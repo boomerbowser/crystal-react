@@ -67,6 +67,7 @@ export interface UseMotionOptions {
 function toMotionKeyframes(recipe: CrystalRecipe): {
   values: DOMKeyframesDefinition;
   times: number[] | undefined;
+  frameCount: number;
 } {
   const properties = new Set<string>();
   for (const frame of recipe.keyframes) {
@@ -88,7 +89,7 @@ function toMotionKeyframes(recipe: CrystalRecipe): {
     ? offsets
     : undefined;
 
-  return { values: values as DOMKeyframesDefinition, times };
+  return { values: values as DOMKeyframesDefinition, times, frameCount: recipe.keyframes.length };
 }
 
 /**
@@ -130,15 +131,21 @@ export function useMotion(
     element.dataset['crMotionName'] = name;
     element.dataset['crMotionState'] = 'running';
 
-    const { values, times } = toMotionKeyframes(recipe);
+    const { values, times, frameCount } = toMotionKeyframes(recipe);
     const web = recipe.spring?.platform?.web;
 
-    /* The spring is the recipe's own physics, fitted upstream so its settling
-       time equals the authored duration. Where a recipe has none — a travelling
-       loop is linear by definition — the duration and Crystal's enter easing
-       stand in. */
-    const transition = web
-      ? { type: 'spring' as const, stiffness: web.stiffness, damping: web.damping, mass: web.mass, ...(times ? { times } : {}) }
+    /* A spring is a continuous solution from one value to another, so it can only
+       describe a two-keyframe animation — Motion refuses more, and it is right
+       to: "settle from A to B" has no meaning across four waypoints.
+     *
+     * Crystal authors most recipes as three or four frames (press overshoots,
+     * recovers, and returns), and fits each recipe's spring so that its settling
+     * time EQUALS the authored duration. So the two forms agree by construction,
+     * and the split below loses nothing: where Motion can take the spring it gets
+     * the real physics, and where it cannot, the duration it falls back to is the
+     * one that spring was fitted to produce. */
+    const transition = web && frameCount === 2
+      ? { type: 'spring' as const, stiffness: web.stiffness, damping: web.damping, mass: web.mass }
       : { duration: duration / 1000, ease: [0.22, 0.65, 0.22, 1] as const, ...(times ? { times } : {}) };
 
     void animate(element, values, transition)

@@ -16,7 +16,7 @@ where something is not yet built, it says so.
 | Requirement | Answered by | Status |
 | --- | --- | --- |
 | React Aria as the unstyled primitive | §2.1 | decided |
-| Parity with PrimeReact, Mantine, MUI + MUI X, Ant Design, including add-ons | §4 | scoped: 174 components |
+| Parity with PrimeReact, Mantine, MUI + MUI X, Ant Design, including add-ons | §4, §4.1, §4.2 | scoped: 265 components + 20 blocks, capability specified per component |
 | Crystal's animations at every appropriate step | §3.4, §2.6 | built on Motion for React, driven by Crystal's springs |
 | Theme provider, theme object, colour scheme and typography context, hooks | §3.3 | built |
 | 100% functional, correct TypeScript | §3.2 | enforced |
@@ -342,7 +342,7 @@ documentation is machine-readable at the same URL a person reads.
 
 ---
 
-## 4. Scope — 174 components
+## 4. Scope — 285 entries
 
 The catalogue lives in `design-system/tokens/catalogue/`; `libraries/parity.json` is
 generated from it and is the progress record. **172 to build**; two are recorded
@@ -356,18 +356,114 @@ and plumbing rather than components Crystal would name. 55 additions took the ca
 from 119 to 174, the largest single gap being that Crystal named **no charting surface at
 all** while all four benchmarks ship one.
 
-| Category | Count |
-| --- | --- |
-| utility | 16 |
-| layout | 14 |
-| typography | 7 |
-| actions | 9 |
-| inputs | 44 |
-| navigation | 15 |
-| overlays | 10 |
-| data-display | 31 |
-| charts | 14 |
-| feedback | 14 |
+| Category | Count | |
+| --- | --- | --- |
+| utility | 25 | |
+| layout | 14 | |
+| typography | 17 | a full suite, not five entries |
+| actions | 9 | |
+| inputs | 52 | |
+| navigation | 17 | |
+| overlays | 11 | |
+| data-display | 37 | |
+| charts | 24 | charts, statistics and visualisation |
+| feedback | 15 | |
+| media | 5 | |
+| commerce | 24 | functional e-commerce |
+| screens | 15 | whole views and their chrome |
+| **blocks** | **20** | **a separate tier — see §4.2** |
+
+**283 to build**; two are recorded `not-applicable` with reasons.
+
+
+### 4.1 Capability, not nomenclature
+
+**The correction that reshaped this section.** The first reading of parity counted
+component *names* against four benchmark libraries. A catalogue can pass that
+check and still be unable to drag an element, upload a file with progress, or play
+a video, because counting names against names cannot see a missing capability.
+Meridian's own example: Crystal specified a drag element that could not actually
+be click-and-dragged.
+
+Two sources were added as a result:
+
+1. **React Aria's component list.** CONTRACT §3 says to wrap a maintained
+   primitive rather than rebuild it, so a primitive React Aria ships that Crystal
+   does not name is a gap *by definition* — Crystal would be leaving accessible
+   behaviour on the floor. The installed package was enumerated and diffed against
+   the catalogue; the contexts are internal plumbing, the components are not.
+2. **The named list**: click-and-drag, File Input / Upload / UploadZone,
+   Spotlight, floating action, navbar and submenu types, animated toasts and
+   banners, alerts, loading and skeletons, pagination, portal, video and music
+   players, gallery, carousel.
+
+28 components followed, including a `media` category Crystal never had.
+
+#### Capabilities every component owes
+
+These are requirements on the *whole library*, checked per component rather than
+assumed. Where a component in the catalogue can carry one of these and does not,
+it is not finished.
+
+| Capability | Where it applies | What it means |
+| --- | --- | --- |
+| **Click-and-drag** | list, grid-list, tree-view, navigation-tree, table, data-table, transfer, tags-input, token-field, kanban-style collections, gallery, upload-zone | Pointer drag **and** keyboard drag. Enter lifts, arrows move, Enter drops, Escape cancels, every state announced. A drag that only works by pointer is unfinished, not degraded. |
+| **Drop targets** | anything that accepts a drag | A visible drop indicator that follows the gap rather than covering an item, plus announced valid and invalid targets. |
+| **Resize** | table, data-table, resizable, floating-window, split panes | Pointer and keyboard. The resizer is a slider with announced values, and a 44px target that does not shift what it borders. |
+| **Virtualisation** | list, grid-list, table, data-table, tree-view, select, combobox, virtual-scroller | Correct `aria-setsize` and `aria-posinset` across recycling, and focus retained when a focused row recycles. |
+| **Selection** | every collection | Single, multiple and none; range selection with Shift; select-all semantics. Carried by label weight, never a check mark. |
+| **Async** | every collection, every field that fetches | Loading, empty, error and load-more as first-class states with their own surfaces, not a spinner covering the component. |
+| **Filtering and sorting** | table, data-table, list, combobox, autocomplete | Sort state announced through `aria-sort`; filtering never silently drops the selected item. |
+| **Forms** | every input | Native form participation, validation display, `aria-describedby` wiring, submission state, server errors landing on the same field state as client rules. |
+| **Overlay placement** | popover, tooltip, menu, submenu, hover-card, combobox, date pickers | Flip and shift at viewport edges, arrow following placement, and correct behaviour inside a scroll container. |
+| **Internationalisation** | dates, times, numbers, calendars, collation | Real locale handling through `@internationalized/date`, and right-to-left correctness — an axis Crystal's own visual gate already tests. |
+| **Media transport** | video-player, audio-player, media-controls, gallery, lightbox | Real `video`/`audio` elements, captions with announced state, a scrubber that is a slider rather than a progress bar, and keyboard transport that does not trap focus. |
+| **Motion** | every component with a state change | The recipe Crystal's catalogue assigns it, bound to **state** rather than to an event, so keyboard and assistive technology get what a pointer user gets. Where the catalogue assigns none, the component plays none. |
+
+#### How this is enforced
+
+A component's catalogue entry carries its `states` and its `crystal` obligations,
+and the parity manifest carries its status. A slice is not complete until, for
+each of its components, the capabilities above that apply to it are implemented
+and tested — a drag test that only simulates a pointer does not count, because the
+keyboard path is the one that breaks silently.
+
+
+### 4.2 Blocks are a separate tier
+
+Meridian asked for larger composed blocks — dashboards, players, stores,
+interactive apps — and asked for them in a section of their own rather than mixed
+into the components. That separation is right, and worth stating as a rule:
+
+**A component is a primitive with one job and a contract a library can hold.** A
+button is a button in every product; its material, geometry, focus and motion are
+the same everywhere, and the contract is checkable.
+
+**A block is an arrangement that solves a recognisable product problem** — a
+dashboard shell, a checkout, a player, a storefront. Blocks are *opinionated by
+design*: they make layout and flow decisions that a component never should. A
+design system that cannot tell the two apart ends up shipping opinions as if they
+were primitives, and every product then fights the opinion instead of using the
+system.
+
+So blocks live in their own category, ship from their own entry point, and carry a
+different promise: **a component's API is stable; a block is a starting point that
+products are expected to fork.** What blocks guarantee is that the materials,
+motion, focus and accessibility inside them are Crystal's, so forking one does not
+mean leaving the design system.
+
+Benchmarked against Tailwind UI, Mantine UI, Ant Design Pro, MUI Templates and
+PrimeBlocks — which is where this tier exists in the ecosystems Crystal is
+measured against.
+
+Two scope boundaries worth stating now, because they are easy to cross later:
+
+- **Payment.** The commerce components never handle raw card data. `payment-method`
+  defers to the host provider's own element, which keeps PCI scope out of the
+  library entirely.
+- **Charts owe a text equivalent.** A chart is a second representation of data,
+  never the only one, and colour never carries meaning alone. This applies to all
+  24 of them.
 
 ---
 
@@ -418,75 +514,90 @@ Nothing downstream is trustworthy until this passes.
       layers stay behind in the web runtime, because animated `box-shadow`,
       `border-radius` and `background-position` cannot be composited and do not port.
 
-### D — Utility and layout (30)
+### D — Utility and layout (39)
 
-`visually-hidden`, `skip-link`, `focus-trap`, `transition`, `direction-provider`,
-`theme-provider`, `reduced-effects`, `resizable`, `watermark`, `qr-code`, `click-away`,
-`animate-on-scroll`, `no-ssr`, `global-styles`, `terminal`*, `border-beam`*,
-`app-shell`, `container`, `grid`, `simple-grid`, `stack`, `group`, `divider`,
-`aspect-ratio`, `scroll-area`, `center`, `space`, `app-bar`, `masonry`, `overflow-list`.
+`visually-hidden`, `skip-link`, `focus-trap`, `transition`, `direction-provider`, `theme-provider`, `reduced-effects`, `resizable`, `watermark`, `qr-code`, `click-away`, `animate-on-scroll`, `no-ssr`, `global-styles`, `terminal`*, `border-beam`*, `pressable`, `focusable`, `drag-handle`, `drop-indicator`, `virtualizer`, `shared-element-transition`, `toolbar`, `router-provider`, `ssr-provider`, `app-shell`, `container`, `grid`, `simple-grid`, `stack`, `group`, `divider`, `aspect-ratio`, `scroll-area`, `center`, `space`, `app-bar`, `masonry`, `overflow-list`.
 
-\* recorded `not-applicable`.
+\* recorded `not-applicable`, with the reason in the catalogue.
 
-### E — Typography and actions (16)
+### E — Typography and actions (26)
 
-`title`, `text`, `blockquote`, `mark`, `prose`, `highlight`, `number-formatter`;
-`button`, `icon-button`, `button-group`, `split-button`, `floating-action`, `copy-button`,
-`close-button`, `action-bar`, `speed-dial`.
+`title`, `text`, `blockquote`, `mark`, `prose`, `highlight`, `number-formatter`, `display`, `heading`, `lead`, `prose-list`, `code-block`, `truncate`, `cite`, `abbreviation`, `text-balance`, `gradient-text`, `button`, `icon-button`, `button-group`, `split-button`, `floating-action`, `copy-button`, `close-button`, `action-bar`, `speed-dial`.
 
-### F — Inputs, part one (22)
+### F — Inputs, part one (26 of 52)
 
-`text-input`, `textarea`, `number-input`, `password-input`, `search-input`, `mask-input`,
-`json-input`, `select`, `native-select`, `checkbox`, `checkbox-group`, `radio`,
-`radio-group`, `switch`, `slider`, `range-slider`, `angle-slider`, `knob`,
-`segmented-control`, `rating`, `form-field`, `helper-text`.
+The text, choice and range families: text and its variants, select, checkbox,
+radio, switch, the sliders, segmented control, rating, and the field scaffolding.
 
-### G — Inputs, part two (22)
+### G — Inputs, part two (26 of 52)
 
-`combobox`, `autocomplete`, `multi-select`, `tags-input`, `chip`, `pin-input`,
-`color-input`, `date-input`, `date-picker`, `date-range-picker`, `date-time-picker`,
-`time-input`, `month-picker`, `year-picker`, `digital-clock`, `file-input`, `dropzone`,
-`transfer`, `cascader`, `mentions`, `rich-text-surface`, `fieldset`.
+The composite and temporal families: combobox and autocomplete, tags and tokens,
+colour in all six forms, the six date and time components, file input, upload and
+upload zone, transfer, cascader, mentions and the rich-text surface.
 
 ### H — Forms
 
-The whole system from §3.8: `useCrystalForm`, Standard Schema validation, submission state,
-the mutation adapter, and server-error mapping onto field state.
+The whole system from §3.8: `useCrystalForm`, Standard Schema validation,
+submission state, the mutation adapter, and server errors landing on the same
+field state as client rules.
 
-### I — Navigation and overlays (25)
+### I — Navigation and overlays (28)
 
-`anchor`, `nav-link`, `nav-rail`, `dock`, `breadcrumbs`, `tabs`, `pagination`, `stepper`,
-`burger`, `command-palette`, `tree-view`, `affix`, `bottom-navigation`, `navigation-menu`,
-`table-of-contents`; `dialog`, `drawer`, `menu`, `context-menu`, `popover`, `hover-card`,
-`tooltip`, `scrim`, `portal`, `floating-window`.
+`anchor`, `nav-link`, `nav-rail`, `dock`, `breadcrumbs`, `tabs`, `pagination`, `stepper`, `burger`, `command-palette`, `tree-view`, `affix`, `bottom-navigation`, `navigation-menu`, `table-of-contents`, `menubar`, `submenu`, `dialog`, `drawer`, `menu`, `context-menu`, `popover`, `hover-card`, `tooltip`, `scrim`, `portal`, `floating-window`, `overlay-arrow`.
 
-### J — Data display (31)
+### J — Data display (37)
 
-`card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`,
-`badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`,
-`spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`,
-`caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`,
-`organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`.
+`card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
-Ends with `data-table`, which is the hardest component in the catalogue: sorting,
-selection, resizing, virtualisation and drag-and-drop, all of which React Aria supplies.
+Ends with `data-table`, the hardest component in the catalogue: sorting,
+selection, resizing, virtualisation and drag-and-drop — every one of which React
+Aria supplies, and every one of which needs a keyboard path as well as a pointer
+one.
 
-### K — Charts (14)
+### K — Charts, statistics and visualisation (24)
 
-`chart-surface` first, then `bar-chart`, `line-chart`, `area-chart`, `pie-chart`,
-`donut-chart`, `scatter-chart`, `radar-chart`, `spark-line`, `gauge`, `heatmap`,
-`funnel-chart`, `chart-legend`, `chart-tooltip`.
+`chart-surface`, `bar-chart`, `line-chart`, `area-chart`, `pie-chart`, `donut-chart`, `scatter-chart`, `radar-chart`, `spark-line`, `gauge`, `heatmap`, `funnel-chart`, `chart-legend`, `chart-tooltip`, `calendar-heatmap`, `treemap`, `sankey`, `candlestick-chart`, `waterfall-chart`, `bullet-chart`, `box-plot`, `histogram`, `geo-map`, `network-graph`.
 
-**Every chart owes a text equivalent of its data.** A chart is a second representation,
-never the only one. Colour never carries meaning alone.
+`chart-surface` first; everything else composes onto it. **Every chart owes a
+text equivalent of its data** — a chart is a second representation, never the only
+one, and colour never carries meaning alone.
 
-### L — Feedback (14)
+### L — Feedback (15)
 
-`alert`, `toast`, `notification`, `progress`, `ring-progress`, `semi-circle-progress`,
-`meter-group`, `loader`, `skeleton`, `loading-overlay`, `empty-state`, `result`,
-`popconfirm`, `tour`.
+`alert`, `toast`, `notification`, `progress`, `ring-progress`, `loader`, `skeleton`, `loading-overlay`, `empty-state`, `result`, `popconfirm`, `tour`, `semi-circle-progress`, `meter-group`, `banner`.
 
-### M — Documentation website
+### M — Media (5)
+
+`video-player`, `audio-player`, `media-controls`, `gallery`, `lightbox`.
+
+Real `video` and `audio` elements underneath. Captions with announced state, a
+scrubber that is a slider rather than a progress bar, and keyboard transport that
+does not trap focus.
+
+### N — Commerce (24)
+
+`price`, `price-range`, `discount-badge`, `quantity-stepper`, `variant-selector`, `stock-indicator`, `product-card`, `product-gallery`, `cart-item`, `cart-summary`, `coupon-input`, `checkout-steps`, `payment-method`, `address-form`, `order-summary`, `shipping-selector`, `delivery-estimate`, `wishlist-button`, `review`, `rating-summary`, `filter-panel`, `sort-select`, `compare-table`, `recently-viewed`.
+
+`payment-method` defers to the host provider's own element and never handles raw
+card data, which keeps PCI scope out of the library entirely.
+
+### O — Screens (15)
+
+`screen`, `page-header`, `view-stack`, `master-detail`, `split-view`, `command-bar`, `status-bar`, `workspace`, `focus-mode`, `empty-screen`, `error-screen`, `loading-screen`, `offline-screen`, `not-found-screen`, `permission-screen`.
+
+Whole views and their chrome, including the states a view can be in before it has
+content — loading, empty, error, offline, not found, unauthorised — which products
+otherwise improvise separately and inconsistently.
+
+### P — Blocks (20)
+
+`dashboard-shell`, `metrics-row`, `analytics-panel`, `data-table-block`, `crud-form-block`, `settings-block`, `auth-block`, `profile-block`, `activity-feed`, `notification-centre`, `player-shell`, `playlist-block`, `storefront-block`, `product-detail-block`, `checkout-block`, `cart-drawer`, `pricing-block`, `onboarding-block`, `search-block`, `editor-block`.
+
+Last, because every block is an arrangement of components that must already
+exist. A separate tier with a different promise: a component's API is stable, a
+block is a starting point products are expected to fork. See §4.2.
+
+### Q — Documentation website
 
 Built alongside the slices rather than after them: a component is not done until
 its page exists, which keeps the documentation from becoming a separate project

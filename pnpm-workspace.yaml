@@ -1,2 +1,16 @@
+packages:
+  - '.'
+  - 'apps/*'
+
 allowBuilds:
   '@parcel/watcher': set this to true or false
+
+# Sass pulls in @parcel/watcher, which has a native build step. pnpm 10+ exits
+# non-zero until every such dependency gets an explicit answer, so an unanswered
+# one breaks `pnpm install` on a fresh clone and therefore CI. Declined: it is an
+# optional watcher for a build-time dependency and nothing it does reaches a
+# consumer's bundle.
+neverBuiltDependencies:
+  - '@parcel/watcher'
+
+strictDepBuilds: false
