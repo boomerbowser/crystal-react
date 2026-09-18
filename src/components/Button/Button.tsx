@@ -16,6 +16,7 @@
 import { forwardRef, useRef, type ReactNode } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { useMotion } from '../../motion/useMotion.js';
+import { cx } from '../../styles/cx.js';
 import styles from './Button.module.scss';
 
 /** Fill, not geometry. A button is a pill in every variant. */
@@ -56,12 +57,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
      held key repeating does not restart the press animation on every repeat. */
   const play = useMotion(localRef, { once: true });
 
-  const classes = [
+  const classes = cx(
     styles['button'],
     VARIANT_CLASS[variant],
-    shape === 'card' ? styles['card'] : undefined,
+    shape === 'card' && styles['card'],
     className,
-  ].filter(Boolean).join(' ');
+  );
 
   /* `style` is spread only when defined: under `exactOptionalPropertyTypes` an
      explicit `undefined` is not the same as an absent property, and React Aria's

@@ -17,8 +17,8 @@ where something is not yet built, it says so.
 | --- | --- | --- |
 | React Aria as the unstyled primitive | §2.1 | decided |
 | Parity with PrimeReact, Mantine, MUI + MUI X, Ant Design, including add-ons | §4 | scoped: 174 components |
-| Crystal's animations at every appropriate step | §3.4 | designed |
-| Theme provider, theme object, colour scheme and typography context, hooks | §3.3 | built |
+| Crystal's animations at every appropriate step | §3.4 | built for recipes; presets blocked on task C-1 |
+| Theme provider, theme object, colour scheme and typography context, hooks | §3.3 | provider and hooks built; typography context outstanding |
 | 100% functional, correct TypeScript | §3.2 | enforced |
 | Next.js, TanStack Start, React Router, Gatsby, Redwood | §3.6 | designed, gated |
 | Vitest, Jest, Storybook, LLMs | §3.7 | Vitest built; rest designed |
@@ -26,6 +26,7 @@ where something is not yet built, it says so.
 | Dynamic and responsive; improve the animations | §3.4, §3.5 | designed |
 | Forms: components, state, validation, submission, mutations | §3.8 | designed |
 | Named Crystal React, published as `@crystal/react` | §3.9 | set |
+| A documentation website, deployable to Vercel | §3.10, slice M | designed |
 
 ---
 
@@ -240,6 +241,62 @@ minimum survives every density and every breakpoint.
 `@crystal/react`, ESM + CJS + types, `sideEffects` declaring the SCSS. Changesets for
 versioning. Peer range React 18.2 and 19.
 
+### 3.10 Documentation website
+
+A real documentation site, at the standard set by MUI, Mantine, PrimeReact and
+Blueprint: every component gets a page with an explanation, isolated visual
+examples, the code for each, a generated props table, and its accessibility and
+material notes.
+
+**Next.js App Router, deployed to Vercel.** Chosen over a docs framework because
+it earns its keep twice: the site is also the Next.js compatibility gate from
+§3.6. A library that cannot server-render its own documentation has not proven
+the claim, and a separate smoke app would be a weaker test than the real thing.
+
+It lives at `apps/docs` in this repository, as a pnpm workspace package depending
+on the library through `workspace:*`. The library stays at the repository root.
+Vercel's project root is `apps/docs`; a preview deployment per pull request is the
+review surface for visual change.
+
+**The code shown is the code that runs.** This is the one rule the docs
+architecture is built around, because it is where documentation sites decay. Each
+example is a real `.tsx` file under `apps/docs/demos/`, imported and rendered *and*
+read from disk at build time for its source. There is no second copy of an
+example in a code fence, so an example cannot drift from what it renders, and a
+demo that stops compiling breaks the build rather than quietly lying.
+
+Each example is **isolated**: rendered inside its own `CrystalProvider` scope with
+per-demo controls for palette, mode, density, direction and reduced effects — the
+same axes the design system's visual gate uses. Because the provider scopes to an
+element rather than a document (§3.3), a demo can be dark on a light page with no
+iframe and no portal gymnastics.
+
+**Props tables are generated** from the TypeScript types with
+`react-docgen-typescript`, never hand-written. A hand-written props table is a
+second description of the same shape and drifts from the first — the same argument
+as CONTRACT §1 for values.
+
+Every component page carries:
+
+- what it is, and when to reach for it rather than its neighbours;
+- anatomy, states, and which Crystal materials it uses;
+- isolated examples, each with its source and a copy button;
+- a generated props table, plus the React Aria props it passes through;
+- accessibility notes: roles, keyboard map, and what the component does *not* do;
+- the motion recipes it plays, and what each marks;
+- its parity claim — the Mantine, MUI, Ant Design and PrimeReact components it
+  corresponds to, drawn from the catalogue rather than retyped.
+
+Page content is MDX. The component index, the parity claims and the material and
+motion notes come from `@crystal/core`'s catalogue, so a component added to the
+catalogue appears in the documentation without anybody remembering to add it.
+
+Beyond the component pages: getting started per framework, theming and the token
+reference, the material hierarchy, motion, accessibility, forms, and a migration
+note for each benchmark library. Local search over a generated index. And
+`llms.txt` plus the component manifest (§3.7) are served from the site, so the
+documentation is machine-readable at the same URL a person reads.
+
 ---
 
 ## 4. Scope — 174 components
@@ -293,11 +350,30 @@ Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 - [ ] Storybook 9 with the six-palette toolbar
 - [ ] `llms.txt` and the generated component manifest
 
-**Gate C** — one component per concern, proven together: `Button` (pill geometry, press
-recipe, Resin, focus halo), `Card` (Haze fill, feathered edge, crisp text), `Dialog` (Resin
-surface, Mirage scrim, optical layer attached for entry and **fully detached** after),
-`TextInput` (Haze fill in a Resin shell, `field-focus`, `field-invalid`). Nothing downstream
-is trustworthy until this passes.
+**Gate C** — one component per concern, proven together:
+
+- [x] `Button` — pill geometry, Resin, focus halo, `press` and `hover` bound to press
+      *state* so a keyboard user gets what a pointer user gets.
+- [x] `Card` — Haze fill on an isolated paint layer, crisp text, recessed when inside a
+      Resin frame, and **no motion**: the catalogue assigns Card no recipe, and a library
+      must not invent one.
+- [x] `TextInput` — Haze well in a Resin shell, `field-focus`, and `field-invalid` /
+      `field-valid` bound to validation state so a server-side failure animates
+      identically to a client one.
+- [ ] `Dialog` — **blocked upstream.** The catalogue specifies it as a Mirage scrim with an
+      80% feathered Haze surface above it (not Resin, as an earlier draft of this plan
+      said), and its motion as `mirage`, `mirage-out` and `dismiss`. Those are duration
+      *presets*, not recipes: `motion.js` builds their keyframes at runtime from travel,
+      depth and feather tokens plus a direction cycle. Reimplementing that in React is
+      exactly the divergence CONTRACT §1 forbids, so `@crystal/core` must first export the
+      preset keyframe construction as a pure function. Tracked as task C-1 below.
+
+Nothing downstream is trustworthy until this passes.
+
+**Task C-1 — export the motion presets from `@crystal/core`.** Extract the preset keyframe
+construction out of `motion.js`'s IIFE into a function that takes an element and a preset
+name and returns keyframes and options. React then consumes it the same way it consumes
+`frames`. This also removes the last reason the preset path cannot be unit-tested.
 
 ### D — Utility and layout (30)
 
@@ -367,6 +443,22 @@ never the only one. Colour never carries meaning alone.
 `meter-group`, `loader`, `skeleton`, `loading-overlay`, `empty-state`, `result`,
 `popconfirm`, `tour`.
 
+### M — Documentation website
+
+Built alongside the slices rather than after them: a component is not done until
+its page exists, which keeps the documentation from becoming a separate project
+nobody finishes.
+
+- [ ] `apps/docs` as a pnpm workspace package; Next.js App Router; library by `workspace:*`
+- [ ] Vercel project rooted at `apps/docs`, preview deployment per pull request
+- [ ] The demo registry: source read from disk at build time, so the code shown is the code that runs
+- [ ] The isolated demo frame, with palette, mode, density, direction and reduced-effects controls
+- [ ] Generated props tables from the TypeScript types
+- [ ] The component page template, fed from the catalogue
+- [ ] Guides: getting started per framework, theming, tokens, materials, motion, accessibility, forms
+- [ ] Migration notes from Mantine, MUI, Ant Design and PrimeReact
+- [ ] Local search; `llms.txt` and the component manifest served from the site
+
 ---
 
 ## 6. Final gates
@@ -379,6 +471,11 @@ never the only one. Colour never carries meaning alone.
 - Framework smoke tests pass: Next.js, TanStack Start, React Router, Gatsby, Redwood.
 - A Jest suite runs, so that claim is checkable rather than assumed.
 - `lint:tokens` clean: no hard-coded design value anywhere in the library.
+- The documentation site builds and deploys to Vercel, with a page for every
+  component `parity.json` reports as `implemented` — a component claiming to exist
+  with no page is not done.
+- Every demo compiles. Since the source shown is read from the file that renders,
+  a broken example breaks the build rather than misleading a reader.
 
 ---
 

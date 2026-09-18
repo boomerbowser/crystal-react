@@ -1,0 +1,104 @@
+@use '../../styles/tokens' as *;
+
+/* TextInput — a Haze well inside a Resin shell.
+ *
+ * The shell floats; the well is what you read and type into, so it is recessed
+ * inside the frame rather than raised on it. Crystal's light source is overhead
+ * throughout, so recession inverts the light pair: an inset shadow along the top
+ * edge where the frame occludes the light, a highlight returning along the bottom.
+ *
+ * The field itself is never blurred. Feathering applies to the isolated paint
+ * layer only — text, the caret, the hit area and the focus ring stay crisp.
+ */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;  /* crystal-allow-literal: label-to-field gap, layout rather than material */
+  color: var(--cr-text);
+}
+
+.label {
+  font-size: 12px;  /* crystal-allow-literal: form label scale, pending a type-scale token */
+  font-weight: 800;
+}
+
+.shell {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--cr-outline);
+  border-radius: var(--cr-radius);
+  background: var(--cr-resin-fill);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  /* The recessed pair: a highlight inset along the top edge where the light
+     lands, over Crystal's content-level shadow. Both come from tokens — the
+     depth of a field is a system value, not a number chosen here. */
+  box-shadow: inset 0 2px 1px var(--cr-rim), var(--cr-shadow-content);
+  transform-origin: center;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  min-height: $cr-action-min-target;
+  padding: $cr-action-padding-block $cr-action-padding-inline;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+}
+
+/* The focus ring belongs to the shell, so it traces the control rather than the
+   bare input inside it. */
+.input:focus { outline: none; }
+
+.shell:focus-within {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* Invalid is carried by the outline and by the message, never by colour alone. */
+.shell[data-invalid] {
+  border-color: var(--cr-danger-ink);
+}
+
+.description,
+.error {
+  font-size: 12px;  /* crystal-allow-literal: helper text scale, pending a type-scale token */
+}
+
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+.field[data-disabled] {
+  opacity: $cr-action-disabled-opacity;
+  cursor: not-allowed;
+}
+
+:global([data-effects='opaque']) .shell {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .shell {
+    background: var(--cr-surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .shell {
+    background: Field;
+    border: 1px solid FieldText;
+    backdrop-filter: none;
+  }
+  .shell:focus-within { outline-color: Highlight; }
+}
