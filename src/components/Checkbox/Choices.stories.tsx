@@ -95,14 +95,14 @@ export const Ranges: Story = {
         minValue={0}
         maxValue={10000}
         step={100}
-        formatValue={(value) => `£${value.toLocaleString('en-GB')}`}
+        formatOptions={{ style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }}
       />
       <RangeSlider
         label="Price"
         defaultValue={[20, 80]}
         startLabel="Minimum price"
         endLabel="Maximum price"
-        formatValue={(value) => `£${value}`}
+        formatOptions={{ style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }}
       />
       <Group gap="xl">
         <AngleSlider label="Rotation" defaultValue={45} />

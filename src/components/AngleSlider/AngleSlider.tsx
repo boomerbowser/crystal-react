@@ -18,8 +18,8 @@
  * `role="slider"` with `aria-valuenow` is what makes it a number to everybody
  * else. The visible figure beside it is for everybody.
  */
-import { useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
-import { useMove } from 'react-aria';
+import { useId, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
+import { mergeProps, useMove } from 'react-aria';
 import { cx } from '../../styles/cx.js';
 import styles from './AngleSlider.module.scss';
 
@@ -48,6 +48,7 @@ function Dial({
   const current = value ?? uncontrolled;
   const started = useRef(current);
 
+  const labelId = useId();
   const span = maxValue - minValue;
   const clamp = (next: number) => (wraps
     ? ((next - minValue) % span + span) % span + minValue
@@ -65,14 +66,26 @@ function Dial({
        circular control has no single axis and insisting on one makes half the
        gestures do nothing. Up and right increase. */
     onMove: (event) => {
-      started.current += (event.deltaX - event.deltaY) * (span / 200);
+      const direction = Math.sign(event.deltaX - event.deltaY);
+      if (event.pointerType === 'keyboard') {
+        /* A key press is one step, not a distance. `useMove` reports arrow keys
+           as a delta of one pixel, and scaling that by the pointer ratio below
+           moved a 0–100 dial by half a unit — which then rounded back to where
+           it started, so arrow keys did nothing at all. */
+        started.current = current + direction * step;
+      } else {
+        started.current += (event.deltaX - event.deltaY) * (span / 200);
+      }
       set(started.current);
     },
   });
 
   /* Arrow keys step, which `useMove` already delivers as deltas — Home and End
-     are the two the hook does not cover, and they are the ones that make a bounded
-     control quick to set. */
+     are the two the hook does not cover, and they are the ones that make a
+     bounded control quick to set. Merged with `moveProps` rather than written
+     after it: JSX takes the last `onKeyDown` it is given, so spreading the hook's
+     props and then setting this one replaced the hook's key handling outright,
+     and arrow keys moved the dial not at all. */
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Home') { event.preventDefault(); set(minValue); }
     if (event.key === 'End') { event.preventDefault(); set(wraps ? maxValue - step : maxValue); }
@@ -84,13 +97,18 @@ function Dial({
 
   return (
     <div className={cx(styles['field'], className)} {...(isDisabled ? { 'data-disabled': true } : {})}>
-      <span className={cx(styles['label'])}>{label}</span>
+      <span id={labelId} className={cx(styles['label'])}>{label}</span>
       <div className={cx(styles['row'])}>
         <div
-          {...(isDisabled ? {} : moveProps)}
+          {...(isDisabled ? {} : mergeProps(moveProps, { onKeyDown }))}
           role="slider"
           tabIndex={isDisabled ? -1 : 0}
-          aria-label={typeof label === 'string' ? label : undefined}
+          /* Points at the label that is already on screen, rather than at a
+             copy of it. The first version wrote `aria-label` only when `label`
+             was a string, so `<Knob label={<>Gain</>} />` — a fragment, an
+             icon and a word, anything not a bare string — produced a slider
+             with no accessible name at all. */
+          aria-labelledby={labelId}
           aria-valuenow={current}
           aria-valuemin={minValue}
           aria-valuemax={maxValue}
@@ -98,7 +116,6 @@ function Dial({
              unit, which for an angle or a gain is not enough to act on. */
           aria-valuetext={text}
           aria-disabled={isDisabled || undefined}
-          onKeyDown={onKeyDown}
           className={cx(styles['dial'])}
         >
           <span

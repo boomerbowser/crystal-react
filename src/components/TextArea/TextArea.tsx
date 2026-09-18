@@ -16,8 +16,16 @@
  * The character count is announced rather than only drawn, and only when it
  * matters: a live region that speaks on every keystroke is unusable, so it
  * announces as the limit approaches and not before.
+ *
+ * It does that with two elements rather than by switching one element's role.
+ * The visible figure is `aria-hidden`; a separate, permanently mounted live
+ * region carries the announcement and holds an empty string until the limit is
+ * near. A live region that is *inserted* at the same moment as its content is
+ * not reliably announced — the assistive technology has to have been watching
+ * the node before the text arrives — which is what the first version did.
  */
 import { forwardRef, useState, type ReactNode } from 'react';
+import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import {
   TextField as AriaTextField, Label, TextArea as AriaTextArea, Text, FieldError,
   type TextFieldProps as AriaTextFieldProps,
@@ -80,16 +88,25 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
           {...(placeholder ? { placeholder } : {})}
         />
         {maxLength !== undefined ? (
-          /* Announced only as the limit approaches. A live region that speaks on
-             every keystroke is a field nobody can use with a screen reader. */
-          <span
-            className={cx(styles['count'], over ? styles['over'] : undefined)}
-            {...(remaining !== undefined && remaining <= 20
-              ? { role: 'status', 'aria-live': 'polite' as const }
-              : {})}
-          >
-            {length} / {maxLength}
-          </span>
+          <>
+            <span
+              aria-hidden="true"
+              className={cx(styles['count'], over ? styles['over'] : undefined)}
+            >
+              {length} / {maxLength}
+            </span>
+            {/* Present from mount and empty until the limit is near, so the
+                announcement is a text change inside a region that was already
+                being watched. Spoken as words rather than as "180 / 200",
+                which a reader renders as a date. */}
+            <VisuallyHidden role="status" aria-live="polite">
+              {remaining === undefined || remaining > 20
+                ? ''
+                : over
+                  ? `${-remaining} characters over the limit`
+                  : `${remaining} characters remaining`}
+            </VisuallyHidden>
+          </>
         ) : null}
       </div>
       {description ? (

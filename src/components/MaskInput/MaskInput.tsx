@@ -20,7 +20,7 @@
  *     characters interrupted by announcements of inserted punctuation, which is
  *     what happens when a mask is applied by rewriting the input on every key.
  */
-import { forwardRef, useState, type ReactNode } from 'react';
+import { forwardRef, useId, useState, type ReactNode } from 'react';
 import { IMaskInput } from 'react-imask';
 import { cx } from '../../styles/cx.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
@@ -58,7 +58,13 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(function M
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const raw = value ?? uncontrolled;
 
-  const fieldId = id ?? `mask-${mask.length}-${name ?? 'field'}`;
+  /* Derived from React's own id counter, not from the mask. The first version
+     built the fallback out of the mask's length and the field's name, so two
+     unnamed phone fields on one form both became `mask-14-field` and both
+     labels resolved to the first input — clicking the second label focused the
+     first, and a reader announced the wrong name. */
+  const generatedId = useId();
+  const fieldId = id ?? generatedId;
   const descriptionId = `${fieldId}-description`;
   const errorId = `${fieldId}-error`;
   const describedBy = [

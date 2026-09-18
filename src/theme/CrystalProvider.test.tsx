@@ -177,4 +177,42 @@ describe('CrystalProvider', () => {
        computed-value time and Frost renders with no diffusion at all. */
     expect(container.style.getPropertyValue('--cr-frost-blur')).toBeTruthy();
   });
+
+  /* One container per live scope, and none left over. Nested providers each get
+     their own because each carries a different palette; the count is the thing
+     to watch, because a container that outlives its provider accumulates. */
+  it('keeps one overlay container per live provider', () => {
+    const count = () => document.querySelectorAll('[data-crystal-overlays]').length;
+
+    const { unmount } = render(
+      <CrystalProvider palette="prism">
+        <CrystalProvider palette="harbor" mode="dark">
+          <span>island</span>
+        </CrystalProvider>
+      </CrystalProvider>,
+    );
+    expect(count()).toBe(2);
+
+    unmount();
+    expect(count()).toBe(0);
+  });
+
+  /* Re-theming rewrites the container rather than replacing it, and a property
+     the new palette does not declare comes off. Harbor dark declares
+     `contentOwnSurface`; Prism does not. */
+  it('drops properties the new theme does not declare', () => {
+    const { rerender } = render(
+      <CrystalProvider palette="harbor" mode="dark"><span>x</span></CrystalProvider>,
+    );
+    const overlay = () => document.querySelectorAll('[data-crystal-overlays]');
+    const inner = overlay()[overlay().length - 1] as HTMLElement;
+    expect(inner.style.getPropertyValue('--cr-content-own-surface')).toBeTruthy();
+
+    rerender(
+      <CrystalProvider palette="prism" mode="light"><span>x</span></CrystalProvider>,
+    );
+    expect(inner.style.getPropertyValue('--cr-content-own-surface')).toBe('');
+    /* The same element, not a replacement — an overlay open inside it survives. */
+    expect(overlay()[overlay().length - 1]).toBe(inner);
+  });
 });

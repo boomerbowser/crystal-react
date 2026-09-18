@@ -13,13 +13,32 @@ describe('TextArea', () => {
   });
 
   /* A live region that speaks on every keystroke is a field nobody can use with
-     a screen reader, so the count announces only as the limit approaches. */
-  it('announces the count only as the limit approaches', async () => {
+     a screen reader, so the count announces only as the limit approaches — but
+     the region itself exists from the first render, because one that appears at
+     the same moment as its content is not reliably announced. The old test
+     asserted the region was absent before the threshold, which is exactly the
+     behaviour that was wrong. */
+  it('mounts the live region silent and fills it as the limit approaches', async () => {
     renderWithCrystal(<TextArea label="Bio" maxLength={30} />);
-    expect(screen.queryByRole('status')).toBeNull();
+    const region = screen.getByRole('status');
+    expect(region.textContent).toBe('');
 
-    await userEvent.type(screen.getByRole('textbox', { name: 'Bio' }), 'a'.repeat(12));
-    expect(screen.getByRole('status').textContent).toContain('12 / 30');
+    const field = screen.getByRole('textbox', { name: 'Bio' });
+    await userEvent.type(field, 'a'.repeat(5));
+    /* Still 25 remaining — nothing to say yet, and the same node is still there. */
+    expect(screen.getByRole('status')).toBe(region);
+    expect(region.textContent).toBe('');
+
+    await userEvent.type(field, 'a'.repeat(7));
+    expect(region.textContent).toBe('18 characters remaining');
+    /* The visible figure is separate, and not announced twice. */
+    expect(screen.getByText('12 / 30').getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('says how far over the limit the text is', async () => {
+    renderWithCrystal(<TextArea label="Bio" maxLength={4} />);
+    await userEvent.type(screen.getByRole('textbox', { name: 'Bio' }), 'abcdefg');
+    expect(screen.getByRole('status').textContent).toBe('3 characters over the limit');
   });
 
   it('becomes invalid past the limit', async () => {

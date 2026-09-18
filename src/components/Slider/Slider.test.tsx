@@ -19,13 +19,22 @@ describe('Slider', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The one that matters most: a slider whose value is a price or a duration must
-     announce "£24" rather than "24". A number without its unit is a guess. */
-  it('announces the value with its unit', () => {
+  /* The one that matters most, and the one the first version got wrong: a slider
+     whose value is a price must announce "£24" rather than "24". The old test
+     asserted only that aria-valuetext was non-empty, which is why it passed
+     while the unit reached the screen and not the announcement. */
+  it('announces the value with its unit, not only shows it', () => {
     renderWithCrystal(
-      <Slider label="Price" defaultValue={24} formatValue={(value) => `£${value}`} />,
+      <Slider
+        label="Price"
+        defaultValue={24}
+        formatOptions={{ style: 'currency', currency: 'GBP' }}
+      />,
     );
-    expect(screen.getByRole('slider', { name: 'Price' }).getAttribute('aria-valuetext')).toBeTruthy();
+    const announced = screen.getByRole('slider', { name: 'Price' }).getAttribute('aria-valuetext') ?? '';
+    expect(announced).toContain('£');
+    /* And the visible output is the same string, so the two cannot drift. */
+    expect(document.querySelector('output')?.textContent).toBe(announced);
   });
 
   it('steps from the keyboard', async () => {
@@ -48,6 +57,7 @@ describe('RangeSlider', () => {
         defaultValue={[20, 80]}
         startLabel="Minimum price"
         endLabel="Maximum price"
+        formatOptions={{ style: 'currency', currency: 'GBP' }}
       />,
     );
     const [lower, upper] = screen.getAllByRole('slider') as HTMLInputElement[];
@@ -57,5 +67,7 @@ describe('RangeSlider', () => {
     expect(upper?.getAttribute('aria-label')).toBe('Maximum price');
     expect(lower?.value).toBe('20');
     expect(upper?.value).toBe('80');
+    /* Each end announces with the unit too. */
+    expect(lower?.getAttribute('aria-valuetext') ?? '').toContain('£');
   });
 });

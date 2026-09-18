@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen } from '../../test/render.js';
-import { FileInput, DropZone, Upload } from './FileInput.js';
+import { FileInput, DropZone, Upload, UploadZone } from './FileInput.js';
 
 describe('FileInput', () => {
   it('has no accessibility violations and opens the platform picker', async () => {
@@ -50,5 +50,27 @@ describe('Upload', () => {
       <Upload label="Attachments" files={[{ id: '1', name: 'report.pdf', error: 'Too large' }]} />,
     );
     expect(screen.getByRole('alert').textContent).toContain('Too large');
+  });
+
+  /* The drop surface and the list used to be assembled by rendering a whole
+     second chooser with its label blanked, which duplicated the button, the
+     description and the error — the last of those announced twice, because both
+     copies carried `role="alert"`. */
+  it('gives a drop zone exactly one chooser, one description and one error', () => {
+    renderWithCrystal(
+      <UploadZone
+        label="Attachments"
+        description="PDF or PNG, up to 10 MB"
+        errorMessage="That file is too large"
+        files={[{ id: 'a', name: 'brief.pdf', size: 2048 }]}
+      />,
+    );
+    expect(screen.getAllByRole('button', { name: 'Choose a file' })).toHaveLength(1);
+    expect(screen.getAllByText('PDF or PNG, up to 10 MB')).toHaveLength(1);
+    expect(screen.getAllByRole('alert')).toHaveLength(1);
+    /* And no empty label left behind by the old composition. */
+    const labels = Array.from(document.querySelectorAll('span'))
+      .filter((node) => node.className.includes('label'));
+    expect(labels.every((node) => node.textContent !== '')).toBe(true);
   });
 });

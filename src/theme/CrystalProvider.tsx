@@ -17,7 +17,7 @@
  * render more than once, which Storybook and visual tests both do.
  */
 import {
-  createContext, useContext, useEffect, useMemo, useId, useState,
+  createContext, useContext, useEffect, useMemo, useId, useRef, useState,
   type ReactNode, type CSSProperties, type JSX,
 } from 'react';
 import { I18nProvider } from 'react-aria-components';
@@ -186,7 +186,16 @@ function useThemedPortal(
   style: CSSProperties,
 ): HTMLElement | null {
   const [container, setContainer] = useState<HTMLElement | null>(null);
+  /* What this container was last given, so a property that disappears between
+     palettes is taken off rather than left behind. Harbor dark declares
+     `contentOwnSurface` and Prism does not; without this, switching from one to
+     the other keeps Harbor's value on the overlay container for ever. */
+  const written = useRef<string[]>([]);
 
+  /* Created once per provider instance and removed when that instance goes, so
+     the count of containers is the count of live scopes. It deliberately does not
+     depend on the theme: re-theming rewrites this element, it does not replace
+     it, which would tear down every open overlay inside it. */
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;
     const element = document.createElement('div');
@@ -202,13 +211,19 @@ function useThemedPortal(
       if (value === undefined) container.removeAttribute(name);
       else container.setAttribute(name, value);
     }
+
+    const next: string[] = [];
     for (const [name, value] of Object.entries(style)) {
-      if (name.startsWith('--')) container.style.setProperty(name, String(value));
-      else container.style.setProperty(
-        name.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`),
-        String(value),
-      );
+      const property = name.startsWith('--')
+        ? name
+        : name.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+      container.style.setProperty(property, String(value));
+      next.push(property);
     }
+    for (const property of written.current) {
+      if (!next.includes(property)) container.style.removeProperty(property);
+    }
+    written.current = next;
   }, [container, attributes, style]);
 
   return container;

@@ -140,13 +140,20 @@ export interface UploadProps extends FileInputProps {
   onRemove?: (id: string) => void;
 }
 
-/** A chooser with the list of what was chosen, and how far each has got. */
-export function Upload({ files, onRemove, ...props }: UploadProps): React.JSX.Element {
+/**
+ * The list of what was chosen and how far each has got, without a chooser of its
+ * own. Shared by `Upload`, which puts a `FileInput` above it, and `UploadZone`,
+ * which puts a `DropZone` there instead — neither of them by rendering the other
+ * and hiding half of it.
+ */
+function UploadedFiles({ files, onRemove }: {
+  files: readonly UploadedFile[];
+  onRemove?: ((id: string) => void) | undefined;
+}): React.JSX.Element {
   const statusId = useId();
 
   return (
-    <div className={cx(styles['field'])}>
-      <FileInput {...props} />
+    <>
       {files.length > 0 ? (
         <ul className={cx(styles['files'])}>
           {files.map((file) => (
@@ -194,18 +201,36 @@ export function Upload({ files, onRemove, ...props }: UploadProps): React.JSX.El
       <VisuallyHidden as="div" id={statusId} role="status" aria-live="polite">
         {files.filter((file) => file.progress === undefined && !file.error).length} of {files.length} uploaded
       </VisuallyHidden>
+    </>
+  );
+}
+
+/** A chooser with the list of what was chosen, and how far each has got. */
+export function Upload({ files, onRemove, ...props }: UploadProps): React.JSX.Element {
+  return (
+    <div className={cx(styles['field'])}>
+      <FileInput {...props} />
+      <UploadedFiles files={files} {...(onRemove ? { onRemove } : {})} />
     </div>
   );
 }
 
 export type UploadZoneProps = UploadProps & { children?: ReactNode };
 
-/** The drop surface with the list beneath it. */
+/**
+ * The drop surface with the list beneath it.
+ *
+ * It used to compose `Upload` with `label=""` to suppress the second heading.
+ * That left an empty `span` in the accessibility tree — and, less visibly, a
+ * second "Choose a file" button, a second copy of the description, and a second
+ * `role="alert"` carrying the same error, so a failure was announced twice. Both
+ * halves now draw on the same list and only the drop surface carries the chooser.
+ */
 export function UploadZone({ files, onRemove, children, ...props }: UploadZoneProps): React.JSX.Element {
   return (
     <div className={cx(styles['field'])}>
       <DropZone {...props}>{children}</DropZone>
-      <Upload {...props} files={files} {...(onRemove ? { onRemove } : {})} label="" />
+      <UploadedFiles files={files} {...(onRemove ? { onRemove } : {})} />
     </div>
   );
 }

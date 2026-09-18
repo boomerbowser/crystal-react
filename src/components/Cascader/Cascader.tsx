@@ -58,6 +58,12 @@ export interface CascaderProps {
   placeholder?: string;
   /** What separates the levels when the path is shown and announced. */
   separator?: string;
+  /**
+   * What each column is a list *of* — `['Country', 'Region', 'City']`. Only the
+   * product knows this; without it a column is named after the option it hangs
+   * from, which is better than its depth but less precise.
+   */
+  columnLabels?: readonly string[];
   isDisabled?: boolean;
   className?: string;
 }
@@ -90,7 +96,7 @@ function labelsFor(options: readonly CascaderNode[], path: readonly string[]): s
 
 export function Cascader({
   label, options, value, defaultValue = [], onChange, description, errorMessage,
-  placeholder = 'Choose', separator = ' / ', isDisabled = false, className,
+  placeholder = 'Choose', separator = ' / ', columnLabels, isDisabled = false, className,
 }: CascaderProps): React.JSX.Element {
   const [uncontrolled, setUncontrolled] = useState<readonly string[]>(defaultValue);
   const path = value ?? uncontrolled;
@@ -102,8 +108,18 @@ export function Cascader({
   };
 
   const columns = childrenAt(options, path);
+  const chosen = labelsFor(options, path);
   /* The path, not the leaf. "Edinburgh" alone has lost what disambiguates it. */
-  const shown = labelsFor(options, path).join(separator);
+  const shown = chosen.join(separator);
+
+  /* Columns were named "Top level", "Level 2", "Level 3" — a reader arriving in
+     the third column learned its position and not its subject. Failing a name
+     from the caller, a column is named after the option it hangs from, so moving
+     into the children of "Scotland" announces "Scotland" and not "Level 2". */
+  const columnName = (depth: number): string => columnLabels?.[depth]
+    ?? (depth === 0
+      ? (typeof label === 'string' ? label : 'Options')
+      : chosen[depth - 1] ?? `Level ${depth + 1}`);
 
   return (
     <div className={cx(styles['field'], className)}>
@@ -124,7 +140,7 @@ export function Cascader({
             {columns.map((column, depth) => (
               <ListBox
                 key={depth}
-                aria-label={depth === 0 ? 'Top level' : `Level ${depth + 1}`}
+                aria-label={columnName(depth)}
                 items={column}
                 selectionMode="single"
                 selectedKeys={path[depth] ? new Set([path[depth]!]) : new Set<string>()}

@@ -29,10 +29,18 @@ import styles from './Slider.module.scss';
 export interface SliderProps extends Omit<AriaSliderProps<number>, 'className' | 'style' | 'children'> {
   label: ReactNode;
   /**
-   * How the value reads aloud and on screen — "£24", "2 hours". A number without
-   * its unit is a guess, and this becomes `aria-valuetext` as well as the output.
+   * How the value reads — `{ style: 'currency', currency: 'GBP' }`,
+   * `{ style: 'unit', unit: 'hour' }`. `Intl.NumberFormat` options rather than a
+   * function, deliberately: React Aria derives `aria-valuetext` from these, so
+   * the figure on screen, the figure announced and the locale they are formatted
+   * in all agree by construction.
+   *
+   * A formatting function cannot do that. The first version took one, used it for
+   * the visible output only, and left the announcement as a bare number — a
+   * budget slider showed £2,400 and said "2,400", which is precisely the failure
+   * this component exists to prevent.
    */
-  formatValue?: (value: number) => string;
+  formatOptions?: Intl.NumberFormatOptions;
   /** Labels beneath the track, evenly spaced. */
   ticks?: readonly ReactNode[];
   /** Hide the numeric output. The value is still announced. */
@@ -41,15 +49,21 @@ export interface SliderProps extends Omit<AriaSliderProps<number>, 'className' |
 }
 
 export function Slider({
-  label, formatValue, ticks, hideOutput = false, className, ...props
+  label, formatOptions, ticks, hideOutput = false, className, ...props
 }: SliderProps): React.JSX.Element {
   return (
-    <AriaSlider {...props} className={cx(styles['field'], className)}>
+    <AriaSlider
+      {...props}
+      {...(formatOptions ? { formatOptions } : {})}
+      className={cx(styles['field'], className)}
+    >
       <div className={cx(styles['header'])}>
         <Label className={cx(styles['label'])}>{label}</Label>
         {hideOutput ? null : (
+          /* The same label React Aria puts in `aria-valuetext`, so the two cannot
+             disagree. */
           <SliderOutput className={cx(styles['output'])}>
-            {({ state }) => (formatValue ? formatValue(state.getThumbValue(0)) : state.getThumbValueLabel(0))}
+            {({ state }) => state.getThumbValueLabel(0)}
           </SliderOutput>
         )}
       </div>
@@ -79,21 +93,24 @@ export interface RangeSliderProps extends Omit<AriaSliderProps<number[]>, 'class
   startLabel?: string;
   /** What the upper bound is, for its own name — "Maximum price". */
   endLabel?: string;
-  formatValue?: (value: number) => string;
+  /** As `Slider`: `Intl` options, so the output and the announcement agree. */
+  formatOptions?: Intl.NumberFormatOptions;
   className?: string;
 }
 
 export function RangeSlider({
-  label, startLabel = 'Minimum', endLabel = 'Maximum', formatValue, className, ...props
+  label, startLabel = 'Minimum', endLabel = 'Maximum', formatOptions, className, ...props
 }: RangeSliderProps): React.JSX.Element {
   return (
-    <AriaSlider {...props} className={cx(styles['field'], className)}>
+    <AriaSlider
+      {...props}
+      {...(formatOptions ? { formatOptions } : {})}
+      className={cx(styles['field'], className)}
+    >
       <div className={cx(styles['header'])}>
         <Label className={cx(styles['label'])}>{label}</Label>
         <SliderOutput className={cx(styles['output'])}>
-          {({ state }) => (formatValue
-            ? `${formatValue(state.getThumbValue(0))} – ${formatValue(state.getThumbValue(1))}`
-            : `${state.getThumbValueLabel(0)} – ${state.getThumbValueLabel(1)}`)}
+          {({ state }) => `${state.getThumbValueLabel(0)} – ${state.getThumbValueLabel(1)}`}
         </SliderOutput>
       </div>
       <SliderTrack className={cx(styles['track'])}>

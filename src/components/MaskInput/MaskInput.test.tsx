@@ -25,4 +25,20 @@ describe('MaskInput', () => {
     expect(onChange).toHaveBeenLastCalledWith('5550123456');
     expect((field as HTMLInputElement).value).toBe('(555) 012-3456');
   });
+
+  /* Two identical fields on one form, neither given an id. The fallback used to
+     be derived from the mask, so both got the same one and the second label
+     pointed at the first input. */
+  it('gives two identical unnamed fields distinct ids', () => {
+    renderWithCrystal(
+      <>
+        <MaskInput label="Home phone" mask="(000) 000-0000" />
+        <MaskInput label="Work phone" mask="(000) 000-0000" />
+      </>,
+    );
+    const home = screen.getByLabelText('Home phone');
+    const work = screen.getByLabelText('Work phone');
+    expect(home.id).not.toBe(work.id);
+    expect(home).not.toBe(work);
+  });
 });
