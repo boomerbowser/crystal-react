@@ -29,7 +29,7 @@ import {
   type RadioGroupProps as AriaRadioGroupProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './Checkbox.module.scss';
 
 const CheckMark = (
@@ -108,7 +108,7 @@ export function CheckboxGroup({
   const scope = useInvalidMotion(invalid);
 
   return (
-    <AriaCheckboxGroup {...props} isInvalid={invalid} className={cx(styles['group'], className)}>
+    <AriaCheckboxGroup {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['group'], className)}>
       <Label className={cx(styles['legend'])}>{label}</Label>
       <div
         ref={scope as never}
@@ -136,7 +136,7 @@ export function RadioGroup({
   const scope = useInvalidMotion(invalid);
 
   return (
-    <AriaRadioGroup {...props} isInvalid={invalid} className={cx(styles['group'], className)}>
+    <AriaRadioGroup {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['group'], className)}>
       <Label className={cx(styles['legend'])}>{label}</Label>
       <div
         ref={scope as never}

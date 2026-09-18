@@ -27,7 +27,7 @@ import {
   type TextFieldProps as AriaTextFieldProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './PasswordInput.module.scss';
 
 /** What the product decided about the value. Crystal renders it; it scores nothing. */
@@ -80,7 +80,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
     <AriaTextField
       {...props}
       type={revealed ? 'text' : 'password'}
-      isInvalid={invalid}
+      {...declaredInvalid(props.isInvalid, errorMessage)}
       className={cx(styles['field'], className)}
       {...(style ? { style } : {})}
     >

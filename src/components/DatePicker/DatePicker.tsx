@@ -33,7 +33,7 @@ import {
   type DateValue,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './DatePicker.module.scss';
 
 const CalendarIcon = (
@@ -53,6 +53,12 @@ interface FieldExtras {
   label: ReactNode;
   description?: ReactNode;
   errorMessage?: ReactNode;
+  /* Without this a date cannot be part of a form: it is not submitted, and a
+     `Form` distributing a server's errors has no name to match it against. Every
+     other field in the library took one; these did not, which made the whole
+     temporal family unusable in the one place dates are most often collected. */
+  name?: string;
+  isRequired?: boolean;
   className?: string;
 }
 
@@ -81,7 +87,7 @@ export function DateInput({
   const shellScope = useInvalidMotion(invalid);
 
   return (
-    <DateField {...props} isInvalid={invalid} className={cx(styles['field'], className)}>
+    <DateField {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['field'], className)}>
       <Label className={cx(styles['label'])}>{label}</Label>
       <Group ref={shellScope as never} className={cx(styles['shell'])} {...(invalid ? { 'data-invalid': true } : {})}>
         {segments}
@@ -148,7 +154,7 @@ export function DatePicker({
   const shellScope = useInvalidMotion(invalid);
 
   return (
-    <AriaDatePicker {...props} isInvalid={invalid} className={cx(styles['field'], className)}>
+    <AriaDatePicker {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['field'], className)}>
       <Label className={cx(styles['label'])}>{label}</Label>
       <Group ref={shellScope as never} className={cx(styles['shell'])} {...(invalid ? { 'data-invalid': true } : {})}>
         {segments}
@@ -186,7 +192,7 @@ export function DateRangePicker({
   const shellScope = useInvalidMotion(invalid);
 
   return (
-    <AriaDateRangePicker {...props} isInvalid={invalid} className={cx(styles['field'], className)}>
+    <AriaDateRangePicker {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['field'], className)}>
       <Label className={cx(styles['label'])}>{label}</Label>
       <Group ref={shellScope as never} className={cx(styles['shell'])} {...(invalid ? { 'data-invalid': true } : {})}>
         <AriaDateInput slot="start" className={cx(styles['segments'])}>

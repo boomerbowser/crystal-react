@@ -114,6 +114,9 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+      valibot:
+        specifier: ^1.5.0
+        version: 1.5.0(typescript@7.0.2)
       vite:
         specifier: ^8.3.0
         version: 8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.1)
@@ -3693,6 +3696,14 @@ packages:
   v8-to-istanbul@9.3.0:
     resolution: {integrity: sha512-kiGUalWN+rgBJ/1OHZsBtU4rXZOfj/7rKQxULKlIzwzQSvMJUUNgPwJEEh7gU6xEVxC0ahoOBvN2YI8GH6FNgA==}
     engines: {node: '>=10.12.0'}
+
+  valibot@1.5.0:
+    resolution: {integrity: sha512-nil6AkP2TChWL43Z5uJ6GTxX01CUA+g8LWUM+N/rB9NBbkUMaUsi9PUNzlUPgoKASgmx9f7eGOYpJ04/fSa6FQ==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   vite-plugin-dts@5.1.0:
     resolution: {integrity: sha512-MfLc2G+mXPUDGGxpHQeYbdunavFP9UpT9yxiAsTgUXRxfEd3HqysSAM4E72jhz5eIz3OOexCHkqiVlQq8ok9/A==}
@@ -7622,6 +7633,10 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.31
       '@types/istanbul-lib-coverage': 2.0.6
       convert-source-map: 2.0.0
+
+  valibot@1.5.0(typescript@7.0.2):
+    optionalDependencies:
+      typescript: 7.0.2
 
   vite-plugin-dts@5.1.0(esbuild@0.28.2)(rolldown@1.2.9)(typescript@7.0.2)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.28.2)(sass@1.104.1)):
     dependencies:

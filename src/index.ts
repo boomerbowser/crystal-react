@@ -2,4 +2,5 @@
 export * from './theme/index.js';
 export * from './motion/index.js';
 export * from './components/index.js';
+export * from './form/index.js';
 export type { CrystalSpacing } from './styles/spacing.js';

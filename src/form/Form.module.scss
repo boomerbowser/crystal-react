@@ -1,0 +1,25 @@
+@use '../styles/tokens' as *;
+
+.form { display: grid; gap: $cr-spacing-lg; }
+
+/* The states are attributes rather than classes so a product can dress them from
+   its own stylesheet without reaching into this one. */
+.form[data-cr-submission='submitting'] { cursor: progress; }
+.form[data-cr-submission='submitting'] :is(input, select, textarea, button) { pointer-events: none; }
+
+.formErrors {
+  display: grid;
+  gap: $cr-spacing-2xs;
+  padding: $cr-spacing-sm $cr-spacing-md;
+  border: 1px solid var(--cr-danger-ink);
+  border-radius: var(--cr-radius);
+  background: var(--cr-danger-surface);
+  color: var(--cr-danger-ink);
+}
+
+/* Weight, not colour alone — the same rule the rest of Crystal follows. */
+.formError { margin: 0; font-weight: 700; }
+
+@media (forced-colors: active) {
+  .formErrors { border-color: CanvasText; background: Canvas; color: CanvasText; }
+}

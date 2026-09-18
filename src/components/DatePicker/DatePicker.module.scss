@@ -33,7 +33,13 @@
 
 .segment[data-focused] { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
 .shell:focus-within { @include field.focus-ring; }
-.shell[data-invalid] { border-color: var(--cr-danger-ink); }
+/* Two selectors for one state. The shell carries `data-invalid` when this
+   component set it; the field wrapper carries it when React Aria worked it out —
+   a native constraint, or an error a `Form` distributed from a server. Styling
+   only the first meant a field could be announced as invalid and drawn as if it
+   were fine. */
+.shell[data-invalid],
+.field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
 
 .trigger { @include field.inline-action; }
 .trigger svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }

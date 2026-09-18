@@ -831,11 +831,47 @@ track, the slider track and thumb, the chip height, and the well inset.
       formatting with `aria-pressed`, which is the only thing a formatting
       toolbar is for.
 
-### H — Forms
+### H — Forms — complete
 
-The whole system from §3.8: `useCrystalForm`, Standard Schema validation,
-submission state, the mutation adapter, and server errors landing on the same
-field state as client rules.
+`useCrystalForm`, `Form`, and the Standard Schema types, in `src/form/`.
+
+- **Standard Schema v1 declared locally, not depended on.** `@standard-schema/spec`
+  is that interface and nothing else; a package in the tree for twenty lines of
+  frozen type is the wrong trade. Zod, Valibot and ArkType all work untouched and
+  none is a dependency. Tested against Valibot as a devDependency, because a
+  hand-rolled `~standard` object proves only that the hook can read a shape it was
+  written against.
+- **Native validation stays on.** React Aria's `Form` sets `noValidate` only when
+  `validationBehavior` is not `'native'`, so the browser blocks a structurally
+  invalid submit before the schema runs. A field already declares `isRequired`;
+  making the schema restate it would be §1's redeclaration with rules instead of
+  values. The browser checks shape, the schema checks meaning, the server checks
+  truth.
+- **An issue with no path is a form error**, not a field's. "One of these two is
+  required" is true of the form and of neither field.
+- **Submission state as a data attribute**, so the stylesheet dresses it.
+- **The double-submit guard is a ref**, because Enter in a text field submits
+  whatever the button is doing and state read inside the handler still says idle.
+- **`valuesFromForm` does not coerce.** Strings and `File`s as the browser reports
+  them; a repeated name becomes an array; an unchecked checkbox is absent. Pinned
+  by a test rather than assumed.
+
+**Building it found two defects older than the slice.**
+
+Every field coerced `isInvalid` with `?? Boolean(errorMessage)`. React Aria treats
+a *defined* `isInvalid` as "the caller owns validity from here", so an untouched
+field handed it `false` — which is not "this field is fine" but "stop working out
+whether it is". Native validation never reached a field, and neither did any error
+a `Form` distributed. Ten call sites fixed via `declaredInvalid`, with a test that
+puts every named field inside a `Form` carrying an error and asks whether it
+noticed. The temporal family accepted no `name` at all, so a date could not be
+submitted or matched to an error; it does now.
+
+And `--cr-focus-core` / `--cr-focus-ring` were read by every field and defined by
+nothing, so Crystal's focus ring painted on no control in the library. Crystal now
+publishes the recipe; `src/theme/published-properties.test.tsx` reads every
+`var(--cr-…)` in every stylesheet here and fails on any that Crystal does not
+publish and no component sets itself.
 
 ### I — Navigation and overlays (28)
 

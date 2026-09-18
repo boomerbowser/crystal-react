@@ -13,7 +13,7 @@
  * server looks exactly like one that failed locally. That is the same rule the
  * upstream engine follows, and the reason it binds to state rather than events.
  */
-import { forwardRef, useEffect, useRef, type ReactNode } from 'react';
+import { forwardRef, type ReactNode } from 'react';
 import {
   TextField as AriaTextField,
   Label,
@@ -22,8 +22,9 @@ import {
   FieldError,
   type TextFieldProps as AriaTextFieldProps,
 } from 'react-aria-components';
-import { useMotion } from '../../motion/useMotion.js';
 import { cx } from '../../styles/cx.js';
+import { FieldShell } from '../FormField/FieldShell.js';
+import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import styles from './TextInput.module.scss';
 
 export interface TextInputProps extends Omit<AriaTextFieldProps, 'className' | 'style' | 'children'> {
@@ -45,52 +46,41 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function T
   { label, description, errorMessage, placeholder, className, style, ...props },
   forwardedRef,
 ) {
-  const [shellScope, play] = useMotion({ once: true });
-
-  /* An error message is the invalid state: two ways to say the same thing would
-     eventually disagree. An explicit `isInvalid` still wins if a caller sets it. */
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-
-  /* Bound to the state, not to an event. `previous` starts undefined so a field
-     that mounts already invalid — a re-rendered server error — does not animate
-     on arrival, which would be motion marking nothing that just changed. */
-  const previous = useRef<boolean | undefined>(undefined);
-  useEffect(() => {
-    if (previous.current !== undefined && previous.current !== invalid) {
-      play(invalid ? 'field-invalid' : 'field-valid');
-    }
-    previous.current = invalid;
-  }, [invalid, play]);
-
   const classes = cx(styles['field'], className);
 
   return (
     <AriaTextField
       {...props}
-      isInvalid={invalid}
+      /* Said only when somebody has decided. A defined `isInvalid` takes validity
+         away from React Aria, and with it every error a `Form` was given to
+         distribute. See `declaredInvalid`. */
+      {...declaredInvalid(props.isInvalid, errorMessage)}
       className={classes}
       {...(style ? { style } : {})}
     >
-      <Label className={cx(styles['label'])}>{label}</Label>
-      <div
-        ref={shellScope as never}
-        className={cx(styles['shell'])}
-        {...(invalid ? { 'data-invalid': true } : {})}
-      >
-        <Input
-          ref={forwardedRef}
-          className={cx(styles['input'])}
-          {...(placeholder ? { placeholder } : {})}
-          onFocus={() => play('field-focus')}
-        />
-      </div>
-      {description ? (
-        <Text slot="description" className={cx(styles['description'])}>{description}</Text>
-      ) : null}
-      {/* Rendered whether or not a message is supplied: React Aria fills it from
-          native validation too, so a required field left empty still explains
-          itself without the caller wiring anything. */}
-      <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
+      {({ isInvalid }) => (
+        <>
+          <Label className={cx(styles['label'])}>{label}</Label>
+          {/* The validity React Aria resolved, not the one the caller declared:
+              a server's rejection has to move the field exactly as a local rule
+              would. */}
+          <FieldShell isInvalid={isInvalid} className={cx(styles['shell'])}>
+            <Input
+              ref={forwardedRef}
+              className={cx(styles['input'])}
+              {...(placeholder ? { placeholder } : {})}
+            />
+          </FieldShell>
+          {description ? (
+            <Text slot="description" className={cx(styles['description'])}>{description}</Text>
+          ) : null}
+          {/* Rendered whether or not a message is supplied: React Aria fills it
+              from native validation and from a `Form`'s errors too, so a required
+              field left empty explains itself without the caller wiring
+              anything. */}
+          <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
+        </>
+      )}
     </AriaTextField>
   );
 });

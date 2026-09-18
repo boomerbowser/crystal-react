@@ -25,7 +25,7 @@ import {
   type NumberFieldProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './NumberInput.module.scss';
 
 export interface NumberInputProps extends Omit<NumberFieldProps, 'className' | 'style' | 'children'> {
@@ -53,7 +53,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
   return (
     <NumberField
       {...props}
-      isInvalid={invalid}
+      {...declaredInvalid(props.isInvalid, errorMessage)}
       className={cx(styles['field'], className)}
       {...(style ? { style } : {})}
     >

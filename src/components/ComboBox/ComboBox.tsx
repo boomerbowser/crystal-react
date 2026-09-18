@@ -25,7 +25,7 @@ import {
   type ComboBoxProps as AriaComboBoxProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './ComboBox.module.scss';
 
 const ChevronIcon = (
@@ -85,7 +85,7 @@ function Field({
          a combobox whose whole subject is a filtered list. `allowsEmptyCollection`
          is what keeps the popover open to say so when nothing matches. */
       {...(isFiltered ? { items: options } : { defaultItems: options })}
-      isInvalid={invalid}
+      {...declaredInvalid(props.isInvalid, errorMessage)}
       className={cx(styles['field'], className)}
     >
       <Label className={cx(styles['label'])}>{label}</Label>

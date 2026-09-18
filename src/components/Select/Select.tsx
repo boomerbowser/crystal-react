@@ -26,7 +26,7 @@ import {
   type SelectProps as AriaSelectProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './Select.module.scss';
 
 const ChevronIcon = (
@@ -59,7 +59,7 @@ export function Select({
   const shellScope = useInvalidMotion(invalid);
 
   return (
-    <AriaSelect {...props} isInvalid={invalid} className={cx(styles['field'], className)}>
+    <AriaSelect {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['field'], className)}>
       <Label className={cx(styles['label'])}>{label}</Label>
       <Button
         ref={shellScope as never}

@@ -24,7 +24,13 @@
 
 .control:focus { outline: none; }
 .shell:focus-within { @include field.focus-ring; }
-.shell[data-invalid] { border-color: var(--cr-danger-ink); }
+/* Two selectors for one state. The shell carries `data-invalid` when this
+   component set it; the field wrapper carries it when React Aria worked it out —
+   a native constraint, or an error a `Form` distributed from a server. Styling
+   only the first meant a field could be announced as invalid and drawn as if it
+   were fine. */
+.shell[data-invalid],
+.field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
 
 /* The counter sits at the well's top edge, which is the catalogue's placement —
    below it would compete with the helper text and above the label would read as

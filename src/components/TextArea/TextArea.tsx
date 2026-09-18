@@ -31,6 +31,7 @@ import {
   type TextFieldProps as AriaTextFieldProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './TextArea.module.scss';
 
@@ -69,7 +70,10 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   return (
     <AriaTextField
       {...props}
-      isInvalid={invalid || over}
+      /* Over the limit is a decision this component has made, so it is said; short
+         of that nothing is said, and React Aria keeps validity — which is how a
+         native constraint or a server's error still reaches the field. */
+      {...declaredInvalid(over ? true : props.isInvalid, errorMessage)}
       onChange={(value) => { setLength(value.length); props.onChange?.(value); }}
       className={cx(styles['field'], className)}
       {...(style ? { style } : {})}

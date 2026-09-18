@@ -18,7 +18,13 @@
 .shell:focus-within { @include field.focus-ring; }
 
 /* Invalid is carried by the outline and by the message, never by colour alone. */
-.shell[data-invalid] { border-color: var(--cr-danger-ink); }
+/* Two selectors for one state. The shell carries `data-invalid` when this
+   component set it; the field wrapper carries it when React Aria worked it out —
+   a native constraint, or an error a `Form` distributed from a server. Styling
+   only the first meant a field could be announced as invalid and drawn as if it
+   were fine. */
+.shell[data-invalid],
+.field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
 
 .description, .error { @include field.message; }
 .description { color: var(--cr-muted); }
