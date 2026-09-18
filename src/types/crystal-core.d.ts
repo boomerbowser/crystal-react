@@ -18,6 +18,18 @@ interface CrystalKeyframe {
   readonly offset?: number;
 }
 
+interface CrystalSpring {
+  readonly stiffness: number;
+  readonly damping: number;
+  readonly mass: number;
+  readonly dampingRatio: number;
+  readonly platform: {
+    readonly web: { readonly stiffness: number; readonly damping: number; readonly mass: number };
+    readonly swiftUI: { readonly response: number; readonly dampingFraction: number };
+    readonly compose: { readonly dampingRatio: number; readonly stiffness: number };
+  };
+}
+
 interface CrystalRecipe {
   readonly id: string;
   readonly category: string;
@@ -32,6 +44,9 @@ interface CrystalRecipe {
   /** A recipe may declare the paint layer it animates, so feathering moves
    *  without the text on it moving. */
   readonly layer?: string;
+  /** Fitted upstream so the spring's settling time equals the authored duration.
+   *  Absent on a travelling loop, which is linear by definition. */
+  readonly spring?: CrystalSpring;
 }
 
 interface CrystalAnimation {

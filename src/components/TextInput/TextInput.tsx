@@ -45,8 +45,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function T
   { label, description, errorMessage, placeholder, className, style, ...props },
   forwardedRef,
 ) {
-  const shellRef = useRef<HTMLDivElement>(null);
-  const play = useMotion(shellRef, { once: true });
+  const [shellScope, play] = useMotion({ once: true });
 
   /* An error message is the invalid state: two ways to say the same thing would
      eventually disagree. An explicit `isInvalid` still wins if a caller sets it. */
@@ -74,7 +73,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function T
     >
       <Label className={cx(styles['label'])}>{label}</Label>
       <div
-        ref={shellRef}
+        ref={shellScope as never}
         className={cx(styles['shell'])}
         {...(invalid ? { 'data-invalid': true } : {})}
       >

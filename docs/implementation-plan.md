@@ -17,7 +17,7 @@ where something is not yet built, it says so.
 | --- | --- | --- |
 | React Aria as the unstyled primitive | §2.1 | decided |
 | Parity with PrimeReact, Mantine, MUI + MUI X, Ant Design, including add-ons | §4 | scoped: 174 components |
-| Crystal's animations at every appropriate step | §3.4 | built for recipes; presets blocked on task C-1 |
+| Crystal's animations at every appropriate step | §3.4, §2.6 | built on Motion for React, driven by Crystal's springs |
 | Theme provider, theme object, colour scheme and typography context, hooks | §3.3 | provider and hooks built; typography context outstanding |
 | 100% functional, correct TypeScript | §3.2 | enforced |
 | Next.js, TanStack Start, React Router, Gatsby, Redwood | §3.6 | designed, gated |
@@ -102,6 +102,49 @@ it is `external` in the bundle, so a consumer resolves one copy of the token set
 Until `@crystal/core` is published, it is linked from a sibling checkout
 (`../crystal-design-system/design-system`). If that path is missing, the token build fails
 loudly rather than falling back to stale values.
+
+### 2.6 Every dependency is the React-native one
+
+**Policy.** Where a library ships a React binding, Crystal React uses the binding,
+not the framework-agnostic core. A JS-first library is used only where no React
+binding exists *and* the work is genuinely framework-agnostic — date arithmetic,
+scale math — because wrapping such a library in `useEffect` by hand reimplements
+what its own binding already does, and does it worse: lifecycle, cleanup,
+concurrent rendering and Strict Mode double-invocation are exactly where
+hand-rolled wrappers leak.
+
+This was a real gap. Motion was adopted only after Meridian pointed at it, which
+means the plan had no policy — so here is the audit, and the rule that produced it.
+
+| Need | Chosen | Licence | Why |
+| --- | --- | --- | --- |
+| Behaviour and accessibility | `react-aria-components` | Apache-2.0 | §2.1 |
+| Motion | `motion/react` | MIT | Consumes Crystal's `{stiffness, damping, mass}` springs directly |
+| Dates | `@internationalized/date` | Apache-2.0 | Framework-agnostic *by design*; there is nothing React-shaped to bind |
+| Charts | `@visx/*` | MIT | React-native and low-level: scales and shapes, no imposed visual opinion, so Crystal owns the material |
+| Virtualisation | `@tanstack/react-virtual` | MIT | Headless, React-native |
+| Rich text | `@tiptap/react` | MIT | The React binding, not the vanilla core |
+| Carousel | `embla-carousel-react` | MIT | The React binding |
+| Mask input | `react-imask` | MIT | The React binding of IMask |
+| QR code | `qrcode.react` | ISC | React-native |
+| Drag and drop | `@react-aria/dnd` | Apache-2.0 | Already present; a second DnD library would mean a second accessibility model |
+| Command palette | React Aria `Autocomplete` | Apache-2.0 | Prefer the primitive already in use over `cmdk`, for the same reason |
+
+Every one is MIT, ISC or Apache-2.0. No paid licence, and no licence that becomes
+paid at a usage threshold.
+
+**Motion for React also removes GSAP.** `@crystal/core` depends on GSAP for
+pseudo-element animation in the web preview, and GSAP's is a custom
+"no charge" licence rather than an OSS one. Crystal React needs neither: Motion
+for React covers what it used GSAP for, so the React library's dependency graph
+contains no non-OSS licence at all.
+
+**Where this changes the physics, it improves it.** Every Crystal recipe carries a
+spring fitted so its settling time equals the authored duration, and Motion's
+spring transition takes exactly `{ stiffness, damping, mass }`. The recipe's own
+physics now drive the animation instead of a duration plus a bezier approximating
+them — which is what CONTRACT §6 asks for when it says to honour the physics
+rather than the keyframes.
 
 ---
 

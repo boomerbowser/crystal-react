@@ -13,9 +13,10 @@
  * would have excluded them, which is the mistake the upstream motion work had to
  * correct across eleven recipes.
  */
-import { forwardRef, useRef, type ReactNode } from 'react';
+import { forwardRef, type ReactNode } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { useMotion } from '../../motion/useMotion.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Button.module.scss';
 
@@ -52,10 +53,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   { children, variant = 'resin', shape = 'pill', className, style, ...props },
   forwardedRef,
 ) {
-  const localRef = useRef<HTMLButtonElement>(null);
   /* `once` coalesces a repeat of the same recipe while it is still running, so a
-     held key repeating does not restart the press animation on every repeat. */
-  const play = useMotion(localRef, { once: true });
+     held key repeating does not restart the press animation on every repeat.
+     The scope is Motion's, and it cancels anything in flight on unmount. */
+  const [scope, play] = useMotion({ once: true });
 
   const classes = cx(
     styles['button'],
@@ -70,11 +71,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   return (
     <AriaButton
       {...props}
-      ref={(node: HTMLButtonElement | null) => {
-        localRef.current = node;
-        if (typeof forwardedRef === 'function') forwardedRef(node);
-        else if (forwardedRef) forwardedRef.current = node;
-      }}
+      ref={mergeRefs<HTMLButtonElement>(scope as never, forwardedRef)}
       className={classes}
       {...(style ? { style } : {})}
       onPressStart={(event) => {

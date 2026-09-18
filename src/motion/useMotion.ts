@@ -1,32 +1,34 @@
 'use client';
 
-/* Crystal's motion, bound to a React lifecycle.
+/* Crystal's motion, on Motion for React.
  *
- * Crystal owns the physics: the recipes, their springs, their durations and the
- * engine that plays them all come from `@crystal/core`. CONTRACT §6 is explicit
- * that a library honours the physics rather than copying the keyframes, and §1
- * that it reuses the resolver's arithmetic rather than reimplementing it,
- * "because two implementations of the same formula will diverge".
+ * Crystal owns the physics; this file owns the binding. CONTRACT §6 is explicit
+ * that a library honours the *physics* rather than copying keyframes, and that is
+ * what makes Motion for React the right engine rather than merely a React-shaped
+ * one: every Crystal recipe carries a real spring — `{ stiffness, damping, mass }`
+ * fitted so its settling time equals the authored duration — and Motion's spring
+ * transition takes exactly those three numbers. The recipe's own physics drive
+ * the animation, instead of a duration and a bezier approximating them.
  *
- * What this file implements is the binding — refs, effects and cleanup — which is
- * genuinely different on a platform with a component lifecycle, and is what §2
- * means by a platform-appropriate technique.
+ * `useAnimate` gives a scope whose animations are cancelled when the component
+ * unmounts, which is the lifecycle guarantee a plain WAAPI call cannot make and
+ * the reason an animation here can never outlive the element it plays on.
  *
- * Three things it deliberately does NOT do:
+ * Three things this deliberately does NOT do:
  *
  *   - It never drives an animation through React state. A 60fps animation that
- *     re-renders is a 60fps render, and the imperative path costs nothing.
+ *     re-renders is a 60fps render; the imperative path costs nothing.
  *   - It never animates a property the compositor cannot handle. The web preview
- *     animates `box-shadow`, `border-radius` and `background-position` on its
- *     optical layers — 46 keyframes between them — and each of those forces a
- *     repaint every frame. Crystal React restricts itself to `transform` and
- *     `opacity`, and expresses a shadow change as an opacity cross-fade between
- *     two pre-rendered layers instead.
- *   - It never starts anything at rest. Ambient motion is deferred upstream
- *     (R22) and must not be reinvented here.
+ *     animates `box-shadow`, `border-radius` and `background-position` across 46
+ *     keyframes, each forcing a repaint every frame. Crystal React restricts
+ *     itself to `transform` and `opacity`, and expresses a shadow change as an
+ *     opacity cross-fade between pre-rendered layers.
+ *   - It never starts anything at rest. Ambient motion is deferred upstream (R22)
+ *     and must not be reinvented here.
  */
-import { useCallback, useEffect, useRef } from 'react';
-import { frames } from '@crystal/core/engines';
+import { useCallback, useRef } from 'react';
+import { useAnimate } from 'motion/react';
+import type { AnimationSequence, DOMKeyframesDefinition } from 'motion/react';
 import motionRecipes from '@crystal/core/motion-recipes' with { type: 'json' };
 import { useCrystalTheme } from '../theme/CrystalProvider.js';
 
@@ -34,12 +36,14 @@ const RECIPES: ReadonlyMap<string, CrystalRecipe> = new Map(
   motionRecipes.recipes.map((recipe) => [recipe.id, recipe]),
 );
 
-/** Every recipe Crystal ships, for editors and for the generated manifest. */
 export type CrystalRecipeName = string;
 
 export function getRecipe(name: CrystalRecipeName): CrystalRecipe | undefined {
   return RECIPES.get(name);
 }
+
+/** Every recipe id Crystal ships. Exported for the generated documentation. */
+export const recipeNames: readonly string[] = [...RECIPES.keys()];
 
 export interface UseMotionOptions {
   /**
@@ -54,30 +58,56 @@ export interface UseMotionOptions {
 }
 
 /**
- * Returns a `play(recipeName)` bound to an element ref.
+ * Turn a recipe's keyframes into Motion's per-property arrays.
  *
- * Playing is imperative on purpose: it causes no render, and it is safe to call
- * from an event handler, an effect, or a state-change observer.
+ * Motion animates each property across its own array of values, where Crystal
+ * authors a list of frames each holding several properties. The frames carry
+ * explicit offsets, which become Motion's `times`.
  */
-export function useMotion<T extends HTMLElement>(
-  ref: React.RefObject<T | null>,
+function toMotionKeyframes(recipe: CrystalRecipe): {
+  values: DOMKeyframesDefinition;
+  times: number[] | undefined;
+} {
+  const properties = new Set<string>();
+  for (const frame of recipe.keyframes) {
+    for (const key of Object.keys(frame)) if (key !== 'offset') properties.add(key);
+  }
+
+  const values: Record<string, unknown[]> = {};
+  for (const property of properties) {
+    values[property] = recipe.keyframes.map((frame) => {
+      const value = (frame as Record<string, unknown>)[property];
+      /* A frame that omits a property holds the previous value rather than
+         jumping to a default — which is what the frame list means. */
+      return value ?? null;
+    });
+  }
+
+  const offsets = recipe.keyframes.map((frame) => frame.offset);
+  const times = offsets.every((offset): offset is number => typeof offset === 'number')
+    ? offsets
+    : undefined;
+
+  return { values: values as DOMKeyframesDefinition, times };
+}
+
+/**
+ * Returns `[scope, play]`.
+ *
+ * Attach `scope` to the element the recipe plays on. `play(name)` is imperative
+ * on purpose: it triggers no render, and is safe from an event handler, an effect
+ * or a state-change observer.
+ */
+export function useMotion(
   options: UseMotionOptions = {},
-): (name: CrystalRecipeName) => void {
+): [ReturnType<typeof useAnimate>[0], (name: CrystalRecipeName) => void] {
+  const [scope, animate] = useAnimate();
   const { resolveDuration, reduceMotion } = useCrystalTheme();
-  const running = useRef<{ name: string; handle: CrystalAnimation } | null>(null);
+  const running = useRef<string | null>(null);
   const once = options.once ?? false;
 
-  /* One cancellation path, used by both a replacement and unmount, so an
-     animation can never outlive the element it is playing on. */
-  const stop = useCallback(() => {
-    running.current?.handle.cancel();
-    running.current = null;
-  }, []);
-
-  useEffect(() => stop, [stop]);
-
-  return useCallback((name: CrystalRecipeName) => {
-    const element = ref.current;
+  const play = useCallback((name: CrystalRecipeName) => {
+    const element = scope.current as HTMLElement | null;
     if (!element) return;
 
     const recipe = RECIPES.get(name);
@@ -87,34 +117,41 @@ export function useMotion<T extends HTMLElement>(
       );
     }
 
-    /* Reduced motion removes the movement, never the state change. The caller has
-       already applied whatever this recipe was marking. */
+    /* Reduced motion removes the movement, never the state change. Whatever this
+       recipe was marking has already been applied by the caller. */
     const duration = resolveDuration(recipe.duration);
     if (reduceMotion || duration === 0) {
       element.dataset['crMotionState'] = 'instant';
       return;
     }
 
-    if (once && running.current?.name === name) return;
-    stop();
-
+    if (once && running.current === name) return;
+    running.current = name;
     element.dataset['crMotionName'] = name;
     element.dataset['crMotionState'] = 'running';
 
-    const handle = frames(element, recipe.keyframes, {
-      duration,
-      engine: recipe.engine,
-      easing: 'cubic-bezier(0.22, 0.65, 0.22, 1)',
-    });
+    const { values, times } = toMotionKeyframes(recipe);
+    const web = recipe.spring?.platform?.web;
 
-    const record = { name, handle };
-    running.current = record;
+    /* The spring is the recipe's own physics, fitted upstream so its settling
+       time equals the authored duration. Where a recipe has none — a travelling
+       loop is linear by definition — the duration and Crystal's enter easing
+       stand in. */
+    const transition = web
+      ? { type: 'spring' as const, stiffness: web.stiffness, damping: web.damping, mass: web.mass, ...(times ? { times } : {}) }
+      : { duration: duration / 1000, ease: [0.22, 0.65, 0.22, 1] as const, ...(times ? { times } : {}) };
 
-    void handle.finished
-      .then(() => { if (running.current === record) element.dataset['crMotionState'] = 'finished'; })
+    void animate(element, values, transition)
+      .then(() => {
+        if (running.current === name) element.dataset['crMotionState'] = 'finished';
+      })
       /* A cancelled animation is the normal path, not an error: it happens
          whenever a component unmounts mid-motion. */
       .catch(() => { /* cancelled */ })
-      .finally(() => { if (running.current === record) running.current = null; });
-  }, [ref, resolveDuration, reduceMotion, once, stop]);
+      .finally(() => { if (running.current === name) running.current = null; });
+  }, [scope, animate, resolveDuration, reduceMotion, once]);
+
+  return [scope, play];
 }
+
+export type { AnimationSequence };
