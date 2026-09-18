@@ -1,0 +1,102 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* Checkbox and Radio — a luminous Resin control with a contained mark.
+ *
+ * "Contained" is the word that matters. The mark sits inside the box rather than
+ * overflowing it, and it carries the contrast: the box is a material and the mark
+ * is ink, so the pair is checkable as a pair. A mark that bleeds past the box
+ * reads as a sticker on top of the control rather than as its state.
+ *
+ * The whole label is the target. A 26px box is a 26px picture; the row around it
+ * reaches 44px, which is why the label is inside the control rather than beside
+ * it.
+ */
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-sm;
+  min-block-size: $cr-action-min-target;
+  color: var(--cr-text);
+  cursor: pointer;
+}
+
+.box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: $cr-choice-box-size;
+  block-size: $cr-choice-box-size;
+  border: 1px solid var(--cr-outline);
+  border-radius: $cr-choice-box-radius;
+  background: var(--cr-resin-fill);
+  box-shadow: inset 0 2px 1px var(--cr-rim);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  color: var(--cr-on-primary);
+}
+
+.circle { border-radius: 50%; }
+
+.choice[data-selected] .box,
+.choice[data-indeterminate] .box {
+  background: var(--cr-primary);
+  border-color: var(--cr-primary);
+}
+
+.mark {
+  inline-size: calc(#{$cr-choice-box-size} * 0.62);
+  block-size: calc(#{$cr-choice-box-size} * 0.62);
+  opacity: 0;
+}
+
+.choice[data-selected] .mark, .choice[data-indeterminate] .mark { opacity: 1; }
+
+/* A radio's centre is a dot rather than a glyph, contained the same way. */
+.dot {
+  inline-size: calc(#{$cr-choice-box-size} * 0.42);
+  block-size: calc(#{$cr-choice-box-size} * 0.42);
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+}
+
+.choice[data-selected] .dot { opacity: 1; }
+
+.choice[data-focus-visible] .box {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.choice[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.choice[data-invalid] .box { border-color: var(--cr-danger-ink); }
+
+/* A group is a fieldset with rhythm, not a panel. */
+.group { @include field.field; }
+.legend { @include field.label; }
+.options { display: flex; flex-direction: column; gap: $cr-spacing-2xs; }
+.horizontal { flex-direction: row; flex-wrap: wrap; gap: var(--cr-space); }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+:global([data-effects='opaque']) .box {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .box { background: var(--cr-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .box { background: Field; border-color: FieldText; backdrop-filter: none; color: Highlight; }
+  .choice[data-selected] .box, .choice[data-indeterminate] .box { background: Field; border-color: Highlight; }
+  .choice[data-focus-visible] .box { outline-color: Highlight; }
+}

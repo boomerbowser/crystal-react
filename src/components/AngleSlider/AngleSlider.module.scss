@@ -1,0 +1,98 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* AngleSlider and Knob — circular controls for a bounded value.
+ *
+ * Both draw an arc and both put the value in text beside it, which the catalogue
+ * asks for twice: "a text equivalent" and "readable as text, not only as an arc".
+ * An arc is a picture of a number, and the number is the thing being set.
+ */
+
+.field { @include field.field; }
+.label { @include field.label; }
+.row { display: flex; align-items: center; gap: var(--cr-space); }
+
+.dial {
+  position: relative;
+  inline-size: calc(#{$cr-action-min-target} * 2);
+  block-size: calc(#{$cr-action-min-target} * 2);
+  border-radius: 50%;
+  border: 1px solid var(--cr-rim);
+  background: var(--cr-resin-fill);
+  box-shadow: var(--cr-shadow-content);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  touch-action: none;
+  cursor: grab;
+}
+
+.dial:active { cursor: grabbing; }
+
+.arc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  /* A conic gradient is the arc: one paint rather than an SVG path recalculated
+     on every frame. */
+  background: conic-gradient(
+    from var(--cr-arc-from, 0deg),
+    var(--cr-primary) var(--cr-arc, 0deg),
+    transparent var(--cr-arc, 0deg)
+  );
+  /* The mask turns the filled circle into a ring. `#000` here is coverage rather
+     than colour — a mask's alpha is what paints, and nothing in it is visible. */
+  mask: radial-gradient(farthest-side, transparent calc(100% - #{$cr-slider-track-height}), #000 0);  /* crystal-allow-literal: mask coverage, not a colour */
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - #{$cr-slider-track-height}), #000 0);  /* crystal-allow-literal: mask coverage, not a colour */
+}
+
+/* The thumb rides the rim. Its hit area is the whole dial, which is why the dial
+   carries the pointer handling rather than the thumb.
+ *
+ * It is placed by rotating an orbit rather than by a sine and a cosine in
+ * JavaScript. The arithmetic version needs the rim radius as a number, and that
+ * radius is a token — so it would have been a magic number in a template literal,
+ * drifting the moment the dial or the thumb changed size. Here only the angle
+ * comes from JavaScript and the geometry stays in CSS. */
+.orbit {
+  position: absolute;
+  inset: 0;
+  rotate: var(--cr-angle, 0deg);
+}
+
+.thumb {
+  position: absolute;
+  inset-block-start: calc(#{$cr-slider-track-height} / 2);
+  inset-inline-start: 50%;
+  inline-size: $cr-slider-thumb-size;
+  block-size: $cr-slider-thumb-size;
+  translate: -50% -25%;
+  border-radius: 50%;
+  border: 1px solid var(--cr-rim);
+  background: var(--cr-surface);
+  box-shadow: var(--cr-shadow-content);
+}
+
+.dial[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.value { font-variant-numeric: tabular-nums; font-weight: 700; font-size: var(--cr-text-heading-size); }
+.unit { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+
+.field[data-disabled] { opacity: $cr-action-disabled-opacity; }
+.field[data-disabled] .dial { cursor: not-allowed; }
+
+:global([data-effects='opaque']) .dial {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (forced-colors: active) {
+  .dial { background: ButtonFace; border-color: ButtonText; backdrop-filter: none; }
+  .arc { background: Highlight; }
+  .thumb { background: ButtonFace; border-color: ButtonText; }
+  .dial[data-focus-visible] { outline-color: Highlight; }
+}

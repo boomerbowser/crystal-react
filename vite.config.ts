@@ -29,7 +29,7 @@ export default defineConfig({
          consumes Crystal's generated values rather than carrying a copy, and
          bundling it would inline a second copy of the token set that could then
          drift from the installed one. */
-      external: (id) => /^(react|react-dom|react\/|react-dom\/|react-aria|react-aria-components|react-stately|@react-|@internationalized\/|@crystal\/core|motion|motion-dom|motion-utils|qrcode\.react)/.test(id),
+      external: (id) => /^(react|react-dom|react\/|react-dom\/|react-aria|react-aria-components|react-stately|@react-|@internationalized\/|@crystal\/core|motion|motion-dom|motion-utils|qrcode\.react|react-imask|imask)/.test(id),
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',

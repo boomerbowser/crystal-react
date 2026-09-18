@@ -1,0 +1,93 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* Select and NativeSelect — the field anatomy with a disclosure.
+ *
+ * The catalogue is specific that the badge and any decoration stay clear of the
+ * platform arrow. A native select draws its own disclosure wherever the platform
+ * puts it, and a decoration placed over it is a decoration on top of a control —
+ * so the trailing padding leaves room and nothing is drawn inside it.
+ */
+
+.field { @include field.field; }
+.label { @include field.label; }
+.shell { @include field.shell; }
+.control { @include field.control; cursor: pointer; text-align: start; }
+
+.control:focus { outline: none; }
+.shell:focus-within { @include field.focus-ring; }
+.shell[data-invalid] { border-color: var(--cr-danger-ink); }
+
+/* Room for the platform's own arrow, which is never covered. */
+.native { appearance: auto; padding-inline-end: $cr-spacing-xl; }
+
+.disclosure {
+  display: flex;
+  align-items: center;
+  padding-inline-end: $cr-action-padding-inline;
+  color: var(--cr-muted);
+  pointer-events: none;
+}
+
+.disclosure svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.placeholder { color: var(--cr-muted); }
+
+/* The list is a Frost panel: a transient overlay is Frost, never Resin. */
+.popover {
+  min-inline-size: var(--trigger-width);
+  max-block-size: 40vh;
+  padding: $cr-spacing-2xs;
+  border: 1px solid var(--cr-edge);
+  border-radius: var(--cr-radius);
+  background: var(--cr-frost-fill);
+  box-shadow: var(--cr-shadow-float);
+  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
+  overflow: auto;
+}
+
+.list { outline: none; }
+
+.option {
+  display: flex;
+  align-items: center;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-sm;
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  color: var(--cr-text);
+  /* Selection is label weight. Never a check mark: in Crystal a check mark means
+     validated or informational, and a list that uses one for selection has said
+     something else. */
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.option[data-selected] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+.option[data-focused] { background: var(--cr-surface-alt); }
+.option[data-selected][data-focused] { background: var(--cr-primary-soft); }
+.option[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+.field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+:global([data-effects='opaque']) .popover {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .popover { background: var(--cr-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .popover { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
+}
+
+@include field.shell-fallbacks('.shell');

@@ -1,0 +1,53 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* NumberInput — the field anatomy with steppers. */
+
+.field { @include field.field; }
+.label { @include field.label; }
+.shell { @include field.shell; }
+.control { @include field.control; text-align: start; font-variant-numeric: tabular-nums; }
+
+.control:focus { outline: none; }
+.shell:focus-within { @include field.focus-ring; }
+.shell[data-invalid] { border-color: var(--cr-danger-ink); }
+
+.steppers {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  padding: $cr-spacing-2xs;
+  gap: $cr-spacing-2xs;
+}
+
+/* Each stepper is short, so the pair together reaches the target height rather
+   than each one doing so — a 44px increment and a 44px decrement make an 88px
+   field, which is a field that looks like a mistake. They are pointer
+   affordances; the arrow keys are the primary route and always reach the value. */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-inline-size: $cr-spacing-xl;
+  border: 0;
+  border-radius: $cr-spacing-xs;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: pointer;
+}
+
+.stepper:hover:not(:disabled) { background: var(--cr-surface-alt); color: var(--cr-text); }
+.stepper:disabled { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.stepper svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+/* Reaching a bound is a state the control shows, not a silent refusal to move. */
+.shell[data-at-bound] .stepper:disabled { color: var(--cr-edge); }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+.field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+@include field.shell-fallbacks('.shell');

@@ -1,0 +1,28 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* SearchInput — the field anatomy with a leading icon and a clear control. */
+
+.field { @include field.field; }
+.label { @include field.label; }
+.shell { @include field.shell; }
+.control { @include field.control; }
+
+.control:focus { outline: none; }
+.shell:focus-within { @include field.focus-ring; }
+
+.leadingIcon { @include field.leading-icon; }
+.leadingIcon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.leadingIcon + .control { padding-inline-start: $cr-spacing-sm; }
+
+.inlineAction { @include field.inline-action; }
+.inlineAction:hover:not(:disabled) { color: var(--cr-text); }
+.inlineAction svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+.field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+@include field.shell-fallbacks('.shell');

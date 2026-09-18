@@ -1,0 +1,125 @@
+'use client';
+
+/* Rating.
+ *
+ * Interactive, it is a radio group: five mutually exclusive values with arrow-key
+ * movement and one tab stop, which is what a radio group already is. Read-only,
+ * it is text with a picture beside it — not a disabled radio group, because a
+ * disabled control announces "you may not change this" when the truth is "this is
+ * not a control".
+ *
+ * **Never symbol-only.** The catalogue's rule, and the value is always text: four
+ * filled stars out of five is a picture of a number, and a picture of a number is
+ * not a number to anybody who cannot see it — nor easily to anybody trying to
+ * tell four from five at a glance.
+ *
+ * A fractional symbol is one glyph clipped rather than two overlaid. Overlaying
+ * doubles the stroke where the two meet, which reads as a thicker outline on the
+ * partial symbol — the tell of a rating built by stacking.
+ */
+import { useState, type CSSProperties, type ReactNode } from 'react';
+import { RadioGroup, Radio, Label } from 'react-aria-components';
+import { cx } from '../../styles/cx.js';
+import styles from './Rating.module.scss';
+
+const StarIcon = (
+  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+    <path d="M12 3l2.8 6.3 6.2.6-4.7 4.3 1.4 6.3L12 17.3 6.3 20.5l1.4-6.3L3 9.9l6.2-.6z" />
+  </svg>
+);
+
+export interface RatingProps {
+  label: ReactNode;
+  /** How many symbols. Five unless a product says otherwise. */
+  max?: number;
+  value?: number;
+  defaultValue?: number;
+  onChange?: (value: number) => void;
+  /** Not a control: text with a picture beside it, and fractions are allowed. */
+  isReadOnly?: boolean;
+  isDisabled?: boolean;
+  /** How the value reads — "4 out of 5", "4.2 stars". Always rendered. */
+  formatValue?: (value: number, max: number) => string;
+  className?: string;
+}
+
+export function Rating({
+  label, max = 5, value, defaultValue = 0, onChange, isReadOnly = false,
+  isDisabled = false, formatValue, className,
+}: RatingProps): React.JSX.Element {
+  /* Uncontrolled unless a value is given. Passing the prop through to the radio
+     group unconditionally made every Rating fully controlled, so one given only a
+     `defaultValue` could never change — it rendered, it announced correctly, and
+     clicking it did nothing. The test is what found it. */
+  const [uncontrolled, setUncontrolled] = useState(defaultValue);
+  const current = value ?? uncontrolled;
+  const text = formatValue ? formatValue(current, max) : `${current} out of ${max}`;
+
+  const set = (next: number) => {
+    if (value === undefined) setUncontrolled(next);
+    onChange?.(next);
+  };
+
+  if (isReadOnly) {
+    /* Text with a picture beside it. A disabled radio group would announce "you
+       may not change this", which is not what a published score means. */
+    return (
+      <div className={cx(styles['field'], styles['readonly'], className)}>
+        <span className={cx(styles['label'])}>{label}</span>
+        <div className={cx(styles['row'])}>
+          <span className={cx(styles['symbols'])} aria-hidden="true">
+            {Array.from({ length: max }, (_, index) => {
+              const fraction = Math.min(1, Math.max(0, current - index));
+              return (
+                <span key={index} className={cx(styles['symbol'], styles['fraction'])}>
+                  {StarIcon}
+                  {fraction > 0 ? (
+                    <span
+                      className={cx(styles['partial'])}
+                      style={{ '--cr-fraction': `${fraction * 100}%` } as CSSProperties}
+                    >
+                      {StarIcon}
+                    </span>
+                  ) : null}
+                </span>
+              );
+            })}
+          </span>
+          {/* The value, as text. Never only the symbols. */}
+          <span className={cx(styles['value'])}>{text}</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <RadioGroup
+      value={String(current)}
+      onChange={(next) => set(Number(next))}
+      isDisabled={isDisabled}
+      className={cx(styles['field'], className)}
+    >
+      <Label className={cx(styles['label'])}>{label}</Label>
+      <div className={cx(styles['row'])}>
+        <div className={cx(styles['symbols'])}>
+          {Array.from({ length: max }, (_, index) => {
+            const score = index + 1;
+            return (
+              <Radio
+                key={score}
+                value={String(score)}
+                /* Each symbol says what it means, so arrowing through them
+                   announces "3 out of 5" rather than "radio button, 3". */
+                aria-label={formatValue ? formatValue(score, max) : `${score} out of ${max}`}
+                className={cx(styles['symbol'], score <= current ? styles['filled'] : undefined)}
+              >
+                {StarIcon}
+              </Radio>
+            );
+          })}
+        </div>
+        <span className={cx(styles['value'])}>{text}</span>
+      </div>
+    </RadioGroup>
+  );
+}

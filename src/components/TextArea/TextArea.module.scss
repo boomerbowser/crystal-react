@@ -1,0 +1,48 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* TextArea — the field anatomy with a multi-line well.
+ *
+ * `field-sizing: content` is the autosize, and it is worth preferring over a
+ * JavaScript one: it grows the well as the value does without a resize observer,
+ * without a shadow element measuring the text, and — the part that matters —
+ * without ever moving the caret, which is what the catalogue means by "autosize
+ * must not trap the caret". Where it is unsupported the textarea keeps its rows
+ * and its resize handle, which is the behaviour being improved on.
+ */
+
+.field { @include field.field; }
+.label { @include field.label; }
+.shell { @include field.shell; align-items: stretch; }
+.control { @include field.control; resize: vertical; }
+
+.autosize {
+  field-sizing: content;
+  resize: none;
+  max-block-size: 60vh;
+}
+
+.control:focus { outline: none; }
+.shell:focus-within { @include field.focus-ring; }
+.shell[data-invalid] { border-color: var(--cr-danger-ink); }
+
+/* The counter sits at the well's top edge, which is the catalogue's placement —
+   below it would compete with the helper text and above the label would read as
+   part of the label. */
+.count {
+  position: absolute;
+  inset-block-start: calc(-1 * #{$cr-spacing-lg});
+  inset-inline-end: 0;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+.over { color: var(--cr-danger-ink); font-weight: 700; }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+.field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+@include field.shell-fallbacks('.shell');

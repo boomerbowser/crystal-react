@@ -1,0 +1,118 @@
+@use '../../styles/tokens' as *;
+
+/* Chip — a compact pill for a value, a filter or a selection.
+ *
+ * 32px tall inside a 44px target: the pill is the picture and the row around it
+ * is the place to press, which is the same split every compact control in Crystal
+ * makes.
+ *
+ * A removable chip is **two** controls — the chip and its remove button — so the
+ * remove control has its own target inside the chip's. That is why the chip's own
+ * padding shrinks when it is removable rather than the remove button being
+ * squeezed.
+ */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  min-block-size: $cr-chip-height;
+  padding-inline: $cr-spacing-sm;
+  border: 1px solid var(--cr-edge);
+  border-radius: $cr-action-radius;
+  background: var(--cr-surface-alt);
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  font-weight: 550;
+  white-space: nowrap;
+}
+
+/* The target around the picture. Transparent, centred, and 44px tall. */
+.pressable { position: relative; cursor: pointer; }
+
+.pressable::after {
+  content: '';
+  position: absolute;
+  inset-block: 50%;
+  inset-inline: 0;
+  translate: 0 -50%;
+  block-size: $cr-action-min-target;
+}
+
+/* Selection is label weight, here as everywhere. The fill is the second signal. */
+.chip[data-selected] {
+  font-weight: 800;
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+  border-color: var(--cr-primary-soft);
+}
+
+.chip[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.chip[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+.removable { padding-inline-end: $cr-spacing-2xs; }
+
+/* The label half of a chip that is both selectable and removable. It carries the
+   press behaviour; the pill around it carries the material. */
+.chipLabel {
+  display: flex;
+  align-items: center;
+  min-block-size: 100%;
+  margin-inline: calc(-1 * #{$cr-spacing-sm});
+  padding-inline: $cr-spacing-sm;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.chipLabel[data-selected] { font-weight: 800; }
+
+.chipLabel[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(-1 * #{$cr-focus-core-offset});
+}
+
+.remove {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: $cr-spacing-lg;
+  block-size: $cr-spacing-lg;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Its own target, centred on the visible control. The insets and the translate
+   are not decoration: without them the box takes its static position inside the
+   button's flex layout, and the button grew to 48px — a 32px chip rendering 52px
+   tall. The story is what showed it. */
+.remove::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+}
+
+.remove:hover { background: var(--cr-surface); }
+.remove svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+@media (forced-colors: active) {
+  .chip { background: ButtonFace; border-color: ButtonText; color: ButtonText; }
+  .chip[data-selected] { background: ButtonFace; outline: 2px solid Highlight; }
+}

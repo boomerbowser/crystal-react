@@ -1,0 +1,43 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* PinInput — a row of single-character wells. */
+
+.field { @include field.field; }
+.label { @include field.label; }
+
+.wells { display: flex; gap: $cr-spacing-xs; }
+
+.well {
+  @include field.shell;
+  inline-size: $cr-action-min-target;
+  block-size: calc(#{$cr-action-min-target} + #{$cr-spacing-xs});
+  border-radius: var(--cr-radius);
+  justify-content: center;
+}
+
+.cell {
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  font: inherit;
+  font-size: var(--cr-text-heading-size);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: inherit;
+}
+
+.cell:focus { outline: none; }
+.well:focus-within { @include field.focus-ring; }
+.well[data-invalid] { border-color: var(--cr-danger-ink); }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+.field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+@include field.shell-fallbacks('.well');

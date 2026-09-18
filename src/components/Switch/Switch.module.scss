@@ -1,0 +1,88 @@
+@use '../../styles/tokens' as *;
+
+/* Switch — a Resin track with a contrast-bearing thumb.
+ *
+ * "State must not rely on position alone" is the catalogue's rule and the reason
+ * the track changes colour as well as the thumb moving: a switch distinguished
+ * only by which end its thumb is at is unreadable in greyscale and at a glance,
+ * and it is the most common accessibility failure in this control.
+ */
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-sm;
+  min-block-size: $cr-action-min-target;
+  color: var(--cr-text);
+  cursor: pointer;
+}
+
+.track {
+  position: relative;
+  flex: none;
+  inline-size: $cr-switch-track-width;
+  block-size: $cr-switch-track-height;
+  border: 1px solid var(--cr-outline);
+  border-radius: $cr-action-radius;
+  background: var(--cr-resin-fill);
+  box-shadow: inset 0 2px 1px var(--cr-rim);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  transition: background var(--cr-state), border-color var(--cr-state);
+}
+
+.thumb {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: $cr-spacing-2xs;
+  translate: 0 -50%;
+  inline-size: calc(#{$cr-switch-track-height} - #{$cr-spacing-sm});
+  block-size: calc(#{$cr-switch-track-height} - #{$cr-spacing-sm});
+  border-radius: 50%;
+  background: var(--cr-text);
+  transition: translate var(--cr-state), background var(--cr-state);
+}
+
+/* Both move: the track takes the palette's primary and the thumb takes its ink.
+   Position is the second signal, not the only one. */
+.switch[data-selected] .track {
+  background: var(--cr-primary);
+  border-color: var(--cr-primary);
+}
+
+.switch[data-selected] .thumb {
+  translate: calc(#{$cr-switch-track-width} - 100% - #{$cr-spacing-sm}) -50%;
+  background: var(--cr-on-primary);
+}
+
+.switch[data-focus-visible] .track {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.switch[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+/* Reduced motion removes the travel and keeps the state change: the thumb is
+   where it belongs the instant the value changes. */
+@media (prefers-reduced-motion: reduce) {
+  .track, .thumb { transition: none; }
+}
+
+:global([data-effects='opaque']) .track {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .track { background: var(--cr-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .track { background: Field; border-color: FieldText; backdrop-filter: none; }
+  .switch[data-selected] .track { background: Highlight; border-color: Highlight; }
+  .thumb { background: FieldText; }
+  .switch[data-selected] .thumb { background: HighlightText; }
+  .switch[data-focus-visible] .track { outline-color: Highlight; }
+}

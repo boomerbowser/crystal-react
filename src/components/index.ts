@@ -63,3 +63,22 @@ export * from './IconButton/index.js';
 export * from './ButtonGroup/index.js';
 export * from './FloatingAction/index.js';
 export * from './CopyButton/index.js';
+
+/* Inputs */
+export * from './FormField/index.js';
+export * from './TextArea/index.js';
+export * from './NumberInput/index.js';
+export * from './PasswordInput/index.js';
+export * from './SearchInput/index.js';
+export * from './PinInput/index.js';
+export * from './Checkbox/index.js';
+export * from './Switch/index.js';
+export * from './SegmentedControl/index.js';
+export * from './Chip/index.js';
+export * from './Slider/index.js';
+export * from './Select/index.js';
+export * from './Rating/index.js';
+export * from './MaskInput/index.js';
+export * from './JsonInput/index.js';
+export * from './AngleSlider/index.js';
+export * from './MultiSelect/index.js';

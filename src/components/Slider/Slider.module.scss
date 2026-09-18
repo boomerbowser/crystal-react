@@ -1,0 +1,109 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* Slider and RangeSlider — a value-driven track with a Resin thumb.
+ *
+ * The thumb is 26px and the target is 44px, which it reaches through padding
+ * rather than by growing: a 44px circle on an 8px track looks like a mistake, and
+ * a 26px one that is only 26px to press is one a fingertip misses.
+ *
+ * Everything here is logical rather than physical — `inset-inline-start`, not
+ * `left` — so the track mirrors in right-to-left without a second stylesheet.
+ * React Aria reverses the value mapping to match, which is the half that CSS
+ * cannot do.
+ */
+
+.field { @include field.field; }
+.header { display: flex; align-items: baseline; justify-content: space-between; gap: $cr-spacing-sm; }
+.label { @include field.label; }
+.output { font-size: var(--cr-text-caption-size); font-variant-numeric: tabular-nums; color: var(--cr-muted); }
+
+.track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  block-size: $cr-action-min-target;
+  inline-size: 100%;
+}
+
+/* The rail and the fill are pseudo-elements on one track, so the filled span and
+   the empty one cannot drift apart by a pixel. */
+.track::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  block-size: $cr-slider-track-height;
+  border-radius: $cr-slider-track-height;
+  background: var(--cr-surface-alt);
+  box-shadow: inset 0 1px 1px var(--cr-control-edge);
+}
+
+.fill {
+  position: absolute;
+  block-size: $cr-slider-track-height;
+  border-radius: $cr-slider-track-height;
+  background: var(--cr-primary);
+  inset-inline-start: var(--cr-fill-start, 0%);
+  inline-size: var(--cr-fill-size, 0%);
+}
+
+.thumb {
+  position: relative;
+  inline-size: $cr-slider-thumb-size;
+  block-size: $cr-slider-thumb-size;
+  border: 1px solid var(--cr-rim);
+  border-radius: 50%;
+  background: var(--cr-resin-fill);
+  box-shadow: var(--cr-shadow-content);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+}
+
+/* The target, not the picture. */
+.thumb::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  translate: -50% -50%;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+}
+
+.thumb[data-dragging] { background: var(--cr-primary); }
+
+.thumb[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* Two thumbs that meet must stay separable, which the catalogue asks for: the
+   upper one lifts so its edge is still visible when they coincide. */
+.thumb + .thumb { z-index: 1; }
+
+.ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-block-start: calc(-1 * #{$cr-spacing-xs});
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+.field[data-disabled] { opacity: $cr-action-disabled-opacity; }
+
+:global([data-effects='opaque']) .thumb {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .thumb { background: var(--cr-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .track::before { background: Canvas; border: 1px solid CanvasText; }
+  .fill { background: Highlight; }
+  .thumb { background: ButtonFace; border-color: ButtonText; backdrop-filter: none; }
+  .thumb[data-focus-visible] { outline-color: Highlight; }
+}

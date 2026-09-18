@@ -748,10 +748,42 @@ catalogue's size inside an icon button.
       from. The action bar announces its count: the bar appearing and the size of
       the selection are the same piece of news.
 
-### F — Inputs, part one (26 of 52)
+### F — Inputs, part one (26 of 52) — complete
 
-The text, choice and range families: text and its variants, select, checkbox,
-radio, switch, the sliders, segmented control, rating, and the field scaffolding.
+**One anatomy, shared by mixins.** Every text-shaped control is a label, a Haze
+well inside a Resin shell, and helper text or an error beneath. That lives in
+`styles/_field.scss` rather than in ten stylesheets, because ten descriptions of
+one material diverge the first time one of them changes — CONTRACT §1 applied
+inside a library rather than across one.
+
+- [x] `form-field`, `fieldset`, `helper-text` — the wiring is the whole component:
+      the label points at the control, `aria-describedby` carries the hint **and**
+      the error (describing a field by only its error drops the guidance that
+      would have prevented it), and the error is text with a mark, never colour.
+- [x] `text-input`, `textarea`, `number-input`, `password-input`, `search-input`,
+      `mask-input`, `json-input`, `pin-input` — the reveal toggle is a named
+      button with `aria-pressed`, because whether the password is currently
+      visible is a privacy question; the search landmark is opt-in, because two
+      landmarks are worse than none; the mask reports the **raw** value, because a
+      form that receives `(555) 012-3456` has pushed the formatting problem to a
+      server that will disagree about it; and a pasted code fills every box.
+- [x] `select`, `native-select`, `multi-select` — two components because a native
+      select is the right answer more often than a built one: on a phone it opens
+      the platform picker. Selection is label weight, never a check mark.
+- [x] `checkbox`, `checkbox-group`, `radio`, `radio-group`, `switch`,
+      `segmented-control`, `chip`, `rating` — indeterminate through the property
+      and not a class; the switch's state never rests on position alone; the
+      segmented control is a radio group and never borrows tab semantics; a
+      rating is never symbol-only.
+- [x] `slider`, `range-slider`, `angle-slider`, `knob` — `aria-valuetext` so a
+      slider announces "£24" rather than "24", and a range slider is **two**
+      sliders with distinct names, because a reader moving the lower bound must
+      not be told the upper one. The dials share `useMove` with `Resizable`, which
+      is how "keyboard steps match the slider contract" stays true.
+
+Eight more tokens entered Crystal for this slice, every one of them a figure the
+catalogue already stated in prose: the choice box and its radius, the switch
+track, the slider track and thumb, the chip height, and the well inset.
 
 ### G — Inputs, part two (26 of 52)
 

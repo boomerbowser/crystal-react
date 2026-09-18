@@ -1,0 +1,121 @@
+@use 'tokens' as *;
+
+/* The field anatomy, once.
+ *
+ * Every text-shaped control in Crystal is the same thing: a label, a Haze well
+ * inside a Resin shell, and helper text or an error beneath. Writing that out in
+ * ten stylesheets is ten descriptions of one material, and they diverge the first
+ * time one of them changes — which is CONTRACT §1 applied inside a library rather
+ * than across one.
+ *
+ * Mixins rather than shared classes, because the sharing happens at compile time
+ * and leaves no runtime class juggling for a caller to get wrong.
+ */
+
+/* The outer stack: label, control, message. */
+@mixin field {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-xs;
+  color: var(--cr-text);
+}
+
+@mixin label {
+  font-size: var(--cr-text-caption-size);
+  font-weight: 800;
+}
+
+/* The shell floats; the well inside is what you read and type into, so it is
+   recessed rather than raised. Crystal's light source is overhead throughout, so
+   recession inverts the light pair: a highlight inset along the top edge where
+   the light lands, over the content-level shadow. */
+@mixin shell {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--cr-outline);
+  border-radius: var(--cr-radius);
+  background: var(--cr-resin-fill);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  box-shadow: inset 0 2px 1px var(--cr-rim), var(--cr-shadow-content);
+  transform-origin: center;
+}
+
+@mixin control {
+  flex: 1;
+  min-width: 0;
+  min-height: $cr-action-min-target;
+  padding: $cr-action-padding-block $cr-action-padding-inline;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+}
+
+/* The ring belongs to the shell, so it traces the control rather than the bare
+   input inside it. */
+@mixin focus-ring {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+@mixin message {
+  font-size: var(--cr-text-caption-size);
+}
+
+/* A control inside the shell rather than beside it — a reveal toggle, a clear
+   button. It reaches the target floor by being as tall as the well, not by
+   growing the field. */
+@mixin inline-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  min-inline-size: $cr-action-min-target;
+  border: 0;
+  border-radius: $cr-action-radius;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: pointer;
+}
+
+/* A leading icon is decoration and never a control: making it pressable puts a
+   tab stop in front of the field for something that does nothing. */
+@mixin leading-icon {
+  display: flex;
+  align-items: center;
+  padding-inline-start: $cr-action-padding-inline;
+  color: var(--cr-muted);
+  pointer-events: none;
+}
+
+/* Every fallback route for the shell, in one place. Each one keeps the shape and
+   the hierarchy and drops only the diffusion. */
+@mixin shell-fallbacks($selector) {
+  :global([data-effects='opaque']) #{$selector} {
+    background: var(--cr-surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    #{$selector} {
+      background: var(--cr-surface);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    #{$selector} {
+      background: Field;
+      border: 1px solid FieldText;
+      backdrop-filter: none;
+    }
+    #{$selector}:focus-within { outline-color: Highlight; }
+  }
+}

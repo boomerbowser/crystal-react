@@ -1,0 +1,53 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* FormField, Fieldset and HelperText — the scaffolding around a control. */
+
+.field { @include field.field; }
+.label { @include field.label; }
+
+.required {
+  color: var(--cr-danger-ink);
+  /* Beside the label rather than replacing part of it, so the asterisk is not
+     read as punctuation in the middle of a sentence. */
+  margin-inline-start: 0.25em;
+}
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+/* The error carries an icon as well as a colour, because colour alone is not an
+   indication — and a form is where that rule has the most consequences. */
+.error::before { content: '⚠ '; }
+
+.field[data-disabled] {
+  opacity: $cr-action-disabled-opacity;
+  cursor: not-allowed;
+}
+
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cr-space);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.legend {
+  padding: 0;
+  font-size: var(--cr-text-subheading-size);
+  font-weight: 750;
+  color: var(--cr-text);
+}
+
+/* A panel is optional: a group inside a form usually needs rhythm rather than a
+   surface, and putting every group on its own card makes a form read as a stack
+   of unrelated things. */
+.panelled {
+  padding: var(--cr-space);
+  border: 1px solid var(--cr-edge);
+  border-radius: var(--cr-radius);
+}

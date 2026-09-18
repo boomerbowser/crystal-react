@@ -1,0 +1,85 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* SegmentedControl — a pill strip of mutually exclusive options.
+ *
+ * **Selection is label weight.** Crystal's rule, and this is the control where it
+ * is most often broken: a segmented control whose selected option is a coloured
+ * fill has chosen colour as the signal, and the reader who cannot distinguish it
+ * has nothing. Weight is typographic rather than chromatic, so it survives
+ * greyscale, forced colours and a bad screen — and the fill underneath is a
+ * second signal rather than the only one.
+ *
+ * The leading rail was removed from Crystal at Meridian's direction, because it
+ * offset the label it marked. It is not reinstated here.
+ */
+
+.group { @include field.field; }
+.legend { @include field.label; }
+
+/* `align-self: start` because the strip is a control and its wrapper is a column
+   flex: a flex child stretches to the cross axis by default, and a segmented
+   control spanning the page reads as a broken tab bar. */
+.strip {
+  display: inline-flex;
+  align-self: start;
+  align-items: stretch;
+  padding: $cr-spacing-2xs;
+  border: 1px solid var(--cr-rim);
+  border-radius: $cr-action-radius;
+  background: var(--cr-resin-fill);
+  box-shadow: var(--cr-shadow-content);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+}
+
+.segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-xs});
+  padding-inline: $cr-action-padding-inline;
+  border-radius: $cr-action-radius;
+  color: var(--cr-muted);
+  /* Regular until selected. The weight *is* the selection. */
+  font-weight: 550;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.segment[data-selected] {
+  font-weight: 800;
+  color: var(--cr-on-primary-soft);
+  background: var(--cr-primary-soft);
+}
+
+.segment[data-hovered]:not([data-selected]) { color: var(--cr-text); }
+
+.segment[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(-1 * #{$cr-focus-core-offset});
+  box-shadow: var(--cr-focus-ring);
+}
+
+.segment[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+:global([data-effects='opaque']) .strip {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .strip { background: var(--cr-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .strip { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  /* A fill is erased by the text backplate in forced colours, so selection is a
+     ring and the weight — never a background. */
+  .segment[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
+}

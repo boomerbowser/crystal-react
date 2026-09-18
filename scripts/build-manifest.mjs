@@ -79,6 +79,7 @@ const NAMED_DIFFERENTLY = {
   /* The component *is* the element; the transition is what it does to it. */
   SharedElement: 'shared-element-transition',
   Abbr: 'abbreviation',
+  TextArea: 'textarea',
   /* The catalogue lists `title` and `heading` separately — one for the levels
      with display tracking, one for levels two to six. They are the same component
      with a different default, and shipping both names would be two names for one
