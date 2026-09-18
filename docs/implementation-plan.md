@@ -522,7 +522,13 @@ Nothing downstream is trustworthy until this passes.
       layers stay behind in the web runtime, because animated `box-shadow`,
       `border-radius` and `background-position` cannot be composited and do not port.
 
-### D — Utility and layout (39)
+### D — Utility and layout (39, 1 done)
+
+- [x] `scroll-area` — taken out of order, because Meridian reported the scrolling
+      problem from a phone and it had to be fixed in both places at once. Carries
+      Crystal's two scrollbars by class rather than restating their CSS, drives
+      the edge fade through `data-cr-scroll`, and becomes a tab stop only when it
+      scrolls and holds nothing focusable. 14 tests.
 
 `visually-hidden`, `skip-link`, `focus-trap`, `transition`, `direction-provider`, `theme-provider`, `reduced-effects`, `resizable`, `watermark`, `qr-code`, `click-away`, `animate-on-scroll`, `no-ssr`, `global-styles`, `terminal`*, `border-beam`*, `pressable`, `focusable`, `drag-handle`, `drop-indicator`, `virtualizer`, `shared-element-transition`, `toolbar`, `router-provider`, `ssr-provider`, `app-shell`, `container`, `grid`, `simple-grid`, `stack`, `group`, `divider`, `aspect-ratio`, `scroll-area`, `center`, `space`, `app-bar`, `masonry`, `overflow-list`.
 

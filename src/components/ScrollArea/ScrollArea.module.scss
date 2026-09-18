@@ -1,0 +1,29 @@
+@use '../../styles/tokens' as *;
+
+/* Scroll area.
+ *
+ * Almost nothing lives here on purpose. The scrollbar's colour and geometry, the
+ * scroll contract — no chaining, a stable gutter, native gesture handling — and
+ * the edge fade are all `@crystal/core`'s stylesheet, reached through the
+ * `.cr-scroll-frost` / `.cr-scroll-resin` classes the component applies. Writing
+ * them again here would be a second description of one specification, and the two
+ * would drift the first time either changed.
+ *
+ * What is left is which way the box scrolls, which is the product's decision and
+ * is the only thing this file decides.
+ */
+
+.area {
+  position: relative;
+  /* Focus lands on this element when it is the only way to reach the content, and
+     a focus ring at the very edge of a scroll container is clipped by its own
+     overflow without a little room to sit in. */
+  outline-offset: -$cr-focus-core-offset;
+}
+
+.axisY { overflow-y: auto; overflow-x: hidden; }
+/* `overflow-y: hidden` is deliberate on a horizontal scroller: with it `auto`,
+   the browser reserves an inline gutter for a vertical scrollbar that can never
+   appear, which is 12px lost from every one of them. */
+.axisX { overflow-x: auto; overflow-y: hidden; }
+.axisBoth { overflow: auto; }

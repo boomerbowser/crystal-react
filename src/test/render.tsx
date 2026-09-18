@@ -37,5 +37,5 @@ export function renderWithCrystal(
   };
 }
 
-export { screen, within, waitFor, act } from '@testing-library/react';
+export { screen, within, waitFor, act, fireEvent } from '@testing-library/react';
 export { default as userEvent } from '@testing-library/user-event';
