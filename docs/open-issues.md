@@ -162,6 +162,16 @@ motion primitive without its own suite.
 
 `src/motion/usePreset.ts`.
 
+**Closed.** Six tests covering what this file owns rather than what the core
+module computes: it names the movement, it reports finishing, it settles the
+promise instantly under reduced motion and for materials whose signature is paint
+(an exit awaiting it must never hang), it clamps measured travel *and* depth to
+Crystal's ceiling, and it passes the caller's anchoring through.
+
+The clamp test uses a ceiling of 30 rather than Crystal's own 50, because depth's
+fallback is 50 — a ceiling equal to the fallback would let a hook that never
+clamped pass. Verified by removing the clamp and watching it fail with 4000.
+
 ## R-6 · `MultiSelect` is a select pretending to be a combobox
 
 It drives React Aria's `Select` with `selectedKey={null}` and reads the selection
