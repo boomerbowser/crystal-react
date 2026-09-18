@@ -215,6 +215,22 @@ Root of both repositories. A workflow running `pnpm verify`, the design system's
 `npm test` / `validate.py` / `verify:visual` / `verify:scroll`, and Storybook's
 test runner would close it.
 
+**Closed.** `.github/workflows/verify.yml` in both repositories. No new checks —
+every step is a script that already existed; what changes is that they run on a
+clean checkout, on somebody else's machine, before a change lands.
+
+Crystal React's workflow lays out both checkouts as siblings, because
+`@crystal/core` resolves to `file:../crystal-design-system/design-system` and the
+layout on disk is part of the build. Crystal is private, so the Crystal checkout
+needs a repository-scoped `CRYSTAL_READ_TOKEN` secret; without one the run stops
+there, which is the honest place for it.
+
+Both add one gate that did not exist by hand: **a build must not change a
+committed file.** Generated output that has drifted from its source makes every
+check beneath it evidence about the wrong thing. Crystal's own copy exempts the
+`date` in `validation/token-checks.json` — it records when the evidence was
+produced — and holds the rest of that file to the same rule.
+
 ## R-8 · The docs website does not exist yet
 
 Slice M in `implementation-plan.md`. Meridian asked for a documentation site

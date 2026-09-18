@@ -1,0 +1,90 @@
+# Crystal React's gates, run on every push and pull request.
+#
+# Nothing here is a new check — each step already exists as a script. What this
+# adds is that they run on somebody else's machine, on a clean checkout, before
+# a change lands rather than after somebody remembers.
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Tokens, types, tests and bundle
+    runs-on: ubuntu-latest
+    # Crystal is not a published package here: `@crystal/core` resolves to
+    # `file:../crystal-design-system/design-system`, a *sibling* of this
+    # repository, and the library reads its tokens, its resolver and its
+    # stylesheets straight out of it. CONTRACT §1 is the reason — a second copy
+    # of a value drifts from the first silently — so the layout on disk is part
+    # of the build, and both checkouts go into the paths that dependency names.
+    defaults:
+      run:
+        working-directory: crystal-react
+    steps:
+      - name: Check out Crystal React
+        uses: actions/checkout@v5
+        with:
+          path: crystal-react
+
+      - name: Check out Crystal beside it
+        uses: actions/checkout@v5
+        with:
+          repository: boomerbowser/crystal
+          path: crystal-design-system
+          # Crystal is private. A repository-scoped token is needed; without one
+          # this step is where the run stops, which is the honest place for it.
+          token: ${{ secrets.CRYSTAL_READ_TOKEN }}
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: crystal-react/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+
+      # Tokens first: everything below reads what this writes, and a stale
+      # generated file makes every check beneath it evidence about the wrong
+      # thing.
+      - run: pnpm run tokens
+
+      # No value is redeclared that Crystal already defines. This is CONTRACT §1
+      # as a script, and it is first because it is the one that fails loudest
+      # when somebody types a number.
+      - run: pnpm run lint:tokens
+
+      - run: pnpm run typecheck
+      - run: pnpm run test
+      - run: pnpm run test:jest
+
+      # Builds the library, checks what the bundle pulls in, and regenerates the
+      # parity manifest.
+      - run: pnpm run build
+
+      - name: Generated files match their source
+        run: |
+          git diff --exit-code || {
+            echo "::error::A build changed a committed file. Run pnpm build and commit the result."
+            exit 1
+          }
+
+      # A story that throws is a component nobody can look at, and this project
+      # has found a defect in a browser for every slice that tests passed.
+      - run: pnpm run build-storybook
+
+      - name: Keep the built storybook
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook
+          path: crystal-react/storybook-static
+          retention-days: 7
+          if-no-files-found: ignore
