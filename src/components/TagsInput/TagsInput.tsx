@@ -29,6 +29,7 @@ import { Chip } from '../Chip/Chip.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './TagsInput.module.scss';
+import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
 
 export interface TagsInputProps {
   label: ReactNode;
@@ -49,6 +50,12 @@ export interface TagsInputProps {
   validate?: (value: string) => string | null;
   isDisabled?: boolean;
   isInvalid?: boolean;
+  /**
+   * The field's name in a form. Without it the field cannot be submitted, and a
+   * `Form` distributing a server's errors has no name to match it against — so
+   * the field sits there looking untouched while the server objects.
+   */
+  name?: string;
   className?: string;
 }
 
@@ -96,13 +103,16 @@ function useTags({
 
 function Field({
   label, description, errorMessage, placeholder, delimiters = [',', 'Enter'],
-  isDisabled = false, isInvalid, className, ...rest
+  isDisabled = false, isInvalid, name, className, ...rest
 }: TagsInputProps): React.JSX.Element {
   const { tags, add, remove, refusal, announcement } = useTags(rest);
   const [draft, setDraft] = useState('');
   const entry = useRef<HTMLInputElement | null>(null);
   const labelId = useId();
-  const invalid = isInvalid ?? Boolean(errorMessage ?? refusal);
+  const validation = useDistributedErrors(name, errorMessage, isInvalid);
+  /* A refusal is this component saying no to a tag, which is its own business
+     and not the form's. */
+  const invalid = refusal ? true : validation.isInvalid;
   const shellScope = useInvalidMotion(invalid);
 
   const commit = () => { if (add(draft)) setDraft(''); };
@@ -158,8 +168,8 @@ function Field({
           swallow what was typed. */}
       <VisuallyHidden as="div" role="status" aria-live="polite">{announcement}</VisuallyHidden>
       {description ? <span className={cx(styles['description'])}>{description}</span> : null}
-      {refusal ?? errorMessage ? (
-        <span role="alert" className={cx(styles['error'])}>{refusal ?? errorMessage}</span>
+      {refusal ?? validation.message ? (
+        <span role="alert" className={cx(styles['error'])}>{refusal ?? validation.message}</span>
       ) : null}
     </div>
   );

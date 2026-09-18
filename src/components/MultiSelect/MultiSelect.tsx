@@ -44,6 +44,7 @@ import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import type { SelectOption } from '../Select/Select.js';
 import styles from './MultiSelect.module.scss';
+import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
 
 const ChevronIcon = (
   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
@@ -70,18 +71,25 @@ export interface MultiSelectProps {
   isFilterable?: boolean;
   isDisabled?: boolean;
   isInvalid?: boolean;
+  /**
+   * The field's name in a form. Without it the field cannot be submitted, and a
+   * `Form` distributing a server's errors has no name to match it against — so
+   * the field sits there looking untouched while the server objects.
+   */
+  name?: string;
   className?: string;
 }
 
 export function MultiSelect({
   label, options, value, defaultValue = [], onChange, description, errorMessage,
   placeholder = 'Choose any', maxSelected, isFilterable = true,
-  isDisabled = false, isInvalid, className,
+  isDisabled = false, isInvalid, name, className,
 }: MultiSelectProps): React.JSX.Element {
   const [uncontrolled, setUncontrolled] = useState<readonly string[]>(defaultValue);
   const [query, setQuery] = useState('');
   const selected = value ?? uncontrolled;
-  const invalid = isInvalid ?? Boolean(errorMessage);
+  const validation = useDistributedErrors(name, errorMessage, isInvalid);
+  const invalid = validation.isInvalid;
   const shellScope = useInvalidMotion(invalid);
   const listRef = useRef<HTMLDivElement>(null);
   /* The popover measures and anchors itself against the trigger it was given,
@@ -140,7 +148,7 @@ export function MultiSelect({
 
   const messageIds = [
     description ? descriptionId : undefined,
-    errorMessage ? errorId : undefined,
+    validation.message ? errorId : undefined,
     valueId,
   ].filter(Boolean).join(' ');
 
@@ -247,8 +255,8 @@ export function MultiSelect({
       {description ? (
         <span id={descriptionId} className={cx(styles['description'])}>{description}</span>
       ) : null}
-      {errorMessage ? (
-        <span id={errorId} role="alert" className={cx(styles['error'])}>{errorMessage}</span>
+      {validation.message ? (
+        <span id={errorId} role="alert" className={cx(styles['error'])}>{validation.message}</span>
       ) : null}
     </div>
   );

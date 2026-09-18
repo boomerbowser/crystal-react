@@ -34,25 +34,48 @@ export const Switch = forwardRef<HTMLLabelElement, SwitchProps>(function Switch(
   ref,
 ) {
   const [scope, play] = useMotion();
-  const selected = props.isSelected ?? props.defaultSelected ?? false;
-  const previous = useRef<boolean | undefined>(undefined);
-
-  /* Bound to the value rather than to the press, so a switch changed by a form
-     reset or by a server response animates the same way one changed by hand does.
-     Undefined first, so a switch that mounts already on does not animate. */
-  useEffect(() => {
-    if (previous.current !== undefined && previous.current !== selected) {
-      play(selected ? 'switch-on' : 'switch-off');
-    }
-    previous.current = selected;
-  }, [selected, play]);
 
   return (
     <AriaSwitch {...props} ref={mergeRefs(scope as never, ref)} className={cx(styles['switch'], className)}>
-      <span className={cx(styles['track'])}>
-        <span className={cx(styles['thumb'])} />
-      </span>
-      <span>{children}</span>
+      {({ isSelected }) => (
+        <>
+          <SwitchMotion isSelected={isSelected} play={play} />
+          <span className={cx(styles['track'])}>
+            <span className={cx(styles['thumb'])} />
+          </span>
+          <span>{children}</span>
+        </>
+      )}
     </AriaSwitch>
   );
 });
+
+/**
+ * Bound to the value rather than to the press, so a switch changed by a form
+ * reset or by a server response animates the same way one changed by hand does.
+ *
+ * It reads the value **React Aria resolved**, which is the part the first version
+ * got wrong: it read `props.isSelected ?? props.defaultSelected ?? false`, and an
+ * uncontrolled switch has neither — so the commonest switch of all, the one a
+ * person simply clicks, sat at `false` for ever and never animated at all.
+ *
+ * A component rather than an effect in the parent, because the resolved value
+ * arrives through a render function and hooks cannot be called inside one.
+ */
+function SwitchMotion({ isSelected, play }: {
+  isSelected: boolean;
+  play: ReturnType<typeof useMotion>[1];
+}): null {
+  /* Undefined first, so a switch that mounts already on does not animate:
+     motion marks the moment a state is entered, and that one was never entered. */
+  const previous = useRef<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    if (previous.current !== undefined && previous.current !== isSelected) {
+      play(isSelected ? 'switch-on' : 'switch-off');
+    }
+    previous.current = isSelected;
+  }, [isSelected, play]);
+
+  return null;
+}

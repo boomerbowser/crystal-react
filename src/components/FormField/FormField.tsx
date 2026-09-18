@@ -28,6 +28,7 @@
 import { cloneElement, useId, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
 import styles from './FormField.module.scss';
+import { useDistributedErrors } from './useDistributedErrors.js';
 
 export interface FormFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /** The visible label. A field without one is a field nobody can name. */
@@ -41,6 +42,12 @@ export interface FormFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ch
   /** Overrides the inference from `errorMessage`, for a field invalid without a message. */
   isInvalid?: boolean;
   /**
+   * The field's name in a form. Without it the field cannot be submitted, and a
+   * `Form` distributing a server's errors has no name to match it against — so
+   * the field sits there looking untouched while the server objects.
+   */
+  name?: string;
+  /**
    * The control. Receives `id`, `aria-describedby`, `aria-invalid` and
    * `aria-required`, so it is wired whether or not it knows about this component.
    */
@@ -49,7 +56,7 @@ export interface FormFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ch
 
 export function FormField({
   label, description, errorMessage, isRequired = false, isDisabled = false,
-  isInvalid, children, className, ...props
+  isInvalid, name, children, className, ...props
 }: FormFieldProps): React.JSX.Element {
   const controlId = useId();
   const descriptionId = useId();
@@ -57,13 +64,14 @@ export function FormField({
 
   /* An error message is the invalid state. Two ways to say the same thing
      eventually disagree, and the one the reader is told is the one that matters. */
-  const invalid = isInvalid ?? Boolean(errorMessage);
+  const validation = useDistributedErrors(name, errorMessage, isInvalid);
+  const invalid = validation.isInvalid;
 
   /* Both, when there are both. Describing a field by only its error drops the
      guidance that would have prevented it. */
   const describedBy = [
     description ? descriptionId : null,
-    errorMessage ? errorId : null,
+    validation.message ? errorId : null,
   ].filter(Boolean).join(' ') || undefined;
 
   return (
@@ -88,8 +96,8 @@ export function FormField({
       ) : null}
       {/* A live region, so a message that appears after submission is announced
           rather than only drawn. Errors are text with a mark, never colour. */}
-      {errorMessage ? (
-        <span id={errorId} role="alert" className={cx(styles['error'])}>{errorMessage}</span>
+      {validation.message ? (
+        <span id={errorId} role="alert" className={cx(styles['error'])}>{validation.message}</span>
       ) : null}
     </div>
   );

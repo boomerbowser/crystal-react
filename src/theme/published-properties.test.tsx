@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync, globSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { render } from '@testing-library/react';
 import { CrystalProvider } from './CrystalProvider.js';
 
@@ -27,7 +27,7 @@ const PUBLISHED = (() => {
     resolve(process.cwd(), 'node_modules/@crystal/core/assets/crystal-theme.css'),
     'utf8',
   );
-  for (const [, name] of theme.matchAll(/(--cr-[a-z0-9-]+)\s*:/g)) declared.add(name);
+  for (const match of theme.matchAll(/(--cr-[a-z0-9-]+)\s*:/g)) declared.add(match[1]!);
   return declared;
 })();
 
@@ -50,14 +50,26 @@ const LOCAL = new Set([
   '--cr-scroll-fade-start', '--cr-scroll-fade-end',
 ]);
 
+/** Every stylesheet in the library, found rather than listed. */
+function stylesheetsUnder(directory: string): string[] {
+  const found: string[] = [];
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) found.push(...stylesheetsUnder(path));
+    else if (entry.name.endsWith('.scss')) found.push(path);
+  }
+  return found;
+}
+
 describe('the properties this library reads', () => {
   it('are all properties Crystal publishes', () => {
-    const files = globSync('src/**/*.scss', { cwd: process.cwd() });
+    const files = stylesheetsUnder(resolve(process.cwd(), 'src'));
     const missing = new Map<string, string[]>();
 
     for (const file of files) {
       const css = readFileSync(file, 'utf8');
-      for (const [, name] of css.matchAll(/var\(\s*(--cr-[a-z0-9-]+)/g)) {
+      for (const match of css.matchAll(/var\(\s*(--cr-[a-z0-9-]+)/g)) {
+        const name = match[1]!;
         if (PUBLISHED.has(name) || LOCAL.has(name)) continue;
         const seen = missing.get(name) ?? [];
         if (!seen.includes(file)) seen.push(file);

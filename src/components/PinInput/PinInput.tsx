@@ -23,6 +23,7 @@ import { useCallback, useId, useRef, useState, type ClipboardEvent, type Keyboar
 import { cx } from '../../styles/cx.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './PinInput.module.scss';
+import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
 
 export interface PinInputProps {
   label: ReactNode;
@@ -39,16 +40,23 @@ export interface PinInputProps {
   isMasked?: boolean;
   isDisabled?: boolean;
   isInvalid?: boolean;
+  /**
+   * The field's name in a form. Without it the field cannot be submitted, and a
+   * `Form` distributing a server's errors has no name to match it against — so
+   * the field sits there looking untouched while the server objects.
+   */
+  name?: string;
   className?: string;
 }
 
 export function PinInput({
   label, description, errorMessage, length = 6, value, defaultValue = '',
-  onChange, onComplete, isMasked = false, isDisabled = false, isInvalid, className,
+  onChange, onComplete, isMasked = false, isDisabled = false, isInvalid, name, className,
 }: PinInputProps): React.JSX.Element {
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const current = (value ?? uncontrolled).slice(0, length);
-  const invalid = isInvalid ?? Boolean(errorMessage);
+  const validation = useDistributedErrors(name, errorMessage, isInvalid);
+  const invalid = validation.isInvalid;
   const shellScope = useInvalidMotion(invalid);
 
   const labelId = useId();
@@ -104,7 +112,7 @@ export function PinInput({
 
   const describedBy = [
     description ? descriptionId : null,
-    errorMessage ? errorId : null,
+    validation.message ? errorId : null,
   ].filter(Boolean).join(' ') || undefined;
 
   return (
@@ -141,8 +149,8 @@ export function PinInput({
       {description ? (
         <span id={descriptionId} className={cx(styles['description'])}>{description}</span>
       ) : null}
-      {errorMessage ? (
-        <span id={errorId} role="alert" className={cx(styles['error'])}>{errorMessage}</span>
+      {validation.message ? (
+        <span id={errorId} role="alert" className={cx(styles['error'])}>{validation.message}</span>
       ) : null}
     </div>
   );

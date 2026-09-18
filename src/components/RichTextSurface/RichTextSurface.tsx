@@ -33,6 +33,7 @@ import { Toolbar } from '../Toolbar/Toolbar.js';
 import { IconButton } from '../IconButton/IconButton.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './RichTextSurface.module.scss';
+import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
 
 export interface FormatAction {
   id: string;
@@ -53,6 +54,12 @@ export interface RichTextSurfaceProps {
   errorMessage?: ReactNode;
   isReadOnly?: boolean;
   isInvalid?: boolean;
+  /**
+   * The field's name in a form. Without it the field cannot be submitted, and a
+   * `Form` distributing a server's errors has no name to match it against — so
+   * the field sits there looking untouched while the server objects.
+   */
+  name?: string;
   className?: string;
   /**
    * The editor. Whatever renders here owns the document, the paste pipeline and
@@ -63,10 +70,11 @@ export interface RichTextSurfaceProps {
 
 export function RichTextSurface({
   label, actions = [], description, errorMessage, isReadOnly = false,
-  isInvalid, className, children,
+  isInvalid, name, className, children,
 }: RichTextSurfaceProps): React.JSX.Element {
   const labelId = useId();
-  const invalid = isInvalid ?? Boolean(errorMessage);
+  const validation = useDistributedErrors(name, errorMessage, isInvalid);
+  const invalid = validation.isInvalid;
 
   return (
     <div className={cx(styles['field'], className)}>
@@ -83,8 +91,12 @@ export function RichTextSurface({
                 key={action.id}
                 label={action.label}
                 icon={action.icon}
-                isSelected={action.isActive ?? false}
-                isDisabled={action.isDisabled ?? false}
+                /* Said only when the product has decided. `isSelected={false}`
+                   is not "this is off" but "I own whether it is on", so an
+                   action that does not report its own state was frozen off and
+                   could not toggle itself at all. */
+                {...(action.isActive !== undefined ? { isSelected: action.isActive } : {})}
+                {...(action.isDisabled !== undefined ? { isDisabled: action.isDisabled } : {})}
                 onPress={action.onToggle}
               />
             ))}
@@ -98,7 +110,7 @@ export function RichTextSurface({
         </div>
       </div>
       {description ? <span className={cx(styles['description'])}>{description}</span> : null}
-      {errorMessage ? <span role="alert" className={cx(styles['error'])}>{errorMessage}</span> : null}
+      {validation.message ? <span role="alert" className={cx(styles['error'])}>{validation.message}</span> : null}
     </div>
   );
 }

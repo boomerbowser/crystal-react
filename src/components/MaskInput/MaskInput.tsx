@@ -25,6 +25,7 @@ import { IMaskInput } from 'react-imask';
 import { cx } from '../../styles/cx.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from '../TextInput/TextInput.module.scss';
+import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
 
 export interface MaskInputProps {
   label: ReactNode;
@@ -53,7 +54,8 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(function M
   },
   ref,
 ) {
-  const invalid = isInvalid ?? Boolean(errorMessage);
+  const validation = useDistributedErrors(name, errorMessage, isInvalid);
+  const invalid = validation.isInvalid;
   const shellScope = useInvalidMotion(invalid);
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const raw = value ?? uncontrolled;
@@ -69,7 +71,7 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(function M
   const errorId = `${fieldId}-error`;
   const describedBy = [
     description ? descriptionId : null,
-    errorMessage ? errorId : null,
+    validation.message ? errorId : null,
   ].filter(Boolean).join(' ') || undefined;
 
   return (
@@ -104,8 +106,8 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(function M
       {description ? (
         <span id={descriptionId} className={cx(styles['description'])}>{description}</span>
       ) : null}
-      {errorMessage ? (
-        <span id={errorId} role="alert" className={cx(styles['error'])}>{errorMessage}</span>
+      {validation.message ? (
+        <span id={errorId} role="alert" className={cx(styles['error'])}>{validation.message}</span>
       ) : null}
     </div>
   );

@@ -9,6 +9,12 @@ import { Select } from '../components/Select/Select.js';
 import { ComboBox } from '../components/ComboBox/ComboBox.js';
 import { DateInput } from '../components/DatePicker/DatePicker.js';
 import { CheckboxGroup, Checkbox } from '../components/Checkbox/Checkbox.js';
+import { MaskInput } from '../components/MaskInput/MaskInput.js';
+import { PinInput } from '../components/PinInput/PinInput.js';
+import { TagsInput } from '../components/TagsInput/TagsInput.js';
+import { MultiSelect } from '../components/MultiSelect/MultiSelect.js';
+import { RichTextSurface } from '../components/RichTextSurface/RichTextSurface.js';
+import { FormField } from '../components/FormField/FormField.js';
 
 /* The gate that did not exist, and the reason it matters.
  *
@@ -90,5 +96,46 @@ describe('a server error reaches every field', () => {
     );
     expect(screen.queryByText('From the server')).toBeNull();
     expect(screen.getByRole('textbox', { name: 'Email' }).getAttribute('aria-invalid')).toBeNull();
+  });
+});
+
+/* The other half of the same question, and the half that had no answer at all.
+ *
+ * Most fields here are React Aria components, and React Aria hands them their
+ * share of a `Form`'s errors without being asked. These are not: they are built
+ * by hand, they were invisible to the whole mechanism, and the only error they
+ * knew how to show was one their own caller had passed in. None of them even
+ * took a `name`, so there was nothing to match a server's error against.
+ *
+ * They read the same context React Aria's own fields read. Validation display is
+ * React Aria's wheelhouse; this is how a hand-built control stays inside it. */
+describe('a server error reaches the hand-built fields too', () => {
+  const HAND_BUILT: Array<[string, React.JSX.Element]> = [
+    ['MaskInput', <MaskInput label="Phone" name="phone" mask="(000) 000-0000" />],
+    ['PinInput', <PinInput label="Phone" name="phone" length={4} />],
+    ['TagsInput', <TagsInput label="Phone" name="phone" />],
+    ['MultiSelect', <MultiSelect label="Phone" name="phone" options={OPTIONS} />],
+    ['RichTextSurface', <RichTextSurface label="Phone" name="phone" />],
+    ['FormField', <FormField label="Phone" name="phone"><input /></FormField>],
+  ];
+
+  for (const [name, element] of HAND_BUILT) {
+    it(`${name} shows what the form was given for it`, () => {
+      renderWithCrystal(
+        <Form validationErrors={{ phone: ['We could not reach that number'] }}>{element}</Form>,
+      );
+      expect(screen.getByRole('alert').textContent).toContain('We could not reach that number');
+    });
+  }
+
+  /* And a caller's own message still wins: it is the more specific statement,
+     and two at once would be a field arguing with itself. */
+  it("prefers the caller's message to the form's", () => {
+    renderWithCrystal(
+      <Form validationErrors={{ phone: ['From the server'] }}>
+        <MaskInput label="Phone" name="phone" mask="(000) 000-0000" errorMessage="From the caller" />
+      </Form>,
+    );
+    expect(screen.getByRole('alert').textContent).toBe('From the caller');
   });
 });
