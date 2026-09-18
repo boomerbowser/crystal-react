@@ -12,7 +12,11 @@
 .field { @include field.field; }
 .label { @include field.label; }
 .shell { @include field.shell; }
-.control { @include field.control; cursor: pointer; text-align: start; }
+/* One element, both roles. It was `@include field.control` here, whose
+   `border-radius: inherit` reached past the shell — because the shell *is* this
+   element — to the field, which has none. The trigger rendered square while
+   every other field in the library was a 28px well. */
+.control { @include field.trigger; }
 
 .control:focus { outline: none; }
 .shell:focus-within { @include field.focus-ring; }

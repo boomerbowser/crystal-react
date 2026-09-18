@@ -6,7 +6,7 @@
 .field { @include field.field; }
 .label { @include field.label; }
 .shell { @include field.shell; }
-.trigger { @include field.control; cursor: pointer; text-align: start; }
+.trigger { @include field.trigger; }
 
 .shell:focus-within { @include field.focus-ring; }
 .value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

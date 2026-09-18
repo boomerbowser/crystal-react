@@ -41,6 +41,23 @@ the materials actually on.
 
 ---
 
+**The pass is done, and it found one.** `Select`'s trigger is one element
+carrying both the shell and the control, and `control`'s `border-radius: inherit`
+— which exists so an input inside a well does not square off — reached past the
+shell to the field, which has no radius. The trigger rendered with square corners
+while every other field in the library was a 28px well. Nothing in the tests
+could see it; `border-radius` is geometry, and jsdom has none.
+
+Fixed by giving the combination its own mixin, `field.trigger`, which is
+`control` without the inherited radius. `Cascader` was doing the same thing and
+is moved onto it too.
+
+Everything else surveyed with the materials on — buttons, comboboxes, the scroll
+areas, cards, the temporal family, the dialog over its Mirage scrim — renders as
+intended. One false alarm worth recording: a dialog screenshot taken two seconds
+after opening looked washed out and blurred. It was a frame of the entrance
+animation, which is a second long. The settled state is crisp.
+
 ## R-1 · A slider's unit is shown but not announced
 
 **Severity: high — the component's own comment claims otherwise.**
@@ -239,3 +256,7 @@ line with MUI, Mantine, PrimeReact and Blueprint. Nothing is built.
 
 **Scheduled, not overdue** — recorded here so it is visible alongside everything
 else rather than only inside the plan.
+
+**Not an issue — scheduled work.** This is slice M of `implementation-plan.md`
+and belongs to the plan's status rather than to a defect tracker. Recorded here
+only so the number is not reused.

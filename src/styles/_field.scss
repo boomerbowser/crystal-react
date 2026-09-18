@@ -49,6 +49,12 @@
   transform-origin: center;
 }
 
+/* The control that sits *inside* a shell: an input, a textarea, the button half
+   of a field. It takes the shell's radius by inheritance, which is what keeps a
+   focus ring and a background from squaring off inside a rounded well.
+   `@include control` on the shell itself is therefore wrong — `inherit` then
+   reaches past the shell to the field, which has no radius, and the whole
+   control renders square. Use `trigger` for an element that is both. */
 @mixin control {
   flex: 1;
   min-width: 0;
@@ -59,6 +65,16 @@
   background: transparent;
   font: inherit;
   color: inherit;
+}
+
+/* One element that is the shell and the control at once — a select's trigger,
+   a cascader's. Everything `control` gives, except the inherited radius, which
+   it keeps as its own. */
+@mixin trigger {
+  @include control;
+  border-radius: var(--cr-radius);
+  cursor: pointer;
+  text-align: start;
 }
 
 /* The ring belongs to the shell, so it traces the control rather than the bare
