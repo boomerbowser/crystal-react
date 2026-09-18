@@ -43,6 +43,10 @@ jobs:
           token: ${{ secrets.CRYSTAL_READ_TOKEN }}
 
       - uses: pnpm/action-setup@v4
+        with:
+          # package.json declares no `packageManager`, and without it this action
+          # has nothing to read a version from and fails before installing.
+          version: 11
       - uses: actions/setup-node@v5
         with:
           node-version: 22

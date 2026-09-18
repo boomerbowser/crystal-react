@@ -84,6 +84,12 @@ export function MultiSelect({
   const invalid = isInvalid ?? Boolean(errorMessage);
   const shellScope = useInvalidMotion(invalid);
   const listRef = useRef<HTMLDivElement>(null);
+  /* The popover measures and anchors itself against the trigger it was given,
+     and the trigger is now the disclosure button — which, with three chips in
+     the shell, is whatever narrow strip they left over. Anchoring there would
+     open a 32px-wide list under the chevron. The shell is what the field looks
+     like, so the shell is what the popover is told to follow. */
+  const shellRef = useRef<HTMLDivElement>(null);
 
   const labelId = useId();
   const valueId = useId();
@@ -145,7 +151,10 @@ export function MultiSelect({
         {/* The shell is a div, not the trigger. The chips inside it are buttons,
             and a button inside a button is not a thing a browser can render. */}
         <div
-          ref={shellScope as never}
+          ref={(node: HTMLDivElement | null) => {
+            (shellScope as unknown as { current: HTMLDivElement | null }).current = node;
+            shellRef.current = node;
+          }}
           className={cx(styles['shell'])}
           {...(invalid ? { 'data-invalid': true } : {})}
         >
@@ -185,7 +194,7 @@ export function MultiSelect({
           {maxSelected !== undefined ? `, at most ${maxSelected}` : ''}
         </VisuallyHidden>
 
-        <Popover className={cx(styles['popover'])}>
+        <Popover triggerRef={shellRef} className={cx(styles['popover'])}>
           <Dialog aria-labelledby={labelId} className={cx(styles['dialog'])}>
             {isFilterable ? (
               <SearchField
