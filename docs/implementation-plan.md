@@ -403,20 +403,20 @@ Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 - [x] `TextInput` — Haze well in a Resin shell, `field-focus`, and `field-invalid` /
       `field-valid` bound to validation state so a server-side failure animates
       identically to a client one.
-- [ ] `Dialog` — **blocked upstream.** The catalogue specifies it as a Mirage scrim with an
-      80% feathered Haze surface above it (not Resin, as an earlier draft of this plan
-      said), and its motion as `mirage`, `mirage-out` and `dismiss`. Those are duration
-      *presets*, not recipes: `motion.js` builds their keyframes at runtime from travel,
-      depth and feather tokens plus a direction cycle. Reimplementing that in React is
-      exactly the divergence CONTRACT §1 forbids, so `@crystal/core` must first export the
-      preset keyframe construction as a pure function. Tracked as task C-1 below.
+- [x] `Dialog` — a Mirage scrim with an 80% feathered Haze surface above it (**not**
+      Resin, as an earlier draft of this plan said; the catalogue is the spec and a test
+      pins it). React Aria owns focus containment, its return, Escape and scroll locking.
+      `AnimatePresence` holds the subtree mounted until the exit settles, which is why a
+      dismissal plays at all — without it the animation and the unmount race, and the
+      unmount wins.
 
 Nothing downstream is trustworthy until this passes.
 
-**Task C-1 — export the motion presets from `@crystal/core`.** Extract the preset keyframe
-construction out of `motion.js`'s IIFE into a function that takes an element and a preset
-name and returns keyframes and options. React then consumes it the same way it consumes
-`frames`. This also removes the last reason the preset path cannot be unit-tested.
+- [x] **Task C-1 — export the motion presets from `@crystal/core`.** Done:
+      `assets/core/presets.js` is a pure module, `motion.js` consumes it rather than
+      keeping its own copy, and `usePreset` consumes it from React. The decorative paint
+      layers stay behind in the web runtime, because animated `box-shadow`,
+      `border-radius` and `background-position` cannot be composited and do not port.
 
 ### D — Utility and layout (30)
 
