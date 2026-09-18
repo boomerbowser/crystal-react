@@ -1,0 +1,25 @@
+@use '../../styles/tokens' as *;
+
+/* Container — the page shell, as Crystal's own preview draws it.
+ *
+ * A ceiling and a gutter that steps down as the viewport narrows. The three
+ * gutter values and the breakpoints they change at are Crystal's tokens, not
+ * this library's opinion; before they were tokens they lived only in the
+ * preview's stylesheet, where no other implementation could reach them.
+ */
+
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  margin-inline: auto;
+  max-width: var(--cr-container-max, #{$cr-layout-container-max});
+  padding-inline: $cr-layout-gutter-wide;
+}
+
+@media (max-width: $cr-breakpoint-lg) {
+  .container { padding-inline: $cr-layout-gutter-base; }
+}
+
+@media (max-width: $cr-breakpoint-sm) {
+  .container { padding-inline: $cr-layout-gutter-compact; }
+}

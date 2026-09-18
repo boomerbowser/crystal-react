@@ -544,15 +544,57 @@ Nothing downstream is trustworthy until this passes.
       layers stay behind in the web runtime, because animated `box-shadow`,
       `border-radius` and `background-position` cannot be composited and do not port.
 
-### D — Utility and layout (39, 1 done)
+### D — Utility and layout (39, 17 done)
+
+**Done.**
 
 - [x] `scroll-area` — taken out of order, because Meridian reported the scrolling
       problem from a phone and it had to be fixed in both places at once. Carries
-      Crystal's two scrollbars by class rather than restating their CSS, drives
-      the edge fade through `data-cr-scroll`, and becomes a tab stop only when it
-      scrolls and holds nothing focusable. 14 tests.
+      Crystal's two scrollbars by class rather than restating their CSS, drives the
+      edge fade through `data-cr-scroll`, and becomes a tab stop only when it
+      scrolls and holds nothing focusable.
+- [x] `container` — the shell ceiling and the reading ceiling, which are different
+      numbers for different reasons. Introduces no landmark, which the catalogue
+      states in as many words.
+- [x] `stack`, `group` — one box turned ninety degrees, two exports because that is
+      the vocabulary a product reads. Gap as a custom property rather than seven
+      classes per component.
+- [x] `grid`, `simple-grid` — twelve columns with spans per breakpoint, and the
+      auto-flowing pair that needs no breakpoint props at all. A cell with no span
+      is full width: a forgotten prop produces a readable stack, not slivers.
+- [x] `center`, `space`, `aspect-ratio` — `space` is `aria-hidden`, because the
+      catalogue forbids using it to convey grouping and an empty div is announced
+      as a blank item by some screen readers.
+- [x] `divider` — decoration when unlabelled, a named `separator` when labelled.
+      The name comes from `aria-labelledby`, because `separator` is not a
+      name-from-content role and a label left as a child text node is announced as
+      nothing.
+- [x] `visually-hidden`, `skip-link` — React Aria owns the clipping recipe; Crystal
+      owns the pill the skip link becomes on focus, and the part every product gets
+      wrong: focusing the target rather than only scrolling to it.
+- [x] `focus-trap` — React Aria's `FocusScope`, as the catalogue instructs ("use a
+      maintained primitive rather than rebuilding it"), with Crystal's rule stated
+      around it: never trap without a visible, keyboard-reachable exit.
+- [x] `click-away` — React Aria's `useInteractOutside`, plus Escape, because
+      Crystal's rule is that dismissal is never *only* a click-away and a keyboard
+      user has no outside to click.
+- [x] `no-ssr` — `useIsSSR`, tied to React's hydration signal rather than a
+      `useEffect` flag, so there is no mismatch to warn about.
+- [x] `focusable`, `pressable` — React Aria's behaviour with Crystal's appearance.
+      `Pressable` also supplies the role React Aria deliberately leaves out: a bare
+      React Aria `Pressable` is a tab stop a screen reader announces as nothing,
+      and the catalogue asks for button semantics unless told otherwise.
 
-`visually-hidden`, `skip-link`, `focus-trap`, `transition`, `direction-provider`, `theme-provider`, `reduced-effects`, `resizable`, `watermark`, `qr-code`, `click-away`, `animate-on-scroll`, `no-ssr`, `global-styles`, `terminal`*, `border-beam`*, `pressable`, `focusable`, `drag-handle`, `drop-indicator`, `virtualizer`, `shared-element-transition`, `toolbar`, `router-provider`, `ssr-provider`, `app-shell`, `container`, `grid`, `simple-grid`, `stack`, `group`, `divider`, `aspect-ratio`, `scroll-area`, `center`, `space`, `app-bar`, `masonry`, `overflow-list`.
+Two tokens entered Crystal for this slice, because the catalogue makes both
+Crystal's obligation and neither existed: the **spacing scale** and the
+**breakpoints**, plus the shell's ceilings, gutters and minimum cell width. Values
+a library has to invent are values that drift.
+
+**Remaining (22).** `transition`, `direction-provider`, `theme-provider`,
+`reduced-effects`, `resizable`, `watermark`, `qr-code`, `animate-on-scroll`,
+`global-styles`, `terminal`*, `border-beam`*, `drag-handle`, `drop-indicator`,
+`virtualizer`, `shared-element-transition`, `toolbar`, `router-provider`,
+`ssr-provider`, `app-shell`, `app-bar`, `masonry`, `overflow-list`.
 
 \* recorded `not-applicable`, with the reason in the catalogue.
 

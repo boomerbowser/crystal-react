@@ -1,0 +1,37 @@
+@use '../../styles/tokens' as *;
+
+/* SkipLink — hidden until focused, then a real control at the top of the page.
+ *
+ * It is an action, so it is a pill: Crystal's action geometry applies to a link
+ * that behaves like a button, and a skip link that arrives in a different shape
+ * than every other control announces itself as an afterthought.
+ */
+
+.skipLink {
+  position: absolute;
+  inset-block-start: -100%;
+  inset-inline-start: $cr-spacing-sm;
+  z-index: 100;  /* crystal-allow-literal: stacking order, not a design value */
+  display: inline-flex;
+  align-items: center;
+  min-block-size: $cr-action-min-target;
+  padding: $cr-action-padding-block $cr-action-padding-inline;
+  border: 1px solid var(--cr-edge);
+  border-radius: $cr-action-radius;
+  background: var(--cr-surface);
+  color: var(--cr-text);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Focus is the only thing that reveals it, so the position change is bound to
+   focus rather than to hover — a pointer user never needs it and should never
+   see it appear under their cursor. */
+.skipLink:focus-visible,
+.skipLink:focus {
+  inset-block-start: $cr-spacing-sm;
+}
+
+@media (forced-colors: active) {
+  .skipLink { background: Canvas; color: CanvasText; border-color: CanvasText; }
+}

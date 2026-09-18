@@ -38,18 +38,36 @@ if (!SOURCE) {
 const catalogue = JSON.parse(readFileSync(SOURCE, 'utf8'));
 const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
 
-/* What is actually implemented, read from the source tree rather than declared.
-   A list of "done" components maintained by hand goes stale the first time
-   somebody deletes one. */
+/* What is actually implemented, read from what the package exports rather than
+   declared. A list of "done" components maintained by hand goes stale the first
+   time somebody deletes one.
+ *
+   This reads exported names, not directory names, because the two stopped
+   agreeing: `Stack` and `Group` are one box turned ninety degrees and share a
+   file, so a directory scan reported Group as not started while it was exported,
+   documented and tested. A component is implemented when a consumer can import
+   it — that is the only definition that matches what "implemented" means to
+   somebody reading the manifest. */
 const componentsDir = join(ROOT, 'src/components');
-const implemented = new Set(
-  existsSync(componentsDir)
-    ? readdirSync(componentsDir)
-      .filter((entry) => statSync(join(componentsDir, entry)).isDirectory())
-      /* PascalCase directory -> catalogue id */
-      .map((entry) => entry.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase())
-    : [],
-);
+const exported = new Set();
+for (const entry of existsSync(componentsDir) ? readdirSync(componentsDir) : []) {
+  const dir = join(componentsDir, entry);
+  if (!statSync(dir).isDirectory()) continue;
+  const barrel = join(dir, 'index.ts');
+  if (!existsSync(barrel)) continue;
+  for (const match of readFileSync(barrel, 'utf8').matchAll(/export\s*\{([^}]*)\}/g)) {
+    for (const name of match[1].split(',')) {
+      const symbol = name.trim().split(/\s+as\s+/).pop()?.trim();
+      if (symbol && /^[A-Z]/.test(symbol)) exported.add(symbol);
+    }
+  }
+}
+/* PascalCase export -> catalogue id. `SimpleGrid` -> `simple-grid`, `NoSsr` ->
+   `no-ssr`; the second capital run is why the boundary is matched twice. */
+const implemented = new Set([...exported].map((name) => name
+  .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+  .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+  .toLowerCase()));
 
 /* Every recipe and preset Crystal ships, so the scan below matches against real
    names rather than against a guess at call syntax. The first version matched
@@ -68,8 +86,18 @@ const PRESET_IDS = new Set(['plastic', 'frost', 'resin', 'haze', 'stone', 'mirag
    "what moves, and when" is the question an assistant most often has to answer
    about a design system, and it is invisible from the type signature. */
 function motionUsed(componentId) {
-  const dir = join(componentsDir, componentId.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join(''));
-  if (!existsSync(dir)) return { recipes: [], presets: [] };
+  const pascal = componentId.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join('');
+  /* A component may live in a neighbour's directory — Group is in Stack's — so
+     the source is found by looking for the directory that exports it rather than
+     by assuming one is named after it. */
+  const dir = existsSync(join(componentsDir, pascal))
+    ? join(componentsDir, pascal)
+    : (readdirSync(componentsDir)
+      .map((entry) => join(componentsDir, entry))
+      .find((candidate) => statSync(candidate).isDirectory()
+        && existsSync(join(candidate, 'index.ts'))
+        && new RegExp(`\\b${pascal}\\b`).test(readFileSync(join(candidate, 'index.ts'), 'utf8'))) ?? '');
+  if (!dir || !existsSync(dir)) return { recipes: [], presets: [] };
   const recipes = new Set();
   const presets = new Set();
   for (const file of readdirSync(dir)) {

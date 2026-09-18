@@ -1,0 +1,22 @@
+@use '../../styles/tokens' as *;
+
+/* Stack and Group are the same box with a different main axis, so they share one
+   rule and differ by direction. The gap arrives as a custom property rather than
+   as a class per step: seven steps across two components is fourteen classes
+   describing one number.
+ *
+ * `min-width: 0` is not decoration. A flex item defaults to `min-width: auto`,
+ * which refuses to shrink below its content — so a long word or a wide table
+ * inside a stack pushes the whole layout wider instead of wrapping or scrolling.
+ * It is the single most common layout defect this component prevents.
+ */
+
+.stack {
+  display: flex;
+  min-width: 0;
+  gap: var(--cr-stack-gap, #{$cr-spacing-md});
+}
+
+.vertical { flex-direction: column; }
+.horizontal { flex-direction: row; align-items: center; }
+.wrap { flex-wrap: wrap; }

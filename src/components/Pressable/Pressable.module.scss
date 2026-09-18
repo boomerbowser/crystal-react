@@ -1,0 +1,26 @@
+@use '../../styles/tokens' as *;
+
+/* Pressable — the minimum target, enforced on whatever it wraps.
+ *
+ * The catalogue asks this component to enforce the 44px minimum on its child.
+ * Doing it by growing the child would change the design; doing it with a
+ * pseudo-element extends the *hit area* without moving a pixel, which is what the
+ * requirement actually is — a target big enough for a fingertip, not a control
+ * big enough to look clumsy.
+ */
+
+.pressable {
+  position: relative;
+  touch-action: manipulation;
+}
+
+.pressable::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  translate: -50% -50%;
+  min-inline-size: $cr-action-min-target;
+  min-block-size: $cr-action-min-target;
+  inline-size: 100%;
+  block-size: 100%;
+}

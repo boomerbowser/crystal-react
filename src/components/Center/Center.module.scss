@@ -1,0 +1,13 @@
+@use '../../styles/tokens' as *;
+
+/* Center — a child centred on both axes. */
+
+.center {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+}
+
+/* `inline` keeps the box in the text flow, which is what centring an icon inside
+   a button needs; the block form takes the width it is given. */
+.inline { display: inline-grid; }
