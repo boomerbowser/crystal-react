@@ -4,6 +4,9 @@ packages:
 
 allowBuilds:
   '@parcel/watcher': set this to true or false
+  esbuild: set this to true or false
+
+ignoreWorkspaceRootCheck: true
 
 # Sass pulls in @parcel/watcher, which has a native build step. pnpm 10+ exits
 # non-zero until every such dependency gets an explicit answer, so an unanswered

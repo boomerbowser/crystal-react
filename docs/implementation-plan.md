@@ -21,7 +21,7 @@ where something is not yet built, it says so.
 | Theme provider, theme object, colour scheme and typography context, hooks | §3.3 | built |
 | 100% functional, correct TypeScript | §3.2 | enforced |
 | Next.js, TanStack Start, React Router, Gatsby, Redwood | §3.6 | designed, gated |
-| Vitest, Jest, Storybook, LLMs | §3.7 | Vitest built; rest designed |
+| Vitest, Jest, Storybook, LLMs | §3.7 | Vitest, Storybook and the LLM manifest built; Jest suite outstanding |
 | SCSS/PostCSS under the hood, not CSS-in-JS | §2.2, §3.1 | built |
 | Dynamic and responsive; improve the animations | §3.4, §3.5 | designed |
 | Forms: components, state, validation, submission, mutations | §3.8 | designed |
@@ -485,9 +485,10 @@ Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 - [x] `CrystalProvider`, the theme object, six hooks, per-element scoping, 7 tests
 - [x] Typography context: family, reading rhythm, and a scale *derived* from the reading size so moving that token moves every step
 - [x] `useMotion` (recipes, on Crystal's springs) and `usePreset` (material presets, on Crystal's shared preset module)
-- [ ] `renderWithCrystal`, axe integration, Jest parity suite
-- [ ] Storybook 9 with the six-palette toolbar
-- [ ] `llms.txt` and the generated component manifest
+- [x] `renderWithCrystal` with theme axes as one argument; axe assertions
+- [ ] Jest parity suite — one suite proven to run under Jest, so the claim is checkable
+- [x] Storybook with every theme axis in the toolbar — six palettes, both modes, both densities, both directions, reduced effects and reduced motion — and a11y findings set to fail rather than inform
+- [x] `llms.txt` and `component-manifest.json`, generated from Crystal's catalogue with status read from the source tree
 
 **Gate C** — one component per concern, proven together:
 
