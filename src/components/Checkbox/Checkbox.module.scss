@@ -35,7 +35,6 @@
   background: var(--cr-resin-fill);
   box-shadow: inset 0 2px 1px var(--cr-rim);
   backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
   color: var(--cr-on-primary);
 }
 
@@ -88,11 +87,10 @@
 :global([data-effects='opaque']) .box {
   background: var(--cr-surface);
   backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .box { background: var(--cr-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .box { background: var(--cr-surface); backdrop-filter: none; }
 }
 
 @media (forced-colors: active) {

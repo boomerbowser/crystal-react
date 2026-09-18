@@ -795,11 +795,41 @@ Eight more tokens entered Crystal for this slice, every one of them a figure the
 catalogue already stated in prose: the choice box and its radius, the switch
 track, the slider track and thumb, the chip height, and the well inset.
 
-### G — Inputs, part two (26 of 52)
+### G — Inputs, part two (26 of 52) — complete
 
-The composite and temporal families: combobox and autocomplete, tags and tokens,
-colour in all six forms, the six date and time components, file input, upload and
-upload zone, transfer, cascader, mentions and the rich-text surface.
+- [x] `combobox`, `autocomplete` — one React Aria primitive with a different
+      policy on free text. Focus never leaves the field; the highlighted row is
+      named by `aria-activedescendant`, which is what lets typing continue while
+      the list is open. Empty and loading are surfaces, not an absent popover.
+- [x] `tags-input`, `token-field` — additions and removals are announced, a
+      duplicate is refused **and says why**, and focus returns to the entry after
+      a removal: removing the last chip destroys the element that had focus, and
+      the browser then focuses the body, dropping a keyboard user out of the form.
+- [x] `color-input`, `color-area`, `color-slider`, `color-wheel`, `color-swatch`,
+      `color-swatch-picker` — colour is never the only representation, in six
+      components whose entire subject is a colour. The thumb is two rings, white
+      inside dark, because a single-colour border disappears against part of the
+      gamut it sits on. A hue slider handed a hex converts rather than throwing.
+- [x] `date-input`, `time-input`, `date-picker`, `date-range-picker`,
+      `date-time-picker`, `month-picker`, `year-picker`, `digital-clock` — a row
+      of segments, each its own spin button, so a date is enterable in any locale
+      without knowing the order. An unset segment shows `dd`: `01` is an answer
+      nobody gave. All the arithmetic is `@internationalized/date`.
+- [x] `file-input`, `dropzone`, `upload`, `upload-zone` — a drop surface always
+      contains a real button, because dragging needs a pointer, a steady hand and
+      sight of both ends of the gesture. Progress is a number as well as a bar.
+- [x] `transfer`, `cascader` — Transfer moves items with named controls rather
+      than a drag, which is the catalogue's requirement and the reason it is two
+      listboxes. Cascader announces the whole path, and a branch says it is one
+      in its **name** rather than as a silent chevron.
+- [x] `rich-text-surface`, `mentions` — Crystal owns the chrome, the product owns
+      the engine, which is what the catalogue says: "the entire editing engine,
+      serialisation and paste handling". **The plan's dependency table names
+      `@tiptap/react` for this; reading the catalogue, no engine belongs in the
+      library**, and bundling one would impose a large dependency on every
+      consumer for a component most will not use. The toolbar reports active
+      formatting with `aria-pressed`, which is the only thing a formatting
+      toolbar is for.
 
 ### H — Forms
 

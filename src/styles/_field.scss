@@ -29,6 +29,13 @@
    recessed rather than raised. Crystal's light source is overhead throughout, so
    recession inverts the light pair: a highlight inset along the top edge where
    the light lands, over the content-level shadow. */
+/* Only the unprefixed `backdrop-filter` is ever written in this library.
+ *
+ * Writing `-webkit-backdrop-filter` beside it made autoprefixer drop the standard
+ * property, and Chromium does not understand the WebKit alias — so every Frost
+ * and Resin surface rendered as a flat translucent fill with no diffusion at all,
+ * in every story, since the beginning. Autoprefixer adds the prefix for Safari
+ * on its own; the job here is to write the property once. */
 @mixin shell {
   position: relative;
   isolation: isolate;
@@ -38,7 +45,6 @@
   border-radius: var(--cr-radius);
   background: var(--cr-resin-fill);
   backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
   box-shadow: inset 0 2px 1px var(--cr-rim), var(--cr-shadow-content);
   transform-origin: center;
 }
@@ -99,14 +105,12 @@
   :global([data-effects='opaque']) #{$selector} {
     background: var(--cr-surface);
     backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
 
   @media (prefers-reduced-transparency: reduce) {
     #{$selector} {
       background: var(--cr-surface);
       backdrop-filter: none;
-      -webkit-backdrop-filter: none;
     }
   }
 

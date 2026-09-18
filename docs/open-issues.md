@@ -10,6 +10,24 @@ slice, and that is noted where it applies.
 
 ---
 
+## R-0 · Everything visual before slice G was reviewed without Crystal's materials
+
+**Not a defect any more — a caveat on the evidence.**
+
+`-webkit-backdrop-filter` was written by hand beside `backdrop-filter` in every
+stylesheet that used it. Autoprefixer, seeing both, dropped the **standard**
+property and kept the prefixed one — and Chromium does not understand the WebKit
+alias. So Frost and Resin rendered as flat translucent fills with no diffusion at
+all, in every story, from the first component to slice F.
+
+Fixed in slice G: the library writes the unprefixed property once and lets
+autoprefixer add the prefix. But every visual judgement recorded before that was
+made against a Crystal without its materials, and the screenshots in earlier
+commit messages show that state. Worth a pass over the finished components with
+the materials actually on.
+
+---
+
 ## R-1 · A slider's unit is shown but not announced
 
 **Severity: high — the component's own comment claims otherwise.**

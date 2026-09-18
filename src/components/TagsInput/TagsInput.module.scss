@@ -1,0 +1,47 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* TagsInput and TokenField — a field whose value is a set of chips. */
+
+.field { @include field.field; }
+.label { @include field.label; }
+
+.shell {
+  @include field.shell;
+  flex-wrap: wrap;
+  gap: $cr-spacing-2xs;
+  padding: $cr-spacing-2xs $cr-spacing-sm;
+}
+
+.shell:focus-within { @include field.focus-ring; }
+.shell[data-invalid] { border-color: var(--cr-danger-ink); }
+
+.tags { display: contents; }
+
+/* The entry field sits on the same line as the last chip and takes the rest of
+   it, so typing continues where the value ends rather than below it. */
+.entry {
+  flex: 1;
+  min-inline-size: calc(#{$cr-action-min-target} * 2);
+  min-block-size: $cr-chip-height;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+}
+
+.entry:focus { outline: none; }
+
+/* A duplicate is refused rather than silently ignored, and the refusal is drawn
+   on the chip that already holds the value — which is the answer to "why did
+   nothing happen". */
+.duplicate { animation: none; outline: 2px solid var(--cr-danger-ink); outline-offset: 2px; }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+.count { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+.field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+@include field.shell-fallbacks('.shell');

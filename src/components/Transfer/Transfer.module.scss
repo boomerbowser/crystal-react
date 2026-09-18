@@ -1,0 +1,64 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* Transfer — two lists and the controls between them. */
+
+.transfer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: var(--cr-space);
+  align-items: stretch;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--cr-edge);
+  border-radius: var(--cr-radius);
+  background: var(--cr-surface-alt);
+  overflow: hidden;
+}
+
+.panelHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $cr-spacing-sm;
+  padding: $cr-spacing-sm;
+  border-block-end: 1px solid var(--cr-edge);
+  font-weight: 750;
+}
+
+.panelCount { font-weight: 400; font-size: var(--cr-text-caption-size); color: var(--cr-muted); }
+
+.list { flex: 1; min-block-size: calc(#{$cr-action-min-target} * 4); max-block-size: 40vh; outline: none; padding: $cr-spacing-2xs; }
+
+.item {
+  display: flex;
+  align-items: center;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-sm;
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.item[data-selected] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+.item[data-focused] { background: var(--cr-surface); }
+.item[data-selected][data-focused] { background: var(--cr-primary-soft); }
+
+.empty { display: flex; align-items: center; justify-content: center; min-block-size: calc(#{$cr-action-min-target} * 2); color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+
+.controls { display: flex; flex-direction: column; justify-content: center; gap: $cr-spacing-xs; }
+
+/* Below the md breakpoint the two panels stack and the controls turn, because
+   three columns in a phone's width is three unusable columns. */
+@media (max-width: $cr-breakpoint-md) {
+  .transfer { grid-template-columns: minmax(0, 1fr); }
+  .controls { flex-direction: row; justify-content: center; }
+}
+
+@media (forced-colors: active) {
+  .item[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
+}

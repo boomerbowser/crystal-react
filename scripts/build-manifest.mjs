@@ -80,6 +80,10 @@ const NAMED_DIFFERENTLY = {
   SharedElement: 'shared-element-transition',
   Abbr: 'abbreviation',
   TextArea: 'textarea',
+  /* The catalogue spells these as one word; Crystal spells them the way React
+     and the DOM do. */
+  ComboBox: 'combobox',
+  DropZone: 'dropzone',
   /* The catalogue lists `title` and `heading` separately — one for the levels
      with display tracking, one for levels two to six. They are the same component
      with a different default, and shipping both names would be two names for one

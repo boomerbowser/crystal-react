@@ -1,0 +1,107 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* RichTextSurface and Mentions — a toolbar above an editable surface, and a
+ * popover attached to one.
+ *
+ * Crystal owns the chrome. The editing engine is the product's, which the
+ * catalogue states in as many words, and that is the right split: an editor is a
+ * document model, a paste pipeline and a serialisation format, none of which a
+ * design system should have an opinion about.
+ */
+
+.field { @include field.field; }
+.label { @include field.label; }
+
+.frame {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--cr-outline);
+  border-radius: var(--cr-radius);
+  background: var(--cr-resin-fill);
+  box-shadow: inset 0 2px 1px var(--cr-rim), var(--cr-shadow-content);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  overflow: hidden;
+}
+
+.frame:focus-within { @include field.focus-ring; }
+.frame[data-invalid] { border-color: var(--cr-danger-ink); }
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $cr-spacing-2xs;
+  padding: $cr-spacing-2xs;
+  border-block-end: 1px solid var(--cr-edge);
+}
+
+/* The surface is a content fill inside the frame: what you read and type into is
+   recessed, as it is in every other Crystal field. */
+.surface {
+  min-block-size: calc(#{$cr-action-min-target} * 3);
+  max-block-size: 50vh;
+  padding: var(--cr-space);
+  background: var(--cr-haze-fill);
+  color: var(--cr-text);
+  font-size: var(--cr-text-body-size);
+  line-height: var(--cr-text-body-leading);
+  outline: none;
+  overflow-y: auto;
+}
+
+.surface[data-readonly] { background: var(--cr-surface-alt); }
+
+/* A mention, once inserted. A token rather than plain text, so it is visibly a
+   reference to something rather than a word that happens to start with @. */
+.token {
+  padding-inline: 0.2em;
+  border-radius: $cr-spacing-2xs;
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+  font-weight: 700;
+}
+
+.popover {
+  min-inline-size: calc(#{$cr-action-min-target} * 4);
+  max-block-size: 30vh;
+  padding: $cr-spacing-2xs;
+  border: 1px solid var(--cr-edge);
+  border-radius: var(--cr-radius);
+  background: var(--cr-frost-fill);
+  box-shadow: var(--cr-shadow-float);
+  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
+  overflow: auto;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-sm;
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.option[data-selected], .option[data-focused] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+.state { display: flex; align-items: center; min-block-size: $cr-action-min-target; padding-inline: $cr-spacing-sm; color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+:global([data-effects='opaque']) .frame,
+:global([data-effects='opaque']) .popover {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .frame, .popover { background: var(--cr-surface); backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .frame, .popover { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .token { background: Canvas; outline: 1px solid CanvasText; }
+}

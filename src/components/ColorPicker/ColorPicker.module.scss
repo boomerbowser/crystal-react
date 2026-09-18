@@ -1,0 +1,101 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* The colour family.
+ *
+ * The thumb is the part that needs care. It sits on top of an arbitrary colour —
+ * that is the whole point of a colour area — so a thumb with a single-colour
+ * border is invisible against some of the values it is meant to mark. Crystal's
+ * answer is a two-ring thumb: a white ring inside a dark one, which keeps an edge
+ * against anything. That is not a decorative choice; it is the only way a thumb
+ * stays visible across a gamut.
+ */
+
+.field { @include field.field; }
+.label { @include field.label; }
+.shell { @include field.shell; }
+.control { @include field.control; font-variant-numeric: tabular-nums; }
+
+.control:focus { outline: none; }
+.shell:focus-within { @include field.focus-ring; }
+.shell[data-invalid] { border-color: var(--cr-danger-ink); }
+
+/* A swatch over a chequerboard, so a translucent colour reads as translucent
+   rather than as a paler opaque one. */
+.swatch {
+  flex: none;
+  inline-size: $cr-choice-box-size;
+  block-size: $cr-choice-box-size;
+  margin-inline-start: $cr-spacing-sm;
+  border: 1px solid var(--cr-edge);
+  border-radius: $cr-choice-box-radius;
+  background-image:
+    linear-gradient(45deg, var(--cr-surface-alt) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--cr-surface-alt) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--cr-surface-alt) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--cr-surface-alt) 75%);
+  background-size: $cr-spacing-xs $cr-spacing-xs;
+  background-position: 0 0, 0 #{$cr-spacing-2xs}, #{$cr-spacing-2xs} calc(-1 * #{$cr-spacing-2xs}), calc(-1 * #{$cr-spacing-2xs}) 0;
+}
+
+.area {
+  inline-size: 100%;
+  block-size: calc(#{$cr-action-min-target} * 4);
+  border-radius: var(--cr-radius);
+  border: 1px solid var(--cr-edge);
+}
+
+.track {
+  block-size: $cr-slider-thumb-size;
+  border-radius: $cr-slider-thumb-size;
+  border: 1px solid var(--cr-edge);
+}
+
+.wheel { flex: none; }
+
+/* Two rings, so the thumb keeps an edge against any colour beneath it. */
+.thumb {
+  inline-size: $cr-slider-thumb-size;
+  block-size: $cr-slider-thumb-size;
+  border-radius: 50%;
+  border: 2px solid #fff;  /* crystal-allow-literal: the light half of a two-ring thumb, which must not follow the palette */
+  box-shadow: 0 0 0 1px #000, inset 0 0 0 1px #000;  /* crystal-allow-literal: the dark half of the same thumb */
+}
+
+.thumb[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+}
+
+.swatchGrid { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; }
+
+.swatchOption {
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  border-radius: $cr-choice-box-radius;
+  border: 1px solid var(--cr-edge);
+  cursor: pointer;
+}
+
+/* Selection is a ring rather than a fill, because the fill is the value. */
+.swatchOption[data-selected] {
+  outline: $cr-selection-rail-width solid var(--cr-primary);
+  outline-offset: 2px;
+}
+
+.swatchOption[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+}
+
+.name { font-size: var(--cr-text-caption-size); color: var(--cr-muted); }
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+@media (forced-colors: active) {
+  .swatchOption[data-selected] { outline-color: Highlight; }
+  .thumb { border-color: CanvasText; }
+}
+
+@include field.shell-fallbacks('.shell');

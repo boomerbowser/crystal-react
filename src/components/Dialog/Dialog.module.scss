@@ -18,7 +18,6 @@
      overlay gradient, which is why it is a filter and not just a dark fill. */
   background: var(--cr-mirage-fill);
   backdrop-filter: blur(var(--cr-mirage-blur)) saturate(var(--cr-mirage-saturation)) brightness(var(--cr-mirage-brightness));
-  -webkit-backdrop-filter: blur(var(--cr-mirage-blur)) saturate(var(--cr-mirage-saturation)) brightness(var(--cr-mirage-brightness));
 }
 
 /* The surface holds the material and the height ceiling; the body inside it is
@@ -78,7 +77,6 @@
 :global([data-effects='opaque']) .scrim {
   background: var(--cr-mirage-fallback-fill);
   backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -86,7 +84,6 @@
   .scrim {
     background: var(--cr-mirage-fallback-fill);
     backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
 }
 

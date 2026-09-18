@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { CrystalProvider, useCrystalTheme } from './CrystalProvider.js';
 import { useColorScheme, useMotionSpeed } from './hooks.js';
 import { crystalTokens } from './tokens.generated.js';
@@ -146,5 +146,35 @@ describe('CrystalProvider', () => {
     const inner = screen.getByTestId('inner').closest('[data-crystal-scope]') as HTMLElement;
     expect(outer.style.getPropertyValue('--cr-canvas'))
       .not.toBe(inner.style.getPropertyValue('--cr-canvas'));
+  });
+
+  /* React Aria portals a popover to `document.body`, which is outside the scope
+     element — so none of its custom properties reach the overlay. Every menu,
+     listbox and dialog resolved `:root` instead: a Harbor dark page opened a
+     Prism light menu, and `backdrop-filter: blur(var(--cr-frost-blur))` was
+     invalid at computed-value time because the variable did not exist there, so
+     Frost lost its diffusion entirely. The story is what showed it — the page
+     was legible straight through an open calendar. */
+  it('gives overlays a themed container rather than a bare body', async () => {
+    render(
+      <CrystalProvider palette="harbor" mode="dark"><span>x</span></CrystalProvider>,
+    );
+
+    const container = await waitFor(() => {
+      const found = document.querySelector<HTMLElement>('[data-crystal-overlays]');
+      expect(found).not.toBeNull();
+      return found!;
+    });
+
+    /* A sibling of the scope, not a child: a child would inherit correctly and
+       be clipped by any ancestor with `overflow: hidden`, which is the thing
+       portalling exists to avoid. */
+    expect(container.parentElement).toBe(document.body);
+    expect(container.dataset['crystalPalette']).toBe('harbor');
+    expect(container.dataset['crystalMode']).toBe('dark');
+    expect(container.style.getPropertyValue('--cr-canvas')).toBe(harbourDark['canvas']);
+    /* The one that broke the material: without it the blur is invalid at
+       computed-value time and Frost renders with no diffusion at all. */
+    expect(container.style.getPropertyValue('--cr-frost-blur')).toBeTruthy();
   });
 });

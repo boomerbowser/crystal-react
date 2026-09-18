@@ -17,10 +17,11 @@
  * render more than once, which Storybook and visual tests both do.
  */
 import {
-  createContext, useContext, useMemo, useId,
+  createContext, useContext, useEffect, useMemo, useId, useState,
   type ReactNode, type CSSProperties, type JSX,
 } from 'react';
 import { I18nProvider } from 'react-aria-components';
+import { UNSAFE_PortalProvider } from 'react-aria';
 import preferences from '@crystal/core/core/preferences';
 import resolver from '@crystal/core/resolver';
 import crystalFlat from '@crystal/core/flat' with { type: 'json' };
@@ -137,6 +138,14 @@ function scopeStyle(theme: CrystalThemeValues): CSSProperties {
        control and a light default scrollbar, which is the seam that gives a dark
        theme away. */
     colorScheme: theme.mode,
+    /* `color` and the family are inherited properties, and publishing the tokens
+       does not set them — a scope's descendants would take whatever ink the
+       document above had. That showed up first on an overlay: a Harbor dark
+       calendar drew Prism light's near-black text on its own dark surface. A
+       scope paints its own ink for the same reason it declares its own
+       colour-scheme. */
+    color: 'var(--cr-text)',
+    fontFamily: 'var(--cr-font)',
   } as CSSProperties;
 }
 
@@ -156,6 +165,53 @@ export interface CrystalProviderProps extends CrystalThemeInput {
   as?: 'div' | 'section' | 'main' | 'body';
   className?: string;
   style?: CSSProperties;
+}
+
+/* Where overlays go.
+ *
+ * React Aria portals a popover, a modal or a tooltip to `document.body`, which is
+ * outside the scope element — so none of the scope's custom properties reach it
+ * and every overlay resolved `:root` instead. A Harbor dark page opened a Prism
+ * light menu, and `backdrop-filter: blur(var(--cr-frost-blur))` was invalid at
+ * computed-value time because the variable did not exist there, so the Frost
+ * material lost its diffusion entirely and the page showed straight through.
+ *
+ * The fix is a sibling of the scope rather than a child of it: a container
+ * appended to `body` carrying the same attributes and the same resolved
+ * properties. A child would inherit correctly and be clipped by any ancestor with
+ * `overflow: hidden`, which is what portalling exists to avoid.
+ */
+function useThemedPortal(
+  attributes: Record<string, string | undefined>,
+  style: CSSProperties,
+): HTMLElement | null {
+  const [container, setContainer] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+    const element = document.createElement('div');
+    element.dataset['crystalOverlays'] = 'true';
+    document.body.append(element);
+    setContainer(element);
+    return () => { element.remove(); };
+  }, []);
+
+  useEffect(() => {
+    if (!container) return;
+    for (const [name, value] of Object.entries(attributes)) {
+      if (value === undefined) container.removeAttribute(name);
+      else container.setAttribute(name, value);
+    }
+    for (const [name, value] of Object.entries(style)) {
+      if (name.startsWith('--')) container.style.setProperty(name, String(value));
+      else container.style.setProperty(
+        name.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`),
+        String(value),
+      );
+    }
+  }, [container, attributes, style]);
+
+  return container;
 }
 
 export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
@@ -182,24 +238,36 @@ export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
     ],
   );
 
+  const resolved = scopeStyle(theme);
+  const scopeAttributes = useMemo(() => ({
+    'data-crystal-scope': scopeId,
+    'data-crystal-palette': theme.palette,
+    'data-crystal-mode': theme.mode,
+    'data-crystal-density': theme.density,
+    'data-effects': theme.effects === 'opaque' ? 'opaque' : undefined,
+    dir: theme.direction,
+  }), [scopeId, theme.palette, theme.mode, theme.density, theme.effects, theme.direction]);
+
+  const overlayContainer = useThemedPortal(scopeAttributes, resolved);
+
   return (
     <CrystalThemeContext.Provider value={theme}>
       {/* React Aria needs the direction too, or its own components lay out
           left-to-right inside a right-to-left scope — a `dir` attribute is not
           something a JavaScript layout calculation reads. */}
       <I18nProvider locale={locale ?? (theme.direction === 'rtl' ? 'ar' : 'en')}>
+      {/* Overlays go to a themed sibling of the scope rather than to a bare
+          `body`, so a popover carries the palette, the mode and the material of
+          the scope that opened it. */}
+      <UNSAFE_PortalProvider getContainer={() => overlayContainer}>
       <Element
-        data-crystal-scope={scopeId}
-        data-crystal-palette={theme.palette}
-        data-crystal-mode={theme.mode}
-        data-crystal-density={theme.density}
-        data-effects={theme.effects === 'opaque' ? 'opaque' : undefined}
-        dir={theme.direction}
+        {...scopeAttributes}
         className={className}
-        style={{ ...scopeStyle(theme), ...style }}
+        style={{ ...resolved, ...style }}
       >
         {children}
       </Element>
+      </UNSAFE_PortalProvider>
       </I18nProvider>
     </CrystalThemeContext.Provider>
   );

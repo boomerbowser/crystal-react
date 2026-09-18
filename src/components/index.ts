@@ -82,3 +82,13 @@ export * from './MaskInput/index.js';
 export * from './JsonInput/index.js';
 export * from './AngleSlider/index.js';
 export * from './MultiSelect/index.js';
+
+/* Inputs, part two */
+export * from './ComboBox/index.js';
+export * from './TagsInput/index.js';
+export * from './ColorPicker/index.js';
+export * from './DatePicker/index.js';
+export * from './FileInput/index.js';
+export * from './Transfer/index.js';
+export * from './Cascader/index.js';
+export * from './RichTextSurface/index.js';

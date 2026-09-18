@@ -1,0 +1,96 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* The file family: a trigger, a drop surface, and the list of what was chosen. */
+
+.field { @include field.field; }
+.label { @include field.label; }
+
+.zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $cr-spacing-sm;
+  min-block-size: calc(#{$cr-action-min-target} * 3);
+  padding: var(--cr-space);
+  /* A dashed edge is the one place Crystal uses one: it says "this boundary is a
+     target, not a surface", which is exactly what a drop zone is. */
+  border: 2px dashed var(--cr-edge);
+  border-radius: var(--cr-radius);
+  color: var(--cr-muted);
+  text-align: center;
+}
+
+.zone[data-drop-target] {
+  border-color: var(--cr-primary);
+  border-style: solid;
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+}
+
+.zone[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+}
+
+.zone svg { inline-size: $cr-icon-action; block-size: $cr-icon-action; }
+
+.files { display: flex; flex-direction: column; gap: $cr-spacing-2xs; margin: 0; padding: 0; list-style: none; }
+
+.file {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-sm;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-sm;
+  border: 1px solid var(--cr-edge);
+  border-radius: var(--cr-radius);
+  background: var(--cr-surface-alt);
+}
+
+.fileName { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fileSize { color: var(--cr-muted); font-size: var(--cr-text-caption-size); font-variant-numeric: tabular-nums; }
+
+/* Progress is a bar and a number. The bar alone says "something is happening";
+   the number says how much, which is what somebody waiting actually wants. */
+.progressTrack {
+  flex: 1;
+  block-size: $cr-slider-track-height;
+  border-radius: $cr-slider-track-height;
+  background: var(--cr-surface);
+  overflow: hidden;
+}
+
+.progressFill {
+  block-size: 100%;
+  inline-size: var(--cr-progress, 0%);
+  border-radius: inherit;
+  background: var(--cr-primary);
+}
+
+.remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: pointer;
+}
+
+.remove:hover { color: var(--cr-text); background: var(--cr-surface); }
+.remove svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.description, .error { @include field.message; }
+.description { color: var(--cr-muted); }
+.error { color: var(--cr-danger-ink); font-weight: 700; }
+
+@media (forced-colors: active) {
+  .zone { border-color: CanvasText; }
+  .zone[data-drop-target] { border-color: Highlight; background: Canvas; }
+  .progressFill { background: Highlight; }
+}

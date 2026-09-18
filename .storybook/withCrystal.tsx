@@ -54,16 +54,14 @@ export const withCrystal: Decorator = (Story, context) => {
       direction={(direction as CrystalDirection) ?? 'ltr'}
       effects={(effects as CrystalEffects) ?? 'full'}
       reduceMotion={reduceMotion === 'true'}
-      /* Crystal's own ground, painted from the scope. Without it a story renders
-         on Storybook's white and a dark palette looks like an island rather than
-         a page — and `color` is inherited from the document, not from the scope's
-         custom properties, so it has to be said here too. */
+      /* Crystal's own ground, painted from the scope, so a dark palette reads as
+         a page rather than an island. The ink and the family are the provider's
+         own now — a scope paints them for every consumer, not only for this
+         Storybook. */
       style={{
         padding: 'var(--cr-space)',
         background: 'var(--cr-canvas)',
-        color: 'var(--cr-text)',
         minHeight: '100vh',
-        fontFamily: 'var(--cr-font)',
       }}
     >
       <Story />
