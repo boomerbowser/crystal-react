@@ -50,10 +50,17 @@ const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
    somebody reading the manifest. */
 const componentsDir = join(ROOT, 'src/components');
 const exported = new Set();
+/* The theme provider is a component of the catalogue but lives with the theme,
+   so its barrel is read alongside the component ones rather than moved to keep a
+   script happy. */
+const barrels = [join(ROOT, 'src/theme/index.ts')];
 for (const entry of existsSync(componentsDir) ? readdirSync(componentsDir) : []) {
   const dir = join(componentsDir, entry);
   if (!statSync(dir).isDirectory()) continue;
   const barrel = join(dir, 'index.ts');
+  if (existsSync(barrel)) barrels.push(barrel);
+}
+for (const barrel of barrels) {
   if (!existsSync(barrel)) continue;
   for (const match of readFileSync(barrel, 'utf8').matchAll(/export\s*\{([^}]*)\}/g)) {
     for (const name of match[1].split(',')) {
@@ -62,9 +69,16 @@ for (const entry of existsSync(componentsDir) ? readdirSync(componentsDir) : [])
     }
   }
 }
+/* Where Crystal's name for a thing is not the catalogue's id. This is not a list
+   of what is done — status still comes from the exports — it is a translation
+   table for the handful of cases where the library's own vocabulary is better
+   than the catalogue's generic one. `CrystalProvider` is the theme provider, and
+   calling it `ThemeProvider` as well would be two names for one thing. */
+const NAMED_DIFFERENTLY = { CrystalProvider: 'theme-provider' };
+
 /* PascalCase export -> catalogue id. `SimpleGrid` -> `simple-grid`, `NoSsr` ->
    `no-ssr`; the second capital run is why the boundary is matched twice. */
-const implemented = new Set([...exported].map((name) => name
+const implemented = new Set([...exported].map((name) => NAMED_DIFFERENTLY[name] ?? name
   .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
   .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
   .toLowerCase()));

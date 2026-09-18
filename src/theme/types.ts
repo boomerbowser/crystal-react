@@ -12,6 +12,13 @@ export type CrystalPalette = 'prism' | 'fuchsia' | 'cobalt' | 'ion' | 'amethyst'
 
 export type CrystalMode = 'light' | 'dark';
 
+/**
+ * What a product may ask for, which is one more thing than what resolves.
+ * `system` follows `prefers-color-scheme`; the resolved theme is always `light`
+ * or `dark`, because a component asking "am I dark?" needs an answer.
+ */
+export type CrystalModePreference = CrystalMode | 'system';
+
 /** `comfortable` is Crystal's default; `compact` tightens spacing, never targets. */
 export type CrystalDensity = 'comfortable' | 'compact';
 
@@ -48,7 +55,10 @@ export interface CrystalThemeValues {
   reduceMotion: boolean;
 }
 
-export type CrystalThemeInput = Partial<CrystalThemeValues>;
+export type CrystalThemeInput = Partial<Omit<CrystalThemeValues, 'mode'>> & {
+  /** `system` follows the operating system; the resolved value is never `system`. */
+  mode?: CrystalModePreference;
+};
 
 export interface CrystalTheme extends CrystalThemeValues {
   /**

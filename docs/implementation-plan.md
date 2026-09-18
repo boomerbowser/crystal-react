@@ -544,7 +544,7 @@ Nothing downstream is trustworthy until this passes.
       layers stay behind in the web runtime, because animated `box-shadow`,
       `border-radius` and `background-position` cannot be composited and do not port.
 
-### D — Utility and layout (39, 17 done)
+### D — Utility and layout (39, 25 done)
 
 **Done.**
 
@@ -590,11 +590,46 @@ Crystal's obligation and neither existed: the **spacing scale** and the
 **breakpoints**, plus the shell's ceilings, gutters and minimum cell width. Values
 a library has to invent are values that drift.
 
-**Remaining (22).** `transition`, `direction-provider`, `theme-provider`,
-`reduced-effects`, `resizable`, `watermark`, `qr-code`, `animate-on-scroll`,
-`global-styles`, `terminal`*, `border-beam`*, `drag-handle`, `drop-indicator`,
-`virtualizer`, `shared-element-transition`, `toolbar`, `router-provider`,
-`ssr-provider`, `app-shell`, `app-bar`, `masonry`, `overflow-list`.
+**Also done — providers, scopes and the two React Aria wrappers.**
+
+- [x] `theme-provider` — `CrystalProvider`, which already was this; it gained the
+      three things the catalogue asks for and it did not have. It declares
+      `color-scheme`, so native controls and the browser's own scrollbars follow
+      the mode rather than staying light inside a dark scope. It resolves
+      `mode="system"` against `prefers-color-scheme` — a preference, never a
+      resolved value, because a component asking "am I dark?" needs an answer. And
+      it honours `prefers-reduced-transparency` and `forced-colors` on its own, so
+      a product that never thought about either still respects them; an explicit
+      `effects` prop can only ever reduce further, never restore.
+- [x] `direction-provider` — a `CrystalProvider` underneath rather than a second
+      mechanism. It also hands React Aria a locale, which is the half a `dir`
+      attribute cannot do: React Aria calculates placement in JavaScript, and a
+      calculation does not read an attribute.
+- [x] `reduced-effects` — the explicit product preference. The system's own
+      setting is already honoured above it.
+- [x] `global-styles` — paints the document from the resolved scope, restores what
+      it found on unmount, and deliberately touches neither focus visibility nor
+      motion preferences. A reset may normalise appearance; it may not remove an
+      affordance or overrule a preference somebody expressed to their operating
+      system.
+- [x] `router-provider`, `ssr-provider` — React Aria's, re-exported with Crystal's
+      reason attached. `SSRProvider` does nothing on React 18 and later, which is
+      this library's floor; it is shipped so the name exists where somebody looks
+      for it and the reason is written down rather than folklore.
+- [x] `toolbar` — React Aria's roving tab index and arrow handling, Crystal's
+      material and geometry. One tab stop for a group of controls is an
+      accessibility decision, not a layout one: a formatting bar of fifteen
+      buttons is otherwise fifteen stops between a person and the next field.
+- [x] `transition` — `usePreset` and `AnimatePresence`, and deliberately thin.
+      Everything it could decide is decided in `@crystal/core`, and a transition
+      component carrying its own durations is a second motion system. It renders a
+      real wrapper rather than `display: contents`, because an element that
+      generates no box cannot be faded — which would silently remove the exit
+      animation it exists for.
+
+**Remaining (10).** `resizable`, `watermark`, `qr-code`, `animate-on-scroll`,
+`terminal`*, `border-beam`*, `drag-handle`, `drop-indicator`, `virtualizer`,
+`shared-element-transition`, `app-shell`, `app-bar`, `masonry`, `overflow-list`.
 
 \* recorded `not-applicable`, with the reason in the catalogue.
 

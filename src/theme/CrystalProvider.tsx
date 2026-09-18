@@ -20,11 +20,13 @@ import {
   createContext, useContext, useMemo, useId,
   type ReactNode, type CSSProperties, type JSX,
 } from 'react';
+import { I18nProvider } from 'react-aria-components';
 import preferences from '@crystal/core/core/preferences';
 import crystalFlat from '@crystal/core/flat' with { type: 'json' };
 import type {
-  CrystalTheme, CrystalThemeInput, CrystalThemeValues, CrystalDirection,
+  CrystalTheme, CrystalThemeInput, CrystalThemeValues, CrystalDirection, CrystalMode,
 } from './types.js';
+import { usePreferredMode, usePrefersReducedTransparency, useForcedColors } from './usePreferredScheme.js';
 
 const core = preferences;
 
@@ -42,8 +44,17 @@ export const crystalChoices = core.CHOICES;
 
 const CrystalThemeContext = createContext<CrystalTheme | null>(null);
 
-function resolveTheme(input: CrystalThemeInput, inherited: CrystalTheme | null): CrystalTheme {
-  const merged = { ...(inherited ?? {}), ...input };
+function resolveTheme(
+  input: CrystalThemeInput,
+  inherited: CrystalTheme | null,
+  system: { mode: CrystalMode; reducedTransparency: boolean; forcedColors: boolean },
+): CrystalTheme {
+  /* `system` is a preference, never a resolved value: a component asking "am I
+     dark?" needs an answer, so it is turned into one here and nowhere else. */
+  const requestedMode = input.mode ?? (inherited ? undefined : 'system');
+  const mode: CrystalMode | undefined = requestedMode === 'system' ? system.mode
+    : requestedMode;
+  const merged = { ...(inherited ?? {}), ...input, ...(mode ? { mode } : {}) };
   /* Crystal normalises and clamps; anything it does not recognise it replaces
      with the documented default, so an out-of-range value cannot reach CSS. */
   const normalised = core.normalisePreferences(
@@ -55,9 +66,18 @@ function resolveTheme(input: CrystalThemeInput, inherited: CrystalTheme | null):
   /* `effects` is a Crystal preference under the name `reduced`, which is a
      boolean. Translating here keeps the public API legible without inventing a
      second concept. */
-  const effects = input.effects
-    ?? inherited?.effects
-    ?? ((normalised as unknown as { reduced?: boolean }).reduced ? 'opaque' : 'full');
+  /* The operating system asking for less transparency is not the same thing as a
+     product preference for it, but it must win the same way: a product that has
+     never thought about the setting still honours it. An explicit `effects` prop
+     is the one thing that may ask for more than the system does — and it cannot,
+     because the system's answer is checked first. Forced colours is beyond both:
+     the operating system is painting, and every translucent surface is already
+     being replaced. */
+  const effects = system.reducedTransparency || system.forcedColors
+    ? 'opaque' as const
+    : input.effects
+      ?? inherited?.effects
+      ?? ((normalised as unknown as { reduced?: boolean }).reduced ? 'opaque' : 'full');
 
   const values: CrystalThemeValues = { ...normalised, direction, effects };
 
@@ -78,10 +98,25 @@ function scopeStyle(theme: CrystalThemeValues): CSSProperties {
     '--cr-radius': `${theme.radius}px`,
     '--cr-motion-speed': `${theme.motionSpeed}`,
     '--cr-motion-enabled': theme.reduceMotion ? '0' : '1',
+    /* Native controls and the browser's own scrollbars read `color-scheme`, not
+       Crystal's tokens. Without it a dark Crystal scope still gets a light form
+       control and a light default scrollbar, which is the seam that gives a dark
+       theme away. */
+    colorScheme: theme.mode,
   } as CSSProperties;
 }
 
 export interface CrystalProviderProps extends CrystalThemeInput {
+  /**
+   * BCP-47 locale for React Aria's formatting and collation — dates, numbers,
+   * calendars, sorting. Given one, its direction wins over `direction`, because a
+   * locale is a stronger statement than a layout flag.
+   *
+   * Without one the locale is derived from `direction`, so a product that only
+   * ever said "this page is right-to-left" still gets React Aria laying out
+   * right-to-left rather than only the CSS.
+   */
+  locale?: string;
   children?: ReactNode;
   /** Rendered element for the scope. Defaults to a `div`. */
   as?: 'div' | 'section' | 'main' | 'body';
@@ -90,24 +125,35 @@ export interface CrystalProviderProps extends CrystalThemeInput {
 }
 
 export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
-  const { children, as: Element = 'div', className, style, ...input } = props;
+  const { children, as: Element = 'div', className, style, locale, ...input } = props;
   const inherited = useContext(CrystalThemeContext);
   /* A stable id per provider, so nested scopes are distinguishable in the DOM
      and in a screenshot diff without relying on render order. */
   const scopeId = useId();
 
+  const systemMode = usePreferredMode();
+  const reducedTransparency = usePrefersReducedTransparency();
+  const forcedColors = useForcedColors();
+
   const theme = useMemo(
-    () => resolveTheme(input, inherited),
+    () => resolveTheme(input, inherited, {
+      mode: systemMode, reducedTransparency, forcedColors,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       input.palette, input.mode, input.density, input.direction, input.effects,
       input.atmosphere, input.translucency, input.elevation, input.radius,
       input.motionSpeed, input.reduceMotion, inherited,
+      systemMode, reducedTransparency, forcedColors,
     ],
   );
 
   return (
     <CrystalThemeContext.Provider value={theme}>
+      {/* React Aria needs the direction too, or its own components lay out
+          left-to-right inside a right-to-left scope — a `dir` attribute is not
+          something a JavaScript layout calculation reads. */}
+      <I18nProvider locale={locale ?? (theme.direction === 'rtl' ? 'ar' : 'en')}>
       <Element
         data-crystal-scope={scopeId}
         data-crystal-palette={theme.palette}
@@ -120,6 +166,7 @@ export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
       >
         {children}
       </Element>
+      </I18nProvider>
     </CrystalThemeContext.Provider>
   );
 }

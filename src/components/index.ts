@@ -14,6 +14,13 @@ export * from './Space/index.js';
 export * from './Divider/index.js';
 export * from './AspectRatio/index.js';
 
+/* Providers and scopes */
+export * from './DirectionProvider/index.js';
+export * from './ReducedEffects/index.js';
+export * from './GlobalStyles/index.js';
+export * from './RouterProvider/index.js';
+export * from './SSRProvider/index.js';
+
 /* Utility */
 export * from './VisuallyHidden/index.js';
 export * from './SkipLink/index.js';
@@ -22,3 +29,5 @@ export * from './ClickAway/index.js';
 export * from './NoSsr/index.js';
 export * from './Focusable/index.js';
 export * from './Pressable/index.js';
+export * from './Toolbar/index.js';
+export * from './Transition/index.js';

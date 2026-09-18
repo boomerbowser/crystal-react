@@ -66,4 +66,35 @@ describe('CrystalProvider', () => {
     expect(() => render(<Probe />)).toThrow(/must be used inside <CrystalProvider>/);
     quiet.mockRestore();
   });
+
+  /* Native form controls and the browser's own scrollbars read `color-scheme`,
+     not Crystal's tokens. Without it a dark scope still gets a light select and a
+     light default scrollbar, which is the seam that gives a dark theme away. */
+  it('declares color-scheme so native controls and scrollbars follow the mode', () => {
+    const { container, rerender } = render(
+      <CrystalProvider mode="dark"><span>x</span></CrystalProvider>,
+    );
+    expect((container.firstElementChild as HTMLElement).style.colorScheme).toBe('dark');
+
+    rerender(<CrystalProvider mode="light"><span>x</span></CrystalProvider>);
+    expect((container.firstElementChild as HTMLElement).style.colorScheme).toBe('light');
+  });
+
+  /* `system` is a preference, never a resolved value. A component asking "am I
+     dark?" needs an answer, so it is turned into one in the provider. */
+  it('resolves system to a real mode rather than passing it through', () => {
+    let seen: string | undefined;
+    function ModeProbe(): null { seen = useCrystalTheme().mode; return null; }
+    render(<CrystalProvider mode="system"><ModeProbe /></CrystalProvider>);
+    expect(['light', 'dark']).toContain(seen);
+  });
+
+  /* React Aria lays out from its own locale, not from a `dir` attribute, so a
+     right-to-left Crystal scope that does not tell it is half mirrored. */
+  it('hands React Aria a locale so its own components mirror too', () => {
+    const { container } = render(
+      <CrystalProvider direction="rtl"><span>x</span></CrystalProvider>,
+    );
+    expect((container.firstElementChild as HTMLElement).getAttribute('dir')).toBe('rtl');
+  });
 });
