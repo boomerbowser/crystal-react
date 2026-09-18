@@ -129,6 +129,28 @@ means the plan had no policy — so here is the audit, and the rule that produce
 | QR code | `qrcode.react` | ISC | React-native |
 | Drag and drop | `@react-aria/dnd` | Apache-2.0 | Already present; a second DnD library would mean a second accessibility model |
 | Command palette | React Aria `Autocomplete` | Apache-2.0 | Prefer the primitive already in use over `cmdk`, for the same reason |
+| Composition utilities | `react-aria` (`mergeProps`, `useObjectRef`) | Apache-2.0 | Prop and ref merging that every component needs; hand-rolled versions of both existed here first |
+
+**Scrolling defers to React Aria wherever React Aria has an answer.** Meridian asked
+for this explicitly, and it is worth writing down what the answer turns out to be,
+because it is narrower than it sounds. React Aria ships **no scroll-area primitive**;
+its one scrolling API is `usePreventScroll`, the modal scroll lock, which `Dialog`
+already receives through React Aria's own `Modal` rather than from anything Crystal
+wrote. So Crystal's `ScrollArea` is not a reimplementation of something React Aria
+offers — it is the container React Aria leaves to the design system, and what it
+contributes is Crystal's two scrollbars, the scroll contract and the edge fade.
+
+Where React Aria *does* own scrolling, the components that need it take it and do not
+repeat it:
+
+| Scrolling concern | Owner |
+| --- | --- |
+| Modal scroll lock | React Aria `Modal` (`usePreventScroll`) |
+| Keyboard scroll-into-view inside a collection | React Aria collections |
+| Virtualised scrolling | React Aria `Virtualizer`, with `@tanstack/react-virtual` only where a collection is not involved |
+| Infinite scroll sentinels | React Aria's `*LoadMoreItem` components |
+| Focus containment and restoration | React Aria `FocusScope` |
+| The scroll container, its scrollbar and its edge fade | Crystal |
 
 Every one is MIT, ISC or Apache-2.0. No paid licence, and no licence that becomes
 paid at a usage threshold.

@@ -36,12 +36,22 @@
  * Reduced motion needs nothing here: this component animates nothing, and the
  * smooth scrolling a product may ask for is `scroll-behavior`, which Crystal's
  * reset already switches to `auto` under `prefers-reduced-motion`.
+ *
+ * React Aria owns everything here that it has an answer for, and for a scroll
+ * container that is less than it sounds: it ships no scroll-area primitive, and
+ * its one scrolling API — `usePreventScroll` — is the modal scroll lock, which
+ * `Dialog` already gets through React Aria's own `Modal`. What it does own here is
+ * the composition: `useObjectRef` and `mergeProps` merge the forwarded ref and
+ * chain a consumer's `onScroll` with this component's, so neither is hand-rolled.
+ * Where React Aria owns scrolling outright — keyboard scroll-into-view inside a
+ * collection, `Virtualizer`, the load-more sentinels — the components that use it
+ * take it rather than repeating it here.
  */
 import {
-  forwardRef, useCallback, useEffect, useRef, useState,
+  forwardRef, useCallback, useEffect, useState,
   type HTMLAttributes, type ReactNode,
 } from 'react';
-import { mergeRefs } from '../../utils/mergeRefs.js';
+import { mergeProps, useObjectRef } from 'react-aria';
 import { cx } from '../../styles/cx.js';
 import styles from './ScrollArea.module.scss';
 
@@ -80,7 +90,7 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(function S
   { variant = 'frost', axis = 'y', fade = true, className, children, ...props },
   ref,
 ) {
-  const inner = useRef<HTMLDivElement | null>(null);
+  const inner = useObjectRef(ref);
   const [edges, setEdges] = useState<ScrollEdges>(undefined);
   const [needsTabStop, setNeedsTabStop] = useState(false);
 
@@ -139,12 +149,8 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(function S
 
   return (
     <div
-      {...props}
-      ref={mergeRefs(inner, ref)}
-      onScroll={(event) => {
-        measure();
-        props.onScroll?.(event);
-      }}
+      {...mergeProps(props, { onScroll: measure })}
+      ref={inner}
       className={cx(
         styles['area'],
         styles[axis === 'x' ? 'axisX' : axis === 'both' ? 'axisBoth' : 'axisY'],

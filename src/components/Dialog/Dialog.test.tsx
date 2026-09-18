@@ -63,4 +63,18 @@ describe('Dialog', () => {
     expect(dialog.className).not.toMatch(/resin/i);
     expect(baseElement.querySelector('[class*="scrim"]')).not.toBeNull();
   });
+
+  /* A dialog that overflows on a phone is the defect Meridian reported from the
+     deployed preview. Its body scrolls, with Crystal's Frost scrollbar — a dialog
+     is a reading surface, not a control plane — and the surface itself does not,
+     because the surface is what carries the material. */
+  it('scrolls its body with the Frost scrollbar, leaving the surface to the material', () => {
+    renderWithCrystal(<Dialog isOpen title="Terms">Body</Dialog>);
+    const body = screen.getByText('Body').closest('.cr-scroll-frost');
+    expect(body).not.toBeNull();
+    expect(body?.className).not.toMatch(/\bcr-scroll-resin\b/);
+
+    /* The heading stays out of the scroller: context that scrolls away is lost. */
+    expect(screen.getByRole('heading', { name: 'Terms' }).closest('.cr-scroll-frost')).toBeNull();
+  });
 });

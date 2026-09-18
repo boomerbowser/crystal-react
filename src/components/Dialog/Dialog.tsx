@@ -12,6 +12,13 @@
  * and what separates it from the page is the Mirage scrim beneath rather than
  * elevation above.
  *
+ * The body scrolls, not the surface. A dialog that overflows on a phone was the
+ * defect Meridian reported from the deployed preview, and a surface that both
+ * carries a material and scrolls cannot take the edge fade — a mask dissolves the
+ * element's own fill and border along with its content. Keeping the title out of
+ * the scroller is the better behaviour regardless: context that scrolls away is
+ * context lost.
+ *
  * Exit motion is why this uses `AnimatePresence`. Without it a closing dialog
  * unmounts immediately and its dismissal never plays — the animation and the
  * element race, and the element wins. `AnimatePresence` holds the subtree mounted
@@ -28,6 +35,7 @@ import {
   type ModalOverlayProps,
 } from 'react-aria-components';
 import { usePreset } from '../../motion/usePreset.js';
+import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Dialog.module.scss';
 
@@ -84,7 +92,12 @@ export function Dialog({ title, children, className, ...props }: DialogProps): R
               <Heading slot="title" id={titleId} className={cx(styles['title'])}>
                 {title}
               </Heading>
-              {children}
+              {/* A dialog is a reading surface, so its scrollbar is the Frost one —
+                  and it is on the body rather than the surface, because the
+                  surface is what carries the material. */}
+              <ScrollArea variant="frost" className={cx(styles['body'])}>
+                {children}
+              </ScrollArea>
             </AriaDialog>
           </Modal>
         </MotionOverlay>

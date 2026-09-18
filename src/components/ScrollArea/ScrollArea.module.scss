@@ -15,10 +15,11 @@
 
 .area {
   position: relative;
-  /* Focus lands on this element when it is the only way to reach the content, and
-     a focus ring at the very edge of a scroll container is clipped by its own
-     overflow without a little room to sit in. */
-  outline-offset: -$cr-focus-core-offset;
+  /* No focus rule here. Crystal's focus is a crisp core at a 3px offset inside a
+     four-layer feathered halo, and its own stylesheet now reaches `[tabindex]` as
+     well as the native controls — which it did not until this component made a
+     `div` focusable. Restating it here, or pulling the ring inward to keep it off
+     the container's edge, would be a second focus recipe and a worse one. */
 }
 
 .axisY { overflow-y: auto; overflow-x: hidden; }

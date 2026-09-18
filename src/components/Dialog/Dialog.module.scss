@@ -21,18 +21,30 @@
   -webkit-backdrop-filter: blur(var(--cr-mirage-blur)) saturate(var(--cr-mirage-saturation)) brightness(var(--cr-mirage-brightness));
 }
 
+/* The surface holds the material and the height ceiling; the body inside it is
+   what scrolls. That split is the rule Crystal states for the edge fade — a mask
+   fades an element's own fill and border along with its content, so a surface
+   that also scrolls would dissolve itself — and it is better behaviour anyway: a
+   title that scrolls out of a tall dialog takes its context with it. */
 .dialog {
   position: relative;
   isolation: isolate;
+  display: flex;
+  flex-direction: column;
   max-width: 560px;  /* crystal-allow-literal: reading measure, not a material value */
   width: 100%;
   max-height: 85vh;
-  overflow: auto;
   padding: var(--cr-space);
   border: 1px solid var(--cr-edge);
   border-radius: var(--cr-radius);
   background: transparent;
   color: var(--cr-text);
+}
+
+.body {
+  /* A flex child will not shrink below its content without this, and a body that
+     cannot shrink is a dialog that grows past its ceiling instead of scrolling. */
+  min-height: 0;
 }
 
 /* The Haze fill lives on its own paint layer so the feather never touches text. */
