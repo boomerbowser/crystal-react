@@ -17,6 +17,11 @@
  * The mark is rotated because an axis-aligned repeat reads as a background
  * texture rather than as a mark, and a rotated one is also harder to crop out of
  * a screenshot — which is usually why a watermark is there.
+ *
+ * The tile is a **mask**, not a background image. A data URI is its own document,
+ * so `currentColor` inside one resolves to black no matter what the page around
+ * it is doing — a black mark on a dark surface. Masking a `currentColor` fill
+ * makes the mark take the surface's own ink in every palette and both modes.
  */
 import { useMemo, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -48,7 +53,12 @@ export const Watermark = function Watermark({
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${tile}" height="${tile}">`
       + `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" `
       + `transform="rotate(${angle} ${tile / 2} ${tile / 2})" `
-      + `font-family="system-ui, sans-serif" font-size="16" fill="currentColor">`
+      /* Solid black in the mask's own document; the mask turns it into coverage,
+         and the surface's ink is what actually paints. */
+      /* Opaque in the mask's own document, which is coverage rather than colour:
+         the mask turns it into where the ink paints, and the ink is the
+         surface's. */
+      + `font-family="system-ui, sans-serif" font-size="16" fill="#000">`  // crystal-allow-literal: mask coverage, not a colour
       + text.replace(/[<>&"]/g, (c) => `&#${c.charCodeAt(0)};`)
       + '</text></svg>';
     return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;

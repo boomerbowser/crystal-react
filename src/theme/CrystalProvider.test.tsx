@@ -3,6 +3,14 @@ import { render, screen } from '@testing-library/react';
 import { CrystalProvider, useCrystalTheme } from './CrystalProvider.js';
 import { useColorScheme, useMotionSpeed } from './hooks.js';
 import { crystalTokens } from './tokens.generated.js';
+import crystalFlat from '@crystal/core/flat' with { type: 'json' };
+
+/* Read from Crystal's own token file rather than typed in. A test asserting a
+   literal hex passes forever after the palette changes underneath it — which is
+   the drift these assertions exist to catch. */
+const harbourDark = (crystalFlat as {
+  palettes: Record<string, { modes: Record<string, Record<string, string>> }>;
+}).palettes['harbor']!.modes['dark']!;
 
 function Probe() {
   const theme = useCrystalTheme();
@@ -82,6 +90,16 @@ describe('CrystalProvider', () => {
 
   /* `system` is a preference, never a resolved value. A component asking "am I
      dark?" needs an answer, so it is turned into one in the provider. */
+  /* Opt-in, deliberately: an unset provider follows Crystal's own default token
+     rather than the operating system, because making it follow the OS would
+     change the default appearance of every existing consumer. */
+  it('follows Crystal\'s default mode until asked for the system one', () => {
+    let seen: string | undefined;
+    function DefaultProbe(): null { seen = useCrystalTheme().mode; return null; }
+    render(<CrystalProvider><DefaultProbe /></CrystalProvider>);
+    expect(seen).toBe(crystalTokens['default.mode'] ?? 'light');
+  });
+
   it('resolves system to a real mode rather than passing it through', () => {
     let seen: string | undefined;
     function ModeProbe(): null { seen = useCrystalTheme().mode; return null; }
@@ -96,5 +114,37 @@ describe('CrystalProvider', () => {
       <CrystalProvider direction="rtl"><span>x</span></CrystalProvider>,
     );
     expect((container.firstElementChild as HTMLElement).getAttribute('dir')).toBe('rtl');
+  });
+
+  /* The defect this test exists for: the provider published only the numeric
+     preferences and assumed colours arrived from `crystal-theme.css` keyed off
+     `data-crystal-palette` and `data-crystal-mode`. That stylesheet defines
+     neither selector — it is one palette at `:root` — so a scope asking for
+     Harbor in dark mode rendered Prism in light, and every palette and mode
+     control in Storybook changed an attribute and nothing else. */
+  it('publishes the resolved palette, not only the numbers', () => {
+    const { container } = render(
+      <CrystalProvider palette="harbor" mode="dark"><span>x</span></CrystalProvider>,
+    );
+    const scope = container.firstElementChild as HTMLElement;
+    /* Harbor dark, from Crystal's own token file. A provider that published
+       nothing would leave these empty; one that published Prism would differ. */
+    expect(scope.style.getPropertyValue('--cr-canvas')).toBe(harbourDark['canvas']);
+    expect(scope.style.getPropertyValue('--cr-text')).toBe(harbourDark['text']);
+  });
+
+  /* Two scopes, two palettes, at the same time — which is the claim the provider
+     has made since it was written and could not keep. */
+  it('lets a scope differ from the one around it', () => {
+    const { container } = render(
+      <CrystalProvider palette="prism" mode="light">
+        <span data-testid="outer">x</span>
+        <CrystalProvider palette="harbor" mode="dark"><span data-testid="inner">y</span></CrystalProvider>
+      </CrystalProvider>,
+    );
+    const outer = container.firstElementChild as HTMLElement;
+    const inner = screen.getByTestId('inner').closest('[data-crystal-scope]') as HTMLElement;
+    expect(outer.style.getPropertyValue('--cr-canvas'))
+      .not.toBe(inner.style.getPropertyValue('--cr-canvas'));
   });
 });

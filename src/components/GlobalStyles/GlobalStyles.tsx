@@ -18,8 +18,15 @@
  * descriptions of one reset is the drift CONTRACT §1 is about. What it does is
  * paint the document with the scope's resolved foundation, which a stylesheet
  * cannot do on its own: the values depend on the palette and mode in force.
+ *
+ * Painting means copying the resolved custom properties onto `documentElement`,
+ * not referencing them. The first version set `background: var(--cr-canvas)` on
+ * `body` and painted nothing at all: the properties live on the provider's scope
+ * element, `body` is *above* it, and custom properties inherit downward only. The
+ * values are read from the scope and written to the root, which is the only
+ * direction that works.
  */
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useCrystalTheme } from '../../theme/CrystalProvider.js';
 
 export interface GlobalStylesProps {
@@ -31,36 +38,46 @@ export interface GlobalStylesProps {
   paintDocument?: boolean;
 }
 
-export function GlobalStyles({ paintDocument = true }: GlobalStylesProps): null {
+export function GlobalStyles({ paintDocument = true }: GlobalStylesProps): React.JSX.Element {
   const theme = useCrystalTheme();
+  /* A ref rather than a query, so the scope this belongs to is the one that
+     rendered it — not whichever provider happens to be first in the document. */
+  const marker = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
     if (!paintDocument || typeof document === 'undefined') return undefined;
+    const scope = marker.current?.closest<HTMLElement>('[data-crystal-scope]');
+    if (!scope) return undefined;
+
     const root = document.documentElement;
     const body = document.body;
 
     /* Restored on unmount rather than left behind. A component that paints the
-       document and never cleans up makes a mounted/unmounted Crystal island
+       document and never cleans up makes a mounted and unmounted Crystal island
        permanently change a host page. */
-    const previous = {
-      colorScheme: root.style.colorScheme,
-      background: body.style.background,
-      color: body.style.color,
-      font: body.style.fontFamily,
-    };
+    const previousInline = root.getAttribute('style');
+    const previousBody = body.getAttribute('style');
 
+    /* Copied, not referenced. The scope's properties do not reach the root on
+       their own, and `var(--cr-canvas)` above the element that defines it
+       resolves to nothing. */
+    for (const name of Array.from(scope.style)) {
+      if (name.startsWith('--cr-')) root.style.setProperty(name, scope.style.getPropertyValue(name));
+    }
     root.style.colorScheme = theme.mode;
     body.style.background = 'var(--cr-canvas)';
     body.style.color = 'var(--cr-text)';
     body.style.fontFamily = 'var(--cr-font)';
 
     return () => {
-      root.style.colorScheme = previous.colorScheme;
-      body.style.background = previous.background;
-      body.style.color = previous.color;
-      body.style.fontFamily = previous.font;
+      if (previousInline === null) root.removeAttribute('style');
+      else root.setAttribute('style', previousInline);
+      if (previousBody === null) body.removeAttribute('style');
+      else body.setAttribute('style', previousBody);
     };
-  }, [paintDocument, theme.mode]);
+  }, [paintDocument, theme]);
 
-  return null;
+  /* A zero-size marker is how the effect finds its own scope. It is hidden from
+     assistive technology because it is bookkeeping, not content. */
+  return <span ref={marker} aria-hidden="true" style={{ display: 'none' }} />;
 }

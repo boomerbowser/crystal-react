@@ -12,17 +12,30 @@
 .watermark {
   position: relative;
   isolation: isolate;
+  /* The mask paints in `currentColor`, and `color` is inherited from the document
+     rather than from the scope's custom properties — so without this the mark
+     takes whatever ink the page above the Crystal scope happens to have, which is
+     dark ink on a dark surface the moment the scope is darker than the page. */
+  color: var(--cr-text);
 }
 
+/* A mask rather than a background image, so the mark takes the surface's own ink.
+   A data URI is its own document: `currentColor` inside one resolves to black
+   regardless of the page around it, which in dark mode is a black mark on a dark
+   surface — invisible, and wrong in the other direction in light mode too. */
 .watermark::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background-image: var(--cr-watermark-image);
-  background-repeat: repeat;
-  background-size: var(--cr-watermark-size);
+  background-color: currentColor;
+  mask-image: var(--cr-watermark-image);
+  mask-repeat: repeat;
+  mask-size: var(--cr-watermark-size);
+  -webkit-mask-image: var(--cr-watermark-image);
+  -webkit-mask-repeat: repeat;
+  -webkit-mask-size: var(--cr-watermark-size);
   opacity: var(--cr-watermark-opacity, 0.06);
 }
 

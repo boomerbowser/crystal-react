@@ -21,6 +21,12 @@
  *     arranges them by importance. Crystal does not guess that the last one
  *     matters least.
  *
+ * Widths are recorded during the measuring pass and measured from that record
+ * afterwards, never from the DOM. Reading the DOM works while the row is
+ * shrinking and fails the moment it widens: the hidden items are not rendered, so
+ * a second pass can only ever conclude that the items still visible are the ones
+ * that fit, and the row never grows back.
+ *
  * The trigger is a pill that reaches the minimum target, like every other action.
  */
 import {
@@ -49,26 +55,27 @@ export function OverflowList({
 }: OverflowListProps): React.JSX.Element {
   const items = Children.toArray(children);
   const row = useRef<HTMLDivElement | null>(null);
+  /* Each item's width, taken once while every item was laid out. This is what
+     makes the row able to grow back. */
+  const widths = useRef<number[]>([]);
+  const triggerWidth = useRef(0);
   const [visibleCount, setVisibleCount] = useState<number | null>(null);
 
   const measure = useCallback(() => {
     const element = row.current;
-    if (!element) return;
+    if (!element || widths.current.length === 0) return;
 
     const available = element.clientWidth;
-    const children_ = Array.from(element.children) as HTMLElement[];
-    /* The last child is the overflow trigger; it is measured but never dropped. */
-    const trigger = children_[children_.length - 1];
     const gapSize = Number.parseFloat(getComputedStyle(element).columnGap) || 0;
 
     let used = 0;
     let fits = 0;
-    for (let i = 0; i < children_.length - 1; i += 1) {
-      const next = used + (i > 0 ? gapSize : 0) + (children_[i]?.offsetWidth ?? 0);
+    for (let i = 0; i < widths.current.length; i += 1) {
+      const next = used + (i > 0 ? gapSize : 0) + (widths.current[i] ?? 0);
       /* Room for the trigger has to be reserved whenever anything is going to be
          hidden — otherwise the last item that "fits" pushes the trigger out. */
-      const needsTrigger = i < children_.length - 2;
-      const budget = available - (needsTrigger ? gapSize + (trigger?.offsetWidth ?? 0) : 0);
+      const needsTrigger = i < widths.current.length - 1;
+      const budget = available - (needsTrigger ? gapSize + triggerWidth.current : 0);
       if (next > budget) break;
       used = next;
       fits += 1;
@@ -76,14 +83,28 @@ export function OverflowList({
     setVisibleCount(fits);
   }, []);
 
+  /* A change in the item list invalidates the record, so the row goes back to
+     measuring rather than deciding from widths that belonged to other items. */
+  useEffect(() => {
+    widths.current = [];
+    setVisibleCount(null);
+  }, [items.length]);
+
   useEffect(() => {
     const element = row.current;
     if (!element) return undefined;
+
+    if (widths.current.length === 0) {
+      const laidOut = Array.from(element.children) as HTMLElement[];
+      widths.current = laidOut.slice(0, -1).map((child) => child.offsetWidth);
+      triggerWidth.current = laidOut[laidOut.length - 1]?.offsetWidth ?? 0;
+    }
     measure();
+
     const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(measure) : null;
     observer?.observe(element);
     return () => observer?.disconnect();
-  }, [measure, items.length]);
+  }, [measure, visibleCount === null, items.length]);
 
   /* Null means "not measured yet": everything is rendered so the widths exist to
      be read, and the row is invisible so the overflow is never seen. */

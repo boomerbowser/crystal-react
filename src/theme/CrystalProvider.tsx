@@ -22,6 +22,7 @@ import {
 } from 'react';
 import { I18nProvider } from 'react-aria-components';
 import preferences from '@crystal/core/core/preferences';
+import resolver from '@crystal/core/resolver';
 import crystalFlat from '@crystal/core/flat' with { type: 'json' };
 import type {
   CrystalTheme, CrystalThemeInput, CrystalThemeValues, CrystalDirection, CrystalMode,
@@ -50,8 +51,14 @@ function resolveTheme(
   system: { mode: CrystalMode; reducedTransparency: boolean; forcedColors: boolean },
 ): CrystalTheme {
   /* `system` is a preference, never a resolved value: a component asking "am I
-     dark?" needs an answer, so it is turned into one here and nowhere else. */
-  const requestedMode = input.mode ?? (inherited ? undefined : 'system');
+     dark?" needs an answer, so it is turned into one here and nowhere else.
+   *
+   * It is opt-in, deliberately. Making an unset provider follow the operating
+   * system would change the default appearance of every existing consumer, and
+   * Crystal's own `default.mode` token says `light`. The catalogue agrees — it
+   * says the theme provider "respects the system preference *when set to
+   * system*". */
+  const requestedMode = input.mode;
   const mode: CrystalMode | undefined = requestedMode === 'system' ? system.mode
     : requestedMode;
   const merged = { ...(inherited ?? {}), ...input, ...(mode ? { mode } : {}) };
@@ -87,11 +94,38 @@ function resolveTheme(
   };
 }
 
-/** The custom properties a scope publishes. Colours come from Crystal's own
- *  stylesheet, keyed off `data-crystal-palette` and `data-crystal-mode`; what is
- *  written here is only what varies numerically. */
+/** The custom properties a scope publishes.
+ *
+ * All of them, resolved by Crystal's own resolver rather than left to a
+ * stylesheet. This used to publish only the numeric preferences, on the
+ * assumption that colours arrived from `crystal-theme.css` keyed off
+ * `data-crystal-palette` and `data-crystal-mode` — and that stylesheet defines
+ * neither selector. It is a single palette at `:root`, so a scope asking for
+ * Harbor in dark mode silently rendered Prism in light: the provider's own claim
+ * that a dark island needs no second root was false, and every palette and mode
+ * control in Storybook changed an attribute and nothing else.
+ *
+ * `resolve` is Crystal's arithmetic, imported rather than reimplemented, which is
+ * what CONTRACT §1 asks for and the reason the resolver became importable. */
 function scopeStyle(theme: CrystalThemeValues): CSSProperties {
+  const resolved = resolver.resolve(
+    {
+      palette: theme.palette,
+      mode: theme.mode,
+      atmosphere: theme.atmosphere,
+      translucency: theme.translucency,
+      elevation: theme.elevation,
+      radius: theme.radius,
+      density: theme.density,
+      reduced: theme.effects === 'opaque',
+      reduceMotion: theme.reduceMotion,
+      motionSpeed: theme.motionSpeed,
+    },
+    theme.mode,
+  );
+
   return {
+    ...resolved,
     '--cr-atmosphere': `${theme.atmosphere}`,
     '--cr-translucency': `${theme.translucency}`,
     '--cr-elevation': `${theme.elevation}`,
