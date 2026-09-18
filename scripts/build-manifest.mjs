@@ -74,7 +74,11 @@ for (const barrel of barrels) {
    table for the handful of cases where the library's own vocabulary is better
    than the catalogue's generic one. `CrystalProvider` is the theme provider, and
    calling it `ThemeProvider` as well would be two names for one thing. */
-const NAMED_DIFFERENTLY = { CrystalProvider: 'theme-provider' };
+const NAMED_DIFFERENTLY = {
+  CrystalProvider: 'theme-provider',
+  /* The component *is* the element; the transition is what it does to it. */
+  SharedElement: 'shared-element-transition',
+};
 
 /* PascalCase export -> catalogue id. `SimpleGrid` -> `simple-grid`, `NoSsr` ->
    `no-ssr`; the second capital run is why the boundary is matched twice. */

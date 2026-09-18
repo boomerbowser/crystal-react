@@ -544,7 +544,7 @@ Nothing downstream is trustworthy until this passes.
       layers stay behind in the web runtime, because animated `box-shadow`,
       `border-radius` and `background-position` cannot be composited and do not port.
 
-### D — Utility and layout (39, 30 done)
+### D — Utility and layout (39) — complete
 
 **Done.**
 
@@ -654,9 +654,39 @@ a library has to invent are values that drift.
       affordance that names its count rather than being clipped away; priority
       order is the product's, in child order.
 
-**Remaining (7).** `resizable`, `drag-handle`, `drop-indicator`, `virtualizer`,
-`shared-element-transition`, `app-shell`, `app-bar`. Two more are recorded
-`not-applicable`: `terminal`* and `border-beam`*.
+**Also done — the application frame and manipulation.**
+
+- [x] `app-shell` — the material assignment of a whole view in one place: Plastic
+      underneath, Frost for the supporting panels, Resin for the floating
+      destination group. The landmarks with **one main per view**, which is why
+      the regions are props rather than children a caller arranges. The content
+      scrolls, not the page — a sticky header does not hold inside a grid whose
+      header row is exactly as tall as the header — and both scrolling regions
+      take Crystal's Frost scrollbar.
+- [x] `app-bar` — Frost band, full-bleed, actions as pills, elevation earned on
+      scroll rather than worn at rest. Declining the banner role means rendering a
+      `div`: a `header` outside sectioning content *is* a banner implicitly, so a
+      role alone would not have taken it away.
+- [x] `resizable` — React Aria's `useMove`, which reports movement from a pointer
+      and from the arrow keys through one interface, so the keyboard path is not a
+      second implementation that drifts. A `separator` with `aria-valuenow`, so the
+      size is announced as it changes rather than "something was grabbed".
+- [x] `drag-handle`, `drop-indicator` — React Aria's `useDrag`, whose keyboard path
+      is the same state machine rather than a fallback beside the pointer one. That
+      is the whole reason to take it: a hand-rolled drag is where the keyboard path
+      is invariably missing, because the pointer version looks finished. Crystal
+      owns the lift, the settle and the indicator's material.
+- [x] `virtualizer` — React Aria's, re-exported with its layouts. The hard part is
+      not the windowing; it is `aria-setsize`/`aria-posinset` across recycling and
+      not dropping focus when a focused row is reused, and only a virtualizer
+      integrated with its collections gets those for free.
+- [x] `shared-element-transition` — Motion's `layoutId` inside `AnimatePresence`.
+      Removed entirely under reduced motion rather than damped, which is the
+      catalogue's wording and the right reading: a slower moving object is still a
+      moving object.
+
+**Slice D is complete**: 37 implemented, 2 recorded `not-applicable` (`terminal`
+and `border-beam`, with reasons in the catalogue).
 
 \* recorded `not-applicable`, with the reason in the catalogue.
 

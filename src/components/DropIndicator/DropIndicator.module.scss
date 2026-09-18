@@ -1,0 +1,41 @@
+@use '../../styles/tokens' as *;
+
+/* DropIndicator — where the thing will land.
+ *
+ * A line in the palette's primary, because it is a control affordance rather than
+ * a material: it belongs to the gesture, not to the surface. It has no height of
+ * its own in the flow — the rule is drawn on a pseudo-element so appearing does
+ * not push the list apart, which would move the very gap the reader is aiming at.
+ */
+
+.dropIndicator {
+  position: relative;
+  display: block;
+  block-size: 0;
+  outline: none;
+}
+
+.dropIndicator::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: calc(-1 * $cr-spacing-2xs / 2);
+  block-size: $cr-selection-rail-width;
+  border-radius: $cr-selection-rail-width;
+  background: var(--cr-primary);
+  opacity: 0;
+}
+
+.dropIndicator[data-drop-target]::before { opacity: 1; }
+
+/* An invalid target says so rather than showing nothing: a reader who cannot see
+   the indicator appear has no way to tell "not here" from "not yet". */
+.invalid::before {
+  background: var(--cr-danger-ink);
+  opacity: 1;
+}
+
+@media (forced-colors: active) {
+  .dropIndicator[data-drop-target]::before { background: Highlight; }
+  .invalid::before { background: CanvasText; }
+}

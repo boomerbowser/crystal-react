@@ -1,0 +1,107 @@
+@use '../../styles/tokens' as *;
+
+/* AppShell — the material assignment of a whole view, in one place.
+ *
+ * Plastic is the foundation and is what the page sits on. Frost is the supporting
+ * panels — the sidebar and the header band. Resin is the floating destination
+ * group, which is the one surface here that is above the content rather than
+ * beside it. That ordering is the hierarchy, and it is the whole reason this
+ * component exists rather than being a grid the product writes itself.
+ */
+
+/* The shell fills the viewport and the main region scrolls, rather than the page
+   scrolling under a sticky header. Sticky would not hold here anyway: a sticky
+   element sticks within its containing block, and the header's grid row is
+   exactly as tall as the header — there is no room to stick in. Making the
+   content the scroller is both the fix and the usual shape of an application. */
+.appShell {
+  display: grid;
+  grid-template-areas: 'header header' 'sidebar main';
+  grid-template-columns: var(--cr-shell-sidebar, #{$cr-layout-sidebar-width}) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  block-size: 100dvh;
+  overflow: hidden;
+  background: var(--cr-canvas);
+  color: var(--cr-text);
+}
+
+.collapsed { grid-template-columns: 0 minmax(0, 1fr); }
+
+.header { grid-area: header; min-width: 0; }
+
+.sidebar {
+  grid-area: sidebar;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--cr-frost-fill);
+  border-inline-end: 1px solid var(--cr-edge);
+  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
+  /* The safe area is the reason a shell is a component: a sidebar pinned to the
+     left of a phone in landscape sits under the notch without it. */
+  padding-inline-start: env(safe-area-inset-left);
+}
+
+.main {
+  grid-area: main;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--cr-space);
+  padding-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
+}
+
+/* Below the sidebar's breakpoint the shell is one column and the sidebar becomes
+   the product's problem — a drawer, a sheet, a menu. A shell that decides that
+   for a product decides too much. */
+@media (max-width: $cr-breakpoint-md) {
+  .appShell {
+    grid-template-areas: 'header' 'main';
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sidebar { display: none; }
+}
+
+.destinations {
+  position: fixed;
+  inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
+  inset-inline: 0;
+  z-index: 20;  /* crystal-allow-literal: stacking order, not a design value */
+  margin-inline: auto;
+  width: max-content;
+  max-width: calc(100% - var(--cr-space) * 2);
+  display: flex;
+  align-items: center;
+  gap: $cr-action-gap;
+  padding: $cr-spacing-2xs;
+  border: 1px solid var(--cr-rim);
+  border-radius: $cr-action-radius;
+  background: var(--cr-resin-fill);
+  box-shadow: var(--cr-shadow-float);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+}
+
+:global([data-effects='opaque']) .sidebar,
+:global([data-effects='opaque']) .destinations {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .sidebar, .destinations {
+    background: var(--cr-surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .sidebar, .destinations {
+    background: Canvas;
+    border-color: CanvasText;
+    backdrop-filter: none;
+  }
+}

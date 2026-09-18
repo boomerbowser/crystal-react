@@ -1,0 +1,40 @@
+@use '../../styles/tokens' as *;
+
+/* DragHandle — the grip, and the lift.
+ *
+ * The lift is elevation: a picked-up item rises off the surface it was resting
+ * on, which is what makes the gesture read as carrying rather than smearing.
+ * Crystal's float shadow is the same one a Resin plane uses, because a lifted
+ * item *is* momentarily a floating plane.
+ */
+
+.draggable {
+  position: relative;
+  touch-action: none;
+}
+
+.handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: $cr-action-min-target;
+  min-block-size: $cr-action-min-target;
+  border: 0;
+  border-radius: $cr-action-radius;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: grab;
+}
+
+.handle:hover { color: var(--cr-text); }
+.handle[data-cr-state='dragging'] { cursor: grabbing; }
+
+.dragging {
+  box-shadow: var(--cr-shadow-float);
+  border-radius: var(--cr-radius);
+  opacity: 0.9;
+}
+
+@media (forced-colors: active) {
+  .dragging { outline: 2px solid Highlight; }
+}

@@ -36,3 +36,12 @@ export * from './QRCode/index.js';
 export * from './Masonry/index.js';
 export * from './AnimateOnScroll/index.js';
 export * from './OverflowList/index.js';
+
+/* Application frame, manipulation and virtualisation */
+export * from './AppBar/index.js';
+export * from './AppShell/index.js';
+export * from './Resizable/index.js';
+export * from './SharedElement/index.js';
+export * from './DragHandle/index.js';
+export * from './DropIndicator/index.js';
+export * from './Virtualizer/index.js';
