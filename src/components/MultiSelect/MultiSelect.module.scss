@@ -25,25 +25,75 @@
 .shell[data-invalid] { border-color: var(--cr-danger-ink); }
 .shell:focus-within { @include field.focus-ring; }
 
-.placeholder { color: var(--cr-muted); padding-inline: $cr-spacing-2xs; }
+/* The opener fills what the chips leave, so the whole empty part of the shell
+   opens the list rather than only the chevron — but it is a sibling of the
+   chips, not their container. Chips carry remove buttons, and a button inside a
+   button is not something a browser can render. */
+.opener {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  min-inline-size: $cr-spacing-xl;
+  min-block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-xs});
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.opener:focus-visible { outline: none; }
+
+.placeholder { flex: 1; color: var(--cr-muted); padding-inline: $cr-spacing-2xs; }
 .spacer { flex: 1; min-inline-size: $cr-spacing-lg; }
 
-.disclosure { display: flex; align-items: center; color: var(--cr-muted); pointer-events: none; }
+.disclosure { display: flex; align-items: center; color: var(--cr-muted); }
 .disclosure svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
 .popover {
   min-inline-size: var(--trigger-width);
-  max-block-size: 40vh;
+  max-block-size: 52vh;
   padding: $cr-spacing-2xs;
   border: 1px solid var(--cr-edge);
   border-radius: var(--cr-radius);
   background: var(--cr-frost-fill);
   box-shadow: var(--cr-shadow-float);
   backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
-  overflow: auto;
 }
 
-.list { outline: none; }
+.dialog { outline: none; display: grid; gap: $cr-spacing-2xs; }
+
+.search { display: block; }
+.searchInput {
+  inline-size: 100%;
+  min-block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-xs});
+  padding-inline: $cr-spacing-sm;
+  border: 1px solid var(--cr-edge);
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  background: var(--cr-surface);
+  color: var(--cr-text);
+  font: inherit;
+}
+.searchInput:focus-visible { @include field.focus-ring; }
+
+/* Announced when it appears, because reaching the limit is the reason the
+   remaining options have just stopped responding. */
+.limit {
+  margin: 0;
+  padding: $cr-spacing-2xs $cr-spacing-sm;
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+}
+
+.empty {
+  margin: 0;
+  padding: $cr-spacing-sm;
+  color: var(--cr-muted);
+}
+
+.list { outline: none; max-block-size: 32vh; overflow: auto; }
 
 .option {
   display: flex;
@@ -56,8 +106,11 @@
   cursor: pointer;
 }
 
-/* Selection is label weight here too. */
+/* Selection is label weight here too. It never matched before: the listbox was
+   nested in a `Select`, which replaced its selection, so no option was ever
+   marked selected in the DOM or in the accessibility tree. */
 .option[data-selected] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+.option[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 .option[data-focused] { background: var(--cr-surface-alt); }
 .option[data-selected][data-focused] { background: var(--cr-primary-soft); }
 

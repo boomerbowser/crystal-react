@@ -171,6 +171,26 @@ intends. The catalogue calls it "combobox anatomy", and slice G brings the real
 
 `src/components/MultiSelect/MultiSelect.tsx`. **Fix during slice G.**
 
+**Closed, and it was not a shape quibble — the component announced nothing as
+selected.** Probed rather than assumed: React Aria's `Select` *and* its
+`ComboBox` each own the selection of the listbox they contain, and each replaces
+it. A `ListBox selectionMode="multiple"` nested inside either renders with no
+`aria-multiselectable` and every option `aria-selected="false"`, silently and
+with no warning. The shipped component did that, so nothing was announced as
+chosen — and `.option[data-selected]`, which carries Crystal's label weight,
+never matched either. The selection was invisible in both directions at once,
+and there was no test file at all to notice.
+
+Rebuilt on a standalone `ListBox` inside `DialogTrigger` → `Popover` → `Dialog`,
+where it keeps its own multiple selection. **Do not re-nest it in a field
+wrapper.** The trigger reports `aria-haspopup="dialog"`, which is what it opens.
+
+Filtering came with it, which is what "combobox anatomy" was asking for, along
+with the catalogue's `at-limit` state (`maxSelected`) that the component had
+never had. A filter hides options and must not deselect them, so keys the filter
+has hidden are carried across by hand. Nine tests, including axe with the
+popover open.
+
 ## R-7 · Neither repository has continuous integration
 
 `pnpm verify` and the design system's gate set are run by hand. Every gate in

@@ -90,6 +90,8 @@ export const ChoiceFamily: Story = {
           { value: 'digests', label: 'Weekly digest' },
         ]}
         defaultValue={['mentions']}
+        maxSelected={2}
+        description="At most two, so the digest stays short"
       />
     </Stack>
   ),
