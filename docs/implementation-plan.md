@@ -18,7 +18,7 @@ where something is not yet built, it says so.
 | React Aria as the unstyled primitive | §2.1 | decided |
 | Parity with PrimeReact, Mantine, MUI + MUI X, Ant Design, including add-ons | §4 | scoped: 174 components |
 | Crystal's animations at every appropriate step | §3.4, §2.6 | built on Motion for React, driven by Crystal's springs |
-| Theme provider, theme object, colour scheme and typography context, hooks | §3.3 | provider and hooks built; typography context outstanding |
+| Theme provider, theme object, colour scheme and typography context, hooks | §3.3 | built |
 | 100% functional, correct TypeScript | §3.2 | enforced |
 | Next.js, TanStack Start, React Router, Gatsby, Redwood | §3.6 | designed, gated |
 | Vitest, Jest, Storybook, LLMs | §3.7 | Vitest built; rest designed |
@@ -387,8 +387,8 @@ Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 - [x] `scripts/build-tokens.mjs` — the single point where values enter
 - [x] `scripts/lint-tokens.mjs` — fails on a hard-coded colour or length
 - [x] `CrystalProvider`, the theme object, six hooks, per-element scoping, 7 tests
-- [ ] Typography context and the type scale
-- [ ] `useMotion`, `useStateMotion`, `useOpticalLayer`
+- [x] Typography context: family, reading rhythm, and a scale *derived* from the reading size so moving that token moves every step
+- [x] `useMotion` (recipes, on Crystal's springs) and `usePreset` (material presets, on Crystal's shared preset module)
 - [ ] `renderWithCrystal`, axe integration, Jest parity suite
 - [ ] Storybook 9 with the six-palette toolbar
 - [ ] `llms.txt` and the generated component manifest
