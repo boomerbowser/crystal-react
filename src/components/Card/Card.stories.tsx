@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Card } from './Card.js';
+import { crystalTokens } from '../../theme/tokens.generated.js';
 
 const meta = {
   title: 'Data display/Card',
@@ -8,10 +9,13 @@ const meta = {
     docs: {
       description: {
         component:
-          'A Haze content fill: 80% opaque with a 1.95px feathered perimeter. The feather lives '
-          + 'on an isolated paint layer, so the edge softens while text, icons and focus rings stay '
-          + 'crisp. Card plays no motion — Crystal\'s catalogue assigns it none, and a library must '
-          + 'not invent motion the design system did not specify.',
+          /* The figures come from the live tokens rather than being typed into the
+             prose, so the documentation cannot drift from the material it describes. */
+          `A Haze content fill: ${Number(crystalTokens['material.haze.fill']) * 100}% opaque with a `
+          + `${crystalTokens['material.haze.feather']} feathered perimeter. The feather lives on an `
+          + 'isolated paint layer, so the edge softens while text, icons and focus rings stay crisp. '
+          + 'Card plays no motion — Crystal\'s catalogue assigns it none, and a library must not '
+          + 'invent motion the design system did not specify.',
       },
     },
   },
@@ -25,7 +29,7 @@ export const Default: Story = {
     children: (
       <>
         <h3 style={{ margin: 0 }}>Part of the same material world</h3>
-        <p style={{ margin: '8px 0 0', color: 'var(--cr-muted)' }}>
+        <p style={{ marginBlock: 'var(--cr-space) 0', color: 'var(--cr-muted)' }}>
           Colour carries through from the material beneath it.
         </p>
       </>
@@ -45,7 +49,7 @@ export const InsideResin: Story = {
   render: () => (
     <div
       className="cr-resin"
-      style={{ padding: 'var(--cr-space)', borderRadius: 'calc(var(--cr-radius) + 6px)' }}
+      style={{ padding: 'var(--cr-space)' }}
     >
       <Card>This card sits inside a Resin frame, and is recessed into it.</Card>
     </div>
