@@ -1,12 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { CrystalProvider } from '../../theme/CrystalProvider.js';
+import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
 import { Button } from './Button.js';
 
-const renderWithCrystal = (ui: React.ReactNode, theme = {}) =>
-  render(<CrystalProvider {...theme}>{ui}</CrystalProvider>);
 
 describe('Button', () => {
   it('renders a real button with its label as the accessible name', () => {
@@ -37,7 +33,7 @@ describe('Button', () => {
   it('reports the press recipe as instant under reduced motion, still firing the action', async () => {
     const user = userEvent.setup();
     const onPress = vi.fn();
-    renderWithCrystal(<Button onPress={onPress}>Save</Button>, { reduceMotion: true });
+    renderWithCrystal(<Button onPress={onPress}>Save</Button>, { theme: { reduceMotion: true } });
     const button = screen.getByRole('button', { name: 'Save' });
 
     await user.click(button);
@@ -70,14 +66,14 @@ describe('Button', () => {
   });
 
   it('keeps pill geometry in every variant, and card only when asked', () => {
-    const { rerender } = renderWithCrystal(<Button variant="primary">A</Button>);
+    const { rerenderWithCrystal } = renderWithCrystal(<Button variant="primary">A</Button>);
     const classOf = () => screen.getByRole('button').className;
     const pill = classOf();
-    rerender(<CrystalProvider><Button variant="quiet">A</Button></CrystalProvider>);
+    rerenderWithCrystal(<Button variant="quiet">A</Button>);
     /* A variant is a fill, never a different shape: no variant adds the card class. */
     expect(classOf()).not.toMatch(/card/);
     expect(pill).not.toMatch(/card/);
-    rerender(<CrystalProvider><Button shape="card">A</Button></CrystalProvider>);
+    rerenderWithCrystal(<Button shape="card">A</Button>);
     expect(classOf()).toMatch(/card/);
   });
 
@@ -85,8 +81,6 @@ describe('Button', () => {
     /* Recipes come from @crystal/core. A typo must not degrade to "no animation",
        because that is indistinguishable from a working component that is subtly
        dead — which is how eleven hollow recipes shipped upstream. */
-    expect(() => render(
-      <CrystalProvider><Button>A</Button></CrystalProvider>,
-    )).not.toThrow();
+    expect(() => renderWithCrystal(<Button>A</Button>)).not.toThrow();
   });
 });

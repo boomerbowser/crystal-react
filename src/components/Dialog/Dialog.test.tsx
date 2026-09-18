@@ -1,13 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { CrystalProvider } from '../../theme/CrystalProvider.js';
+import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
 import { Dialog } from './Dialog.js';
 import { Button } from '../Button/Button.js';
 
-const renderWithCrystal = (ui: React.ReactNode) =>
-  render(<CrystalProvider>{ui}</CrystalProvider>);
 
 describe('Dialog', () => {
   it('is not in the document until it is open', () => {

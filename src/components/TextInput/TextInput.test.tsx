@@ -1,12 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { CrystalProvider } from '../../theme/CrystalProvider.js';
+import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
 import { TextInput } from './TextInput.js';
 
-const renderWithCrystal = (ui: React.ReactNode) =>
-  render(<CrystalProvider>{ui}</CrystalProvider>);
 
 describe('TextInput', () => {
   it('associates its label with the field', () => {
@@ -47,13 +43,13 @@ describe('TextInput', () => {
 
   /* Bound to state, so a server-side failure animates identically to a client one. */
   it('plays field-invalid when the field becomes invalid, and field-valid when it recovers', () => {
-    const { container, rerender } = renderWithCrystal(<TextInput label="Email" />);
+    const { container, rerenderWithCrystal } = renderWithCrystal(<TextInput label="Email" />);
     const shell = () => container.querySelector('[class*="shell"]') as HTMLElement;
 
-    rerender(<CrystalProvider><TextInput label="Email" errorMessage="Bad address." /></CrystalProvider>);
+    rerenderWithCrystal(<TextInput label="Email" errorMessage="Bad address." />);
     expect(shell().dataset['crMotionName']).toBe('field-invalid');
 
-    rerender(<CrystalProvider><TextInput label="Email" /></CrystalProvider>);
+    rerenderWithCrystal(<TextInput label="Email" />);
     expect(shell().dataset['crMotionName']).toBe('field-valid');
   });
 

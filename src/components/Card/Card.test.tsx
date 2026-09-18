@@ -1,11 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { CrystalProvider } from '../../theme/CrystalProvider.js';
+import { renderWithCrystal, screen } from '../../test/render.js';
 import { Card } from './Card.js';
 
-const renderWithCrystal = (ui: React.ReactNode) =>
-  render(<CrystalProvider>{ui}</CrystalProvider>);
 
 describe('Card', () => {
   it('renders its children', () => {
@@ -21,11 +18,11 @@ describe('Card', () => {
   /* A landmark without a name is noise in a screen reader's landmark list, so the
      region is earned by having one rather than granted by default. */
   it('is a plain div until it is named, then a region', () => {
-    const { container, rerender } = renderWithCrystal(<Card>Contents</Card>);
+    const { container, rerenderWithCrystal } = renderWithCrystal(<Card>Contents</Card>);
     expect(container.querySelector('section')).toBeNull();
     expect(screen.queryByRole('region')).toBeNull();
 
-    rerender(<CrystalProvider><Card aria-label="Summary">Contents</Card></CrystalProvider>);
+    rerenderWithCrystal(<Card aria-label="Summary">Contents</Card>);
     expect(screen.getByRole('region', { name: 'Summary' })).toBeInTheDocument();
   });
 

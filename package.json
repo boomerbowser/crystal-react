@@ -22,18 +22,21 @@
       "require": "./dist/index.cjs"
     },
     "./styles.css": "./dist/styles.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./component-manifest.json": "./dist/component-manifest.json",
+    "./llms.txt": "./dist/llms.txt"
   },
   "scripts": {
     "tokens": "node scripts/build-tokens.mjs",
-    "build": "pnpm run tokens && vite build && tsc -p tsconfig.build.json --emitDeclarationOnly && node scripts/check-bundle.mjs",
+    "build": "pnpm run tokens && vite build && tsc -p tsconfig.build.json --emitDeclarationOnly && node scripts/check-bundle.mjs && pnpm run manifest",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint:tokens": "node scripts/lint-tokens.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "verify": "pnpm run lint:tokens && pnpm run typecheck && pnpm run test && pnpm run build"
+    "verify": "pnpm run lint:tokens && pnpm run typecheck && pnpm run test && pnpm run build",
+    "manifest": "node scripts/build-manifest.mjs"
   },
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",
