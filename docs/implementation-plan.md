@@ -21,7 +21,7 @@ where something is not yet built, it says so.
 | Theme provider, theme object, colour scheme and typography context, hooks | §3.3 | built |
 | 100% functional, correct TypeScript | §3.2 | enforced |
 | Next.js, TanStack Start, React Router, Gatsby, Redwood | §3.6 | designed, gated |
-| Vitest, Jest, Storybook, LLMs | §3.7 | Vitest, Storybook and the LLM manifest built; Jest suite outstanding |
+| Vitest, Jest, Storybook, LLMs | §3.7 | built, all four |
 | SCSS/PostCSS under the hood, not CSS-in-JS | §2.2, §3.1 | built |
 | Dynamic and responsive; improve the animations | §3.4, §3.5 | designed |
 | Forms: components, state, validation, submission, mutations | §3.8 | designed |
@@ -254,8 +254,11 @@ minimum survives every density and every breakpoint.
 
 - **Vitest** + Testing Library + `vitest-axe`, with a shared `renderWithCrystal` helper.
   Built; 7 tests currently cover the provider.
-- **Jest** compatibility is a shipped requirement, not an assumption: a transform note plus
-  one suite proven to run under Jest, so the claim is checkable.
+- **Jest** compatibility is proven, not assumed: `pnpm test:jest` runs a real suite under
+  Jest's own resolver, transform and environment, and it is part of `pnpm verify`. Babel is
+  pinned to 7.x there to match the core `babel-jest` resolves — with preset-typescript 8
+  against core 7 the preset silently does not engage, the file parses as JavaScript, and
+  `createContext<T | null>(null)` becomes a chain of comparisons.
 - **Storybook 9** with a toolbar covering all six palettes, both modes, both densities, both
   directions and reduced effects — the same axes the design system's visual gate uses.
 - **LLM integration**: `llms.txt` at the package root, and a generated
@@ -486,7 +489,11 @@ Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 - [x] Typography context: family, reading rhythm, and a scale *derived* from the reading size so moving that token moves every step
 - [x] `useMotion` (recipes, on Crystal's springs) and `usePreset` (material presets, on Crystal's shared preset module)
 - [x] `renderWithCrystal` with theme axes as one argument; axe assertions
-- [ ] Jest parity suite — one suite proven to run under Jest, so the claim is checkable
+- [x] Jest parity suite — one suite runs under Jest in `pnpm verify`, so the claim is
+      checkable. It renders a themed component, reads the theme through Crystal's
+      resolver and asserts the clamp, which exercises the three things that actually
+      differ under Jest: ESM-style `.js` specifiers in TypeScript imports, SCSS module
+      resolution, and the jsdom environment
 - [x] Storybook with every theme axis in the toolbar — six palettes, both modes, both densities, both directions, reduced effects and reduced motion — and a11y findings set to fail rather than inform
 - [x] `llms.txt` and `component-manifest.json`, generated from Crystal's catalogue with status read from the source tree
 
