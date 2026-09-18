@@ -82,13 +82,20 @@ for (const [name, value] of Object.entries(tokenMap)) {
 }
 
 const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/\./g, '-').toLowerCase();
-/* SCSS reads a bare token as a value, so a colour or dimension can be written
-   literally; anything containing a space or comma must be quoted to survive. */
-const scssValue = (value) => (
-  typeof value === 'number' ? String(value)
-    : /[\s,]/.test(String(value)) ? `"${value}"`
-      : String(value)
-);
+/* Quote everything that is not provably safe bare, rather than quoting the cases
+   that look dangerous.
+ *
+ * The first version quoted values containing a space or a comma, which let
+ * `$cr-feedback-light-danger-symbol: !;` through — the danger status symbol is a
+ * bare `!`, which SCSS reads as the start of `!important` and refuses. Status
+ * symbols, font stacks and easing curves are all strings; only numbers, numbers
+ * with a unit, and hex colours are values SCSS should read literally. */
+const SAFE_BARE = /^(-?\d*\.?\d+[a-z%]*|#[0-9a-fA-F]{3,8})$/;
+const scssValue = (value) => {
+  if (typeof value === 'number') return String(value);
+  const text = String(value);
+  return SAFE_BARE.test(text) ? text : JSON.stringify(text);
+};
 
 const entries = Object.entries(tokenMap).filter(([, value]) => value === null || typeof value !== 'object');
 
@@ -119,4 +126,15 @@ mkdirSync(resolve(ROOT, 'src/theme'), { recursive: true });
 writeFileSync(resolve(ROOT, 'src/styles/_tokens.scss'), scss);
 writeFileSync(resolve(ROOT, 'src/theme/tokens.generated.ts'), ts);
 
-console.log(`${entries.length} tokens -> src/styles/_tokens.scss and src/theme/tokens.generated.ts`);
+/* Compile what was just written. A token file that does not parse fails here,
+   with the offending line, rather than inside the first component that imports
+   it — which is where the bare `!` surfaced the first time. */
+const sass = await import('sass');
+try {
+  sass.compileString(scss, { syntax: 'scss' });
+} catch (error) {
+  console.error('The generated _tokens.scss does not compile:\n' + error.message);
+  process.exit(1);
+}
+
+console.log(`${entries.length} tokens -> src/styles/_tokens.scss and src/theme/tokens.generated.ts (compiles)`);

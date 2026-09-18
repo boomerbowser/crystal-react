@@ -1,0 +1,130 @@
+@use '../../styles/tokens' as *;
+
+/* Button.
+ *
+ * Every value here is a token or a custom property. A literal colour or length in
+ * this file is a CONTRACT §1 defect and `pnpm lint:tokens` fails on one.
+ *
+ * Selectors key off React Aria's `data-*` attributes rather than class toggles,
+ * which is why this library needs no style runtime: the primitive already
+ * publishes its state to CSS.
+ */
+
+.button {
+  /* Actions are pills, independent of the content radius. A card-shaped button is
+     a separate variant and is the exception, not the default. */
+  border-radius: $cr-action-radius;
+  border: 1px solid var(--cr-rim);
+  padding: $cr-action-padding-block $cr-action-padding-inline;
+  min-height: $cr-action-min-target;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $cr-action-gap;
+
+  font: inherit;
+  font-weight: 700;
+  color: var(--cr-text);
+  text-decoration: none;
+  cursor: pointer;
+
+  /* Resin: the floating control plane. */
+  position: relative;
+  isolation: isolate;
+  background: var(--cr-resin-fill);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  box-shadow: var(--cr-shadow-content);
+
+  /* Transform is set by the motion engine; declaring the origin here keeps the
+     press deformation centred whatever the button's size. */
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* The elevated shadow is a second, pre-rendered layer cross-faded by opacity,
+   never an animated `box-shadow`. A box-shadow keyframe repaints every frame;
+   an opacity change on an existing layer is composited. */
+.button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: var(--cr-shadow-float);
+  opacity: 0;
+  transition: opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.button[data-hovered]::after { opacity: 1; }
+
+.button[data-focus-visible] {
+  /* The focus recipe is one token: a crisp core inside a four-layer feathered
+     halo. It is never delayed, never blurred and never replaced by a badge. */
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.button[data-disabled] {
+  cursor: not-allowed;
+  opacity: $cr-action-disabled-opacity;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Secondary and quiet are fills, not different geometry: a button is a pill in
+   every variant. */
+.secondary {
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+}
+
+.primary {
+  background: var(--cr-primary);
+  color: var(--cr-on-primary);
+  border-color: transparent;
+}
+
+.quiet {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* A card-shaped button keeps the content radius. The documented exception to the
+   pill rule, and the only one. */
+.card {
+  border-radius: var(--cr-radius);
+}
+
+/* Reduced effects removes diffusion while keeping shape, contour and hierarchy —
+   it never flattens the control into a plain rectangle. */
+:global([data-effects='opaque']) .button {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .button {
+    background: var(--cr-surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .button {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+    backdrop-filter: none;
+  }
+  .button[data-focus-visible] { outline-color: Highlight; }
+  .button::after { display: none; }
+}

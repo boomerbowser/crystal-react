@@ -50,21 +50,28 @@ const problems = [];
 for (const file of walk(SRC)) {
   const rel = relative(ROOT, file);
   if (GENERATED.has(rel)) continue;
-  const lines = readFileSync(file, 'utf8').split('\n');
+  const source = readFileSync(file, 'utf8');
+  /* Block comments are stripped across the whole file before splitting, because a
+     multi-line comment's middle lines carry no delimiter of their own — the first
+     version flagged a value mentioned in prose. Newlines are preserved so the
+     reported line numbers still point at the real line. */
+  const stripped = source.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' '));
+  const lines = stripped.split('\n');
+  const original = source.split('\n');
   lines.forEach((line, index) => {
-    const code = line.replace(/\/\/.*$/, '').replace(/\/\*.*?\*\//g, '');
+    const code = line.replace(/\/\/.*$/, '');
     if (!code.trim()) return;
     /* An explicit, reviewed exception. Written on the line so it is visible in a
        diff rather than buried in this file's allow-list. */
-    if (/crystal-allow-literal/.test(line)) return;
+    if (/crystal-allow-literal/.test(original[index] ?? '')) return;
 
     if (COLOUR.test(code)) {
-      problems.push(`${rel}:${index + 1}  colour literal — use a token or custom property\n      ${line.trim()}`);
+      problems.push(`${rel}:${index + 1}  colour literal — use a token or custom property\n      ${(original[index] ?? '').trim()}`);
     }
     for (const match of code.matchAll(LENGTH)) {
       const literal = match[1] + match[2];
       if (ALLOWED_LENGTHS.has(literal)) continue;
-      problems.push(`${rel}:${index + 1}  length literal "${literal}" — use a token or custom property\n      ${line.trim()}`);
+      problems.push(`${rel}:${index + 1}  length literal "${literal}" — use a token or custom property\n      ${(original[index] ?? '').trim()}`);
     }
   });
 }
