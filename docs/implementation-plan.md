@@ -8,6 +8,16 @@ changes with it, and `libraries/parity.json` in the design system is the progres
 
 ---
 
+## 0. Open issues
+
+Things noticed while implementing and deliberately not fixed yet are in
+[open-issues.md](open-issues.md), most-consequential first. Two of them —
+a slider's unit reaching the screen but not the announcement, and two mask inputs
+sharing an id — are real defects with confirmed reproductions; the rest are gaps.
+Add to that list rather than carrying a defect in your head.
+
+---
+
 ## 1. Requirements, and where each is answered
 
 Meridian's brief, traced to the section that satisfies it. Nothing here is aspirational —
