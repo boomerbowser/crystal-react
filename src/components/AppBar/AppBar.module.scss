@@ -38,9 +38,10 @@
 
 .title {
   margin: 0;
-  font-size: 19px;  /* crystal-allow-literal: bar title, pending a type-scale token */
+  font-size: var(--cr-text-heading-size);
+  line-height: var(--cr-text-heading-leading);
+  letter-spacing: var(--cr-text-heading-tracking);
   font-weight: 750;
-  letter-spacing: -0.03em;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

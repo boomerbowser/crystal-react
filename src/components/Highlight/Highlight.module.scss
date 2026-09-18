@@ -1,0 +1,29 @@
+@use '../../styles/tokens' as *;
+
+/* Mark and Highlight — a search match, inline.
+ *
+ * The fill is the palette's soft primary with its own ink on top, which is the
+ * pair Crystal already uses for a selected surface: a match is a kind of
+ * selection. Using the pair rather than a yellow means the contrast holds in
+ * every palette and both modes, and it is checked as a pair rather than hoped
+ * for.
+ *
+ * The geometry is a small radius and a hair of padding, so a mark inside a
+ * sentence does not change the line height — a highlight that reflows the
+ * paragraph it is in draws attention to the wrong thing.
+ */
+
+.mark {
+  padding-inline: 0.15em;
+  border-radius: $cr-spacing-2xs;
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+  /* The ink is set explicitly because `mark` has a UA colour that survives a
+     background change and is black in every browser. */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@media (forced-colors: active) {
+  .mark { background: Highlight; color: HighlightText; }
+}

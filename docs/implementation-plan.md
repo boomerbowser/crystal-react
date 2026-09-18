@@ -690,9 +690,63 @@ and `border-beam`, with reasons in the catalogue).
 
 \* recorded `not-applicable`, with the reason in the catalogue.
 
-### E — Typography and actions (26)
+### E — Typography and actions (26) — complete
 
-`title`, `text`, `blockquote`, `mark`, `prose`, `highlight`, `number-formatter`, `display`, `heading`, `lead`, `prose-list`, `code-block`, `truncate`, `cite`, `abbreviation`, `text-balance`, `gradient-text`, `button`, `icon-button`, `button-group`, `split-button`, `floating-action`, `copy-button`, `close-button`, `action-bar`, `speed-dial`.
+**The scale moved upstream first.** Crystal specified a reading rhythm and no
+scale, so this library had derived six steps of its own — three tables of ratios,
+leadings and trackings that no other platform could see. They are Crystal's tokens
+now, reaching CSS as `--cr-text-<step>-*`, and six `crystal-allow-literal` markers
+reading "pending a type-scale token" became tokens with them. Two icon sizes came
+along: 20px, which Crystal's reset has always drawn an icon at, and 24px, the
+catalogue's size inside an icon button.
+
+- [x] `title`, `heading`, `display`, `lead` — `Title`, `Display`, `Lead`. **The
+      level and the step are chosen separately**, which the catalogue states twice
+      and which is the whole design: a component where `level={2}` also means
+      "medium" forces a choice between a correct outline and a correct appearance,
+      and products choose appearance. `Lead` stays a paragraph, because a
+      standfirst in the document outline is a sentence of copy pretending to be
+      structure.
+- [x] `text`, `truncate`, `text-balance` — truncation clamps rather than cutting,
+      so the text is hidden from sight and not from the DOM, and the full value
+      comes back through `title`. `Truncate`'s expand control appears only when
+      there is something to reveal: one that does nothing still costs a keyboard
+      user a tab stop to find that out.
+- [x] `prose`, `prose-list`, `blockquote`, `cite`, `abbreviation` — `Prose` is the
+      one place a stylesheet reaches its descendants, because the alternative is
+      asking a content author to know Crystal. `Cite` names a work rather than a
+      person, and `Abbr` is focusable, because an expansion shown only on hover is
+      no use without a pointer.
+- [x] `mark`, `highlight` — the matched string stays one readable sentence with
+      `mark` elements inside it, rather than an array of fragments a screen reader
+      reads as fragments. The query is escaped: a search for `c++` is an input a
+      person is allowed to make.
+- [x] `number-formatter` — one string, visible and spoken. "1.2M" on screen and
+      1204893 in an `aria-label` is two facts that drift, and the one a screen
+      reader reads is the one nobody checks.
+- [x] `code-block`, `copy-button` — a named region and a tab stop, because a
+      sample wider than its column scrolls and a scroll container with nothing
+      focusable is unreachable without a pointer. The copy control names what it
+      copied, and the confirmation goes to a live region: a label that changes is
+      a visual event until something says it.
+- [x] `gradient-text` — every point along the gradient clears the contrast floor,
+      because it runs between palette colours that already do. The solid colour
+      under the clip is one of them, so an unsupported clip leaves coloured text
+      rather than transparent text.
+- [x] `icon-button`, `close-button` — `label` is required rather than
+      optional-with-a-warning, which makes an unnamed icon button a compile error
+      instead of an audit finding. `CloseButton` names *what* closes: a page with
+      three dismissible things otherwise has three buttons called "Close".
+- [x] `button-group`, `split-button` — pill outside, square inside, one plane. The
+      role is earned by a name, because an unnamed group announces "group" and
+      tells the reader nothing. A split button is two buttons: a control that
+      behaves differently depending on which half was pressed cannot be described
+      to somebody who cannot see the halves.
+- [x] `floating-action`, `speed-dial`, `action-bar` — Resin at the float
+      elevation, with the safe-area offset. A dial's actions keep visible labels,
+      because an icon in a set that appeared a moment ago has no context to be read
+      from. The action bar announces its count: the bar appearing and the size of
+      the selection are the same piece of news.
 
 ### F — Inputs, part one (26 of 52)
 

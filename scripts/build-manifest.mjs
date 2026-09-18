@@ -78,14 +78,24 @@ const NAMED_DIFFERENTLY = {
   CrystalProvider: 'theme-provider',
   /* The component *is* the element; the transition is what it does to it. */
   SharedElement: 'shared-element-transition',
+  Abbr: 'abbreviation',
+  /* The catalogue lists `title` and `heading` separately — one for the levels
+     with display tracking, one for levels two to six. They are the same component
+     with a different default, and shipping both names would be two names for one
+     thing, which is the mistake `ThemeProvider` was avoided for. */
+  Title: ['title', 'heading'],
 };
 
 /* PascalCase export -> catalogue id. `SimpleGrid` -> `simple-grid`, `NoSsr` ->
    `no-ssr`; the second capital run is why the boundary is matched twice. */
-const implemented = new Set([...exported].map((name) => NAMED_DIFFERENTLY[name] ?? name
-  .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-  .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
-  .toLowerCase()));
+const implemented = new Set([...exported].flatMap((name) => {
+  const mapped = NAMED_DIFFERENTLY[name];
+  if (mapped) return Array.isArray(mapped) ? mapped : [mapped];
+  return [name
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+    .toLowerCase()];
+}));
 
 /* Every recipe and preset Crystal ships, so the scan below matches against real
    names rather than against a guess at call syntax. The first version matched

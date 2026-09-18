@@ -46,6 +46,7 @@
   "dependencies": {
     "@crystal/core": "file:../crystal-design-system/design-system",
     "@internationalized/date": "^3.12.4",
+    "@internationalized/number": "^3.6.8",
     "motion": "13.4.0",
     "qrcode.react": "^4.2.0",
     "react-aria": "^3.52.1",

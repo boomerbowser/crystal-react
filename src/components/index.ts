@@ -45,3 +45,21 @@ export * from './SharedElement/index.js';
 export * from './DragHandle/index.js';
 export * from './DropIndicator/index.js';
 export * from './Virtualizer/index.js';
+
+/* Typography */
+export * from './Text/index.js';
+export * from './Title/index.js';
+export * from './Prose/index.js';
+export * from './Highlight/index.js';
+export * from './Truncate/index.js';
+export * from './NumberFormatter/index.js';
+export * from './CodeBlock/index.js';
+export * from './GradientText/index.js';
+export * from './ProseList/index.js';
+export * from './TextBalance/index.js';
+
+/* Actions */
+export * from './IconButton/index.js';
+export * from './ButtonGroup/index.js';
+export * from './FloatingAction/index.js';
+export * from './CopyButton/index.js';

@@ -1,0 +1,40 @@
+@use '../../styles/tokens' as *;
+
+/* Text — body copy, and the small pieces of running text.
+ *
+ * Every step is the same rule with different custom properties, because the scale
+ * is Crystal's: six classes each repeating a size, a leading and a tracking would
+ * be eighteen numbers restating what the resolver already published.
+ */
+
+.text {
+  margin: 0;
+  font-size: var(--cr-text-size, var(--cr-text-body-size));
+  line-height: var(--cr-text-leading, var(--cr-text-body-leading));
+  letter-spacing: var(--cr-text-tracking, var(--cr-text-body-tracking));
+  color: var(--cr-text);
+}
+
+.muted { color: var(--cr-muted); }
+.onSurface { color: var(--cr-content-muted); }
+
+/* The measure. Long lines are hard to return from: the eye loses the next one.
+   `ch` rather than px because the comfortable measure is a count of characters,
+   not a width — it should follow the font size rather than fight it. */
+.measure { max-inline-size: 68ch; }
+
+.weightRegular { font-weight: 400; }
+.weightMedium { font-weight: 550; }
+.weightStrong { font-weight: 750; }
+
+/* Truncation to one line. The full value stays in the accessibility tree, which
+   the component does with `title`, so the clipped half is not simply lost. */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tabular figures line up in a column; proportional ones read better in a
+   sentence. The default is proportional because most text is a sentence. */
+.tabular { font-variant-numeric: tabular-nums; }

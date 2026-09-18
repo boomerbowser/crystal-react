@@ -64,9 +64,10 @@
 
 .title {
   margin: 0 0 var(--cr-space);
-  font-size: 21px;  /* crystal-allow-literal: heading scale, pending a type-scale token */
+  font-size: var(--cr-text-heading-size);
+  line-height: var(--cr-text-heading-leading);
+  letter-spacing: var(--cr-text-heading-tracking);
   font-weight: 750;
-  letter-spacing: -0.03em;
 }
 
 :global([data-effects='opaque']) .dialog::before {

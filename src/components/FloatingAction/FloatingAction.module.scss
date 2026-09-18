@@ -1,0 +1,94 @@
+@use '../../styles/tokens' as *;
+
+/* FloatingAction, SpeedDial and ActionBar — the surfaces that float above content.
+ *
+ * All three are Resin at the float elevation, and all three have the same
+ * obligation the catalogue states for the first: **it must not cover the final
+ * content or the focused element.** The safe-area offset is part of that; so is
+ * the scroll padding a page owes a floating control, which is the product's to
+ * set and is said in the component's documentation because nothing here can.
+ */
+
+.floating {
+  position: fixed;
+  inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
+  inset-inline-end: max(var(--cr-space), env(safe-area-inset-right));
+  z-index: 20;  /* crystal-allow-literal: stacking order, not a design value */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $cr-action-gap;
+  min-inline-size: $cr-action-min-target;
+  min-block-size: $cr-action-min-target;
+  padding: 0;
+  border: 1px solid var(--cr-rim);
+  border-radius: 50%;
+  background: var(--cr-resin-fill);
+  color: var(--cr-text);
+  box-shadow: var(--cr-shadow-float);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  cursor: pointer;
+}
+
+/* Extended: a pill with a label beside the icon. The circle is the compact form
+   of the same control, not a different one. */
+.extended {
+  border-radius: $cr-action-radius;
+  padding-inline: $cr-action-padding-inline;
+  font-weight: 700;
+}
+
+.floating svg { inline-size: $cr-icon-action; block-size: $cr-icon-action; }
+
+/* A dial's actions stack above the trigger. Pills with visible labels, never
+   icons alone — an icon in a set that appeared a moment ago has no context to be
+   read from. */
+.dial {
+  position: fixed;
+  inset-block-end: calc(max(var(--cr-space), env(safe-area-inset-bottom)) + #{$cr-action-min-target} + #{$cr-spacing-sm});
+  inset-inline-end: max(var(--cr-space), env(safe-area-inset-right));
+  z-index: 20;  /* crystal-allow-literal: stacking order, not a design value */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: $cr-spacing-xs;
+}
+
+/* An action bar is centred rather than cornered: it belongs to a selection in
+   the content, not to the page. */
+.actionBar {
+  position: fixed;
+  inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
+  inset-inline: 0;
+  z-index: 20;  /* crystal-allow-literal: stacking order, not a design value */
+  margin-inline: auto;
+  inline-size: max-content;
+  max-inline-size: calc(100% - var(--cr-space) * 2);
+  display: flex;
+  align-items: center;
+  gap: $cr-action-gap;
+  padding: $cr-spacing-2xs $cr-spacing-sm;
+  border: 1px solid var(--cr-rim);
+  border-radius: $cr-action-radius;
+  background: var(--cr-resin-fill);
+  box-shadow: var(--cr-shadow-float);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  -webkit-backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+}
+
+.count { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+
+:global([data-effects='opaque']) :is(.floating, .actionBar) {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .floating, .actionBar { background: var(--cr-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .floating, .actionBar { background: ButtonFace; border-color: ButtonText; backdrop-filter: none; }
+}

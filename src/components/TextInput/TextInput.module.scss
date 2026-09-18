@@ -19,7 +19,7 @@
 }
 
 .label {
-  font-size: 12px;  /* crystal-allow-literal: form label scale, pending a type-scale token */
+  font-size: var(--cr-text-caption-size);
   font-weight: 800;
 }
 
@@ -69,7 +69,7 @@
 
 .description,
 .error {
-  font-size: 12px;  /* crystal-allow-literal: helper text scale, pending a type-scale token */
+  font-size: var(--cr-text-caption-size);
 }
 
 .description { color: var(--cr-muted); }

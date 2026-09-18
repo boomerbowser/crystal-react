@@ -34,7 +34,8 @@
 
 .caption {
   margin-block-start: $cr-spacing-xs;
-  font-size: 13px;  /* crystal-allow-literal: supporting text, pending a type-scale token */
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
   color: var(--cr-muted);
 }
 

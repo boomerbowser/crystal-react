@@ -1,0 +1,113 @@
+@use '../../styles/tokens' as *;
+
+/* Prose — one reading rhythm for content the product did not lay out.
+ *
+ * This is the component for rendered Markdown, a CMS body, anything arriving as
+ * HTML rather than as Crystal components. Its job is that a heading, a list, a
+ * quotation, a table, a code block and an image all sit on the same rhythm
+ * without the author of the content knowing Crystal exists.
+ *
+ * The rhythm is a single idea: space between blocks comes from the reading
+ * leading, so a paragraph gap is one blank line. Everything else follows from
+ * that — which is what makes a document look composed rather than assembled.
+ */
+
+.prose {
+  color: var(--cr-text);
+  font-size: var(--cr-text-body-size);
+  line-height: var(--cr-text-body-leading);
+  max-inline-size: 68ch;
+}
+
+.prose > * + * { margin-block-start: $cr-spacing-lg; }
+
+.prose :is(h1, h2, h3, h4, h5, h6) {
+  margin-block: $cr-spacing-xl 0;
+  font-weight: 750;
+  text-wrap: balance;
+  color: var(--cr-text);
+}
+
+/* Each level takes a step, so the content's own outline drives the size without
+   the author choosing one. */
+.prose h1 { font-size: var(--cr-text-display-size); line-height: var(--cr-text-display-leading); letter-spacing: var(--cr-text-display-tracking); }
+.prose h2 { font-size: var(--cr-text-title-size); line-height: var(--cr-text-title-leading); letter-spacing: var(--cr-text-title-tracking); }
+.prose h3 { font-size: var(--cr-text-heading-size); line-height: var(--cr-text-heading-leading); letter-spacing: var(--cr-text-heading-tracking); }
+.prose :is(h4, h5, h6) { font-size: var(--cr-text-subheading-size); line-height: var(--cr-text-subheading-leading); letter-spacing: var(--cr-text-subheading-tracking); }
+
+/* The first block sets the top of the column, so it takes no lead-in space. */
+.prose > :first-child { margin-block-start: 0; }
+
+.prose a {
+  color: var(--cr-primary);
+  text-underline-offset: 0.2em;
+}
+
+.prose :is(ul, ol) { padding-inline-start: $cr-spacing-lg; }
+.prose li + li { margin-block-start: $cr-spacing-xs; }
+.prose li::marker { color: var(--cr-muted); }
+
+/* The standalone `Blockquote` component takes the same treatment. It cannot take
+   `.prose` for it: that rule is `.prose blockquote`, a descendant selector, and
+   the component *is* the blockquote — so it matched nothing and the rule was
+   invisible. The story is what showed it. */
+.prose blockquote,
+.blockquote {
+  margin-inline: 0;
+  padding-inline-start: $cr-spacing-md;
+  /* A rule rather than a panel: a quotation inside running text is part of the
+     text, and putting it on its own surface reads as a callout. */
+  border-inline-start: $cr-selection-rail-width solid var(--cr-primary-soft);
+  color: var(--cr-muted);
+}
+
+.prose blockquote cite,
+.blockquote cite {
+  display: block;
+  margin-block-start: $cr-spacing-xs;
+  font-size: var(--cr-text-caption-size);
+  font-style: normal;
+  color: var(--cr-muted);
+}
+
+.prose :is(code, kbd, samp) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  padding-inline: 0.2em;
+  border-radius: $cr-spacing-2xs;
+  background: var(--cr-surface-alt);
+}
+
+.prose pre {
+  padding: var(--cr-space);
+  border-radius: var(--cr-radius);
+  background: var(--cr-surface-alt);
+  overflow-x: auto;
+}
+
+.prose pre code { padding: 0; background: none; font-size: inherit; }
+
+.prose :is(img, video) { max-inline-size: 100%; border-radius: var(--cr-radius); }
+
+.prose table { border-collapse: collapse; inline-size: 100%; }
+.prose :is(th, td) {
+  padding: $cr-spacing-sm;
+  border-block-end: 1px solid var(--cr-edge);
+  text-align: start;
+}
+.prose th { font-weight: 750; }
+
+.prose hr { border: 0; block-size: 1px; background: var(--cr-edge); }
+
+.prose abbr {
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+
+.prose mark { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+
+@media (forced-colors: active) {
+  .prose :is(code, kbd, samp, pre, mark) { background: Canvas; border: 1px solid CanvasText; }
+  .prose blockquote { border-inline-start-color: CanvasText; }
+}

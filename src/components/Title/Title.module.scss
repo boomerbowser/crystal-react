@@ -1,0 +1,58 @@
+@use '../../styles/tokens' as *;
+
+/* Title — headings at a step of Crystal's scale.
+ *
+ * `text-wrap: balance` is the catalogue's `text-balance` component, applied here
+ * rather than shipped separately: a heading that wraps to a one-word second line
+ * is the defect, and balancing is the fix, so it belongs on the thing that has
+ * the problem. Browsers without it simply wrap as before, which is the fallback
+ * the catalogue asks for — nothing to detect and nothing to polyfill.
+ */
+
+.title {
+  margin: 0;
+  font-size: var(--cr-title-size);
+  line-height: var(--cr-title-leading);
+  letter-spacing: var(--cr-title-tracking);
+  font-weight: 750;
+  color: var(--cr-text);
+  text-wrap: balance;
+}
+
+.lead {
+  margin: 0;
+  font-size: var(--cr-text-subheading-size);
+  line-height: var(--cr-text-subheading-leading);
+  letter-spacing: var(--cr-text-subheading-tracking);
+  font-weight: 400;
+  color: var(--cr-muted);
+  max-inline-size: 60ch;
+  text-wrap: pretty;
+}
+
+.unbalanced { text-wrap: initial; }
+
+/* A gradient fill clips the paint to the glyphs. The solid colour underneath is
+   not a fallback bolted on: it is what paints wherever the clip is unsupported,
+   and it is a real palette colour so the contrast floor holds either way. */
+.gradient {
+  color: var(--cr-primary);
+  background-image: linear-gradient(100deg, var(--cr-primary), var(--cr-decorative) 55%, var(--cr-companion));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .gradient { color: transparent; }
+}
+
+/* Forced colours is the operating system deciding what is legible, and a gradient
+   is the first thing to go: transparent text over a clipped image is invisible
+   the moment the image is suppressed. */
+@media (forced-colors: active) {
+  .gradient {
+    color: CanvasText;
+    background-image: none;
+    -webkit-text-fill-color: CanvasText;
+  }
+}

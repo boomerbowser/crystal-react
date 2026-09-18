@@ -6,51 +6,32 @@
  * scale, so that is what this exposes: the family, the reading size and the
  * leading, all from tokens, plus the steps derived from them.
  *
- * The steps are *derived*, not invented. Each is a ratio of the reading size, so
- * changing `typography.readingSize` upstream moves the whole scale rather than
- * leaving six hard-coded sizes behind. That is the same argument CONTRACT §1
- * makes about values generally: a number that cannot be changed centrally is a
- * defect, and a scale written as six literals is six of them.
+ * The steps are *derived*, not invented, and the derivation is Crystal's: each is
+ * a ratio of the reading size, held in `semantic.typography.scale`, so changing
+ * `typography.readingSize` upstream moves the whole scale rather than leaving six
+ * hard-coded sizes behind. The ratios lived here first, which was a type scale
+ * one platform library could see and the others could not — the same argument
+ * CONTRACT §1 makes about values generally.
+ *
+ * The same values reach CSS as `--cr-text-<step>-size`, `-leading` and
+ * `-tracking`, published by the resolver, so a stylesheet does not have to go
+ * through this hook to use the scale.
  */
 import { useMemo } from 'react';
+import crystalFlat from '@crystal/core/flat' with { type: 'json' };
 import { useCrystalTheme } from './CrystalProvider.js';
 import { crystalTokens } from './tokens.generated.js';
 
 /** Named steps, largest to smallest. `body` is Crystal's reading size exactly. */
 export type TypographyStep = 'display' | 'title' | 'heading' | 'subheading' | 'body' | 'caption';
 
-/* Ratios against the reading size. A modest scale on purpose: Crystal's
-   hierarchy is carried by weight and material as much as by size, and a
-   dramatic scale fights that. */
-const RATIO: Record<TypographyStep, number> = {
-  display: 2.0,
-  title: 1.5,
-  heading: 1.25,
-  subheading: 1.0625,
-  body: 1,
-  caption: 0.8125,
-};
-
-/* Larger text needs proportionally tighter leading to stay a block rather than a
-   list of lines; small text needs more. */
-const LEADING: Record<TypographyStep, number> = {
-  display: 1.1,
-  title: 1.2,
-  heading: 1.3,
-  subheading: 1.45,
-  body: 1.5,
-  caption: 1.45,
-};
-
-/* Display and title are set tighter: at large sizes default tracking reads loose. */
-const TRACKING: Record<TypographyStep, string> = {
-  display: '-0.055em',
-  title: '-0.04em',
-  heading: '-0.03em',
-  subheading: '-0.01em',
-  body: '0',
-  caption: '0',
-};
+/* The scale is Crystal's, read from the tokens. It used to be three tables here:
+   six ratios, six leadings and six trackings, which is a type scale living in one
+   platform library where the other platforms cannot see it. CONTRACT §1 is about
+   exactly that, and the derivation moved upstream. */
+const SCALE = (crystalFlat as unknown as {
+  typography: { scale: Record<TypographyStep, { ratio: number; leading: number; tracking: string }> };
+}).typography.scale;
 
 export interface TypographyStepValues {
   fontSize: string;
@@ -90,12 +71,12 @@ export function useTypography(): CrystalTypography {
     const leadingScale = density === 'compact' ? 0.92 : 1;
 
     const steps = {} as Record<TypographyStep, TypographyStepValues>;
-    for (const name of Object.keys(RATIO) as TypographyStep[]) {
-      const size = readingSize * RATIO[name];
+    for (const name of Object.keys(SCALE) as TypographyStep[]) {
+      const scale = SCALE[name];
       steps[name] = {
-        fontSize: `${Math.round(size * 100) / 100}px`,
-        lineHeight: String(Math.round(LEADING[name] * leadingScale * 1000) / 1000),
-        letterSpacing: TRACKING[name],
+        fontSize: `${Math.round(readingSize * scale.ratio * 100) / 100}px`,
+        lineHeight: String(Math.round(scale.leading * leadingScale * 1000) / 1000),
+        letterSpacing: scale.tracking,
       };
     }
 

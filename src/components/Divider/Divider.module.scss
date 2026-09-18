@@ -36,7 +36,8 @@
   gap: $cr-spacing-sm;
   background: none;
   block-size: auto;
-  font-size: 13px;  /* crystal-allow-literal: supporting text, pending a type-scale token */
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
   font-weight: 650;
 }
 
