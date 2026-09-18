@@ -1,0 +1,52 @@
+@use '../../styles/tokens' as *;
+
+/* QRCode — a Haze quiet zone at a fixed contrast.
+ *
+ * The quiet zone is not padding. A scanner needs a margin of clear space to find
+ * the code's edges, and a code drawn flush against a coloured surface fails to
+ * scan even though it looks fine. Crystal's contribution is that the quiet zone
+ * is a Haze fill rather than a hard white rectangle, so it belongs to the surface
+ * it sits on — and that the code's own two colours do **not** follow the palette.
+ * A scannable code needs near-maximum contrast; a palette-tinted one is a
+ * decoration that sometimes works.
+ */
+
+.qrCode {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  /* Four modules of quiet zone is the specification's minimum. */
+  padding: $cr-spacing-md;
+  border-radius: var(--cr-radius);
+  color: var(--cr-text);
+}
+
+.qrCode::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--cr-haze-fill);
+  filter: blur(var(--cr-haze-feather));
+}
+
+.caption {
+  margin-block-start: $cr-spacing-xs;
+  font-size: 13px;  /* crystal-allow-literal: supporting text, pending a type-scale token */
+  color: var(--cr-muted);
+}
+
+.expired { opacity: 0.4; }
+
+:global([data-effects='opaque']) .qrCode::before { background: var(--cr-surface); filter: none; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .qrCode::before { background: var(--cr-surface); filter: none; }
+}
+
+@media (forced-colors: active) {
+  .qrCode { background: Canvas; }
+  .qrCode::before { display: none; }
+}

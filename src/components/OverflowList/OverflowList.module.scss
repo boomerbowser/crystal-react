@@ -1,0 +1,24 @@
+@use '../../styles/tokens' as *;
+
+/* OverflowList — one row that measures itself and hides what does not fit.
+ *
+ * The measuring pass needs the items laid out before it can know which fit, and
+ * laying them out visibly first produces a flash of the overflowing row. So the
+ * row is measured while hidden from sight but still laid out — `visibility`, not
+ * `display` — and revealed once the decision is made.
+ */
+
+.overflowList {
+  display: flex;
+  align-items: center;
+  gap: var(--cr-overflow-gap, #{$cr-action-gap});
+  min-width: 0;
+  /* A row that measures its own children must not wrap, or every child fits by
+     definition and nothing ever overflows. */
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.measuring { visibility: hidden; }
+
+.item { flex: 0 0 auto; }

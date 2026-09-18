@@ -1,0 +1,33 @@
+@use '../../styles/tokens' as *;
+
+/* Watermark — a repeating mark over content.
+ *
+ * Two rules from the catalogue, and both are about what it must not do: it never
+ * intercepts pointer events, and it never obscures text. The first is
+ * `pointer-events: none` and is absolute — a decoration that eats clicks makes
+ * the content under it unusable. The second is the opacity, which is low enough
+ * that body text keeps its contrast ratio with the mark on top of it.
+ */
+
+.watermark {
+  position: relative;
+  isolation: isolate;
+}
+
+.watermark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: var(--cr-watermark-image);
+  background-repeat: repeat;
+  background-size: var(--cr-watermark-size);
+  opacity: var(--cr-watermark-opacity, 0.06);
+}
+
+/* Forced colours is the operating system deciding what is legible. A decorative
+   wash over content is the first thing that has to go. */
+@media (forced-colors: active) {
+  .watermark::after { display: none; }
+}

@@ -1,0 +1,35 @@
+@use '../../styles/tokens' as *;
+
+/* Masonry — columns that pack items of unequal height without stretching them.
+ *
+ * CSS multi-column rather than a JavaScript packing pass. The trade is real and
+ * worth stating: columns fill top-to-bottom before moving across, so the visual
+ * order runs down each column rather than across the rows. For a gallery that is
+ * what a reader expects; for an ordered set it is not, which is why the component
+ * says so and offers a list role only when the items really are a set.
+ *
+ * The alternative — measuring every item and placing it absolutely — reflows on
+ * every resize, fights the browser, and produces a layout that a screen reader
+ * walks in a different order than a sighted reader sees.
+ */
+
+.masonry {
+  column-count: var(--cr-masonry-columns, 3);
+  column-gap: var(--cr-masonry-gap, #{$cr-spacing-md});
+  min-width: 0;
+}
+
+.masonry > * {
+  /* Without this an item can be split across a column boundary, which for a card
+     means its top half in one column and its bottom half in the next. */
+  break-inside: avoid;
+  margin-block-end: var(--cr-masonry-gap, #{$cr-spacing-md});
+}
+
+@media (max-width: $cr-breakpoint-md) {
+  .masonry { column-count: var(--cr-masonry-columns-md, 2); }
+}
+
+@media (max-width: $cr-breakpoint-sm) {
+  .masonry { column-count: 1; }
+}

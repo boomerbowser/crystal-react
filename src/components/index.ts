@@ -31,3 +31,8 @@ export * from './Focusable/index.js';
 export * from './Pressable/index.js';
 export * from './Toolbar/index.js';
 export * from './Transition/index.js';
+export * from './Watermark/index.js';
+export * from './QRCode/index.js';
+export * from './Masonry/index.js';
+export * from './AnimateOnScroll/index.js';
+export * from './OverflowList/index.js';

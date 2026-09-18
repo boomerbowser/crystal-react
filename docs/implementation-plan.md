@@ -544,7 +544,7 @@ Nothing downstream is trustworthy until this passes.
       layers stay behind in the web runtime, because animated `box-shadow`,
       `border-radius` and `background-position` cannot be composited and do not port.
 
-### D — Utility and layout (39, 25 done)
+### D — Utility and layout (39, 30 done)
 
 **Done.**
 
@@ -627,9 +627,36 @@ a library has to invent are values that drift.
       generates no box cannot be faded — which would silently remove the exit
       animation it exists for.
 
-**Remaining (10).** `resizable`, `watermark`, `qr-code`, `animate-on-scroll`,
-`terminal`*, `border-beam`*, `drag-handle`, `drop-indicator`, `virtualizer`,
-`shared-element-transition`, `app-shell`, `app-bar`, `masonry`, `overflow-list`.
+**Also done — the standalone five.**
+
+- [x] `watermark` — a tiled SVG on a pseudo-element, so it is outside the
+      accessibility tree by construction rather than by `aria-hidden`, and
+      `pointer-events: none` because a wash that eats clicks makes the content
+      under it unusable. The opacity is clamped: past a few percent the mark
+      competes with body text, and text read through a pattern is text whose
+      contrast ratio no longer means what it says.
+- [x] `qr-code` — `qrcode.react` (ISC) renders it; Crystal owns the Haze quiet
+      zone and the contrast floor. The code's two colours are the one place in
+      this library where a colour is deliberately not a token: a scanner reads
+      luminance, and a palette-tinted code is a decoration that scans in good
+      light and fails in bad. The encoded value is always available as text.
+- [x] `masonry` — CSS columns rather than a JavaScript packing pass, which reflows
+      on every resize and produces an order a screen reader walks differently from
+      a sighted reader. A list only when the items are a set, because the visual
+      order really is columnar.
+- [x] `animate-on-scroll` — content is present and readable before the animation
+      runs, never revealed by it. So no `opacity: 0` waiting to be undone: a
+      reader whose observer never fires, or whose JavaScript failed, gets the page
+      rather than a blank one. Only entry recipes are accepted, and the rest are
+      refused rather than accepted and ignored.
+- [x] `overflow-list` — measures itself with the row laid out but invisible, so
+      the overflowing state is never seen for a frame. Hidden items move into an
+      affordance that names its count rather than being clipped away; priority
+      order is the product's, in child order.
+
+**Remaining (7).** `resizable`, `drag-handle`, `drop-indicator`, `virtualizer`,
+`shared-element-transition`, `app-shell`, `app-bar`. Two more are recorded
+`not-applicable`: `terminal`* and `border-beam`*.
 
 \* recorded `not-applicable`, with the reason in the catalogue.
 
