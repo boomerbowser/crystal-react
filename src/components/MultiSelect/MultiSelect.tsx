@@ -45,6 +45,7 @@ import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import type { SelectOption } from '../Select/Select.js';
 import styles from './MultiSelect.module.scss';
 import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
+import { FormValue } from '../FormField/FormValue.js';
 
 const ChevronIcon = (
   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
@@ -255,6 +256,7 @@ export function MultiSelect({
       {description ? (
         <span id={descriptionId} className={cx(styles['description'])}>{description}</span>
       ) : null}
+      <FormValue name={name} value={selected} />
       {validation.message ? (
         <span id={errorId} role="alert" className={cx(styles['error'])}>{validation.message}</span>
       ) : null}

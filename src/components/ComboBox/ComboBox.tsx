@@ -20,12 +20,13 @@
  */
 import type { ReactNode } from 'react';
 import {
-  ComboBox as AriaComboBox, Label, Input, Button, Group, Popover, ListBox, ListBoxItem,
+  ComboBox as AriaComboBox, Label, Input, Button, Popover, ListBox, ListBoxItem,
   Text, FieldError,
   type ComboBoxProps as AriaComboBoxProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid } from '../FormField/useInvalidMotion.js';
+import { FieldGroupShell } from '../FormField/FieldShell.js';
 import styles from './ComboBox.module.scss';
 
 const ChevronIcon = (
@@ -67,8 +68,6 @@ function Field({
   label, options, description, errorMessage, placeholder, isLoading = false,
   emptyMessage = 'No matches', isFiltered = false, className, allowsCustomValue, ...props
 }: ComboBoxProps): React.JSX.Element {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const shellScope = useInvalidMotion(invalid);
 
   return (
     <AriaComboBox
@@ -88,17 +87,17 @@ function Field({
       {...declaredInvalid(props.isInvalid, errorMessage)}
       className={cx(styles['field'], className)}
     >
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group
-        ref={shellScope as never}
-        className={cx(styles['shell'])}
-        {...(invalid ? { 'data-invalid': true } : {})}
-      >
+      {/* The validity React Aria resolved, not the one the caller declared, so a
+          server's rejection moves the field exactly as a local rule would. */}
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'])}>
         {/* Focus never leaves this input. The highlighted row is named through
             `aria-activedescendant`, which React Aria maintains. */}
         <Input className={cx(styles['control'])} {...(placeholder ? { placeholder } : {})} />
         <Button className={cx(styles['trigger'])}>{ChevronIcon}</Button>
-      </Group>
+      </FieldGroupShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
@@ -131,6 +130,8 @@ function Field({
           </ListBox>
         )}
       </Popover>
+      </>
+      )}
     </AriaComboBox>
   );
 }

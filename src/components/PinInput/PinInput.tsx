@@ -24,6 +24,7 @@ import { cx } from '../../styles/cx.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './PinInput.module.scss';
 import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
+import { FormValue } from '../FormField/FormValue.js';
 
 export interface PinInputProps {
   label: ReactNode;
@@ -149,6 +150,7 @@ export function PinInput({
       {description ? (
         <span id={descriptionId} className={cx(styles['description'])}>{description}</span>
       ) : null}
+      <FormValue name={name} value={current} />
       {validation.message ? (
         <span id={errorId} role="alert" className={cx(styles['error'])}>{validation.message}</span>
       ) : null}

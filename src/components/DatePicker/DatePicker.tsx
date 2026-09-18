@@ -29,11 +29,12 @@ import {
   DatePicker as AriaDatePicker, DateRangePicker as AriaDateRangePicker,
   Calendar, RangeCalendar, CalendarGrid, CalendarGridHeader, CalendarHeaderCell,
   CalendarGridBody, CalendarCell, Heading,
-  Label, Button, Group, Popover, Dialog, Text, FieldError,
+  Label, Button, Popover, Dialog, Text, FieldError,
   type DateValue,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid } from '../FormField/useInvalidMotion.js';
+import { FieldGroupShell } from '../FormField/FieldShell.js';
 import styles from './DatePicker.module.scss';
 
 const CalendarIcon = (
@@ -83,17 +84,20 @@ export interface DateInputProps extends FieldExtras {
 export function DateInput({
   label, description, errorMessage, className, ...props
 }: DateInputProps): React.JSX.Element {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const shellScope = useInvalidMotion(invalid);
-
   return (
     <DateField {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['field'], className)}>
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group ref={shellScope as never} className={cx(styles['shell'])} {...(invalid ? { 'data-invalid': true } : {})}>
+      {/* The validity React Aria resolved, not the one the caller declared, so a
+          server's rejection moves the field exactly as a local rule would. */}
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'])}>
         {segments}
-      </Group>
+      </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
+      </>
+      )}
     </DateField>
   );
 }
@@ -102,6 +106,7 @@ export interface TimeInputProps extends FieldExtras {
   granularity?: 'hour' | 'minute' | 'second';
   hourCycle?: 12 | 24;
   isDisabled?: boolean;
+  isInvalid?: boolean;
 }
 
 /** A time in segments. The hour cycle follows the locale unless a product says. */
@@ -109,11 +114,21 @@ export function TimeInput({
   label, description, errorMessage, className, ...props
 }: TimeInputProps): React.JSX.Element {
   return (
-    <TimeField {...props} className={cx(styles['field'], className)}>
+    <TimeField
+      {...props}
+      {...declaredInvalid(props.isInvalid, errorMessage)}
+      className={cx(styles['field'], className)}
+    >
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group className={cx(styles['shell'])}>{segments}</Group>
+      {/* This one had no validation binding at all — not even the declared kind —
+          so it neither marked itself nor moved, whatever went wrong. */}
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'])}>{segments}</FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
+      </>
+      )}
     </TimeField>
   );
 }
@@ -150,16 +165,17 @@ export interface DatePickerProps extends DateInputProps {
 export function DatePicker({
   label, description, errorMessage, className, isDateUnavailable, ...props
 }: DatePickerProps): React.JSX.Element {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const shellScope = useInvalidMotion(invalid);
-
   return (
     <AriaDatePicker {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['field'], className)}>
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group ref={shellScope as never} className={cx(styles['shell'])} {...(invalid ? { 'data-invalid': true } : {})}>
+      {/* The validity React Aria resolved, not the one the caller declared, so a
+          server's rejection moves the field exactly as a local rule would. */}
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'])}>
         {segments}
         <Button className={cx(styles['trigger'])}>{CalendarIcon}</Button>
-      </Group>
+      </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
       <Popover className={cx(styles['popover'])}>
@@ -169,11 +185,20 @@ export function DatePicker({
           </Calendar>
         </Dialog>
       </Popover>
+      </>
+      )}
     </AriaDatePicker>
   );
 }
 
-export interface DateRangePickerProps extends FieldExtras {
+export interface DateRangePickerProps extends Omit<FieldExtras, 'name'> {
+  /**
+   * A range is two values, so it is two names — React Aria submits and matches
+   * each end separately, and a single `name` reaches neither. `FieldExtras`'
+   * `name` is omitted here rather than quietly ignored.
+   */
+  startName?: string;
+  endName?: string;
   value?: { start: DateValue; end: DateValue } | null;
   defaultValue?: { start: DateValue; end: DateValue } | null;
   onChange?: (value: { start: DateValue; end: DateValue } | null) => void;
@@ -188,13 +213,14 @@ export interface DateRangePickerProps extends FieldExtras {
 export function DateRangePicker({
   label, description, errorMessage, className, isDateUnavailable, ...props
 }: DateRangePickerProps): React.JSX.Element {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const shellScope = useInvalidMotion(invalid);
-
   return (
     <AriaDateRangePicker {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['field'], className)}>
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group ref={shellScope as never} className={cx(styles['shell'])} {...(invalid ? { 'data-invalid': true } : {})}>
+      {/* The validity React Aria resolved, not the one the caller declared, so a
+          server's rejection moves the field exactly as a local rule would. */}
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'])}>
         <AriaDateInput slot="start" className={cx(styles['segments'])}>
           {(segment) => <DateSegment segment={segment} className={cx(styles['segment'])} />}
         </AriaDateInput>
@@ -203,7 +229,7 @@ export function DateRangePicker({
           {(segment) => <DateSegment segment={segment} className={cx(styles['segment'])} />}
         </AriaDateInput>
         <Button className={cx(styles['trigger'])}>{CalendarIcon}</Button>
-      </Group>
+      </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
       <Popover className={cx(styles['popover'])}>
@@ -213,6 +239,8 @@ export function DateRangePicker({
           </RangeCalendar>
         </Dialog>
       </Popover>
+      </>
+      )}
     </AriaDateRangePicker>
   );
 }

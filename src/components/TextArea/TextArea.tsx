@@ -32,7 +32,7 @@ import {
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
 import { declaredInvalid } from '../FormField/useInvalidMotion.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { FieldShell } from '../FormField/FieldShell.js';
 import styles from './TextArea.module.scss';
 
 export interface TextAreaProps extends Omit<AriaTextFieldProps, 'className' | 'style' | 'children' | 'onBlur'> {
@@ -60,8 +60,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   { label, description, errorMessage, placeholder, rows = 3, autosize = true, maxLength, onBlur, className, style, ...props },
   forwardedRef,
 ) {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const shellScope = useInvalidMotion(invalid);
   const [length, setLength] = useState((props.value ?? props.defaultValue ?? '').length);
 
   const remaining = maxLength === undefined ? undefined : maxLength - length;
@@ -78,12 +76,13 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
       className={cx(styles['field'], className)}
       {...(style ? { style } : {})}
     >
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <div
-        ref={shellScope as never}
-        className={cx(styles['shell'])}
-        {...(invalid || over ? { 'data-invalid': true } : {})}
-      >
+      {/* The validity React Aria resolved, not the one the caller declared, so a
+          server's rejection moves the field exactly as a local rule would. Over
+          the limit is this component's own judgement and is added to it. */}
+      <FieldShell isInvalid={isInvalid || over} className={cx(styles['shell'])}>
         <AriaTextArea
           ref={forwardedRef}
           rows={rows}
@@ -112,11 +111,13 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
             </VisuallyHidden>
           </>
         ) : null}
-      </div>
+      </FieldShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
+      </>
+      )}
     </AriaTextField>
   );
 });

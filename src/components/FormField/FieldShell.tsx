@@ -14,9 +14,9 @@
  * shell is a component and not a `<div>` written inline.
  */
 import type { ReactNode, Ref } from 'react';
-import { Group } from 'react-aria-components';
+import { Button, Group } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { useFieldMotion } from './useInvalidMotion.js';
+import { useFieldMotion, useInvalidMotion } from './useInvalidMotion.js';
 
 export interface FieldShellProps {
   isInvalid: boolean;
@@ -67,5 +67,32 @@ export function FieldGroupShell({
     >
       {children}
     </Group>
+  );
+}
+
+/**
+ * The same again, as React Aria's `Button` — a select's trigger, where the shell
+ * and the control are one pressable element rather than a box with a control in
+ * it. It takes no `playsFocus`: a button marks its own focus, and the field
+ * motion here is validation only.
+ */
+export interface FieldButtonShellProps {
+  isInvalid: boolean;
+  className?: string | undefined;
+  children: ReactNode;
+}
+
+export function FieldButtonShell({
+  isInvalid, className, children,
+}: FieldButtonShellProps): React.JSX.Element {
+  const scope = useInvalidMotion(isInvalid);
+  return (
+    <Button
+      ref={scope as never}
+      className={cx(className)}
+      {...(isInvalid ? { 'data-invalid': true } : {})}
+    >
+      {children}
+    </Button>
   );
 }

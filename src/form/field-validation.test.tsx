@@ -7,7 +7,7 @@ import { PasswordInput } from '../components/PasswordInput/PasswordInput.js';
 import { NumberInput } from '../components/NumberInput/NumberInput.js';
 import { Select } from '../components/Select/Select.js';
 import { ComboBox } from '../components/ComboBox/ComboBox.js';
-import { DateInput } from '../components/DatePicker/DatePicker.js';
+import { DateInput, TimeInput, DatePicker, DateRangePicker } from '../components/DatePicker/DatePicker.js';
 import { CheckboxGroup, Checkbox } from '../components/Checkbox/Checkbox.js';
 import { MaskInput } from '../components/MaskInput/MaskInput.js';
 import { PinInput } from '../components/PinInput/PinInput.js';
@@ -38,6 +38,9 @@ const CASES: Array<[string, React.JSX.Element, string]> = [
   ['NumberInput', <NumberInput label="Email" name="email" />, 'Email'],
   ['ComboBox', <ComboBox label="Email" name="email" options={OPTIONS} />, 'Email'],
   ['DateInput', <DateInput label="Email" name="email" />, 'Email'],
+  ['TimeInput', <TimeInput label="Email" name="email" />, 'Email'],
+  ['DatePicker', <DatePicker label="Email" name="email" />, 'Email'],
+
 ];
 
 describe('a server error reaches every field', () => {
@@ -115,7 +118,7 @@ describe('a server error reaches the hand-built fields too', () => {
     ['PinInput', <PinInput label="Phone" name="phone" length={4} />],
     ['TagsInput', <TagsInput label="Phone" name="phone" />],
     ['MultiSelect', <MultiSelect label="Phone" name="phone" options={OPTIONS} />],
-    ['RichTextSurface', <RichTextSurface label="Phone" name="phone" />],
+    ['RichTextSurface', <RichTextSurface label="Phone" name="phone"><div contentEditable /></RichTextSurface>],
     ['FormField', <FormField label="Phone" name="phone"><input /></FormField>],
   ];
 
@@ -137,5 +140,19 @@ describe('a server error reaches the hand-built fields too', () => {
       </Form>,
     );
     expect(screen.getByRole('alert').textContent).toBe('From the caller');
+  });
+});
+
+/* A range is two values, so it is two names. A single `name` reaches neither
+   end, which is React Aria's design and not something to paper over: the type
+   omits `name` rather than accepting one it would ignore. */
+describe('DateRangePicker', () => {
+  it('takes an error on either end', () => {
+    renderWithCrystal(
+      <Form validationErrors={{ 'trip-start': ['Too early'] }}>
+        <DateRangePicker label="Trip" startName="trip-start" endName="trip-end" />
+      </Form>,
+    );
+    expect(screen.getByText('Too early')).toBeInTheDocument();
   });
 });

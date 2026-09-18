@@ -29,7 +29,8 @@ import {
   type RadioGroupProps as AriaRadioGroupProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid } from '../FormField/useInvalidMotion.js';
+import { FieldShell } from '../FormField/FieldShell.js';
 import styles from './Checkbox.module.scss';
 
 const CheckMark = (
@@ -104,24 +105,30 @@ export type CheckboxGroupProps =
 export function CheckboxGroup({
   label, description, errorMessage, orientation = 'vertical', className, children, ...props
 }: CheckboxGroupProps): React.JSX.Element {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const scope = useInvalidMotion(invalid);
 
   return (
     <AriaCheckboxGroup {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['group'], className)}>
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['legend'])}>{label}</Label>
-      <div
-        ref={scope as never}
+      {/* The validity React Aria resolved, not the one the caller declared: a
+          server's "choose at least one" has to move the set exactly as a local
+          rule would. */}
+      <FieldShell
+        isInvalid={isInvalid}
+        playsFocus={false}
         className={cx(styles['options'], orientation === 'horizontal' ? styles['horizontal'] : undefined)}
       >
         {children}
-      </div>
+      </FieldShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       {/* The error describes the set. "Choose at least one" attached to the first
           checkbox is a message about that checkbox. */}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
+      </>
+      )}
     </AriaCheckboxGroup>
   );
 }
@@ -132,22 +139,28 @@ export type RadioGroupProps =
 export function RadioGroup({
   label, description, errorMessage, orientation = 'vertical', className, children, ...props
 }: RadioGroupProps): React.JSX.Element {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const scope = useInvalidMotion(invalid);
 
   return (
     <AriaRadioGroup {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['group'], className)}>
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['legend'])}>{label}</Label>
-      <div
-        ref={scope as never}
+      {/* The validity React Aria resolved, not the one the caller declared: a
+          server's "choose at least one" has to move the set exactly as a local
+          rule would. */}
+      <FieldShell
+        isInvalid={isInvalid}
+        playsFocus={false}
         className={cx(styles['options'], orientation === 'horizontal' ? styles['horizontal'] : undefined)}
       >
         {children}
-      </div>
+      </FieldShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
+      </>
+      )}
     </AriaRadioGroup>
   );
 }

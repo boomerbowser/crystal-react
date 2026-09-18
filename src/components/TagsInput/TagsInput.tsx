@@ -30,6 +30,7 @@ import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import styles from './TagsInput.module.scss';
 import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
+import { FormValue } from '../FormField/FormValue.js';
 
 export interface TagsInputProps {
   label: ReactNode;
@@ -168,6 +169,7 @@ function Field({
           swallow what was typed. */}
       <VisuallyHidden as="div" role="status" aria-live="polite">{announcement}</VisuallyHidden>
       {description ? <span className={cx(styles['description'])}>{description}</span> : null}
+      <FormValue name={name} value={tags} />
       {refusal ?? validation.message ? (
         <span role="alert" className={cx(styles['error'])}>{refusal ?? validation.message}</span>
       ) : null}

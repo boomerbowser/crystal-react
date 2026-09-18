@@ -21,12 +21,13 @@
  */
 import { forwardRef, type ReactNode, type SelectHTMLAttributes } from 'react';
 import {
-  Select as AriaSelect, SelectValue, Label, Button, Popover, ListBox, ListBoxItem,
+  Select as AriaSelect, SelectValue, Label, Popover, ListBox, ListBoxItem,
   Text, FieldError,
   type SelectProps as AriaSelectProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid } from '../FormField/useInvalidMotion.js';
+import { FieldButtonShell } from '../FormField/FieldShell.js';
 import styles from './Select.module.scss';
 
 const ChevronIcon = (
@@ -55,17 +56,15 @@ export interface SelectProps extends Omit<AriaSelectProps<SelectOption>, 'classN
 export function Select({
   label, options, description, errorMessage, placeholder = 'Choose one', className, ...props
 }: SelectProps): React.JSX.Element {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const shellScope = useInvalidMotion(invalid);
 
   return (
     <AriaSelect {...props} {...declaredInvalid(props.isInvalid, errorMessage)} className={cx(styles['field'], className)}>
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Button
-        ref={shellScope as never}
-        className={cx(styles['shell'], styles['control'])}
-        {...(invalid ? { 'data-invalid': true } : {})}
-      >
+      {/* The validity React Aria resolved, not the one the caller declared, so a
+          server's rejection moves the field exactly as a local rule would. */}
+      <FieldButtonShell isInvalid={isInvalid} className={cx(styles['shell'], styles['control'])}>
         <SelectValue className={cx(styles['value'])}>
           {({ selectedText, isPlaceholder }) => (
             <span className={cx(isPlaceholder ? styles['placeholder'] : undefined)}>
@@ -74,7 +73,7 @@ export function Select({
           )}
         </SelectValue>
         <span className={cx(styles['disclosure'])} aria-hidden="true">{ChevronIcon}</span>
-      </Button>
+      </FieldButtonShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
@@ -94,6 +93,8 @@ export function Select({
           )}
         </ListBox>
       </Popover>
+      </>
+      )}
     </AriaSelect>
   );
 }

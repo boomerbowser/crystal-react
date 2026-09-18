@@ -23,11 +23,12 @@
  */
 import { forwardRef, useState, type ReactNode } from 'react';
 import {
-  TextField as AriaTextField, Label, Input, Button, Group, Text, FieldError,
+  TextField as AriaTextField, Label, Input, Button, Text, FieldError,
   type TextFieldProps as AriaTextFieldProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid } from '../FormField/useInvalidMotion.js';
+import { FieldGroupShell } from '../FormField/FieldShell.js';
 import styles from './PasswordInput.module.scss';
 
 /** What the product decided about the value. Crystal renders it; it scores nothing. */
@@ -72,8 +73,6 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
   { label, description, errorMessage, placeholder, reveals = 'the password', strength, className, style, ...props },
   forwardedRef,
 ) {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const shellScope = useInvalidMotion(invalid);
   const [revealed, setRevealed] = useState(false);
 
   return (
@@ -84,12 +83,12 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
       className={cx(styles['field'], className)}
       {...(style ? { style } : {})}
     >
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group
-        ref={shellScope as never}
-        className={cx(styles['shell'])}
-        {...(invalid ? { 'data-invalid': true } : {})}
-      >
+      {/* The validity React Aria resolved, not the one the caller declared, so a
+          server's rejection moves the field exactly as a local rule would. */}
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'])}>
         <Input
           ref={forwardedRef}
           className={cx(styles['control'])}
@@ -105,7 +104,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
         >
           <EyeIcon open={revealed} />
         </Button>
-      </Group>
+      </FieldGroupShell>
       {strength ? (
         <div className={cx(styles['meter'])}>
           <div className={cx(styles['meterTrack'])}>
@@ -125,6 +124,8 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
+      </>
+      )}
     </AriaTextField>
   );
 });

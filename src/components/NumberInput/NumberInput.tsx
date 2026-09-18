@@ -21,11 +21,12 @@
  */
 import { forwardRef, type ReactNode } from 'react';
 import {
-  NumberField, Label, Input, Button, Group, Text, FieldError,
+  NumberField, Label, Input, Button, Text, FieldError,
   type NumberFieldProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { declaredInvalid, useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { declaredInvalid } from '../FormField/useInvalidMotion.js';
+import { FieldGroupShell } from '../FormField/FieldShell.js';
 import styles from './NumberInput.module.scss';
 
 export interface NumberInputProps extends Omit<NumberFieldProps, 'className' | 'style' | 'children'> {
@@ -47,8 +48,6 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
   { label, description, errorMessage, placeholder, className, style, ...props },
   forwardedRef,
 ) {
-  const invalid = props.isInvalid ?? Boolean(errorMessage);
-  const shellScope = useInvalidMotion(invalid);
 
   return (
     <NumberField
@@ -57,12 +56,12 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
       className={cx(styles['field'], className)}
       {...(style ? { style } : {})}
     >
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group
-        ref={shellScope as never}
-        className={cx(styles['shell'])}
-        {...(invalid ? { 'data-invalid': true } : {})}
-      >
+      {/* The validity React Aria resolved, not the one the caller declared, so a
+          server's rejection moves the field exactly as a local rule would. */}
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'])}>
         <Input
           ref={forwardedRef}
           className={cx(styles['control'])}
@@ -74,11 +73,13 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
           <Button slot="increment" className={cx(styles['stepper'])}><Chevron up /></Button>
           <Button slot="decrement" className={cx(styles['stepper'])}><Chevron up={false} /></Button>
         </div>
-      </Group>
+      </FieldGroupShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
+      </>
+      )}
     </NumberField>
   );
 });

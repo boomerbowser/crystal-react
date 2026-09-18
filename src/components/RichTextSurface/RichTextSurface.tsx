@@ -55,9 +55,11 @@ export interface RichTextSurfaceProps {
   isReadOnly?: boolean;
   isInvalid?: boolean;
   /**
-   * The field's name in a form. Without it the field cannot be submitted, and a
-   * `Form` distributing a server's errors has no name to match it against — so
-   * the field sits there looking untouched while the server objects.
+   * The field's name, **for matching a server's errors only**. Unlike the other
+   * fields here this does not submit anything, because this component holds no
+   * value: the editor lives in `children` and owns the document, the paste
+   * pipeline and the serialisation. Whatever renders there is what puts a value
+   * in the form — a hidden input of its own, or its own submit handling.
    */
   name?: string;
   className?: string;
