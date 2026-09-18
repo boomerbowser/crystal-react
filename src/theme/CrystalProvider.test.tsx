@@ -54,11 +54,10 @@ describe('CrystalProvider', () => {
   });
 
   it('writes the theme onto the DOM for CSS to read', () => {
-    const { container } = render(<CrystalProvider palette="cobalt" mode="dark" ambient={false} />);
+    const { container } = render(<CrystalProvider palette="cobalt" mode="dark" />);
     const scope = container.querySelector('[data-crystal-scope]') as HTMLElement;
     expect(scope.dataset.crystalPalette).toBe('cobalt');
     expect(scope.dataset.crystalMode).toBe('dark');
-    expect(scope.dataset.ambient).toBe('off');
     expect(scope.style.getPropertyValue('--cr-radius')).toBe(crystalTokens['shape.contentRadius']);
   });
 

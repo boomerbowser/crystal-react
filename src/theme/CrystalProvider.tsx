@@ -6,7 +6,7 @@
  * CSS as custom properties on a scope element, and make it readable from hooks.
  *
  * It does not re-derive any Crystal rule. Normalisation, clamps, choices and
- * duration resolution come from `@meridian/crystal/core/preferences`, whose
+ * duration resolution come from `@crystal/core/core/preferences`, whose
  * ranges are contract — CONTRACT §1 says to reuse the resolver's arithmetic
  * rather than reimplement it, "because two implementations of the same formula
  * will diverge".
@@ -20,8 +20,8 @@ import {
   createContext, useContext, useMemo, useId,
   type ReactNode, type CSSProperties, type JSX,
 } from 'react';
-import preferences from '@meridian/crystal/core/preferences';
-import crystalFlat from '@meridian/crystal/flat' with { type: 'json' };
+import preferences from '@crystal/core/core/preferences';
+import crystalFlat from '@crystal/core/flat' with { type: 'json' };
 import type {
   CrystalTheme, CrystalThemeInput, CrystalThemeValues, CrystalDirection,
 } from './types.js';
@@ -42,10 +42,6 @@ export const crystalChoices = core.CHOICES;
 
 const CrystalThemeContext = createContext<CrystalTheme | null>(null);
 
-/* Ambient is not part of Crystal's stored preferences — it is a document-level
-   switch in the web preview — so it is defaulted here and carried alongside. */
-const AMBIENT_DEFAULT = true;
-
 function resolveTheme(input: CrystalThemeInput, inherited: CrystalTheme | null): CrystalTheme {
   const merged = { ...(inherited ?? {}), ...input };
   /* Crystal normalises and clamps; anything it does not recognise it replaces
@@ -56,7 +52,6 @@ function resolveTheme(input: CrystalThemeInput, inherited: CrystalTheme | null):
   ) as unknown as CrystalThemeValues;
 
   const direction: CrystalDirection = input.direction ?? inherited?.direction ?? 'ltr';
-  const ambient = input.ambient ?? inherited?.ambient ?? AMBIENT_DEFAULT;
   /* `effects` is a Crystal preference under the name `reduced`, which is a
      boolean. Translating here keeps the public API legible without inventing a
      second concept. */
@@ -64,7 +59,7 @@ function resolveTheme(input: CrystalThemeInput, inherited: CrystalTheme | null):
     ?? inherited?.effects
     ?? ((normalised as unknown as { reduced?: boolean }).reduced ? 'opaque' : 'full');
 
-  const values: CrystalThemeValues = { ...normalised, direction, ambient, effects };
+  const values: CrystalThemeValues = { ...normalised, direction, effects };
 
   return {
     ...values,
@@ -107,7 +102,7 @@ export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
     [
       input.palette, input.mode, input.density, input.direction, input.effects,
       input.atmosphere, input.translucency, input.elevation, input.radius,
-      input.motionSpeed, input.reduceMotion, input.ambient, inherited,
+      input.motionSpeed, input.reduceMotion, inherited,
     ],
   );
 
@@ -119,7 +114,6 @@ export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
         data-crystal-mode={theme.mode}
         data-crystal-density={theme.density}
         data-effects={theme.effects === 'opaque' ? 'opaque' : undefined}
-        data-ambient={theme.ambient ? undefined : 'off'}
         dir={theme.direction}
         className={className}
         style={{ ...scopeStyle(theme), ...style }}

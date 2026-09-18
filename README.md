@@ -13,11 +13,12 @@ Early. The foundation is in place; the catalogue is not. Progress is recorded in
 is the single source of truth for what exists. Nothing here should be described
 as available until that file says `implemented`.
 
-The plan is `proposals/crystal-react-plan.md` in the design system repository.
+The plan is [`docs/implementation-plan.md`](docs/implementation-plan.md) — requirements traced
+to the sections that answer them, the architecture, all 174 components by slice, and the gates.
 
 ## How it consumes Crystal
 
-`@meridian/crystal` is not published yet, so it is linked from a sibling
+`@crystal/core` is not published yet, so it is linked from a sibling
 checkout:
 
 ```
@@ -45,7 +46,7 @@ attributes, which is what lets the styling be plain SCSS.
 values are SCSS variables. Nothing needs a style runtime.
 
 **Crystal owns the physics; React owns the binding.** The engines, springs,
-recipes and state derivation are imported from `@meridian/crystal`. What this
+recipes and state derivation are imported from `@crystal/core`. What this
 library implements is the lifecycle — refs, effects and cleanup — which is
 genuinely different on a platform with components.
 

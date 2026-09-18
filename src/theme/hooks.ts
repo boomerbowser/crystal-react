@@ -57,7 +57,3 @@ export function useMotionSpeed(): {
   return { motionSpeed, reduceMotion, resolveDuration };
 }
 
-/** Whether surfaces animate at rest in this scope. */
-export function useAmbientEnabled(): boolean {
-  return useCrystalTheme().ambient;
-}

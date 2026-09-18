@@ -39,8 +39,8 @@
     "react-dom": "^18.2.0 || ^19.0.0"
   },
   "dependencies": {
+    "@crystal/core": "file:../crystal-design-system/design-system",
     "@internationalized/date": "^3.12.4",
-    "@meridian/crystal": "file:../crystal-design-system/design-system",
     "react-aria-components": "^1.21.1",
     "react-stately": "^3.50.0"
   },
@@ -53,6 +53,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.6.1",
     "jsdom": "^30.1.0",
+    "playwright": "^1.63.0",
     "postcss": "^8.5.28",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
