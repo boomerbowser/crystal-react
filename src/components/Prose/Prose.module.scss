@@ -57,7 +57,7 @@
   padding-inline-start: $cr-spacing-md;
   /* A rule rather than a panel: a quotation inside running text is part of the
      text, and putting it on its own surface reads as a callout. */
-  border-inline-start: $cr-selection-rail-width solid var(--cr-primary-soft);
+  border-inline-start: $cr-indicator-line-width solid var(--cr-primary-soft);
   color: var(--cr-muted);
 }
 

@@ -79,7 +79,7 @@
 
 /* Selection is a ring rather than a fill, because the fill is the value. */
 .swatchOption[data-selected] {
-  outline: $cr-selection-rail-width solid var(--cr-primary);
+  outline: $cr-indicator-line-width solid var(--cr-primary);
   outline-offset: 2px;
 }
 

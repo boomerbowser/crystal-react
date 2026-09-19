@@ -10,8 +10,9 @@
  * greyscale, forced colours and a bad screen — and the fill underneath is a
  * second signal rather than the only one.
  *
- * The leading rail was removed from Crystal at Meridian's direction, because it
- * offset the label it marked. It is not reinstated here.
+ * Nothing is set beside the label to mark it either: a leading mark shifts the
+ * very label it points at, so the selected option would no longer line up with
+ * the others.
  */
 
 .group { @include field.field; }

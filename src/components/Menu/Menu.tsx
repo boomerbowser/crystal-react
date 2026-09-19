@@ -8,8 +8,8 @@
  *
  * **A check mark in a menu means checked**, and this is the only place in Crystal
  * where a check mark means anything at all. Everywhere else it means validated or
- * informational, and selection is carried by label weight — never a rail, which
- * offsets the label it marks. A checkable menu item is a checkbox that happens to
+ * informational, and selection is carried by label weight — never a mark set
+ * beside the label, which offsets it. A checkable menu item is a checkbox that happens to
  * live in a menu: it reports `aria-checked`, and a check is what a checkbox
  * draws. The highlighted row still uses weight.
  *

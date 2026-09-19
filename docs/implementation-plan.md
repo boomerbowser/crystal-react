@@ -974,8 +974,8 @@ From `libraries/CONTRACT.md`. These are the contract, not preferences.
 - **Materials**: Plastic → Frost → Resin, plus Haze, Stone, Mirage. Resin never contains
   Resin; a surface above Resin is a Haze content fill.
 - **Focus** is a crisp 2px core at 3px offset inside a four-layer feathered halo.
-- **Selection is label weight.** Never a rail, never a check mark. A check mark means
-  validated or informational.
+- **Selection is label weight.** Never a check mark, and never a mark beside the label.
+  A check mark means validated or informational.
 - **Action controls are pills.** Card-shaped buttons keep the content radius.
 - **Motion** honours the spring physics, not the keyframes. Hard ceiling 5000ms. Reduced
   motion removes spatial change and keeps state feedback.
