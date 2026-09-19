@@ -109,15 +109,23 @@ await page.waitForSelector('#storybook-root [role="treegrid"]');
 
 /* Nothing in Crystal moves at rest. A tree that animates its own rows into
    existence on load is the clearest possible violation, and it is invisible in a
-   screenshot taken after the animation finishes. */
+   screenshot taken after the animation has finished.
+   
+   `useMotion` sets `data-cr-motion-state` to "running" and then to "finished"
+   rather than clearing it, which is what makes this checkable at all: the
+   attribute is a record that an animation *happened*, not a report of one in
+   flight. So probing after the page has settled still catches a tree that
+   animated itself and then stopped. Proved by making the tree live from its
+   first render — three rows, caught. */
 const atRest = await page.evaluate(() => {
   const root = document.querySelector('#storybook-root');
-  return [...root.querySelectorAll('[data-cr-motion-state]')].map((el) => el.className);
+  return [...root.querySelectorAll('[data-cr-motion-state]')]
+    .map((el) => `${el.dataset.crMotionName ?? '?'}:${el.dataset.crMotionState}`);
 });
 record(
   'a tree does not animate the rows it rendered with',
   atRest.length === 0,
-  `${atRest.length} row(s) were mid-animation with nobody having touched the page`,
+  `${atRest.length} row(s) had animated with nobody having touched the page: ${JSON.stringify(atRest)}`,
 );
 
 await browser.close();
