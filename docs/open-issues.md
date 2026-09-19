@@ -625,3 +625,51 @@ definition — the strip variant included, since it is the same fill at a differ
 inset with the children deliberately bare. And `verify-materials` should grow a
 comparison for the `::before` layer, because the reason this was invisible is
 that the gate only ever asked the element about itself.
+
+## R-16 · Crystal is a path on a disk, not a dependency
+
+**Requested by Meridian, 19 September 2026. Recorded; not started.**
+**The consumer's half of D-10 in the design system's tracker, which holds the
+detail, the proposed shape and the steps only Meridian can take.**
+
+This library declares:
+
+```json
+"@crystal/core": "file:../crystal-design-system/design-system"
+```
+
+That is not a dependency. It is a path on one contributor's disk, pointing at a
+directory that is simultaneously the design system, its documentation website and
+its build machinery. Everything that has gone wrong between the two repositories
+this week traces back to it.
+
+**There is no version to target.** Crystal React cannot say it is built against
+Crystal 2.0.1. It resolves whatever happens to be checked out beside it, so a
+material token can change under this library with no range to pin, no changelog
+to read, and no way to stay on a known-good Crystal while upgrading
+deliberately. CI reproduces this exactly: it checks Crystal out at its default
+branch, which is why pushing this repository before the design system fails as
+`[sass] Undefined variable` — a defect in neither repository.
+
+**A path cannot be cached correctly.** R-14: Vite pre-bundles it once, and a
+change to Crystal's resolver never reaches the served page. Three investigations
+in one day, one of which was Meridian reporting that Crystal's specifications
+were missing from every component. `optimizeDeps.force` is a workaround for a
+package manager being asked to treat live source as a release.
+
+**A path has no export boundary.** R-13 and D-9: the drift this library had was
+only findable by running two servers and diffing computed styles, because there
+is no artefact stating what Crystal's Resin *is*. And Crystal's own website
+could shape a blessed appearance with a stylesheet it does not export, which no
+consumer could ever have matched.
+
+**Everything above applies to every other platform library, and worse.** A
+SwiftUI or Compose library cannot install an npm path at all. The Swift and
+Kotlin exports are generated and then stranded inside a package only npm can
+reach, so those libraries would retype values — the exact thing CONTRACT §1
+forbids, made unavoidable by the packaging.
+
+What this library needs from the resolution: a published version to depend on, a
+range to pin it with, and a local development story — a workspace or an
+overrides entry — so Crystal can still be edited in the same sitting without
+going back to a path.
