@@ -55,6 +55,80 @@ export interface UseMotionOptions {
    * interrupts, because that is a different thing being expressed.
    */
   readonly once?: boolean;
+  /**
+   * Reorient a directional recipe. The physics are untouched; what changes is
+   * which way the movement points.
+   *
+   * Crystal authors its directional recipes once, for one direction, with
+   * physical transforms: `drawer-in` reads `translateX(105%) rotateY(-12deg)`,
+   * which is a panel arriving from the **right**. That is correct for a drawer on
+   * the inline-end edge of a left-to-right page and wrong for every other case —
+   * and CSS cannot mirror a transform for you the way it mirrors
+   * `padding-inline-start`. Right-to-left is a verified axis in Crystal, so a
+   * recipe that cannot follow it is a gap rather than a preference.
+   *
+   * Reorienting rather than authoring three more recipes is deliberate: a
+   * recipe carries a fitted spring, and a second copy of the same movement is a
+   * second thing to keep in step with it. See `reorientRecipe`.
+   */
+  readonly reorient?: Reorientation;
+}
+
+export interface Reorientation {
+  /** Negate the inline component: a movement from the right becomes one from the left. */
+  readonly mirrorInline?: boolean;
+  /** Turn the movement onto the block axis: from the side becomes from the top or bottom. */
+  readonly toBlockAxis?: boolean;
+}
+
+/**
+ * Rewrite a recipe's transforms so the same movement points somewhere else.
+ *
+ * Only two things are touched, and both are geometry rather than physics:
+ *
+ *   - `mirrorInline` negates `translateX` and `rotateY`. A panel arriving from
+ *     the right arrives from the left instead, tilted the other way, over the
+ *     same distance in the same time.
+ *   - `toBlockAxis` swaps the axes: `translateX` becomes `translateY` and
+ *     `rotateY` becomes `rotateX` with its sign flipped, because a positive
+ *     rotation about Y and a positive rotation about X tip a panel *toward*
+ *     opposite corners. The result is the authored movement about the other edge.
+ *
+ * Durations, offsets, easing and the fitted spring are all carried through
+ * untouched. Nothing here invents a movement; it points an authored one.
+ */
+export function reorientRecipe(recipe: CrystalRecipe, how: Reorientation): CrystalRecipe {
+  const { mirrorInline = false, toBlockAxis = false } = how;
+  if (!mirrorInline && !toBlockAxis) return recipe;
+
+  /* Captures the function name and its single argument. Crystal's recipes write
+     one argument per transform function, which is what makes this tractable: a
+     general transform parser would be a CSS parser. A function this does not
+     know is left exactly as it is. */
+  const negate = (value: string): string => (value.startsWith('-') ? value.slice(1) : `-${value}`);
+
+  const rewrite = (transform: string): string => transform.replace(
+    /(translateX|translateY|rotateX|rotateY)\(([^)]*)\)/g,
+    (whole, fn: string, argument: string) => {
+      const value = argument.trim();
+      if (toBlockAxis) {
+        if (fn === 'translateX') return `translateY(${mirrorInline ? negate(value) : value})`;
+        /* The sign flip is the axis change, not the mirroring: the two rotations
+           are opposite-handed. Mirroring on top of it cancels back out. */
+        if (fn === 'rotateY') return `rotateX(${mirrorInline ? value : negate(value)})`;
+        return whole;
+      }
+      if (fn === 'translateX' || fn === 'rotateY') return `${fn}(${negate(value)})`;
+      return whole;
+    },
+  );
+
+  return {
+    ...recipe,
+    keyframes: recipe.keyframes.map((frame) => (
+      typeof frame.transform === 'string' ? { ...frame, transform: rewrite(frame.transform) } : frame
+    )),
+  };
 }
 
 /**
@@ -106,12 +180,15 @@ export function useMotion(
   const { resolveDuration, reduceMotion } = useCrystalTheme();
   const running = useRef<string | null>(null);
   const once = options.once ?? false;
+  const mirrorInline = options.reorient?.mirrorInline ?? false;
+  const toBlockAxis = options.reorient?.toBlockAxis ?? false;
 
   const play = useCallback((name: CrystalRecipeName) => {
     const element = scope.current as HTMLElement | null;
     if (!element) return;
 
-    const recipe = RECIPES.get(name);
+    const authored = RECIPES.get(name);
+    const recipe = authored && reorientRecipe(authored, { mirrorInline, toBlockAxis });
     if (!recipe) {
       throw new RangeError(
         `Unknown Crystal motion "${name}". Recipes come from @crystal/core; this library defines none of its own.`,
@@ -156,7 +233,7 @@ export function useMotion(
          whenever a component unmounts mid-motion. */
       .catch(() => { /* cancelled */ })
       .finally(() => { if (running.current === name) running.current = null; });
-  }, [scope, animate, resolveDuration, reduceMotion, once]);
+  }, [scope, animate, resolveDuration, reduceMotion, once, mirrorInline, toBlockAxis]);
 
   return [scope, play];
 }

@@ -873,7 +873,7 @@ publishes the recipe; `src/theme/published-properties.test.tsx` reads every
 `var(--cr-…)` in every stylesheet here and fails on any that Crystal does not
 publish and no component sets itself.
 
-### I — Navigation and overlays (28) — in progress, 17 of 28
+### I — Navigation and overlays (28) — in progress, 18 of 28
 
 `anchor`, `nav-link`, `nav-rail`, `dock`, `breadcrumbs`, `tabs`, `pagination`, `stepper`, `burger`, `command-palette`, `tree-view`, `affix`, `bottom-navigation`, `navigation-menu`, `table-of-contents`, `menubar`, `submenu`, `dialog`, `drawer`, `menu`, `context-menu`, `popover`, `hover-card`, `tooltip`, `scrim`, `portal`, `floating-window`, `overlay-arrow`.
 
@@ -955,6 +955,28 @@ publish and no component sets itself.
   has none of those edge cases, and unlike the observer it works in the in-app
   preview browser, which delivers no `IntersectionObserver` callbacks at all
   (D-5).
+- [x] **`drawer`.** "Modality must be real, not implied" is the catalogue's
+  wording and the whole design: `isModal` picks between two different
+  constructions, not two appearances. Modal is a React Aria `Modal` — focus
+  contained, the page `inert`, Escape, scroll locked, focus returned, a Mirage
+  scrim. Non-modal is a `complementary` landmark with no scrim, no trap and no
+  lock. There is no way to ask for one's look with the other's behaviour, and
+  both directions are gated.
+
+  **`useMotion` gained `reorient`.** Crystal authors `drawer-in` once, from the
+  right, with a physical `translateX(105%)`. CSS mirrors `padding-inline-start`
+  and cannot mirror a transform, so that recipe is wrong on three of four edges
+  and in every right-to-left page — and right-to-left is a verified axis in
+  Crystal. `reorientRecipe` negates the inline component or turns the movement
+  onto the block axis, carrying the fitted spring, the duration and the offsets
+  through untouched. Authoring three more recipes would have been authoring three
+  more specifications.
+
+  Two defects: the close control in the modal drawer had **no handler at all**
+  — `Dialog`'s children were passed directly rather than through its render
+  prop, so the button rendered, focused, pressed and did nothing. And an
+  inline-end drawer sat **151px clear of the right-hand edge**, because a
+  shrink-to-fit holder anchors its content at its start. Both are now gated.
 
 ### J — Data display (37)
 

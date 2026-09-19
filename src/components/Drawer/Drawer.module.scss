@@ -1,0 +1,160 @@
+@use '../../styles/tokens' as *;
+
+/* Drawer — a Frost panel anchored to an edge.
+ *
+ * Frost rather than Haze, which is what separates it from a dialog: a dialog is
+ * content to be read in the middle of the page and takes an 80% content fill; a
+ * drawer is a *surface the page grew*, attached to an edge, and Frost is the
+ * diffused intermediate surface. Anything opened from inside it is therefore
+ * floating above Frost and is Resin, which is the correct stack and the reason
+ * the panel declares it rather than leaving the DOM to imply it.
+ */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--cr-mirage-fill);
+  backdrop-filter: blur(var(--cr-mirage-blur)) saturate(var(--cr-mirage-saturation)) brightness(var(--cr-mirage-brightness));
+}
+
+/* The holder pins the panel to its edge. The panel itself knows nothing about
+   where it is except its radius, which keeps the sweep a pure transform.
+   
+   It spans the whole viewport and aligns the panel, rather than being pinned to
+   one edge and shrinking to fit. Pinning is the obvious spelling and it is wrong
+   on the end edge: a shrink-to-fit box anchors its content at its *start*, so a
+   panel narrower than the box it was given sat 151px clear of the edge it was
+   supposed to be attached to — measured at 1000px wide, where the box resolved
+   to 543 and the panel to 392. Aligning is symmetrical and has no such
+   arithmetic to get wrong.
+   
+   `pointer-events` is the cost of covering the viewport: without it the holder
+   swallows the clicks the scrim needs to dismiss on. */
+.modalHolder {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  pointer-events: none;
+}
+
+.modalHolder > * { pointer-events: auto; }
+
+.modalHolder.start { justify-content: flex-start; }
+.modalHolder.end { justify-content: flex-end; }
+.modalHolder.top { align-items: flex-start; }
+.modalHolder.bottom { align-items: flex-end; }
+
+.panel {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  padding: var(--cr-space);
+  border: 1px solid var(--cr-edge);
+  background: var(--cr-frost-fill);
+  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
+  box-shadow: var(--cr-shadow-float);
+  color: var(--cr-text);
+  /* The sweep is a 3D transform, so the panel needs its own stacking context and
+     a stable origin for the rotation not to pivot about the page. */
+  transform-origin: center;
+}
+
+/* "Panel radius on the inner edges only." The outer edge is flush against the
+   viewport, and rounding it would leave a sliver of page showing through a
+   corner that is supposed to be the screen's own. Logical, so it mirrors. */
+.panel.start {
+  block-size: 100%;
+  inline-size: min(#{$cr-layout-sidebar-width} * 1.4, 100%);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-start-end-radius: var(--cr-radius);
+  border-end-end-radius: var(--cr-radius);
+  border-inline-start: 0;
+}
+
+.panel.end {
+  block-size: 100%;
+  inline-size: min(#{$cr-layout-sidebar-width} * 1.4, 100%);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-start-start-radius: var(--cr-radius);
+  border-end-start-radius: var(--cr-radius);
+  border-inline-end: 0;
+}
+
+.panel.top {
+  inline-size: 100%;
+  max-block-size: 85vh;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+  border-end-start-radius: var(--cr-radius);
+  border-end-end-radius: var(--cr-radius);
+  border-block-start: 0;
+}
+
+.panel.bottom {
+  inline-size: 100%;
+  max-block-size: 85vh;
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+  border-start-start-radius: var(--cr-radius);
+  border-start-end-radius: var(--cr-radius);
+  border-block-end: 0;
+}
+
+/* Not modal: it sits in the layout rather than over it, so it is not fixed, has
+   no scrim above the page, and does not stretch to the viewport. Every rule that
+   would make it *look* modal is absent, which is the point — the appearance and
+   the behaviour say the same thing. */
+.panel.inline {
+  position: relative;
+  block-size: auto;
+  max-block-size: 100%;
+  border-radius: var(--cr-radius);
+  border: 1px solid var(--cr-edge);
+}
+
+.panel.inline.start, .panel.inline.end { inline-size: min(#{$cr-layout-sidebar-width} * 1.4, 100%); }
+.panel.inline.top, .panel.inline.bottom { inline-size: 100%; }
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $cr-spacing-sm;
+  margin-block-end: $cr-spacing-md;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--cr-text-heading-size);
+  line-height: var(--cr-text-heading-leading);
+  letter-spacing: var(--cr-text-heading-tracking);
+  font-weight: 800;
+}
+
+.body {
+  flex: 1;
+  min-block-size: 0;
+}
+
+:global([data-effects='opaque']) .panel {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+}
+
+:global([data-effects='opaque']) .scrim {
+  background: var(--cr-mirage-fallback-fill);
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .panel { background: var(--cr-surface); backdrop-filter: none; }
+  .scrim { background: var(--cr-mirage-fallback-fill); backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .panel { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .scrim { background: Canvas; backdrop-filter: none; }
+}
