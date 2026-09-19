@@ -21,7 +21,7 @@
   border-radius: $cr-action-radius;
   background: var(--cr-resin-fill);
   backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  box-shadow: var(--cr-shadow-content);
+  box-shadow: var(--cr-shadow-float);
   color: var(--cr-text);
   font-weight: 550;
   text-decoration: none;

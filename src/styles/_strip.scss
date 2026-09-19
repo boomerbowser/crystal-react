@@ -30,7 +30,7 @@
   border: 1px solid var(--cr-rim);
   border-radius: $cr-action-radius;
   background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-content);
+  box-shadow: var(--cr-shadow-float);
   backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
 }
 

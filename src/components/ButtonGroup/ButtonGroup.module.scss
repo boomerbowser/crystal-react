@@ -16,7 +16,7 @@
   /* The plane is the group's, not each button's, so the children sit on it
      rather than each carrying their own. */
   background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-content);
+  box-shadow: var(--cr-shadow-float);
   backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
 }
 

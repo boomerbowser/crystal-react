@@ -522,6 +522,16 @@ Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
   resolves on the themed scope *and* on the container overlays are portalled
   into. The provider was built first and correctly; what was missing was proof
   that what it publishes survives to the served page.
+- [x] **The environment, per component.** Every adjustable value in Crystal's own
+  "Make it yours" panel is a Storybook toolbar control — palette, appearance,
+  colour atmosphere, Frost base tint, elevation, corner radius, density,
+  direction, animation speed, reduced motion, reduced effects — and each can be
+  pinned per story through `parameters.crystal`, so a component whose subject is
+  an environment can show one and a browser gate can measure a fixed one.
+
+  Colour atmosphere mattered most and was the one with no way to reach it. Crystal's
+  materials are defined by what is behind them, the decorator painted a flat
+  canvas, and every material in every story therefore rendered as white. See R-13.
 - [x] Typography context: family, reading rhythm, and a scale *derived* from the reading size so moving that token moves every step
 - [x] `useMotion` (recipes, on Crystal's springs) and `usePreset` (material presets, on Crystal's shared preset module)
 - [x] `renderWithCrystal` with theme axes as one argument; axe assertions

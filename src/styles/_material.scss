@@ -1,0 +1,56 @@
+/* Crystal's materials, as one definition each.
+ *
+ * These exist because the library drifted. Crystal paints Resin with
+ * `--cr-shadow-float`, which is **four layers**: two inset optical rims and a
+ * two-part elevation. Crystal React painted it with `--cr-shadow-content`, which
+ * is two layers, no rims, and roughly half the elevation — so every Resin surface
+ * in the library rendered as a flat rounded rectangle instead of a floating,
+ * rimmed control plane. Meridian saw it immediately and said none of the
+ * components looked like Crystal.
+ *
+ * The rim is not decoration. AGENTS.md lists "optical rims" among the qualities
+ * the approved baseline exists to protect, and it is what makes Resin read as a
+ * raised piece of glass rather than a shape: a bright edge where the light
+ * catches the top, a fainter one returning underneath.
+ *
+ * So the recipe is one token in one mixin. `scripts/verify-materials.mjs`
+ * computes what Crystal's own resolver says a material should be and compares it
+ * with what the browser renders, so this cannot drift again without failing.
+ */
+
+/* Only the unprefixed `backdrop-filter` is ever written in this library; see the
+   note in `_field.scss` for what happened the one time it was not. */
+
+/** Resin: the floating optical control surface. */
+@mixin resin {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--cr-rim);
+  background: var(--cr-resin-fill);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  box-shadow: var(--cr-shadow-float);
+}
+
+/** Frost: the diffused intermediate surface. */
+@mixin frost {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--cr-rim);
+  background: var(--cr-frost-fill);
+  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
+  box-shadow: var(--cr-shadow-panel);
+}
+
+/* Where a material has no backdrop to diffuse — the viewer asked for less, or the
+   renderer cannot produce it — it becomes the surface colour rather than a
+   translucent fill over nothing. */
+@mixin opaque-fallback($selector) {
+  :global([data-effects='opaque']) #{$selector} {
+    background: var(--cr-surface);
+    backdrop-filter: none;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    #{$selector} { background: var(--cr-surface); backdrop-filter: none; }
+  }
+}

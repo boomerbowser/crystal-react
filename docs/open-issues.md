@@ -399,3 +399,99 @@ state still `running` a second and a half after a 620ms recipe. That is
 in a visible Chromium reaches full opacity in 300ms and settles by 700ms.
 Anything measured about motion or opacity in a backgrounded pane is measuring the
 pane.
+
+## R-13 · Crystal React's materials had drifted, and nothing compared them
+
+**Closed for the library. The remaining half is a decision for Meridian — see below.**
+
+Meridian sent a screenshot of Crystal's own playground and said none of the
+components looked like it, "even in their hover state". Two separate causes, both
+real, and neither visible to any existing gate.
+
+### The foundation was flat
+
+Crystal's materials are defined by what is *behind* them: Frost diffuses the
+foundation, Resin transmits its colour, Haze fills over it. The Storybook
+decorator painted `background: var(--cr-canvas)` — a flat colour — so every
+material in every story had nothing to diffuse and rendered as white. The
+hierarchy the whole system is built on was invisible in the one place a reviewer
+looks at it.
+
+Crystal's own scene marks itself `class="stage cr-plastic"`, and `.cr-plastic`
+carries the three radial atmosphere washes. The decorator uses that class now;
+there is no second recipe, the class *is* the recipe.
+
+**Colour atmosphere was a provider input with no way to reach it.** It is a
+toolbar control now, with Frost base tint, elevation, corner radius, animation
+speed and the ground — Crystal's own "Make it yours" panel, in the same order
+with the same defaults. Any of them can also be pinned per story through
+`parameters.crystal`, so a component whose subject *is* an environment can show
+it, and so a browser gate measures a fixed environment rather than whatever the
+last reviewer left in the toolbar.
+
+### Resin had no optical rims and half its elevation
+
+Crystal paints Resin with `--cr-shadow-float`: **four layers**, two inset optical
+rims over a two-part elevation. Crystal React painted `--cr-shadow-content`: two
+layers, no rims, roughly half the elevation. Eight component stylesheets plus the
+field and strip mixins. AGENTS.md lists optical rims among the qualities the
+approved baseline exists to protect, and they are what make Resin read as a
+raised piece of glass rather than a rounded rectangle.
+
+`styles/_material.scss` now holds one definition per material, and
+`Button`'s hover no longer cross-fades a second float shadow in — that was right
+while the rest state was the content shadow and became a doubled shadow the
+moment the rest state was corrected. Crystal's own Resin control does not lift on
+hover: `:is(button,a.cr-button):hover` reads `filter: none`. The resting state
+already *is* the floating state.
+
+### `scripts/verify-materials.mjs`
+
+The aesthetic check. It renders the same material in Crystal's preview and in
+this library and compares the computed style — diffusion, shadow, fill, edge.
+**Neither side's values are written down**, so the expectation follows Crystal
+instead of a copy of it, which is the only way a parity check stays true.
+
+Two things it had to learn. It picks the first match that actually *paints*,
+because `controls.css` puts the Resin recipe on `.cr-resin-haze`, `.cr-control`
+and every bare `button`, so the first `.cr-haze` in Crystal's preview is a control
+wearing Haze's class — comparing against it reports a drift that is really a
+mismatched specimen. And geometry is excluded: Crystal's preview and a Storybook
+specimen are different compositions, so a radius difference is a layout choice
+rather than a material one.
+
+Frost matches exactly. Haze has no clean specimen in Crystal's preview to compare
+against, which is recorded rather than worked around.
+
+## M-4 · Crystal's exported Resin shadow does not produce Crystal's approved Resin
+
+**A decision for Meridian. Found by R-13's parity gate; not fixed here, because
+fixing it changes the material every platform renders.**
+
+There are two Resin shadows in Crystal and they disagree:
+
+| | recipe |
+|---|---|
+| `--cr-shadow-float`, the exported token | `inset 0 1px 1px` highlight, `inset 0 -1px 1px` **contact**, `0 5px 8.75px`, `0 25px 50px`, both **palette-tinted** |
+| what the preview renders, via `controls.css` | `inset 0 2px 1px` highlight, `inset 0 -1px 1px` **highlight**, `0 5px 9px`, `0 16px 30px`, both **near-black ink** `#080b24` |
+
+The second is what the approved baseline shows, because the baseline was captured
+from the preview. The first is what every platform library gets, because
+`controls.css` is not exported — that was D-1's fix.
+
+So a platform library that follows the token cannot reproduce the approved
+appearance, and `libraries/CONTRACT.md`'s parity bar cannot be met by following
+Crystal's own tokens. Concretely the token gives a deeper, softer, palette-tinted
+shadow (50px of spread against 30px) and a shallower top rim.
+
+This is the D-1 hazard once more: `controls.css` shaped the appearance that got
+blessed, and the exported surface says something else.
+
+**What Meridian decides:** whether `--cr-shadow-float` is brought into line with
+the blessed rendering — which changes the generated theme CSS and every
+platform's Resin, deliberately — or whether the token is the intended
+specification and the preview is the thing that drifted, in which case the
+baseline wants re-blessing against it. Crystal React follows the token today,
+which is the exported contract.
+
+Left open.

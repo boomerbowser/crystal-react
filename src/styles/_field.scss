@@ -45,7 +45,10 @@
   border-radius: var(--cr-radius);
   background: var(--cr-resin-fill);
   backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  box-shadow: inset 0 2px 1px var(--cr-rim), var(--cr-shadow-content);
+  /* Crystal's own float shadow, which already carries both optical rims. This
+     line used to write one rim by hand over the content shadow — half the recipe,
+     restated rather than referenced, and half the elevation. */
+  box-shadow: var(--cr-shadow-float);
   transform-origin: center;
 }
 

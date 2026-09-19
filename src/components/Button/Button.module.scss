@@ -34,7 +34,7 @@
   isolation: isolate;
   background: var(--cr-resin-fill);
   backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  box-shadow: var(--cr-shadow-content);
+  box-shadow: var(--cr-shadow-float);
 
   /* Transform is set by the motion engine; declaring the origin here keeps the
      press deformation centred whatever the button's size. */
@@ -42,22 +42,16 @@
   will-change: transform;
 }
 
-/* The elevated shadow is a second, pre-rendered layer cross-faded by opacity,
-   never an animated `box-shadow`. A box-shadow keyframe repaints every frame;
-   an opacity change on an existing layer is composited. */
-.button::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  pointer-events: none;
-  box-shadow: var(--cr-shadow-float);
-  opacity: 0;
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
-}
-
-.button[data-hovered]::after { opacity: 1; }
+/* No elevation change on hover, and that is Crystal's own behaviour rather than
+   an omission: `:is(button,a.cr-button):hover` in `controls.css` reads
+   `background: var(--cr-resin-fill); filter: none` — the resting state of a Resin
+   control already *is* the floating state, so there is nowhere further to lift.
+   
+   This used to cross-fade a second `--cr-shadow-float` layer in on hover, which
+   was right while the resting state was the content shadow and became a doubled
+   shadow the moment the rest state was corrected. The brightness lift is the one
+   Crystal writes for its own filled button. */
+.button[data-hovered] { filter: brightness(1.04); }
 
 .button[data-focus-visible] {
   /* The focus recipe is one token: a crisp core inside a four-layer feathered

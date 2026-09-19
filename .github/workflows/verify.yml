@@ -123,6 +123,13 @@ jobs:
       # others: a material built from a property that does not resolve is not a
       # weaker material, it is a syntax error, and every check beneath it is then
       # measuring a component with no styling.
+      #
+      # `verify:materials` is the aesthetic check, and it is the only one that
+      # needs *both* servers: it renders the same material in Crystal's own
+      # preview and in this library and compares the computed style. Neither
+      # side's values are written down, so the expectation follows Crystal rather
+      # than a copy of it. Meridian found the Resin rims missing before any gate
+      # did, which is the argument for having this one.
       - name: Measure and drive the built stories
         run: |
           python3 -m http.server 6006 --directory storybook-static --bind 127.0.0.1 &
@@ -133,6 +140,16 @@ jobs:
           pnpm run verify:theme
           pnpm run verify:targets
           pnpm run verify:behaviour
+
+          # Material parity needs Crystal's own preview beside the Storybook, so
+          # the same material can be rendered in both and compared. Crystal is
+          # already checked out for the token build; this serves it.
+          python3 ../crystal-design-system/design-system/tools/serve.py &
+          for _ in $(seq 1 40); do
+            curl -sf http://127.0.0.1:4321/ >/dev/null && break
+            sleep 0.5
+          done
+          pnpm run verify:materials
         env:
           STORYBOOK_ORIGIN: http://127.0.0.1:6006
 
