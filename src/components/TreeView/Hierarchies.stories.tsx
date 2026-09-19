@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { useMemo, useState } from 'react';
 import { TreeView, type TreeNode } from './TreeView.js';
 import { TableOfContents, useHeadingInView } from '../TableOfContents/TableOfContents.js';
@@ -99,10 +100,16 @@ export const ScrollSpy: Story = {
 
     return (
       <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'start' }}>
-        <div
+        {/* The library's own scroll region rather than a hand-rolled one. A
+            column of headings and paragraphs holds nothing focusable, so without
+            a tab stop of its own a keyboard cannot scroll it at all — which is
+            what this story shipped as, and what `ScrollArea` already knows how
+            to avoid. A story that hand-rolls what the library provides also
+            stops being an example of it. */}
+        <ScrollArea
           ref={setRoot}
-          className="cr-scroll-frost"
-          style={{ maxHeight: '320px', overflowY: 'auto', maxWidth: '420px', paddingInlineEnd: 'var(--cr-space)' }} /* crystal-allow-literal: story bound, so the column actually scrolls */
+          aria-label="Specification sections"
+          style={{ maxHeight: '320px', maxWidth: '420px', paddingInlineEnd: 'var(--cr-space)' }} /* crystal-allow-literal: story bound, so the column actually scrolls */
         >
           <Stack gap="lg">
             {sections.map((section) => (
@@ -119,7 +126,7 @@ export const ScrollSpy: Story = {
               </Stack>
             ))}
           </Stack>
-        </div>
+        </ScrollArea>
         <TableOfContents entries={sections} {...(active ? { activeId: active } : {})} />
       </div>
     );

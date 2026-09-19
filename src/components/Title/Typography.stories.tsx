@@ -59,7 +59,12 @@ export const LevelAndStepAreSeparate: Story = {
   render: () => (
     <Stack gap="lg">
       <Title level={2} step="subheading">A level-two heading at the subheading step</Title>
-      <Title level={4} step="title">A level-four heading at the title step</Title>
+      {/* Level three, not four. The point is that the level and the step move
+          independently, which a three-at-the-title-step makes just as well — and
+          jumping straight from two to four is `heading-order`, a real failure
+          for anyone navigating by heading. A story that demonstrates a
+          specification by breaking an unrelated one is not a good example. */}
+      <Title level={3} step="title">A level-three heading at the title step</Title>
     </Stack>
   ),
 };

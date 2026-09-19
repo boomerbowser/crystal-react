@@ -19,7 +19,7 @@
  * inside a colour area and the announcements. What Crystal adds is the material
  * and the thumb.
  */
-import { useState, type ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import {
   ColorPicker as AriaColorPicker,
   ColorArea as AriaColorArea,
@@ -104,12 +104,21 @@ export interface ColorAreaProps extends StandaloneColour {
 export function ColorArea({
   xChannel = 'saturation', yChannel = 'brightness', value, defaultValue, onChange, className,
 }: ColorAreaProps): React.JSX.Element {
+  /* The same conversion `ColorSlider` does, and it was missing here. An area's
+     two channels have to exist in the colour it is given: handed `#7338EF`,
+     which is RGB, it asks an RGBColor for its saturation and React Aria throws
+     `Unknown color channel: saturation` — the story rendered nothing at all.
+     No unit test saw it, because the defect is a render-time throw in a browser
+     and the Colour story had no assertion of its own. */
+  const resolvedValue = inSpaceFor(xChannel, value);
+  const resolvedDefault = inSpaceFor(xChannel, defaultValue);
+
   return (
     <AriaColorArea
       xChannel={xChannel}
       yChannel={yChannel}
-      {...(value !== undefined ? { value } : {})}
-      {...(defaultValue !== undefined ? { defaultValue } : {})}
+      {...(resolvedValue !== undefined ? { value: resolvedValue } : {})}
+      {...(resolvedDefault !== undefined ? { defaultValue: resolvedDefault } : {})}
       {...(onChange ? { onChange } : {})}
       className={cx(styles['area'], className)}
     >
@@ -137,7 +146,7 @@ const SPACE_FOR_CHANNEL = {
 } as const;
 
 function inSpaceFor(
-  channel: ColorSliderProps['channel'],
+  channel: ColorSliderProps['channel'] | NonNullable<ColorAreaProps['xChannel']>,
   colour: string | Color | undefined,
 ): Color | undefined {
   if (colour === undefined) return undefined;
@@ -264,20 +273,39 @@ export interface ColorPickerProps {
 export function ColorPicker({
   label, defaultValue = DEFAULT_COLOUR, onChange, className,
 }: ColorPickerProps): React.JSX.Element {
-  const [colour, setColour] = useState<Color>(() => parseColor(defaultValue));
+  /* Held in HSB, not in whatever space the hex parsed to.
+     
+     Every child of this picker reads an HSB channel — the area moves saturation
+     and brightness, the slider moves hue — and `parseColor('#7338EF')` returns
+     an RGBColor, which has none of them. React Aria throws on the first render
+     rather than converting, so the whole picker rendered as an error boundary.
+     Converting once here is the fix for all three children at once; converting
+     in each child would leave them disagreeing about what the current colour is
+     the moment one of them changed it. `toString('hex')` still works from HSB,
+     so a consumer reading the value back sees no difference. */
+  const [colour, setColour] = useState<Color>(() => parseColor(defaultValue).toFormat('hsb'));
+  const groupId = useId();
 
   return (
     <AriaColorPicker
       value={colour}
       onChange={(next) => { setColour(next); onChange?.(next); }}
     >
-      <div className={cx(styles['field'], className)}>
-        <span className={cx(styles['label'])}>{label}</span>
+      <div className={cx(styles['field'], className)} role="group" aria-labelledby={groupId}>
+        <span id={groupId} className={cx(styles['label'])}>{label}</span>
         <ColorArea />
         <ColorSlider channel="hue" />
         {/* Always editable, and always present: the text is the representation
-            that does not depend on seeing the colour. */}
-        <ColorField className={cx(styles['field'])}>
+            that does not depend on seeing the colour.
+
+            Named, and it was not. The picker's own caption is a `span` heading a
+            group, so it labels the group and not the input inside it, and the
+            hex field went out with no accessible name at all — React Aria said
+            so in a console warning on every render and nobody was reading the
+            console. "Hexadecimal value" rather than repeating the picker's
+            label: inside a group that is already announced as "Accent", a field
+            called "Accent" says nothing a listener did not just hear. */}
+        <ColorField className={cx(styles['field'])} aria-label="Hexadecimal value">
           <Group className={cx(styles['shell'])}>
             <AriaColorSwatch className={cx(styles['swatch'])} />
             <Input className={cx(styles['control'])} />

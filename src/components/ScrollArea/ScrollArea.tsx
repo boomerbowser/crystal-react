@@ -53,6 +53,7 @@ import {
 } from 'react';
 import { mergeProps, useObjectRef } from 'react-aria';
 import { cx } from '../../styles/cx.js';
+import { useScrollTabStop } from './useScrollTabStop.js';
 import styles from './ScrollArea.module.scss';
 
 /** Which material's scrollbar this area carries. */
@@ -82,17 +83,14 @@ export interface ScrollAreaProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
 }
 
-const FOCUSABLE =
-  'a[href],button,input,select,textarea,summary,iframe,audio[controls],video[controls],'
-  + '[contenteditable]:not([contenteditable="false"]),[tabindex]:not([tabindex="-1"])';
-
 export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(function ScrollArea(
   { variant = 'frost', axis = 'y', fade = true, className, children, ...props },
   ref,
 ) {
   const inner = useObjectRef(ref);
   const [edges, setEdges] = useState<ScrollEdges>(undefined);
-  const [needsTabStop, setNeedsTabStop] = useState(false);
+  /* The rule lives in one place, because `AppShell` needs it too. */
+  const needsTabStop = useScrollTabStop(inner);
 
   const measure = useCallback(() => {
     const element = inner.current;
@@ -117,11 +115,6 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(function S
         : atEnd ? 'end'
           : 'both');
 
-    /* Vertical overflow still traps content when the declared axis is horizontal,
-       so reachability is asked of the element, not of the axis. */
-    const scrolls = element.scrollHeight > element.clientHeight + 1
-      || element.scrollWidth > element.clientWidth + 1;
-    setNeedsTabStop(scrolls && element.querySelector(FOCUSABLE) === null);
   }, [axis]);
 
   useEffect(() => {

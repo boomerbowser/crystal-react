@@ -1,35 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, userEvent, within } from 'storybook/test';
+import { only } from '../../../.storybook/environment.js';
 import { Tabs } from './Tabs.js';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs.js';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl.js';
 import { Stack } from '../Stack/Stack.js';
 import { Text } from '../Text/Text.js';
-
-const meta = {
-  title: 'Navigation/Tabs and breadcrumbs',
-  parameters: {
-    docs: {
-      description: {
-        component:
-          '**Selection is label weight.** The selected tab is heavier; the soft fill beneath it is a '
-          + 'second signal rather than the only one, which is what keeps selection off colour alone. '
-          + 'In forced colours the fill goes and a ring takes its place, because Chromium paints an '
-          + 'opaque backplate behind text and a filled label disappears under it.\n\n'
-          + 'A tab list and a segmented control are the same material and different semantics. A tab '
-          + 'list picks a *view* and promises a panel will change; a segmented control picks a *value* '
-          + 'and announces as a radio group. Borrowing one for the other tells a screen-reader user to '
-          + 'expect something that never happens, so the strip is shared through `styles/_strip.scss` '
-          + 'and the semantics are not.\n\n'
-          + 'A breadcrumb trail has no material of its own. It sits in the page\'s own content, and '
-          + 'giving it a surface would make it read as a card containing the navigation rather than as '
-          + 'the page saying where it is.',
-      },
-    },
-  },
-} satisfies Meta;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
 
 const docs = [
   {
@@ -49,18 +25,97 @@ const docs = [
   },
 ];
 
+const meta = {
+  title: 'Navigation/Tabs and breadcrumbs',
+  /* Without this docgen has nothing to read and Storybook generates no controls
+     at all — which is the message Meridian screenshotted on this very story. */
+  component: Tabs,
+  args: {
+    items: docs,
+    label: 'Documentation',
+    labelVisible: false,
+    orientation: 'horizontal' as const,
+    /* A spy rather than a no-op, so the Actions panel shows what fired and with
+       what. For a tab list that is the whole contract: the strip's job is to
+       report which view was picked. */
+    onSelectionChange: fn(),
+  },
+  argTypes: {
+    labelVisible: {
+      description: 'Show the label above the strip, naming the list by reference.',
+      control: 'boolean', table: { category: 'Tabs' },
+    },
+    orientation: {
+      control: 'inline-radio', options: ['horizontal', 'vertical'],
+      table: { category: 'Tabs' },
+    },
+    label: { control: 'text', table: { category: 'Tabs' } },
+    /* The collection is structure, not a setting. A JSON editor over it would be
+       a control a reviewer can only break. */
+    items: { control: false, table: { category: 'Tabs' } },
+    onSelectionChange: { table: { category: 'Tabs' } },
+  },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Selection is label weight.** The selected tab is heavier; the soft fill beneath it is a '
+          + 'second signal rather than the only one, which is what keeps selection off colour alone. '
+          + 'In forced colours the fill goes and a ring takes its place, because Chromium paints an '
+          + 'opaque backplate behind text and a filled label disappears under it.\n\n'
+          + 'A tab list and a segmented control are the same material and different semantics. A tab '
+          + 'list picks a *view* and promises a panel will change; a segmented control picks a *value* '
+          + 'and announces as a radio group. Borrowing one for the other tells a screen-reader user to '
+          + 'expect something that never happens, so the strip is shared through `styles/_strip.scss` '
+          + 'and the semantics are not.\n\n'
+          + 'A breadcrumb trail has no material of its own. It sits in the page\'s own content, and '
+          + 'giving it a surface would make it read as a card containing the navigation rather than as '
+          + 'the page saying where it is.',
+      },
+    },
+  },
+} satisfies Meta<typeof Tabs>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+
 export const TabStrip: Story = {
-  render: () => <Tabs label="Documentation" items={docs} />,
+  render: (args) => <Tabs {...only(args)} />,
+  /* The Interactions panel, and the first thing in this library that watches a
+     keyboard in a real browser. A tab list's arrow-key model is the part jsdom
+     cannot answer for: the unit tests assert what React Aria reports, and this
+     asserts what a person pressing Right actually gets. */
+  play: async ({ canvasElement, args, step }) => {
+    const canvas = within(canvasElement);
+    await step('the first tab is selected and carries the weight', async () => {
+      const overview = canvas.getByRole('tab', { name: 'Overview' });
+      await expect(overview).toHaveAttribute('aria-selected', 'true');
+    });
+    await step('Right moves to the next tab and reports it', async () => {
+      await userEvent.click(canvas.getByRole('tab', { name: 'Overview' }));
+      await userEvent.keyboard('{ArrowRight}');
+      await expect(canvas.getByRole('tab', { name: 'Usage' })).toHaveAttribute('aria-selected', 'true');
+      await expect(args.onSelectionChange).toHaveBeenCalled();
+    });
+    await step('nothing is marked with a check', async () => {
+      for (const tab of canvas.getAllByRole('tab')) {
+        await expect(tab.textContent ?? '').not.toMatch(/[\u2713\u2714]/);
+      }
+    });
+  },
 };
 
 /* The label is shown, so it names the list by reference. What is seen and what
    is announced then cannot drift apart, which an `aria-label` cannot promise. */
 export const WithAVisibleLabel: Story = {
-  render: () => <Tabs label="Documentation" items={docs} labelVisible />,
+  args: { labelVisible: true },
+  render: (args) => <Tabs {...only(args)} />,
 };
 
 export const Vertical: Story = {
-  render: () => <Tabs label="Documentation" items={docs} orientation="vertical" />,
+  args: { orientation: 'vertical' },
+  render: (args) => <Tabs {...only(args)} />,
 };
 
 export const WithADisabledTab: Story = {

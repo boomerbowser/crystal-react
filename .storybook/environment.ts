@@ -41,7 +41,7 @@ const range = (
   help: string,
   step = 1,
 ) => {
-  const [min, max] = crystalRanges[key] as [number, number];
+  const [min, max] = crystalRanges[key] as unknown as [number, number];
   return {
     name: label,
     description: help,
@@ -162,3 +162,24 @@ export const environmentArgs = {
 
 /** The keys the decorator consumes, so a render can strip them from its props. */
 export const ENVIRONMENT_KEYS = Object.keys(environmentArgs) as (keyof typeof environmentArgs)[];
+
+/**
+ * A story's own args, with the shared environment removed.
+ *
+ * Every story carries the fourteen environment args so the Controls panel has
+ * something to show. Storybook's default render spreads args straight onto the
+ * component, so without this a `Button` would be handed `atmosphere={90}` and
+ * React Aria would forward it to the DOM — "React does not recognize the
+ * `motionSpeed` prop on a DOM element", once per control, in every story.
+ *
+ *     render: (args) => <Tabs {...only(args)} />
+ *
+ * Explicit at each call rather than hidden in a decorator, because a decorator
+ * cannot change what a story's own render receives, and pretending otherwise is
+ * how the props would leak back in the first time somebody wrote a new story.
+ */
+export function only<T extends object>(args: T): T {
+  const out = { ...args } as Record<string, unknown>;
+  for (const key of ENVIRONMENT_KEYS) delete out[key];
+  return out as T;
+}

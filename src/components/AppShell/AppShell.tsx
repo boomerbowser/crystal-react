@@ -31,6 +31,7 @@
  */
 import { forwardRef, useRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { useScrollTabStop } from '../ScrollArea/useScrollTabStop.js';
 import { ShellScrollContext } from './scrollContext.js';
 import styles from './AppShell.module.scss';
 
@@ -67,6 +68,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
   /* Published so an `AppBar` in the header slot can tell when the content has
      scrolled past it. The bar never moves here, so it cannot tell on its own. */
   const main = useRef<HTMLElement | null>(null);
+  const mainNeedsTabStop = useScrollTabStop(main);
 
   return (
     <ShellScrollContext.Provider value={main}>
@@ -83,7 +85,17 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
           {sidebar}
         </nav>
       ) : null}
-      <main ref={main} className={cx(styles['main'], 'cr-scroll-frost')}>{children}</main>
+      {/* `tabIndex` when the content scrolls and holds nothing focusable. A
+          `<main>` is a landmark, so it cannot be a `ScrollArea`, which renders a
+          div — and so it never inherited that component's reachability rule and
+          shipped as a region a keyboard could not scroll. Same hook, one rule. */}
+      <main
+        ref={main}
+        className={cx(styles['main'], 'cr-scroll-frost')}
+        {...(mainNeedsTabStop ? { tabIndex: 0 } : {})}
+      >
+        {children}
+      </main>
       {destinations ? (
         /* Resin, and floating: the one surface in the shell that is above the
            content rather than beside it. */
