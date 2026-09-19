@@ -691,3 +691,139 @@ this library specifically:
   the workflow: pushing this repository first will no longer fail as
   `[sass] Undefined variable`, because the Crystal it builds against will be a
   pinned version rather than whatever `main` happens to be.
+
+## R-17 · Storybook has almost no Controls, no Actions and no Interactions
+
+**Reported by Meridian, 19 September 2026. Recorded in detail; not started.**
+**Severity: high — this is the review surface, and three of its four panels are
+empty.**
+
+Meridian opened the Tab Strip story and Storybook said, in its own words:
+
+> This story has no controls. Storybook couldn't find or generate any controls
+> for this story. Define `args` or `argTypes`, or configure docgen to let
+> Storybook generate controls automatically.
+
+That is not one story. Counted across the library:
+
+| | count |
+|---|---|
+| Story files | 27 |
+| Exported stories | 92 |
+| Files declaring a real `meta.component` | **19 of 27** |
+| Files with any `args` | **12 of 27** |
+| Files with `argTypes` | **0** |
+| Stories with a `play` function | **0** |
+| Files importing `fn()` from `storybook/test` | **0** |
+| `render:` closures that ignore args entirely | **79** |
+
+So the **Controls** panel is empty or near-empty for most of the library, the
+**Actions** panel is empty for all of it, and the **Interactions** panel has
+nothing to run anywhere.
+
+### Why there are no controls
+
+Three causes, and they stack.
+
+**1. Eight story files declare no `meta.component`.** Without it, docgen has
+nothing to read and Storybook cannot generate a single control — which is exactly
+the message above. Every one of the eight is a file written in the last two days:
+`Links`, `Palette`, `Panels`, `Overlays`, `Navigation`, `Hierarchies`, `Form`,
+`Parity`. The Tab Strip in Meridian's screenshot lives in `Navigation`.
+
+An earlier count of "27 files with `component:`" was wrong and worth naming: it
+matched `docs: { description: { component: … } }`, which is a documentation
+string and not a component reference. The real count is 19.
+
+**2. Almost every story is a `render:` closure.** 79 of them. A closure that
+takes no arguments cannot be driven by args, so even where `meta.component` is
+set and docgen produces argTypes, moving a control changes nothing on screen.
+The stories were written to *demonstrate* rather than to be *operated*, which is
+half a review surface.
+
+**3. No `argTypes` anywhere.** Docgen can infer a type from a prop's TypeScript
+signature but not the intent: which props deserve a control, what a sensible
+range is, which belong in a "Material" group rather than beside `className`.
+Nothing in the library says.
+
+### Why there are no actions
+
+No story imports `fn()` from `storybook/test`, and no `meta` sets
+`argTypes: { onPress: { action: 'onPress' } }`. Every callback Crystal React
+exposes — `onPress`, `onAction`, `onSelectionChange`, `onOpenChange`,
+`onExpandedChange`, `onNavigate`, `onSubmit` — fires into nothing a reviewer can
+see. For a library whose whole job is behaviour, the panel that shows behaviour
+happening is blank.
+
+### Why there are no interactions
+
+Zero `play` functions, and `@storybook/addon-vitest` is not installed — in
+Storybook 10 that addon is what supplies the Interactions panel and its
+step-through debugger. The panel Meridian saw is present and will always be
+empty.
+
+This one compounds a gap already recorded. R-10 and R-11 exist because jsdom
+cannot answer questions about geometry, layout or resolved colour; a `play`
+function runs the same interaction *in a real browser*, and would let a reviewer
+watch focus containment, arrow-key movement through a tree, or a drawer's
+modality behave — the very things whose unit tests were found to be checking
+nothing.
+
+### The environment controls are the wrong shape
+
+The toolbar added yesterday carries every axis Crystal's own "Make it yours"
+panel has, but as **dropdown lists of discrete values**. Crystal's panel is
+continuous. Meridian's screenshot is the specification:
+
+| Crystal's control | Shape | Range | Currently |
+|---|---|---|---|
+| Product palette | Swatch row, six circles, active ringed | six palettes | dropdown |
+| Appearance | Segmented: Light / Dark / Auto | three | dropdown, and **no Auto** |
+| Color atmosphere | Slider with live `%` | 15–90 | dropdown of four |
+| Frost base tint | Slider with live `%` | 35–85 | dropdown of three |
+| Elevation | Slider with live `%` | 60–150 | dropdown of four |
+| Corner radius | Slider with live `px` | 14–28 | dropdown of three |
+| Content density | Segmented: Comfortable / Compact | two | dropdown |
+| Typeface | Select with a preview toggle | `manrope`, system | **absent** |
+| Animation speed | Slider with live `×` | 0.25–2 | dropdown of four |
+| Reduce motion | Checkbox | boolean | dropdown of `true`/`false` |
+| Reduce transparency | Checkbox | boolean | **conflated with `effects`** |
+
+Two of those are more than cosmetic. **Typeface is missing entirely** — the
+resolver takes `s.font` and `preferences.js` clamps it, and neither the provider
+nor the toolbar exposes it. And **reduce transparency is not the same axis as
+`effects`**: `effects: opaque` is a Crystal scheme value, while reduced
+transparency is a user preference the provider reads from
+`prefers-reduced-transparency`. The toolbar currently offers the first and calls
+it the second, so a reviewer cannot simulate the media query the library actually
+branches on.
+
+**A constraint worth recording before anyone tries:** Storybook's `globalTypes`
+toolbar supports only discrete `items`. There is no slider, no swatch row and no
+checkbox in it. Matching Crystal's panel means either a **custom Storybook addon
+with its own panel**, or surfacing the environment as **per-story args with
+`control: { type: 'range' }`**, which renders real sliders in the Controls panel.
+
+The second is probably right, and not only because it is cheaper: Meridian asked
+on 19 September for the environment options to be "available per-component to
+test with and against", and args are per-component by construction. The toolbar
+would stay for taking any story through an axis quickly; args would give the
+sliders, the live values and a fixed environment a gate can measure.
+
+### What closing it needs
+
+1. `meta.component` on the eight files missing it.
+2. `args` and `argTypes` per component — every prop that is a real choice gets a
+   control, grouped, with ranges where Crystal states one. The `render:`
+   closures become arg-driven so moving a control moves the component.
+3. `fn()` spies on every callback, so the Actions panel shows what fired and
+   with what.
+4. `@storybook/addon-vitest`, and `play` functions on the stories whose subject
+   is behaviour — focus containment in a modal drawer, arrow-key movement in a
+   tree, type-ahead in the command palette, the scroll spy.
+5. The environment as args with the shapes above, plus the two genuinely missing
+   axes: typeface, and reduced transparency as its own preference.
+6. A gate. This is the third time a review surface has been broken in a way no
+   check could see, so: every story file declares a `meta.component`; every
+   component with callbacks has action args; no story is render-only unless it
+   says why. A count in CI that only ever goes up.
