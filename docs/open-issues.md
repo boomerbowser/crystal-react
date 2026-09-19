@@ -535,3 +535,93 @@ One more thing that made it hard to see: killing the dev server and restarting i
 is not enough on its own. A lingering process keeps port 6006, the new one fails
 to bind, and the measurement lands on the old server — which looks exactly like a
 cache that will not clear.
+
+## R-15 · Resin surfaces are missing their Haze content fill
+
+**Severity: high. A readability defect before it is an aesthetic one.**
+**Reported by Meridian, 19 September 2026. Recorded, not yet fixed.**
+
+Crystal paints a protective Haze fill *inside* every Resin surface, under the
+content. Crystal React paints it on four surfaces out of twenty.
+
+References, captured side by side, in
+[`references/2026-09-19-resin-haze-fill/`](references/2026-09-19-resin-haze-fill/README.md).
+
+### What Crystal does
+
+Three mechanisms, and the fix needs all three because they are not the same
+thing.
+
+**1. Every Resin control carries a feathered Haze fill.** `controls.css`:
+
+```css
+:is(button, a.cr-button, .cr-control, .cr-field-shell, .cr-resin-haze, .cr-status)::before {
+  content: ''; position: absolute; inset: 8px; z-index: -1;
+  border-radius: inherit; pointer-events: none;
+  background: var(--cr-haze-fill);          /* the 80% content fill */
+  filter: blur(var(--cr-haze-feather));     /* 1.95px */
+}
+```
+
+Inset by 8px so the fill stops short of the rim and the glass edge still reads;
+feathered, and therefore on its own layer behind the content, because feathering
+an element that contains text blurs the text. `site.css` states the purpose in
+one line: *"`.cr-control` paints an 80% white protective fill under its label so
+text stays legible on Resin."*
+
+There is a second layer, `::after` at `inset: 2px` with a 2px blur, carrying the
+optical sheen.
+
+**2. A Resin *strip* carries the fill for the pills inside it, and the pills
+carry no material at all.** `:is(.cr-dock, .segmented, .suite-tabs)` takes the
+same `::before`, and then:
+
+```css
+:is(.cr-dock, .segmented, .suite-tabs) button {
+  background: transparent; box-shadow: none; backdrop-filter: none;
+}
+:is(.cr-dock, .segmented, .suite-tabs) button::before,
+:is(.cr-dock, .segmented, .suite-tabs) button::after { display: none; }
+```
+
+This is structural, not decorative. In Crystal the strip is the material and the
+pills are bare. In Crystal React every pill styles itself and the strip has no
+fill — which is why the tab strip reads as one flat wash.
+
+**3. The dock adds `.cr-dock-inner` at `--cr-label-fill`** — the 55% label veil,
+a different token from the Haze fill — which is the bright inner band visible in
+`standard-crystal-dock.png`.
+
+### What Crystal React does
+
+Sixteen of twenty Resin surfaces paint no Haze fill. Only `NavLink`,
+`OverlayArrow`, `RichTextSurface` and the overlay row mixin do, and the first of
+those was written yesterday.
+
+Missing it: **`Button`**, **`IconButton`**, **`_field.scss`** — which is every
+text input, textarea, select, combobox, date picker and tags input in the
+library — **`_strip.scss`** (tabs and the segmented control), `Toolbar`,
+`ButtonGroup`, `Slider`, `AngleSlider`, `Switch`, `Checkbox`, `AppShell`,
+`FloatingAction`, `Resizable`.
+
+### Why it is not only appearance
+
+Resin is a 20% fill with a 20px backdrop blur: it transmits whatever is behind
+it. On Crystal's Plastic foundation that is a coloured atmosphere gradient, so a
+label on bare Resin is reading against a surface that changes across the control
+and between palettes. The Haze fill is what puts a stable 80% ground under the
+text. Removing it does not merely flatten the material — it makes the label's
+contrast depend on the artwork behind the control.
+
+Crystal's contrast evidence is measured against the composition *with* the fill.
+Nothing in this library's checks measures it: the contrast gate lives in the
+design system, and `verify-materials` compares the surface's own computed style,
+not what a pseudo-element paints behind its content.
+
+### What closing it needs
+
+The Haze fill belongs in `styles/_material.scss` beside the `resin` mixin, as one
+definition — the strip variant included, since it is the same fill at a different
+inset with the children deliberately bare. And `verify-materials` should grow a
+comparison for the `::before` layer, because the reason this was invisible is
+that the gate only ever asked the element about itself.
