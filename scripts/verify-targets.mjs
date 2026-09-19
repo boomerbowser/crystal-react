@@ -133,7 +133,31 @@ for (const { story, selector, why, floor = FLOOR } of CASES) {
 
 await browser.close();
 
-console.log(JSON.stringify({ suite: 'target size', floor: `${FLOOR}px default`, probes, failures }, null, 2));
+/* The floor the suite is at today.
+ *
+ * A selector that matches *nothing* already fails loudly — `waitForSelector`
+ * times out before any of this runs — so that is not what this guards. What it
+ * guards is the case that still matches, and matches *less*: this gate went from
+ * 29 probes to 26 and stayed green, because a `play` function on a probed story
+ * collapsed a tree and left it collapsed. Three rows stopped existing and the
+ * gate reported success about the six that remained.
+ *
+ * Fewer probes is not a better result. It is the same checks run against less of
+ * the library. Raise this when cases are added; lowering it is a deliberate edit
+ * somebody makes in the same commit. */
+const LEAST_PROBES = 29;
+if (probes < LEAST_PROBES) {
+  failures.push(
+    `${probes} controls were measured, and this suite measured ${LEAST_PROBES} `
+    + 'before. Fewer probes is not a better result — it is the same checks run '
+    + 'against less of the library. If the drop is deliberate, lower LEAST_PROBES '
+    + 'in the same commit and say why.',
+  );
+}
+
+console.log(JSON.stringify({
+  suite: 'target size', floor: `${FLOOR}px default`, probes, least: LEAST_PROBES, failures,
+}, null, 2));
 if (failures.length) {
   console.error('\nA control does not reach Crystal\'s target floor.');
   console.error('Either make it taller or restore the hit area with a pseudo-element, as the');

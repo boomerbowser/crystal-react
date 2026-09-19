@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { useMemo, useState } from 'react';
 import { TreeView, type TreeNode } from './TreeView.js';
@@ -79,6 +79,26 @@ export const Files: Story = {
       <TreeView label="Files" items={files} selectionMode="single" defaultExpandedKeys={['src']} />
     </div>
   ),
+};
+
+/* The keyboard model gets a story of its own, and the separation is deliberate.
+ *
+ * A `play` function runs whenever the story *loads*, not only under the test
+ * runner, so a browser gate that opens a story with one is measuring whatever
+ * the play is in the middle of doing. This started on `Files`, and
+ * `verify-targets` — which probes that story — reported three 320×44 tree rows
+ * whose own centre did not belong to them. Nothing was wrong with the rows; the
+ * gate had arrived while the play was still pressing keys.
+ *
+ * So: a story that a measurement gate probes does not carry a play function, and
+ * a story with a play function is not probed. */
+export const Keyboard: Story = {
+  name: 'Keyboard navigation',
+  render: () => (
+    <div style={{ maxWidth: '320px' }} /* crystal-allow-literal: story bound, a sidebar width */>
+      <TreeView label="Files" items={files} selectionMode="single" defaultExpandedKeys={['src']} />
+    </div>
+  ),
   /* A tree's keyboard model, watched rather than asserted about. The unit tests
      check what React Aria reports; this checks what a person pressing Down and
      then Left actually gets, which is the half jsdom cannot answer — it has no
@@ -101,6 +121,26 @@ export const Files: Story = {
       await userEvent.click(parent!);
       await userEvent.keyboard('{ArrowLeft}');
       await expect(parent).toHaveAttribute('aria-expanded', 'false');
+      /* Put it back. A `play` function runs when the story *loads*, not only
+         under the test runner, so whatever it leaves behind is what every other
+         browser gate then measures. This one collapsed the tree and walked away,
+         and `verify-targets` quietly dropped from 29 probes to 26 — it was still
+         green, and it was measuring three fewer rows. A play function that
+         changes what a story shows has to hand it back. */
+      await userEvent.keyboard('{ArrowRight}');
+      await expect(parent).toHaveAttribute('aria-expanded', 'true');
+      /* And wait for the rows to finish arriving. Re-expanding is not enough:
+         the revealed rows animate in, and while they are doing it they are
+         part-transparent and offset, so `elementsFromPoint` does not land on
+         them. `verify-targets` then reported three 320×44 rows whose own centre
+         did not belong to them — a real-looking failure caused entirely by
+         being asked mid-animation. Waited on the rows' own opacity rather than
+         on a duration, so it tracks the motion speed rather than guessing it. */
+      await waitFor(async () => {
+        for (const row of canvas.getAllByRole('row')) {
+          await expect(getComputedStyle(row).opacity).toBe('1');
+        }
+      }, { timeout: 4000 });
     });
   },
 };
