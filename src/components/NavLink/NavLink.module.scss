@@ -1,0 +1,100 @@
+@use '../../styles/tokens' as *;
+
+/* NavLink — a Resin pill with a Haze fill under its label.
+ *
+ * The catalogue's material line is "Resin shell with Haze fill", and the Haze is
+ * not decoration: Resin diffuses whatever is behind it, so a label sitting
+ * directly on it is read against a moving, unpredictable backdrop. The 80%
+ * content fill is what gives the text something stable to sit on. That is the
+ * same reason `.cr-control` paints one in Crystal's own stylesheet.
+ */
+
+.navLink {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: $cr-action-gap;
+  min-block-size: $cr-action-min-target;
+  padding: $cr-action-padding-block $cr-action-padding-inline;
+  border: 1px solid var(--cr-rim);
+  border-radius: $cr-action-radius;
+  background: var(--cr-resin-fill);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  box-shadow: var(--cr-shadow-content);
+  color: var(--cr-text);
+  font-weight: 550;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* The Haze fill. Feathered, and therefore on its own layer behind the label —
+   feathering an element that contains text blurs the text. */
+.navLink::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--cr-haze-fill);
+  filter: blur(var(--cr-haze-feather));
+}
+
+/* The current-location dot's slot, reserved whether or not the dot is drawn.
+   Twice the marker line's thickness, so a dot and a line read as the same weight
+   of mark rather than two unrelated sizes. */
+.dot {
+  flex: none;
+  inline-size: calc(#{$cr-indicator-line-width} * 2);
+  block-size: calc(#{$cr-indicator-line-width} * 2);
+  border-radius: 50%;
+  background: var(--cr-primary);
+}
+
+.dot[data-empty] { background: none; }
+
+.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
+.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.label { min-inline-size: 0; }
+.trailing { margin-inline-start: auto; color: var(--cr-muted); }
+
+/* Current location is the dot; the weight is the signal underneath it, for a
+   reader who cannot resolve a 6px circle. Neither is colour. */
+.navLink[aria-current] { font-weight: 800; }
+.navLink[aria-current] .icon { color: var(--cr-text); }
+
+.navLink[data-hovered] { background: var(--cr-surface-alt); }
+
+.navLink[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.navLink[data-disabled] {
+  opacity: $cr-action-disabled-opacity;
+  cursor: not-allowed;
+}
+
+/* Resin needs a backdrop to diffuse; without one it is a translucent fill over
+   nothing. Where the viewer has asked for less, the pill becomes the surface. */
+:global([data-effects='opaque']) .navLink {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .navLink { background: var(--cr-surface); backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .navLink { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .navLink::before { content: none; }
+  /* A fill is erased by Chromium's text backplate, so the current entry is a
+     ring and the dot — never a background. */
+  .navLink[aria-current] { outline: 2px solid Highlight; color: CanvasText; }
+  .dot { background: Highlight; }
+  .dot[data-empty] { background: none; }
+}

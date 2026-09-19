@@ -49,7 +49,16 @@ const CASES = [
      meets are different nodes — and probing the named one would report every
      segmented control in Crystal as a 1px target. */
   { story: 'navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', selector: '[role="radiogroup"] label', why: 'a pill in a strip, same floor' },
+  { story: 'navigation-links--destinations', selector: '#storybook-root a', why: 'catalogue: pill; minimum 44px target' },
 ];
+
+/* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
+   in a sentence is text, and WCAG 2.5.5 exempts a target whose size is
+   constrained by the line-height of the text around it for that reason. Giving
+   each link in a paragraph a 44px box would make neighbouring links on adjacent
+   lines overlap, which is worse than either. The catalogue asks for 44px on the
+   nav link and says nothing about it for the anchor, and the difference is not
+   an oversight. */
 
 /* Probe inside the 44px box rather than on its edge: a point exactly on a
    boundary belongs to whichever box the engine rounds it into, and that is not

@@ -308,3 +308,36 @@ One thing it taught, worth carrying: for React Aria's radio the element ARIA
 names and the element a finger meets are **different nodes** — the radio is a
 visually-hidden 1px input inside the label. Probing the named one reports every
 segmented control in Crystal as a 1px target.
+
+## R-11 · A rule that lives in CSS has no gate in this library
+
+**Severity: medium, and the shape matters more than any one instance.**
+
+Three checks written this cycle could not be written where they belonged:
+
+- **A link is underlined at rest.** The underline is the non-chromatic signal
+  that distinguishes a link from the sentence around it — WCAG 1.4.1 — and a
+  link that underlines only on hover has no signal for a reader who is not
+  pointing at it. `getComputedStyle(link).textDecorationLine` in a vitest test
+  returns `"none"` whatever `Anchor.module.scss` says, because **jsdom loads no
+  stylesheet**. A test written against it passes on a component with no styling
+  at all.
+- **Every interactive control shows a focus ring.** This is not hypothetical.
+  `--cr-focus-core` and `--cr-focus-ring` were read by every field in this
+  library and defined by nothing, so Crystal's focus ring painted on no control
+  anywhere, through an entire slice, with every test green. What found it was
+  opening a component in a browser. `published-properties.test.tsx` now catches
+  the *undefined property*; nothing catches a control that simply has no rule.
+- **A state is distinguishable without colour.** Selection is weight, current
+  location is a dot, an error is weight plus a symbol. Each is a CSS fact.
+
+The pattern: **jsdom tests semantics, axe tests the tree, the target gate
+measures geometry, and the appearance of a state is checked by nobody.** That is
+the same gap the 36px tab sat in, and R-10 closed only the geometry half of it.
+
+Closing it means a browser gate over stories that reads computed style — the
+`verify-targets.mjs` harness already opens Playwright over the static Storybook
+build and would extend to it. Not done here because it is a second gate with its
+own case list and its own way of being wrong, and bolting it onto a script whose
+subject is "how big is this" would make both harder to trust. It wants its own
+change, and it is the next piece of infrastructure worth building.

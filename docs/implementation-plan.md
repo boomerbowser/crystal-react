@@ -873,7 +873,7 @@ publishes the recipe; `src/theme/published-properties.test.tsx` reads every
 `var(--cr-…)` in every stylesheet here and fails on any that Crystal does not
 publish and no component sets itself.
 
-### I — Navigation and overlays (28) — in progress, 13 of 28
+### I — Navigation and overlays (28) — in progress, 15 of 28
 
 `anchor`, `nav-link`, `nav-rail`, `dock`, `breadcrumbs`, `tabs`, `pagination`, `stepper`, `burger`, `command-palette`, `tree-view`, `affix`, `bottom-navigation`, `navigation-menu`, `table-of-contents`, `menubar`, `submenu`, `dialog`, `drawer`, `menu`, `context-menu`, `popover`, `hover-card`, `tooltip`, `scrim`, `portal`, `floating-window`, `overlay-arrow`.
 
@@ -900,6 +900,27 @@ publish and no component sets itself.
   And one the browser found: **a tab was a 36px target against a stated 44px
   floor**, as the segmented control's pills had been since they shipped. See
   `scripts/verify-targets.mjs`, which now measures it.
+- [x] **`anchor` and `nav-link`.** Both require an `href`, which is the
+  catalogue's rule — "a link that acts is a button, not a link" — enforced in the
+  type rather than documented beside it. React Aria renders a `<span role="link">`
+  when given none, and the result announces as a link while being absent from the
+  browser's link list, unopenable in a new tab and silent in the status bar.
+
+  The nav link reserves the current-location dot's room whether or not the dot is
+  drawn, and there is a story whose only job is to show the label not moving
+  between two states. A column that appears only for the current entry is the
+  defect that had the leading selection mark withdrawn from Crystal; drawing one
+  here that shifted the label would reintroduce it under a new name. Measured in
+  a browser: one distinct label position across all four rows.
+
+  `component.anchor.underlineOffset` (4px) is new in Crystal. The catalogue
+  states the value and there was nowhere honest to read it from — and borrowing
+  `spacing.2xs` for a typographic offset is exactly how `selection.railWidth`
+  became a generic 3px line.
+
+  One naming defect the tests caught: a nav link with trailing content announced
+  as "Inbox12", because the accessible name computation joins adjacent inline
+  content with nothing between it.
 
 ### J — Data display (37)
 

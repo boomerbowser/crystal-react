@@ -1,0 +1,67 @@
+@use '../../styles/tokens' as *;
+
+/* Anchor — a link in running text.
+ *
+ * No material. A link inherits the reading surface it sits on, because it is part
+ * of the sentence rather than a control placed in one.
+ */
+
+.anchor {
+  color: var(--cr-primary);
+  /* Present at rest, not on hover. The underline is what distinguishes a link
+     from the text around it without relying on colour — WCAG 1.4.1 — and a link
+     that only underlines on hover has no signal at all for a reader who is not
+     pointing at it. */
+  text-decoration: underline;
+  /* Clear of the descenders, so a "g" is not struck through. */
+  text-underline-offset: $cr-anchor-underline-offset;
+  cursor: pointer;
+  border-radius: $cr-action-radius;
+}
+
+.anchor[data-hovered] { text-decoration-thickness: 2px; }
+
+.anchor[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.anchor[data-disabled] {
+  color: var(--cr-muted);
+  opacity: $cr-action-disabled-opacity;
+  cursor: not-allowed;
+}
+
+/* Visited takes `--cr-muted` rather than a colour of its own. Crystal publishes
+   no visited token, and inventing one here would be a value nobody reviewed and
+   a CONTRACT §1 defect besides; `--cr-muted` is the published token that already
+   means "still text, less prominent", which is exactly what a destination you
+   have already read is. The underline stays, so the link is still a link without
+   colour.
+
+   `:visited` accepts almost nothing else — browsers restrict it to avoid leaking
+   history, and `getComputedStyle` always reports the unvisited value — so this
+   cannot be tested from script and is not gated. */
+.anchor:visited { color: var(--cr-muted); }
+
+.external {
+  display: inline-flex;
+  margin-inline-start: 0.25em; /* crystal-allow-literal: relative to the text it follows */
+  vertical-align: baseline;
+}
+
+.external svg {
+  inline-size: 0.85em; /* crystal-allow-literal: relative to the text, not a design value */
+  block-size: 0.85em; /* crystal-allow-literal: relative to the text, not a design value */
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (forced-colors: active) {
+  .anchor { color: LinkText; }
+  .anchor:visited { color: VisitedText; }
+}
