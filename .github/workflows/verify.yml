@@ -72,20 +72,22 @@ jobs:
           declared="$(node -p "const d=require('./package.json');(d.devDependencies?.['@crystal/core'] ?? d.dependencies['@crystal/core'])")"
           case "$declared" in
             file:*)
-              # The checkout above put Crystal at ./crystal-design-system, inside
-              # the workspace. The manifest spells the same place as a sibling
-              # (`file:../crystal-design-system/...`) because that is where it
-              # lives on a contributor's disk — so the tail of the declared path
-              # is what identifies the directory, not the whole of it.
-              tail="${declared#file:../crystal-design-system/}"
-              here="crystal-design-system/$tail"
+              # The declared path, used verbatim. This job runs with
+              # `working-directory: crystal-react` and checks both repositories
+              # out as siblings under the workspace, so `../crystal-design-system/…`
+              # means here exactly what it means on a contributor's disk. An
+              # earlier version of this step stripped the `../` after misreading
+              # an absolute path in pnpm's error, and then failed on a checkout
+              # that was perfectly fine — a preflight that cries wolf is worse
+              # than no preflight, because the next person learns to skip it.
+              here="${declared#file:}"
               if [ ! -d "$here" ]; then
                 echo "::error::package.json depends on '$declared', and '$here' is not in this checkout."
                 echo "::error::Crystal is checked out at its default branch. If the design system change this build needs was pushed after this run started, push the design system first and re-run — this is the push-ordering trap in R-16."
-                echo "Crystal's checkout contains:"; ls -1 crystal-design-system 2>/dev/null || echo "  (nothing — the checkout itself failed)"
+                echo "Crystal's checkout contains:"; ls -1 ../crystal-design-system 2>/dev/null || echo "  (nothing — the checkout itself failed)"
                 exit 1
               fi
-              echo "Crystal at $here — $(node -p "const p=require('./$here/package.json');p.name+' '+p.version")"
+              echo "Crystal at $here — $(node -p "const p=require('$here/package.json');p.name+' '+p.version")"
               ;;
             *) echo "Depends on the published '$declared' — no sibling checkout needed." ;;
           esac
