@@ -1,0 +1,105 @@
+@use 'tokens' as *;
+
+/* The Resin pill strip, and the pills inside it.
+ *
+ * Two controls draw this: a segmented control, which picks a value, and a tab
+ * list, which picks a view. They are different semantics — a radio group and a
+ * tablist, announced differently and deliberately so — and the same material.
+ *
+ * It lives here because the second one was about to copy the first. CONTRACT §1
+ * forbids repeating a Crystal *value*, and repeating a whole material recipe is
+ * the same hazard a level up: somebody improves the strip in one file, the other
+ * stays as it was, and two controls that are supposed to look alike stop looking
+ * alike with nothing failing.
+ *
+ * **Selection is label weight.** Not a check mark, which in Crystal means
+ * validated, and not a mark set beside the label, which would offset the very
+ * thing it points at and stop the selected pill lining up with the others. The
+ * soft fill under the weight is a second signal rather than the only one — and it
+ * is the one that goes in forced colours, where Chromium's text backplate paints
+ * over a filled label and erases it.
+ */
+
+/* Only the unprefixed `backdrop-filter` is ever written in this library; see the
+   note in `_field.scss` for what happened the one time it was not. */
+@mixin strip {
+  display: inline-flex;
+  align-self: start;
+  align-items: stretch;
+  padding: $cr-spacing-2xs;
+  border: 1px solid var(--cr-rim);
+  border-radius: $cr-action-radius;
+  background: var(--cr-resin-fill);
+  box-shadow: var(--cr-shadow-content);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+}
+
+/* One pill. Regular until selected — the weight *is* the selection.
+   
+   The pill is the 44px target less the strip's padding on both sides, so the
+   strip reaches the floor without each pill overshooting it — and then the hit
+   area is put back. Measured in a browser, a pill in a 45.6px strip was 36px
+   tall: the strip met the catalogue's "44px minimum" and the thing a finger
+   actually lands on did not. Nothing caught it, because no test in this library
+   measures a target and jsdom reports every box as zero.
+   
+   The pseudo-element grows the target into the strip's own padding without
+   moving a pixel. Neighbouring pills sit side by side, so the extra height
+   overlaps nothing. */
+@mixin pill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-xs});
+  padding-inline: $cr-action-padding-inline;
+  border-radius: $cr-action-radius;
+  color: var(--cr-muted);
+  font-weight: 550;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block: 50%;
+    block-size: $cr-action-min-target;
+    transform: translateY(-50%);
+  }
+}
+
+@mixin pill-selected {
+  font-weight: 800;
+  color: var(--cr-on-primary-soft);
+  background: var(--cr-primary-soft);
+}
+
+@mixin pill-focus {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(-1 * #{$cr-focus-core-offset});
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* Resin needs a backdrop to diffuse. Where the viewer has asked for less of it,
+   or the renderer cannot produce it, the strip becomes the surface colour rather
+   than a translucent fill over nothing. */
+@mixin strip-fallbacks($selector) {
+  :global([data-effects='opaque']) #{$selector} {
+    background: var(--cr-surface);
+    backdrop-filter: none;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    #{$selector} { background: var(--cr-surface); backdrop-filter: none; }
+  }
+}
+
+/* In forced colours the fill is erased by the text backplate, so selection is a
+   ring and the weight — never a background. */
+@mixin strip-forced-colors($strip, $selected) {
+  @media (forced-colors: active) {
+    #{$strip} { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+    #{$selected} { background: none; outline: 2px solid Highlight; color: CanvasText; }
+  }
+}

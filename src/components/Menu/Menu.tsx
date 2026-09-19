@@ -82,6 +82,15 @@ export interface MenuItemProps {
   /** Marks a destructive action, which is stated in words and not in colour alone. */
   isDestructive?: boolean;
   onAction?: () => void;
+  /**
+   * Makes the item a link. React Aria then renders a real `<a>`, so the browser's
+   * own affordances come with it — middle-click, open in a new tab, the status
+   * bar showing where it goes. An item that navigates and is not a link takes all
+   * of that away from somebody who expected it.
+   */
+  href?: string;
+  /** Where a link item opens. Only meaningful with `href`. */
+  target?: string;
   /** What the item is called, when its children are not plain text. */
   textValue?: string;
   className?: string;
@@ -89,7 +98,7 @@ export interface MenuItemProps {
 
 export function MenuItem({
   children, shortcut, isChecked, isDisabled = false, isDestructive = false,
-  onAction, textValue, id, className,
+  onAction, href, target, textValue, id, className,
 }: MenuItemProps): React.JSX.Element {
   const checkable = isChecked !== undefined;
 
@@ -99,6 +108,8 @@ export function MenuItem({
       {...(textValue ? { textValue } : {})}
       isDisabled={isDisabled}
       {...(onAction ? { onAction } : {})}
+      {...(href !== undefined ? { href } : {})}
+      {...(target !== undefined ? { target } : {})}
       /* React Aria turns this into role="menuitemcheckbox" and aria-checked. */
       {...(checkable ? { selectionMode: 'multiple' as const } : {})}
       {...(isDestructive ? { 'data-destructive': true } : {})}

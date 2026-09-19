@@ -1,0 +1,139 @@
+@use '../../styles/tokens' as *;
+
+/* Breadcrumbs — a trail on the reading surface.
+ *
+ * No material of its own. A trail sits in the page's own content, and giving it
+ * a surface would make it read as a card containing the navigation rather than
+ * as the page saying where it is.
+ */
+
+.trail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--cr-text-caption-size);
+}
+
+.crumb {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  min-inline-size: 0;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  /* The 44px floor is met by the hit area rather than by the text box: a trail of
+     44px-tall crumbs is a toolbar, and this is a line of running text. The
+     pseudo-element grows the target without growing the line. */
+  position: relative;
+  min-block-size: var(--cr-text-caption-size);
+  border-radius: $cr-action-radius;
+  color: var(--cr-muted);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* The hit area, in both axes. A short crumb — "Data", 28px wide — was 28×44
+   after the block axis alone was restored, and Crystal's floor is 44 in both.
+   Centred on the crumb and at least 44px across, so the growth is symmetrical
+   and lands in the separator gap rather than over a neighbour. */
+.link::after {
+  content: '';
+  position: absolute;
+  inset-block: 50%;
+  inset-inline-start: 50%;
+  min-inline-size: $cr-action-min-target;
+  inline-size: calc(100% + #{$cr-spacing-xs});
+  block-size: $cr-action-min-target;
+  transform: translate(-50%, -50%);
+}
+
+.link[data-hovered] { color: var(--cr-text); text-decoration: underline; }
+
+.link[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* The current page. React Aria drops the href on the last crumb, so this is
+   text — and the weight is what marks it, never colour on its own. */
+.link[data-current] {
+  color: var(--cr-text);
+  font-weight: 800;
+  cursor: default;
+}
+
+.link[data-current]::after { content: none; }
+.link[data-current][data-hovered] { text-decoration: none; }
+
+.separator {
+  display: inline-flex;
+  flex: none;
+  color: var(--cr-muted);
+  opacity: 0.7;
+}
+
+/* Sized in `em`, so the chevron tracks the text it separates rather than being
+   an icon that happens to sit near it. A separator that stays 20px while the
+   trail is set at caption size reads as a glyph from another typeface. */
+.separator svg {
+  inline-size: 1em; /* crystal-allow-literal: relative to the text, not a design value */
+  block-size: 1em; /* crystal-allow-literal: relative to the text, not a design value */
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Shorter than the target floor on purpose — a 44px-tall control in a line of
+   caption text is a toolbar button that happens to be in a sentence — and the
+   floor is met by the hit area instead, the same way the crumbs do it. Measured:
+   the button's box is 44×32 and what a finger lands on is 44×44. */
+.disclosure {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: $cr-action-min-target;
+  block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-sm});
+  padding: 0;
+  border: 0;
+  border-radius: $cr-action-radius;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: pointer;
+}
+
+.disclosure::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block: 50%;
+  block-size: $cr-action-min-target;
+  transform: translateY(-50%);
+}
+
+/* The icon size comes from `IconButton`; what is set here is the fill, because
+   the ellipsis is drawn rather than stroked like the chevron. */
+.disclosure svg { fill: currentColor; stroke: none; }
+.disclosure[data-hovered], .disclosure:hover { color: var(--cr-text); background: var(--cr-surface-alt); }
+
+.disclosure[data-focus-visible], .disclosure:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+@media (forced-colors: active) {
+  .link[data-current] { color: CanvasText; }
+  .separator { color: CanvasText; opacity: 1; }
+  .disclosure { color: CanvasText; }
+}

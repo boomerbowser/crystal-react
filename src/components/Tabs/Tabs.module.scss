@@ -1,0 +1,67 @@
+@use '../../styles/strip' as strip;
+@use '../../styles/tokens' as *;
+
+/* Tabs — a Resin pill strip over a panel.
+ *
+ * The strip and its pills come from `styles/_strip.scss`, shared with the
+ * segmented control. What is here is what a tab list has and a segmented control
+ * does not: a panel, and a vertical orientation.
+ */
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-md;
+}
+
+.label {
+  font-size: var(--cr-text-caption-size);
+  font-weight: 700;
+  color: var(--cr-muted);
+}
+
+.strip { @include strip.strip; }
+
+.tab { @include strip.pill; }
+.tab[data-selected] { @include strip.pill-selected; }
+.tab[data-hovered]:not([data-selected]) { color: var(--cr-text); }
+.tab[data-focus-visible] { @include strip.pill-focus; }
+.tab[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+/* The panel is the reading surface, not a second material. A tab strip floating
+   over a panel that is itself Resin would be Resin inside Resin, which Crystal
+   forbids: two optical control surfaces stacked read as one smeared one. */
+.panel {
+  min-inline-size: 0;
+}
+
+/* A vertical tab list puts the strip beside the panel. `align-self: start` on
+   the strip already stops it stretching down the column; here it stops it
+   stretching across the row. */
+.tabs[data-orientation='vertical'] {
+  flex-direction: row;
+  align-items: start;
+}
+
+.tabs[data-orientation='vertical'] .strip {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Stacked, so the pill is the full target rather than a short one growing into
+   the strip's padding — that padding is above the first pill and below the last,
+   not between them, so a grown hit area would reach into the neighbouring tab
+   and take its taps. Horizontally there is no such neighbour, which is why the
+   horizontal strip can do it the other way. */
+.tabs[data-orientation='vertical'] .tab {
+  justify-content: start;
+  text-align: start;
+  min-block-size: $cr-action-min-target;
+}
+
+.tabs[data-orientation='vertical'] .tab::after { content: none; }
+
+.tabs[data-orientation='vertical'] .panel { flex: 1; }
+
+@include strip.strip-fallbacks('.strip');
+@include strip.strip-forced-colors('.strip', '.tab[data-selected]');

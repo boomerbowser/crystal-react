@@ -95,6 +95,29 @@ jobs:
       # has found a defect in a browser for every slice that tests passed.
       - run: pnpm run build-storybook
 
+      # Target size, measured in a real browser against the built stories.
+      #
+      # This cannot run above with the unit tests: jsdom reports every box as
+      # zero, so an assertion about a control's size passes there whatever the
+      # control is. The tab strip was 36px against a stated 44px floor from the
+      # day the segmented control shipped, with every test green.
+      #
+      # The static build is served rather than the dev server: it is what the
+      # previous step already produced, and it removes the whole class of stale
+      # transform that has twice sent this project chasing a defect that was not
+      # in the source.
+      - run: npx playwright install --with-deps chromium
+      - name: Measure what a finger lands on
+        run: |
+          python3 -m http.server 6006 --directory storybook-static --bind 127.0.0.1 &
+          for _ in $(seq 1 40); do
+            curl -sf http://127.0.0.1:6006/index.json >/dev/null && break
+            sleep 0.5
+          done
+          pnpm run verify:targets
+        env:
+          STORYBOOK_ORIGIN: http://127.0.0.1:6006
+
       - name: Keep the built storybook
         if: always()
         uses: actions/upload-artifact@v4

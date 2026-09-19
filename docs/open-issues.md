@@ -260,3 +260,51 @@ else rather than only inside the plan.
 **Not an issue — scheduled work.** This is slice M of `implementation-plan.md`
 and belongs to the plan's status rather than to a defect tracker. Recorded here
 only so the number is not reused.
+
+## R-10 · Nothing in the library measured a target
+
+**Closed.**
+
+Crystal's floor is 44px and the catalogue states it per component — "Pill tabs
+inside a pill strip; 44px minimum", "44px targets on touch". No check in this
+library measured one, and the reason generalises past this defect:
+
+- **jsdom reports every box as zero.** A `getBoundingClientRect` assertion in a
+  vitest test passes on a control of any size, including one that is not there.
+- **axe does not measure.** SC 2.5.8's floor is 24px, which is not what Crystal
+  claims, and axe carries no rule for it in any case.
+- **A screenshot shows the paint, not the hit area.** The two differ on purpose
+  in Crystal: a breadcrumb in a line of caption text is 21px tall and 44px to a
+  finger.
+
+So a control could be half the size it promises, in every story, with the unit
+tests green and the frames blessed. One was: a tab measured 36px inside a 45.6px
+strip, and the segmented control's pills had been the same since they shipped.
+Found by opening the component in a browser and measuring, not by reading it.
+
+`scripts/verify-targets.mjs` probes the four edges of a 44px box centred on each
+control and asks the document what is there. It checks the **hit area**, not the
+box, because Crystal reaches the floor two ways — some controls are 44px, some
+are shorter with a pseudo-element restoring the target — and a box measurement
+sees only one of them.
+
+It also checks **ownership**: the topmost element at each probe point has to be
+that control. Growing a hit area is how a small target reaches the floor and also
+how one target starts stealing another's taps, and that check earned itself
+immediately — the vertical tab list, where pills are stacked and each grown area
+reached into the tab below. Vertical pills are now 44px in their own right.
+
+Proved by planting the defect: removing the pseudo-element failed six controls
+across two stories.
+
+Two things it is not. It is a **named list of stories and selectors**, not a
+sweep of every interactive element, because a link in running prose is text
+rather than a target and a blanket sweep would need an exclusion list longer than
+the inclusion one. And it runs in CI against the **static** Storybook build
+rather than the dev server, which removes the stale-transform class of false
+defect that has twice sent this project chasing something not in the source.
+
+One thing it taught, worth carrying: for React Aria's radio the element ARIA
+names and the element a finger meets are **different nodes** — the radio is a
+visually-hidden 1px input inside the label. Probing the named one reports every
+segmented control in Crystal as a 1px target.

@@ -873,9 +873,33 @@ publishes the recipe; `src/theme/published-properties.test.tsx` reads every
 `var(--cr-…)` in every stylesheet here and fails on any that Crystal does not
 publish and no component sets itself.
 
-### I — Navigation and overlays (28)
+### I — Navigation and overlays (28) — in progress, 13 of 28
 
 `anchor`, `nav-link`, `nav-rail`, `dock`, `breadcrumbs`, `tabs`, `pagination`, `stepper`, `burger`, `command-palette`, `tree-view`, `affix`, `bottom-navigation`, `navigation-menu`, `table-of-contents`, `menubar`, `submenu`, `dialog`, `drawer`, `menu`, `context-menu`, `popover`, `hover-card`, `tooltip`, `scrim`, `portal`, `floating-window`, `overlay-arrow`.
+
+- [x] **The overlay surfaces** — `scrim`, `portal`, `overlay-arrow`, `popover`,
+  `tooltip`, `dialog`, `menu`, `context-menu`, `submenu`. **Resin never contains
+  Resin**, and the DOM cannot enforce it: every overlay is portalled to `body` and
+  loses its nesting on the way. A `Dialog` declares the material it presents and
+  an overlay inside it reads that through React context, which follows the
+  element tree rather than the document.
+- [x] **`tabs` and `breadcrumbs`.** The tab strip and the segmented control are
+  the same material and different semantics, so the strip moved into
+  `styles/_strip.scss` before the second one could copy the first. Proved to be a
+  no-op by compiling the segmented control's stylesheet before and after and
+  diffing the declarations.
+
+  Three things the unit tests found that reading the source would not: React
+  Aria's `Breadcrumbs` renders a bare `<ol>` and supplies **no `nav` landmark**;
+  `MenuTrigger` hands its press behaviour down through context, so a plain
+  `<button>` child silently never opens the menu; and "1 hidden breadcrumb" was
+  unreachable, because a collapse always hides `length - 2`. The last became a
+  decision — a trail shorter than four now refuses to collapse, since hiding one
+  crumb costs a click and saves no room.
+
+  And one the browser found: **a tab was a 36px target against a stated 44px
+  floor**, as the segmented control's pills had been since they shipped. See
+  `scripts/verify-targets.mjs`, which now measures it.
 
 ### J — Data display (37)
 
