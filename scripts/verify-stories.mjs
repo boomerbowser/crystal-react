@@ -26,7 +26,7 @@ const FLOOR = {
   filesWithArgs: 18,
   filesWithArgTypes: 10,
   storiesWithPlay: 4,
-  actionArgs: 9,
+  actionArgs: 12,
 };
 
 /* A story file that is not about a component, and says so. `Parity` renders one
@@ -75,7 +75,14 @@ for (const file of files) {
   if (/^ {2}args: \{/m.test(source)) counts.filesWithArgs += 1;
   if (/^ {2}argTypes: \{/m.test(source)) counts.filesWithArgTypes += 1;
   counts.storiesWithPlay += (source.match(/^ {2}play: /gm) ?? []).length;
-  counts.actionArgs += (source.match(/\baction: '/g) ?? []).length;
+  /* Both forms, because both put a callback in the Actions panel and counting
+     one of them understates the library. `argTypes: { onPress: { action: … } }`
+     wires a callback docgen cannot see — nearly every callback here is inherited
+     from a React Aria interface, and this Storybook uses `react-docgen`, which
+     does not resolve what an interface extends. `fn()` in `args` does the same
+     job and additionally gives a `play` function something to assert against. */
+  counts.actionArgs += (source.match(/\baction: '/g) ?? []).length
+    + (source.match(/: fn\(\)/g) ?? []).length;
 }
 
 for (const [key, floor] of Object.entries(FLOOR)) {
@@ -84,6 +91,59 @@ for (const [key, floor] of Object.entries(FLOOR)) {
       `${key} fell from ${floor} to ${counts[key]}. This is a ratchet: if the drop `
       + 'is deliberate, lower the floor in the same commit and say why.',
     );
+  }
+}
+
+/* No story that a measurement gate probes may carry a `play` function.
+ *
+ * This is a rule the hard way. A `play` runs whenever the story *loads*, not
+ * only under the test runner, so a gate that opens one is measuring whatever the
+ * play is in the middle of doing — or whatever it left behind. Adding a play to
+ * the tree's `Files` story cost `verify-targets` three of its twenty-nine probes
+ * and it stayed green, measuring six rows where there had been nine. Restoring
+ * the tree was not enough either: the gate then arrived mid-keystroke and
+ * reported three rows whose own centre did not belong to them.
+ *
+ * `overlays-drawer--modal` then did the same thing and passed, by luck, which is
+ * why this is a check and not a note. The ids are read out of the gate scripts
+ * themselves, so a gate that starts probing a new story is covered without
+ * anybody remembering to come back here. */
+const GATES = ['verify-targets.mjs', 'verify-behaviour.mjs', 'verify-appearance.mjs', 'verify-materials.mjs', 'verify-theme.mjs'];
+const probed = new Set();
+for (const gate of GATES) {
+  const source = readFileSync(resolve(process.cwd(), 'scripts', gate), 'utf8');
+  for (const match of source.matchAll(/id=([a-z0-9]+(?:-[a-z0-9]+)*--[a-z0-9]+(?:-[a-z0-9]+)*)/g)) {
+    probed.add(match[1]);
+  }
+  /* `verify-targets` names its stories in a `story:` field rather than in a URL. */
+  for (const match of source.matchAll(/story: '([^']+)'/g)) probed.add(match[1]);
+}
+
+/* Storybook's own id rule: the title and the story's name, each lowercased with
+   every run of non-alphanumerics collapsed to a dash. A story with no explicit
+   `name` takes its export name split at the capitals — `TabStrip` is
+   "Tab Strip" is `tab-strip`. */
+const slug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const fromExport = (name) => name.replace(/_+$/, '').replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+
+for (const file of files) {
+  const source = readFileSync(file, 'utf8');
+  const title = /title: '([^']+)'/.exec(source)?.[1];
+  if (!title) continue;
+  /* Each exported story, with whatever follows it up to the next export, so a
+     `play:` is attributed to the story it belongs to rather than to the file. */
+  const blocks = [...source.matchAll(/^export const (\w+): Story = \{([\s\S]*?)^\};$/gm)];
+  for (const [, exported, body] of blocks) {
+    if (!/^ {2}play: /m.test(body)) continue;
+    const named = /^ {2}name: '([^']+)'/m.exec(body)?.[1] ?? fromExport(exported);
+    const id = `${slug(title)}--${slug(named)}`;
+    if (probed.has(id)) {
+      failures.push(
+        `${relative(ROOT, file)} → ${id} has a play function and is probed by a `
+        + 'measurement gate. A play runs when the story loads, so the gate measures '
+        + 'it mid-interaction or after it. Give the play its own story.',
+      );
+    }
   }
 }
 

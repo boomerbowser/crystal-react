@@ -80,6 +80,25 @@ export const Modal: Story = {
       <Openable placement="end" isModal />
     </Stack>
   ),
+};
+
+/* Modality gets its own story, for the same reason the tree's keyboard model
+   does: `verify-behaviour` probes `overlays-drawer--modal`, and a `play`
+   function runs whenever a story loads — so the gate would arrive while this one
+   was still pressing Escape. It passed, and it passed by luck. A story a
+   measurement gate probes carries no play function. */
+export const ModalFocus: Story = {
+  name: 'Modality, asserted',
+  render: () => (
+    <Stack gap="md">
+      <Text>Open it, then press Tab repeatedly. Focus never leaves the panel.</Text>
+      <Group gap="sm">
+        <Button>A control on the page</Button>
+        <Button>Another</Button>
+      </Group>
+      <Openable placement="end" isModal />
+    </Stack>
+  ),
   /* Modality, in both directions, which is the assertion that matters and the
      one a unit test keeps getting wrong. React Aria marks a modal open by making
      everything behind it `inert` — not by `aria-modal` — so the check is whether

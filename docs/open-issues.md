@@ -943,7 +943,7 @@ weighed above. The toolbar stays for sweeping one axis across many stories.
 | Files declaring a real `meta.component` | 19 of 27 | **26 of 27** |
 | Files with `argTypes` | 0 | **10** |
 | Stories with a `play` function | 0 | **4** |
-| Callbacks wired to the Actions panel | 0 | **9** |
+| Callbacks wired to the Actions panel | 0 | **12** |
 | Stories run as tests in a browser | 0 | **92** |
 | Total tests | 466 across 82 files | **558 across 109** |
 

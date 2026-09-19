@@ -75,6 +75,17 @@ function Palette({ isLoading = false, registry = commands }: { isLoading?: boole
 export const Palette_: Story = {
   name: 'Palette',
   render: () => <Palette />,
+};
+
+/* Type-ahead and focus containment, in a story of its own. `verify-theme` opens
+   `--palette` to ask an overlay which custom properties resolve on it, and a
+   `play` that opens and then closes the palette leaves that gate racing a
+   dialog. The first response to this was to make the gate tolerate a palette
+   that was already open, which is accommodating the problem rather than fixing
+   it. */
+export const PaletteKeyboard: Story = {
+  name: 'Keyboard navigation',
+  render: () => <Palette />,
   /* The requirement every hand-built palette breaks, watched in a browser:
      focus stays in the search field while the arrow keys move the list, and the
      highlighted row is named by `aria-activedescendant`. Move real focus into

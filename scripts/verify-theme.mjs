@@ -65,11 +65,15 @@ await page.goto(
   `${ORIGIN}/iframe.html?id=overlays-command-palette--palette&viewMode=story`,
   { waitUntil: 'networkidle' },
 );
-/* The story's own `play` function opens the palette as soon as it loads, so by
-   the time this gate looks the overlay is usually already there — and clicking
-   the opener again lands on the scrim and times out, which is how this first
-   broke. Opening is therefore conditional: the requirement is an overlay on
-   screen, not a particular route to one. */
+/* The requirement is an overlay on screen, not a particular route to one.
+ *
+ * Kept conditional after a lesson worth recording. A `play` function was added
+ * to this story, it opened the palette on load, and this gate's click then
+ * landed on the scrim and timed out. The first fix was this condition — which
+ * accommodated the problem instead of removing it. The real fix was moving the
+ * play to a story of its own, and `verify-stories` now fails any story that a
+ * measurement gate probes and that carries a play. The condition stays because
+ * it costs nothing and describes the actual requirement. */
 const dialog = page.locator('[role="dialog"]');
 if (await dialog.count() === 0) {
   await page.getByRole('button', { name: 'Open the palette' }).click();

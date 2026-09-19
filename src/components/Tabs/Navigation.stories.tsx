@@ -82,6 +82,14 @@ type Story = StoryObj<typeof meta>;
 
 export const TabStrip: Story = {
   render: (args) => <Tabs {...only(args)} />,
+};
+
+/* The keyboard model, in a story of its own because `verify-targets` probes
+   `--tab-strip` and a `play` function runs whenever a story loads. A gate that
+   opens a story with one measures it mid-interaction. */
+export const TabKeyboard: Story = {
+  name: 'Keyboard navigation',
+  render: (args) => <Tabs {...only(args)} />,
   /* The Interactions panel, and the first thing in this library that watches a
      keyboard in a real browser. A tab list's arrow-key model is the part jsdom
      cannot answer for: the unit tests assert what React Aria reports, and this
