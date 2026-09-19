@@ -312,6 +312,7 @@ segmented control in Crystal as a 1px target.
 ## R-11 · A rule that lives in CSS has no gate in this library
 
 **Severity: medium, and the shape matters more than any one instance.**
+**Closed 19 September 2026.**
 
 Three checks written this cycle could not be written where they belonged:
 
@@ -345,12 +346,40 @@ because every Crystal state is expressed through a custom property and jsdom
 hands those back unresolved.
 
 `scripts/verify-behaviour.mjs` was built out of this entry and closed the
-behavioural half; it found three defects in the scroll spy on its first run. What
-is left is appearance: a gate that reads *resolved* computed style in a real
-browser and asserts that a focus ring exists, that a selected row is heavier than
-an unselected one, and that a disabled control is not distinguished by opacity
-alone. The harness is there; it needs its own case list and its own care, because
-a gate that asserts a colour is a gate that fails on a palette change.
+behavioural half; it found three defects in the scroll spy on its first run.
+
+### Closed: `scripts/verify-appearance.mjs`
+
+The appearance half, 18 checks, in a real browser against resolved computed
+style. Three rules, and **every assertion is a relationship rather than a
+value** — this entry named the trap ("a gate that asserts a colour is a gate that
+fails on a palette change") and it shaped the whole design:
+
+- **A focus ring exists.** The control is focused and compared with itself at
+  rest. The ring is looked for on the control *and up to three ancestors*,
+  because a Crystal text field puts `outline: 0` on the bare `<input>` and draws
+  the ring on the field shell around it — the shell is the control a person
+  sees. The question is "does focusing this show a ring", not "is the ring on
+  this exact node".
+- **Selection is carried by weight.** The selected row's computed `font-weight`
+  must exceed its neighbour's, and its text must contain no check mark. If the
+  weights are equal, whatever marks the selection is doing it with colour or
+  with a shape, and both are withdrawn.
+- **Disabled is more than opacity.** Opacity lowers contrast against whatever is
+  behind, and on Resin that is a coloured atmosphere gradient — so it is the one
+  signal whose legibility depends on the artwork.
+
+Proven to bite before being trusted. Removing `Button`'s focus ring fails two
+checks; making the selected pill the same weight as its neighbour fails one;
+leaving opacity as the only disabled difference fails one.
+
+**The disabled check had to be rewritten during that exercise, and the reason is
+this project's recurring theme.** The first version compared the disabled button
+with the first *enabled* button in the story — which is a different variant, a
+quiet button beside a Resin one, so `color` and `backgroundColor` always
+differed and the check passed on anything. It could not fail. It now removes the
+disabled attributes from the one element, re-reads it, and puts them back, which
+isolates the single variable.
 
 ## R-12 · A stale dev server is indistinguishable from a broken theme
 

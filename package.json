@@ -42,6 +42,7 @@
     "verify:behaviour": "node scripts/verify-behaviour.mjs",
     "verify:theme": "node scripts/verify-theme.mjs",
     "verify:materials": "node scripts/verify-materials.mjs",
+    "verify:appearance": "node scripts/verify-appearance.mjs",
     "test:jest": "jest"
   },
   "peerDependencies": {

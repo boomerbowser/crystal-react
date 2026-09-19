@@ -123,13 +123,15 @@ jobs:
       # previous step already produced, and it removes the whole class of stale
       # transform that has twice sent this project chasing a defect that was not
       # in the source.
-      # Three gates, one browser, three subjects. `verify:theme` asks whether the
+      # Four gates, one browser, four subjects. `verify:theme` asks whether the
       # properties the stylesheets read actually resolve — on the themed scope
       # and on the container every portalled overlay lives in. `verify:targets`
       # asks how big a control is. `verify:behaviour` asks what a component does
-      # when the page scrolls or resizes.
+      # when the page scrolls or resizes. `verify:appearance` asks what a *state*
+      # looks like — R-11, and the last of that entry's three checks to be
+      # written.
       #
-      # None of the three can be answered where the unit tests are: jsdom reports
+      # None of the four can be answered where the unit tests are: jsdom reports
       # every box as zero, ships no IntersectionObserver, and records a custom
       # property's name without ever computing what it resolves to. The scroll spy
       # was wrong three separate ways with twelve unit tests green.
@@ -155,6 +157,18 @@ jobs:
           pnpm run verify:theme
           pnpm run verify:targets
           pnpm run verify:behaviour
+
+          # Every assertion in this one is a relationship and never a colour:
+          # the focused control differs from itself at rest, the selected row is
+          # heavier than its neighbour, and the disabled control differs from
+          # itself enabled by more than opacity. A gate that asserts a colour is
+          # a gate that fails on a palette change.
+          #
+          # The focus half is not hypothetical. --cr-focus-core and
+          # --cr-focus-ring were read by every field in this library and defined
+          # by nothing, so Crystal's focus ring painted on no control anywhere
+          # through an entire slice, with every test green.
+          pnpm run verify:appearance
 
           # Material parity needs Crystal's own preview beside the Storybook, so
           # the same material can be rendered in both and compared. Crystal is
