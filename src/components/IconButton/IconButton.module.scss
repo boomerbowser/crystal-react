@@ -1,4 +1,5 @@
 @use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
 
 /* IconButton and CloseButton — one icon, and a target big enough to hit.
  *
@@ -23,6 +24,8 @@
 }
 
 .resin {
+  /* An icon button is a button; the label it protects is a glyph. */
+  @include material.haze-fill;
   border-color: var(--cr-rim);
   background: var(--cr-resin-fill);
   box-shadow: var(--cr-shadow-float);

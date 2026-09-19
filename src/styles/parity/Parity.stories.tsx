@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import styles from './Parity.module.scss';
+import { Button } from '../../components/Button/Button.js';
 
 /* The parity specimens.
  *
@@ -43,6 +44,12 @@ export const EveryMaterial: Story = {
       <div className={styles.frost} data-material="frost">Frost</div>
       <div className={styles.resin} data-material="resin">Resin</div>
       <div className={styles.haze} data-material="haze">Haze</div>
+      {/* A real control rather than a bare div, because the Haze content fill is
+          part of the *control* recipe and not of the Resin primitive. Crystal
+          puts an 80% reading fill on an isolated `::before` behind every Resin
+          control's label; the bare `.cr-resin` specimen above has none, so it
+          could never have caught its absence here. */}
+      <span data-material="resin-control"><Button>Resin control</Button></span>
     </div>
   ),
 };

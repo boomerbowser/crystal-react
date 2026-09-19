@@ -1,4 +1,5 @@
 @use 'tokens' as *;
+@use 'material' as material;
 
 /* The Resin pill strip, and the pills inside it.
  *
@@ -23,6 +24,8 @@
 /* Only the unprefixed `backdrop-filter` is ever written in this library; see the
    note in `_field.scss` for what happened the one time it was not. */
 @mixin strip {
+  /* The strip is the material and the pills are bare — structural, not decorative. Measured in Crystal: the strip's ::before paints at 80%, and a pill's ::before and ::after are both display:none. */
+  @include material.haze-fill;
   display: inline-flex;
   align-self: start;
   align-items: stretch;

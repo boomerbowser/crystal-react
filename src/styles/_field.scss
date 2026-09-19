@@ -1,4 +1,5 @@
 @use 'tokens' as *;
+@use 'material' as material;
 
 /* The field anatomy, once.
  *
@@ -37,6 +38,8 @@
  * in every story, since the beginning. Autoprefixer adds the prefix for Safari
  * on its own; the job here is to write the property once. */
 @mixin shell {
+  /* Crystal styles .cr-field-shell with the control recipe, so every text input, textarea, select, combobox, date picker and tags input in this library inherits the fill from here. */
+  @include material.haze-fill;
   position: relative;
   isolation: isolate;
   display: flex;

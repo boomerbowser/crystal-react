@@ -1,4 +1,5 @@
 @use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
 
 /* FloatingAction, SpeedDial and ActionBar — the surfaces that float above content.
  *
@@ -10,6 +11,8 @@
  */
 
 .floating {
+  /* A floating action is a button, over whatever the page happens to scroll beneath it — which is the case the fill exists for. */
+  @include material.haze-fill;
   position: fixed;
   inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
   inset-inline-end: max(var(--cr-space), env(safe-area-inset-right));
@@ -57,6 +60,8 @@
 /* An action bar is centred rather than cornered: it belongs to a selection in
    the content, not to the page. */
 .actionBar {
+  /* The bar is the material and its actions are bare, the same structure as a dock. */
+  @include material.haze-fill;
   position: fixed;
   inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
   inset-inline: 0;

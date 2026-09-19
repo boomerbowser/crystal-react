@@ -539,7 +539,7 @@ cache that will not clear.
 ## R-15 · Resin surfaces are missing their Haze content fill
 
 **Severity: high. A readability defect before it is an aesthetic one.**
-**Reported by Meridian, 19 September 2026. Recorded, not yet fixed.**
+**Reported by Meridian, 19 September 2026. Closed 19 September 2026.**
 
 Crystal paints a protective Haze fill *inside* every Resin surface, under the
 content. Crystal React paints it on four surfaces out of twenty.
@@ -625,6 +625,74 @@ definition — the strip variant included, since it is the same fill at a differ
 inset with the children deliberately bare. And `verify-materials` should grow a
 comparison for the `::before` layer, because the reason this was invisible is
 that the gate only ever asked the element about itself.
+
+### Closed
+
+**The inset became a token first.** `--cr-haze-fill` and `--cr-haze-feather`
+were always exported; the composition was not. "Held back 8px from the rim, on
+an isolated layer behind the content" lived only as a literal in Crystal's
+`controls.css`, which is deliberately unexported — so this library could carry
+every Haze token, pass every token gate, and paint nothing. `component.haze.inset`
+now sits in Crystal's DTCG source, the resolver emits `--cr-haze-inset`,
+`controls.css` reads it instead of holding its own copy, and the Swift and Kotlin
+exports picked it up for free. That last part is the actual fix: the recipe now
+reaches every platform library rather than only the renderer that knew it.
+
+**The gate was built before the fix and proven red.** A new `resin-control` pair
+in `verify-materials`, with a `pseudo` field, comparing
+`content, backgroundColor, filter, top, right, bottom, left`. It could not be
+added to the existing `resin` pair: that pair's Crystal selector is
+`.cr-resin:not(button):not(.cr-control):not(.cr-field-shell)`, which excludes the
+very controls the fill lives on, so a `::before` comparison there would have
+compared nothing against nothing and passed. Run before the fix it reported
+seven differences, the first being `content: none` against Crystal's `""` — a
+pseudo-element with no `content` does not exist, and every other property on it
+still computes to a plausible value, so `content` is what makes the absence
+legible rather than a colour mismatch. Now 17 comparisons, 0 failures.
+
+**One definition, in `styles/_material.scss`.** `@mixin haze-fill($inset)` sets
+`position: relative` and `isolation: isolate` itself rather than trusting the
+host: `z-index: -1` without a stacking context puts the fill behind the
+*element*, and on a Resin control — whose own background is a translucent fill —
+it then disappears underneath it, which is indistinguishable from never having
+written the rule. Applied to nine surfaces: `Button`, `IconButton`,
+`FloatingAction` (both the action and its bar), `ButtonGroup`, `Toolbar`,
+`AppShell`'s destination strip, `_field.scss`'s shell — which carries every text
+input, textarea, select, combobox, date picker and tags input in the library —
+and `_strip.scss`. `NavLink` was rewritten onto the mixin at `haze-fill(0)`.
+
+Verified by rendering, not by reading: all nine paint
+`rgba(255,255,255,0.8)` at `blur(1.95px)`, inset `8px`, and a tab pill correctly
+paints none.
+
+### Three things this entry had wrong, found by measuring Crystal instead of reading it
+
+1. **Mechanism 3 was attributed to the wrong file and the wrong material.** The
+   dock's inner band is **Stone**, not Haze, and it is in the **exported**
+   `crystal.css`, not in `controls.css`. Measured in Crystal's preview:
+   `rgba(255, 255, 255, 0.55)`, `blur(1.95px)`, inset `0`. `docs/materials.md`
+   already says so — "the dock's `.cr-dock-inner` uses the same recipe" as
+   `.cr-stone`. It is a separate material with its own token and is not part of
+   this defect.
+
+2. **"The same fill at a different inset" was wrong.** A Resin strip uses the
+   *same* inset as a Resin control — 8px in both. Measured, not inferred.
+
+3. **Four of the surfaces listed as missing the fill are correct without it.**
+   `Checkbox`, `Switch`, `Slider` and `AngleSlider` were named above. Crystal
+   gives none of them a Haze `::before`: `input[type=checkbox]`, `.switch-track`
+   and `input[type=range]` are not in the `:is(...)` list the recipe applies to,
+   and each has its own. Measured in Crystal's preview: checkbox `no ::before`,
+   range `no ::before`. Adding the fill there would have been a regression
+   against Crystal dressed as a fix — which is what comes of working from a
+   selector list rather than from what the browser renders. `Resizable`'s drag
+   handle has no Crystal analogue and was left alone.
+
+   Relatedly, "only four surfaces have it" counted loosely: `OverlayArrow` and
+   `RichTextSurface` use `--cr-haze-fill` as an element *background*, which is
+   Haze-as-a-material and a different mechanism from the protective layer.
+   `NavLink` was the only surface in the library using the `::before` mechanism
+   at all.
 
 ## R-16 · Crystal is a path on a disk, not a dependency
 
@@ -827,3 +895,11 @@ sliders, the live values and a fixed environment a gate can measure.
    check could see, so: every story file declares a `meta.component`; every
    component with callbacks has action args; no story is render-only unless it
    says why. A count in CI that only ever goes up.
+
+**Confirmed by Meridian, 19 September 2026**, with a second screenshot: the Tab
+Strip story with the **Controls** panel open and reading "This story has no
+controls". Their words — "this is where and what we were talking about in terms
+of how Crystal's controls should be translated to Storybook". So the destination
+is settled and it is not the toolbar: Crystal's "Make it yours" axes belong in
+the **Controls panel, as per-story args**, which is the second of the two options
+weighed above. The toolbar stays for sweeping one axis across many stories.

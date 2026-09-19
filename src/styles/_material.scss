@@ -54,3 +54,62 @@
     #{$selector} { background: var(--cr-surface); backdrop-filter: none; }
   }
 }
+
+/* Haze: the protective content fill a Resin control paints under its label.
+ *
+ * Crystal's rule, from `controls.css`, applies to every control it styles —
+ * `:is(button, a.cr-button, .cr-control, .cr-field-shell, .cr-resin-haze,
+ * .cr-status)` — and to a Resin strip. This library painted it on four surfaces
+ * out of twenty, and Meridian reported it as a readability defect before an
+ * aesthetic one, which is the right order: Resin is a 20% fill with a 20px
+ * backdrop blur, so it transmits whatever is behind it. On Crystal's Plastic
+ * foundation that is a coloured atmosphere gradient. The Haze fill is what puts
+ * a stable 80% ground under the text; without it a label's contrast depends on
+ * the artwork behind the control, and Crystal's contrast evidence is measured
+ * against the composition *with* the fill.
+ *
+ * Three properties carry it and each is load-bearing:
+ *
+ *   - It is a separate layer, at `z-index: -1` behind the content. The fill is
+ *     feathered, and feathering an element that contains text blurs the text.
+ *     This is why it cannot simply be a second background on the control.
+ *   - It is inset, so the fill stops short of the rim and the glass edge still
+ *     reads. The inset is `--cr-haze-inset`, exported by Crystal — the fill and
+ *     its feather were always tokens and the inset was not, which is how a
+ *     library could carry every Haze token and still paint nothing.
+ *   - It is `pointer-events: none`, because it covers the control.
+ *
+ * The inset is an argument rather than a constant because a few surfaces
+ * legitimately differ — a full-bleed navigation row fills to its own edge, since
+ * it has no exposed glass perimeter to protect. Passing `0` states that as a
+ * decision; a hand-written `inset: 0` beside sixteen hand-written `inset: 8px`
+ * reads as an oversight.
+ */
+@mixin haze-fill($inset: var(--cr-haze-inset)) {
+  /* Both are load-bearing, and the mixin sets them rather than trusting the host
+     to. `z-index: -1` alone puts the fill behind the *element*, not behind its
+     label — so on a Resin control, whose own background is a translucent fill,
+     the layer disappears underneath it and the result is indistinguishable from
+     not having written the rule. `isolation: isolate` makes the control its own
+     stacking context, which is what keeps -1 meaning "behind the content". */
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: $inset;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: inherit;
+    background: var(--cr-haze-fill);
+    filter: blur(var(--cr-haze-feather));
+  }
+
+  /* Forced colours replaces the whole composition with system colours, and a
+     translucent fill over them is noise at best. Crystal's own rule does the
+     same. */
+  @media (forced-colors: active) {
+    &::before { display: none; }
+  }
+}

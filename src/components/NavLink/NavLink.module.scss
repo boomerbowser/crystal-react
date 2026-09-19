@@ -1,4 +1,5 @@
 @use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
 
 /* NavLink — a Resin pill with a Haze fill under its label.
  *
@@ -28,17 +29,14 @@
   cursor: pointer;
 }
 
-/* The Haze fill. Feathered, and therefore on its own layer behind the label —
-   feathering an element that contains text blurs the text. */
-.navLink::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  background: var(--cr-haze-fill);
-  filter: blur(var(--cr-haze-feather));
+/* The Haze fill, at the shared definition rather than a second copy of it.
+   Inset `0` and not Crystal's `--cr-haze-inset`, deliberately: a navigation row
+   is full-bleed inside its rail and has no exposed glass perimeter to hold the
+   fill back from. Stating it as an argument is the point — a hand-written
+   `inset: 0` sitting beside nine hand-written `inset: 8px` is indistinguishable
+   from an oversight, which is most of how this defect survived. */
+.navLink {
+  @include material.haze-fill(0);
 }
 
 /* The current-location dot's slot, reserved whether or not the dot is drawn.

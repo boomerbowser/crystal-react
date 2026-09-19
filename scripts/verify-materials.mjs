@@ -38,6 +38,22 @@ const STORY = 'materials-parity--every-material';
  * them is a layout choice rather than a material drift. */
 const MATERIAL = ['backdropFilter', 'boxShadow', 'backgroundColor', 'borderColor', 'borderWidth'];
 
+/* The Haze content fill, which is a *pseudo-element*, and that is the whole
+ * reason R-15 went unseen. Crystal holds an 80% reading fill on an isolated
+ * `::before` behind every Resin control's label, inset from the rim so the glass
+ * edge still reads. Sixteen of this library's twenty Resin surfaces painted none
+ * of it, and every gate stayed green, because each one asked the element about
+ * itself and a `::before` is not the element.
+ *
+ * `content` is first and it is load-bearing: a pseudo-element with no `content`
+ * does not exist, and every other property on it still computes to a plausible
+ * value. Checking the colour without checking `content` compares the style of
+ * something that was never painted.
+ *
+ * The inset is read as four longhands rather than as `inset`, which browsers do
+ * not reliably serialise back from the shorthand. */
+const HAZE_LAYER = ['content', 'backgroundColor', 'filter', 'top', 'right', 'bottom', 'left'];
+
 /* Each pair is one material: where Crystal renders it, and where this library
    does. Crystal's side uses its own primitive classes, which are the exported
    contract — `.cr-frost`, `.cr-resin`, `.cr-haze`, `.cr-plastic`. */
@@ -53,6 +69,19 @@ const PAIRS = [
     react: '[data-material="resin"]',
   },
   { material: 'frost', crystal: '.cr-frost:not(button):not(.cr-control)', react: '[data-material="frost"]' },
+  /* A Resin *control*, which is a different specimen from a Resin surface and
+     needs its own pair. The `resin` pair above excludes buttons and controls on
+     purpose — `controls.css` gives them a recipe the bare primitive does not
+     have — so it can never see the Haze fill, because the fill only exists on
+     the controls it excludes. Adding a `::before` comparison there would have
+     compared nothing against nothing and passed. */
+  {
+    material: 'resin-control',
+    crystal: 'button.cr-button',
+    react: '[data-material="resin-control"] button',
+    pseudo: '::before',
+    props: HAZE_LAYER,
+  },
 ];
 
 /* Haze is not in that list, and its absence is the honest thing rather than the
@@ -110,9 +139,11 @@ const measure = async (url, ready, pairs, side) => {
         return style.backgroundColor !== 'rgba(0, 0, 0, 0)' || style.backdropFilter !== 'none';
       });
       if (!element) { out[pair.material] = null; continue; }
-      const style = getComputedStyle(element);
+      /* The pair says which layer it is about. A material pair asks the element;
+         a Haze pair asks the `::before` that paints behind the element's label. */
+      const style = getComputedStyle(element, pair.pseudo ?? null);
       const record = {};
-      for (const property of props) record[property] = style[property];
+      for (const property of pair.props ?? props) record[property] = style[property];
       out[pair.material] = record;
     }
     return out;
@@ -130,13 +161,14 @@ const ours = await measure(
   'react',
 );
 
-for (const { material } of PAIRS) {
+for (const pair of PAIRS) {
+  const { material } = pair;
   const mine = ours[material];
   const crystal = theirs[material];
   if (!crystal) { failures.push(`${material}: Crystal's own preview has no such surface to compare against`); continue; }
   if (!mine) { failures.push(`${material}: the parity story renders no [data-material="${material}"]`); continue; }
 
-  for (const property of MATERIAL) {
+  for (const property of pair.props ?? MATERIAL) {
     compared.push(`${material}.${property}`);
     if (mine[property] !== crystal[property]) {
       const key = `${material}.${property}`;

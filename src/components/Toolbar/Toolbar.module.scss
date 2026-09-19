@@ -1,4 +1,5 @@
 @use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
 
 /* Toolbar — a grouped set of controls with one tab stop.
  *
@@ -18,6 +19,8 @@
 .vertical { flex-direction: column; align-items: stretch; }
 
 .resin {
+  /* A toolbar is a dock. */
+  @include material.haze-fill;
   padding: $cr-spacing-2xs;
   border: 1px solid var(--cr-rim);
   border-radius: $cr-action-radius;
