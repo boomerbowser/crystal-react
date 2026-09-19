@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen } from '../../test/render.js';
 import { Anchor } from './Anchor.js';
+import { crystalTokens } from '../../theme/tokens.generated.js';
 
 describe('Anchor', () => {
   it('has no accessibility violations', async () => {
@@ -21,13 +22,33 @@ describe('Anchor', () => {
     expect(link).toHaveAttribute('href', '/docs');
   });
 
-  /* The underline — the non-chromatic signal that this is a link, present at
-     rest and not only on hover — is deliberately NOT asserted here. jsdom loads
-     no stylesheet, so `getComputedStyle(link).textDecorationLine` is "none"
-     whatever `Anchor.module.scss` says, and a test written against it would pass
-     on a component with no styling at all. That is the same shape as the 36px
-     tab: a check that cannot see what it claims to check. It belongs in a
-     browser; see R-11 in docs/open-issues.md. */
+  /* The underline is the second, non-chromatic signal that distinguishes a link
+     from the sentence around it — WCAG 1.4.1 — so it is present at rest and not
+     only on hover.
+     
+     Read as the shorthand, and that is not a style choice. Vitest is configured
+     with `css: true`, so the module stylesheet really is applied here, but jsdom
+     does not derive longhands from a shorthand: `textDecoration` answers
+     "underline" and `textDecorationLine` answers "none" for the same element.
+     The first attempt at this test read the longhand, concluded that jsdom loads
+     no CSS at all, and deleted itself. It was wrong, and so was the note it left
+     behind. What jsdom genuinely cannot do is resolve a custom property —
+     `color` here reads back as the literal text `var(--cr-primary)` — so a check
+     about a colour still belongs in a browser. */
+  it('is underlined at rest, not only on hover', () => {
+    renderWithCrystal(<Anchor href="/docs">The documentation</Anchor>);
+    const link = screen.getByRole('link');
+    expect(getComputedStyle(link).textDecoration).toContain('underline');
+  });
+
+  /* Against the token rather than against the number. A test that writes `4px`
+     keeps passing after the token moves, which makes it a test of nothing —
+     which is why `lint:tokens` refuses a literal in here too. */
+  it('clears the descenders it runs under, by the published offset', () => {
+    renderWithCrystal(<Anchor href="/docs">The documentation</Anchor>);
+    const offset = getComputedStyle(screen.getByRole('link')).getPropertyValue('text-underline-offset');
+    expect(offset).toBe(crystalTokens['anchor.underlineOffset']);
+  });
 
   it('opens an external link safely', () => {
     renderWithCrystal(<Anchor href="https://example.com" isExternal>Example</Anchor>);

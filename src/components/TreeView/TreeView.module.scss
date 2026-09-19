@@ -1,0 +1,143 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/overlay' as overlay;
+
+/* TreeView — Haze rows on whatever surface holds them.
+ *
+ * Haze rather than Resin: a tree sits *in* a panel rather than floating above
+ * one, and a Resin row inside a Resin sidebar would be Resin containing Resin,
+ * which Crystal forbids — two panes of the same glass read as neither pane.
+ */
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  outline: none;
+}
+
+/* The row's focus ring belongs to the row, not to the tree. A composite widget
+   holds focus on behalf of its active row, so ringing the container would ring
+   the whole tree every time somebody pressed an arrow key. */
+.item { @include overlay.composite-focus; }
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  min-block-size: $cr-action-min-target;
+  padding-inline-end: $cr-spacing-sm;
+  /* One rule for every level. `--cr-tree-level` is 0 at the root. */
+  padding-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step});
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  color: var(--cr-text);
+  font-weight: 550;
+  cursor: pointer;
+}
+
+/* The indentation guides, as one repeating gradient rather than one element per
+   level. A guide per level would mean a wrapper per level, and React Aria
+   renders the tree flat — every row is a sibling, carrying its depth as a
+   number. The gradient draws a line at every step across the indented region
+   and stops where the content starts. */
+.row::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step});
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--cr-control-edge) 0 1px,
+    transparent 1px $cr-tree-indent-step
+  );
+}
+
+/* Right-to-left mirrors the whole construction: the gradient has to run the
+   other way, because `to right` is physical and depth is not. */
+[dir='rtl'] .row::before {
+  background-image: repeating-linear-gradient(
+    to left,
+    var(--cr-control-edge) 0 1px,
+    transparent 1px $cr-tree-indent-step
+  );
+}
+
+.item[data-hovered] .row { background: var(--cr-surface-alt); }
+
+/* Selection is weight. The soft fill is the second signal, never the only one. */
+.item[data-selected] .row {
+  font-weight: 800;
+  color: var(--cr-on-primary-soft);
+  background: var(--cr-primary-soft);
+}
+
+.item[data-focus-visible] .row {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(-1 * #{$cr-focus-core-offset});
+  box-shadow: var(--cr-focus-ring);
+}
+
+.item[data-disabled] .row {
+  opacity: $cr-action-disabled-opacity;
+  cursor: not-allowed;
+}
+
+.chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: $cr-icon-action;
+  block-size: $cr-icon-action;
+  padding: 0;
+  border: 0;
+  border-radius: $cr-action-radius;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: pointer;
+}
+
+/* The chevron points along the reading direction when closed and down when
+   open, so its own rotation says which it is — the state is not carried by
+   colour, and `aria-expanded` says it in words besides. */
+.chevron svg {
+  inline-size: $cr-icon-size;
+  block-size: $cr-icon-size;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: rotate var(--cr-state) var(--cr-ease-settle);
+}
+
+.item[data-expanded] > * .chevron svg { rotate: 90deg; }
+[dir='rtl'] .chevron svg { scale: -1 1; }
+
+.chevronEmpty { cursor: default; }
+
+.chevron[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(-1 * #{$cr-focus-core-offset});
+}
+
+.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
+.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron svg { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .item[data-selected] .row { background: none; outline: 2px solid Highlight; color: CanvasText; }
+  .row::before {
+    background-image: repeating-linear-gradient(
+      to right,
+      CanvasText 0 1px,
+      transparent 1px $cr-tree-indent-step
+    );
+  }
+}

@@ -107,7 +107,14 @@ jobs:
       # transform that has twice sent this project chasing a defect that was not
       # in the source.
       - run: npx playwright install --with-deps chromium
-      - name: Measure what a finger lands on
+
+      # Two gates, one browser, two subjects. `verify:targets` asks how big a
+      # control is; `verify:behaviour` asks what a component does when the page
+      # scrolls or resizes. Both are things jsdom cannot answer — it reports
+      # every box as zero and ships no IntersectionObserver — so a unit test
+      # about either passes on an implementation that does nothing. The scroll
+      # spy was wrong three separate ways with twelve unit tests green.
+      - name: Measure and drive the built stories
         run: |
           python3 -m http.server 6006 --directory storybook-static --bind 127.0.0.1 &
           for _ in $(seq 1 40); do
@@ -115,6 +122,7 @@ jobs:
             sleep 0.5
           done
           pnpm run verify:targets
+          pnpm run verify:behaviour
         env:
           STORYBOOK_ORIGIN: http://127.0.0.1:6006
 

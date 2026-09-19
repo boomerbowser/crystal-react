@@ -78,6 +78,8 @@ export * from './Tabs/index.js';
 export * from './Breadcrumbs/index.js';
 export * from './Anchor/index.js';
 export * from './NavLink/index.js';
+export * from './TreeView/index.js';
+export * from './TableOfContents/index.js';
 export * from './Chip/index.js';
 export * from './Slider/index.js';
 export * from './Select/index.js';

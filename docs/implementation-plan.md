@@ -873,7 +873,7 @@ publishes the recipe; `src/theme/published-properties.test.tsx` reads every
 `var(--cr-…)` in every stylesheet here and fails on any that Crystal does not
 publish and no component sets itself.
 
-### I — Navigation and overlays (28) — in progress, 15 of 28
+### I — Navigation and overlays (28) — in progress, 17 of 28
 
 `anchor`, `nav-link`, `nav-rail`, `dock`, `breadcrumbs`, `tabs`, `pagination`, `stepper`, `burger`, `command-palette`, `tree-view`, `affix`, `bottom-navigation`, `navigation-menu`, `table-of-contents`, `menubar`, `submenu`, `dialog`, `drawer`, `menu`, `context-menu`, `popover`, `hover-card`, `tooltip`, `scrim`, `portal`, `floating-window`, `overlay-arrow`.
 
@@ -921,6 +921,40 @@ publish and no component sets itself.
   One naming defect the tests caught: a nav link with trailing content announced
   as "Inbox12", because the accessible name computation joins adjacent inline
   content with nothing between it.
+- [x] **`tree-view` and `table-of-contents`.** Both mark their current row with
+  label weight and put nothing in the leading space, because in both that space
+  already means depth.
+
+  The tree is a **`treegrid`**, not a `tree`. A `treeitem` in the plain tree
+  pattern must not contain independently focusable widgets and Crystal's row
+  contains the disclosure the catalogue asks for; the two cannot both be
+  honoured. Level, expansion and full arrow-key navigation are all present.
+  Raised as M-3 for Meridian, because changing the catalogue is their call.
+
+  The table of contents is **controlled**: the catalogue puts "which headings are
+  collected, scroll spy thresholds" with the product, so the component is told
+  which entry is active and `useHeadingInView` ships beside it.
+
+  Four defects, and the last three are the reason
+  `scripts/verify-behaviour.mjs` now exists:
+
+  - The tree animated its own rows on first render. The mechanism was React's
+    effect ordering — children before parents — and it does not apply, because
+    React Aria builds its collection in one commit and renders rows in the next,
+    so *every* row mounts after the tree's mount effect. Replaced with a flag set
+    on the first expand.
+  - `rootMargin: '-20% 0px -80% 0px'`, the usual spelling of a reading line a
+    fifth of the way down, is a band of **zero height** and nothing intersects a
+    rectangle with no area. Two of five headings were never marked.
+  - Given a real band, the last entry was unreachable: a short final section
+    cannot push itself to the reading line.
+  - Detecting the end of the scroll inside the observer's callback does not help,
+    because reaching the end is not a crossing and the callback never runs.
+
+  The spy is a passive scroll listener now, coalesced to one read per frame. It
+  has none of those edge cases, and unlike the observer it works in the in-app
+  preview browser, which delivers no `IntersectionObserver` callbacks at all
+  (D-5).
 
 ### J — Data display (37)
 

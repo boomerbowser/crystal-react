@@ -315,13 +315,20 @@ segmented control in Crystal as a 1px target.
 
 Three checks written this cycle could not be written where they belonged:
 
-- **A link is underlined at rest.** The underline is the non-chromatic signal
-  that distinguishes a link from the sentence around it — WCAG 1.4.1 — and a
-  link that underlines only on hover has no signal for a reader who is not
-  pointing at it. `getComputedStyle(link).textDecorationLine` in a vitest test
-  returns `"none"` whatever `Anchor.module.scss` says, because **jsdom loads no
-  stylesheet**. A test written against it passes on a component with no styling
-  at all.
+- ~~**A link is underlined at rest.**~~ **Withdrawn — this one was checkable and
+  is now checked.** The claim here was that jsdom loads no stylesheet. It is
+  false: Vitest is configured with `css: true` and the module stylesheet really
+  is applied. What jsdom does not do is derive longhands from a shorthand, so
+  `textDecoration` answers `"underline"` on the same element where
+  `textDecorationLine` answers `"none"`. The first attempt read the longhand and
+  concluded the wrong thing. `Anchor.test.tsx` now asserts the shorthand and the
+  underline offset.
+
+  The real boundary, measured rather than assumed: jsdom applies the rules and
+  reports lengths, but **does not resolve custom properties** — `color` on that
+  same element reads back as the literal text `var(--cr-primary)`. So anything
+  about a Crystal *colour* is still a browser question, and anything about a
+  length, a shorthand or a keyword is not.
 - **Every interactive control shows a focus ring.** This is not hypothetical.
   `--cr-focus-core` and `--cr-focus-ring` were read by every field in this
   library and defined by nothing, so Crystal's focus ring painted on no control
@@ -331,13 +338,16 @@ Three checks written this cycle could not be written where they belonged:
 - **A state is distinguishable without colour.** Selection is weight, current
   location is a dot, an error is weight plus a symbol. Each is a CSS fact.
 
-The pattern: **jsdom tests semantics, axe tests the tree, the target gate
-measures geometry, and the appearance of a state is checked by nobody.** That is
-the same gap the 36px tab sat in, and R-10 closed only the geometry half of it.
+The pattern that remains: **jsdom tests semantics and the parts of CSS that are
+not colours, axe tests the tree, the target gate measures geometry, the behaviour
+gate drives the page — and what a state *looks like* is checked by nobody**,
+because every Crystal state is expressed through a custom property and jsdom
+hands those back unresolved.
 
-Closing it means a browser gate over stories that reads computed style — the
-`verify-targets.mjs` harness already opens Playwright over the static Storybook
-build and would extend to it. Not done here because it is a second gate with its
-own case list and its own way of being wrong, and bolting it onto a script whose
-subject is "how big is this" would make both harder to trust. It wants its own
-change, and it is the next piece of infrastructure worth building.
+`scripts/verify-behaviour.mjs` was built out of this entry and closed the
+behavioural half; it found three defects in the scroll spy on its first run. What
+is left is appearance: a gate that reads *resolved* computed style in a real
+browser and asserts that a focus ring exists, that a selected row is heavier than
+an unselected one, and that a disabled control is not distinguished by opacity
+alone. The harness is there; it needs its own case list and its own care, because
+a gate that asserts a colour is a gate that fails on a palette change.

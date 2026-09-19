@@ -1,0 +1,90 @@
+@use '../../styles/tokens' as *;
+
+/* TableOfContents — a Haze content fill beside the reading column.
+ *
+ * Haze rather than Resin: it is part of the page's content, not a control plane
+ * floating over it, and a Resin panel next to a reading column competes with the
+ * text for the reader's attention.
+ */
+
+.toc {
+  position: relative;
+  isolation: isolate;
+  padding: var(--cr-space);
+  border-radius: var(--cr-radius);
+}
+
+.toc::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--cr-haze-fill);
+  filter: blur(var(--cr-haze-feather));
+  box-shadow: var(--cr-shadow-content);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-2xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  position: relative;
+  display: block;
+  /* Depth as indentation, from the same number the entry declares. */
+  padding-inline-start: calc(var(--cr-toc-level, 0) * #{$cr-tree-indent-step});
+  padding-block: $cr-spacing-2xs;
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* No grown hit area here, and the reason is the difference between this and a
+   breadcrumb trail.
+   
+   A trail is a row: growing each crumb sideways lands in the separator gap and
+   touches nothing. A contents list is a column, and growing each entry to 44px
+   makes it reach into the entry above and below — measured, and caught by the
+   target gate's ownership check. Overlapping targets are worse than small ones:
+   a small target is hard to hit, an overlapping one hits the wrong thing.
+   
+   So the entries stay the size of the text on a fine pointer, where 27px against
+   a 4px gap is comfortable and clears WCAG 2.5.8's 24px floor, and grow to the
+   full target under a coarse one. Crystal's catalogue makes exactly this
+   distinction elsewhere — the breadcrumb line reads "44px targets *on touch*". */
+@media (pointer: coarse) {
+  .entry {
+    display: flex;
+    align-items: center;
+    min-block-size: $cr-action-min-target;
+  }
+}
+
+.entry:hover { color: var(--cr-text); }
+
+.entry:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* Where you are. Weight, never a mark in the leading space — the leading space
+   in this list is already saying how deep the heading is. */
+.entry[aria-current='location'] {
+  color: var(--cr-text);
+  font-weight: 800;
+}
+
+@media (forced-colors: active) {
+  .entry[aria-current='location'] { color: CanvasText; text-decoration: underline; }
+}

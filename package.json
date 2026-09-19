@@ -38,6 +38,7 @@
     "verify": "pnpm run lint:tokens && pnpm run typecheck && pnpm run test && pnpm run test:jest && pnpm run build",
     "manifest": "node scripts/build-manifest.mjs",
     "verify:targets": "node scripts/verify-targets.mjs",
+    "verify:behaviour": "node scripts/verify-behaviour.mjs",
     "test:jest": "jest"
   },
   "peerDependencies": {

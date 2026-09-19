@@ -50,6 +50,16 @@ const CASES = [
      segmented control in Crystal as a 1px target. */
   { story: 'navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', selector: '[role="radiogroup"] label', why: 'a pill in a strip, same floor' },
   { story: 'navigation-links--destinations', selector: '#storybook-root a', why: 'catalogue: pill; minimum 44px target' },
+  { story: 'navigation-hierarchies--files', selector: '[role="row"] > * > div', why: 'a tree row is a target' },
+  /* 24, not 44, and the catalogue is why: it asks for "44px targets on touch"
+     on the breadcrumb trail and for nothing of the kind on the table of
+     contents. A trail is a row, so a grown crumb lands in the separator gap; a
+     contents list is a column, and a grown entry reaches into its neighbours —
+     which the ownership check below caught the first time this case was added at
+     44. Overlapping targets are worse than small ones. The entries reach the
+     full target under a coarse pointer, which this run does not emulate; what is
+     held here is WCAG 2.5.8's floor, which applies to everything. */
+  { story: 'navigation-hierarchies--contents', selector: '#storybook-root nav a', floor: 24, why: 'WCAG 2.5.8: a target in a list clears 24px and does not overlap its neighbours' },
 ];
 
 /* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
@@ -71,7 +81,7 @@ let probes = 0;
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
-for (const { story, selector, why } of CASES) {
+for (const { story, selector, why, floor = FLOOR } of CASES) {
   await page.goto(`${ORIGIN}/iframe.html?id=${story}&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForSelector(selector);
 
@@ -106,7 +116,7 @@ for (const { story, selector, why } of CASES) {
         right: probe(cx + half, cy),
       };
     }),
-    { floor: FLOOR, inset: INSET },
+    { floor, inset: INSET },
   );
 
   for (const r of results) {
@@ -115,7 +125,7 @@ for (const { story, selector, why } of CASES) {
     if (short.length) {
       failures.push(
         `${story} ${selector} "${r.name}": box ${r.box}, but the ${short.join(' and ')} of a `
-        + `${FLOOR}px target is not on it, or belongs to a different control — ${why}`,
+        + `${floor}px target is not on it, or belongs to a different control — ${why}`,
       );
     }
   }
@@ -123,7 +133,7 @@ for (const { story, selector, why } of CASES) {
 
 await browser.close();
 
-console.log(JSON.stringify({ suite: 'target size', floor: `${FLOOR}px`, probes, failures }, null, 2));
+console.log(JSON.stringify({ suite: 'target size', floor: `${FLOOR}px default`, probes, failures }, null, 2));
 if (failures.length) {
   console.error('\nA control does not reach Crystal\'s target floor.');
   console.error('Either make it taller or restore the hit area with a pseudo-element, as the');

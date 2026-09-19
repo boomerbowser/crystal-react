@@ -48,6 +48,10 @@ const LOCAL = new Set([
   '--cr-title-size', '--cr-title-leading', '--cr-title-tracking',
   '--cr-watermark-image', '--cr-watermark-opacity', '--cr-watermark-size',
   '--cr-scroll-fade-start', '--cr-scroll-fade-end',
+  /* Depth, written per row as a number so one CSS rule indents every level and
+     one gradient draws every guide. It cannot be a Crystal token: it is not a
+     value, it is which row this is. */
+  '--cr-tree-level', '--cr-toc-level',
 ]);
 
 /** Every stylesheet in the library, found rather than listed. */
