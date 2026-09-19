@@ -518,6 +518,10 @@ Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 - [x] `scripts/build-tokens.mjs` — the single point where values enter
 - [x] `scripts/lint-tokens.mjs` — fails on a hard-coded colour or length
 - [x] `CrystalProvider`, the theme object, six hooks, per-element scoping, 7 tests
+  — and, since R-12, a browser gate that every property the stylesheets read
+  resolves on the themed scope *and* on the container overlays are portalled
+  into. The provider was built first and correctly; what was missing was proof
+  that what it publishes survives to the served page.
 - [x] Typography context: family, reading rhythm, and a scale *derived* from the reading size so moving that token moves every step
 - [x] `useMotion` (recipes, on Crystal's springs) and `usePreset` (material presets, on Crystal's shared preset module)
 - [x] `renderWithCrystal` with theme axes as one argument; axe assertions

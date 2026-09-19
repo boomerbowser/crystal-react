@@ -39,6 +39,7 @@
     "manifest": "node scripts/build-manifest.mjs",
     "verify:targets": "node scripts/verify-targets.mjs",
     "verify:behaviour": "node scripts/verify-behaviour.mjs",
+    "verify:theme": "node scripts/verify-theme.mjs",
     "test:jest": "jest"
   },
   "peerDependencies": {

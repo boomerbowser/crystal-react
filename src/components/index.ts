@@ -81,6 +81,7 @@ export * from './NavLink/index.js';
 export * from './TreeView/index.js';
 export * from './TableOfContents/index.js';
 export * from './Drawer/index.js';
+export * from './CommandPalette/index.js';
 export * from './Chip/index.js';
 export * from './Slider/index.js';
 export * from './Select/index.js';

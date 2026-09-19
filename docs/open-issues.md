@@ -351,3 +351,51 @@ browser and asserts that a focus ring exists, that a selected row is heavier tha
 an unselected one, and that a disabled control is not distinguished by opacity
 alone. The harness is there; it needs its own case list and its own care, because
 a gate that asserts a colour is a gate that fails on a palette change.
+
+## R-12 · A stale dev server is indistinguishable from a broken theme
+
+**Closed as a gate; the hazard itself is inherent.**
+
+Meridian looked at the running Storybook and reported that "many of Crystal's
+specifications seem to be absent from the components". They were right about what
+they saw and the cause was not the components: the dev server had been running
+across several hours of source changes and was serving a stale copy of
+`@crystal/core`, so `--cr-overlay-max-width`, `--cr-overlay-tooltip-max-width`
+and both arrow properties resolved to nothing. A command palette with no maximum
+width is 1160px of palette.
+
+This had already cost something before the report arrived. The same stale bundle
+had a diagnosis underway that read "the provider does not publish the overlay
+properties" — which was false, and which would have produced a fix for a defect
+that did not exist. Clearing `node_modules/.vite` resolved all four.
+
+It is the third time. The two earlier ones cost a chase after
+`useInvalidMotion is not defined` and a chase after missing focus properties,
+both of which were in the source the whole time.
+
+**What is new: `scripts/verify-theme.mjs`.** It collects every `var(--cr-…)` in
+the library's stylesheets and asks a real browser whether each one resolves — on
+the themed scope *and* on the container React Aria portals every overlay into.
+Sixty properties, both elements. It then computes the three materials and fails
+if any of them is `none`, because a `backdrop-filter` built from a property that
+does not resolve is not a weaker blur, it is a syntax error, and the surface
+renders flat.
+
+`published-properties.test.tsx` already mounted a provider and checked that each
+property read is one the provider writes, and it is a real check — it caught the
+focus-ring outage. What it cannot see is the overlay container, a value that is
+present but not *usable*, or a served bundle that is not the source. Those three
+are what this adds.
+
+The failure message names the cache, because the next person to meet this will
+otherwise spend the same hour:
+
+> If the source looks right, clear the dev server's cache before believing this.
+
+**A second artifact, worth knowing and not worth gating.** The same session's
+palette looked washed out in the in-app preview browser — 59% opacity, motion
+state still `running` a second and a half after a 620ms recipe. That is
+`requestAnimationFrame` throttling in a hidden tab, not a defect: the same story
+in a visible Chromium reaches full opacity in 300ms and settles by 700ms.
+Anything measured about motion or opacity in a backgrounded pane is measuring the
+pane.

@@ -108,12 +108,21 @@ jobs:
       # in the source.
       - run: npx playwright install --with-deps chromium
 
-      # Two gates, one browser, two subjects. `verify:targets` asks how big a
-      # control is; `verify:behaviour` asks what a component does when the page
-      # scrolls or resizes. Both are things jsdom cannot answer — it reports
-      # every box as zero and ships no IntersectionObserver — so a unit test
-      # about either passes on an implementation that does nothing. The scroll
-      # spy was wrong three separate ways with twelve unit tests green.
+      # Three gates, one browser, three subjects. `verify:theme` asks whether the
+      # properties the stylesheets read actually resolve — on the themed scope
+      # and on the container every portalled overlay lives in. `verify:targets`
+      # asks how big a control is. `verify:behaviour` asks what a component does
+      # when the page scrolls or resizes.
+      #
+      # None of the three can be answered where the unit tests are: jsdom reports
+      # every box as zero, ships no IntersectionObserver, and records a custom
+      # property's name without ever computing what it resolves to. The scroll spy
+      # was wrong three separate ways with twelve unit tests green.
+      #
+      # `verify:theme` runs first because it is the one whose failure explains the
+      # others: a material built from a property that does not resolve is not a
+      # weaker material, it is a syntax error, and every check beneath it is then
+      # measuring a component with no styling.
       - name: Measure and drive the built stories
         run: |
           python3 -m http.server 6006 --directory storybook-static --bind 127.0.0.1 &
@@ -121,6 +130,7 @@ jobs:
             curl -sf http://127.0.0.1:6006/index.json >/dev/null && break
             sleep 0.5
           done
+          pnpm run verify:theme
           pnpm run verify:targets
           pnpm run verify:behaviour
         env:

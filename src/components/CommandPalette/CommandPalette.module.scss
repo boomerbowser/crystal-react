@@ -1,0 +1,170 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/overlay' as overlay;
+@use '../../styles/field' as field;
+
+/* CommandPalette — three materials, each named by the catalogue.
+ *
+ * Mirage under it, Haze for the surface, Resin for the field. The palette is a
+ * surface you read and decide from rather than a control plane floating over the
+ * page, so it is Haze; what lifts it off the page is the Mirage beneath rather
+ * than elevation above. The field inside is a control, so it is Resin — which is
+ * the ordinary field stack and not Resin inside Resin.
+ */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: var(--cr-space);
+  /* Not vertically centred. A palette appears under the hand that summoned it,
+     and a list that grows and shrinks as you type would walk up and down the
+     screen if it were pinned to the middle. */
+  padding-block-start: 12vh;
+  background: var(--cr-mirage-fill);
+  backdrop-filter: blur(var(--cr-mirage-blur)) saturate(var(--cr-mirage-saturation)) brightness(var(--cr-mirage-brightness));
+}
+
+.holder { display: contents; }
+
+.palette {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  max-inline-size: var(--cr-overlay-max-width);
+  max-block-size: 60vh;
+  padding: $cr-spacing-xs;
+  border: 1px solid var(--cr-edge);
+  border-radius: var(--cr-radius);
+  background: transparent;
+  color: var(--cr-text);
+  outline: none;
+  transform-origin: top center;
+}
+
+/* Haze is feathered, so it is a layer behind the content rather than the
+   element itself — feathering an element that contains text blurs the text. */
+.palette::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--cr-haze-fill);
+  filter: blur(var(--cr-haze-feather));
+  box-shadow: var(--cr-shadow-float);
+}
+
+/* The field: Resin, and the shell rather than the input, so the focus ring
+   traces the control and not the bare text box inside it. */
+.field {
+  @include field.shell;
+  gap: $cr-spacing-xs;
+  padding-inline: $cr-spacing-sm;
+}
+
+.field:focus-within {
+  @include field.focus-ring;
+}
+
+.searchIcon { display: inline-flex; flex: none; color: var(--cr-muted); }
+.searchIcon svg {
+  inline-size: $cr-icon-size;
+  block-size: $cr-icon-size;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.input {
+  @include field.control;
+  padding-inline: 0;
+  outline: none;
+}
+
+/* "Results list inset 8px" — from the field above it and from the surface's own
+   edge, so the rows read as content within the palette rather than as a second
+   panel butted against it. */
+.results {
+  margin-block-start: $cr-spacing-xs;
+  padding: 0;
+  overflow-y: auto;
+  outline: none;
+}
+
+/* The scrollbar itself is `.cr-scroll-resin`, applied in the component. Crystal
+   owns the thumb's colour, its geometry and the whole scroll contract — no
+   chaining, a stable gutter, native gestures — and writing any of it again here
+   would be a second description of one specification. A compact list of rows is
+   a control plane, which is what Resin's scrollbar is for. */
+
+/* The list holds focus on behalf of its active row, so the ring belongs to the
+   row and not to the box around it. */
+.results { @include overlay.composite-focus; }
+
+.section { display: block; }
+
+.heading {
+  display: block;
+  padding: $cr-spacing-xs $cr-spacing-sm $cr-spacing-2xs;
+  font-size: var(--cr-text-caption-size);
+  font-weight: 700;
+  color: var(--cr-muted);
+}
+
+.row {
+  @include overlay.row;
+  @include overlay.row-forced-colors;
+  padding-block: $cr-spacing-2xs;
+}
+
+.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
+.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.labels { display: flex; flex-direction: column; min-inline-size: 0; flex: 1; }
+.label { display: block; }
+.description {
+  display: block;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+.shortcut {
+  flex: none;
+  padding: 0 $cr-spacing-2xs;
+  border: 1px solid var(--cr-control-edge);
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  font-family: inherit;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+/* Empty and loading are the same shape so the palette does not jump between
+   them, and both are text rather than a spinner nobody hears. */
+.status {
+  padding: $cr-spacing-md $cr-spacing-sm;
+  text-align: center;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+:global([data-effects='opaque']) .scrim {
+  background: var(--cr-mirage-fallback-fill);
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .scrim { background: var(--cr-mirage-fallback-fill); backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .scrim { background: Canvas; backdrop-filter: none; }
+  .palette { border-color: CanvasText; }
+  .palette::before { content: none; background: Canvas; }
+  .shortcut { border-color: CanvasText; color: CanvasText; }
+}
