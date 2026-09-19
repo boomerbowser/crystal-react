@@ -487,11 +487,51 @@ shadow (50px of spread against 30px) and a shallower top rim.
 This is the D-1 hazard once more: `controls.css` shaped the appearance that got
 blessed, and the exported surface says something else.
 
-**What Meridian decides:** whether `--cr-shadow-float` is brought into line with
-the blessed rendering — which changes the generated theme CSS and every
-platform's Resin, deliberately — or whether the token is the intended
-specification and the preview is the thing that drifted, in which case the
-baseline wants re-blessing against it. Crystal React follows the token today,
-which is the exported contract.
+**Closed. Meridian gave full approval to make whatever changes aesthetic parity
+needs, so this was fixed rather than allowed.**
 
-Left open.
+Each side was right about something and both are kept. The **rims** are the
+blessed ones — 2px of light along the top where it catches, and a light edge
+returning underneath; the token's lower inset used the contact colour, which
+reads as an inner shadow at the bottom of a control rather than as the underside
+of glass. The **elevation** is the token's — palette-tinted like every other
+Crystal shadow, and scaled by the elevation control, neither of which the literal
+did. Moving the elevation slider did nothing to any control in the playground
+before this.
+
+`controls.css` now reads `var(--cr-shadow-float)` in both the places it had
+written its own copy, so there is one recipe. The coefficients are the blessed
+distances over the default 125% elevation — `4e`/`7.2e` and `12.8e`/`24e` — so the
+default renders what was approved and the slider now moves it.
+
+Twelve of eighteen frames moved, the largest at 3.2% of pixels with a worst
+channel delta of 19 of 255. Side by side the playgrounds are the same picture.
+Re-blessed with the reason in
+`validation/captures/2026-09-19-one-resin-shadow/`. 1,788 contrast cases still
+pass, and `verify-materials` reports ten comparisons, no allowances, no failures.
+
+## R-14 · A `file:` dependency was pre-bundled once and served stale for hours
+
+**Closed.**
+
+`@crystal/core` is `file:../crystal-design-system/design-system` — the design
+system itself, edited in the same sitting as this library. Vite's dependency
+optimiser caches a pre-bundled copy, so a change to Crystal's resolver does not
+reach the served page until somebody clears the cache.
+
+It cost three investigations in one day. Once far enough to begin a wrong
+diagnosis of the theme provider. Once for Meridian to look at the Storybook and
+report, correctly, that Crystal's specifications were missing from every
+component. And once more while fixing M-4, when the parity gate kept reporting
+the old shadow after the token had already changed.
+
+Excluding it from optimisation was the first attempt and it fails outright:
+`core/preferences.js` and the resolver are CommonJS, so the browser receives a
+module with no default export and every story renders blank. They have to be
+pre-bundled; what they must not be is pre-bundled *once*. `optimizeDeps.force` in
+`viteFinal` costs a few seconds of startup and removes the class.
+
+One more thing that made it hard to see: killing the dev server and restarting it
+is not enough on its own. A lingering process keeps port 6006, the new one fails
+to bind, and the measurement lands on the old server — which looks exactly like a
+cache that will not clear.

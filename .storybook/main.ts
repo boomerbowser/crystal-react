@@ -23,6 +23,28 @@ const config: StorybookConfig = {
      * catches up. */
     reactDocgen: 'react-docgen',
   },
+
+  /* Re-bundle Crystal on every start.
+   *
+   * `@crystal/core` is `file:../crystal-design-system/design-system` — the design
+   * system itself, edited in the same sitting as this library. Vite's dependency
+   * optimiser caches a pre-bundled copy of it, so a change to Crystal's resolver
+   * does not reach the served page until somebody clears the cache. From the
+   * inside that is indistinguishable from a defect: it cost three investigations
+   * in one day, once far enough to start a wrong diagnosis of the theme provider,
+   * and once for Meridian to report that Crystal's specifications were missing
+   * from every component.
+   *
+   * Excluding it from optimisation was the first attempt and it does not work:
+   * `core/preferences.js` and the resolver are CommonJS, so the browser gets a
+   * module with no default export and every story fails to render. They have to
+   * be pre-bundled; what they must not be is pre-bundled *once*.
+   *
+   * `force` costs a few seconds of startup and removes the whole class. */
+  viteFinal: async (config) => ({
+    ...config,
+    optimizeDeps: { ...config.optimizeDeps, force: true },
+  }),
 };
 
 export default config;

@@ -71,23 +71,20 @@ const PAIRS = [
 
 /* Differences that are known, explained and somebody's decision.
  *
- * One entry, and it is not this library's defect: Crystal has two Resin shadows.
- * `--cr-shadow-float`, the exported token every platform gets, and a bespoke
- * recipe written into `controls.css`, which is what the preview renders and
- * therefore what the approved baseline shows. They disagree on rim depth, on the
- * lower rim's colour, and on the elevation's colour and spread.
+ * Empty, and it was not always. The one entry it held was M-4: Crystal had two
+ * Resin shadows — the exported `--cr-shadow-float` and a hand-written copy in
+ * `controls.css` — and because the preview loads the second, a platform library
+ * following the first could not reproduce the appearance that was blessed.
  *
- * `controls.css` is not exported — that was D-1's fix — so a platform library
- * following the token cannot reproduce the blessed appearance. Which of the two
- * is the specification is Meridian's call, recorded as M-4. Crystal React follows
- * the token, which is the contract it is given.
+ * Meridian approved fixing it rather than allowing it, so `controls.css` reads
+ * the token now and the token carries the blessed rims over the tinted,
+ * elevation-responsive spread it always had. One recipe, and this list is empty
+ * again — which is the state it should be kept in. An entry here is a difference
+ * somebody decided to live with, not a place to put one that is inconvenient.
  *
- * Named rather than pattern-matched, and announced rather than hidden: a list
- * somebody has to add to is a list somebody thinks about, and an allowance that
- * prints nothing is a gate quietly switched off. */
-const KNOWN = new Map([
-  ['resin.boxShadow', 'M-4: Crystal\'s exported --cr-shadow-float and its blessed controls.css rendering disagree'],
-]);
+ * Named rather than pattern-matched, and printed on every run: an allowance that
+ * says nothing is a gate quietly switched off. */
+const KNOWN = new Map([]);
 
 const failures = [];
 const allowed = [];
