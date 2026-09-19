@@ -725,7 +725,8 @@ paints none.
 
 ## R-16 · Crystal is a path on a disk, not a dependency
 
-**Requested by Meridian, 19 September 2026. Recorded; not started.**
+**Requested by Meridian, 19 September 2026. Blocked on publication — see the end
+of this entry.**
 **The consumer's half of D-10 in the design system's tracker, which holds the
 detail, the proposed shape and the steps only Meridian can take.**
 
@@ -1020,3 +1021,35 @@ while docgen still cannot see inherited props would mean hand-writing an
 retyped specification and exactly the kind of thing that goes stale.
 
 The ratchet holds the floor in the meantime, so this cannot quietly get worse.
+
+
+---
+
+### R-16, where it stands — 19 September 2026
+
+The design system's half is written: the package boundary is drawn, the release
+gates exist, and `.github/workflows/publish.yml` publishes on a tag with Trusted
+Publishing and provenance. The proposal is
+`crystal-design-system/proposals/2026-09-19-crystal-core-as-a-library.md`.
+
+**This library's half has deliberately not started, and the dependency line is
+unchanged.** `"@crystal/core": "^2.0.0"` cannot be committed until something has
+been published to the `@crystal` scope: a committed range pointing at a version
+nobody can install is worse than an honest `file:` path, because it fails for
+every contributor rather than for one. `optimizeDeps.force` stays with it — it is
+R-14's workaround, and `pnpm link` is its cure, but only once there is a
+published package to link *away from*.
+
+What changes here on the day `@crystal/core@2.0.0` exists, in one commit:
+
+```
+- "@crystal/core": "file:../crystal-design-system/design-system"
++ "@crystal/core": "^2.0.0"
+```
+
+plus removing the `viteFinal` hook in `.storybook/main.ts` and its comment,
+documenting `pnpm link ../crystal-design-system/design-system` for local work
+against an unreleased Crystal, and dropping the sibling checkout from
+`.github/workflows/verify.yml` — which also removes the push-ordering trap
+recorded there, where pushing this repository before the design system fails as
+`[sass] Undefined variable`.
