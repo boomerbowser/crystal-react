@@ -25,6 +25,17 @@ export type CrystalDensity = 'comfortable' | 'compact';
 export type CrystalDirection = 'ltr' | 'rtl';
 
 /**
+ * The reading face. `manrope` is Crystal's own; `system` hands typography to the
+ * operating system's UI face, which is what a reader who has configured one
+ * expects and what some embedded contexts require.
+ *
+ * Crystal has always supported this — `preferences.js` clamps `font` to these
+ * two and the resolver branches `--cr-font` on it — and this library never
+ * forwarded it, so every product rendered Manrope whatever it asked for.
+ */
+export type CrystalTypeface = 'manrope' | 'system';
+
+/**
  * How much optical effect a surface may use.
  *
  * - `full` — diffusion, grain, rims and the optical layer.
@@ -53,6 +64,8 @@ export interface CrystalThemeValues {
   motionSpeed: number;
   /** When true, spatial movement is removed and state feedback is kept. */
   reduceMotion: boolean;
+  /** Crystal's own face, or the operating system's. */
+  font: CrystalTypeface;
 }
 
 export type CrystalThemeInput = Partial<Omit<CrystalThemeValues, 'mode'>> & {

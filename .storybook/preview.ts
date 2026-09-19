@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/react-vite';
 import { withCrystal, crystalGlobalTypes } from './withCrystal.js';
+import { environmentArgs, environmentArgTypes } from './environment.js';
 
 /* Crystal's reset, materials and scrollbars, and the resolved theme. A story
    renders against the same CSS an application would.
@@ -18,7 +19,17 @@ import '@crystal/core/css';
 import '@crystal/core/theme';
 
 const preview: Preview = {
-  parameters: {
+  /* Declared here rather than in each story file, so the environment is on
+     *every* component's Controls panel without twenty-seven authors having
+     remembered to offer it. That is what "available per-component to test with
+     and against" has to mean in practice: a reviewer opening any story finds the
+     same panel Crystal's own preview has.
+
+     The decorator only honours one of these once it differs from the story's
+     initial value, so their presence does not disable the toolbar. */
+  args: environmentArgs,
+  argTypes: environmentArgTypes,
+  parameters:  {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     a11y: {
       /* Accessibility findings fail rather than inform. A panel nobody opens is

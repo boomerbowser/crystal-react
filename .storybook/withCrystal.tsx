@@ -1,7 +1,8 @@
 import type { Decorator } from '@storybook/react-vite';
 import { CrystalProvider } from '../src/theme/CrystalProvider.js';
 import type {
-  CrystalDensity, CrystalDirection, CrystalEffects, CrystalMode, CrystalPalette,
+  CrystalDensity, CrystalDirection, CrystalEffects, CrystalModePreference,
+  CrystalPalette, CrystalTypeface,
 } from '../src/theme/types.js';
 
 /* The environment, as toolbar controls.
@@ -28,8 +29,11 @@ export const crystalGlobalTypes = {
     },
   },
   mode: {
-    description: 'Light or dark',
-    toolbar: { icon: 'mirror', items: ['light', 'dark'], dynamicTitle: true },
+    /* `system` is Crystal's Auto. `CrystalModePreference` has allowed it since
+       the provider was written and the toolbar never offered it, so the one
+       appearance setting most readers actually use could not be reviewed. */
+    description: 'Light, dark or auto',
+    toolbar: { icon: 'mirror', items: ['light', 'dark', 'system'], dynamicTitle: true },
   },
   density: {
     description: 'Spacing density',
@@ -168,7 +172,7 @@ const NUMBER = (value: string | number | undefined, fallback: number): number =>
  */
 export interface CrystalStoryEnvironment {
   palette?: CrystalPalette;
-  mode?: CrystalMode;
+  mode?: CrystalModePreference;
   density?: CrystalDensity;
   direction?: CrystalDirection;
   effects?: CrystalEffects;
@@ -178,6 +182,9 @@ export interface CrystalStoryEnvironment {
   elevation?: number;
   radius?: number;
   motionSpeed?: number;
+  font?: CrystalTypeface;
+  /** The viewer's preference, which overrides `effects` exactly as the real one does. */
+  reduceTransparency?: boolean;
   /** `plastic` is Crystal's foundation; `canvas` is a flat ground with no atmosphere. */
   ground?: 'plastic' | 'canvas';
 }
@@ -185,11 +192,30 @@ export interface CrystalStoryEnvironment {
 export const withCrystal: Decorator = (Story, context) => {
   const globals = context.globals as Record<string, string>;
   const pinned = (context.parameters['crystal'] ?? {}) as CrystalStoryEnvironment;
-  /* The story's own value where it has one, the toolbar's otherwise. Read per
-     axis rather than as a whole object, so pinning the ground does not freeze
-     the palette too. */
+  const args = context.args as Record<string, unknown>;
+  const initial = context.initialArgs as Record<string, unknown>;
+
+  /* Four sources, in this order, and the middle one is the interesting part.
+   *
+   *   1. What the story pinned, which a reviewer must not be able to undo — a
+   *      browser gate measures some of these stories, and a measurement taken in
+   *      whatever environment the last person left behind is worth nothing.
+   *   2. An environment **arg the reviewer has actually moved**.
+   *   3. The toolbar.
+   *   4. Crystal's default.
+   *
+   * Step two compares against `initialArgs` rather than just reading `args`,
+   * and it has to. Every story carries the full environment as args so the
+   * Controls panel has sliders to show, which means `args.atmosphere` is always
+   * set — so reading it directly would make the args win permanently and the
+   * toolbar would stop working the moment this shipped. Comparing with the
+   * story's initial value is what distinguishes "the reviewer dragged this" from
+   * "this is just the default sitting there". */
+  const moved = (key: string): unknown =>
+    (key in args && args[key] !== initial[key] ? args[key] : undefined);
+
   const pick = <K extends keyof CrystalStoryEnvironment>(key: K): CrystalStoryEnvironment[K] | string | undefined =>
-    (pinned[key] ?? globals[key]);
+    (pinned[key] ?? (moved(key) as CrystalStoryEnvironment[K]) ?? globals[key]);
 
   const palette = pick('palette');
   const mode = pick('mode');
@@ -203,6 +229,13 @@ export const withCrystal: Decorator = (Story, context) => {
   const radius = pick('radius');
   const motionSpeed = pick('motionSpeed');
   const ground = pick('ground');
+  const font = pick('font');
+  /* A viewer's preference beats a product's, which is how the real one behaves:
+     the provider checks `prefers-reduced-transparency` before it looks at
+     `effects`, so a product cannot ask for more diffusion than the reader
+     allowed. Simulated here by resolving to the same place. */
+  const reduceTransparency = pick('reduceTransparency');
+  const wantsOpaque = reduceTransparency === true || reduceTransparency === 'true';
 
   /* `.cr-plastic` is Crystal's own foundation class, out of the stylesheet this
      Storybook already loads — the three radial atmosphere washes over the canvas
@@ -216,10 +249,11 @@ export const withCrystal: Decorator = (Story, context) => {
   return (
     <CrystalProvider
       palette={(palette as CrystalPalette) ?? 'prism'}
-      mode={(mode as CrystalMode) ?? 'light'}
+      mode={(mode as CrystalModePreference) ?? 'light'}
       density={(density as CrystalDensity) ?? 'comfortable'}
       direction={(direction as CrystalDirection) ?? 'ltr'}
-      effects={(effects as CrystalEffects) ?? 'full'}
+      effects={wantsOpaque ? 'opaque' : ((effects as CrystalEffects) ?? 'full')}
+      font={(font as CrystalTypeface) ?? 'manrope'}
       reduceMotion={reduceMotion === true || reduceMotion === 'true'}
       atmosphere={NUMBER(atmosphere, 90)}
       translucency={NUMBER(translucency, 35)}

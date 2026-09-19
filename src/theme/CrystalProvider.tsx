@@ -118,6 +118,11 @@ function scopeStyle(theme: CrystalThemeValues): CSSProperties {
       elevation: theme.elevation,
       radius: theme.radius,
       density: theme.density,
+      /* Forwarded, and it was not. Crystal's resolver branches `--cr-font` on
+         this and `preferences.js` clamps it to `manrope` or `system`; leaving it
+         out meant a product could ask for the system face and be given Manrope,
+         silently, with no error and nothing to see in a test. */
+      font: theme.font,
       reduced: theme.effects === 'opaque',
       reduceMotion: theme.reduceMotion,
       motionSpeed: theme.motionSpeed,
