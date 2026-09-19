@@ -37,6 +37,13 @@ jobs:
         with:
           path: crystal-react
 
+      # Crystal is checked out at its default branch, so this job always builds
+      # against whatever Crystal's `main` is *at the moment the job starts*.
+      # A change here that needs a new Crystal token therefore has to be pushed
+      # second: push Crystal first, then this. Getting it the wrong way round
+      # fails as `[sass] Undefined variable`, which reads like a typo in this
+      # repository and is not one — it happened, fifteen seconds apart, when
+      # `component.indicator.lineWidth` was added.
       - name: Check out Crystal beside it
         uses: actions/checkout@v5
         with:
