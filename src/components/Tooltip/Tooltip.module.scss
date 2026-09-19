@@ -1,0 +1,21 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/overlay' as overlay;
+
+/* A tooltip is small and it is read at a glance, so it takes Stone — the
+   protected label backing — rather than an open material. Stone is what Crystal
+   uses when a label has to stay legible over whatever happens to be behind it,
+   and a tooltip is exactly that case: it lands wherever the pointer is.
+ */
+.tooltip {
+  @include overlay.surface;
+  max-inline-size: $cr-overlay-tooltip-max-width;
+  padding: $cr-spacing-xs $cr-spacing-sm;
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  font-weight: 650;
+  background: var(--cr-stone-fill);
+  backdrop-filter: blur(var(--cr-stone-feather)) saturate(var(--cr-resin-saturation));
+  border-color: var(--cr-edge);
+}
+
+@include overlay.surface-fallbacks('.tooltip');

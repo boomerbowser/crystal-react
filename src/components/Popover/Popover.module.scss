@@ -1,0 +1,7 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/overlay' as overlay;
+
+.popover { @include overlay.surface; padding: var(--cr-space); max-inline-size: min(92vw, #{$cr-overlay-max-width}); }
+.popover[data-cr-overlay='haze'] { padding: $cr-spacing-md; }
+
+@include overlay.surface-fallbacks('.popover');

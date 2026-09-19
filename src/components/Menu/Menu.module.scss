@@ -1,0 +1,59 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/overlay' as overlay;
+
+/* A menu narrower than its trigger looks like a mistake, and one narrower than
+   its own shortcuts wraps them. `min-content` is what "as wide as the widest row"
+   actually means, and it needs no number. */
+.popover {
+  @include overlay.surface;
+  padding: $cr-spacing-2xs;
+  min-inline-size: max(min-content, var(--trigger-width, 0px));
+  max-inline-size: min(92vw, #{$cr-overlay-max-width});
+}
+.menu { @include overlay.composite-focus; display: grid; gap: 1px; max-block-size: 60vh; overflow: auto; }
+
+.item {
+  @include overlay.row;
+  @include overlay.row-forced-colors;
+  justify-content: space-between;
+  gap: $cr-spacing-md;
+}
+
+/* A check mark here means checked, which is the one place in Crystal it means
+   anything: a checkable menu item is a checkbox in a menu, and `aria-checked` is
+   what it reports. Everywhere else a check means validated, and selection is
+   label weight — which is also what this uses for the highlighted row. */
+.mark { inline-size: $cr-icon-size; block-size: $cr-icon-size; flex: none; color: var(--cr-primary); }
+.mark[data-hidden] { visibility: hidden; }
+
+.label { flex: 1; min-inline-size: 0; }
+.shortcut { color: var(--cr-muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+.item[data-selected] .shortcut, .item[data-focused] .shortcut { color: inherit; }
+
+.chevron { inline-size: $cr-icon-size; block-size: $cr-icon-size; flex: none; color: var(--cr-muted); }
+
+.section + .section { margin-block-start: $cr-spacing-2xs; }
+.heading {
+  padding: $cr-spacing-2xs $cr-spacing-sm;
+  font-size: var(--cr-text-caption-size);
+  font-weight: 800;
+  color: var(--cr-muted);
+}
+
+.separator {
+  block-size: 1px;
+  margin: $cr-spacing-2xs $cr-spacing-sm;
+  background: var(--cr-edge);
+  border: 0;
+}
+
+/* The 1x1 anchor a context menu opens from. Positioned at the pointer, invisible,
+   and never a focus target — it exists only so the popover has something to
+   measure against. */
+.pointAnchor { position: fixed; inline-size: 1px; block-size: 1px; pointer-events: none; }
+
+@include overlay.surface-fallbacks('.popover');
+
+@media (forced-colors: active) {
+  .separator { background: CanvasText; }
+}

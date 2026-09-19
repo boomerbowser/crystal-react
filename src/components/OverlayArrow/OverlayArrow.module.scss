@@ -1,0 +1,82 @@
+@use '../../styles/tokens' as *;
+
+/* The pointer that ties an overlay to its trigger.
+ *
+ * It is a rotated square carrying the overlay's own material, not an SVG filled
+ * with the overlay's colour. That distinction is the whole component. A diffusing
+ * surface and a flat triangle of the same nominal fill do not match: the surface
+ * takes its colour from whatever is behind it and the triangle does not, so the
+ * arrow reads as a sticker on the glass exactly where the eye is looking. The
+ * catalogue asks that it "match the overlay material exactly, including under
+ * reduced effects", and only a square that diffuses can.
+ *
+ * Two edges of the square are drawn and two are not — the two that meet the
+ * overlay would otherwise draw a line across the join.
+ */
+/* React Aria's own wrapper is already placed at the right edge of the overlay, so
+   this is the shape and nothing else. Positioning it again here put it at the
+   corner of the surface instead — two things placing one element, and the second
+   one winning. */
+.arrow {
+  inline-size: $cr-overlay-arrow-size;
+  block-size: $cr-overlay-arrow-size;
+  rotate: 45deg;
+  border: 1px solid var(--cr-rim);
+  border-radius: $cr-overlay-arrow-radius;
+}
+
+/* The surface's own shadow, on the arrow too. Matching the material exactly is
+   not enough on its own: Resin is a 20% fill with a white rim, and what makes the
+   surface legible against the page is the float shadow around it. A 14px square
+   with the fill and the rim and no shadow is invisible on a pale page — which is
+   what this looked like before, a correctly placed arrow nobody could see. */
+.arrow[data-cr-overlay='resin'] {
+  background: var(--cr-resin-fill);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  box-shadow: var(--cr-shadow-float);
+}
+
+.arrow[data-cr-overlay='haze'] {
+  background: var(--cr-haze-fill);
+  border-color: var(--cr-edge);
+  box-shadow: var(--cr-shadow-content);
+}
+
+/* React Aria positions the wrapper itself, with inline styles — `bottom: 100%`
+   and a `left` that keeps the arrow over the trigger. Positioning it again here
+   fought those and put the arrow inside the surface instead of on its edge, so
+   this sets nothing but the size.
+ *
+ * What is left to the stylesheet is what the arrow looks like from each side: the
+ * square is nudged a quarter of its width under the surface so the join closes,
+ * and the two edges that meet the surface lose their border — they would
+ * otherwise draw a line straight across it. `data-placement` is where the
+ * *overlay* sits relative to its trigger, so an overlay below its trigger has its
+ * arrow at the top, pointing up. */
+.wrap { inline-size: $cr-overlay-arrow-size; block-size: $cr-overlay-arrow-size; }
+
+.wrap[data-placement='bottom'] .arrow { translate: 0 25%; border-block-end-color: transparent; border-inline-end-color: transparent; }
+.wrap[data-placement='top'] .arrow { translate: 0 -25%; border-block-start-color: transparent; border-inline-start-color: transparent; }
+.wrap[data-placement='right'] .arrow { translate: 25% 0; border-block-start-color: transparent; border-inline-end-color: transparent; }
+.wrap[data-placement='left'] .arrow { translate: -25% 0; border-block-end-color: transparent; border-inline-start-color: transparent; }
+.arrow[data-placement='bottom'] { translate: 0 calc(#{$cr-overlay-arrow-size} / 2); border-block-end-color: transparent; border-inline-end-color: transparent; }
+.arrow[data-placement='top'] { translate: 0 calc(#{$cr-overlay-arrow-size} / -2); border-block-start-color: transparent; border-inline-start-color: transparent; }
+.arrow[data-placement='right'] { translate: calc(#{$cr-overlay-arrow-size} / 2) 0; border-block-start-color: transparent; border-inline-end-color: transparent; }
+.arrow[data-placement='left'] { translate: calc(#{$cr-overlay-arrow-size} / -2) 0; border-block-end-color: transparent; border-inline-start-color: transparent; }
+
+:global([data-effects='opaque']) .arrow,
+:global([data-crystal-overlays][data-effects='opaque']) .arrow {
+  background: var(--cr-surface);
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .arrow { background: var(--cr-surface); backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .wrap { display: none; }
+  /* No arrow at all: in forced colours the overlay is a plain bordered box, and
+     a rotated square with two transparent edges becomes a stray mark beside it. */
+  .arrow { display: none; }
+}

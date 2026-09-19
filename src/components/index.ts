@@ -92,3 +92,8 @@ export * from './FileInput/index.js';
 export * from './Transfer/index.js';
 export * from './Cascader/index.js';
 export * from './RichTextSurface/index.js';
+export * from './Scrim/index.js';
+export * from './OverlayArrow/index.js';
+export * from './Popover/index.js';
+export * from './Tooltip/index.js';
+export * from './Menu/index.js';

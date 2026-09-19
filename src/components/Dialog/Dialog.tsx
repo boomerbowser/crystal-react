@@ -37,6 +37,7 @@ import {
 import { usePreset } from '../../motion/usePreset.js';
 import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { cx } from '../../styles/cx.js';
+import { SurfaceProvider } from '../../overlays/surface.js';
 import styles from './Dialog.module.scss';
 
 export interface DialogProps extends Omit<ModalOverlayProps,
@@ -96,7 +97,11 @@ export function Dialog({ title, children, className, ...props }: DialogProps): R
                   and it is on the body rather than the surface, because the
                   surface is what carries the material. */}
               <ScrollArea variant="frost" className={cx(styles['body'])}>
-                {children}
+                {/* A dialog is Haze, so anything opened from inside it is opening
+                    on top of Haze and recesses rather than floating. Resin never
+                    contains Resin, and the DOM cannot say so — an overlay is
+                    portalled to `body` and loses its nesting on the way. */}
+                <SurfaceProvider surface="haze">{children}</SurfaceProvider>
               </ScrollArea>
             </AriaDialog>
           </Modal>

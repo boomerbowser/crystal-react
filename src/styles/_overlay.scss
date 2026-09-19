@@ -1,0 +1,115 @@
+@use 'tokens' as *;
+
+/* The two materials an overlay can be, in one place.
+ *
+ * Which one it gets is decided in React rather than in CSS, because the DOM
+ * cannot tell: an overlay is portalled to `body` and loses its nesting on the
+ * way. `data-cr-overlay` is what the decision writes down.
+ *
+ * Resin never contains Resin. On the page or on Frost, an overlay is the floating
+ * control plane; once something Resin or Haze is already between it and the page,
+ * it recesses into Haze instead.
+ */
+@mixin surface {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--cr-radius);
+  border: 1px solid var(--cr-rim);
+  color: var(--cr-text);
+  box-shadow: var(--cr-shadow-float);
+
+  &[data-cr-overlay='resin'] {
+    background: var(--cr-resin-fill);
+    backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  }
+
+  /* Recessed rather than floating: the feathered content fill, and no lift,
+     because it is inside something that is already lifted. */
+  &[data-cr-overlay='haze'] {
+    background: var(--cr-haze-fill);
+    border-color: var(--cr-edge);
+    box-shadow: var(--cr-shadow-content);
+  }
+}
+
+/* Every overlay owes the same three fallbacks: a product that asked for opaque
+   effects, a viewer who asked for less transparency, and forced colours. */
+@mixin surface-fallbacks($selector) {
+  :global([data-effects='opaque']) #{$selector},
+  :global([data-crystal-overlays][data-effects='opaque']) #{$selector} {
+    background: var(--cr-surface);
+    backdrop-filter: none;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    #{$selector} {
+      background: var(--cr-surface);
+      backdrop-filter: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    #{$selector} {
+      background: Canvas;
+      color: CanvasText;
+      border: 1px solid CanvasText;
+      backdrop-filter: none;
+      box-shadow: none;
+    }
+  }
+}
+
+/* A composite widget holds focus on behalf of whichever row is active, so the
+   *container* must not wear the focus ring — Crystal's global rule puts a halo on
+   anything with a tabindex, which is right for a scroll region that is itself the
+   focus target and wrong here: it draws a ring around the whole menu while the
+   thing a person is actually on is one row inside it.
+ *
+ * Opting out has to be explicit, because the selector cannot tell the two cases
+ * apart. The ring moves to the row.
+ */
+@mixin composite-focus {
+  &:focus-visible, &:focus { outline: none; box-shadow: none; }
+}
+
+/* A row in a menu, a listbox, a tree. Selection is label weight — never a rail,
+   which offsets the label it marks, and never a check mark, which in Crystal
+   means validated or informational. */
+@mixin row {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-sm;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-sm;
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  color: var(--cr-text);
+  font-weight: 550;
+  cursor: pointer;
+
+  &[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+  &[data-focused] { background: var(--cr-surface-alt); }
+  /* The keyboard ring, on the row that has it. Inset, because a halo outside a
+     row inside a padded surface is cropped by the surface. */
+  &[data-focus-visible] {
+    outline: $cr-focus-core-width solid var(--cr-focus-core);
+    outline-offset: calc(-1 * #{$cr-focus-core-width});
+  }
+  &[data-selected] {
+    font-weight: 800;
+    background: var(--cr-primary-soft);
+    color: var(--cr-on-primary-soft);
+  }
+  &[data-selected][data-focused] { background: var(--cr-primary-soft); }
+}
+
+@mixin row-forced-colors {
+  @media (forced-colors: active) {
+    &[data-selected] {
+      background: none;
+      color: CanvasText;
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+    &[data-focused] { background: none; outline: 2px solid Highlight; }
+  }
+}

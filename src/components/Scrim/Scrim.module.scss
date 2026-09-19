@@ -1,0 +1,40 @@
+@use '../../styles/tokens' as *;
+
+/* Mirage: the layer that separates an overlay from the scene beneath it.
+ *
+ * It is a filter rather than a dark fill, and that is the whole specification.
+ * Mirage draws its chroma from the actual backdrop — a violet page washes violet,
+ * a photograph washes with the photograph — where a flat overlay would invent a
+ * colour the scene does not have. The opacity is there to sit the diffusion at a
+ * level, not to do the separating on its own.
+ */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--cr-mirage-fill);
+  backdrop-filter: blur(var(--cr-mirage-blur))
+    saturate(var(--cr-mirage-saturation))
+    brightness(var(--cr-mirage-brightness));
+}
+
+/* Centring is the common case but not the only one — a drawer's scrim holds its
+   panel against an edge — so it is asked for rather than assumed. */
+.centred { display: grid; place-items: center; padding: var(--cr-space); }
+
+/* Without the filter the wash has to carry the separation alone, so it is a
+   heavier fill. Crystal names that value rather than deriving it here. */
+:global([data-effects='opaque']) .scrim {
+  background: var(--cr-mirage-fallback-fill);
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .scrim {
+    background: var(--cr-mirage-fallback-fill);
+    backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .scrim { background: Canvas; backdrop-filter: none; }
+}
