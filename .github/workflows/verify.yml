@@ -23,7 +23,7 @@ jobs:
     name: Tokens, types, tests and bundle
     runs-on: ubuntu-latest
     # Crystal is not a published package here: `@crystal/core` resolves to
-    # `file:../crystal-design-system/design-system`, a *sibling* of this
+    # `file:../crystal-design-system/design-system/core`, a *sibling* of this
     # repository, and the library reads its tokens, its resolver and its
     # stylesheets straight out of it. CONTRACT §1 is the reason — a second copy
     # of a value drifts from the first silently — so the layout on disk is part

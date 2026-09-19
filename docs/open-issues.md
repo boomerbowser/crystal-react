@@ -733,8 +733,13 @@ detail, the proposed shape and the steps only Meridian can take.**
 This library declares:
 
 ```json
-"@crystal/core": "file:../crystal-design-system/design-system"
+"@crystal/core": "file:../crystal-design-system/design-system/core"
 ```
+
+*(It said `…/design-system` until 19 September, when Meridian asked for the
+library's files to be separated from the preview website into their own folder.
+The path now points at a directory that is only the library — which is a real
+improvement, and still a path.)*
 
 That is not a dependency. It is a path on one contributor's disk, pointing at a
 directory that is simultaneously the design system, its documentation website and
@@ -1043,7 +1048,7 @@ published package to link *away from*.
 What changes here on the day `@crystal/core@2.0.0` exists, in one commit:
 
 ```
-- "@crystal/core": "file:../crystal-design-system/design-system"
+- "@crystal/core": "file:../crystal-design-system/design-system/core"
 + "@crystal/core": "^2.0.0"
 ```
 

@@ -26,7 +26,7 @@ const config: StorybookConfig = {
 
   /* Re-bundle Crystal on every start.
    *
-   * `@crystal/core` is `file:../crystal-design-system/design-system` — the design
+   * `@crystal/core` is `file:../crystal-design-system/design-system/core` — the design
    * system itself, edited in the same sitting as this library. Vite's dependency
    * optimiser caches a pre-bundled copy of it, so a change to Crystal's resolver
    * does not reach the served page until somebody clears the cache. From the
