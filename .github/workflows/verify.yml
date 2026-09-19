@@ -53,6 +53,43 @@ jobs:
           # this step is where the run stops, which is the honest place for it.
           token: ${{ secrets.CRYSTAL_HEAD_TOKEN }}
 
+      # Say what went wrong, rather than letting pnpm say it.
+      #
+      # The path dependency points into Crystal's `core/` folder. When Crystal
+      # has not been pushed yet — or was pushed seconds ago and this checkout
+      # caught the commit before it — that directory does not exist, and pnpm
+      # reports `ENOENT: no such file or directory, scandir …/design-system/core`
+      # in the middle of two hundred lines of resolution output. That reads like
+      # a broken lockfile and it is not one. It happened on the very commit that
+      # created `core/`.
+      #
+      # This is the push-ordering trap recorded in R-16, and it goes away when
+      # the dependency is a published version rather than a path. Until then the
+      # least it can do is name itself.
+      - name: Crystal is present, and new enough
+        run: |
+          set -euo pipefail
+          declared="$(node -p "const d=require('./package.json');(d.devDependencies?.['@crystal/core'] ?? d.dependencies['@crystal/core'])")"
+          case "$declared" in
+            file:*)
+              # The checkout above put Crystal at ./crystal-design-system, inside
+              # the workspace. The manifest spells the same place as a sibling
+              # (`file:../crystal-design-system/...`) because that is where it
+              # lives on a contributor's disk — so the tail of the declared path
+              # is what identifies the directory, not the whole of it.
+              tail="${declared#file:../crystal-design-system/}"
+              here="crystal-design-system/$tail"
+              if [ ! -d "$here" ]; then
+                echo "::error::package.json depends on '$declared', and '$here' is not in this checkout."
+                echo "::error::Crystal is checked out at its default branch. If the design system change this build needs was pushed after this run started, push the design system first and re-run — this is the push-ordering trap in R-16."
+                echo "Crystal's checkout contains:"; ls -1 crystal-design-system 2>/dev/null || echo "  (nothing — the checkout itself failed)"
+                exit 1
+              fi
+              echo "Crystal at $here — $(node -p "const p=require('./$here/package.json');p.name+' '+p.version")"
+              ;;
+            *) echo "Depends on the published '$declared' — no sibling checkout needed." ;;
+          esac
+
       - uses: pnpm/action-setup@v4
         with:
           # package.json declares no `packageManager`, and without it this action
