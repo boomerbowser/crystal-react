@@ -670,6 +670,24 @@ reach, so those libraries would retype values — the exact thing CONTRACT §1
 forbids, made unavoidable by the packaging.
 
 What this library needs from the resolution: a published version to depend on, a
-range to pin it with, and a local development story — a workspace or an
-overrides entry — so Crystal can still be edited in the same sitting without
-going back to a path.
+range to pin it with, and a local development story so Crystal can still be
+edited in the same sitting without going back to a path.
+
+**Answered by Meridian, 19 September 2026**, and recorded in full in D-10. For
+this library specifically:
+
+- The dependency becomes `"@crystal/core": "^2.0.0"`, from the public npm
+  registry under the **`@crystal`** scope, which Meridian had verified as free
+  and which D-10 wrongly called "almost certainly taken". Verified since:
+  `@crystal/core` and `@crystal/react` both return 404 and a scope search returns
+  nothing. This library keeps the name `@crystal/react`.
+- Local work against an unpublished Crystal uses **`pnpm link`** — a symlink
+  rather than a copy, so an edit is live and there is no cache to clear. That
+  retires `optimizeDeps.force` in `.storybook/main.ts`, which is R-14's
+  workaround rather than its cure; the `viteFinal` hook and the comment
+  explaining it can go once the dependency is a real one.
+- CI stops checking Crystal out beside this repository and installs the
+  published version instead, which removes the push-ordering trap recorded in
+  the workflow: pushing this repository first will no longer fail as
+  `[sass] Undefined variable`, because the Crystal it builds against will be a
+  pinned version rather than whatever `main` happens to be.
