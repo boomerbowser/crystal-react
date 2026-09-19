@@ -77,6 +77,23 @@ jobs:
       - run: pnpm run lint:tokens
 
       - run: pnpm run typecheck
+
+      # Is the review surface reviewable? A ratchet over meta.component, args,
+      # argTypes, play functions and action args, plus the one line in
+      # preview.ts that puts Crystal's environment on every story.
+      #
+      # Meridian has reported a broken Storybook three times — a flat ground that
+      # hid the material hierarchy, an environment nothing exposed, and a
+      # Controls panel reading "This story has no controls" — and each time no
+      # check in this repository was looking. It runs before the tests because it
+      # is cheap and because a story nobody can operate makes every screenshot
+      # beneath it evidence about the wrong thing.
+      - run: node scripts/verify-stories.mjs
+
+      # Both projects: unit in jsdom, and every story mounted in a real Chromium
+      # with its play function and its accessibility checks. The second needs a
+      # browser, which is why the install moved up here from the gates below.
+      - run: npx playwright install --with-deps chromium
       - run: pnpm run test
       - run: pnpm run test:jest
 
@@ -106,8 +123,6 @@ jobs:
       # previous step already produced, and it removes the whole class of stale
       # transform that has twice sent this project chasing a defect that was not
       # in the source.
-      - run: npx playwright install --with-deps chromium
-
       # Three gates, one browser, three subjects. `verify:theme` asks whether the
       # properties the stylesheets read actually resolve — on the themed scope
       # and on the container every portalled overlay lives in. `verify:targets`

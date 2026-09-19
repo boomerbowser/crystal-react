@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { useState } from 'react';
 import { Drawer, type DrawerPlacement } from './Drawer.js';
 import { Button } from '../Button/Button.js';
@@ -8,6 +9,22 @@ import { TextInput } from '../TextInput/TextInput.js';
 
 const meta = {
   title: 'Overlays/Drawer',
+  /* Without this docgen has nothing to read and Storybook generates no
+     controls at all — the message Meridian screenshotted. This file shows
+     several components together; the one named here is its subject, and the
+     others are the context it is normally seen in. */
+  component: Drawer,
+  /* The callbacks as actions, so the Actions panel shows what fired and with
+     what. They are declared by hand because this Storybook uses `react-docgen`
+     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
+     react-docgen reads a component's own interface without resolving what it
+     extends. Every callback here is inherited from a React Aria interface, so
+     docgen cannot see one of them. Each was checked against the compiler
+     before being written down. */
+  argTypes: {
+    onOpenChange: { action: 'onOpenChange', table: { category: 'Events' } },
+  },
+  args: { title: 'Filters', placement: 'end' as const, isModal: true, onOpenChange: fn() },
   parameters: {
     docs: {
       description: {
@@ -31,7 +48,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<typeof Drawer>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -63,6 +80,29 @@ export const Modal: Story = {
       <Openable placement="end" isModal />
     </Stack>
   ),
+  /* Modality, in both directions, which is the assertion that matters and the
+     one a unit test keeps getting wrong. React Aria marks a modal open by making
+     everything behind it `inert` — not by `aria-modal` — so the check is whether
+     the page behind actually went inert, and whether it came back. A test that
+     only checks the first half passes on a drawer that never releases the page. */
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const behind = canvas.getByRole('button', { name: 'A control on the page' });
+    await step('the page behind goes inert while it is open', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: /open/i }));
+      await waitFor(async () => {
+        await expect(document.querySelector('[role="dialog"]')).toBeTruthy();
+      });
+      await expect(behind.closest('[inert]')).toBeTruthy();
+    });
+    await step('and comes back when it closes', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        await expect(document.querySelector('[role="dialog"]')).toBeNull();
+      });
+      await expect(behind.closest('[inert]')).toBeNull();
+    });
+  },
 };
 
 export const EveryEdge: Story = {

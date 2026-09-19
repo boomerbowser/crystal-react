@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { useMemo, useState } from 'react';
 import { TreeView, type TreeNode } from './TreeView.js';
@@ -6,34 +7,6 @@ import { TableOfContents, useHeadingInView } from '../TableOfContents/TableOfCon
 import { Stack } from '../Stack/Stack.js';
 import { Text } from '../Text/Text.js';
 import { Title } from '../Title/Title.js';
-
-const meta = {
-  title: 'Navigation/Hierarchies',
-  parameters: {
-    docs: {
-      description: {
-        component:
-          '**Both mark their current row with label weight, and neither puts anything in the '
-          + 'leading space.** That space is already carrying meaning in both components — it is '
-          + 'the depth — so a mark there would be read as a level rather than as a state.\n\n'
-          + '**The tree is a `treegrid`.** A `treeitem` in the plain tree pattern must not contain '
-          + 'independently focusable widgets, and Crystal\'s row contains the disclosure button the '
-          + 'catalogue asks for. Level, expansion and full arrow-key navigation are all present; '
-          + 'only the role names differ, and the divergence is recorded rather than hidden.\n\n'
-          + '**Rows revealed by expanding play `accordion-in`; rows present on first render play '
-          + 'nothing.** Nothing in Crystal moves at rest, and a tree animating itself into '
-          + 'existence on page load is exactly that.\n\n'
-          + '**The table of contents is controlled.** The catalogue puts "which headings are '
-          + 'collected, scroll spy thresholds" with the product, so the component is told which '
-          + 'entry is active and `useHeadingInView` ships beside it for products that want the '
-          + 'default answer.',
-      },
-    },
-  },
-} satisfies Meta;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
 
 const FolderIcon = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -64,12 +37,72 @@ const files: TreeNode[] = [
   { id: 'licence', label: 'LICENSE', isDisabled: true },
 ];
 
+const meta = {
+  title: 'Navigation/Hierarchies',
+  /* Without this docgen has nothing to read and Storybook generates no
+     controls at all — the message Meridian screenshotted. This file shows
+     several components together; the one named here is its subject, and the
+     others are the context it is normally seen in. */
+  component: TreeView,
+  args: { items: files, label: 'Project files' },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Both mark their current row with label weight, and neither puts anything in the '
+          + 'leading space.** That space is already carrying meaning in both components — it is '
+          + 'the depth — so a mark there would be read as a level rather than as a state.\n\n'
+          + '**The tree is a `treegrid`.** A `treeitem` in the plain tree pattern must not contain '
+          + 'independently focusable widgets, and Crystal\'s row contains the disclosure button the '
+          + 'catalogue asks for. Level, expansion and full arrow-key navigation are all present; '
+          + 'only the role names differ, and the divergence is recorded rather than hidden.\n\n'
+          + '**Rows revealed by expanding play `accordion-in`; rows present on first render play '
+          + 'nothing.** Nothing in Crystal moves at rest, and a tree animating itself into '
+          + 'existence on page load is exactly that.\n\n'
+          + '**The table of contents is controlled.** The catalogue puts "which headings are '
+          + 'collected, scroll spy thresholds" with the product, so the component is told which '
+          + 'entry is active and `useHeadingInView` ships beside it for products that want the '
+          + 'default answer.',
+      },
+    },
+  },
+} satisfies Meta<typeof TreeView>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+
+
 export const Files: Story = {
   render: () => (
     <div style={{ maxWidth: '320px' }} /* crystal-allow-literal: story bound, a sidebar width */>
       <TreeView label="Files" items={files} selectionMode="single" defaultExpandedKeys={['src']} />
     </div>
   ),
+  /* A tree's keyboard model, watched rather than asserted about. The unit tests
+     check what React Aria reports; this checks what a person pressing Down and
+     then Left actually gets, which is the half jsdom cannot answer — it has no
+     layout, so it cannot tell a collapsed row from a hidden one. */
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const rows = () => canvas.getAllByRole('row');
+    await step('Down moves to the next row', async () => {
+      const first = rows()[0]!;
+      await userEvent.click(first);
+      await expect(first).toHaveFocus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(rows()[1]).toHaveFocus();
+    });
+    await step('Left collapses the expanded parent rather than moving', async () => {
+      const parent = canvas.getAllByRole('row').find(
+        (row) => row.getAttribute('aria-expanded') === 'true',
+      );
+      await expect(parent).toBeTruthy();
+      await userEvent.click(parent!);
+      await userEvent.keyboard('{ArrowLeft}');
+      await expect(parent).toHaveAttribute('aria-expanded', 'false');
+    });
+  },
 };
 
 /* Expand `src` and watch the revealed rows arrive. Reload and watch nothing

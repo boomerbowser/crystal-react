@@ -4,6 +4,16 @@ import { TextInput } from './TextInput.js';
 const meta = {
   title: 'Inputs/TextInput',
   component: TextInput,
+  /* The callbacks as actions, so the Actions panel shows what fired and with
+     what. They are declared by hand because this Storybook uses `react-docgen`
+     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
+     react-docgen reads a component's own interface without resolving what it
+     extends. Every callback here is inherited from a React Aria interface, so
+     docgen cannot see one of them. Each was checked against the compiler
+     before being written down. */
+  argTypes: {
+    onChange: { action: 'onChange', table: { category: 'Events' } },
+  },
   parameters: {
     docs: {
       description: {

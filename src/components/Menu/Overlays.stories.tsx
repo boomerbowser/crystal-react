@@ -11,6 +11,11 @@ import { Text } from '../Text/Text.js';
 
 const meta = {
   title: 'Overlays/Anchored surfaces',
+  /* Without this docgen has nothing to read and Storybook generates no
+     controls at all — the message Meridian screenshotted. This file shows
+     several components together; the one named here is its subject, and the
+     others are the context it is normally seen in. */
+  component: Menu,
   parameters: {
     docs: {
       description: {
@@ -28,7 +33,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<typeof Menu>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

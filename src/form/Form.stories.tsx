@@ -3,6 +3,7 @@ import * as v from 'valibot';
 import { useState } from 'react';
 import { Form } from './Form.js';
 import { useCrystalForm } from './useCrystalForm.js';
+import type { CrystalFormProps } from './useCrystalForm.js';
 import type { StandardSchemaV1 } from './standard-schema.js';
 import { TextInput } from '../components/TextInput/TextInput.js';
 import { NumberInput } from '../components/NumberInput/NumberInput.js';
@@ -12,6 +13,20 @@ import { Group } from '../components/Stack/Stack.js';
 
 const meta = {
   title: 'Forms/useCrystalForm',
+  /* Without this docgen has nothing to read and Storybook generates no
+     controls at all — the message Meridian screenshotted. This file shows
+     several components together; the one named here is its subject, and the
+     others are the context it is normally seen in. */
+  component: Form,
+  args: {
+    /* Placeholders, and deliberately so. Every story in this file builds its own
+       form with `useCrystalForm`, because a form's *state* is the subject — a
+       schema, its errors and what it does on submit. These exist only so the
+       required props are satisfied and docgen has a component to read, which is
+       what generates the props table. */
+    form: undefined as unknown as CrystalFormProps,
+    children: null,
+  },
   parameters: {
     docs: {
       description: {
@@ -29,7 +44,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<typeof Form>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

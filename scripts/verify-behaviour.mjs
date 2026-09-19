@@ -66,7 +66,17 @@ await page.waitForSelector('#storybook-root nav');
 
 const spy = await page.evaluate(async () => {
   const root = document.querySelector('#storybook-root');
-  const column = root.querySelector('[style*="overflow"]');
+  /* Found by measuring rather than by matching a selector. This read
+     `[style*="overflow"]`, which only ever worked because the story happened to
+     set `overflowY` as an inline style; the moment the story started using the
+     library's own `ScrollArea` — which sets it in CSS, as a component should —
+     the gate crashed on a null. A behaviour gate should ask the page what
+     scrolls, not how somebody spelled it. */
+  const column = [...root.querySelectorAll('*')].find((el) => (
+    el.scrollHeight > el.clientHeight + 1
+    && ['auto', 'scroll'].includes(getComputedStyle(el).overflowY)
+  ));
+  if (!column) throw new Error('the scroll-spy story renders nothing that scrolls');
   const active = () => {
     const entry = root.querySelector('[aria-current="location"]');
     return entry ? entry.textContent : null;

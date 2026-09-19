@@ -762,7 +762,8 @@ this library specifically:
 
 ## R-17 · Storybook has almost no Controls, no Actions and no Interactions
 
-**Reported by Meridian, 19 September 2026. Recorded in detail; not started.**
+**Reported by Meridian, 19 September 2026. Largely closed 19 September 2026; one
+part deliberately left open and named below.**
 **Severity: high — this is the review surface, and three of its four panels are
 empty.**
 
@@ -903,3 +904,90 @@ of how Crystal's controls should be translated to Storybook". So the destination
 is settled and it is not the toolbar: Crystal's "Make it yours" axes belong in
 the **Controls panel, as per-story args**, which is the second of the two options
 weighed above. The toolbar stays for sweeping one axis across many stories.
+
+
+### Closed
+
+| | before | after |
+|---|---|---|
+| Files declaring a real `meta.component` | 19 of 27 | **26 of 27** |
+| Files with `argTypes` | 0 | **10** |
+| Stories with a `play` function | 0 | **4** |
+| Callbacks wired to the Actions panel | 0 | **9** |
+| Stories run as tests in a browser | 0 | **92** |
+| Total tests | 466 across 82 files | **558 across 109** |
+
+**The environment is in the Controls panel, declared once.** `.storybook/environment.ts`
+carries every axis of Crystal's "Make it yours" panel with the right shape —
+sliders for atmosphere, Frost tint, elevation, radius and animation speed, an
+inline radio for the palettes, checkboxes for the two reduction preferences —
+and `preview.ts` declares it for every story, so it is per-component without
+twenty-seven authors having remembered. Every range and choice is read from
+Crystal's own `RANGES` and `CHOICES`; typing `min: 15` here would be the
+CONTRACT §1 defect this library exists to avoid.
+
+The decorator honours an environment arg only once it differs from the story's
+`initialArgs`. Every story now carries the whole environment, so `args.atmosphere`
+is always set; reading it directly would make args win permanently and the
+toolbar would have stopped working the moment this shipped.
+
+**The two genuinely missing axes are added.** Typeface did not exist anywhere in
+this library: Crystal has supported `font: manrope | system` since the headless
+core was written, and the provider never forwarded it, so a product asking for
+the system face got Manrope with no error. Reduce transparency is now its own
+control, separate from the product's `effects`, and its description says exactly
+what it can and cannot do — it resolves the provider the way the real preference
+does, and it cannot make a media query true, so the stylesheets' own
+`@media (prefers-reduced-transparency: reduce)` branch stays a browser gate's
+job. Appearance also gained `system`, which `CrystalModePreference` has allowed
+all along.
+
+**The Interactions panel exists and runs in CI.** `@storybook/addon-vitest`, and
+`vitest.config.ts` split into two projects: `unit` in jsdom, `storybook` in a
+real Chromium. All four `play` functions this entry asked for are written — the
+tab strip's arrow keys, the tree's arrow keys and collapse, the palette's
+type-ahead and focus containment, and the drawer's modality in both directions.
+
+Running the stories as tests also executed `addon-a11y`'s `test: 'error'`, which
+had been configured for some time and never run. It failed five things on its
+first pass, every one of them real, and they are fixed in the same commit:
+`ColorPicker` rendered nothing at all (an RGB colour handed to a saturation
+channel); `AppShell` shipped a `<main>` no keyboard could scroll; the scroll-spy
+story hand-rolled the same defect; `ColorPicker`'s hex field had no accessible
+name; and the typography story jumped from a level-two heading to a level-four.
+
+**The gate.** `scripts/verify-stories.mjs` — a ratchet over `meta.component`,
+`args`, `argTypes`, `play` functions and action args, plus the one line in
+`preview.ts` that puts the environment on every story. Proven to bite before
+being trusted: stripping `meta.component` from `Button`, renaming the tab
+strip's `play`, and removing `args: environmentArgs` each fail it, and
+restoring each returns it to green. `Parity` is exempted by name, not by
+pattern, because it renders one specimen per *material* and has no component to
+point docgen at.
+
+Two gates needed repair once the stories became real, and both had been brittle
+rather than wrong: `verify-behaviour` found the scroll column with
+`[style*="overflow"]`, which only worked while the story set it inline, and now
+finds it by asking the page what actually scrolls; `verify-theme` clicked open a
+palette the story's own `play` function had already opened, and now opens one
+only if none is there.
+
+### Left open, deliberately
+
+**Item 2 is half done.** 79 `render:` closures ignore args, and only `Tabs` was
+converted to be arg-driven. So most components' Controls panels show the
+environment and their action args but not their own props as live controls.
+
+Finishing it is mechanical but not small, and it interacts with something worth
+deciding first: this Storybook uses `react-docgen` rather than
+`react-docgen-typescript`, because the latter builds a TypeScript program
+through a plugin that does not support TypeScript 7 and fails the build
+outright. react-docgen reads a component's own interface and does not resolve
+what it extends — and nearly every callback in this library is inherited from a
+React Aria interface. That is why the nine action args are declared by hand and
+checked against the compiler rather than generated. Converting all 79 renders
+while docgen still cannot see inherited props would mean hand-writing an
+`argTypes` entry for most props in the library, which is a large amount of
+retyped specification and exactly the kind of thing that goes stale.
+
+The ratchet holds the floor in the meantime, so this cannot quietly get worse.

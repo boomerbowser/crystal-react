@@ -6,6 +6,22 @@ import { Text } from '../Text/Text.js';
 
 const meta = {
   title: 'Navigation/Links',
+  /* Without this docgen has nothing to read and Storybook generates no
+     controls at all — the message Meridian screenshotted. This file shows
+     several components together; the one named here is its subject, and the
+     others are the context it is normally seen in. */
+  component: Anchor,
+  /* The callbacks as actions, so the Actions panel shows what fired and with
+     what. They are declared by hand because this Storybook uses `react-docgen`
+     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
+     react-docgen reads a component's own interface without resolving what it
+     extends. Every callback here is inherited from a React Aria interface, so
+     docgen cannot see one of them. Each was checked against the compiler
+     before being written down. */
+  argTypes: {
+    onPress: { action: 'onPress', table: { category: 'Events' } },
+  },
+  args: { href: '#destination', children: 'a link in running text' },
   parameters: {
     docs: {
       description: {
@@ -26,7 +42,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta;
+} satisfies Meta<typeof Anchor>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -65,8 +65,16 @@ await page.goto(
   `${ORIGIN}/iframe.html?id=overlays-command-palette--palette&viewMode=story`,
   { waitUntil: 'networkidle' },
 );
-await page.getByRole('button', { name: 'Open the palette' }).click();
-await page.waitForSelector('[role="dialog"]');
+/* The story's own `play` function opens the palette as soon as it loads, so by
+   the time this gate looks the overlay is usually already there — and clicking
+   the opener again lands on the scrim and times out, which is how this first
+   broke. Opening is therefore conditional: the requirement is an overlay on
+   screen, not a particular route to one. */
+const dialog = page.locator('[role="dialog"]');
+if (await dialog.count() === 0) {
+  await page.getByRole('button', { name: 'Open the palette' }).click();
+}
+await dialog.first().waitFor({ timeout: 10000 });
 
 const result = await page.evaluate((wanted) => {
   const scope = document.querySelector('#storybook-root [data-crystal-scope]');
