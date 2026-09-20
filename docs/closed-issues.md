@@ -807,3 +807,73 @@ this library specifically:
   the workflow: pushing this repository first will no longer fail as
   `[sass] Undefined variable`, because the Crystal it builds against will be a
   pinned version rather than whatever `main` happens to be.
+
+---
+## R-18 · Slice I's twelve components have no stories, so three gates cannot see them
+
+**Found 20 September 2026.**
+
+Slice I added `Portal`, `NavRail`, `Dock`, `BottomNavigation`, `Affix`, `Burger`,
+`Pagination`, `Stepper`, `HoverCard`, `Menubar`, `NavigationMenu` and
+`FloatingWindow`. All twelve have unit tests — 71 between them, all passing — and
+none has a story. That is not unusual on its own; 27 story files cover about a
+hundred components, so stories were never one-per-component. What makes it worth
+recording is which gates it silently removes.
+
+Three of the six gates reach a component **by navigating to a story URL**, so a
+component with no story is not measured rather than measured and passing:
+
+- `scripts/verify-targets.mjs` — its `CASES` is a hand-written list of story IDs
+  and selectors, deliberately so (a blanket sweep would fail on links in running
+  prose). Nothing in it refers to the twelve. `NavRail`, `Dock`,
+  `BottomNavigation`, `Pagination`, `Stepper`, `Burger` and `Menubar` all present
+  finger targets that the catalogue holds to the 44px floor, and none of them has
+  ever been measured. This is the exact shape of the defect that gate was written
+  for: the tab strip shipped at 36px with green unit tests, because **jsdom
+  reports every box as zero**.
+- The rendered half of `scripts/verify-theme.mjs`, and the visual frames.
+
+One gate does cover them, and the distinction matters: `verify-theme.mjs` finds
+its token names by walking `src/**/*.scss` on disk, so every `var(--cr-…)` the
+twelve read **is** checked against the published theme. Their token usage is
+gated; their geometry and their appearance are not.
+
+**Closing it** is a story per component that carries a target, added to
+`CASES` with the selector and the catalogue line that sets its floor. Worth doing
+before the count grows again — and worth doing as part of R-17 rather than
+beside it, since a new story written with `render:` args costs nothing extra and
+a new story written without them adds to the 79.
+
+**Closed 20 September 2026.** Five story files, covering all twelve. Writing
+them turned three gates red on three real defects, which is the entry's own
+argument made concrete:
+
+- **A collapsed `NavRail` was a 32px-wide target.** `.item` carried
+  `min-block-size: $cr-action-min-target` and no inline floor, so the *label*
+  was what gave the row its width — and hiding the label took the hit area with
+  it, which is the one thing collapsing must not do. Now
+  `min-inline-size: $cr-action-min-target` as well, so it is square.
+- **`FloatingWindow`'s title bar was `<header role="button">`.** HTML-AAM does
+  not let a sectioning element be overridden into a widget, so axe fails it as
+  `aria-allowed-role`. It is a real `<button>` now, with the user-agent's
+  styling reset so Crystal's rim is still the bar's only border.
+- **`Menubar` produced an invalid tree**: `button[aria-haspopup]` children under
+  `role="menubar"`, with a generic wrapper in between — `aria-required-children`
+  twice over. The bar sets `role="menuitem"` on its triggers and `role="none"`
+  on the wrapper itself, rather than asking callers to remember, and a test pins
+  both because a role set from a ref callback comes undone quietly.
+
+All three were invisible to the unit tests, and two of them for the same reason:
+the element *did* report the role each test asked for. What was wrong was the
+tree around it, which only axe over a rendered story can see. The third needed a
+real browser, because jsdom reports every box as zero.
+
+`verify-targets.mjs` gained nine cases and 34 probes, and `LEAST_PROBES` went
+from 29 to 63. The old floor was exactly the old probe count, which is worth
+noticing: it would not have caught a drop until the suite lost a probe it never
+had.
+
+One correction to the entry as written: it said `verify-theme.mjs` covers the
+twelve, and that is true only of its static half. It finds token *names* by
+walking `src/**/*.scss`, so their token usage was gated all along; the values it
+reads at runtime come from a rendered story, so that half was in the gap too.

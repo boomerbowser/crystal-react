@@ -3,7 +3,7 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Two entries.** R-17's first item is done — all 27 story
+**One entry, and only part of it.** R-17's first item is done — all 27 story
 files declare `meta.component` — and its third is answered as far as it can be,
 with the nine action args declared by hand because `react-docgen` cannot resolve
 the React Aria interfaces this library's callbacks are inherited from.
@@ -13,10 +13,6 @@ arguments, so moving a control changes nothing on screen, and only `Tabs` was
 converted. Finishing it is mechanical but not small, and the entry names the
 thing worth deciding first — whether to keep hand-declaring inherited props or
 wait for a docgen that can see them.
-
-R-18 is the other half of the same surface: slice I's twelve components have no
-stories at all, which quietly takes them out of the three gates that reach a
-component by navigating to one. The two are worth closing together.
 
 Closed entries are in [`closed-issues.md`](closed-issues.md), with the reasoning
 intact.
@@ -289,40 +285,3 @@ against an unreleased Crystal, and dropping the sibling checkout from
 `.github/workflows/verify.yml` — which also removes the push-ordering trap
 recorded there, where pushing this repository before the design system fails as
 `[sass] Undefined variable`.
-
----
-
-## R-18 · Slice I's twelve components have no stories, so three gates cannot see them
-
-**Found 20 September 2026.**
-
-Slice I added `Portal`, `NavRail`, `Dock`, `BottomNavigation`, `Affix`, `Burger`,
-`Pagination`, `Stepper`, `HoverCard`, `Menubar`, `NavigationMenu` and
-`FloatingWindow`. All twelve have unit tests — 71 between them, all passing — and
-none has a story. That is not unusual on its own; 27 story files cover about a
-hundred components, so stories were never one-per-component. What makes it worth
-recording is which gates it silently removes.
-
-Three of the six gates reach a component **by navigating to a story URL**, so a
-component with no story is not measured rather than measured and passing:
-
-- `scripts/verify-targets.mjs` — its `CASES` is a hand-written list of story IDs
-  and selectors, deliberately so (a blanket sweep would fail on links in running
-  prose). Nothing in it refers to the twelve. `NavRail`, `Dock`,
-  `BottomNavigation`, `Pagination`, `Stepper`, `Burger` and `Menubar` all present
-  finger targets that the catalogue holds to the 44px floor, and none of them has
-  ever been measured. This is the exact shape of the defect that gate was written
-  for: the tab strip shipped at 36px with green unit tests, because **jsdom
-  reports every box as zero**.
-- The rendered half of `scripts/verify-theme.mjs`, and the visual frames.
-
-One gate does cover them, and the distinction matters: `verify-theme.mjs` finds
-its token names by walking `src/**/*.scss` on disk, so every `var(--cr-…)` the
-twelve read **is** checked against the published theme. Their token usage is
-gated; their geometry and their appearance are not.
-
-**Closing it** is a story per component that carries a target, added to
-`CASES` with the selector and the catalogue line that sets its floor. Worth doing
-before the count grows again — and worth doing as part of R-17 rather than
-beside it, since a new story written with `render:` args costs nothing extra and
-a new story written without them adds to the 79.
