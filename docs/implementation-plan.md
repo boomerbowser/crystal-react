@@ -10,11 +10,20 @@ changes with it, and `libraries/parity.json` in the design system is the progres
 
 ## 0. Open issues
 
-Things noticed while implementing and deliberately not fixed yet are in
-[open-issues.md](open-issues.md), most-consequential first. Two of them —
-a slider's unit reaching the screen but not the announcement, and two mask inputs
-sharing an id — are real defects with confirmed reproductions; the rest are gaps.
-Add to that list rather than carrying a defect in your head.
+Things noticed while implementing and not fixed are in
+[open-issues.md](open-issues.md). It holds **one** entry now — R-17's second
+item, where most stories are `render:` closures that ignore args, so Storybook's
+Controls panel moves nothing for them. The twenty that closed are in
+[closed-issues.md](closed-issues.md) with their reasoning intact, because several
+explain why things are shaped as they are rather than merely what was wrong.
+
+Crystal's own tracker is `crystal-design-system/proposals/open-issues.md`. What
+is open there and matters here: two divergences in the focus ring between what
+this library renders and what Crystal's site renders — the elevation layers and
+the dark-mode feather alphas — both recorded in D-11 and both Meridian's to
+decide. Do not resolve either by changing this library.
+
+Add to the list rather than carrying a defect in your head.
 
 ---
 
@@ -109,9 +118,22 @@ The design system publishes as `@crystal-ui/core`; this library is `@crystal-ui/
 under the `@crystal-ui` scope. Crystal React consumes `@crystal-ui/core` and never vendors it —
 it is `external` in the bundle, so a consumer resolves one copy of the token set.
 
-Until `@crystal-ui/core` is published, it is linked from a sibling checkout
-(`../crystal-design-system/core`). If that path is missing, the token build fails
-loudly rather than falling back to stale values.
+`@crystal-ui/core` is **published** — `^2.0.0` from the public npm registry, and
+the lockfile resolves to the registry tarball. It was a `file:` path into a
+sibling checkout until 20 September 2026, which is a thing that works on one
+contributor's disk and nowhere else; CI checked Crystal out beside this
+repository to make it true there, and the push ordering between the two was a
+trap with its own tracker entry.
+
+None of that is needed now, and the workarounds came out with it: no sibling
+checkout in CI, no `optimizeDeps.force` in Storybook. A published version is
+immutable, so Vite's pre-bundle cache cannot go stale against an edit — which is
+the entire hazard that flag existed for.
+
+If you ever need to develop a change across both repositories, `pnpm link
+../crystal-design-system/core` is the way, and it brings the stale-pre-bundle
+hazard back with it: run Storybook with `--force` for that session. Do not
+commit the linked range.
 
 ### 2.6 Every dependency is the React-native one
 
@@ -325,6 +347,14 @@ A real documentation site, at the standard set by MUI, Mantine, PrimeReact and
 Blueprint: every component gets a page with an explanation, isolated visual
 examples, the code for each, a generated props table, and its accessibility and
 material notes.
+
+**Not `crystal-preview`.** That is Crystal's site: it documents the design
+system, it installs `@crystal-ui/core`, and it renders the specification that
+ships inside that package. It says what a material *is*. This site says what a
+React component *does* — props, accessibility, the code that runs. Two audiences
+and two sources of truth; merging them would mean one of the two repositories
+documenting the other's API, which is the cross-repository coupling the split
+just removed.
 
 **Next.js App Router, deployed to Vercel.** Chosen over a docs framework because
 it earns its keep twice: the site is also the Next.js compatibility gate from
@@ -887,11 +917,11 @@ publishes the recipe; `src/theme/published-properties.test.tsx` reads every
 `var(--cr-…)` in every stylesheet here and fails on any that Crystal does not
 publish and no component sets itself.
 
-### I — Navigation and overlays (28) — in progress, 18 of 28
+### I — Navigation and overlays (28) — in progress, 16 of 28
 
 `anchor`, `nav-link`, `nav-rail`, `dock`, `breadcrumbs`, `tabs`, `pagination`, `stepper`, `burger`, `command-palette`, `tree-view`, `affix`, `bottom-navigation`, `navigation-menu`, `table-of-contents`, `menubar`, `submenu`, `dialog`, `drawer`, `menu`, `context-menu`, `popover`, `hover-card`, `tooltip`, `scrim`, `portal`, `floating-window`, `overlay-arrow`.
 
-- [x] **The overlay surfaces** — `scrim`, `portal`, `overlay-arrow`, `popover`,
+- [x] **The overlay surfaces** — `scrim`, `overlay-arrow`, `popover`,
   `tooltip`, `dialog`, `menu`, `context-menu`, `submenu`. **Resin never contains
   Resin**, and the DOM cannot enforce it: every overlay is portalled to `body` and
   loses its nesting on the way. A `Dialog` declares the material it presents and
@@ -991,6 +1021,48 @@ publish and no component sets itself.
   prop, so the button rendered, focused, pressed and did nothing. And an
   inline-end drawer sat **151px clear of the right-hand edge**, because a
   shrink-to-fit holder anchors its content at its start. Both are now gated.
+
+**Remaining — 12 of 28.** The manifest is the authority on this count, because
+it reads status from what the package exports rather than from a list somebody
+maintains. `portal` was ticked above and is not exported: every overlay portals
+to `body` and the behaviour is thoroughly built, but the catalogue lists the
+mechanism as its own entry and nothing satisfies it.
+
+- [ ] **`portal`.** The mechanism, exposed. React Aria portals overlays itself
+  and `UNSTABLE_PortalProvider` can redirect that, which is why this was easy to
+  believe done. What is missing is the thing a consumer reaches for when they
+  need their own content outside its layout parent — and, more importantly, the
+  place where the material context that survives portalling is documented rather
+  than being an implementation detail of nine other components.
+- [ ] **`hover-card`.** A popover that opens on hover or focus after a delay.
+  The delay is the component: too short and it fires while the pointer crosses,
+  too long and it feels broken. It must open on focus as well as hover or it is
+  keyboard-inaccessible, and it must stay open while the pointer travels into
+  it — which is the same intent-counter problem the tooltip already solves.
+- [ ] **`floating-window`.** Draggable, resizable, constrained to the viewport.
+  The only component in this slice that is not a React Aria primitive, so its
+  keyboard story has to be designed rather than inherited: a window that can
+  only be moved with a pointer is a window half the users cannot move.
+- [ ] **`nav-rail`, `dock`, `bottom-navigation`.** Three shapes of the same
+  idea — a persistent destination list — at three densities. They share
+  selection semantics with `nav-link`, which means **label weight alone**, never
+  a rail and never a mark beside the label.
+- [ ] **`navigation-menu`, `menubar`.** Menu surfaces that live in the page
+  rather than over it. Both are Resin control planes, so an overlay opening from
+  them is the Resin-never-contains-Resin case the `Dialog` context already
+  handles.
+- [ ] **`pagination`, `stepper`.** Both are sequences with a current position,
+  and both announce it — a page control that does not say "page 3 of 12" to a
+  screen reader is a row of unlabelled numbers.
+- [ ] **`burger`.** A disclosure control with two states that must be announced,
+  not merely drawn. Its animation is the one place in this slice where motion
+  carries meaning rather than decoration.
+- [ ] **`affix`.** Sticky positioning with a known offset. The scroll listener
+  is the same passive, frame-coalesced one `table-of-contents` ended up with,
+  for the same reason: `IntersectionObserver` delivers nothing in the in-app
+  preview browser (D-5).
+
+---
 
 ### J — Data display (37)
 
