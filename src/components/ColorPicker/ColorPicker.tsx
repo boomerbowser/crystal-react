@@ -30,7 +30,7 @@ import {
   ColorThumb, SliderTrack, ColorWheelTrack, Label, Input, Group, Text,
   parseColor, type Color,
 } from 'react-aria-components';
-import crystalFlat from '@crystal/core/flat' with { type: 'json' };
+import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 import { cx } from '../../styles/cx.js';
 import styles from './ColorPicker.module.scss';
 

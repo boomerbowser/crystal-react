@@ -35,7 +35,7 @@ clarification is recorded beneath it with its date.
 > - Ensure the library implements form components, state, validation, submission,
 >   and mutations with Crystals styling, theming, materials, and animations
 > - Name the library Crystal React, and then it's made into an npm/pnpm/bun/yarn
->   package, it's name will be @crystal/react
+>   package, it's name will be @crystal-ui/react
 
 ## Clarifications
 

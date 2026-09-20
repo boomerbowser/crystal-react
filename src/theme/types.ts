@@ -1,7 +1,7 @@
 /* The shape of a Crystal theme.
  *
  * Every range and choice here is Crystal's, not this library's. The values are
- * validated at runtime by `@crystal/core/core/preferences`, whose clamps are
+ * validated at runtime by `@crystal-ui/core/core/preferences`, whose clamps are
  * contract rather than defensive coding: "a product that lets a preference drift
  * outside these ranges is no longer rendering Crystal". These types exist so the
  * same mistake is caught at compile time instead.

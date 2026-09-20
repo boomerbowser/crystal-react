@@ -107,8 +107,8 @@ export const Groups: Story = {
         </SplitButton>
         <Card aria-label="Install">
           <Group gap="sm" align="center">
-            <Text as="span"><code>npm i @crystal/react</code></Text>
-            <CopyButton value="npm i @crystal/react" label="Copy the install command" />
+            <Text as="span"><code>npm i @crystal-ui/react</code></Text>
+            <CopyButton value="npm i @crystal-ui/react" label="Copy the install command" />
           </Group>
         </Card>
       </Stack>

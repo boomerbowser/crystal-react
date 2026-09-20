@@ -5,7 +5,7 @@
  * Entry and exit choreography bound to Crystal's timings, easings and travel
  * limits. It is a thin component over `usePreset` and `AnimatePresence`, and the
  * thinness is the point: everything it could decide is already decided in
- * `@crystal/core`, and a transition component that carries its own durations is a
+ * `@crystal-ui/core`, and a transition component that carries its own durations is a
  * second motion system.
  *
  * Why `AnimatePresence` rather than a mount flag: without it, a closing element

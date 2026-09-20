@@ -26,7 +26,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const CANDIDATES = [
-  join(ROOT, 'node_modules/@crystal/core/tokens/catalogue.json'),
+  join(ROOT, 'node_modules/@crystal-ui/core/tokens/catalogue.json'),
   resolve(ROOT, '../crystal-design-system/design-system/tokens/catalogue.json'),
 ];
 const SOURCE = CANDIDATES.find((path) => existsSync(path));
@@ -201,7 +201,7 @@ Crystal Design System for React. ${pkg.description}
 
 Crystal is Meridian's design system; this library implements it for React. It does
 not invent visual decisions — every value, material and motion recipe comes from
-\`@crystal/core\`, and a hard-coded colour or length in this library is a defect.
+\`@crystal-ui/core\`, and a hard-coded colour or length in this library is a defect.
 
 ## Status
 

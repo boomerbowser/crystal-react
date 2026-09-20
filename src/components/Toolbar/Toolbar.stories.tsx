@@ -19,7 +19,7 @@ const meta = {
           + 'A floating toolbar is a Resin plane; one inside a surface that already has a '
           + 'material inherits it, because Resin never contains Resin.\n\n'
           + 'Transition is deliberately thin — everything it could decide is already decided in '
-          + '`@crystal/core`. It renders a real wrapper rather than `display: contents`, because '
+          + '`@crystal-ui/core`. It renders a real wrapper rather than `display: contents`, because '
           + 'an element that generates no box cannot be faded, and the exit animation is the '
           + 'reason the component exists.',
       },

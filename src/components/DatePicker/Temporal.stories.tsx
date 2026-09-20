@@ -4,7 +4,7 @@ import { DateInput, TimeInput, DatePicker, DateRangePicker, DateTimePicker, Digi
 import { ColorInput, ColorPicker, ColorSwatchPicker, ColorWheel } from '../ColorPicker/ColorPicker.js';
 import { FileInput, DropZone, Upload } from '../FileInput/FileInput.js';
 import { Stack, Group } from '../Stack/Stack.js';
-import crystalFlat from '@crystal/core/flat' with { type: 'json' };
+import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 
 /* The six palettes, from Crystal's own token file. Typing the seeds here would
    make a swatch picker that stops matching the palettes it is showing — which is

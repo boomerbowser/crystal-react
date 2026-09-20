@@ -18,7 +18,7 @@
  * through this hook to use the scale.
  */
 import { useMemo } from 'react';
-import crystalFlat from '@crystal/core/flat' with { type: 'json' };
+import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 import { useCrystalTheme } from './CrystalProvider.js';
 import { crystalTokens } from './tokens.generated.js';
 

@@ -142,7 +142,7 @@ export const Composed: Story = {
         throughout, which is why clamping is used rather than cutting the string.
       </Truncate>
       <CodeBlock language="TypeScript" label="crystal.ts">
-        {'import { CrystalProvider, Button } from \'@crystal/react\';\n\n<CrystalProvider palette="prism">\n  <Button variant="primary">Save</Button>\n</CrystalProvider>'}
+        {'import { CrystalProvider, Button } from \'@crystal-ui/react\';\n\n<CrystalProvider palette="prism">\n  <Button variant="primary">Save</Button>\n</CrystalProvider>'}
       </CodeBlock>
     </Stack>
   ),

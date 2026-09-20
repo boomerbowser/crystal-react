@@ -8,7 +8,7 @@
  * keyframes: its geometry is computed from travel and depth tokens, so changing a
  * travel token moves every preset at once.
  *
- * The computation is `@crystal/core/core/presets` and is not repeated here.
+ * The computation is `@crystal-ui/core/core/presets` and is not repeated here.
  * CONTRACT §1 is explicit that two implementations of the same formula diverge,
  * and this one is more exposed to that than most: the numbers are read from live
  * custom properties, so a second implementation would drift silently rather than
@@ -18,8 +18,8 @@
 import { useCallback } from 'react';
 import { useAnimate } from 'motion/react';
 import type { DOMKeyframesDefinition } from 'motion/react';
-import presets from '@crystal/core/core/presets';
-import type { CrystalPresetName, CrystalFlowDirection } from '@crystal/core/core/presets';
+import presets from '@crystal-ui/core/core/presets';
+import type { CrystalPresetName, CrystalFlowDirection } from '@crystal-ui/core/core/presets';
 import { useCrystalTheme } from '../theme/CrystalProvider.js';
 
 /** Read a `--cr-*` length from the resolved theme, falling back to Crystal's own default. */

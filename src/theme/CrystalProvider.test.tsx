@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { CrystalProvider, useCrystalTheme } from './CrystalProvider.js';
 import { useColorScheme, useMotionSpeed } from './hooks.js';
 import { crystalTokens } from './tokens.generated.js';
-import crystalFlat from '@crystal/core/flat' with { type: 'json' };
+import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 
 /* Read from Crystal's own token file rather than typed in. A test asserting a
    literal hex passes forever after the palette changes underneath it — which is

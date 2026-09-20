@@ -1,4 +1,4 @@
-/* Entry points `@crystal/core` ships as plain JavaScript.
+/* Entry points `@crystal-ui/core` ships as plain JavaScript.
  *
  * Ambient declarations for the modules the design system exports but does not yet
  * type. Where it DOES ship types — `core/state`, `core/preferences` — they are
@@ -54,7 +54,7 @@ interface CrystalAnimation {
   cancel(): void;
 }
 
-declare module '@crystal/core/engines' {
+declare module '@crystal-ui/core/engines' {
   /** Play keyframes on an element. Cancelling always settles `finished` and
    *  restores any paint the animation owned. */
   export function frames(
@@ -65,12 +65,12 @@ declare module '@crystal/core/engines' {
   export const versions: Readonly<{ motion: string; gsap: string }>;
 }
 
-declare module '@crystal/core/motion-recipes' {
+declare module '@crystal-ui/core/motion-recipes' {
   const catalogue: { readonly recipes: readonly CrystalRecipe[] };
   export default catalogue;
 }
 
-declare module '@crystal/core/flat' {
+declare module '@crystal-ui/core/flat' {
   const flat: {
     readonly default: Record<string, unknown>;
     readonly palettes: Record<string, unknown>;

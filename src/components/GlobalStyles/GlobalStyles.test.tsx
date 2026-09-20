@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { renderWithCrystal } from '../../test/render.js';
 import { GlobalStyles } from './GlobalStyles.js';
-import crystalFlat from '@crystal/core/flat' with { type: 'json' };
+import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 
 /* From Crystal's own token file, not typed in: a literal hex keeps passing after
    the palette changes underneath it. */

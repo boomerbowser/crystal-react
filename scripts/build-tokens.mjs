@@ -40,7 +40,7 @@ const ROOT = resolve(HERE, '..');
 /* Resolved rather than hard-coded, so moving the checkout fails loudly instead
    of silently falling back to stale values. */
 const CANDIDATES = [
-  resolve(ROOT, 'node_modules/@crystal/core/exports/crystal-tokens.ts'),
+  resolve(ROOT, 'node_modules/@crystal-ui/core/exports/crystal-tokens.ts'),
   resolve(ROOT, '../crystal-design-system/design-system/exports/crystal-tokens.ts'),
 ];
 const SOURCE = CANDIDATES.find((path) => {

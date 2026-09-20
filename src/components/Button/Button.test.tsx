@@ -78,7 +78,7 @@ describe('Button', () => {
   });
 
   it('passes an unknown recipe name up as an error rather than failing silently', () => {
-    /* Recipes come from @crystal/core. A typo must not degrade to "no animation",
+    /* Recipes come from @crystal-ui/core. A typo must not degrade to "no animation",
        because that is indistinguishable from a working component that is subtly
        dead — which is how eleven hollow recipes shipped upstream. */
     expect(() => renderWithCrystal(<Button>A</Button>)).not.toThrow();

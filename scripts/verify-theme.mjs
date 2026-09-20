@@ -16,7 +16,7 @@
  *      name; only a browser computes `blur(var(--cr-frost-blur))` and decides
  *      whether it is a filter or a syntax error.
  *   3. **A stale bundle.** A dev server serving an hour-old copy of
- *      `@crystal/core` reports missing properties that are present in the source.
+ *      `@crystal-ui/core` reports missing properties that are present in the source.
  *      That has now happened three times in this project, once far enough to
  *      start a wrong diagnosis, and it is indistinguishable from a real defect
  *      without something that checks the served page.

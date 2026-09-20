@@ -1,8 +1,8 @@
 /* Fail if the build vendored a dependency.
  *
  * Twice now a dependency has been silently inlined into `dist/` because it was
- * missing from the externals list — `@crystal/core` first, then Motion. Both
- * times the build succeeded and said nothing, and vendoring `@crystal/core` in
+ * missing from the externals list — `@crystal-ui/core` first, then Motion. Both
+ * times the build succeeded and said nothing, and vendoring `@crystal-ui/core` in
  * particular breaks CONTRACT §1: a consumer would resolve two copies of the token
  * set, which can then drift.
  *
@@ -38,7 +38,7 @@ if (vendored.length) {
   console.error(`The build vendored ${vendored.length} dependency tree(s) into dist/:\n`);
   for (const path of vendored) console.error('  - ' + path);
   console.error('\nAdd the package to `external` in vite.config.ts. A dependency belongs in');
-  console.error('package.json, not in the bundle — vendoring @crystal/core in particular');
+  console.error('package.json, not in the bundle — vendoring @crystal-ui/core in particular');
   console.error('would leave a consumer resolving two copies of the token set.');
   process.exit(1);
 }

@@ -7,10 +7,10 @@ describe('CopyButton', () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.assign(navigator, { clipboard: { writeText } });
 
-    renderWithCrystal(<CopyButton value="npm i @crystal/react" label="Copy the install command" />);
+    renderWithCrystal(<CopyButton value="npm i @crystal-ui/react" label="Copy the install command" />);
     await userEvent.click(screen.getByRole('button', { name: 'Copy the install command' }));
 
-    expect(writeText).toHaveBeenCalledWith('npm i @crystal/react');
+    expect(writeText).toHaveBeenCalledWith('npm i @crystal-ui/react');
     /* Announced as well as drawn: a label that changes is a visual event, and a
        live region is what turns it into a spoken one. */
     await waitFor(() => {

@@ -4,7 +4,7 @@
  *
  * Crystal's catalogue gives this component three obligations — the scrollbar's
  * appearance, the edge fade, and reduced-motion behaviour — and this file owns
- * none of their values. The scrollbar is `@crystal/core`'s own `.cr-scroll-frost`
+ * none of their values. The scrollbar is `@crystal-ui/core`'s own `.cr-scroll-frost`
  * or `.cr-scroll-resin` class, and the fade is Crystal's CSS keyed on
  * `data-cr-scroll`. What React adds is the one thing CSS cannot do on its own:
  * know whether there is content beyond each edge.

@@ -1,6 +1,6 @@
 # Crystal React — implementation plan
 
-`@crystal/react`. A comprehensive React component library implementing the full Crystal
+`@crystal-ui/react`. A comprehensive React component library implementing the full Crystal
 catalogue at parity with Mantine, MUI (including the X add-ons), Ant Design and PrimeReact.
 
 This is the working plan. It is kept current: when a decision changes, this document
@@ -35,7 +35,7 @@ where something is not yet built, it says so.
 | SCSS/PostCSS under the hood, not CSS-in-JS | §2.2, §3.1 | built |
 | Dynamic and responsive; improve the animations | §3.4, §3.5 | designed |
 | Forms: components, state, validation, submission, mutations | §3.8 | designed |
-| Named Crystal React, published as `@crystal/react` | §3.9 | set |
+| Named Crystal React, published as `@crystal-ui/react` | §3.9 | set |
 | A documentation website, deployable to Vercel | §3.10, slice M | designed |
 
 ---
@@ -103,13 +103,13 @@ them. Two findings carry forward for whenever it returns, recorded in CONTRACT �
 state fails by being *too strong* or *too weak*, so it needs a measured floor as well as a
 ceiling; and its cost was structural rather than tuning.
 
-### 2.5 `@crystal/core` is the base package
+### 2.5 `@crystal-ui/core` is the base package
 
-The design system publishes as `@crystal/core`; this library is `@crystal/react`. Both sit
-under the `@crystal` scope. Crystal React consumes `@crystal/core` and never vendors it —
+The design system publishes as `@crystal-ui/core`; this library is `@crystal-ui/react`. Both sit
+under the `@crystal-ui` scope. Crystal React consumes `@crystal-ui/core` and never vendors it —
 it is `external` in the bundle, so a consumer resolves one copy of the token set.
 
-Until `@crystal/core` is published, it is linked from a sibling checkout
+Until `@crystal-ui/core` is published, it is linked from a sibling checkout
 (`../crystal-design-system/design-system`). If that path is missing, the token build fails
 loudly rather than falling back to stale values.
 
@@ -165,7 +165,7 @@ repeat it:
 Every one is MIT, ISC or Apache-2.0. No paid licence, and no licence that becomes
 paid at a usage threshold.
 
-**Motion for React also removes GSAP.** `@crystal/core` depends on GSAP for
+**Motion for React also removes GSAP.** `@crystal-ui/core` depends on GSAP for
 pseudo-element animation in the web preview, and GSAP's is a custom
 "no charge" licence rather than an OSS one. Crystal React needs neither: Motion
 for React covers what it used GSAP for, so the React library's dependency graph
@@ -186,7 +186,7 @@ rather than the keyframes.
 
 Three layers, in cascade order:
 
-1. **`@crystal/core` stylesheets** — the reset, the material primitives and the resolved
+1. **`@crystal-ui/core` stylesheets** — the reset, the material primitives and the resolved
    theme custom properties. Imported once by the consumer.
 2. **Component SCSS** — one `.module.scss` per component, selecting on React Aria's
    `data-*` attributes. Compiled through PostCSS with Autoprefixer.
@@ -216,7 +216,7 @@ bundler, so the published types are the ones the source actually checks.
 
 ### 3.3 Theme — built
 
-- `CrystalProvider` wraps `@crystal/core/core/preferences`. Normalisation, clamps, choices
+- `CrystalProvider` wraps `@crystal-ui/core/core/preferences`. Normalisation, clamps, choices
   and duration resolution are Crystal's; the provider re-derives nothing. Crystal's own
   defaults and palette list are passed in rather than copied.
 - **Scoping is per element, not per document.** A nested provider writes custom properties
@@ -316,7 +316,7 @@ minimum survives every density and every breakpoint.
 
 ### 3.9 Packaging
 
-`@crystal/react`, ESM + CJS + types, `sideEffects` declaring the SCSS. Changesets for
+`@crystal-ui/react`, ESM + CJS + types, `sideEffects` declaring the SCSS. Changesets for
 versioning. Peer range React 18.2 and 19.
 
 ### 3.10 Documentation website
@@ -366,7 +366,7 @@ Every component page carries:
   corresponds to, drawn from the catalogue rather than retyped.
 
 Page content is MDX. The component index, the parity claims and the material and
-motion notes come from `@crystal/core`'s catalogue, so a component added to the
+motion notes come from `@crystal-ui/core`'s catalogue, so a component added to the
 catalogue appears in the documentation without anybody remembering to add it.
 
 Beyond the component pages: getting started per framework, theming and the token
@@ -513,7 +513,7 @@ until `parity.json` says `implemented`.
 Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 
 - [x] Repository, separate from the design system, remote `boomerbowser/crystal-react`
-- [x] `package.json` as `@crystal/react`; Vite library build; ESM + CJS; `preserveModules`
+- [x] `package.json` as `@crystal-ui/react`; Vite library build; ESM + CJS; `preserveModules`
 - [x] TypeScript strict with the stricter flags; declarations emitted by `tsc`
 - [x] `scripts/build-tokens.mjs` — the single point where values enter
 - [x] `scripts/lint-tokens.mjs` — fails on a hard-coded colour or length
@@ -562,7 +562,7 @@ Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 
 Nothing downstream is trustworthy until this passes.
 
-- [x] **Task C-1 — export the motion presets from `@crystal/core`.** Done:
+- [x] **Task C-1 — export the motion presets from `@crystal-ui/core`.** Done:
       `assets/core/presets.js` is a pure module, `motion.js` consumes it rather than
       keeping its own copy, and `usePreset` consumes it from React. The decorative paint
       layers stay behind in the web runtime, because animated `box-shadow`,
@@ -645,7 +645,7 @@ a library has to invent are values that drift.
       accessibility decision, not a layout one: a formatting bar of fifteen
       buttons is otherwise fifteen stops between a person and the next field.
 - [x] `transition` — `usePreset` and `AnimatePresence`, and deliberately thin.
-      Everything it could decide is decided in `@crystal/core`, and a transition
+      Everything it could decide is decided in `@crystal-ui/core`, and a transition
       component carrying its own durations is a second motion system. It renders a
       real wrapper rather than `display: contents`, because an element that
       generates no box cannot be faded — which would silently remove the exit

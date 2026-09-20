@@ -6,7 +6,7 @@
  * CSS as custom properties on a scope element, and make it readable from hooks.
  *
  * It does not re-derive any Crystal rule. Normalisation, clamps, choices and
- * duration resolution come from `@crystal/core/core/preferences`, whose
+ * duration resolution come from `@crystal-ui/core/core/preferences`, whose
  * ranges are contract — CONTRACT §1 says to reuse the resolver's arithmetic
  * rather than reimplement it, "because two implementations of the same formula
  * will diverge".
@@ -22,9 +22,9 @@ import {
 } from 'react';
 import { I18nProvider } from 'react-aria-components';
 import { UNSAFE_PortalProvider } from 'react-aria';
-import preferences from '@crystal/core/core/preferences';
-import resolver from '@crystal/core/resolver';
-import crystalFlat from '@crystal/core/flat' with { type: 'json' };
+import preferences from '@crystal-ui/core/core/preferences';
+import resolver from '@crystal-ui/core/resolver';
+import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 import type {
   CrystalTheme, CrystalThemeInput, CrystalThemeValues, CrystalDirection, CrystalMode,
 } from './types.js';

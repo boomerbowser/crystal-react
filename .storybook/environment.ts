@@ -24,14 +24,14 @@
  *
  * `crystalRanges` and `crystalChoices` are Crystal's own `RANGES` and `CHOICES`,
  * re-exported by this library's provider and originally from
- * `@crystal/core/core/preferences`, where the clamps are contract: "a product
+ * `@crystal-ui/core/core/preferences`, where the clamps are contract: "a product
  * that lets a preference drift outside these ranges is no longer rendering
  * Crystal". Typing `min: 15` here would be a second copy of a number Crystal
  * owns, which is the CONTRACT §1 defect this whole library exists to avoid — and
  * it would silently stop matching the day Crystal moved a floor.
  */
 import { crystalRanges, crystalChoices } from '../src/theme/CrystalProvider.js';
-import crystalFlat from '@crystal/core/flat' with { type: 'json' };
+import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 
 const PALETTES = Object.keys((crystalFlat as { palettes: Record<string, unknown> }).palettes);
 

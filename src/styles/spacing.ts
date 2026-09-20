@@ -3,7 +3,7 @@
 /* The spacing scale, as a prop.
  *
  * Every layout component takes the same seven steps, so they are named once here
- * rather than seven times. The values are Crystal's — `@crystal/core` publishes
+ * rather than seven times. The values are Crystal's — `@crystal-ui/core` publishes
  * them as `--cr-spacing-*` — and this file translates a step name into the custom
  * property that holds it. Nothing here decides what a step is worth.
  *

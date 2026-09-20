@@ -4,7 +4,7 @@
  *
  * Almost nothing lives here on purpose. The scrollbar's colour and geometry, the
  * scroll contract — no chaining, a stable gutter, native gesture handling — and
- * the edge fade are all `@crystal/core`'s stylesheet, reached through the
+ * the edge fade are all `@crystal-ui/core`'s stylesheet, reached through the
  * `.cr-scroll-frost` / `.cr-scroll-resin` classes the component applies. Writing
  * them again here would be a second description of one specification, and the two
  * would drift the first time either changed.

@@ -1,6 +1,6 @@
 # Crystal React
 
-Crystal Design System for React. Published as `@crystal/react`.
+Crystal Design System for React. Published as `@crystal-ui/react`.
 
 This repository is deliberately separate from the design system. Crystal is the
 base; this implements Crystal for React. It does not fork the token or material
@@ -18,7 +18,7 @@ to the sections that answer them, the architecture, all 174 components by slice,
 
 ## How it consumes Crystal
 
-`@crystal/core` is not published yet, so it is linked from a sibling
+`@crystal-ui/core` is not published yet, so it is linked from a sibling
 checkout:
 
 ```
@@ -46,7 +46,7 @@ attributes, which is what lets the styling be plain SCSS.
 values are SCSS variables. Nothing needs a style runtime.
 
 **Crystal owns the physics; React owns the binding.** The engines, springs,
-recipes and state derivation are imported from `@crystal/core`. What this
+recipes and state derivation are imported from `@crystal-ui/core`. What this
 library implements is the lifecycle — refs, effects and cleanup — which is
 genuinely different on a platform with components.
 

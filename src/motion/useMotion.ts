@@ -29,7 +29,7 @@
 import { useCallback, useRef } from 'react';
 import { useAnimate } from 'motion/react';
 import type { AnimationSequence, DOMKeyframesDefinition } from 'motion/react';
-import motionRecipes from '@crystal/core/motion-recipes' with { type: 'json' };
+import motionRecipes from '@crystal-ui/core/motion-recipes' with { type: 'json' };
 import { useCrystalTheme } from '../theme/CrystalProvider.js';
 
 const RECIPES: ReadonlyMap<string, CrystalRecipe> = new Map(
@@ -191,7 +191,7 @@ export function useMotion(
     const recipe = authored && reorientRecipe(authored, { mirrorInline, toBlockAxis });
     if (!recipe) {
       throw new RangeError(
-        `Unknown Crystal motion "${name}". Recipes come from @crystal/core; this library defines none of its own.`,
+        `Unknown Crystal motion "${name}". Recipes come from @crystal-ui/core; this library defines none of its own.`,
       );
     }
 

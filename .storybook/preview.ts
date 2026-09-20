@@ -6,7 +6,7 @@ import { environmentArgs, environmentArgTypes } from './environment.js';
    renders against the same CSS an application would.
  *
  * There is deliberately no third import. This once loaded
- * `@crystal/core/controls`, the preview site's own control layer, which styles
+ * `@crystal-ui/core/controls`, the preview site's own control layer, which styles
  * bare elements — `:is(button, a.cr-button)` gives every button on the page a
  * Resin background, a feathered ::before and a 48px minimum height. That put a
  * second implementation of every control underneath this library's own, which is
@@ -15,8 +15,8 @@ import { environmentArgs, environmentArgTypes } from './environment.js';
  *
  * Crystal no longer exports it, so the import would not resolve today. The
  * comment stays because the reason is worth more than the specifier. */
-import '@crystal/core/css';
-import '@crystal/core/theme';
+import '@crystal-ui/core/css';
+import '@crystal-ui/core/theme';
 
 const preview: Preview = {
   /* Declared here rather than in each story file, so the environment is on

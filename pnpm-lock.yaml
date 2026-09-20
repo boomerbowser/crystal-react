@@ -8,7 +8,7 @@ importers:
 
   .:
     dependencies:
-      '@crystal/core':
+      '@crystal-ui/core':
         specifier: file:../crystal-design-system/design-system/core
         version: file:../crystal-design-system/design-system/core(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@internationalized/date':
@@ -797,7 +797,7 @@ packages:
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
 
-  '@crystal/core@file:../crystal-design-system/design-system/core':
+  '@crystal-ui/core@file:../crystal-design-system/design-system/core':
     resolution: {directory: ../crystal-design-system/design-system/core, type: directory}
 
   '@csstools/color-helpers@5.1.0':
@@ -4846,7 +4846,7 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
 
-  '@crystal/core@file:../crystal-design-system/design-system/core(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@crystal-ui/core@file:../crystal-design-system/design-system/core(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       gsap: 3.15.0
       motion: 13.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)

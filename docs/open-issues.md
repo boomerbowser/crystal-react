@@ -237,7 +237,7 @@ every step is a script that already existed; what changes is that they run on a
 clean checkout, on somebody else's machine, before a change lands.
 
 Crystal React's workflow lays out both checkouts as siblings, because
-`@crystal/core` resolves to `file:../crystal-design-system/design-system` and the
+`@crystal-ui/core` resolves to `file:../crystal-design-system/design-system` and the
 layout on disk is part of the build. Crystal is private, so the Crystal checkout
 needs a repository-scoped `CRYSTAL_READ_TOKEN` secret; without one the run stops
 there, which is the honest place for it.
@@ -389,7 +389,7 @@ Meridian looked at the running Storybook and reported that "many of Crystal's
 specifications seem to be absent from the components". They were right about what
 they saw and the cause was not the components: the dev server had been running
 across several hours of source changes and was serving a stale copy of
-`@crystal/core`, so `--cr-overlay-max-width`, `--cr-overlay-tooltip-max-width`
+`@crystal-ui/core`, so `--cr-overlay-max-width`, `--cr-overlay-tooltip-max-width`
 and both arrow properties resolved to nothing. A command palette with no maximum
 width is 1160px of palette.
 
@@ -543,7 +543,7 @@ pass, and `verify-materials` reports ten comparisons, no allowances, no failures
 
 **Closed.**
 
-`@crystal/core` is `file:../crystal-design-system/design-system` — the design
+`@crystal-ui/core` is `file:../crystal-design-system/design-system` — the design
 system itself, edited in the same sitting as this library. Vite's dependency
 optimiser caches a pre-bundled copy, so a change to Crystal's resolver does not
 reach the served page until somebody clears the cache.
@@ -733,7 +733,7 @@ detail, the proposed shape and the steps only Meridian can take.**
 This library declares:
 
 ```json
-"@crystal/core": "file:../crystal-design-system/design-system/core"
+"@crystal-ui/core": "file:../crystal-design-system/design-system/core"
 ```
 
 *(It said `…/design-system` until 19 September, when Meridian asked for the
@@ -779,11 +779,14 @@ edited in the same sitting without going back to a path.
 **Answered by Meridian, 19 September 2026**, and recorded in full in D-10. For
 this library specifically:
 
-- The dependency becomes `"@crystal/core": "^2.0.0"`, from the public npm
-  registry under the **`@crystal`** scope, which Meridian had verified as free
-  and which D-10 wrongly called "almost certainly taken". Verified since:
-  `@crystal/core` and `@crystal/react` both return 404 and a scope search returns
-  nothing. This library keeps the name `@crystal/react`.
+- The dependency becomes `"@crystal-ui/core": "^2.0.0"`, from the public npm
+  registry under the **`@crystal-ui`** scope. The history is worth keeping: D-10
+  wrongly called a scope "almost certainly taken" against Meridian's word, then
+  "verified" the opposite with a check that could not answer the question — a
+  404 on `@crystal/core` proves the *package* was never published and says
+  nothing about who holds the *scope*, which npm reserves separately. Meridian
+  checked directly on 20 September: `@crystal` is taken, and the scope Meridian
+  holds is `@crystal-ui`. This library keeps the name `@crystal-ui/react`.
 - Local work against an unpublished Crystal uses **`pnpm link`** — a symlink
   rather than a copy, so an edit is live and there is no cache to clear. That
   retires `optimizeDeps.force` in `.storybook/main.ts`, which is R-14's
@@ -1038,18 +1041,18 @@ Publishing and provenance. The proposal is
 `crystal-design-system/proposals/2026-09-19-crystal-core-as-a-library.md`.
 
 **This library's half has deliberately not started, and the dependency line is
-unchanged.** `"@crystal/core": "^2.0.0"` cannot be committed until something has
-been published to the `@crystal` scope: a committed range pointing at a version
+unchanged.** `"@crystal-ui/core": "^2.0.0"` cannot be committed until something has
+been published to the `@crystal-ui` scope: a committed range pointing at a version
 nobody can install is worse than an honest `file:` path, because it fails for
 every contributor rather than for one. `optimizeDeps.force` stays with it — it is
 R-14's workaround, and `pnpm link` is its cure, but only once there is a
 published package to link *away from*.
 
-What changes here on the day `@crystal/core@2.0.0` exists, in one commit:
+What changes here on the day `@crystal-ui/core@2.0.0` exists, in one commit:
 
 ```
-- "@crystal/core": "file:../crystal-design-system/design-system/core"
-+ "@crystal/core": "^2.0.0"
+- "@crystal-ui/core": "file:../crystal-design-system/design-system/core"
++ "@crystal-ui/core": "^2.0.0"
 ```
 
 plus removing the `viteFinal` hook in `.storybook/main.ts` and its comment,

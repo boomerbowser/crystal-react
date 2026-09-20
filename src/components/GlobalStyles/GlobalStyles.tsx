@@ -13,7 +13,7 @@
  * the person expressed to their operating system. A reset is allowed to normalise
  * appearance; it is not allowed to remove an affordance.
  *
- * Crystal's reset itself lives in `@crystal/core`'s stylesheet, which a product
+ * Crystal's reset itself lives in `@crystal-ui/core`'s stylesheet, which a product
  * imports once — this component does not inline a copy of it, because two
  * descriptions of one reset is the drift CONTRACT §1 is about. What it does is
  * paint the document with the scope's resolved foundation, which a stylesheet

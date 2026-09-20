@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { act } from 'react';
 import { render, screen } from '@testing-library/react';
-import presets from '@crystal/core/core/presets';
+import presets from '@crystal-ui/core/core/presets';
 import { CrystalProvider } from '../theme/CrystalProvider.js';
 import { usePreset, type CrystalPresetName, type UsePresetOptions } from './usePreset.js';
 

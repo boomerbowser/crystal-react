@@ -24,7 +24,7 @@ const PUBLISHED = (() => {
   for (const name of Array.from(scope.style)) declared.add(name);
   /* Plus the static theme sheet, which is the other half of what a consumer gets. */
   const theme = readFileSync(
-    resolve(process.cwd(), 'node_modules/@crystal/core/assets/crystal-theme.css'),
+    resolve(process.cwd(), 'node_modules/@crystal-ui/core/assets/crystal-theme.css'),
     'utf8',
   );
   for (const match of theme.matchAll(/(--cr-[a-z0-9-]+)\s*:/g)) declared.add(match[1]!);

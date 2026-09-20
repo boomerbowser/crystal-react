@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen } from '../../test/render.js';
-import crystalFlat from '@crystal/core/flat' with { type: 'json' };
+import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 import { ColorInput, ColorSwatch, ColorSwatchPicker, ColorSlider } from './ColorPicker.js';
 
 /* Crystal's own seeds rather than typed hexes. A colour component's test is the
