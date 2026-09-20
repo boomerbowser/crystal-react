@@ -538,6 +538,22 @@ Each slice: implement, story, test, axe check, visual evidence, `parity.json` st
 report. Order follows dependency, not the catalogue's own order. A component is not done
 until `parity.json` says `implemented`.
 
+**"Story" is not documentation here; it is the address three of the six gates use.**
+`verify-targets.mjs`, the rendered half of `verify-theme.mjs` and the visual frames all
+reach a component by navigating to a story ID, so a component with no story is not
+failing those gates — it is outside them, and the suite stays green. Slice I was shipped
+without stories and CI passed; writing them afterwards turned three gates red on three
+real defects, two of which no unit test could have caught because the element did report
+the role each test asked for and the tree around it was what was wrong. The third was a
+32px-wide target, which jsdom cannot see at all: it reports every box as zero. See R-18
+in `docs/closed-issues.md`.
+
+So: a component that carries a finger target also needs a **case in
+`scripts/verify-targets.mjs`**, and `LEAST_PROBES` raised to the new count. A state that
+matters and is reachable only by operating a control — a collapsed rail, a modal window —
+needs a **story of its own**, because a gate can address a story and cannot address a
+state behind a click.
+
 ### C — Foundation (in progress)
 
 Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
