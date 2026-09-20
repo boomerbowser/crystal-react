@@ -12,6 +12,7 @@ export * from './SimpleGrid/index.js';
 export * from './Center/index.js';
 export * from './Space/index.js';
 export * from './Divider/index.js';
+export * from './Dock/index.js';
 export * from './AspectRatio/index.js';
 
 /* Providers and scopes */
@@ -75,9 +76,11 @@ export * from './Checkbox/index.js';
 export * from './Switch/index.js';
 export * from './SegmentedControl/index.js';
 export * from './Tabs/index.js';
+export * from './BottomNavigation/index.js';
 export * from './Breadcrumbs/index.js';
 export * from './Anchor/index.js';
 export * from './NavLink/index.js';
+export * from './NavRail/index.js';
 export * from './TreeView/index.js';
 export * from './TableOfContents/index.js';
 export * from './Drawer/index.js';
@@ -103,5 +106,6 @@ export * from './RichTextSurface/index.js';
 export * from './Scrim/index.js';
 export * from './OverlayArrow/index.js';
 export * from './Popover/index.js';
+export * from './Portal/index.js';
 export * from './Tooltip/index.js';
 export * from './Menu/index.js';

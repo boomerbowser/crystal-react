@@ -1,0 +1,78 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+.bar {
+  @include material.resin;
+  position: sticky;
+  inset-block-end: 0;
+  z-index: 1;
+  /* Zero everywhere it does not apply, so there is no branch and nothing to
+     detect — a phone's home indicator is the only place it is not zero. */
+  padding-block-end: env(safe-area-inset-bottom, 0px);
+  border-radius: $cr-shape-content-radius $cr-shape-content-radius 0 0;
+}
+
+.list {
+  display: flex;
+  margin: 0;
+  padding: $cr-spacing-2xs;
+  list-style: none;
+}
+
+/* Equal slots, so the destinations do not shift as labels change length —
+   a bar whose targets move between pages is one nobody can aim at. */
+.slot { flex: 1 1 0; min-inline-size: 0; }
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $cr-spacing-2xs;
+  min-block-size: $cr-action-min-target;
+  padding: $cr-spacing-xs $cr-spacing-2xs;
+  border-radius: $cr-action-radius;
+  color: var(--cr-text);
+  font-weight: 550;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* The Haze content fill, at the shared definition. Inset 0: a slot is
+   full-bleed inside the bar and has no exposed glass perimeter to hold the fill
+   back from. This is the surface where the fill matters most — content scrolls
+   underneath it continuously. */
+.item { @include material.haze-fill(0); }
+
+.item[aria-current] { font-weight: 800; }
+.item[aria-current] .icon { color: var(--cr-primary); }
+
+.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
+.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-inline-size: 100%;
+}
+
+.item:hover { background: var(--cr-surface-alt); }
+
+.item:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+@include material.opaque-fallback('.bar');
+
+@media (forced-colors: active) {
+  .bar { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .item::before { content: none; }
+  /* A fill is erased by Chromium's text backplate, so the current destination
+     is a ring. */
+  .item[aria-current] { outline: 2px solid Highlight; color: CanvasText; }
+}

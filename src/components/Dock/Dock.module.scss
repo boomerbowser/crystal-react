@@ -1,0 +1,79 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* One Resin plane. The destinations are painted on it, not floating beside it —
+   Resin diffusing Resin at adjacent edges is what the material contract
+   forbids, and a row of individual Resin pills is exactly that. */
+
+.dock {
+  @include material.resin;
+  display: inline-flex;
+  padding: $cr-spacing-2xs;
+  border-radius: $cr-action-radius;
+}
+
+/* The shared Stone label backing: one backing behind the whole row rather than
+   one per destination. Per-label backings would draw a box around each and turn
+   this into a segmented control, which picks a view rather than going
+   somewhere. */
+.group {
+  display: flex;
+  align-items: stretch;
+  gap: $cr-spacing-2xs;
+  margin: 0;
+  padding: $cr-spacing-2xs;
+  list-style: none;
+  border-radius: $cr-action-radius;
+  background: var(--cr-stone-fill);
+  backdrop-filter: blur(var(--cr-stone-feather)) saturate(var(--cr-resin-saturation));
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: $cr-action-gap;
+  min-block-size: $cr-action-min-target;
+  padding: $cr-action-padding-block $cr-action-padding-inline;
+  border-radius: $cr-action-radius;
+  color: var(--cr-text);
+  font-weight: 550;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* The destination itself changes material. Nothing is drawn beside the label. */
+.item[aria-current] {
+  background: var(--cr-primary);
+  color: var(--cr-on-primary);
+  font-weight: 800;
+}
+
+.item[aria-current] .icon { color: var(--cr-on-primary); }
+
+.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
+.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.item:hover:not([aria-current]) { background: var(--cr-surface-alt); }
+
+.item:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+@include material.opaque-fallback('.dock');
+
+:global([data-effects='opaque']) .group { backdrop-filter: none; }
+@media (prefers-reduced-transparency: reduce) { .group { backdrop-filter: none; } }
+
+@media (forced-colors: active) {
+  .dock { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .group { background: Canvas; backdrop-filter: none; }
+  /* A filled label is erased by Chromium's text backplate, so the current
+     destination is a ring and not a fill. */
+  .item[aria-current] {
+    background: Canvas;
+    color: CanvasText;
+    outline: 2px solid Highlight;
+  }
+}
