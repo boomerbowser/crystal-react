@@ -16,4 +16,4 @@ and "Library" sit on near-white in Crystal, and "Usage" and "API" sit on a pale
 lavender wash in Crystal React. That is a contrast difference before it is an
 aesthetic one.
 
-See R-15 in `../../open-issues.md`.
+See R-15 in `../../closed-issues.md`.
