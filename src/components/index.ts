@@ -1,3 +1,4 @@
+export * from './Burger/index.js';
 export * from './Button/index.js';
 export * from './Card/index.js';
 export * from './TextInput/index.js';
@@ -91,6 +92,7 @@ export * from './Select/index.js';
 export * from './Rating/index.js';
 export * from './MaskInput/index.js';
 export * from './JsonInput/index.js';
+export * from './Affix/index.js';
 export * from './AngleSlider/index.js';
 export * from './MultiSelect/index.js';
 

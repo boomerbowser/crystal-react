@@ -1,0 +1,67 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+.burger {
+  @include material.resin;
+  @include material.haze-fill;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  border-radius: $cr-action-radius;
+  color: var(--cr-text);
+  cursor: pointer;
+}
+
+/* Three bars on one node: the middle is the background, the outer two are
+   pseudo-elements. One transform on one element cannot desynchronise the way
+   three separate animations can. */
+.bars,
+.bars::before,
+.bars::after {
+  display: block;
+  inline-size: $cr-icon-size;
+  block-size: $cr-indicator-line-width;
+  border-radius: $cr-overlay-arrow-radius;
+  background: currentcolor;
+}
+
+.bars { position: relative; }
+
+.bars::before,
+.bars::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+}
+
+.bars::before { inset-block-start: calc(#{$cr-icon-size} / -3); }
+.bars::after { inset-block-start: calc(#{$cr-icon-size} / 3); }
+
+/* The cross. Crystal's `icon-turn` plays the movement; these are the end
+   states, so the control is correct at rest whether or not it animated —
+   including under reduced motion, where the recipe says to apply the semantic
+   state immediately and omit the movement. */
+.burger[data-open] .bars { background: transparent; }
+.burger[data-open] .bars::before { inset-block-start: 0; transform: rotate(45deg); }
+.burger[data-open] .bars::after { inset-block-start: 0; transform: rotate(-45deg); }
+
+.burger[data-hovered] { background: var(--cr-surface-alt); }
+
+.burger[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.burger[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+@include material.opaque-fallback('.burger');
+
+@media (forced-colors: active) {
+  .burger { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .burger::before { content: none; }
+  .bars, .bars::before, .bars::after { background: CanvasText; }
+  .burger[data-open] .bars { background: transparent; }
+}
