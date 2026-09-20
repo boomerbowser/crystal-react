@@ -10,6 +10,19 @@ allowBuilds:
 
 ignoreWorkspaceRootCheck: true
 
+# pnpm declines to install a package published in the last few minutes, which
+# is a supply-chain guard against a compromised publish being picked up before
+# anyone notices. Crystal is first-party: published by Meridian, from its own
+# tag-triggered workflow, with a provenance attestation tying the tarball to
+# the commit. Waiting out a cooling-off period on our own release buys nothing
+# and would fail CI for the first hours after every version.
+#
+# By name rather than by version. pnpm writes `@crystal-ui/core@2.0.0` when it
+# adds this itself, which would need a new line per release and would fail the
+# day of one.
+minimumReleaseAgeExclude:
+  - '@crystal-ui/core'
+
 # Sass pulls in @parcel/watcher, which has a native build step. pnpm 10+ exits
 # non-zero until every such dependency gets an explicit answer, so an unanswered
 # one breaks `pnpm install` on a fresh clone and therefore CI. Declined: it is an

@@ -24,27 +24,29 @@ const config: StorybookConfig = {
     reactDocgen: 'react-docgen',
   },
 
-  /* Re-bundle Crystal on every start.
+  /* No `optimizeDeps.force`, and the reason it is gone is the reason it existed.
    *
-   * `@crystal-ui/core` is `file:../crystal-design-system/core` — the design
-   * system itself, edited in the same sitting as this library. Vite's dependency
-   * optimiser caches a pre-bundled copy of it, so a change to Crystal's resolver
-   * does not reach the served page until somebody clears the cache. From the
-   * inside that is indistinguishable from a defect: it cost three investigations
-   * in one day, once far enough to start a wrong diagnosis of the theme provider,
-   * and once for Meridian to report that Crystal's specifications were missing
-   * from every component.
+   * `@crystal-ui/core` used to be `file:../crystal-design-system/core` — the
+   * design system itself, edited in the same sitting as this library. Vite's
+   * dependency optimiser caches a pre-bundled copy, so a change to Crystal's
+   * resolver did not reach the served page until somebody cleared the cache.
+   * From the inside that is indistinguishable from a defect: it cost three
+   * investigations in one day, once far enough to start a wrong diagnosis of
+   * the theme provider, and once for Meridian to report that Crystal's
+   * specifications were missing from every component. Forcing a re-bundle on
+   * every start removed the class, at a few seconds of startup each time.
    *
-   * Excluding it from optimisation was the first attempt and it does not work:
-   * `core/preferences.js` and the resolver are CommonJS, so the browser gets a
-   * module with no default export and every story fails to render. They have to
-   * be pre-bundled; what they must not be is pre-bundled *once*.
+   * The dependency is `^2.0.0` from npm now. A published version is immutable,
+   * so a cached pre-bundle of it cannot go stale — there is no edit for it to
+   * miss. `pnpm install` changes the resolved version and Vite re-optimises
+   * when the lockfile moves. The workaround had exactly one cause and it is
+   * gone, so keeping it would only be paying the startup cost for a hazard
+   * that no longer exists. That is R-14 closed by its cure rather than by its
+   * workaround.
    *
-   * `force` costs a few seconds of startup and removes the whole class. */
-  viteFinal: async (config) => ({
-    ...config,
-    optimizeDeps: { ...config.optimizeDeps, force: true },
-  }),
+   * If Crystal is ever linked locally again — `pnpm link` for a change being
+   * developed across both repositories — the hazard returns with it, and
+   * `--force` on the Storybook command is the per-session answer. */
 };
 
 export default config;

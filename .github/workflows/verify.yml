@@ -22,12 +22,12 @@ jobs:
   verify:
     name: Tokens, types, tests and bundle
     runs-on: ubuntu-latest
-    # Crystal is not a published package here: `@crystal-ui/core` resolves to
-    # `file:../crystal-design-system/core`, a *sibling* of this
-    # repository, and the library reads its tokens, its resolver and its
-    # stylesheets straight out of it. CONTRACT §1 is the reason — a second copy
-    # of a value drifts from the first silently — so the layout on disk is part
-    # of the build, and both checkouts go into the paths that dependency names.
+    # Crystal is a published package now: `@crystal-ui/core` is `^2.0.0` from
+    # npm, and the library reads its tokens, its resolver and its stylesheets
+    # out of `node_modules`. CONTRACT §1 is still the reason — a second copy of
+    # a value drifts from the first silently — but a registry version is a
+    # better answer than a sibling directory, because it is the same bytes for
+    # everyone and it cannot be edited underneath a build.
     defaults:
       run:
         working-directory: crystal-react
@@ -37,54 +37,46 @@ jobs:
         with:
           path: crystal-react
 
-      # Crystal is checked out at its default branch, so this job always builds
-      # against whatever Crystal's `main` is *at the moment the job starts*.
-      # A change here that needs a new Crystal token therefore has to be pushed
-      # second: push Crystal first, then this. Getting it the wrong way round
-      # fails as `[sass] Undefined variable`, which reads like a typo in this
-      # repository and is not one — it happened, fifteen seconds apart, when
-      # `component.indicator.lineWidth` was added.
-      - name: Check out Crystal beside it
-        uses: actions/checkout@v5
-        with:
-          repository: boomerbowser/crystal
-          path: crystal-design-system
-          # Crystal is private. A repository-scoped token is needed; without one
-          # this step is where the run stops, which is the honest place for it.
-          token: ${{ secrets.CRYSTAL_HEAD_TOKEN }}
-
-      # Say what went wrong, rather than letting pnpm say it.
+      # R-16, the push-ordering trap, is closed — and this step is what is left
+      # of it rather than a live guard.
       #
-      # The path dependency points into Crystal's `core/` folder. When Crystal
-      # has not been pushed yet — or was pushed seconds ago and this checkout
-      # caught the commit before it — that directory does not exist, and pnpm
-      # reports `ENOENT: no such file or directory, scandir …/crystal-design-system/core`
-      # in the middle of two hundred lines of resolution output. That reads like
-      # a broken lockfile and it is not one. It happened on the very commit that
-      # created `core/`.
+      # Crystal used to be checked out here as a sibling and depended on by
+      # path, so this job built against whatever Crystal's `main` was at the
+      # moment it started. A change needing a new Crystal token had to be pushed
+      # second, and getting it the wrong way round failed as
+      # `[sass] Undefined variable` — which reads like a typo in this repository
+      # and is not one. It happened, fifteen seconds apart, when
+      # `component.indicator.lineWidth` was added. Worse, if Crystal's `core/`
+      # was not there at all, pnpm said
+      # `ENOENT: no such file or directory, scandir …/crystal-design-system/core`
+      # in the middle of two hundred lines of resolution output, which reads
+      # like a broken lockfile and is not one.
       #
-      # This is the push-ordering trap recorded in R-16, and it goes away when
-      # the dependency is a published version rather than a path. Until then the
-      # least it can do is name itself.
+      # A published version has none of that: it is the same bytes for every
+      # build and it cannot be half-pushed. The `file:` branch below now only
+      # fires if somebody points this back at a working copy, which is a
+      # reasonable thing to do for a change spanning both repositories and an
+      # unreasonable thing to merge — so it stays, and it says so.
       - name: Crystal is present, and new enough
         run: |
           set -euo pipefail
           declared="$(node -p "const d=require('./package.json');(d.devDependencies?.['@crystal-ui/core'] ?? d.dependencies['@crystal-ui/core'])")"
           case "$declared" in
             file:*)
-              # The declared path, used verbatim. This job runs with
-              # `working-directory: crystal-react` and checks both repositories
-              # out as siblings under the workspace, so `../crystal-design-system/…`
-              # means here exactly what it means on a contributor's disk. An
-              # earlier version of this step stripped the `../` after misreading
-              # an absolute path in pnpm's error, and then failed on a checkout
-              # that was perfectly fine — a preflight that cries wolf is worse
-              # than no preflight, because the next person learns to skip it.
+              # The declared path, used verbatim — never rewritten. An earlier
+              # version of this step stripped the `../` after misreading an
+              # absolute path in pnpm's error, and then failed a checkout that
+              # was perfectly fine. A preflight that cries wolf is worse than no
+              # preflight, because the next person learns to skip it.
+              #
+              # Nothing checks Crystal out here any more, so a `file:` range
+              # will not resolve in CI at all. Saying which path is missing is
+              # more use than letting pnpm say it.
               here="${declared#file:}"
               if [ ! -d "$here" ]; then
                 echo "::error::package.json depends on '$declared', and '$here' is not in this checkout."
-                echo "::error::Crystal is checked out at its default branch. If the design system change this build needs was pushed after this run started, push the design system first and re-run — this is the push-ordering trap in R-16."
-                echo "Crystal's checkout contains:"; ls -1 ../crystal-design-system 2>/dev/null || echo "  (nothing — the checkout itself failed)"
+                echo "::error::Nothing checks Crystal out in CI: the dependency is expected to be a published range like '^2.0.0'. A file: path works on a contributor's disk and nowhere else, so it cannot be merged."
+                echo "::error::If this is a change spanning both repositories, publish Crystal first and depend on the version."
                 exit 1
               fi
               echo "Crystal at $here — $(node -p "const p=require('$here/package.json');p.name+' '+p.version")"
@@ -186,6 +178,30 @@ jobs:
       # side's values are written down, so the expectation follows Crystal rather
       # than a copy of it. Meridian found the Resin rims missing before any gate
       # did, which is the argument for having this one.
+      # Crystal's own site, for the material-parity gate below: the same
+      # material rendered in both and compared, so this library cannot drift
+      # from Crystal while every one of its own tests stays green.
+      #
+      # It is built rather than merely checked out. The site reaches the
+      # library through a copy its build makes, that copy is gitignored, and
+      # serve.py refuses to start without it — which is the right refusal,
+      # because a site missing Crystal does not look broken, it looks like a
+      # design regression. Both repositories are public, so no token.
+      - name: Check out Crystal's site
+        uses: actions/checkout@v5
+        with:
+          repository: boomerbowser/crystal-preview
+          path: crystal-preview
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Build Crystal's site
+        working-directory: crystal-preview
+        run: |
+          npm ci --no-audit --no-fund
+          pip install -r tools/requirements.txt
+          npm run build
+
       - name: Measure and drive the built stories
         run: |
           python3 -m http.server 6006 --directory storybook-static --bind 127.0.0.1 &
@@ -209,10 +225,13 @@ jobs:
           # through an entire slice, with every test green.
           pnpm run verify:appearance
 
-          # Material parity needs Crystal's own preview beside the Storybook, so
-          # the same material can be rendered in both and compared. Crystal is
-          # already checked out for the token build; this serves it.
-          python3 ../crystal-design-system/tools/serve.py &
+          # Material parity needs Crystal's own site beside the Storybook, so
+          # the same material can be rendered in both and compared. It is
+          # checked out and built in the step above: the site reaches the
+          # library through a copy that the build makes, and serve.py refuses
+          # to start without it rather than serving a site with no Crystal in
+          # it — which does not look broken, it looks like a design regression.
+          python3 ../crystal-preview/tools/serve.py &
           for _ in $(seq 1 40); do
             curl -sf http://127.0.0.1:4321/ >/dev/null && break
             sleep 0.5
