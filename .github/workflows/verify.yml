@@ -186,12 +186,19 @@ jobs:
       # library through a copy its build makes, that copy is gitignored, and
       # serve.py refuses to start without it — which is the right refusal,
       # because a site missing Crystal does not look broken, it looks like a
-      # design regression. Both repositories are public, so no token.
+      # design regression.
+      #
+      # crystal-preview is private, so this needs a repository-scoped token.
+      # `crystal` is public and `crystal-preview` is not, which is easy to get
+      # backwards: the library everyone installs is open and the site that
+      # documents it is not. Without the token `actions/checkout` reports
+      # "Not Found", which reads like a typo in the repository name.
       - name: Check out Crystal's site
         uses: actions/checkout@v5
         with:
           repository: boomerbowser/crystal-preview
           path: crystal-preview
+          token: ${{ secrets.CRYSTAL_HEAD_TOKEN }}
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
