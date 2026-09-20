@@ -110,7 +110,7 @@ under the `@crystal-ui` scope. Crystal React consumes `@crystal-ui/core` and nev
 it is `external` in the bundle, so a consumer resolves one copy of the token set.
 
 Until `@crystal-ui/core` is published, it is linked from a sibling checkout
-(`../crystal-design-system/design-system`). If that path is missing, the token build fails
+(`../crystal-design-system/core`). If that path is missing, the token build fails
 loudly rather than falling back to stale values.
 
 ### 2.6 Every dependency is the React-native one
@@ -379,7 +379,7 @@ documentation is machine-readable at the same URL a person reads.
 
 ## 4. Scope — 285 entries
 
-The catalogue lives in `design-system/tokens/catalogue/`; `libraries/parity.json` is
+The catalogue lives in `core/tokens/catalogue/`; `libraries/parity.json` is
 generated from it and is the progress record. **172 to build**; two are recorded
 `not-applicable` with reasons.
 

@@ -23,7 +23,7 @@ jobs:
     name: Tokens, types, tests and bundle
     runs-on: ubuntu-latest
     # Crystal is not a published package here: `@crystal-ui/core` resolves to
-    # `file:../crystal-design-system/design-system/core`, a *sibling* of this
+    # `file:../crystal-design-system/core`, a *sibling* of this
     # repository, and the library reads its tokens, its resolver and its
     # stylesheets straight out of it. CONTRACT §1 is the reason — a second copy
     # of a value drifts from the first silently — so the layout on disk is part
@@ -58,7 +58,7 @@ jobs:
       # The path dependency points into Crystal's `core/` folder. When Crystal
       # has not been pushed yet — or was pushed seconds ago and this checkout
       # caught the commit before it — that directory does not exist, and pnpm
-      # reports `ENOENT: no such file or directory, scandir …/design-system/core`
+      # reports `ENOENT: no such file or directory, scandir …/crystal-design-system/core`
       # in the middle of two hundred lines of resolution output. That reads like
       # a broken lockfile and it is not one. It happened on the very commit that
       # created `core/`.
@@ -212,7 +212,7 @@ jobs:
           # Material parity needs Crystal's own preview beside the Storybook, so
           # the same material can be rendered in both and compared. Crystal is
           # already checked out for the token build; this serves it.
-          python3 ../crystal-design-system/design-system/tools/serve.py &
+          python3 ../crystal-design-system/tools/serve.py &
           for _ in $(seq 1 40); do
             curl -sf http://127.0.0.1:4321/ >/dev/null && break
             sleep 0.5

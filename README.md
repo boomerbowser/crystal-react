@@ -22,7 +22,7 @@ to the sections that answer them, the architecture, all 174 components by slice,
 checkout:
 
 ```
-../crystal-design-system/design-system
+../crystal-design-system/core
 ```
 
 If that path does not exist, `pnpm run tokens` fails loudly rather than falling

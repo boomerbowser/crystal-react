@@ -9,7 +9,7 @@
  *
  * The source is the RESOLVED flat export, not the raw DTCG tree. The same
  * section says so — "Generated exports for TypeScript, Swift and Kotlin are
- * emitted from it into design-system/exports/. A library imports those" — and
+ * emitted from it into core/exports/. A library imports those" — and
  * reading the tree instead would mean a second implementation of alias
  * resolution, which is exactly the divergence §1 warns about.
  *
@@ -41,7 +41,7 @@ const ROOT = resolve(HERE, '..');
    of silently falling back to stale values. */
 const CANDIDATES = [
   resolve(ROOT, 'node_modules/@crystal-ui/core/exports/crystal-tokens.ts'),
-  resolve(ROOT, '../crystal-design-system/design-system/exports/crystal-tokens.ts'),
+  resolve(ROOT, '../crystal-design-system/core/exports/crystal-tokens.ts'),
 ];
 const SOURCE = CANDIDATES.find((path) => {
   try { readFileSync(path); return true; } catch { return false; }
