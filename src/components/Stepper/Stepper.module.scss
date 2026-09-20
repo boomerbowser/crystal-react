@@ -1,0 +1,106 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* Resin step markers on a Haze track — the catalogue's material line. The track
+   is the connector between the steps, and it is Haze because it sits under the
+   markers rather than floating beside them. */
+.stepper {
+  display: flex;
+  gap: $cr-spacing-md;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.stepper[data-orientation='vertical'] { flex-direction: column; }
+
+.step {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+/* The connector. Drawn from each step to the next, never after the last — a
+   line leading out of the final step says there is more. */
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  background: var(--cr-haze-fill);
+}
+
+.stepper[data-orientation='horizontal'] .step:not(:last-child)::after {
+  inset-inline-start: calc(#{$cr-action-min-target} + #{$cr-spacing-xs});
+  inset-inline-end: calc(#{$cr-spacing-md} * -1);
+  inset-block-start: calc(#{$cr-action-min-target} / 2);
+  block-size: $cr-indicator-line-width;
+}
+
+.stepper[data-orientation='vertical'] .step:not(:last-child)::after {
+  inset-block-start: calc(#{$cr-action-min-target} + #{$cr-spacing-xs});
+  inset-block-end: calc(#{$cr-spacing-md} * -1);
+  inset-inline-start: calc(#{$cr-action-min-target} / 2);
+  inline-size: $cr-indicator-line-width;
+}
+
+.control {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: $cr-action-gap;
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cr-text);
+  text-align: start;
+}
+
+button.control { cursor: pointer; }
+
+/* Resin markers. */
+.marker {
+  @include material.resin;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  border-radius: 50%;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.text { display: flex; flex-direction: column; min-inline-size: 0; }
+.label { font-weight: 550; }
+.description { color: var(--cr-muted); }
+
+/* State is weight and material, and it is said in the accessible name. Colour
+   is never the only carrier: the complete marker also takes a tick and the
+   error marker an exclamation, which is the shape half of the pair. */
+.step[data-state='current'] .label { font-weight: 800; }
+.step[data-state='current'] .marker { border-color: var(--cr-primary); color: var(--cr-primary); }
+.step[data-state='complete'] .marker { color: var(--cr-primary); }
+.step[data-state='error'] .marker { border-color: var(--cr-danger-ink); color: var(--cr-danger-ink); }
+.step[data-state='upcoming'] .label { color: var(--cr-muted); }
+
+button.control[data-hovered] .marker { background: var(--cr-surface-alt); }
+
+button.control[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  border-radius: $cr-action-radius;
+  box-shadow: var(--cr-focus-ring);
+}
+
+@include material.opaque-fallback('.marker');
+
+@media (forced-colors: active) {
+  .marker { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .step[data-state='current'] .marker { outline: 2px solid Highlight; }
+  .step:not(:last-child)::after { background: CanvasText; }
+}

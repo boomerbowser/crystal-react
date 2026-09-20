@@ -9,12 +9,17 @@ import { Affix } from './Affix.js';
 let top = 0;
 const original = Element.prototype.getBoundingClientRect;
 
+/* The fixture's height, not a design value: jsdom reports zero for everything,
+   so the test has to supply a number for the component to measure, and the
+   assertions below check that this exact number is what gets reserved.
+   crystal-allow-literal — a test fixture's dimension, never rendered. */
+const FIXTURE_HEIGHT = 48;
+
 beforeEach(() => {
   top = 200;
   Element.prototype.getBoundingClientRect = function rect(this: Element): DOMRect {
     /* The content measures a height; the holder reports the scroll position. */
-    const height = (this as HTMLElement).dataset['pinned'] !== undefined
-      || this.className.includes('content') ? 48 : 48;
+    const height = FIXTURE_HEIGHT;
     return { top, bottom: top + height, height, width: 300, left: 0, right: 300, x: 0, y: top, toJSON: () => ({}) } as DOMRect;
   };
 });
@@ -67,7 +72,7 @@ describe('Affix', () => {
     /* Found from the content rather than from the container's first child,
        which is the provider's wrapper. */
     const holder = screen.getByText('Filters').parentElement?.parentElement as HTMLElement;
-    await vi.waitFor(() => expect(holder.style.blockSize).toBe('48px'));
+    await vi.waitFor(() => expect(holder.style.blockSize).toBe(`${FIXTURE_HEIGHT}px`));
     scroll(8);
     await vi.waitFor(() => {
       expect(screen.getByText('Filters').closest('[data-pinned]')).not.toBeNull();
@@ -75,6 +80,6 @@ describe('Affix', () => {
     /* The height is reserved in both states. Reserving it only while pinned is
        what makes the page jump — and then loop, because releasing restores the
        height, which scrolls the threshold back under the element. */
-    expect(holder.style.blockSize).toBe('48px');
+    expect(holder.style.blockSize).toBe(`${FIXTURE_HEIGHT}px`);
   });
 });

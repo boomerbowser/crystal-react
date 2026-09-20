@@ -1,0 +1,84 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+}
+
+.pages {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Resin shells with a Haze fill, which is the catalogue's material line for
+   this component and the same construction every Crystal control uses: Resin
+   diffuses what is behind it, so the number needs something stable to sit on. */
+.page,
+.arrow {
+  @include material.resin;
+  @include material.haze-fill;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: $cr-action-min-target;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-sm;
+  border-radius: $cr-action-radius;
+  color: var(--cr-text);
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+/* Where you are, in weight. Nothing is drawn beside the number. */
+.page[aria-current] { font-weight: 800; }
+
+/* The elided range. It has the width of a control so the row's rhythm holds,
+   and none of a control's behaviour. */
+.gap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: $cr-action-min-target;
+  min-block-size: $cr-action-min-target;
+  color: var(--cr-muted);
+}
+
+.page[data-hovered],
+.arrow[data-hovered] { background: var(--cr-surface-alt); }
+
+.page[data-focus-visible],
+.arrow[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* Disabled rather than removed: a control that disappears at the edge changes
+   the row's shape and moves every other target. */
+.arrow[data-disabled] {
+  opacity: $cr-action-disabled-opacity;
+  cursor: not-allowed;
+}
+
+@include material.opaque-fallback('.page');
+@include material.opaque-fallback('.arrow');
+
+@media (forced-colors: active) {
+  .page, .arrow {
+    background: Canvas;
+    border-color: CanvasText;
+    backdrop-filter: none;
+  }
+  .page::before, .arrow::before { content: none; }
+  /* A fill is erased by Chromium's text backplate, so the current page is a
+     ring. */
+  .page[aria-current] { outline: 2px solid Highlight; color: CanvasText; }
+  .arrow[data-disabled] { color: GrayText; }
+}
