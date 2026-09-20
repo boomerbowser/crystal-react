@@ -29,6 +29,7 @@ export * from './SkipLink/index.js';
 export * from './FocusTrap/index.js';
 export * from './ClickAway/index.js';
 export * from './NoSsr/index.js';
+export * from './FloatingWindow/index.js';
 export * from './Focusable/index.js';
 export * from './Pressable/index.js';
 export * from './Toolbar/index.js';
@@ -61,6 +62,7 @@ export * from './ProseList/index.js';
 export * from './TextBalance/index.js';
 
 /* Actions */
+export * from './HoverCard/index.js';
 export * from './IconButton/index.js';
 export * from './ButtonGroup/index.js';
 export * from './FloatingAction/index.js';
@@ -84,6 +86,7 @@ export * from './Breadcrumbs/index.js';
 export * from './Anchor/index.js';
 export * from './NavLink/index.js';
 export * from './NavRail/index.js';
+export * from './NavigationMenu/index.js';
 export * from './TreeView/index.js';
 export * from './TableOfContents/index.js';
 export * from './Drawer/index.js';
@@ -113,3 +116,4 @@ export * from './Popover/index.js';
 export * from './Portal/index.js';
 export * from './Tooltip/index.js';
 export * from './Menu/index.js';
+export * from './Menubar/index.js';

@@ -1,0 +1,50 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+.window {
+  @include material.resin;
+  position: fixed;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  border-radius: $cr-shape-content-radius;
+  overflow: hidden;
+}
+
+/* The handle reaches the minimum target: a title bar smaller than 44px is a
+   drag target most pointers miss and most fingers cannot hit at all. */
+.bar {
+  display: flex;
+  align-items: center;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-md;
+  border-block-end: 1px solid var(--cr-rim);
+  color: var(--cr-text);
+  font-weight: 650;
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+}
+
+.bar:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(#{$cr-focus-core-offset} * -1);
+  box-shadow: var(--cr-focus-ring);
+}
+
+.title { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.body {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  padding: $cr-spacing-md;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+@include material.opaque-fallback('.window');
+
+@media (forced-colors: active) {
+  .window { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+}

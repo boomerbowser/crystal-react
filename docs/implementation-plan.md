@@ -917,7 +917,7 @@ publishes the recipe; `src/theme/published-properties.test.tsx` reads every
 `var(--cr-…)` in every stylesheet here and fails on any that Crystal does not
 publish and no component sets itself.
 
-### I — Navigation and overlays (28) — in progress, 16 of 28
+### I — Navigation and overlays (28) — complete
 
 `anchor`, `nav-link`, `nav-rail`, `dock`, `breadcrumbs`, `tabs`, `pagination`, `stepper`, `burger`, `command-palette`, `tree-view`, `affix`, `bottom-navigation`, `navigation-menu`, `table-of-contents`, `menubar`, `submenu`, `dialog`, `drawer`, `menu`, `context-menu`, `popover`, `hover-card`, `tooltip`, `scrim`, `portal`, `floating-window`, `overlay-arrow`.
 
@@ -1022,45 +1022,63 @@ publish and no component sets itself.
   inline-end drawer sat **151px clear of the right-hand edge**, because a
   shrink-to-fit holder anchors its content at its start. Both are now gated.
 
-**Remaining — 12 of 28.** The manifest is the authority on this count, because
-it reads status from what the package exports rather than from a list somebody
-maintains. `portal` was ticked above and is not exported: every overlay portals
-to `body` and the behaviour is thoroughly built, but the catalogue lists the
-mechanism as its own entry and nothing satisfies it.
+**Complete.** All 28: navigation 17, overlays 11. The twelve that were
+outstanding are below, with what each had to get right.
 
-- [ ] **`portal`.** The mechanism, exposed. React Aria portals overlays itself
-  and `UNSTABLE_PortalProvider` can redirect that, which is why this was easy to
-  believe done. What is missing is the thing a consumer reaches for when they
-  need their own content outside its layout parent — and, more importantly, the
-  place where the material context that survives portalling is documented rather
-  than being an implementation detail of nine other components.
-- [ ] **`hover-card`.** A popover that opens on hover or focus after a delay.
-  The delay is the component: too short and it fires while the pointer crosses,
-  too long and it feels broken. It must open on focus as well as hover or it is
-  keyboard-inaccessible, and it must stay open while the pointer travels into
-  it — which is the same intent-counter problem the tooltip already solves.
-- [ ] **`floating-window`.** Draggable, resizable, constrained to the viewport.
-  The only component in this slice that is not a React Aria primitive, so its
-  keyboard story has to be designed rather than inherited: a window that can
-  only be moved with a pointer is a window half the users cannot move.
-- [ ] **`nav-rail`, `dock`, `bottom-navigation`.** Three shapes of the same
-  idea — a persistent destination list — at three densities. They share
-  selection semantics with `nav-link`, which means **label weight alone**, never
-  a rail and never a mark beside the label.
-- [ ] **`navigation-menu`, `menubar`.** Menu surfaces that live in the page
-  rather than over it. Both are Resin control planes, so an overlay opening from
-  them is the Resin-never-contains-Resin case the `Dialog` context already
-  handles.
-- [ ] **`pagination`, `stepper`.** Both are sequences with a current position,
-  and both announce it — a page control that does not say "page 3 of 12" to a
-  screen reader is a row of unlabelled numbers.
-- [ ] **`burger`.** A disclosure control with two states that must be announced,
-  not merely drawn. Its animation is the one place in this slice where motion
-  carries meaning rather than decoration.
-- [ ] **`affix`.** Sticky positioning with a known offset. The scroll listener
-  is the same passive, frame-coalesced one `table-of-contents` ended up with,
-  for the same reason: `IntersectionObserver` delivers nothing in the in-app
-  preview browser (D-5).
+- [x] **`portal`.** The mechanism, exposed. Every overlay here already portals,
+  which is why this was easy to believe done — but a product needing the same
+  escape for its own content had nothing to reach for. Two properties are
+  tested rather than assumed: React context survives the portal, which is what
+  makes `SurfaceProvider` and "Resin never contains Resin" enforceable; and the
+  container is resolved in an effect, because `document` does not exist while
+  rendering on the server and `createPortal` throws.
+- [x] **`hover-card`.** Opens on hover *or focus*, after a delay, and survives
+  the pointer's journey from trigger into card. That journey is the whole
+  component: a boolean closes at the moment the pointer leaves the trigger and
+  has not yet entered the card, so it counts instead — the same intent counter
+  the disclosure, popover, menu and toast closures already use.
+- [x] **`floating-window`.** The only component in this slice that is not a
+  React Aria primitive, so its keyboard model is designed rather than
+  inherited: the title bar is a real control, arrow keys move it, Shift widens
+  the step, a modifier resizes, and Home returns it. A window that can only be
+  moved with a pointer is a window half the users cannot move, and it looks
+  complete to anyone testing with a mouse. Bounds are clamped on the way in
+  rather than corrected afterwards — a window dropped past a corner cannot be
+  recovered by pointer *or* keyboard, because both need the handle.
+- [x] **`nav-rail`, `dock`, `bottom-navigation`.** Three shapes of one idea at
+  three densities, and the catalogue distinguishes them by material: a Frost
+  rail with a Resin active destination, one Resin dock plane whose labels share
+  a single Stone backing, and a Resin bar holding Haze label fills. One plane
+  for the dock, because a row of separate Resin pills is Resin beside Resin.
+  None of the three draws anything beside a label; the active destination
+  changes its own material and its label weight.
+- [x] **`navigation-menu`, `menubar`.** These exist separately because their
+  roles are not interchangeable and choosing by appearance is how the wrong one
+  gets used. A menubar is an application's command surface — `role="menubar"`,
+  one tab stop, arrow keys between triggers, wrapping, Home and End, and the
+  roving index remembers where you left. A navigation menu is *not* a menu: it
+  is a `nav` of disclosure buttons opening panels of ordinary links, because
+  announcing a link as a `menuitem` says that following it runs a command, and
+  the menu keyboard model forbids Tab between items a reader expects to Tab
+  through.
+- [x] **`pagination`, `stepper`.** Both announce their position rather than
+  drawing it. Every page control is named "Page 3"; the ellipsis is not a
+  control and no button's name contains it; the arrows are disabled at the
+  bounds rather than removed, because a control that disappears changes the
+  row's shape and moves every other target. Each step says its position, label
+  and state in words — "Step 2 of 4: Details, current" — and nothing in a
+  stepper is focusable unless navigation is real.
+- [x] **`burger`.** A disclosure that owes a name, `aria-expanded` and
+  `aria-controls`, and whose name does not change with its state: changing it
+  re-announces the control as a different element to a reader who tabs back.
+  The one place in this slice where motion carries meaning, so `icon-turn`
+  plays it and the cross is a CSS end state, correct at rest whether or not it
+  animated.
+- [x] **`affix`.** A passive scroll listener rather than
+  `IntersectionObserver`, which delivers nothing in the in-app preview browser
+  (D-5). The placeholder is the component: pinning takes the element out of the
+  flow and its height with it, and releasing restores the height, which scrolls
+  the threshold back under the element and pins it again.
 
 ---
 

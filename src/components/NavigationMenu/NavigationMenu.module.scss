@@ -1,0 +1,62 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* The bar inherits; the panel is Frost. Frost because a panel of links is a
+   reading surface that appears in the page, not a control plane floating over
+   it — that distinction is the whole material hierarchy in one component. */
+.menu { position: relative; }
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.section { position: relative; }
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  min-block-size: $cr-action-min-target;
+  padding: $cr-action-padding-block $cr-action-padding-inline;
+  border: 1px solid transparent;
+  border-radius: $cr-action-radius;
+  background: none;
+  color: var(--cr-text);
+  font: inherit;
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.trigger[aria-expanded='true'] { font-weight: 800; }
+
+.trigger:hover { background: var(--cr-surface-alt); }
+
+.trigger:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.panel {
+  @include material.frost;
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  z-index: 1;
+  min-inline-size: $cr-layout-sidebar-width;
+  margin-block-start: $cr-spacing-2xs;
+  padding: $cr-spacing-md;
+  border-radius: $cr-shape-content-radius;
+}
+
+@include material.opaque-fallback('.panel');
+
+@media (forced-colors: active) {
+  .panel { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .trigger[aria-expanded='true'] { outline: 2px solid Highlight; }
+}
