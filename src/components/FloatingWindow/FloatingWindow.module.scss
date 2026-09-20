@@ -16,6 +16,14 @@
 .bar {
   display: flex;
   align-items: center;
+  /* It is a `<button>`, so the user-agent's own button styling has to go before
+     Crystal's can show: the rim below is the bar's only border. */
+  appearance: none;
+  inline-size: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: start;
   min-block-size: $cr-action-min-target;
   padding-inline: $cr-spacing-md;
   border-block-end: 1px solid var(--cr-rim);

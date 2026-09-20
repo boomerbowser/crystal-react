@@ -53,6 +53,13 @@
 .rail[data-collapsed] .item {
   justify-content: center;
   padding-inline: $cr-action-padding-block;
+  /* Square, not just tall. Collapsed, the label is what was giving the row its
+     width, so the block floor alone left a 32px-wide target — found by
+     `verify-targets.mjs` the day the story that addresses this state was
+     written, and invisible before that because jsdom reports every box as zero.
+     Hiding the label must not shrink the hit area; that is the whole contract
+     of a collapsed rail. */
+  min-inline-size: $cr-action-min-target;
 }
 
 /* The active destination is Resin, lifted off the Frost rail, with a Haze fill

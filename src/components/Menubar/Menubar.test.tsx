@@ -81,7 +81,30 @@ describe('Menubar', () => {
   it('opens a trigger’s own menu', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Bar />);
-    await user.click(screen.getByRole('button', { name: 'Edit' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Edit' }));
     expect(await screen.findByRole('menu', { name: 'Edit' })).toBeTruthy();
+  });
+
+  /* `role="menubar"` must contain `menuitem`s, and React Aria's trigger is a
+     `button` with `aria-haspopup` — correct standing alone, invalid here. The
+     bar sets the role itself rather than asking callers to remember it, and
+     this is what stops that quietly coming undone. It was found by axe running
+     over a story, not by a test: every query by role passed, because both
+     elements did report the role they were asked for. */
+  it('presents its triggers as menuitems, which is what a menubar may contain', () => {
+    renderWithCrystal(<Bar />);
+    const bar = screen.getByRole('menubar', { name: 'Document' });
+    const items = screen.getAllByRole('menuitem');
+    expect(items.map((item) => item.textContent)).toEqual(['File', 'Edit', 'View']);
+    for (const item of items) expect(item.closest('[role="menubar"]')).toBe(bar);
+    /* And nothing generic in between: a plain element between the bar and its
+       items breaks the same rule the roles were set to satisfy. */
+    for (const item of items) {
+      let node = item.parentElement;
+      while (node && node !== bar) {
+        expect(node.getAttribute('role')).toBe('none');
+        node = node.parentElement;
+      }
+    }
   });
 });

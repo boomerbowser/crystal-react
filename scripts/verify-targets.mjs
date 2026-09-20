@@ -60,6 +60,31 @@ const CASES = [
      full target under a coarse pointer, which this run does not emulate; what is
      held here is WCAG 2.5.8's floor, which applies to everything. */
   { story: 'navigation-hierarchies--contents', selector: '#storybook-root nav a', floor: 24, why: 'WCAG 2.5.8: a target in a list clears 24px and does not overlap its neighbours' },
+
+  /* Slice I's destination shells. Added when R-18 was found: twelve components
+     landed with green unit tests and no stories, and a component with no story
+     is not measured by this gate rather than measured and passing — jsdom
+     reports every box as zero, which is the whole reason this file exists. */
+  { story: 'navigation-rails-and-bars--rail', selector: '#storybook-root nav a', why: 'catalogue: a destination is a 44px target' },
+  /* Collapsed is its own story because this gate addresses a story ID: a state
+     reachable only by toggling a control is a state no gate can reach. The
+     label is hidden and the target is not, which is the thing worth measuring. */
+  { story: 'navigation-rails-and-bars--collapsed', selector: '#storybook-root nav a', why: 'a collapsed rail hides the label, not the hit area' },
+  { story: 'navigation-rails-and-bars--dock-bar', selector: '#storybook-root nav a', why: 'catalogue: a dock destination is a 44px target' },
+  { story: 'navigation-rails-and-bars--bottom-bar', selector: '#storybook-root nav a', why: 'catalogue: 44px targets on touch, and a bottom bar is touch' },
+
+  { story: 'navigation-pagination-and-steps--pages', selector: '#storybook-root nav button', why: 'a page control is a target, and a row of them is where they start stealing each other' },
+  { story: 'navigation-pagination-and-steps--steps', selector: '#storybook-root ol button', why: 'a step that can be returned to is a control' },
+
+  { story: 'navigation-menu-bars--bar', selector: '#storybook-root [role="menubar"] button', why: 'a menu trigger is a target' },
+  /* Its own section triggers, which are disclosures over panels of links. */
+  { story: 'navigation-menu-bars--sections', selector: '#storybook-root nav button', why: 'a navigation-menu section trigger is a target' },
+  /* The burger alone, by the element it controls. A blanket `button` — and then
+     `button[aria-expanded]`, which a section trigger also carries — matched the
+     navigation this discloses, `hidden` and therefore 0x0: a probe reporting a
+     component that was behaving correctly. Narrowing the selector is the fix;
+     loosening the floor would not have been. */
+  { story: 'navigation-menu-bars--disclosure', selector: '#storybook-root button[aria-controls="burger-nav"]', why: 'catalogue: the burger is the whole navigation on a narrow layout' },
 ];
 
 /* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
@@ -145,7 +170,7 @@ await browser.close();
  * Fewer probes is not a better result. It is the same checks run against less of
  * the library. Raise this when cases are added; lowering it is a deliberate edit
  * somebody makes in the same commit. */
-const LEAST_PROBES = 29;
+const LEAST_PROBES = 63;
 if (probes < LEAST_PROBES) {
   failures.push(
     `${probes} controls were measured, and this suite measured ${LEAST_PROBES} `

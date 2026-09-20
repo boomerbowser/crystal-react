@@ -105,9 +105,20 @@ function MenubarRovingIndex({ index, children }: { index: number; children: Reac
       .filter((element) => element.closest('[role="menubar"]') && !element.closest('[role="menu"]'));
     items.forEach((item, position) => {
       item.setAttribute('data-menubar-item', '');
+      /* `role="menubar"` must contain `menuitem`s. React Aria's `MenuTrigger`
+         gives its trigger `role="button"` with `aria-haspopup`, which is right
+         standing alone and invalid inside a menu bar — axe fails it as
+         `aria-required-children`, and no test that queries the bar or its
+         triggers by role can see it, because both report the role asked for.
+         Set here rather than asked of the caller: a contract a consumer has to
+         remember is a contract that is wrong in somebody's product. */
+      if (item.getAttribute('role') !== 'menuitem') item.setAttribute('role', 'menuitem');
       item.tabIndex = position === index ? 0 : -1;
     });
   }, [index]);
 
-  return <div ref={apply} className={cx(styles['items'])}>{children}</div>;
+  /* `role="none"`, so the bar's children in the accessibility tree are the
+     triggers rather than this wrapper — a generic element between a `menubar`
+     and its `menuitem`s breaks the same required-children rule. */
+  return <div ref={apply} role="none" className={cx(styles['items'])}>{children}</div>;
 }

@@ -22,11 +22,11 @@ const ROOT = resolve(process.cwd(), 'src');
 /* What the library is at today. Raise these when you add; never lower them to
    make a build pass, which is the one way a ratchet stops being one. */
 const FLOOR = {
-  filesWithComponent: 26,
-  filesWithArgs: 18,
-  filesWithArgTypes: 10,
-  storiesWithPlay: 4,
-  actionArgs: 12,
+  filesWithComponent: 31,
+  filesWithArgs: 23,
+  filesWithArgTypes: 15,
+  storiesWithPlay: 5,
+  actionArgs: 15,
 };
 
 /* A story file that is not about a component, and says so. `Parity` renders one

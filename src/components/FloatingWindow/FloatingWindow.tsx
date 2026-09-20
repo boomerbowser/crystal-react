@@ -158,10 +158,14 @@ export function FloatingWindow({
         blockSize: `${rect.height}px`,
       }}
     >
-      {/* A real control: focusable, named, and operable without a pointer. */}
-      <header
-        role="button"
-        tabIndex={0}
+      {/* A real control: focusable, named, and operable without a pointer — and
+          a real `<button>` rather than a `<header role="button">`, which is what
+          it was. HTML-AAM does not let a sectioning element be overridden into a
+          widget, so axe fails that as `aria-allowed-role`; the element still
+          *reported* `button`, which is why every test querying it by role passed
+          and only running axe over a story found it. */}
+      <button
+        type="button"
         aria-label={`${label} — move or resize with the arrow keys`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -171,7 +175,7 @@ export function FloatingWindow({
         className={cx(styles['bar'])}
       >
         <span className={cx(styles['title'])}>{label}</span>
-      </header>
+      </button>
       <div className={cx(styles['body'])}>{children}</div>
     </section>
   );
