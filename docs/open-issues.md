@@ -3,22 +3,29 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**One entry, and only part of it.** R-17's first item is done — all 27 story
-files declare `meta.component` — and its third is answered as far as it can be,
-with the nine action args declared by hand because `react-docgen` cannot resolve
-the React Aria interfaces this library's callbacks are inherited from.
+**Two entries, and neither is ordinary work.**
 
-What is left is the second item, half done: 79 `render:` closures take no
-arguments, so moving a control changes nothing on screen, and only `Tabs` was
-converted. Finishing it is mechanical but not small, and the entry names the
-thing worth deciding first — whether to keep hand-declaring inherited props or
-wait for a docgen that can see them.
+**R-17** has one part left and it is not in this repository's hands. All three
+of its items are answered: every story file declares `meta.component`; the
+`render:` closures were counted properly and converted where converting is
+right, with a gate holding the line; and the inherited React Aria props are
+described once with the compiler enforcing which component has which. What
+remains is that `react-docgen` cannot resolve a component's *own* inherited
+props, and both routes to an extractor that can are closed until one runs on
+TypeScript 7.
+
+**R-19** is a simplification that 2.1.0 makes possible and that cannot start
+until it is published.
 
 Closed entries are in [`closed-issues.md`](closed-issues.md), with the reasoning
 intact.
 
-Crystal's own tracker — material decisions, the visual gate, the blocked
-deployment — is `crystal-design-system/proposals/open-issues.md`.
+Closed entries are in [`closed-issues.md`](closed-issues.md), with the reasoning
+intact.
+
+Crystal's own tracker is `crystal-design-system/proposals/open-issues.md`. As of
+21 September 2026 it holds only D-4 and D-5, which need hardware, and M-3, which
+needs a decision from Meridian.
 
 ---
 
@@ -236,9 +243,44 @@ only if none is there.
 
 ### Left open, deliberately
 
-**Item 2 is half done.** 79 `render:` closures ignore args, and only `Tabs` was
-converted to be arg-driven. So most components' Controls panels show the
-environment and their action args but not their own props as live controls.
+### Item 2, closed 21 September 2026 — and its premise was wrong
+
+This entry said 79 `render:` closures ignore their args and asked for all of
+them to be converted, calling the job "mechanical but not small". Counted
+properly the premise does not hold, and the correction is worth more than the
+number.
+
+Of the 69 no-arg closures left, **only 15 render exactly one instance of their
+own `meta.component`.** The other 54 are **compositions**: a tab strip beside a
+segmented control, the same destinations in three shells, seven gaps of the
+spacing scale at once, a card inside a Resin frame to show the recess. A
+composition is not a story you drive by args — the subject is the *relationship*,
+and giving one of several components live controls would make it disagree with
+its neighbours while a reviewer watched. Converting all 79 would have been 54
+changes for the worse.
+
+Ten of the fifteen are converted: `Card/InsideResin`, `Container/Shell`,
+`Container/ReadingColumn`, `Divider/Plain`, `Toolbar/Vertical`,
+`Watermark/Marked`, `Tabs/WithADisabledTab`, `TreeView/Files`,
+`TreeView/Keyboard` and `Watermark`'s text. The remaining five are compositions
+that happen to contain one instance, and each now carries a written reason.
+
+**The gate is the part that lasts.** `verify-stories.mjs` fails a story that
+renders exactly one of its own `meta.component`, hard-codes its props and takes
+no args — a Controls panel that moves nothing, which is the actual complaint
+this entry opened with. It is not a floor: a floor lets this get worse one story
+at a time. Exceptions go in `RENDER_ONLY_BY_DESIGN` with a sentence saying why
+the story is a composition rather than a subject, and an entry naming a story
+that no longer exists fails too, so an exemption cannot outlive its story and
+silence a real finding later. Both halves were proven by mutation.
+
+### What is left of R-17, which is not this
+
+The docgen constraint below is unchanged and is the reason the *other* half of a
+Controls panel — a component's own props, described — is still hand-written.
+`.storybook/react-aria.ts` closed the inherited half on 21 September. Nothing is
+outstanding on this entry that is not waiting on an extractor that runs on
+TypeScript 7.
 
 ### The docgen constraint, 21 September 2026 — both routes measured and closed
 
@@ -321,17 +363,47 @@ list is a flat array rather than something to be inferred from the table's
 shape. The table asserts at load that the array and the `Events` category agree
 in both directions.
 
-### What is still open
-
-Converting the remaining 79 `render:` closures. The objection that blocked it —
-that it would mean hand-writing an `argTypes` entry for most props in the
-library — is now half answered: every *inherited* prop is described once and
-attached by the compiler. What a story still writes by hand is its component's
-**own** props, which is a much smaller surface and the part docgen does read.
-
 `ariaArgTypes` is narrower than real docgen in one way worth stating plainly: it
 can refuse a claim, but it cannot *discover*. Nothing tells a story that `Button`
 has `onPress` until somebody writes it and `tsc` agrees. Discovery comes back
 the day either route above opens.
 
-The ratchet holds the floor in the meantime, so this cannot quietly get worse.
+---
+
+## R-19 · The control surface is implemented twice, and one of them can go
+
+**Found 21 September 2026. Blocked on `@crystal-ui/core@2.1.0` being published.**
+
+Crystal 2.1.0 ships the Resin interaction surface: the fill, the rim, the
+`::before` Haze layer, the `::after` optical sheen, `--cr-control-color` and
+`--cr-control-light`, and the reduced-transparency and forced-colours
+adaptations of all of it — plus `.cr-control`, `.cr-field-shell`,
+`.cr-indicator`, `.cr-resin-haze` and `.cr-tag`. Until then it shipped none of
+that. It lived only in the documentation site's own stylesheet, which is not in
+the package and never was, and `components.md` told a consumer to load it.
+
+**That is why this library has its own copy.** It was not a design decision. The
+specification described a surface no consumer could obtain, so the surface was
+rebuilt here in SCSS from the same prose — which is the exact duplication
+`libraries/CONTRACT.md` §1 exists to forbid, arrived at because the alternative
+was shipping components that did not look like Crystal.
+
+**What closing it means**, and it is a judgement rather than a sweep: for each
+place this library paints a Resin control, decide whether the library's own
+declaration is still needed or whether `crystal.css` now supplies it. Some will
+be needed — a React component styling a shell that wraps a native input is not
+the same problem as a stylesheet styling `button` — and the ones that are should
+say so. The ones that are not are a second copy of a specification, drifting
+from the day they were written.
+
+**Do not start before 2.1.0 is installed here.** The dependency is `^2.0.0`
+today, and deleting a rule this library needs because the library "now ships it"
+is how a component stops looking like Crystal in a version nobody is running
+yet.
+
+**Worth measuring first, the way D-11's third divergence finally was:** render a
+story with and without this library's own control CSS, against 2.1.0, and diff
+computed style. A static read of two stylesheets could not answer the same
+question about the preview, and it will not answer it here either — the library's
+`@layer crystal.component` and this library's CSS modules do not compete
+textually.

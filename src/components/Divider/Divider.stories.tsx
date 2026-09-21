@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { only } from '../../../.storybook/environment.js';
 import { Divider } from './Divider.js';
 import { Stack, Group } from '../Stack/Stack.js';
 
@@ -26,10 +27,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Plain: Story = {
-  render: () => (
+  render: (args) => (
     <Stack gap="lg">
       <p style={{ margin: 0 }}>Above the rule.</p>
-      <Divider />
+      <Divider {...only(args)} />
       <p style={{ margin: 0 }}>Below it.</p>
     </Stack>
   ),

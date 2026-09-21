@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { only } from '../../../.storybook/environment.js';
 import { Container } from './Container.js';
 import { Card } from '../Card/Card.js';
 import { Stack } from '../Stack/Stack.js';
@@ -34,16 +35,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Shell: Story = {
-  render: () => (
-    <Container>
+  render: (args) => (
+    <Container {...only(args)}>
       <Card aria-label="Shell">The page shell, with gutters that step down as the window narrows.</Card>
     </Container>
   ),
 };
 
 export const ReadingColumn: Story = {
-  render: () => (
-    <Container width="reading">
+  args: { width: 'reading' },
+  render: (args) => (
+    <Container {...only(args)}>
       <Card aria-label="Reading">
         A column of prose stops being comfortable to read past a certain measure, which is a
         different ceiling from how wide the page itself may become. Naming the intent rather than

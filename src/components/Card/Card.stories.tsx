@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { only } from '../../../.storybook/environment.js';
 import { Card } from './Card.js';
 import { crystalTokens } from '../../theme/tokens.generated.js';
 
@@ -46,12 +47,12 @@ export const AsRegion: Story = {
 /** Haze inside a Resin frame is a content well, not a floating card: it recesses
  *  into the frame rather than sitting on it. */
 export const InsideResin: Story = {
-  render: () => (
+  render: (args) => (
     <div
       className="cr-resin"
       style={{ padding: 'var(--cr-space)' }}
     >
-      <Card>This card sits inside a Resin frame, and is recessed into it.</Card>
+      <Card {...only(args)}>This card sits inside a Resin frame, and is recessed into it.</Card>
     </div>
   ),
 };

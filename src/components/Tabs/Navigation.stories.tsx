@@ -127,12 +127,8 @@ export const Vertical: Story = {
 };
 
 export const WithADisabledTab: Story = {
-  render: () => (
-    <Tabs
-      label="Documentation"
-      items={[docs[0]!, { ...docs[1]!, isDisabled: true }, docs[2]!]}
-    />
-  ),
+  args: { items: [docs[0]!, { ...docs[1]!, isDisabled: true }, docs[2]!] },
+  render: (args) => <Tabs {...only(args)} />,
 };
 
 /* The same strip, the other semantics. Side by side because the pair is the

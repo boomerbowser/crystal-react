@@ -23,7 +23,7 @@ const ROOT = resolve(process.cwd(), 'src');
    make a build pass, which is the one way a ratchet stops being one. */
 const FLOOR = {
   filesWithComponent: 31,
-  filesWithArgs: 23,
+  filesWithArgs: 25,
   filesWithArgTypes: 15,
   storiesWithPlay: 5,
   actionArgs: 17,
@@ -89,6 +89,50 @@ const counts = {
   storiesWithPlay: 0, actionArgs: 0,
 };
 
+/* A story whose whole subject is one instance of the component must take args.
+ *
+ * R-17's second item said 79 `render:` closures ignore their args and asked for
+ * all of them to be converted. Counted properly that premise was wrong, and the
+ * correction matters more than the number: **most of those closures are
+ * compositions**, and a composition is not a story you drive by args. A strip
+ * shown beside a segmented control, the same destinations in three shells, seven
+ * gaps of the spacing scale at once — the subject is the *relationship*, and
+ * giving one of several components live controls would make it disagree with its
+ * neighbours while a reviewer watched.
+ *
+ * What is left after that distinction is small and worth holding: a story that
+ * renders exactly one of its own `meta.component` and hard-codes its props. That
+ * one is a control panel that moves nothing, which is the complaint.
+ *
+ * Deliberate exceptions carry a reason rather than being counted, because a
+ * floor would let this quietly get worse one story at a time.
+ */
+const RENDER_ONLY_BY_DESIGN = new Map([
+  ['components/Menu/Overlays.stories.tsx::OnRightClick', 'the subject is the right-click gesture on a target, not the menu\'s own props'],
+  ['components/Stack/Stack.stories.tsx::TheScale', 'seven gaps at once; the subject is the scale, and the single Stack is the frame around it'],
+  ['components/VisuallyHidden/Utilities.stories.tsx::Hidden', 'its only prop is children, and the subject is the sentence it sits inside'],
+  ['components/NavRail/Shells.stories.tsx::TheSameDestinationsInThreeShells', 'a three-way comparison; driving one shell would make it disagree with the other two'],
+  ['components/Tabs/Navigation.stories.tsx::TheSameStripWithDifferentSemantics', 'the pair is the point — identical material, different semantics'],
+  ['components/TreeView/Hierarchies.stories.tsx::ExpandingIsMotion', 'the subject is what plays on expand, and a play function drives it'],
+]);
+
+function renderOnlySingleSubject(source, name) {
+  const meta = /^ {2}component: ([A-Za-z0-9_]+),/m.exec(source)?.[1];
+  if (!meta) return [];
+  const found = [];
+  for (const story of source.matchAll(/export const ([A-Za-z0-9_]+): Story = \{([\s\S]*?)\n\};/g)) {
+    const [, id, body] = story;
+    if (!/render: \(\) =>/.test(body)) continue;
+    /* Exactly one instance. Zero means the component is context rather than
+       subject; several means a composition of its own variants. */
+    if ([...body.matchAll(new RegExp(`<${meta}\\b`, 'g'))].length !== 1) continue;
+    const key = `${name}::${id}`;
+    if (RENDER_ONLY_BY_DESIGN.has(key)) continue;
+    found.push({ key, meta });
+  }
+  return found;
+}
+
 const files = storyFiles(ROOT).sort();
 for (const file of files) {
   const name = relative(ROOT, file);
@@ -106,6 +150,14 @@ for (const file of files) {
       `${name} declares no meta.component, so docgen has nothing to read and `
       + 'Storybook generates no controls at all. Add one, or add the file to '
       + 'NOT_A_COMPONENT with the reason.',
+    );
+  }
+
+  for (const { key, meta } of renderOnlySingleSubject(source, name)) {
+    failures.push(
+      `${key} renders one \`${meta}\` with hard-coded props and takes no args, so its `
+      + 'Controls panel moves nothing. Take `args` and spread `only(args)`, or add it to '
+      + 'RENDER_ONLY_BY_DESIGN with the reason it is a composition rather than a subject.',
     );
   }
 
@@ -202,6 +254,21 @@ for (const needed of ['args: environmentArgs', 'argTypes: environmentArgTypes'])
       `.storybook/preview.ts no longer declares \`${needed}\`, so the Crystal `
       + 'environment is not on every story’s Controls panel.',
     );
+  }
+}
+
+/* An exception for a story that no longer exists silences nothing today and
+   hides a real one tomorrow, when the name comes back on a different story. */
+{
+  const known = new Set();
+  for (const file of files) {
+    const source = readFileSync(file, 'utf8');
+    for (const story of source.matchAll(/export const ([A-Za-z0-9_]+): Story = \{/g)) {
+      known.add(`${relative(ROOT, file)}::${story[1]}`);
+    }
+  }
+  for (const key of RENDER_ONLY_BY_DESIGN.keys()) {
+    if (!known.has(key)) failures.push(`RENDER_ONLY_BY_DESIGN names ${key}, which is not a story any more`);
   }
 }
 

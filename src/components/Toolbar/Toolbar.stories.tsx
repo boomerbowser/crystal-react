@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { only } from '../../../.storybook/environment.js';
 import { useState } from 'react';
 import { Toolbar } from './Toolbar.js';
 import { Transition } from '../Transition/Transition.js';
@@ -50,8 +51,9 @@ export const Floating: Story = {
 };
 
 export const Vertical: Story = {
-  render: () => (
-    <Toolbar variant="resin" orientation="vertical" aria-label="Tools">
+  args: { variant: 'resin', orientation: 'vertical', 'aria-label': 'Tools' },
+  render: (args) => (
+    <Toolbar {...only(args)}>
       <Button variant="quiet">Select</Button>
       <Button variant="quiet">Draw</Button>
       <Button variant="quiet">Erase</Button>

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { only } from '../../../.storybook/environment.js';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { useMemo, useState } from 'react';
@@ -74,9 +75,10 @@ type Story = StoryObj<typeof meta>;
 
 
 export const Files: Story = {
-  render: () => (
+  args: { label: 'Files', selectionMode: 'single', defaultExpandedKeys: ['src'] },
+  render: (args) => (
     <div style={{ maxWidth: '320px' }} /* crystal-allow-literal: story bound, a sidebar width */>
-      <TreeView label="Files" items={files} selectionMode="single" defaultExpandedKeys={['src']} />
+      <TreeView {...only(args)} />
     </div>
   ),
 };
@@ -94,9 +96,10 @@ export const Files: Story = {
  * a story with a play function is not probed. */
 export const Keyboard: Story = {
   name: 'Keyboard navigation',
-  render: () => (
+  args: { label: 'Files', selectionMode: 'single', defaultExpandedKeys: ['src'] },
+  render: (args) => (
     <div style={{ maxWidth: '320px' }} /* crystal-allow-literal: story bound, a sidebar width */>
-      <TreeView label="Files" items={files} selectionMode="single" defaultExpandedKeys={['src']} />
+      <TreeView {...only(args)} />
     </div>
   ),
   /* A tree's keyboard model, watched rather than asserted about. The unit tests

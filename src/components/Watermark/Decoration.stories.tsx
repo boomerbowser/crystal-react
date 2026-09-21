@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { only } from '../../../.storybook/environment.js';
 import { Watermark } from './Watermark.js';
 import { QRCode } from '../QRCode/QRCode.js';
 import { Masonry } from '../Masonry/Masonry.js';
@@ -39,8 +40,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Marked: Story = {
-  render: () => (
-    <Watermark text="Confidential">
+  render: (args) => (
+    <Watermark {...only(args)}>
       <Card aria-label="Marked">
         <p>
           The mark repeats across this surface without intercepting a single pointer event, and
