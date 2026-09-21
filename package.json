@@ -86,7 +86,6 @@
     "playwright": "^1.63.0",
     "postcss": "^8.5.28",
     "react": "^19.3.0",
-    "react-docgen-typescript": "^2.4.0",
     "react-dom": "^19.3.0",
     "sass": "^1.104.1",
     "storybook": "^10.6.0",

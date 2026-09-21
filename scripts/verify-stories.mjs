@@ -26,7 +26,7 @@ const FLOOR = {
   filesWithArgs: 23,
   filesWithArgTypes: 15,
   storiesWithPlay: 5,
-  actionArgs: 15,
+  actionArgs: 17,
 };
 
 /* A story file that is not about a component, and says so. `Parity` renders one
@@ -42,6 +42,43 @@ function storyFiles(directory) {
     const path = join(directory, entry.name);
     if (entry.isDirectory()) found.push(...storyFiles(path));
     else if (entry.name.endsWith('.stories.tsx')) found.push(path);
+  }
+  return found;
+}
+
+/* The callbacks in `.storybook/react-aria.ts`, read from it rather than listed
+   here: a second copy of that list is the thing the table exists to avoid.
+   Read from its flat `ARIA_EVENTS` array, which exists in that shape because a
+   regex over the nested table got this wrong — see the note beside it there. */
+const ARIA_SOURCE = readFileSync(resolve(process.cwd(), '.storybook/react-aria.ts'), 'utf8');
+const ARIA_EVENTS = new Set(
+  [...(/export const ARIA_EVENTS = \[([\s\S]*?)\] as const/.exec(ARIA_SOURCE)?.[1] ?? '')
+    .matchAll(/'([A-Za-z][A-Za-z0-9]*)'/g)].map(([, name]) => name),
+);
+
+/* A floor on the *table*, not just on the stories. This counter reads another
+   file by regex, and the failure that matters is not it finding the wrong
+   number — it is finding none, reporting zero action args, and blaming the
+   stories. Verified by mutation: reshaping the array drops the count below
+   this and the run stops here rather than three lines later with a wrong
+   diagnosis. */
+const LEAST_ARIA_EVENTS = 9;
+if (ARIA_EVENTS.size < LEAST_ARIA_EVENTS) {
+  console.error(
+    `verify-stories: found ${ARIA_EVENTS.size} names in ARIA_EVENTS and expected at least `
+    + `${LEAST_ARIA_EVENTS}. The array was reshaped and this counter is reading it wrong — `
+    + 'the story counts below would be understated, not the stories worse.',
+  );
+  process.exit(1);
+}
+
+/** Event props a story switched on via `ariaArgTypes<…>({ onPress: true })`. */
+function ariaEventArgs(source) {
+  let found = 0;
+  for (const block of source.matchAll(/ariaArgTypes<[^>]+>\(\{([\s\S]*?)\}\)/g)) {
+    for (const [, name] of block[1].matchAll(/^\s*([A-Za-z][A-Za-z0-9]*): true,/gm)) {
+      if (ARIA_EVENTS.has(name)) found += 1;
+    }
   }
   return found;
 }
@@ -82,7 +119,15 @@ for (const file of files) {
      does not resolve what an interface extends. `fn()` in `args` does the same
      job and additionally gives a `play` function something to assert against. */
   counts.actionArgs += (source.match(/\baction: '/g) ?? []).length
-    + (source.match(/: fn\(\)/g) ?? []).length;
+    + (source.match(/: fn\(\)/g) ?? []).length
+    /* Third form, and the reason it had to be added: the shared React Aria
+       table declares `action` centrally, so a story that switches an event on
+       through `ariaArgTypes` has an Actions entry with neither literal in it.
+       Counting only the literals made this ratchet fall from 15 to 6 the moment
+       nine stories stopped repeating themselves — a gate reporting a
+       *reduction* in the very thing that had just increased, because it was
+       counting the spelling rather than the substance. */
+    + ariaEventArgs(source);
 }
 
 for (const [key, floor] of Object.entries(FLOOR)) {

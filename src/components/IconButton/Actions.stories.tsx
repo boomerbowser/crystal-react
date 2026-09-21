@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ariaArgTypes } from '../../../.storybook/react-aria.js';
+import type { IconButtonProps } from './IconButton.js';
 import { useState } from 'react';
 import { IconButton, CloseButton } from './IconButton.js';
 import { ButtonGroup, SplitButton } from '../ButtonGroup/ButtonGroup.js';
@@ -28,7 +30,15 @@ const meta = {
      docgen cannot see one of them. Each was checked against the compiler
      before being written down. */
   argTypes: {
-    onPress: { action: 'onPress', table: { category: 'Events' } },
+    ...ariaArgTypes<IconButtonProps>({
+      autoFocus: false,
+      isDisabled: true,
+      /* An icon-only button's accessible name, so never off. */
+      label: true,
+      onFocusChange: false,
+      onHoverChange: false,
+      onPress: true,
+    }),
   },
   parameters: {
     docs: {

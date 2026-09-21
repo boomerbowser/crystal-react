@@ -240,16 +240,98 @@ only if none is there.
 converted to be arg-driven. So most components' Controls panels show the
 environment and their action args but not their own props as live controls.
 
-Finishing it is mechanical but not small, and it interacts with something worth
-deciding first: this Storybook uses `react-docgen` rather than
-`react-docgen-typescript`, because the latter builds a TypeScript program
-through a plugin that does not support TypeScript 7 and fails the build
-outright. react-docgen reads a component's own interface and does not resolve
-what it extends — and nearly every callback in this library is inherited from a
-React Aria interface. That is why the nine action args are declared by hand and
-checked against the compiler rather than generated. Converting all 79 renders
-while docgen still cannot see inherited props would mean hand-writing an
-`argTypes` entry for most props in the library, which is a large amount of
-retyped specification and exactly the kind of thing that goes stale.
+### The docgen constraint, 21 September 2026 — both routes measured and closed
+
+This entry previously said the Storybook uses `react-docgen` rather than
+`react-docgen-typescript` "because the latter builds a TypeScript program
+through a plugin that does not support TypeScript 7". That was the right
+conclusion for the wrong reason, and both halves have now been tried rather
+than inferred.
+
+**What the current extractor actually returns.** Run the way
+`@storybook/react-vite` runs it — `parse()` with `makeFsImporter()`, which the
+preset does pass — `react-docgen` reports five props for `Button`: `children,
+variant, shape, className, style`. Not `onPress`, not `isDisabled`. It reads a
+component's own interface and does not resolve `extends Omit<AriaButtonProps,
+…>`, and an importer does not change that: the importer follows *module*
+imports, and this is a *type* relationship into a `.d.ts`.
+
+**Route 1 — `reactDocgen: 'react-docgen-typescript'`.** Not the plugin.
+`react-docgen-typescript@2.4.0` evaluates `ts.JsxEmit.React` at module scope,
+and TypeScript 7's main entry exports exactly two things, `version` and
+`versionMajorMinor` — the compiler API moved behind `typescript/unstable/*`.
+It throws `TypeError: Cannot read properties of undefined (reading 'React')` on
+`require`, before any option is read.
+
+**Route 2 — pin TypeScript 5.x for those packages only.** `typescript` is a
+*peer* of both `react-docgen-typescript` and the Vite plugin, auto-installed
+from the root. pnpm's `overrides` and `packageExtensions` both act on dependency
+resolution, not peer resolution: after each attempt `node_modules/.pnpm` still
+held one TypeScript, `7.0.2`, and both packages still resolved to it.
+
+**Writing our own extractor** is closed by route 1's cause: there is no stable
+compiler API in TypeScript 7 to write it against.
+
+### What was done instead
+
+`.storybook/react-aria.ts` — the inherited props described **once**, with the
+compiler supplying the link docgen cannot. The whole design rests on one
+observation: **`tsc` does resolve `extends` even though docgen does not**, so
+`Extract<keyof P, AriaProp>` is the component's real inherited surface.
+
+```ts
+argTypes: {
+  ...ariaArgTypes<ButtonProps>({ onPress: true, isDisabled: true, autoFocus: false,
+                                 onFocusChange: false, onHoverChange: false }),
+}
+```
+
+The parameter type is `Record<Extract<keyof P, AriaProp>, boolean>`, which does
+both halves of docgen's job:
+
+- **Refuses a prop the component does not have.** `onSelectionChange` on a
+  `Button` fails to compile — and the error *enumerates* the real surface, so
+  filling one of these in is a matter of reading what `tsc` printed.
+- **Refuses to let one be forgotten.** Every prop must be mentioned; `false` is
+  the deliberate omission. A control cannot quietly go absent, which is the
+  actual complaint in this entry.
+
+Both were verified by mutation rather than asserted. `IconButton.label` was
+found this way — the compiler demanded it, and for an icon-only button that
+prop *is* the accessible name.
+
+The nine hand-declared action args are gone into it. That removed a repeated
+`{ action: 'onPress', table: { category: 'Events' } }` from nine files and
+raised the real count from 15 to 17, because the migration also switched on
+callbacks the stories had never declared.
+
+**One gate had to be repaired to see that**, and it is worth recording because
+it is the pattern this repository keeps meeting. `verify-stories.mjs` counted
+action args by matching `action: '` and `: fn()` **in story files**. Moving the
+declarations into a shared table made that count fall from 15 to 6 — a ratchet
+reporting a *reduction* in the very thing that had just increased, because it
+counted the spelling rather than the substance. It now also counts event props
+switched on through `ariaArgTypes`, reads the callback list from
+`ARIA_EVENTS` in the table rather than keeping a second copy, and refuses to run
+at all if it reads fewer than nine names out of it — the failure that mattered
+was never a wrong count, it was finding none and blaming the stories. The first
+version of that reader was itself wrong, matching seven of nine because a lazy
+regex over one single-line entry swallowed the two after it, which is why the
+list is a flat array rather than something to be inferred from the table's
+shape. The table asserts at load that the array and the `Events` category agree
+in both directions.
+
+### What is still open
+
+Converting the remaining 79 `render:` closures. The objection that blocked it —
+that it would mean hand-writing an `argTypes` entry for most props in the
+library — is now half answered: every *inherited* prop is described once and
+attached by the compiler. What a story still writes by hand is its component's
+**own** props, which is a much smaller surface and the part docgen does read.
+
+`ariaArgTypes` is narrower than real docgen in one way worth stating plainly: it
+can refuse a claim, but it cannot *discover*. Nothing tells a story that `Button`
+has `onPress` until somebody writes it and `tsc` agrees. Discovery comes back
+the day either route above opens.
 
 The ratchet holds the floor in the meantime, so this cannot quietly get worse.

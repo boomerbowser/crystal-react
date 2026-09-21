@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ariaArgTypes } from '../../../.storybook/react-aria.js';
+import type { ButtonProps } from './Button.js';
 import { Button } from './Button.js';
 
 /* Every story is reachable on every theme axis through the toolbar: six
@@ -15,7 +17,13 @@ const meta = {
      docgen cannot see one of them. Each was checked against the compiler
      before being written down. */
   argTypes: {
-    onPress: { action: 'onPress', table: { category: 'Events' } },
+    ...ariaArgTypes<ButtonProps>({
+      autoFocus: false,
+      isDisabled: true,
+      onFocusChange: false,
+      onHoverChange: false,
+      onPress: true,
+    }),
   },
   parameters: {
     docs: {

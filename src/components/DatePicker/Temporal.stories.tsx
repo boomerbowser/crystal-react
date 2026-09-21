@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ariaArgTypes } from '../../../.storybook/react-aria.js';
+import type { DatePickerProps } from './DatePicker.js';
 import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date';
 import { DateInput, TimeInput, DatePicker, DateRangePicker, DateTimePicker, DigitalClock } from './DatePicker.js';
 import { ColorInput, ColorPicker, ColorSwatchPicker, ColorWheel } from '../ColorPicker/ColorPicker.js';
@@ -28,7 +30,15 @@ const meta = {
      docgen cannot see one of them. Each was checked against the compiler
      before being written down. */
   argTypes: {
-    onChange: { action: 'onChange', table: { category: 'Events' } },
+    ...ariaArgTypes<DatePickerProps>({
+      description: true,
+      errorMessage: true,
+      isDisabled: true,
+      isInvalid: true,
+      isRequired: true,
+      label: true,
+      onChange: true,
+    }),
   },
   parameters: {
     docs: {

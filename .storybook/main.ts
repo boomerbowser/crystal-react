@@ -15,12 +15,35 @@ const config: StorybookConfig = {
     /* Props tables come from the source, never hand-written — the same argument
        CONTRACT §1 makes about values.
      *
-     * `react-docgen` rather than `react-docgen-typescript`: the latter builds a
-     * TypeScript program through a plugin that does not yet support TypeScript 7,
-     * and fails the build outright. react-docgen reads the same interfaces and
-     * their doc comments without a program. The documentation site generates its
-     * own props tables (§3.10) and can use the richer extractor once the plugin
-     * catches up. */
+     * `react-docgen` rather than `react-docgen-typescript`, and the earlier
+     * version of this comment had the reason wrong. It blamed the Vite plugin
+     * for not supporting TypeScript 7. The plugin is not what fails:
+     * `react-docgen-typescript@2.4.0` evaluates `ts.JsxEmit.React` at module
+     * scope, and TypeScript 7's main entry exports only `version` and
+     * `versionMajorMinor` — the compiler API moved behind `typescript/unstable/*`.
+     * So it throws `Cannot read properties of undefined (reading 'React')` on
+     * `require`, before any option of it is read, and nothing configured here
+     * could reach it.
+     *
+     * Pinning TypeScript 5.x for that package alone was tried and does not work
+     * either: `typescript` is a *peer* of both it and the plugin, auto-installed
+     * from the root, and pnpm's `overrides` and `packageExtensions` both act on
+     * dependency resolution rather than peer resolution. After each attempt the
+     * store still held exactly one TypeScript, 7.0.2.
+     *
+     * **What that costs, measured rather than assumed.** react-docgen reads a
+     * component's own interface and does not resolve what it extends. Run the
+     * way `@storybook/react-vite` runs it — with `makeFsImporter()` — it returns
+     * five props for `Button`: `children, variant, shape, className, style`. No
+     * `onPress`, no `isDisabled`. Nearly every callback and state flag in this
+     * library is inherited from a React Aria interface, so nearly every
+     * component's Controls panel is missing most of its surface.
+     *
+     * `.storybook/react-aria.ts` is the compensation: the inherited props
+     * described once, with the *compiler* enforcing which component has which,
+     * since the compiler does resolve `extends`. See the note at the top of
+     * that file. The documentation site generates its own props tables (§3.10)
+     * and can use a real extractor whenever one runs on TypeScript 7. */
     reactDocgen: 'react-docgen',
   },
 

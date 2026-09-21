@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ariaArgTypes } from '../../../.storybook/react-aria.js';
+import type { TextInputProps } from './TextInput.js';
 import { TextInput } from './TextInput.js';
 
 const meta = {
@@ -12,7 +14,19 @@ const meta = {
      docgen cannot see one of them. Each was checked against the compiler
      before being written down. */
   argTypes: {
-    onChange: { action: 'onChange', table: { category: 'Events' } },
+    ...ariaArgTypes<TextInputProps>({
+      autoFocus: false,
+      description: true,
+      errorMessage: true,
+      isDisabled: true,
+      isInvalid: true,
+      isReadOnly: true,
+      isRequired: true,
+      label: true,
+      onChange: true,
+      onFocusChange: false,
+      placeholder: true,
+    }),
   },
   parameters: {
     docs: {

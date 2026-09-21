@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ariaArgTypes } from '../../../.storybook/react-aria.js';
+import type { CheckboxProps } from './Checkbox.js';
 import { useState } from 'react';
 import { Checkbox, CheckboxGroup, Radio, RadioGroup } from './Checkbox.js';
 import { Switch } from '../Switch/Switch.js';
@@ -20,7 +22,18 @@ const meta = {
      docgen cannot see one of them. Each was checked against the compiler
      before being written down. */
   argTypes: {
-    onChange: { action: 'onChange', table: { category: 'Events' } },
+    ...ariaArgTypes<CheckboxProps>({
+      autoFocus: false,
+      isDisabled: true,
+      isIndeterminate: true,
+      isInvalid: true,
+      isReadOnly: true,
+      isRequired: true,
+      onChange: true,
+      onFocusChange: false,
+      onHoverChange: false,
+      onPress: true,
+    }),
   },
   parameters: {
     docs: {

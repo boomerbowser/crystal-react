@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ariaArgTypes } from '../../../.storybook/react-aria.js';
+import type { AnchorProps } from './Anchor.js';
 import { Anchor } from './Anchor.js';
 import { NavLink } from '../NavLink/NavLink.js';
 import { Stack } from '../Stack/Stack.js';
@@ -19,7 +21,13 @@ const meta = {
      docgen cannot see one of them. Each was checked against the compiler
      before being written down. */
   argTypes: {
-    onPress: { action: 'onPress', table: { category: 'Events' } },
+    ...ariaArgTypes<AnchorProps>({
+      autoFocus: false,
+      isDisabled: true,
+      onFocusChange: false,
+      onHoverChange: false,
+      onPress: true,
+    }),
   },
   args: { href: '#destination', children: 'a link in running text' },
   parameters: {

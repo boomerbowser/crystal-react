@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ariaArgTypes } from '../../../.storybook/react-aria.js';
+import type { DrawerProps } from './Drawer.js';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { useState } from 'react';
 import { Drawer, type DrawerPlacement } from './Drawer.js';
@@ -22,7 +24,10 @@ const meta = {
      docgen cannot see one of them. Each was checked against the compiler
      before being written down. */
   argTypes: {
-    onOpenChange: { action: 'onOpenChange', table: { category: 'Events' } },
+    ...ariaArgTypes<DrawerProps>({
+      isOpen: true,
+      onOpenChange: true,
+    }),
   },
   args: { title: 'Filters', placement: 'end' as const, isModal: true, onOpenChange: fn() },
   parameters: {

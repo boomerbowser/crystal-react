@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { ariaArgTypes } from '../../../.storybook/react-aria.js';
+import type { DialogProps } from './Dialog.js';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Dialog } from './Dialog.js';
 import { Button } from '../Button/Button.js';
@@ -14,7 +16,10 @@ const meta = {
      docgen cannot see one of them. Each was checked against the compiler
      before being written down. */
   argTypes: {
-    onOpenChange: { action: 'onOpenChange', table: { category: 'Events' } },
+    ...ariaArgTypes<DialogProps>({
+      isOpen: true,
+      onOpenChange: true,
+    }),
   },
   parameters: {
     docs: {

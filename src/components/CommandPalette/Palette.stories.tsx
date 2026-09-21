@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ariaArgTypes } from '../../../.storybook/react-aria.js';
+import type { CommandPaletteProps } from './CommandPalette.js';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { useState } from 'react';
 import { CommandPalette, type Command } from './CommandPalette.js';
@@ -27,7 +29,13 @@ const meta = {
      and with what. For a library whose whole subject is behaviour, the
      panel that shows behaviour happening was blank. */
   argTypes: {
-    onAction: { action: 'onAction', table: { category: 'Events' } },
+    ...ariaArgTypes<CommandPaletteProps>({
+      isOpen: true,
+      label: true,
+      onAction: true,
+      onOpenChange: true,
+      placeholder: true,
+    }),
   },
   args: { commands, onAction: fn(), label: 'Run a command' },
   parameters: {
