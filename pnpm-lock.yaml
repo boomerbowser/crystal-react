@@ -111,6 +111,9 @@ importers:
       react:
         specifier: ^19.3.0
         version: 19.3.0
+      react-docgen-typescript:
+        specifier: ^2.4.0
+        version: 2.4.0(typescript@7.0.2)
       react-dom:
         specifier: ^19.3.0
         version: 19.3.0(react@19.3.0)

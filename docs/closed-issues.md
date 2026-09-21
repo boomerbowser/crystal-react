@@ -877,3 +877,25 @@ One correction to the entry as written: it said `verify-theme.mjs` covers the
 twelve, and that is true only of its static half. It finds token *names* by
 walking `src/**/*.scss`, so their token usage was gated all along; the values it
 reads at runtime come from a rendered story, so that half was in the gap too.
+
+**Closed 21 September 2026.** Every line of the "what changes here on the day
+`@crystal-ui/core@2.0.0` exists" list has happened, and each was checked rather
+than assumed:
+
+| Promised | Where it landed |
+|---|---|
+| `file:…` → `"^2.0.0"` | `72acb61`, *Consume Crystal as a published package* |
+| Remove the `viteFinal` hook in `.storybook/main.ts` | gone; the comment left in its place explains R-14's cure rather than its workaround |
+| Document `pnpm link` for cross-repository work | implementation plan §2.5, with `--force` on Storybook for the session and "do not commit the linked range" |
+| Drop the sibling checkout from `.github/workflows/verify.yml` | gone; the only surviving mention is the comment recording what its failure looked like |
+
+One correction worth keeping, because the stale path would have sent somebody to
+a directory that no longer exists: this entry said to document
+`pnpm link ../crystal-design-system/design-system`. The library is at
+`../crystal-design-system/core` — `design-system/` was the nesting the
+restructure removed — and the plan documents the real path.
+
+The push-ordering trap this entry named is gone with the sibling checkout rather
+than fixed: there is no order to get wrong, because CI no longer reads the
+design system from disk at all. It installs the same published package a
+contributor does.
