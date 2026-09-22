@@ -32,7 +32,14 @@ const meta = {
           'An action control. Pills in every variant — `shape="card"` is Crystal\'s one '
           + 'documented exception and keeps the content radius. Press and hover motion bind to '
           + 'press *state* rather than to click, so a keyboard user gets the same feedback a '
-          + 'pointer user does.',
+          + 'pointer user does.\n\n'
+          + 'One variant is tinted and the rest are not, which is what makes the tinted one read '
+          + 'as primary: `primary` paints its **Haze reading fill** in `--cr-primary` with '
+          + '`--cr-on-primary` as the ink, inside the same glass rim every other control has. '
+          + 'The colour is in the fill rather than the perimeter — a fill painted on the button '
+          + 'itself sits *behind* the inset Haze layer and shows only as a ring. `secondary`, '
+          + '`quiet` and `resin` are all the base Resin surface; the names differ because what a '
+          + 'caller means differs.',
       },
     },
   },
@@ -46,14 +53,23 @@ export const Resin: Story = {
   args: { variant: 'resin' },
 };
 
+/** The Haze reading fill in `--cr-primary`, with `--cr-on-primary` as the ink:
+ *  the palette's own tested pair, 4.74 to 10.31 against the rendered composite
+ *  across all six palettes and both modes. */
 export const Primary: Story = {
   args: { variant: 'primary' },
 };
 
+/** The base Resin surface. Crystal's own stylesheet carries no `.secondary` fill:
+ *  the modifier fills were removed from `crystal.css` once they computed
+ *  identically to it. */
 export const Secondary: Story = {
   args: { variant: 'secondary' },
 };
 
+/** The base Resin surface too, at Meridian's direction. It used to have no
+ *  surface at all — transparent background, no rim, no shadow — which left the
+ *  Haze pad painting a bare blob with no perimeter around it. */
 export const Quiet: Story = {
   args: { variant: 'quiet' },
 };

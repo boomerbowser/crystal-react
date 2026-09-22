@@ -47,7 +47,9 @@ const VARIANT_CLASS: Record<ButtonVariant, string | undefined> = {
      compute identically to it. The name stays because it is what a caller
      means. */
   secondary: undefined,
-  quiet: styles['quiet'],
+  /* The base surface too, at Meridian's direction: quiet used to have no surface
+     at all, which left the Haze pad painting a bare blob with no perimeter. */
+  quiet: undefined,
   /* Resin is the base surface the stylesheet already applies, so this variant
      adds nothing — it exists so `variant="resin"` is sayable rather than implicit. */
   resin: undefined,

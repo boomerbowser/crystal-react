@@ -84,50 +84,57 @@
  * mean anything.
  *
  * So secondary is the base surface, the same as `resin`, and the variant survives
- * because "secondary" is what a caller means. Quiet is the one that still differs:
- * it has no surface at all.
+ * because "secondary" is what a caller means.
+ *
+ * Quiet joins it. Meridian, 22 September 2026: "can you make the Quiet buttons
+ * adopt the styling of the empty Secondary button?" It had been the one variant
+ * with no surface — transparent background, no rim, no shadow — which left the
+ * Haze pad painting a bare white blob with no perimeter around it. Crystal's own
+ * stylesheet has no `.quiet` rule either, so this is the same adoption: three
+ * names for the base Resin control, and one of them tinted.
  */
 
-/* The primary action's *reading fill* carries the palette's colour — not its
-   perimeter.
+/* The primary action's *reading fill* is the primary colour.
  *
- * Meridian, 22 September 2026: "the Haze content fill should adopt the primary
- * color, not the rim. The text color will need to be adjusted depending on the
- * primary color."
+ * Meridian, 22 September 2026, twice. First: "the Haze content fill should adopt
+ * the primary color, not the rim. The text color will need to be adjusted
+ * depending on the primary color." Then, against the first attempt: "the Primary
+ * button now has no Haze content fill … return Primary's Haze content fill, and
+ * make the color of that content fill the primary color."
  *
- * This variant used to set `background: var(--cr-primary)` on the button itself,
- * which sits *behind* the Haze layer — an inset fill at `--cr-haze-inset`. So the
- * primary colour never reached the label's ground at all: it survived as the 8px
- * ring of element background left exposed around a white fill, with the rim
- * suppressed to make room for it. The colour was in the perimeter by accident.
+ * What was wrong before either of those: the variant set `background:
+ * var(--cr-primary)` on the button, which sits *behind* the Haze layer — an inset
+ * fill at `--cr-haze-inset`. The primary colour never reached the label's ground
+ * at all: it showed as the 8px ring of exposed background around a white fill,
+ * with white `onPrimary` text sitting on that white fill.
  *
- * Both values are Crystal's own and already contrast-tested. `--cr-haze-own-fill`
- * is the palette's content-own surface at Haze's 80% — the same fill an authored
- * message bubble takes — and `--cr-content-own-text` is the ink tested against it,
- * which is per-palette: Harbor takes its ordinary text ink where the other five
- * take `onPrimarySoft`. That is the "adjusted depending on the primary color"
- * part, and it is also why the fill is the soft tone rather than the solid one.
- * A Haze fill transmits what is behind it, so the full primary at 80% composited
- * over Crystal's own canvas and surface lands between 3.37 and 4.55 against
- * `onPrimary` in every light palette — under the 4.5 floor in all six. The pair
- * below is 8.40 to 12.34 across every palette and both modes.
+ * What was wrong with the first attempt: it used `--cr-haze-own-fill`, the
+ * palette's content-own surface at Haze's 80%. That is a *soft* tone, and over
+ * Crystal's own light atmosphere an 80% soft tone is within a few percent of the
+ * Resin shell around it. The fill was there and nobody could see it.
  *
- * The rim comes back, because it is the Resin rim every other control has rather
- * than a variant signal.
+ * So the fill is `--cr-primary` itself, with `--cr-on-primary` as the ink: the
+ * palette's own tested pair, 4.74 to 10.31 against the rendered composite across
+ * all six palettes and both modes, tightest on Ion in light.
+ *
+ * The fill is opaque where Haze's neutral fill is 80%, and that is deliberate. An
+ * 80% fill transmits a fifth of what is behind it; white over a light page is
+ * still white, so the neutral pad loses nothing, but a mid-tone primary at 80%
+ * over the Resin shell composites to a washed-out lilac sitting at the exact
+ * luminance where neither a white nor a near-black label clears 4.5 — 3.37 to
+ * 4.55 with `onPrimary`, 2.95 to 5.06 with `text`, failing in every light
+ * palette. A reading ground whose job is to make the label independent of the
+ * backdrop cannot be the one thing that depends on it.
+ *
+ * The rim stays the Resin rim: the colour is in the fill, the perimeter is the
+ * same glass every other control has.
  */
 .primary {
-  color: var(--cr-content-own-text);
+  color: var(--cr-on-primary);
 }
 
 .primary::before {
-  background: var(--cr-haze-own-fill);
-}
-
-.quiet {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
+  background: var(--cr-primary);
 }
 
 /* A card-shaped button keeps the content radius. The documented exception to the

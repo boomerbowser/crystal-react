@@ -267,7 +267,9 @@ for (const [id, selector, what] of DISABLED) {
  *
  * So the assertion is where the paint lands, not what colour it is: the primary
  * button's *reading fill* differs from a plain Resin button's, and its ink differs
- * too. Both are false the moment the fill goes back to the element.
+ * too. Both are false the moment the fill goes back to the element — and the
+ * first is also false when the fill is painted in a tone so close to the shell
+ * around it that nobody can see it, which is the second thing that happened.
  */
 {
   await open('actions-button--all-variants', '#storybook-root button');
