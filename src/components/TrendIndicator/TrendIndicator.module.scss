@@ -1,0 +1,33 @@
+@use '../../styles/tokens' as *;
+
+/* TrendIndicator — "Material: inherits. Geometry: sits inline with the figure it
+ * qualifies."
+ *
+ * So it paints no surface and takes no box of its own: it is a run of text with a
+ * glyph in front, sitting on the baseline of whatever it qualifies. The only
+ * thing it owns is which ink the pair takes, and that ink is always the second
+ * signal — the words beside it are the first.
+ */
+
+.trend {
+  display: inline-flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  font-weight: 650;
+}
+
+.trend[data-direction='up'] { color: var(--cr-success-ink); }
+.trend[data-direction='down'] { color: var(--cr-danger-ink); }
+/* "No change" is not a status, so it takes the supporting ink rather than a third
+   status colour. */
+.trend[data-direction='flat'] { color: var(--cr-muted); }
+
+.arrow { font-weight: 800; }
+
+/* Forced colours replaces the palette, and the words are what survive — which is
+   the point of the rule that put them there. */
+@media (forced-colors: active) {
+  .trend { color: CanvasText; }
+}

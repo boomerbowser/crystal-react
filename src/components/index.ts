@@ -136,3 +136,8 @@ export * from './Timeline/index.js';
 export * from './Collapse/index.js';
 export * from './Spoiler/index.js';
 export * from './Accordion/index.js';
+export * from './TrendIndicator/index.js';
+export * from './DeltaBadge/index.js';
+export * from './AuthoredBubble/index.js';
+export * from './OverlayBadge/index.js';
+export * from './RollingNumber/index.js';

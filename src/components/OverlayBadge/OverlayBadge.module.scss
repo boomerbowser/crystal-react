@@ -1,0 +1,62 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* OverlayBadge — "Haze fill with a crisp glyph".
+ *
+ * Crisp is the operative word and it is why the fill lives on a pseudo-element.
+ * Haze feathers its own paint; feathering an element that contains a glyph blurs
+ * the glyph, and a blurred tick over a photograph is indistinguishable from a
+ * rendering fault. Text, icons, hit areas and focus rings stay crisp throughout
+ * Crystal, and this is one of the places it would be easiest to forget.
+ *
+ * `overflow: visible` is stated rather than assumed. The badge overhangs the
+ * corner by half its own size, and a wrapper that clips is the failure the
+ * catalogue names — "never clipped by its host".
+ */
+
+.host {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  /* Said out loud: the badge overhangs, and the host is the thing most likely to
+     have been given a clip by whoever is wrapping it. */
+  overflow: visible;
+}
+
+.badge {
+  @include material.haze-fill(0);
+
+  position: absolute;
+  z-index: 1;
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-inline-size: $cr-indicator-size;
+  min-block-size: $cr-indicator-size;
+  padding: 0 $cr-spacing-2xs;
+  border-radius: $cr-action-radius;
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  line-height: 1;
+  font-weight: 800;
+  /* The ring of page surface that keeps the mark legible where it overlaps its
+     host, which is the same job Avatar's ring does for the same reason. */
+  outline: 2px solid var(--cr-surface);
+  pointer-events: none;
+}
+
+.badge > :first-child { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.topEnd { inset-block-start: 0; inset-inline-end: 0; translate: 35% -35%; }
+.topStart { inset-block-start: 0; inset-inline-start: 0; translate: -35% -35%; }
+.bottomEnd { inset-block-end: 0; inset-inline-end: 0; translate: 35% 35%; }
+.bottomStart { inset-block-end: 0; inset-inline-start: 0; translate: -35% 35%; }
+
+@media (forced-colors: active) {
+  .badge {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+    outline-color: Canvas;
+  }
+}

@@ -14,11 +14,12 @@
  * anybody puts statistics in a column.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { TrendIndicator, type TrendDirection } from '../TrendIndicator/TrendIndicator.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Statistic.module.scss';
 
-/** Which way the trend went. `flat` is a real answer, not a missing one. */
-export type StatisticDirection = 'up' | 'down' | 'flat';
+/** Which way the trend went. Crystal's own three, from `TrendIndicator`. */
+export type StatisticDirection = TrendDirection;
 
 export interface StatisticTrend {
   direction: StatisticDirection;
@@ -38,8 +39,6 @@ export interface StatisticProps extends Omit<HTMLAttributes<HTMLElement>, 'child
   loading?: boolean;
 }
 
-const ARROW: Record<StatisticDirection, string> = { up: '↑', down: '↓', flat: '→' };
-
 export const Statistic = forwardRef<HTMLElement, StatisticProps>(function Statistic(
   { label, value, unit, trend, loading = false, className, ...props },
   ref,
@@ -53,11 +52,12 @@ export const Statistic = forwardRef<HTMLElement, StatisticProps>(function Statis
         {loading ? <span aria-hidden="true" className={styles['placeholder']} /> : value}
         {unit === undefined ? null : <span className={styles['unit']}>{unit}</span>}
       </span>
+      {/* The trend is `TrendIndicator`, not a second copy of it. The rule it
+          carries — direction in a word and a symbol, never in colour alone — is
+          one rule, and two implementations of one rule is how one of them stops
+          following it. */}
       {trend === undefined ? null : (
-        <span className={styles['trend']} data-direction={trend.direction}>
-          <span aria-hidden="true" className={styles['arrow']}>{ARROW[trend.direction]}</span>
-          {trend.label}
-        </span>
+        <TrendIndicator direction={trend.direction}>{trend.label}</TrendIndicator>
       )}
     </div>
   );

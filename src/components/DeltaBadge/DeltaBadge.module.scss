@@ -1,0 +1,39 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* DeltaBadge — a Haze fill in a pill.
+ *
+ * No Resin shell: a delta is a piece of typography inside a table cell or beside
+ * a figure, not a control, and a floating glass pill in a column of numbers reads
+ * as something you could press. The Haze fill alone gives it a ground without
+ * giving it a surface.
+ *
+ * The fill is inset by `0`. `--cr-haze-inset` is 8px and exists to stop the fill
+ * short of an exposed glass perimeter; there is no perimeter here to protect.
+ */
+
+.delta {
+  @include material.haze-fill(0);
+
+  display: inline-flex;
+  align-items: baseline;
+  box-sizing: border-box;
+  padding: $cr-spacing-2xs $cr-spacing-xs;
+  border-radius: $cr-action-radius;
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  font-weight: 700;
+  /* A column of deltas has to line up down its own length. */
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* The sign carries the meaning; the ink is the second signal. */
+.delta[data-state='positive'] { color: var(--cr-success-ink); }
+.delta[data-state='negative'] { color: var(--cr-danger-ink); }
+.delta[data-state='neutral'] { color: var(--cr-muted); }
+
+@media (forced-colors: active) {
+  .delta { color: CanvasText; border: 1px solid CanvasText; }
+}

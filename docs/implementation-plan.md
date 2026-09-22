@@ -1098,7 +1098,7 @@ outstanding are below, with what each had to get right.
 
 ---
 
-### J — Data display (37) — 18 of 37
+### J — Data display (37) — 23 of 37
 
 `card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
@@ -1217,6 +1217,43 @@ which is the half a `waitFor` alone would not catch.
 rather than leaving it looking like an omission: the element of a removed row is
 gone by the time the component hears about it, so an exit there belongs to
 whoever owns the data and can hold the row — which the promise now lets them do.
+
+- [x] **`trend-indicator`, `delta-badge`.** Both exist to hold one rule that is
+  easy to state and easy to drop: direction is carried by a word and a symbol,
+  never by colour alone, and the sign is a character rather than a colour.
+  `TrendIndicator` makes the words a required child, because a direction with no
+  words is a coloured arrow. `DeltaBadge` writes the sign itself — U+2212 MINUS
+  SIGN, not the hyphen a keyboard produces, which is read as a hyphen by some
+  screen readers and rendered at hyphen width by every font, so a column signed
+  with hyphens does not line up. `Statistic` was rebuilt on `TrendIndicator` in
+  the same change: two implementations of one rule is how one of them stops
+  following it.
+- [x] **`authored-bubble`.** The silhouette is Crystal's, value for value from
+  `.cr-bubble`: three content-radius corners and one cut to 6px. The cut is
+  written with *logical* radius properties, so the mirroring the catalogue asks
+  for is expressed once rather than twice in a `[dir=rtl]` rule. `grouped` drops
+  the cut, because in a run of messages from one author the cut marks where the
+  run starts and repeating it turns a signal into a texture. `author` is required
+  — "author and time are text, not implied by side alone" — and `arriving` is the
+  caller's word rather than the component's guess, because Crystal's own note on
+  `message-in` is "only on a new message; do not replay on virtualised history".
+- [x] **`overlay-badge`.** A mark over a corner rather than a count attached to
+  one, which is the distinction from `badge`. Two things are the component rather
+  than a note: the fill is on a pseudo-element so the glyph above it stays crisp,
+  and the wrapper does not clip, because "never clipped by its host" is broken by
+  any caller who wraps a rounded image in `overflow: hidden`.
+- [x] **`rolling-number`** — and the one place in this library where Crystal
+  assigns no recipe and the component is nonetheless motion. `Card` plays nothing
+  because the catalogue gives it nothing; here the anatomy *is* "a number that
+  animates digit by digit", so refusing to move would be refusing to build it.
+  The roll is built from Crystal's published motion **tokens** instead of an
+  invented recipe: one digit of travel, `motion.duration.state`, and
+  `motion.easing.settle`. The CSS does the same arithmetic `resolveDuration`
+  does — `duration / speed`, and zero when `--cr-motion-enabled` is 0 — so the
+  roll follows the same preference slider as every JS recipe without a second
+  copy of the rule. The value is announced once it settles rather than on every
+  frame, and its test asserts the announcement is *still the old value* on the
+  tick after the change.
 
 **What this slice had to write down rather than look up.** Crystal 2.0.0 publishes
 *action* geometry as tokens and badge, avatar, code, kbd and caption geometry only

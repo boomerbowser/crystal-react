@@ -2,13 +2,10 @@
 
 /* Statistic — tabular figures, and colour that is never the only signal.
  *
- * The trend takes a status ink, and the words beside it say the same thing. That
- * pairing is the rule: a green arrow alone fails for a reader who cannot see it
- * and for one who cannot tell the two greens apart, and both are common.
- *
- * `flat` deliberately takes the muted ink rather than a third status colour.
- * "No change" is not a status; treating it as one would make every unremarkable
- * figure look like a report.
+ * The trend's own ink lives in `TrendIndicator`, which is the component that
+ * carries the rule — direction in a word and a symbol, never in colour alone.
+ * Restating it here would be two implementations of one rule, which is how one
+ * of them stops following it.
  */
 
 .statistic {
@@ -51,22 +48,6 @@
   background: var(--cr-haze-fill);
 }
 
-.trend {
-  display: inline-flex;
-  align-items: center;
-  gap: $cr-spacing-2xs;
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
-  font-weight: 650;
-}
-
-.trend[data-direction='up'] { color: var(--cr-success-ink); }
-.trend[data-direction='down'] { color: var(--cr-danger-ink); }
-.trend[data-direction='flat'] { color: var(--cr-muted); }
-
-.arrow { font-weight: 800; }
-
 @media (forced-colors: active) {
-  .trend { color: CanvasText; }
   .placeholder { background: Canvas; border: 1px solid CanvasText; }
 }

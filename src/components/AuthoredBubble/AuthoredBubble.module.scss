@@ -1,0 +1,95 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* AuthoredBubble — Haze, and the content-own pair for the reader's own messages.
+ *
+ * Crystal's own `.cr-bubble` is the reference and this follows it value for
+ * value: a Haze fill on an isolated paint layer, the content shadow on that
+ * layer, and `--cr-haze-own-fill` with `--cr-content-own-text` when the message
+ * is the reader's. That own pair is the one place in Crystal where a Haze fill
+ * carries a palette colour and stays soft — a conversation is a wall of these,
+ * and the solid action colour behind every second message would make the thread
+ * unreadable. It is the same reason the *primary button* takes the solid tone and
+ * this does not: one emphatic control against many, versus half of everything.
+ */
+
+$bubble-cut: 6px; /* crystal-allow-literal: core `.cr-bubble`'s tightened corner */
+
+.bubble {
+  @include material.haze-fill(0);
+
+  display: block;
+  padding: $cr-spacing-sm $cr-spacing-md;
+  border-radius: var(--cr-radius);
+  /* The cut, on the side the message came from. Logical, so it mirrors itself. */
+  border-start-start-radius: $bubble-cut;
+  color: var(--cr-text);
+  line-height: var(--cr-text-body-leading);
+}
+
+.bubble::before { box-shadow: var(--cr-shadow-content); }
+
+/* The reader's own message: the other corner, and the content-own pair. */
+.own {
+  border-start-start-radius: var(--cr-radius);
+  border-start-end-radius: $bubble-cut;
+  color: var(--cr-content-own-text);
+}
+
+.own::before { background: var(--cr-haze-own-fill); }
+
+/* In a run, the cut marks where the run starts. */
+.grouped,
+.grouped.own {
+  border-start-start-radius: var(--cr-radius);
+  border-start-end-radius: var(--cr-radius);
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: $cr-spacing-xs;
+  margin: 0 0 $cr-spacing-2xs;
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+.author { font-weight: 800; }
+.time { color: var(--cr-muted); }
+.own .time { color: inherit; opacity: 0.8; }
+
+.body { margin: 0; }
+
+.delivery {
+  margin: $cr-spacing-2xs 0 0;
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  color: var(--cr-muted);
+}
+
+/* A failed message is a real state, said in words and given the danger boundary
+   `components.md` asks destructive and error surfaces to carry. Never opacity:
+   a faded message over a coloured atmosphere is a legibility problem, not a
+   status. */
+.bubble[data-delivery='failed'] { border: 1px solid var(--cr-danger-ink); }
+.bubble[data-delivery='failed'] .delivery { color: var(--cr-danger-ink); }
+
+:global([data-effects='opaque']) .bubble::before { background: var(--cr-surface); filter: none; }
+:global([data-effects='opaque']) .own::before { background: var(--cr-content-own-base); }
+
+@media (prefers-reduced-transparency: reduce) {
+  .bubble::before { background: var(--cr-surface); filter: none; }
+  .own::before { background: var(--cr-content-own-base); }
+}
+
+@media (forced-colors: active) {
+  .bubble {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+
+  .bubble::before { display: none; }
+  .own { color: CanvasText; }
+  .time, .delivery { color: CanvasText; }
+}
