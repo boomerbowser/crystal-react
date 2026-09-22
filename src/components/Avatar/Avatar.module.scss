@@ -1,0 +1,75 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/avatar' as avatar;
+
+/* Avatar — surface-alt behind initials, a 2px surface ring, always circular.
+ *
+ * The ring is not an outline in the decorative sense. It is what lets avatars
+ * overlap in a group and still read as separate people: each one carries a band
+ * of the page's own surface around it, so the edge that matters is the gap rather
+ * than the silhouette. That is why it is painted in `--cr-surface` and not in the
+ * rim colour, and why `AvatarGroup` needs no rule of its own to produce it.
+ *
+ * The size table lives in `styles/_avatar.scss`, because the overflow chip in
+ * `AvatarGroup` has to be the same circle and a second copy of four numbers is
+ * exactly the drift that stays invisible until one of them changes.
+ */
+
+.avatar {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: var(--avatar-size);
+  block-size: var(--avatar-size);
+  /* Always circular. Not a variant, and not derived from the content radius — a
+     person is a circle throughout Crystal. */
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--cr-surface-alt);
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+  /* The separating band. `box-shadow` rather than `border`, so it sits outside
+     the circle and does not eat into the picture. */
+  box-shadow: 0 0 0 avatar.$ring var(--cr-surface);
+}
+
+@include avatar.sizes;
+
+.image {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.fallback {
+  /* Above the image, so a failed or still-loading picture never shows through
+     the initials that replaced it. */
+  position: relative;
+  z-index: 1;
+  display: inline-grid;
+  place-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+  background: var(--cr-surface-alt);
+}
+
+/* Loading is not a spinner. An avatar is small, usually one of many, and a row of
+   spinners is worse than a row of quiet discs — so the state is the fallback
+   holding still until the picture resolves. Nothing moves at rest. */
+.avatar[data-state='loading'] .fallback { color: var(--cr-muted); }
+
+@media (forced-colors: active) {
+  .avatar {
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: 0 0 0 avatar.$ring Canvas;
+    border: 1px solid CanvasText;
+  }
+
+  .fallback { background: Canvas; }
+}

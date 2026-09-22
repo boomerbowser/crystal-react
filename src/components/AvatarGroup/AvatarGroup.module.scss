@@ -1,0 +1,63 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/avatar' as avatar;
+
+/* AvatarGroup — a -7px overlap, and stacking order that follows reading order.
+ *
+ * The overlap only reads as overlap if the ring is on top of the neighbour it
+ * covers, which means the *first* avatar has to be in front, not behind. Source
+ * order gives the opposite, so the z-index is counted down rather than up. Doing
+ * it the other way produces a row that looks identical until you notice every
+ * ring is cut by the avatar after it.
+ *
+ * The overflow chip "matches avatar size", which is why it reads the same size
+ * class rather than having a scale of its own.
+ */
+
+$avatar-overlap: -7px; /* crystal-allow-literal: the catalogue's stated overlap */
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item { display: inline-flex; }
+
+.item + .item { margin-inline-start: $avatar-overlap; }
+
+/* Counted down from a ceiling, so the first item is in front. Nine covers the
+   groups anybody assembles by hand; past that the overlap is decoration anyway
+   and the overflow chip is doing the work. */
+@for $index from 1 through 9 {
+  .item:nth-child(#{$index}) { z-index: 10 - $index; }
+}
+
+.overflow {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: var(--avatar-size);
+  block-size: var(--avatar-size);
+  border-radius: 50%;
+  background: var(--cr-surface-alt);
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 0 0 avatar.$ring var(--cr-surface);
+}
+
+/* The chip "matches avatar size", from Avatar's own table rather than a second
+   copy of the four numbers. */
+@include avatar.sizes;
+
+@media (forced-colors: active) {
+  .overflow {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+    box-shadow: 0 0 0 avatar.$ring Canvas;
+  }
+}

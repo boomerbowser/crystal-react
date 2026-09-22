@@ -117,3 +117,13 @@ export * from './Portal/index.js';
 export * from './Tooltip/index.js';
 export * from './Menu/index.js';
 export * from './Menubar/index.js';
+
+/* Data display */
+export * from './Badge/index.js';
+export * from './StatusBadge/index.js';
+export * from './ThemeIcon/index.js';
+export * from './Code/index.js';
+export * from './Kbd/index.js';
+export * from './Caption/index.js';
+export * from './Avatar/index.js';
+export * from './AvatarGroup/index.js';

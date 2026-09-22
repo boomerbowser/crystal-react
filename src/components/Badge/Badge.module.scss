@@ -1,0 +1,92 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* Badge — a Resin shell with a Haze fill.
+ *
+ * "Pill or circle; never smaller than legible." Both come out of one rule: a
+ * circle is a pill whose content is narrower than its own minimum size, so the
+ * badge is given a pill radius and a square minimum and the shape follows the
+ * content. One digit is a circle, three digits is a pill, and neither needed a
+ * variant.
+ *
+ * The Haze fill is inset by `0` rather than by `--cr-haze-inset`. That inset is
+ * 8px and exists to stop the fill short of an exposed glass perimeter; on a 20px
+ * badge it would consume the whole fill, and a badge has no perimeter to protect
+ * because it is smaller than the rim treatment it would be protecting.
+ */
+
+/* Crystal 2.0.0 publishes action geometry as tokens and badge geometry only as
+   rules. Until a core release carries them, the values enter here, once, named. */
+$badge-dot-size: 8px; /* crystal-allow-literal: a marker, not a container; wants a core token */
+$badge-ring-width: 2px;
+
+.badge {
+  @include material.resin;
+  @include material.haze-fill(0);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-inline-size: $cr-indicator-size;
+  min-block-size: $cr-indicator-size;
+  padding-inline: $cr-spacing-2xs;
+  border-radius: $cr-action-radius;
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  /* Selection and emphasis are carried by weight throughout Crystal; a count is
+     emphasis, so it is heavier rather than louder. */
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@include material.opaque-fallback('.badge');
+
+.dot {
+  min-inline-size: $badge-dot-size;
+  min-block-size: $badge-dot-size;
+  inline-size: $badge-dot-size;
+  block-size: $badge-dot-size;
+  padding-inline: 0;
+  background: var(--cr-primary);
+}
+
+/* A dot's whole message is that it is there, so it carries no Haze fill: there is
+   no label underneath it to protect. */
+.dot::before { display: none; }
+
+.host {
+  position: relative;
+  display: inline-flex;
+  /* The host is a wrapper, not a surface — it must not introduce its own box. */
+  vertical-align: middle;
+}
+
+/* Attached to a host: the badge straddles the corner, so half of it overhangs.
+   The ring is what keeps it readable where it overlaps the host's own edge. */
+.attached {
+  position: absolute;
+  z-index: 1;
+  outline: $badge-ring-width solid var(--cr-surface);
+}
+
+.topEnd { inset-block-start: 0; inset-inline-end: 0; translate: 50% -50%; }
+.topStart { inset-block-start: 0; inset-inline-start: 0; translate: -50% -50%; }
+.bottomEnd { inset-block-end: 0; inset-inline-end: 0; translate: 50% 50%; }
+.bottomStart { inset-block-end: 0; inset-inline-start: 0; translate: -50% 50%; }
+
+/* Forced colours replaces the composition. A badge that keeps its shape and its
+   border stays a badge; one painted in Highlight would claim to be selected. */
+@media (forced-colors: active) {
+  .badge {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+    box-shadow: none;
+  }
+
+  .dot { background: CanvasText; }
+  .attached { outline-color: Canvas; }
+}

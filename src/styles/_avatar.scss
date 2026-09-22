@@ -1,0 +1,36 @@
+/* Avatar's size table, in one place.
+ *
+ * `Avatar` and `AvatarGroup`'s overflow chip must be the same circle — the
+ * catalogue says the chip "matches avatar size" — and two copies of four numbers
+ * is the drift CONTRACT §1 is about: it would stay invisible until somebody
+ * changed one of them, and then show up as a row where the last disc is the wrong
+ * size. CSS modules scope class names per file, so the table is emitted into each
+ * module rather than imported as a class, and this mixin is the single definition
+ * both emissions come from.
+ *
+ * The property is `--avatar-size` and not `--cr-avatar-size`: the `--cr-` prefix
+ * means "Crystal publishes this", and two gates check that every `--cr-…` the
+ * stylesheets read resolves to something on a mounted provider. This one is
+ * written and read inside these two modules and nowhere else, so it has no claim
+ * on that namespace — borrowing it would have meant adding a name to two
+ * hand-maintained exception lists to say it was not really an exception.
+ *
+ * The steps are on Crystal's 4px rhythm. They are literals because 2.0.0
+ * publishes action geometry as tokens and avatar geometry as nothing at all; when
+ * a core release carries them, this is the one file that changes.
+ */
+
+$sm: 24px; /* crystal-allow-literal: 4px rhythm; wants a core token */
+$md: 32px; /* crystal-allow-literal: 4px rhythm; wants a core token */
+$lg: 40px; /* crystal-allow-literal: 4px rhythm; wants a core token */
+$xl: 48px; /* crystal-allow-literal: 4px rhythm; wants a core token */
+
+/** The band of page surface that separates overlapping avatars. */
+$ring: 2px;
+
+@mixin sizes {
+  .sm { --avatar-size: #{$sm}; }
+  .md { --avatar-size: #{$md}; }
+  .lg { --avatar-size: #{$lg}; }
+  .xl { --avatar-size: #{$xl}; }
+}

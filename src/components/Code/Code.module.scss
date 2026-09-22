@@ -1,0 +1,73 @@
+@use '../../styles/tokens' as *;
+
+/* Code — canvas fill, edge rim, no diffusion anywhere.
+ *
+ * Two radii, because they answer different questions. Inline code sits inside a
+ * line of prose and a 28px content radius on a 20px-tall fragment would round it
+ * into a pill; 14px keeps it a rectangle with softened corners at that height. A
+ * block is a surface in its own right and takes the content radius like every
+ * other surface.
+ */
+
+$code-inline-radius: 14px; /* crystal-allow-literal: the catalogue's stated inline radius */
+
+.code {
+  /* The monospace stack is the reader's, not Crystal's: Crystal specifies Manrope
+     for reading and names no mono face, and substituting one would be this
+     library inventing a typographic decision the design system did not make. */
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  background: var(--cr-canvas);
+  color: var(--cr-text);
+  border: 1px solid var(--cr-edge);
+  /* Said explicitly rather than inherited by luck. Code must stay exact, and the
+     one thing that would make it inexact is the feather it sits near. */
+  filter: none;
+}
+
+.inline {
+  display: inline;
+  padding-inline: $cr-spacing-2xs;
+  border-radius: $code-inline-radius;
+  font-size: var(--cr-text-caption-size);
+  /* Inline code must not change the line's rhythm, so the box grows sideways
+     only and the leading stays the prose's. */
+  line-height: inherit;
+}
+
+.block {
+  display: block;
+  margin: 0;
+  padding: var(--cr-space);
+  border-radius: var(--cr-radius);
+  font-size: var(--cr-text-body-size);
+  line-height: var(--cr-text-body-leading);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  tab-size: 2;
+}
+
+.block:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.withCopy { position: relative; }
+
+/* Over the block rather than above it, so the sample keeps its full width. It is
+   inset by the same step the block is padded by, which is what makes it look
+   placed rather than floating. */
+.copy {
+  position: absolute;
+  inset-block-start: var(--cr-space);
+  inset-inline-end: var(--cr-space);
+}
+
+@media (forced-colors: active) {
+  .code {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+}

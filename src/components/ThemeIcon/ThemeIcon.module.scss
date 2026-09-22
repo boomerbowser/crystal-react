@@ -1,0 +1,40 @@
+@use '../../styles/tokens' as *;
+
+/* ThemeIcon — a filled container around a 24px icon.
+ *
+ * "Primary-soft or surface-alt fill": both are flat fills rather than materials,
+ * and deliberately so. An anchor is a piece of punctuation in a layout, and a
+ * Resin cap beside a heading would out-rank the heading.
+ *
+ * The box is the icon plus one spacing step either side, so the container scales
+ * with the icon rather than with a size table nobody can keep in step.
+ */
+
+.themeIcon {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: $cr-icon-action + $cr-spacing-sm;
+  block-size: $cr-icon-action + $cr-spacing-sm;
+  border-radius: var(--cr-radius);
+  /* Not a control: no hit area, no cursor change, nothing to press. */
+  pointer-events: none;
+}
+
+.themeIcon > :first-child {
+  inline-size: $cr-icon-action;
+  block-size: $cr-icon-action;
+}
+
+.primary { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+.surface { background: var(--cr-surface-alt); color: var(--cr-text); }
+
+.circle { border-radius: 50%; }
+
+@media (forced-colors: active) {
+  .themeIcon {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+}

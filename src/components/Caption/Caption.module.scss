@@ -1,0 +1,81 @@
+@use '../../styles/tokens' as *;
+
+/* Caption — Stone backing when overlaid.
+ *
+ * Stone exists for exactly this: a label over artwork, where contrast cannot be
+ * argued from the palette because the palette is whatever the photograph happens
+ * to be. It is a 55% fill in light and 60% in dark with the same 1.95px feather
+ * Haze uses, and it is the reason an overlaid caption is legible over a white sky
+ * and over a black one.
+ *
+ * Below the media there is no backing at all. The caption is then on the page's
+ * own surface, whose contrast is already known, and painting Stone there would be
+ * a scrim over nothing.
+ */
+
+$caption-inset: 12px; /* crystal-allow-literal: the catalogue's stated inset from the media edge */
+
+.figure {
+  position: relative;
+  display: block;
+  margin: 0;
+  /* The figure is the media's own box, so a rounded image and an overlaid caption
+     share one perimeter rather than the caption overhanging a corner. */
+  border-radius: var(--cr-radius);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.caption {
+  display: block;
+  margin-block-start: $cr-spacing-xs;
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+.overlaid {
+  position: absolute;
+  inset-block-end: $caption-inset;
+  inset-inline: $caption-inset;
+  margin-block-start: 0;
+  padding: $cr-spacing-xs;
+  border-radius: var(--cr-radius);
+  /* Stone, and the text above it. The fill is a separate layer because the
+     feather belongs to the paint: feathering the element would blur the words
+     this backing exists to make readable. */
+  color: var(--cr-text);
+  isolation: isolate;
+}
+
+.overlaid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--cr-stone-fill);
+  filter: blur(var(--cr-stone-feather));
+}
+
+/* Removing diffusion keeps the protection: the backing becomes the surface
+   colour rather than disappearing, because what it guards is contrast. */
+:global([data-effects='opaque']) .overlaid::before {
+  background: var(--cr-surface);
+  filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .overlaid::before { background: var(--cr-surface); filter: none; }
+}
+
+@media (forced-colors: active) {
+  .overlaid {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+
+  .overlaid::before { display: none; }
+}

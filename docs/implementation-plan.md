@@ -1098,7 +1098,7 @@ outstanding are below, with what each had to get right.
 
 ---
 
-### J — Data display (37)
+### J — Data display (37) — 9 of 37
 
 `card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
@@ -1106,6 +1106,73 @@ Ends with `data-table`, the hardest component in the catalogue: sorting,
 selection, resizing, virtualisation and drag-and-drop — every one of which React
 Aria supplies, and every one of which needs a keyboard path as well as a pointer
 one.
+
+- [x] `card` — see slice C, where it was built as the first Haze surface.
+- [x] **The small labels** — `badge`, `status-badge`. Both are counts or words on
+  a Resin shell, and both turned out to be accessibility components rather than
+  geometry ones. A badge's visual is always `aria-hidden`: a loose "3" announced
+  beside a button leaves a listener to guess what the 3 belongs to, so the meaning
+  travels as a whole sentence in a live region or not at all, and `description` is
+  deliberately not defaulted to the count. A status badge puts the semantic pair
+  on the **well** and leaves the pill Resin with ordinary text — which is what
+  Crystal's own cascade produces, `crystal.reset` painting the chip in
+  `--status-surface` and `crystal.component`'s control rule then overriding both
+  the background and the colour. A status-coloured pill would make the word
+  decoration on a coloured ground, and a status-coloured perimeter is the shape
+  Crystal uses for focus.
+
+  The catalogue's "36px minimum height" is a floor rather than the height: twelve
+  pixels of block padding either side of a 24px well is 48px of content box, and
+  the pill renders at 50px with its rim, which is what the preview has always
+  shown. Both numbers are true, and the floor is what protects the pill when the
+  word is set at a smaller step.
+- [x] **`code`, `kbd`** — the two surfaces that are deliberately *not* Crystal
+  materials in the ordinary way. "Never feathered, as code must stay exact": a
+  softened edge around a fragment of syntax reads as imprecision in the thing
+  being quoted, so `Code` takes a canvas fill and an edge rim, the flattest
+  surface Crystal has. A block is a tab stop with a Resin scrollbar, because a
+  sample wider than its column scrolls and a scroll container with nothing
+  focusable in it is unreachable without a pointer. `Kbd` is Resin plus one extra
+  inset highlight along the bottom edge — the difference between glass and a key
+  you could press — and carries no Haze fill, because the fill's own 8px inset is
+  wider than the cap's padding.
+
+  `Code` stops where `CodeBlock` starts: the catalogue lists both, and the split
+  is that `CodeBlock` is the documented sample with a filename, a named region and
+  a copy control in a header, while `Code` is the typographic primitive.
+- [x] **`caption`, `theme-icon`.** A caption never replaces alt text — alt text
+  says what the image *is*, for someone who cannot see it; a caption says what it
+  *means*, to everyone — so `Caption` takes no `alt` prop at all, because offering
+  one invites the two to be written as a single sentence. Overlaid, it sits on
+  Stone, which exists for exactly this: a label over artwork, where contrast
+  cannot be argued from the palette because the palette is whatever the photograph
+  happens to be. `ThemeIcon` looks exactly like an icon button, so the difference
+  is carried by what it does — no press handler, no hit area, not focusable — and
+  it is `aria-hidden` unless it is the only carrier of meaning.
+- [x] **`avatar`, `avatar-group`.** The fallback chain is the component: identity
+  images fail routinely, and a broken image icon where a person's face should be
+  is worse than never having tried, so the image is watched and replaced in place
+  — and a new `src` starts again, without which a virtualised row shows one
+  person's initials over another's photograph. The 2px ring is not decoration: it
+  is the band of page surface that lets overlapping avatars read as separate
+  people, which is why `AvatarGroup` needs no rule of its own to produce it. The
+  stacking order counts *down*, so the first avatar is in front; source order
+  gives the opposite and produces a row that looks identical until you notice
+  every ring is cut by the avatar after it.
+
+  The group is one named list and the people in it keep their names: the catalogue
+  asks the group to *have* a name, not for its members to lose theirs. The
+  overflow chip shows "+3" and announces "3 more", because "+3" read literally is
+  a plus sign and a number.
+
+**What this slice had to write down rather than look up.** Crystal 2.0.0 publishes
+*action* geometry as tokens and badge, avatar, code, kbd and caption geometry only
+as rules in `crystal.css` — or, for the ones with no rule at all, only as a
+sentence in the catalogue. Every such value enters through a named variable
+carrying `crystal-allow-literal` and its source, so the set of things owed a token
+in a later core release is greppable rather than remembered. `styles/_avatar.scss`
+is the one that is shared, because the overflow chip must be the same circle as
+the people beside it.
 
 ### K — Charts, statistics and visualisation (24)
 

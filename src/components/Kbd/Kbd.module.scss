@@ -1,0 +1,50 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* Kbd — "a Resin cap with a defined lower rim".
+ *
+ * Resin already carries two optical rims in `--cr-shadow-float`; what the
+ * catalogue asks for on top of that is a *defined* lower one, which is the
+ * difference between glass and a key you could press. The extra inset highlight
+ * along the bottom edge is the physical cue: light from overhead, a lip
+ * underneath.
+ *
+ * No Haze fill. Haze protects a label sitting over a translucent control, and a
+ * cap this small with one or two characters on it would be almost entirely
+ * feather — the fill's own 8px inset is wider than the cap's padding.
+ */
+
+$kbd-radius: 8px; /* crystal-allow-literal: the catalogue's stated cap radius */
+
+.kbd {
+  @include material.resin;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-inline-size: $cr-indicator-size;
+  padding-inline: $cr-spacing-2xs;
+  border-radius: $kbd-radius;
+  color: var(--cr-text);
+  /* A key cap is not prose. The family is Crystal's, one step down, so a cap
+     inside a sentence does not change the line's rhythm. */
+  font-family: inherit;
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  font-weight: 700;
+  /* The lip. Inset, under the rim rather than outside it, so the cap keeps its
+     own footprint in a line of text. */
+  box-shadow: var(--cr-shadow-float), inset 0 -2px 0 var(--cr-control-edge);
+}
+
+@include material.opaque-fallback('.kbd');
+
+@media (forced-colors: active) {
+  .kbd {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+    box-shadow: none;
+  }
+}

@@ -1,0 +1,108 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* StatusBadge — a Resin pill with a tinted well.
+ *
+ * The colour distribution is the whole design, and it is easy to get backwards.
+ * Crystal's own `.cr-status` puts the semantic pair on the **well** and leaves
+ * the pill itself Resin with ordinary text: `crystal.reset` paints the chip in
+ * `--status-surface`, and `crystal.component`'s control rule then overrides both
+ * the background and the colour, so what survives the cascade is a Resin control
+ * carrying one tinted circle. That is what "never a coloured perimeter stroke"
+ * and "the word carries the meaning" look like when you render them — a
+ * status-coloured pill would make the word decoration on a coloured ground.
+ *
+ * The catalogue's "36px minimum height" is a floor and not the height. Twelve
+ * pixels of block padding either side of a 24px well is 48px of content box, and
+ * the pill renders at 50px with its rim — which is what the preview has always
+ * shown. Both numbers are true; the floor is what protects the pill when the
+ * word is set at a smaller step.
+ */
+
+/* Crystal 2.0.0 publishes these as rules in `crystal.css` rather than as tokens.
+   They enter here once, named, until a core release carries them. */
+$status-radius: 18px; /* crystal-allow-literal: core `span.cr-status` border-radius */
+$status-padding-inline: 18px; /* crystal-allow-literal: core `span.cr-status` padding */
+$status-min-block-size: 36px; /* crystal-allow-literal: the catalogue's stated floor */
+$status-gap: 7px; /* crystal-allow-literal: core `.cr-status` gap */
+
+.statusBadge {
+  @include material.resin;
+  @include material.haze-fill();
+
+  display: inline-flex;
+  align-items: center;
+  gap: $status-gap;
+  box-sizing: border-box;
+  min-block-size: $status-min-block-size;
+  padding: $cr-spacing-sm $status-padding-inline;
+  /* The rim, not the status ink. A status-coloured perimeter is the shape Crystal
+     uses for focus, and a danger-coloured one would read as a control in an error
+     state rather than a fact being reported. */
+  border-radius: $status-radius;
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  font-weight: 750;
+}
+
+@include material.opaque-fallback('.statusBadge');
+
+/* The tested pairs, and the only place colour enters. Status colours are
+   independent of the brand palettes and are never redefined by them, so these
+   read the feedback custom properties rather than anything palette-scoped. */
+.statusBadge[data-status='success'] {
+  --status-surface: var(--cr-success-surface);
+  --status-ink: var(--cr-success-ink);
+}
+
+.statusBadge[data-status='attention'] {
+  --status-surface: var(--cr-attention-surface);
+  --status-ink: var(--cr-attention-ink);
+}
+
+.statusBadge[data-status='danger'] {
+  --status-surface: var(--cr-danger-surface);
+  --status-ink: var(--cr-danger-ink);
+}
+
+.statusBadge[data-status='info'] {
+  --status-surface: var(--cr-info-surface);
+  --status-ink: var(--cr-info-ink);
+}
+
+/* Neutral is the absence of a status rather than a fifth one, so it takes the
+   ordinary surface pair. It also renders no symbol — a glyph would imply a
+   meaning the state does not have. */
+.statusBadge[data-status='neutral'] {
+  --status-surface: var(--cr-surface-alt);
+  --status-ink: var(--cr-text);
+}
+
+.well {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: $cr-icon-action;
+  block-size: $cr-icon-action;
+  border-radius: 50%;
+  background: var(--status-surface);
+  color: var(--status-ink);
+  font-weight: 800;
+}
+
+.word { white-space: nowrap; }
+
+@media (forced-colors: active) {
+  .statusBadge {
+    forced-color-adjust: auto;
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid ButtonText;
+    box-shadow: none;
+  }
+
+  /* The tint is gone in forced colours, so the well would be an invisible circle
+     around a glyph. The system pair keeps the symbol legible and the shape
+     readable without claiming a colour the user did not ask for. */
+  .well { background: Canvas; color: CanvasText; }
+}
