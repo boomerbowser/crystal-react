@@ -70,17 +70,57 @@
   backdrop-filter: none;
 }
 
-/* Secondary and quiet are fills, not different geometry: a button is a pill in
-   every variant. */
-.secondary {
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
+/* Secondary is the plain Resin control, and that is Crystal's own answer rather
+   than an omission: `crystal.css` carries no `.secondary` fill at all — the three
+   modifier fills were removed from it once they were found to compute identically
+   to the base surface.
+ *
+ * This library had kept one, `background: var(--cr-primary-soft)` on the element,
+ * which is the same accident the primary variant had: behind an inset Haze layer
+ * it is not a fill, it is an 8px ring of exposed background. With the primary
+ * action's reading fill now tinted, that ring made the secondary button the
+ * loudest thing in the row — a brighter centre with a coloured halo, beside a
+ * primary that had gone quiet. The hierarchy has to be readable for the tint to
+ * mean anything.
+ *
+ * So secondary is the base surface, the same as `resin`, and the variant survives
+ * because "secondary" is what a caller means. Quiet is the one that still differs:
+ * it has no surface at all.
+ */
+
+/* The primary action's *reading fill* carries the palette's colour — not its
+   perimeter.
+ *
+ * Meridian, 22 September 2026: "the Haze content fill should adopt the primary
+ * color, not the rim. The text color will need to be adjusted depending on the
+ * primary color."
+ *
+ * This variant used to set `background: var(--cr-primary)` on the button itself,
+ * which sits *behind* the Haze layer — an inset fill at `--cr-haze-inset`. So the
+ * primary colour never reached the label's ground at all: it survived as the 8px
+ * ring of element background left exposed around a white fill, with the rim
+ * suppressed to make room for it. The colour was in the perimeter by accident.
+ *
+ * Both values are Crystal's own and already contrast-tested. `--cr-haze-own-fill`
+ * is the palette's content-own surface at Haze's 80% — the same fill an authored
+ * message bubble takes — and `--cr-content-own-text` is the ink tested against it,
+ * which is per-palette: Harbor takes its ordinary text ink where the other five
+ * take `onPrimarySoft`. That is the "adjusted depending on the primary color"
+ * part, and it is also why the fill is the soft tone rather than the solid one.
+ * A Haze fill transmits what is behind it, so the full primary at 80% composited
+ * over Crystal's own canvas and surface lands between 3.37 and 4.55 against
+ * `onPrimary` in every light palette — under the 4.5 floor in all six. The pair
+ * below is 8.40 to 12.34 across every palette and both modes.
+ *
+ * The rim comes back, because it is the Resin rim every other control has rather
+ * than a variant signal.
+ */
+.primary {
+  color: var(--cr-content-own-text);
 }
 
-.primary {
-  background: var(--cr-primary);
-  color: var(--cr-on-primary);
-  border-color: transparent;
+.primary::before {
+  background: var(--cr-haze-own-fill);
 }
 
 .quiet {

@@ -42,7 +42,11 @@ export interface ButtonProps extends Omit<AriaButtonProps, 'className' | 'style'
 
 const VARIANT_CLASS: Record<ButtonVariant, string | undefined> = {
   primary: styles['primary'],
-  secondary: styles['secondary'],
+  /* The base surface, which is what Crystal's own stylesheet gives it: the
+     modifier fills were removed from `crystal.css` once they were found to
+     compute identically to it. The name stays because it is what a caller
+     means. */
+  secondary: undefined,
   quiet: styles['quiet'],
   /* Resin is the base surface the stylesheet already applies, so this variant
      adds nothing — it exists so `variant="resin"` is sayable rather than implicit. */

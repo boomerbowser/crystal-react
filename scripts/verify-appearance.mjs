@@ -252,6 +252,58 @@ for (const [id, selector, what] of DISABLED) {
   record(`${what} announces that it is disabled`, seen.announced, 'no disabled or aria-disabled attribute');
 }
 
+/* --------------------------------- the primary action carries the colour */
+
+/* Meridian, 22 September 2026: "the Haze content fill should adopt the primary
+ * color, not the rim. The text color will need to be adjusted depending on the
+ * primary color."
+ *
+ * The failure this replaces is invisible in a stylesheet and obvious on a screen.
+ * The variant set `background` on the button, which sits *behind* the Haze layer
+ * — an inset fill — so the colour never reached the label's ground: it showed as
+ * the 8px ring of element background left exposed around a white fill. The rule
+ * was there, the colour was there, and the primary button still looked like every
+ * other button.
+ *
+ * So the assertion is where the paint lands, not what colour it is: the primary
+ * button's *reading fill* differs from a plain Resin button's, and its ink differs
+ * too. Both are false the moment the fill goes back to the element.
+ */
+{
+  await open('actions-button--all-variants', '#storybook-root button');
+
+  const seen = await page.evaluate(() => {
+    const buttons = [...document.querySelectorAll('#storybook-root button')];
+    const named = (text) => buttons.find((node) => node.textContent?.trim() === text);
+    const read = (node) => node && ({
+      fill: getComputedStyle(node, '::before').backgroundColor,
+      ink: getComputedStyle(node).color,
+    });
+    return { primary: read(named('Primary')), plain: read(named('Resin')) };
+  });
+
+  if (!seen.primary || !seen.plain) {
+    record('the button story renders a primary and a plain Resin specimen', false,
+      'one of them is missing, so this comparison has nothing to compare');
+  } else {
+    record(
+      'the primary action is tinted in its reading fill, not its perimeter',
+      seen.primary.fill !== seen.plain.fill,
+      `the primary button's ::before fill is ${seen.primary.fill}, the same as a plain `
+      + 'Resin button\'s. The colour is reaching the element behind the Haze layer, where '
+      + 'it shows only as the ring left exposed around the inset fill — which is the '
+      + 'defect this rule replaced, and it looks identical in the stylesheet',
+    );
+    record(
+      'the primary action takes the ink tested against that fill',
+      seen.primary.ink !== seen.plain.ink,
+      `the primary button's colour is ${seen.primary.ink}, the same as a plain Resin `
+      + 'button\'s. The fill moved and the ink did not follow it, which is the half of '
+      + 'this that contrast depends on',
+    );
+  }
+}
+
 await browser.close();
 
 console.log(JSON.stringify({
