@@ -85,6 +85,14 @@ const CASES = [
      component that was behaving correctly. Narrowing the selector is the fix;
      loosening the floor would not have been. */
   { story: 'navigation-menu-bars--disclosure', selector: '#storybook-root button[aria-controls="burger-nav"]', why: 'catalogue: the burger is the whole navigation on a narrow layout' },
+
+  /* Slice J's three interactive rows. Each of these has a floor the catalogue
+     states in words — "header meets 44px" for the accordion — or inherits by
+     being a control in a column, which is the arrangement where a short target
+     is both hardest to hit and easiest to ship. */
+  { story: 'data-display-accordion--default', selector: '#storybook-root button', why: 'catalogue: an accordion header meets 44px' },
+  { story: 'data-display-list--selected', selector: '#storybook-root li a', why: 'an interactive row is a target, and a column of them is where a short one hides' },
+  { story: 'data-display-spoiler--default', selector: '#storybook-root button', why: 'the reveal control is an action, and actions are pills at the floor' },
 ];
 
 /* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
@@ -170,7 +178,7 @@ await browser.close();
  * Fewer probes is not a better result. It is the same checks run against less of
  * the library. Raise this when cases are added; lowering it is a deliberate edit
  * somebody makes in the same commit. */
-const LEAST_PROBES = 63;
+const LEAST_PROBES = 70;
 if (probes < LEAST_PROBES) {
   failures.push(
     `${probes} controls were measured, and this suite measured ${LEAST_PROBES} `

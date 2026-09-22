@@ -1,0 +1,93 @@
+@use '../../styles/tokens' as *;
+
+/* List — Haze rows on whatever surrounds them.
+ *
+ * The row is the Haze surface and the `li` is not, which is what lets a trailing
+ * action sit *outside* the row's press target while still belonging to the row.
+ * A button inside a button is invalid and a button inside a link is worse, so the
+ * geometry has to keep them as siblings.
+ *
+ * "Separators are hairlines." One border-width, never a filled bar: a 1px line in
+ * the edge colour is a boundary, and anything thicker is a piece of furniture.
+ */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-2xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-xs;
+}
+
+.separated { gap: 0; }
+
+.separated .item + .item { border-block-start: 1px solid var(--cr-edge); }
+
+.row {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: $cr-spacing-xs;
+  min-block-size: $cr-action-min-target;
+  box-sizing: border-box;
+  padding: $cr-spacing-xs $cr-spacing-sm;
+  border: 0;
+  border-radius: var(--cr-radius);
+  background: var(--cr-haze-fill);
+  color: var(--cr-text);
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+}
+
+/* A pressable row is a control and says so. A static one is not, and must not
+   grow a cursor that promises something will happen. */
+a.row, button.row { cursor: pointer; }
+
+a.row:hover, button.row:hover { background: var(--cr-surface-alt); }
+
+a.row:focus-visible, button.row:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* Selection is label weight. The fill is the second signal, never the only
+   one — and never a leading mark, which would offset the very label it points
+   at and break the column the rows line up in. */
+.row[aria-current='true'],
+.row[aria-pressed='true'],
+.row[data-selected] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+
+.leading, .trailing { display: inline-flex; align-items: center; flex: none; }
+
+.body { flex: 1 1 auto; min-inline-size: 0; }
+
+.empty {
+  padding: var(--cr-space);
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  text-align: center;
+}
+
+:global([data-effects='opaque']) .row { background: var(--cr-surface); }
+
+@media (prefers-reduced-transparency: reduce) {
+  .row { background: var(--cr-surface); }
+}
+
+@media (forced-colors: active) {
+  .row { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
+  .row[aria-current='true'], .row[aria-pressed='true'], .row[data-selected] {
+    background: Canvas;
+    color: CanvasText;
+    outline: 2px solid Highlight;
+  }
+}

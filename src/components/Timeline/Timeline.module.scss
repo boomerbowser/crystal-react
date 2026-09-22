@@ -1,0 +1,81 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* Timeline — "Resin markers on a Haze connector", 2px.
+ *
+ * The connector is drawn behind the markers rather than between them, which is
+ * what keeps it unbroken when an event's body is taller than another's. It stops
+ * at the last marker's centre, because a line continuing past the final event
+ * promises one that is not there.
+ */
+
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-lg;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.event {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: $cr-spacing-sm;
+  align-items: start;
+}
+
+/* The connector, per event rather than per list: an event that is not the last
+   one carries the segment reaching down to the next marker, so the line ends
+   exactly where the events do. */
+.event:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  inset-block-start: $cr-indicator-field-size;
+  inset-block-end: calc(#{$cr-spacing-lg} * -1);
+  inset-inline-start: calc(#{$cr-indicator-field-size} / 2);
+  inline-size: 2px;
+  translate: -1px 0;
+  background: var(--cr-haze-fill);
+}
+
+.marker {
+  @include material.resin;
+
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: $cr-indicator-field-size;
+  block-size: $cr-indicator-field-size;
+  border-radius: 50%;
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  font-weight: 800;
+}
+
+@include material.opaque-fallback('.marker');
+
+.event[data-status='complete'] .marker { background: var(--cr-success-surface); color: var(--cr-success-ink); }
+.event[data-status='current'] .marker { background: var(--cr-primary); color: var(--cr-on-primary); }
+.event[data-status='error'] .marker { background: var(--cr-danger-surface); color: var(--cr-danger-ink); }
+
+.body { display: flex; flex-direction: column; gap: $cr-spacing-2xs; }
+
+/* The current event is heavier. Weight, not colour: it is the same rule that
+   carries selection everywhere else in Crystal. */
+.title { color: var(--cr-text); font-weight: 650; }
+.event[data-status='current'] .title { font-weight: 800; }
+
+.status, .meta {
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+@media (forced-colors: active) {
+  .marker { background: Canvas; color: CanvasText; border: 1px solid CanvasText; box-shadow: none; }
+  .event[data-status='current'] .marker { outline: 2px solid Highlight; }
+  .event:not(:last-child)::before { background: CanvasText; }
+}

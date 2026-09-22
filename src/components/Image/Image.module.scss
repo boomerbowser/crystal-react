@@ -1,0 +1,56 @@
+@use '../../styles/tokens' as *;
+
+/* Image — a Haze placeholder under a reserved box.
+ *
+ * "Never distorts aspect": the box holds the ratio and the picture is covered
+ * into it, so a photograph that is not the ratio the layout reserved is cropped
+ * rather than stretched. Stretching a face is a worse answer than cropping one.
+ *
+ * The placeholder is Haze rather than a grey rectangle because it is a piece of
+ * the composition rather than a loading widget — and because a grey rectangle on
+ * Crystal's coloured atmosphere reads as a hole in the page.
+ */
+
+.image {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--cr-haze-fill);
+  /* The feather belongs to the paint layer, and here the paint layer is the
+     placeholder alone: the picture above it must stay exact. */
+  filter: none;
+}
+
+.rounded { border-radius: var(--cr-radius); }
+
+.media {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.fallback {
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: $cr-spacing-2xl;
+  padding: var(--cr-space);
+  background: var(--cr-surface-alt);
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  text-align: center;
+}
+
+:global([data-effects='opaque']) .image { background: var(--cr-surface-alt); }
+
+@media (prefers-reduced-transparency: reduce) {
+  .image { background: var(--cr-surface-alt); }
+}
+
+@media (forced-colors: active) {
+  .image { background: Canvas; border: 1px solid CanvasText; }
+  .fallback { background: Canvas; color: CanvasText; }
+}

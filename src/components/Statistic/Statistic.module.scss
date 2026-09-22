@@ -1,0 +1,72 @@
+@use '../../styles/tokens' as *;
+
+/* Statistic — tabular figures, and colour that is never the only signal.
+ *
+ * The trend takes a status ink, and the words beside it say the same thing. That
+ * pairing is the rule: a green arrow alone fails for a reader who cannot see it
+ * and for one who cannot tell the two greens apart, and both are common.
+ *
+ * `flat` deliberately takes the muted ink rather than a third status colour.
+ * "No change" is not a status; treating it as one would make every unremarkable
+ * figure look like a report.
+ */
+
+.statistic {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-2xs;
+  color: var(--cr-text);
+}
+
+.label {
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+.value {
+  display: flex;
+  align-items: baseline;
+  gap: $cr-spacing-2xs;
+  font-size: var(--cr-text-title-size);
+  line-height: var(--cr-text-title-leading);
+  letter-spacing: var(--cr-text-title-tracking);
+  font-weight: 800;
+  /* A column of statistics whose digits do not line up cannot be read down its
+     own length, which is the only reason to put them in a column. */
+  font-variant-numeric: tabular-nums;
+}
+
+.unit {
+  color: var(--cr-muted);
+  font-size: var(--cr-text-body-size);
+  font-weight: 600;
+}
+
+.placeholder {
+  display: inline-block;
+  inline-size: $cr-spacing-2xl;
+  block-size: 1em;  /* crystal-allow-literal: relative to the text, not a design value */
+  border-radius: var(--cr-radius);
+  background: var(--cr-haze-fill);
+}
+
+.trend {
+  display: inline-flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  font-weight: 650;
+}
+
+.trend[data-direction='up'] { color: var(--cr-success-ink); }
+.trend[data-direction='down'] { color: var(--cr-danger-ink); }
+.trend[data-direction='flat'] { color: var(--cr-muted); }
+
+.arrow { font-weight: 800; }
+
+@media (forced-colors: active) {
+  .trend { color: CanvasText; }
+  .placeholder { background: Canvas; border: 1px solid CanvasText; }
+}

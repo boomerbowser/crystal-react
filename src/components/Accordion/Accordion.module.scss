@@ -1,0 +1,84 @@
+@use '../../styles/tokens' as *;
+
+/* Accordion — Haze rows, with the expanded content on the row's own surface.
+ *
+ * "Expanded content shares the row surface": the panel is not a second card under
+ * the header, it is the same piece of material grown taller. So the radius and
+ * the fill belong to the row and the header paints nothing of its own.
+ *
+ * The header reaches 44px through its padding rather than through a grown hit
+ * area. A grown target is for a small control with room around it; a disclosure
+ * header is the full width of the row and has nothing to overlap, so making the
+ * box itself big is both simpler and honest about where the press lands.
+ */
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-2xs;
+}
+
+.row {
+  border-radius: var(--cr-radius);
+  background: var(--cr-haze-fill);
+  color: var(--cr-text);
+  overflow: hidden;
+}
+
+.heading { margin: 0; font: inherit; }
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $cr-spacing-sm;
+  inline-size: 100%;
+  box-sizing: border-box;
+  min-block-size: $cr-action-min-target;
+  padding: $cr-spacing-sm var(--cr-space);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 650;
+  text-align: start;
+  cursor: pointer;
+}
+
+.trigger[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(#{$cr-focus-core-offset} * -1);
+  box-shadow: var(--cr-focus-ring);
+}
+
+.trigger[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+
+.title { flex: 1 1 auto; min-inline-size: 0; }
+
+.chevron {
+  flex: none;
+  inline-size: $cr-icon-action;
+  block-size: $cr-icon-action;
+}
+
+/* The end state, in CSS. Correct at rest whether or not the recipe ran — which
+   is what a reduced-motion reader, a re-render mid-animation and a
+   server-rendered expanded row all need. */
+.row[data-expanded] .chevron { rotate: 180deg; }
+
+.panel { padding: 0; }
+
+.content {
+  padding: 0 var(--cr-space) var(--cr-space);
+  color: var(--cr-text);
+}
+
+:global([data-effects='opaque']) .row { background: var(--cr-surface); }
+
+@media (prefers-reduced-transparency: reduce) {
+  .row { background: var(--cr-surface); }
+}
+
+@media (forced-colors: active) {
+  .row { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
+}

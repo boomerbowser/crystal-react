@@ -84,8 +84,14 @@
  * it has no exposed glass perimeter to protect. Passing `0` states that as a
  * decision; a hand-written `inset: 0` beside sixteen hand-written `inset: 8px`
  * reads as an oversight.
+ *
+ * The feather is an argument for one reason and one only: the catalogue specifies
+ * the indicator as "a 3px-inset Haze fill and a 1px feather on that fill", which
+ * is the single surface in the system where the feather is not Crystal's own
+ * 1.95px. A 20px mark feathered at 1.95px is a fifth of its own radius, and the
+ * mark stops reading as a mark. Every other caller takes the default, and should.
  */
-@mixin haze-fill($inset: var(--cr-haze-inset)) {
+@mixin haze-fill($inset: var(--cr-haze-inset), $feather: var(--cr-haze-feather)) {
   /* Both are load-bearing, and the mixin sets them rather than trusting the host
      to. `z-index: -1` alone puts the fill behind the *element*, not behind its
      label — so on a Resin control, whose own background is a translucent fill,
@@ -103,7 +109,7 @@
     pointer-events: none;
     border-radius: inherit;
     background: var(--cr-haze-fill);
-    filter: blur(var(--cr-haze-feather));
+    filter: blur($feather);
   }
 
   /* Forced colours replaces the whole composition with system colours, and a

@@ -172,10 +172,20 @@ function toMotionKeyframes(recipe: CrystalRecipe): {
  * Attach `scope` to the element the recipe plays on. `play(name)` is imperative
  * on purpose: it triggers no render, and is safe from an event handler, an effect
  * or a state-change observer.
+ *
+ * It returns a promise that settles when the movement finishes, which is what
+ * makes an *exit* recipe possible at all: `accordion-out` and `list-out` mark a
+ * region closing, and a region that unmounted the moment the state changed would
+ * play them into a detached node. `usePreset` already worked this way for the
+ * material presets; recipes had no equivalent, so the catalogue's exit recipes
+ * could not be honoured. Nothing has to await it — every existing caller marks an
+ * arrival and ignores the result — and the promise settles on every path,
+ * including reduced motion and a missing element, so an awaiting caller is never
+ * left hanging.
  */
 export function useMotion(
   options: UseMotionOptions = {},
-): [ReturnType<typeof useAnimate>[0], (name: CrystalRecipeName) => void] {
+): [ReturnType<typeof useAnimate>[0], (name: CrystalRecipeName) => Promise<void>] {
   const [scope, animate] = useAnimate();
   const { resolveDuration, reduceMotion } = useCrystalTheme();
   const running = useRef<string | null>(null);
@@ -183,7 +193,7 @@ export function useMotion(
   const mirrorInline = options.reorient?.mirrorInline ?? false;
   const toBlockAxis = options.reorient?.toBlockAxis ?? false;
 
-  const play = useCallback((name: CrystalRecipeName) => {
+  const play = useCallback(async (name: CrystalRecipeName): Promise<void> => {
     const element = scope.current as HTMLElement | null;
     if (!element) return;
 
@@ -225,7 +235,7 @@ export function useMotion(
       ? { type: 'spring' as const, stiffness: web.stiffness, damping: web.damping, mass: web.mass }
       : { duration: duration / 1000, ease: [0.22, 0.65, 0.22, 1] as const, ...(times ? { times } : {}) };
 
-    void animate(element, values, transition)
+    await animate(element, values, transition)
       .then(() => {
         if (running.current === name) element.dataset['crMotionState'] = 'finished';
       })

@@ -1,0 +1,42 @@
+@use '../../styles/tokens' as *;
+
+/* Spoiler — "edge fade drawn from the surrounding material".
+ *
+ * Drawn *from* the surrounding material, not painted over it: the fade is a mask
+ * on the content, so what shows through is whatever the spoiler is sitting on.
+ * A gradient painted in a surface colour would be a stripe of the wrong colour on
+ * every material except the one it was written for, and Crystal has six.
+ *
+ * The depth is Crystal's stated edge-fade depth — the same 24px the scroll
+ * contract uses for a scrolled edge, and the same gesture: content continuing
+ * past a boundary. Binding them means a change to the fade is one change.
+ */
+
+.spoiler {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $cr-spacing-xs;
+}
+
+.content {
+  position: relative;
+  overflow: hidden;
+  /* The mask fades the content itself, so the material underneath shows through
+     unchanged. `to bottom` rather than a logical direction on purpose: the cut is
+     at the bottom of a block of text in every writing mode. */
+  mask-image: linear-gradient(to bottom, #000 calc(100% - #{$cr-scroll-area-fade-depth}), transparent 100%);  /* crystal-allow-literal: mask coverage, not a colour */
+}
+
+/* Open: no cut, so no fade. Leaving the mask on would fade the last line of fully
+   revealed content, which reads as a rendering fault. */
+.content[data-expanded] {
+  overflow: visible;
+  mask-image: none;
+}
+
+/* A mask is a visual effect with no forced-colours equivalent, and a faded edge
+   over system colours reads as a broken paint. */
+@media (forced-colors: active) {
+  .content { mask-image: none; }
+}

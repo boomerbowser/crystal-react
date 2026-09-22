@@ -1098,7 +1098,7 @@ outstanding are below, with what each had to get right.
 
 ---
 
-### J — Data display (37) — 9 of 37
+### J — Data display (37) — 18 of 37
 
 `card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
@@ -1164,6 +1164,59 @@ one.
   asks the group to *have* a name, not for its members to lose theirs. The
   overflow chip shows "+3" and announces "3 more", because "+3" read literally is
   a plus sign and a number.
+
+- [x] **`indicator`.** The mark a control wears, and the one place in Crystal
+  where the Haze feather is not 1.95px: the catalogue asks for "a 3px-inset Haze
+  fill and a 1px feather", and at 20px across the system feather is a fifth of
+  the mark's own radius. `styles/_material.scss`'s `haze-fill` mixin took a
+  second argument for it, defaulted so that every other caller is unchanged.
+  It is `aria-hidden` and has no hit area at all, because the control beside it
+  already carries `aria-checked`, `aria-invalid`, `aria-current` or `aria-busy`.
+- [x] **`image`.** The ratio is reserved before anything loads, which is the only
+  reason this exists rather than an `img` tag. `alt` is required and may be
+  empty: empty means decorative, absent means announced as a filename, and
+  making the prop required forces the author to say which.
+- [x] **`statistic`.** "Trend direction is stated in text, not by colour or arrow
+  alone", so `trend` carries a direction *and* the words — the arrow is drawn
+  beside them and hidden. `flat` takes the muted ink rather than a third status
+  colour, because "no change" is not a status.
+- [x] **`list`, `description-list`, `timeline`.** All three are arguments for
+  using the real element. A row with an `onClick` on a div is not reachable by
+  keyboard and cannot be opened in a new tab when it was really a link, so
+  `ListItem` takes `href` or `onPress` and renders what each one means, with the
+  trailing action as a *sibling* of the row's control because a button inside a
+  button is invalid. A definition list is the only thing that keeps a term and
+  its value associated when a reader moves through them out of order. And a
+  timeline is an `ol` because the order is the meaning — plus the status said in
+  words, since three of its four states differ only by the colour of a small
+  circle.
+- [x] **`collapse`, `spoiler`, `accordion`** — and the distinction between the
+  first two, which is the whole of it. A collapse is *genuinely* hidden: the
+  usual `max-height: 0` leaves a zero-height region full of focusable links a
+  keyboard user can still tab into, so a closed region is not rendered at all. A
+  spoiler is the opposite and deliberately so — it is a visual economy, and a
+  reader who is not looking at the page has no reason to be given less of it, so
+  the truncated text stays in the accessibility tree behind a mask. `Accordion`
+  is React Aria's `DisclosureGroup`, which is what makes "only one at a time" a
+  property of the group rather than of five rows each watching the others; the
+  chevron's rotation is a CSS end state, correct at rest whether or not
+  `icon-turn` ran, which is the rule `burger` established.
+
+**The change this slice made to `useMotion`.** `play` now returns a promise that
+settles when the movement finishes. Until it did, an *exit* recipe could not be
+honoured at all: `accordion-out` and `list-out` mark a region closing, and a
+region that unmounted the moment its state changed would play them into a
+detached node. `usePreset` had solved this for the material presets and recipes
+had no equivalent. Nothing has to await it — every existing caller marks an
+arrival and ignores the result — and it settles on every path, reduced motion
+and a missing element included. `Collapse` is the first caller to await it, and
+its test asserts the region is *still there* on the tick after the state changed,
+which is the half a `waitFor` alone would not catch.
+
+`list-out` is still not played by the library, and the comment in `List` says why
+rather than leaving it looking like an omission: the element of a removed row is
+gone by the time the component hears about it, so an exit there belongs to
+whoever owns the data and can hold the row — which the promise now lets them do.
 
 **What this slice had to write down rather than look up.** Crystal 2.0.0 publishes
 *action* geometry as tokens and badge, avatar, code, kbd and caption geometry only

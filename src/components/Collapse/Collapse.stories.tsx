@@ -1,0 +1,59 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
+import { only } from '../../../.storybook/environment.js';
+import { Button } from '../Button/Button.js';
+import { Collapse } from './Collapse.js';
+
+const meta = {
+  title: 'Data display/Collapse',
+  component: Collapse,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'A region that opens and closes. "Hidden content is genuinely hidden from assistive '
+          + 'technology", which rules out the usual `max-height: 0` — that leaves a zero-height '
+          + 'region full of focusable links a keyboard user can still tab into. So a collapsed '
+          + 'region is not rendered at all, and the exit recipe is what makes that possible to do '
+          + 'gracefully: `play` returns a promise that settles when the movement finishes, so the '
+          + 'content stays for exactly as long as `accordion-out` runs and then goes. The trigger '
+          + 'is not part of this component, because its `aria-expanded` and `aria-controls` belong '
+          + 'to whoever owns the button.',
+      },
+    },
+  },
+  args: { isExpanded: true, id: 'collapse-story', children: 'A region that opens and closes.' },
+} satisfies Meta<typeof Collapse>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};
+
+/** The assembled pair: a button that owns the state and names the region. This is
+ *  what `Accordion` does for a group of them. */
+export const WithItsTrigger: Story = {
+  render: (args) => {
+    const Demo = () => {
+      const [open, setOpen] = useState(false);
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--cr-space)', alignItems: 'flex-start' }}>
+          <Button
+            variant="quiet"
+            aria-expanded={open}
+            aria-controls="collapse-demo"
+            onPress={() => { setOpen((was) => !was); }}
+          >
+            {open ? 'Hide details' : 'Show details'}
+          </Button>
+          <Collapse {...only(args)} id="collapse-demo" isExpanded={open}>
+            <p style={{ margin: 0 }}>
+              Closed, this paragraph is not in the document at all — not hidden, absent.
+            </p>
+          </Collapse>
+        </div>
+      );
+    };
+    return <Demo />;
+  },
+};
