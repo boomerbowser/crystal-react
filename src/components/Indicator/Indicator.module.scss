@@ -69,4 +69,11 @@ $indicator-haze-feather: 1px;
   /* The fill is gone, so the states would be one shape. The distinction that
      survives is filled versus hollow, which is what forced colours can carry. */
   .indicator[data-state='field-idle'] { background: Canvas; }
+
+  /* Selection and the current item take Highlight, which is what forced colours
+     has for "this is the chosen one". Crystal's rule against a Highlight *fill*
+     is about a label — Chromium paints a text backplate over one and erases the
+     words. A mark carries no text, so the fill is the only signal it has. */
+  .indicator[data-state='selection'],
+  .indicator[data-state='current'] { background: Highlight; border-color: Highlight; }
 }

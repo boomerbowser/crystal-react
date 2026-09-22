@@ -17,7 +17,15 @@
  *
  * The trigger is not here. A disclosure's button carries `aria-expanded` and
  * `aria-controls`, and both have to name this region — so the caller owns the
- * button and passes the `id`. `Accordion` is the assembled version.
+ * button and passes the `id`.
+ *
+ * `Accordion` is not built on this, and the difference is the exit. It uses React
+ * Aria's `DisclosurePanel`, which hides the panel with `hidden="until-found"` —
+ * so a collapsed accordion row is still reachable by find-in-page, which the
+ * catalogue asks for and this component deliberately does not do. The cost is
+ * that React Aria owns the hiding and applies it as soon as the panel's own
+ * animations settle, so `accordion-out` cannot run there. Here it can, because
+ * this component owns the unmount.
  */
 import { useEffect, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { useMotion } from '../../motion/useMotion.js';

@@ -43,6 +43,32 @@ describe('Accordion', () => {
     expect(screen.getByRole('button', { name: 'Returns' })).toHaveAttribute('aria-expanded', 'true');
   });
 
+  /* `icon-turn` is a rotate-and-scale torsion. On the header button it turns the
+     title with it and leaves the final keyframe applied there — which is what it
+     did until this test existed. */
+  it('turns the chevron and not the header', async () => {
+    const { container } = renderWithCrystal(<Accordion items={items} />);
+    const header = screen.getByRole('button', { name: 'Shipping' });
+    await userEvent.click(header);
+    const chevron = header.querySelector('svg') as SVGElement;
+    expect(chevron.dataset['crMotionName'] ?? chevron.dataset['crMotionState']).toBeDefined();
+    expect(header.dataset['crMotionName'] ?? header.dataset['crMotionState']).toBeUndefined();
+  });
+
+  /* Crystal's `accordion-in` is a clip and a fade on the content — "no scripted
+     height measurement needed" — and it plays when the row opens, never on a row
+     that was open when the page loaded. */
+  it('plays the arrival on the content when the row opens, and not on load', async () => {
+    const { container } = renderWithCrystal(<Accordion items={items} defaultExpandedKeys={['shipping']} />);
+    const open = container.querySelector('[id]:not([hidden]) > div') as HTMLElement | null;
+    expect(open?.dataset['crMotionName'] ?? open?.dataset['crMotionState']).toBeUndefined();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Returns' }));
+    const panels = [...container.querySelectorAll('div')]
+      .filter((node) => node.dataset['crMotionName'] !== undefined || node.dataset['crMotionState'] !== undefined);
+    expect(panels.length).toBeGreaterThan(0);
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = renderWithCrystal(<Accordion items={items} defaultExpandedKeys={['shipping']} />);
     await expectNoAxeViolations(container);

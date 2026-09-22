@@ -30,8 +30,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** The assembled pair: a button that owns the state and names the region. This is
- *  what `Accordion` does for a group of them. */
+/** The assembled pair: a button that owns the state and names the region.
+ *  `Accordion` solves the same problem a different way — on React Aria's
+ *  disclosure, which keeps a collapsed row reachable by find-in-page and, in
+ *  exchange, owns the hiding itself. */
 export const WithItsTrigger: Story = {
   render: (args) => {
     const Demo = () => {
