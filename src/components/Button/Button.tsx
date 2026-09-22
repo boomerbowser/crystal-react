@@ -20,8 +20,18 @@ import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Button.module.scss';
 
-/** Fill, not geometry. A button is a pill in every variant. */
-export type ButtonVariant = 'primary' | 'secondary' | 'quiet' | 'resin';
+/**
+ * Fill, not geometry. A button is a pill in every variant.
+ *
+ * There is no `secondary`. It named a second action colour and Crystal defines
+ * one: the palettes publish a single action pair, and the companion and glow
+ * hues are expressive paint that `colors.md` says is never assumed to be
+ * text-safe. A variant named after a colour the system does not define is a
+ * promise it cannot keep, so Meridian withdrew it on 22 September 2026 and
+ * `crystal.css` has no `.secondary` rule either. What it used to mean is
+ * `resin`, which is the default.
+ */
+export type ButtonVariant = 'primary' | 'quiet' | 'resin';
 
 /**
  * Shape.
@@ -42,11 +52,6 @@ export interface ButtonProps extends Omit<AriaButtonProps, 'className' | 'style'
 
 const VARIANT_CLASS: Record<ButtonVariant, string | undefined> = {
   primary: styles['primary'],
-  /* The base surface, which is what Crystal's own stylesheet gives it: the
-     modifier fills were removed from `crystal.css` once they were found to
-     compute identically to it. The name stays because it is what a caller
-     means. */
-  secondary: undefined,
   /* The base surface, minus the reading pad: the whole Resin shell with the
      label directly on the material, which is what makes a quiet button quiet. */
   quiet: styles['quiet'],

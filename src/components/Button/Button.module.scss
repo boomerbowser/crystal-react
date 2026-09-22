@@ -70,31 +70,16 @@
   backdrop-filter: none;
 }
 
-/* Secondary is the plain Resin control, and that is Crystal's own answer rather
-   than an omission: `crystal.css` carries no `.secondary` fill at all — the three
-   modifier fills were removed from it once they were found to compute identically
-   to the base surface.
+/* There is no secondary variant. It named a second action colour and Crystal
+ * defines one — the palettes publish a single action pair, and the companion and
+ * glow hues are expressive paint that `colors.md` says is never assumed to be
+ * text-safe. Meridian withdrew it on 22 September 2026, and `crystal.css` carries
+ * no `.secondary` rule either. What it used to mean is the default, `resin`.
  *
- * This library had kept one, `background: var(--cr-primary-soft)` on the element,
- * which is the same accident the primary variant had: behind an inset Haze layer
- * it is not a fill, it is an 8px ring of exposed background. With the primary
- * action's reading fill now tinted, that ring made the secondary button the
- * loudest thing in the row — a brighter centre with a coloured halo, beside a
- * primary that had gone quiet. The hierarchy has to be readable for the tint to
- * mean anything.
- *
- * So secondary is the base surface, the same as `resin`, and the variant survives
- * because "secondary" is what a caller means.
- *
- * Quiet is the third name, and it differs by one line. Meridian, 22 September
- * 2026, first: "can you make the Quiet buttons adopt the styling of the empty
- * Secondary button?" — it had been the one variant with no surface at all, which
- * left the Haze pad painting a bare blob with no perimeter around it. Then:
- * "remove the Haze content fill from the Quiet buttons." So quiet takes the whole
- * Resin shell — rim, float shadow, sheen — and no reading pad, which makes it the
- * only one of the four that is glass all the way through. Primary is tinted,
- * secondary is the neutral pad, quiet is neither.
- */
+ * So the vocabulary is three: the base Resin control with its neutral reading
+ * pad, `primary` with that pad painted in the action colour, and `quiet` with no
+ * pad at all. Primary is tinted, the default is the neutral pad, quiet is
+ * neither.
 
 /* The primary action's *reading fill* is the primary colour.
  *

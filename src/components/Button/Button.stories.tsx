@@ -37,10 +37,14 @@ const meta = {
           + 'as primary: `primary` paints its **Haze reading fill** in `--cr-primary` with '
           + '`--cr-on-primary` as the ink, inside the same glass rim every other control has. '
           + 'The colour is in the fill rather than the perimeter — a fill painted on the button '
-          + 'itself sits *behind* the inset Haze layer and shows only as a ring. `secondary`, '
-          + '`secondary` and `resin` are the base Resin surface with the neutral reading pad; '
-          + '`quiet` is the same shell with no pad at all, so the label sits directly on the '
-          + 'material. Primary is tinted, secondary is the neutral pad, quiet is neither.',
+          + 'itself sits *behind* the inset Haze layer and shows only as a ring. '
+          + '`resin` is the default: the base surface with the neutral reading pad. `quiet` is '
+          + 'the same shell with no pad at all, so the label sits directly on the material. '
+          + 'Primary is tinted, the default is the neutral pad, quiet is neither.\n\n'
+          + 'There is no `secondary`. It named a second action colour and Crystal defines one — '
+          + 'the palettes publish a single action pair, and the companion and glow hues are '
+          + 'expressive paint that is never assumed to be text-safe. What it used to mean is the '
+          + 'default.',
       },
     },
   },
@@ -61,12 +65,6 @@ export const Primary: Story = {
   args: { variant: 'primary' },
 };
 
-/** The base Resin surface. Crystal's own stylesheet carries no `.secondary` fill:
- *  the modifier fills were removed from `crystal.css` once they computed
- *  identically to it. */
-export const Secondary: Story = {
-  args: { variant: 'secondary' },
-};
 
 /** The whole Resin shell — rim, float shadow, sheen — and no reading pad, which
  *  makes it the only variant that is glass all the way through. The label reads
@@ -90,7 +88,6 @@ export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--cr-space)', flexWrap: 'wrap', alignItems: 'center' }}>
       <Button variant="primary">Primary</Button>
-      <Button variant="secondary">Secondary</Button>
       <Button variant="resin">Resin</Button>
       <Button variant="quiet">Quiet</Button>
       <Button shape="card">Card shaped</Button>
