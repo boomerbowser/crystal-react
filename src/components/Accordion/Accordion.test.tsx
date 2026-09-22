@@ -47,7 +47,7 @@ describe('Accordion', () => {
      title with it and leaves the final keyframe applied there — which is what it
      did until this test existed. */
   it('turns the chevron and not the header', async () => {
-    const { container } = renderWithCrystal(<Accordion items={items} />);
+    renderWithCrystal(<Accordion items={items} />);
     const header = screen.getByRole('button', { name: 'Shipping' });
     await userEvent.click(header);
     const chevron = header.querySelector('svg') as SVGElement;
