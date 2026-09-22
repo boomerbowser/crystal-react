@@ -1098,7 +1098,7 @@ outstanding are below, with what each had to get right.
 
 ---
 
-### J — Data display (37) — 23 of 37
+### J — Data display (37) — 28 of 37
 
 `card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
@@ -1254,6 +1254,49 @@ whoever owns the data and can hold the row — which the promise now lets them d
   copy of the rule. The value is announced once it settles rather than on every
   frame, and its test asserts the announcement is *still the old value* on the
   tick after the change.
+
+- [x] **`stat-card`, `kpi-tile`.** Both are `Card` and `Statistic` rather than a
+  third implementation of either. The stat card's rule — "the figure and its
+  trend are one readable sentence, not a number beside an arrow" — is a rule
+  about *order*, which is the one thing a card can enforce: label, figure,
+  period, trend, read straight down. The KPI tile's is that attainment is stated
+  in words as well as shown, because a bar near its end and a bar past its end
+  look the same and neither says whether past the end is good. `onTarget` is the
+  caller's judgement and not a comparison the tile makes: a cost target is met by
+  coming in *under* it, and a tile that decided for itself would report every
+  saving as a miss.
+- [x] **`marquee`** — the one component in Crystal whose default state is
+  movement at rest, which is the rule Crystal otherwise holds absolutely. The
+  catalogue lists it anyway and the reconciliation is in its own semantics line:
+  "removed entirely under reduced motion". So the animation and the duplicate
+  copy both go under reduced motion, the viewport takes a tab stop so "pausable
+  on focus" means something without a pointer, and `speed` is a rate rather than
+  a duration because a continuous scroll's duration is a fact about the caller's
+  content. The measured duration arrives as a custom property so the stylesheet
+  can still gate it with `--cr-motion-enabled` — an inline `animation-duration`
+  would outrank the rule and quietly un-gate it.
+- [x] **`image-list`.** A real `ul`, so a reader is told how many images there
+  are before walking them, and `alt` required on every item exactly as `Image`
+  requires it. The caption bar keeps the tile's radius on the two corners it
+  meets, logically, so a right-to-left grid needs no second rule.
+- [x] **`image-compare`**, and the defect `verify:targets` found in it. The
+  divider is React Aria's slider — role, value, arrow keys, and `aria-valuetext`
+  via `style: 'unit'` with the percent unit rather than `style: 'percent'`, which
+  multiplies by a hundred and would announce "6,200%". The top picture is clipped
+  rather than resized, because a width would squash it.
+
+  The gate caught what review would not have: React Aria sets `position:
+  relative` on the slider track *inline*, which outranks a class, so the track's
+  `inset: 0` silently did not apply, the track collapsed to zero height, and the
+  handle's `50%` put it at the very top of the frame with half of it clipped by
+  the container's own `overflow: hidden`. The failure read "44×44, but the top of
+  a 44px target is not on it" — the box was right and the position was not, which
+  is the shape of defect a unit test cannot see and a screenshot might be
+  forgiven for. Sizing the track instead of positioning it is the fix that
+  survives the inline style. The handle carries `data-cr-handle` because React
+  Aria's real `input[role=slider]` lives in a visually-hidden 1px box inside it,
+  so probing the *named* element would have reported a 1px target — the same trap
+  the segmented control's label hit in slice I.
 
 **What this slice had to write down rather than look up.** Crystal 2.0.0 publishes
 *action* geometry as tokens and badge, avatar, code, kbd and caption geometry only

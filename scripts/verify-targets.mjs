@@ -93,6 +93,13 @@ const CASES = [
   { story: 'data-display-accordion--default', selector: '#storybook-root button', why: 'catalogue: an accordion header meets 44px' },
   { story: 'data-display-list--selected', selector: '#storybook-root li a', why: 'an interactive row is a target, and a column of them is where a short one hides' },
   { story: 'data-display-spoiler--default', selector: '#storybook-root button', why: 'the reveal control is an action, and actions are pills at the floor' },
+
+  /* The handle, not `[role=slider]`. React Aria puts the real input in a
+     visually-hidden 1px box inside the handle, so probing the named element
+     would report a 1px target on a control the catalogue states at 44px — the
+     same trap the segmented control's label hit, and the reason the handle
+     carries `data-cr-handle`. */
+  { story: 'data-display-image-compare--default', selector: '#storybook-root [data-cr-handle]', why: 'catalogue: the compare handle is a pill and reaches 44px' },
 ];
 
 /* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
@@ -178,7 +185,7 @@ await browser.close();
  * Fewer probes is not a better result. It is the same checks run against less of
  * the library. Raise this when cases are added; lowering it is a deliberate edit
  * somebody makes in the same commit. */
-const LEAST_PROBES = 70;
+const LEAST_PROBES = 71;
 if (probes < LEAST_PROBES) {
   failures.push(
     `${probes} controls were measured, and this suite measured ${LEAST_PROBES} `

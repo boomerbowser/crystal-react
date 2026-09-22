@@ -141,3 +141,8 @@ export * from './DeltaBadge/index.js';
 export * from './AuthoredBubble/index.js';
 export * from './OverlayBadge/index.js';
 export * from './RollingNumber/index.js';
+export * from './StatCard/index.js';
+export * from './KpiTile/index.js';
+export * from './Marquee/index.js';
+export * from './ImageList/index.js';
+export * from './ImageCompare/index.js';

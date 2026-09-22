@@ -1,0 +1,101 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* ImageCompare — "Resin handle over the images; handle is a pill and reaches
+ * 44px."
+ *
+ * The 44px is reached by the handle's own box rather than by a grown hit area,
+ * and that is the right choice here for a reason specific to this control: the
+ * handle sits *over* the pictures with nothing beside it, so a grown target has
+ * nothing to overlap and hiding the real edge of a draggable thing makes it
+ * harder to aim at, not easier.
+ *
+ * The top picture is clipped rather than resized. A width would squash it, and a
+ * squashed picture is not a comparison — it is two pictures at different scales
+ * pretending to be the same one.
+ */
+
+.compare {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--cr-radius);
+  isolation: isolate;
+  background: var(--cr-surface-alt);
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* Clipped to the divider. `--compare-at` is written by the slider's own
+   value, so the picture and the handle cannot disagree. */
+.clipped {
+  clip-path: inset(0 calc(100% - var(--compare-at, 50%)) 0 0);
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+/* React Aria sets `position: relative` on the track inline, which outranks a
+   class — so `inset: 0` would silently not apply and the track would collapse to
+   nothing, taking the thumb's `50%` with it. The handle then sits at the very top
+   of the frame, half of it clipped by the container's own `overflow: hidden`.
+   That is exactly what happened, and `verify:targets` is what found it: a 44×44
+   box whose top edge was not on the control. Sizing the track instead of
+   positioning it is the fix that survives the inline style. */
+.track {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* The line, drawn where the clip ends. Purely visual: the slider's own thumb is
+   the control. */
+.position {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--compare-at, 50%);
+  inline-size: 2px;
+  translate: -1px 0;
+  background: var(--cr-rim);
+  pointer-events: none;
+}
+
+.thumb {
+  @include material.resin;
+
+  position: absolute;
+  inset-block-start: 50%;
+  /* The inline-start is React Aria's, written inline from the real value — so
+     the handle and the clip cannot disagree about where the divider is. */
+  box-sizing: border-box;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  border-radius: $cr-action-radius;
+  cursor: ew-resize;
+}
+
+@include material.opaque-fallback('.thumb');
+
+.thumb[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+@media (forced-colors: active) {
+  .thumb {
+    background: ButtonFace;
+    border: 1px solid ButtonText;
+    box-shadow: none;
+  }
+
+  .position { background: CanvasText; }
+}

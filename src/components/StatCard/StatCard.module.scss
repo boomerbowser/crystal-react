@@ -1,0 +1,37 @@
+@use '../../styles/tokens' as *;
+
+/* StatCard — "Haze content fill on the surrounding material; content radius;
+ * spacing from the scale."
+ *
+ * All three of those belong to `Card`, which is why this file is short: it lays
+ * the parts out and owns nothing else. A second Haze recipe here would be a copy
+ * of the one thing in this library that has already drifted once.
+ *
+ * The period sits *after* the trend, at the end of the sentence the card reads
+ * as. Putting it beside the figure breaks the order the semantics rule is about.
+ */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-xs;
+}
+
+.label {
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+.period {
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+.empty {
+  margin: 0;
+  color: var(--cr-muted);
+  font-size: var(--cr-text-body-size);
+  line-height: var(--cr-text-body-leading);
+}

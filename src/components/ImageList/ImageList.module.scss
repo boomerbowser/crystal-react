@@ -1,0 +1,74 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* ImageList — "Haze caption bars over the image; caption bars keep the content
+ * radius at the bottom corners."
+ *
+ * The bottom-corner rule is the whole of why the caption is not simply a bar: a
+ * caption that squared off the tile's corners would make the grid look like it
+ * had lost its radius in one place, which reads as a rendering fault rather than
+ * a design. The logical properties do it, so a right-to-left grid needs no
+ * second rule.
+ *
+ * The bar is Haze on a pseudo-element, not a background on the bar itself: the
+ * caption is text, and Haze feathers its own paint. This is the same split
+ * `OverlayBadge` makes, and the same one that keeps every label in Crystal crisp
+ * over a softened ground.
+ */
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--tile-min, #{$cr-layout-min-cell-width}), 1fr));
+  gap: $cr-spacing-sm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--cr-radius);
+  isolation: isolate;
+}
+
+.link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.link:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(#{$cr-focus-core-offset} * -1);
+  box-shadow: var(--cr-focus-ring);
+}
+
+.media { border-radius: 0; }
+
+.caption {
+  @include material.haze-fill(0);
+
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: block;
+  padding: $cr-spacing-xs $cr-spacing-sm;
+  /* The tile's radius, on the two corners the bar actually meets. */
+  border-end-start-radius: var(--cr-radius);
+  border-end-end-radius: var(--cr-radius);
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+:global([data-effects='opaque']) .caption::before { background: var(--cr-surface); filter: none; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .caption::before { background: var(--cr-surface); filter: none; }
+}
+
+@media (forced-colors: active) {
+  .caption { background: Canvas; color: CanvasText; border-block-start: 1px solid CanvasText; }
+  .caption::before { display: none; }
+}

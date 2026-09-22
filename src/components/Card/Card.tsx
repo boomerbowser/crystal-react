@@ -15,9 +15,15 @@ import styles from './Card.module.scss';
 
 export interface CardProps extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
-  /** Renders the card as a named region. Without a name it stays a plain div. */
-  'aria-label'?: string;
-  'aria-labelledby'?: string;
+  /** Renders the card as a named region. Without a name it stays a plain div.
+   *
+   * Typed `| undefined` rather than merely optional: under
+   * `exactOptionalPropertyTypes` a narrower re-declaration of a prop
+   * `HTMLAttributes` already types as `string | undefined` makes the whole
+   * interface unassignable from one, which is what a wrapper like `StatCard`
+   * does when it spreads its own props through. */
+  'aria-label'?: string | undefined;
+  'aria-labelledby'?: string | undefined;
 }
 
 export const Card = forwardRef<HTMLElement, CardProps>(function Card(
