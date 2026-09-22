@@ -146,3 +146,4 @@ export * from './KpiTile/index.js';
 export * from './Marquee/index.js';
 export * from './ImageList/index.js';
 export * from './ImageCompare/index.js';
+export * from './Table/index.js';

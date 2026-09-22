@@ -1098,7 +1098,7 @@ outstanding are below, with what each had to get right.
 
 ---
 
-### J — Data display (37) — 28 of 37
+### J — Data display (37) — 29 of 37
 
 `card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
@@ -1297,6 +1297,29 @@ whoever owns the data and can hold the row — which the promise now lets them d
   Aria's real `input[role=slider]` lives in a visually-hidden 1px box inside it,
   so probing the *named* element would have reported a 1px target — the same trap
   the segmented control's label hit in slice I.
+
+- [x] **`table`**, which the rest of the data components stand on.
+  `crystal.css` already carries a complete `.cr-table` treatment, so the
+  stylesheet follows it value for value rather than choosing again — including
+  the Haze fill inset **6px** rather than the usual 8, which is the one value
+  here most likely to be "corrected" by somebody reading the Haze default, and
+  the header band's top corners at `calc(var(--cr-radius) - 8px)`, which is how
+  the catalogue's "header corners inset 8px" stays right when the radius slider
+  moves.
+
+  Two semantics, both easy to get wrong. Every header carries `scope`, because
+  header association is what lets a reader hear "Seats, column 3, 12" while
+  moving across a row, and no ARIA pattern recovers it once the elements are
+  divs. And `aria-sort` goes on the `th` rather than on the button inside it,
+  with exactly one column carrying it at a time — it describes the table's
+  current order, not each column's capability, so a sortable column that is not
+  sorted carries nothing. The test asserts both, by counting the elements that
+  have it and checking the tag.
+
+  The shell scrolls rather than the page, so it is a named tab stop with the
+  Resin scrollbar `.cr-table-scroll` gives it: a compact horizontal scroller is a
+  control plane, and a scroll container with nothing focusable in it cannot be
+  reached without a pointer.
 
 **What this slice had to write down rather than look up.** Crystal 2.0.0 publishes
 *action* geometry as tokens and badge, avatar, code, kbd and caption geometry only

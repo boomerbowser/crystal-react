@@ -1,0 +1,166 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* Table — Crystal's own recipe, value for value.
+ *
+ * `crystal.css` already carries a complete `.cr-table` treatment, so this file
+ * follows it rather than choosing again: a Resin shell with the content shadow,
+ * a Haze fill inset **6px** — not the usual 8, which is what the shell's own
+ * rule says and the one value here most likely to be "corrected" by somebody
+ * reading the Haze default — hairline `--cr-edge` separators, 14px/18px cells,
+ * and a primary-soft header band whose top corners are inset 8px from the
+ * shell's radius. The last one is the catalogue's "header corners inset 8px",
+ * and `calc(var(--cr-radius) - 8px)` is how it stays right when the radius
+ * slider moves.
+ *
+ * The header band is the one place in this library where `--cr-primary-soft` is
+ * a *surface* rather than a ring, and it is paired with `--cr-on-primary-soft`,
+ * which is the ink tested against it. Both come from Crystal's rule.
+ *
+ * The scrollbar comes from `.cr-table-scroll` in the library stylesheet, which
+ * the shell also carries: a compact horizontal scroller is a control plane, so
+ * the thumb is Resin.
+ */
+
+$table-haze-inset: 6px; /* crystal-allow-literal: core `.cr-table-scroll::before` */
+$table-header-inset: 8px; /* crystal-allow-literal: the catalogue's stated header corner inset */
+$table-cell-block: 14px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
+$table-cell-inline: 18px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
+$table-cell-block-narrow: 11px; /* crystal-allow-literal: core's narrow-viewport cells */
+$table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewport cells */
+
+.shell {
+  @include material.haze-fill($table-haze-inset);
+
+  display: block;
+  overflow: auto;
+  max-inline-size: 100%;
+  border: 1px solid var(--cr-rim);
+  border-radius: var(--cr-radius);
+  background: var(--cr-resin-fill);
+  box-shadow: var(--cr-shadow-content);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  /* The scroll contract: contained overscroll and a gutter that does not appear
+     and disappear as rows arrive. */
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.shell:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+@include material.opaque-fallback('.shell');
+
+.table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+}
+
+.table :is(th, td) {
+  border: 0;
+  border-block-end: 1px solid var(--cr-edge);
+  padding: $table-cell-block $table-cell-inline;
+  text-align: start;
+  vertical-align: top;
+  background: transparent;
+}
+
+.table :is(th, td)[data-align='end'] { text-align: end; font-variant-numeric: tabular-nums; }
+
+.table thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+  font-weight: 800;
+  border-block-end: 0;
+}
+
+.table thead th:first-child { border-start-start-radius: calc(var(--cr-radius) - #{$table-header-inset}); }
+.table thead th:last-child { border-start-end-radius: calc(var(--cr-radius) - #{$table-header-inset}); }
+
+.table tbody tr:last-child :is(th, td) { border-block-end: 0; }
+
+.table tbody tr:hover :is(th, td) { background: var(--cr-label-fill); }
+
+/* Selection is label weight, here as everywhere. The fill is the second signal
+   and never the only one. */
+.table tbody tr[data-selected] :is(th, td) {
+  font-weight: 800;
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+}
+
+.caption {
+  caption-side: top;
+  text-align: start;
+  padding: $table-cell-block $table-cell-inline $cr-spacing-2xs;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+/* The sort control is a button in the header, and `aria-sort` on the header is
+   what carries the order. The button reaches the target floor through the
+   header cell's own padding, which it fills. */
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  margin: calc(#{$table-cell-block} * -1) calc(#{$table-cell-inline} * -1);
+  padding: $table-cell-block $table-cell-inline;
+  inline-size: calc(100% + #{$table-cell-inline} * 2);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  text-align: start;
+  cursor: pointer;
+}
+
+.sort:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(#{$cr-focus-core-offset} * -1);
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* Dim until the column is the sorted one, so the header does not read as six
+   columns all claiming an order. */
+.arrow { opacity: 0.35; }
+.arrow[data-sorted] { opacity: 1; }
+
+.notice {
+  padding: var(--cr-space);
+  text-align: center;
+  color: var(--cr-muted);
+}
+
+.placeholder {
+  display: inline-block;
+  inline-size: 40%;
+  block-size: 1em; /* crystal-allow-literal: one line box, relative to the text */
+  border-radius: var(--cr-radius);
+  background: var(--cr-haze-fill);
+}
+
+@media (max-width: $cr-breakpoint-sm) {
+  .table :is(th, td) { padding: $table-cell-block-narrow $table-cell-inline-narrow; }
+}
+
+@media (forced-colors: active) {
+  .shell { background: Canvas; border: 1px solid CanvasText; box-shadow: none; backdrop-filter: none; }
+  .shell::before { display: none; }
+  .table :is(th, td) { border-block-end: 1px solid CanvasText; }
+  .table thead th { background: Canvas; color: CanvasText; border-block-end: 1px solid CanvasText; }
+  /* Selection is a Highlight ring, never a fill: Chromium paints a text
+     backplate over a filled row and erases the words. */
+  .table tbody tr[data-selected] :is(th, td) { background: Canvas; color: CanvasText; outline: 2px solid Highlight; }
+}
