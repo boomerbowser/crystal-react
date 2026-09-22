@@ -86,12 +86,14 @@
  * So secondary is the base surface, the same as `resin`, and the variant survives
  * because "secondary" is what a caller means.
  *
- * Quiet joins it. Meridian, 22 September 2026: "can you make the Quiet buttons
- * adopt the styling of the empty Secondary button?" It had been the one variant
- * with no surface — transparent background, no rim, no shadow — which left the
- * Haze pad painting a bare white blob with no perimeter around it. Crystal's own
- * stylesheet has no `.quiet` rule either, so this is the same adoption: three
- * names for the base Resin control, and one of them tinted.
+ * Quiet is the third name, and it differs by one line. Meridian, 22 September
+ * 2026, first: "can you make the Quiet buttons adopt the styling of the empty
+ * Secondary button?" — it had been the one variant with no surface at all, which
+ * left the Haze pad painting a bare blob with no perimeter around it. Then:
+ * "remove the Haze content fill from the Quiet buttons." So quiet takes the whole
+ * Resin shell — rim, float shadow, sheen — and no reading pad, which makes it the
+ * only one of the four that is glass all the way through. Primary is tinted,
+ * secondary is the neutral pad, quiet is neither.
  */
 
 /* The primary action's *reading fill* is the primary colour.
@@ -135,6 +137,16 @@
 
 .primary::before {
   background: var(--cr-primary);
+}
+
+/* The pad is what makes a label's contrast independent of what is behind the
+   control, so removing it means a quiet button's label reads against the Resin
+   fill and therefore against the backdrop. On Crystal's own foundation that is a
+   wide margin — `--cr-text` over the Resin fill over canvas, surface, surface-alt
+   and foundation measures 10.88 to 18.28 across all six palettes and both modes —
+   but a quiet button over artwork has no protected ground. */
+.quiet::before {
+  display: none;
 }
 
 /* A card-shaped button keeps the content radius. The documented exception to the

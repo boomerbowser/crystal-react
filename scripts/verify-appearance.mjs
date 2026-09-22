@@ -280,8 +280,14 @@ for (const [id, selector, what] of DISABLED) {
     const read = (node) => node && ({
       fill: getComputedStyle(node, '::before').backgroundColor,
       ink: getComputedStyle(node).color,
+      /* Whether the pad is painted at all, which is how `quiet` differs. */
+      pad: getComputedStyle(node, '::before').display,
     });
-    return { primary: read(named('Primary')), plain: read(named('Resin')) };
+    return {
+      primary: read(named('Primary')),
+      plain: read(named('Resin')),
+      quiet: read(named('Quiet')),
+    };
   });
 
   if (!seen.primary || !seen.plain) {
@@ -302,6 +308,15 @@ for (const [id, selector, what] of DISABLED) {
       `the primary button's colour is ${seen.primary.ink}, the same as a plain Resin `
       + 'button\'s. The fill moved and the ink did not follow it, which is the half of '
       + 'this that contrast depends on',
+    );
+    record(
+      'a quiet button has no reading pad, where every other variant does',
+      seen.quiet?.pad === 'none' && seen.plain.pad !== 'none',
+      `the quiet button's ::before display is ${seen.quiet?.pad} and a plain Resin `
+      + `button's is ${seen.plain.pad}. Quiet is the one variant that is glass all the `
+      + 'way through — the label sits on the material rather than on a protected '
+      + 'ground — and the base control rule paints a pad on every button, so one '
+      + 'suppressed pseudo-element is all that distinguishes it',
     );
   }
 }

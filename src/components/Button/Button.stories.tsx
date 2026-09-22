@@ -38,8 +38,9 @@ const meta = {
           + '`--cr-on-primary` as the ink, inside the same glass rim every other control has. '
           + 'The colour is in the fill rather than the perimeter — a fill painted on the button '
           + 'itself sits *behind* the inset Haze layer and shows only as a ring. `secondary`, '
-          + '`quiet` and `resin` are all the base Resin surface; the names differ because what a '
-          + 'caller means differs.',
+          + '`secondary` and `resin` are the base Resin surface with the neutral reading pad; '
+          + '`quiet` is the same shell with no pad at all, so the label sits directly on the '
+          + 'material. Primary is tinted, secondary is the neutral pad, quiet is neither.',
       },
     },
   },
@@ -67,9 +68,10 @@ export const Secondary: Story = {
   args: { variant: 'secondary' },
 };
 
-/** The base Resin surface too, at Meridian's direction. It used to have no
- *  surface at all — transparent background, no rim, no shadow — which left the
- *  Haze pad painting a bare blob with no perimeter around it. */
+/** The whole Resin shell — rim, float shadow, sheen — and no reading pad, which
+ *  makes it the only variant that is glass all the way through. The label reads
+ *  against the material rather than against a protected ground, which is a wide
+ *  margin on Crystal's own foundation and not one over artwork. */
 export const Quiet: Story = {
   args: { variant: 'quiet' },
 };
