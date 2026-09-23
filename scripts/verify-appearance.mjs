@@ -545,6 +545,75 @@ for (const [id, selector, what] of DISABLED) {
   await page.emulateMedia({ forcedColors: 'none' });
 }
 
+/* ------------------------------ an activity indicator turns where it is drawn */
+
+/* Two claims about the feedback slice that no unit test can reach, because both
+ * are facts about resolved CSS in a running engine.
+ *
+ * The first found a real defect. An SVG arc rotated with `rotate` and
+ * `transform-origin` does **not** turn about the circle it was drawn on:
+ * `transform-box: view-box` resolves the origin against the SVG viewport rather
+ * than against the user space `arcPath` draws in, and every combination of the
+ * two was measured sending the arc into orbit around its own ring — by 15px at
+ * best and 103px at worst, entirely outside the box the ring occupies. The fix
+ * is to turn the canvas, which is an ordinary CSS box where `50% 50%` means what
+ * it says. The check is containment rather than a stationary centre: a sixth of
+ * a circle sweeping round its middle moves its own bounding box, and an
+ * orbiting one leaves the ring.
+ *
+ * The second is the reduced-motion fallback the catalogue asks the indeterminate
+ * components for, and it is deliberately **not** "the animation is gone":
+ * `crystal.css` carries a global `animation: none !important` under reduced
+ * motion, so that would be green with this component's own rules deleted —
+ * measured, not assumed. What the component owns is what is left standing when
+ * the movement stops. A travelling segment frozen at two fifths of the track
+ * reads as forty per cent, which is a measurement nobody took; the rule here
+ * fills the track instead, and that is the thing a stylesheet can lose. */
+{
+  await open('feedback-ring-progress--indeterminate', '#storybook-root svg path');
+  const escapes = [];
+  for (let sample = 0; sample < 6; sample += 1) {
+    escapes.push(await page.evaluate(() => {
+      const svg = document.querySelector('#storybook-root svg');
+      const paths = [...svg.querySelectorAll('path')];
+      const arc = paths[paths.length - 1].getBoundingClientRect();
+      const box = svg.getBoundingClientRect();
+      return Math.max(box.x - arc.x, box.y - arc.y, arc.right - box.right, arc.bottom - box.bottom);
+    }));
+    await page.waitForTimeout(140);
+  }
+  const worst = Math.round(Math.max(...escapes));
+  record(
+    'a turning arc stays inside the ring it is drawn on',
+    worst <= 2,
+    `the arc leaves the canvas by ${worst}px at its worst. An arc that orbits its own ring `
+    + 'is a transform-origin resolved against the SVG viewport instead of the user space the '
+    + 'arc was drawn in',
+  );
+
+  const motion = await browser.newContext({
+    viewport: { width: 1280, height: 900 },
+    reducedMotion: 'reduce',
+  });
+  const still = await motion.newPage();
+  await still.goto(story('feedback-progress--indeterminate'), { waitUntil: 'networkidle' });
+  await still.waitForSelector('#storybook-root [role="progressbar"]');
+  const filled = await still.evaluate(() => {
+    const bar = document.querySelector('#storybook-root [role="progressbar"]');
+    const fill = bar?.firstElementChild;
+    if (!bar || !fill) return null;
+    return fill.getBoundingClientRect().width / bar.getBoundingClientRect().width;
+  });
+  record(
+    'a bar that has stopped moving does not read as a number',
+    filled !== null && filled > 0.95,
+    `the indeterminate fill covers ${Math.round((filled ?? 0) * 100)}% of the track under `
+    + 'prefers-reduced-motion: reduce. A travelling segment frozen part-way along reports a '
+    + 'measurement nobody took',
+  );
+  await motion.close();
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

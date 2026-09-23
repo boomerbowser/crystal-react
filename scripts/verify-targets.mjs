@@ -125,6 +125,13 @@ const CASES = [
   { story: 'charts-chart-legend--toggling', selector: '#storybook-root button', why: 'catalogue: legend entries are pills and reach 44px' },
   { story: 'charts-scatter-chart--default', selector: '#storybook-root [role="graphics-symbol"] rect', why: 'a 6px point on Crystal\'s point scale still owes a 44px hit area' },
   { story: 'charts-bar-chart--grouped', selector: '#storybook-root summary', why: 'the control that opens the text equivalent every chart owes' },
+  /* Slice L. The catalogue states the floor for the banner's dismiss outright —
+     "the dismiss control is a 44px pill" — and an alert's is the same control
+     doing the same job, so it is held to the same number. Both are a small glyph
+     in a large target, which is exactly the shape this gate exists to check:
+     nothing about the drawn × says how much of it a fingertip meets. */
+  { story: 'feedback-banner--dismissible', selector: '#storybook-root button', why: 'catalogue: the dismiss control is a 44px pill' },
+  { story: 'feedback-alert--dismissible', selector: '#storybook-root button', why: 'the same control, doing the same job, at the same floor' },
 ];
 
 /* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
@@ -210,7 +217,7 @@ await browser.close();
  * Fewer probes is not a better result. It is the same checks run against less of
  * the library. Raise this when cases are added; lowering it is a deliberate edit
  * somebody makes in the same commit. */
-const LEAST_PROBES = 101;
+const LEAST_PROBES = 103;
 if (probes < LEAST_PROBES) {
   failures.push(
     `${probes} controls were measured, and this suite measured ${LEAST_PROBES} `

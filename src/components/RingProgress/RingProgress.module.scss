@@ -44,19 +44,27 @@
 .ring[data-state='error'] .arc { fill: var(--cr-danger-ink); }
 .ring[data-state='paused'] .arc { fill: var(--cr-muted); }
 
-/* The indeterminate ring turns. Crystal publishes no recipe for a continuous
-   activity indicator, so the shape of this is the component's and only the
-   duration is Crystal's — D-19 records the gap. */
-.ring:not([data-determinate]) .arc {
-  transform-box: view-box;
-  transform-origin: center;
+/* The indeterminate ring turns. The rotation is on the **canvas**, not on the
+   arc: an `<svg>` root is laid out as an ordinary CSS box, so `border-box` and
+   `50% 50%` mean the middle of the drawn ring and nothing has to be reasoned
+   about. Rotating the arc inside the view box does not — `transform-box:
+   view-box` resolves an origin against the SVG viewport rather than against the
+   user space `arcPath` draws in, and every combination of the two was measured
+   sending the arc into orbit around the ring by between 15 and 100 pixels. The
+   full-circle track underneath turns with it and cannot be seen to.
+
+   Crystal publishes no recipe for a continuous activity indicator, so the shape
+   of this is the component's and only the duration is Crystal's — D-19. */
+.ring:not([data-determinate]) .canvas {
+  transform-box: border-box;
+  transform-origin: 50% 50%;
   animation-name: turn;
-  animation-duration: calc(var(--cr-motion-enabled) * #{$cr-motion-duration-departure} / var(--cr-motion-speed));
+  animation-duration: calc(var(--cr-motion-enabled) * #{$cr-motion-duration-flow} / var(--cr-motion-speed));
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
 
-.ring[data-state='paused'] .arc { animation-play-state: paused; }
+.ring[data-state='paused'] .canvas { animation-play-state: paused; }
 
 @keyframes turn {
   to { rotate: 360deg; }
@@ -66,7 +74,8 @@
    stopped mid-spin reads as a value nobody set, so the arc becomes the whole
    circle at reduced strength: busy, and plainly not a measurement. */
 @media (prefers-reduced-motion: reduce) {
-  .ring:not([data-determinate]) .arc { animation: none; opacity: 0.55; }
+  .ring:not([data-determinate]) .canvas { animation: none; }
+  .ring:not([data-determinate]) .arc { opacity: 0.55; }
 }
 
 @media (forced-colors: active) {

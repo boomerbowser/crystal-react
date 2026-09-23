@@ -93,18 +93,22 @@ export const RingProgress = forwardRef<HTMLDivElement, RingProgressProps>(functi
           className={styles['canvas']}
           width={size}
           height={size}
-          viewBox={`0 0 ${size} ${size}`}
+          /* The view box is centred on the origin rather than the arcs being
+             translated into it. `arcPath` draws around (0,0), and a `<g
+             transform>` that moved them would put the element's user space and
+             the view box a radius apart — which is where `transform-origin`
+             resolves, and why the spinning arc orbited the ring instead of
+             turning in it. Measured; see the appearance gate. */
+          viewBox={`${-radius} ${-radius} ${size} ${size}`}
           aria-hidden="true"
         >
-          <g transform={`translate(${radius},${radius})`}>
-            <path className={styles['track']} d={arcPath(radius, stroke, 0, TURN)} />
-            {/* An indeterminate ring draws a fixed sixth of the circle and spins
-                it; a determinate one draws the value and does not move. */}
-            <path
-              className={styles['arc']}
-              d={arcPath(radius, stroke, 0, determinate ? TURN * fraction : TURN / 6)}
-            />
-          </g>
+          <path className={styles['track']} d={arcPath(radius, stroke, 0, TURN)} />
+          {/* An indeterminate ring draws a fixed sixth of the circle and spins
+              it; a determinate one draws the value and does not move. */}
+          <path
+            className={styles['arc']}
+            d={arcPath(radius, stroke, 0, determinate ? TURN * fraction : TURN / 6)}
+          />
         </svg>
         {centre ? <span className={styles['centre']}>{centre}</span> : null}
       </div>
