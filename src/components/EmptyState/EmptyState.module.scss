@@ -1,0 +1,34 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+
+/* "Content radius; centred within its region." */
+.empty {
+  @include material.haze-fill;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $cr-spacing-xs;
+  padding: $cr-spacing-xl $cr-spacing-lg;
+  border-radius: $cr-shape-content-radius;
+  text-align: center;
+  color: var(--cr-text);
+}
+
+.illustration { color: var(--cr-muted); }
+
+.title { margin: 0; font-weight: 750; }
+
+.body {
+  max-inline-size: 46ch;
+  font-size: var(--cr-text-body-size);
+  line-height: var(--cr-text-body-leading);
+  color: var(--cr-muted);
+}
+
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: $cr-spacing-xs; margin-block-start: $cr-spacing-2xs; }
+
+@media (forced-colors: active) {
+  .empty { background: Canvas; border: 1px solid CanvasText; }
+  .body, .illustration { color: CanvasText; }
+}

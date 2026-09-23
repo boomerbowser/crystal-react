@@ -1,0 +1,58 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+@use '../../styles/status';
+
+/* Full-bleed: the region's width and the region's corners. A radius here would
+   make it a card floating inside its container, and a card is not pinned. */
+.banner {
+  @include material.haze-fill;
+
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-sm;
+  inline-size: 100%;
+  padding: $cr-spacing-sm $cr-spacing-md;
+  color: var(--cr-text);
+}
+
+@include status.status-pairs('.banner');
+
+/* "Haze fill with a status accent." The accent is an edge on the leading side,
+   which is the one place a status colour can be drawn on the panel itself
+   without turning the message into decoration on a coloured ground. */
+.banner::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: $cr-spacing-2xs;
+  background: var(--status-ink);
+}
+
+.well { @include status.status-well($cr-icon-size); }
+
+.message { margin: 0; flex: 1; min-inline-size: 0; }
+
+.action { flex: none; }
+
+.dismiss {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  margin-block: calc(-1 * #{$cr-spacing-xs});
+  border: 0;
+  border-radius: $cr-action-radius;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: pointer;
+}
+
+.dismiss:hover { color: var(--cr-text); }
+
+@media (forced-colors: active) {
+  .banner { background: Canvas; border-block-end: 1px solid CanvasText; }
+  .banner::after { background: CanvasText; }
+  .dismiss { color: ButtonText; }
+}

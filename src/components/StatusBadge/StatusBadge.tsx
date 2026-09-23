@@ -27,14 +27,14 @@
  * withdrawn from 2.0 deliberately.
  */
 import { forwardRef, useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { STATUS_RECIPE, STATUS_SYMBOL, type FeedbackStatus } from '../../feedback/status.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
 import styles from './StatusBadge.module.scss';
 
 /** The five states the catalogue lists. */
-export type StatusBadgeStatus = 'success' | 'attention' | 'danger' | 'info' | 'neutral';
+export type StatusBadgeStatus = FeedbackStatus | 'neutral';
 
 export interface StatusBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   /** Which status applies. */
@@ -43,21 +43,11 @@ export interface StatusBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   children: ReactNode;
 }
 
-/* The symbol vocabulary is Crystal's, not this library's. The light and dark rows
-   carry the same glyphs — a symbol is not a colour — so one row is read rather
-   than the mode being threaded through a component that has no other use for it.
-   If they ever diverge, `verify-theme` compares the exported pairs and this line
-   is where the divergence would surface. */
-const SYMBOL: Record<StatusBadgeStatus, string | null> = {
-  success: crystalTokens['feedback.light.success.symbol'],
-  attention: crystalTokens['feedback.light.attention.symbol'],
-  danger: crystalTokens['feedback.light.danger.symbol'],
-  info: crystalTokens['feedback.light.info.symbol'],
-  neutral: null,
-};
-
-/** The recipes the catalogue assigns. The other three states have none. */
-const RECIPE = { success: 'success', attention: 'attention' } as const;
+/* The symbol vocabulary is Crystal's, read once in `feedback/status.ts` and
+   shared with every other component in the feedback slice that draws a well.
+   `neutral` shows none: it is the absence of a status rather than a fifth one,
+   and a glyph would imply a meaning the state does not have. */
+const SYMBOL: Record<StatusBadgeStatus, string | null> = { ...STATUS_SYMBOL, neutral: null };
 
 export const StatusBadge = forwardRef<HTMLSpanElement, StatusBadgeProps>(function StatusBadge(
   { status, children, className, ...props },
@@ -70,7 +60,7 @@ export const StatusBadge = forwardRef<HTMLSpanElement, StatusBadgeProps>(functio
     const changed = previous.current !== status;
     previous.current = status;
     if (!changed) return;
-    const recipe = status === 'success' || status === 'attention' ? RECIPE[status] : null;
+    const recipe = status === 'neutral' ? undefined : STATUS_RECIPE[status];
     if (recipe) play(recipe);
   }, [status, play]);
 

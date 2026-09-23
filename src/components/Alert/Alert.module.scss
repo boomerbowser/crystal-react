@@ -1,0 +1,61 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+@use '../../styles/status';
+
+/* "Content radius; 12px minimum from content to the feathered edge." The Haze
+   fill is inset by `--cr-haze-inset`, so the padding is measured from the
+   element and the feather sits inside it — `$cr-spacing-sm` is that 12px. */
+.alert {
+  @include material.haze-fill;
+
+  display: flex;
+  align-items: flex-start;
+  gap: $cr-spacing-sm;
+  padding: $cr-spacing-md;
+  border-radius: $cr-shape-content-radius;
+  color: var(--cr-text);
+}
+
+@include status.status-pairs('.alert');
+
+.well {
+  @include status.status-well($cr-icon-action);
+
+  margin-block-start: $cr-spacing-2xs;
+}
+
+.content { display: flex; flex-direction: column; gap: $cr-spacing-2xs; min-inline-size: 0; flex: 1; }
+
+.title { margin: 0; font-weight: 750; }
+
+.body {
+  font-size: var(--cr-text-body-size);
+  line-height: var(--cr-text-body-leading);
+  color: var(--cr-muted);
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; margin-block-start: $cr-spacing-2xs; }
+
+/* A pill, and a real target. The glyph is small; what a fingertip meets is not. */
+.dismiss {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  margin: calc(-1 * #{$cr-spacing-xs});
+  border: 0;
+  border-radius: $cr-action-radius;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: pointer;
+  font-size: var(--cr-text-body-size);
+}
+
+.dismiss:hover { color: var(--cr-text); }
+
+@media (forced-colors: active) {
+  .alert { border: 1px solid CanvasText; background: Canvas; }
+  .body { color: CanvasText; }
+  .dismiss { color: ButtonText; }
+}

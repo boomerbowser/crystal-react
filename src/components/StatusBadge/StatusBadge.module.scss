@@ -1,5 +1,6 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
+@use '../../styles/status';
 
 /* StatusBadge — a Resin pill with a tinted well.
  *
@@ -50,26 +51,9 @@ $status-gap: 7px; /* crystal-allow-literal: core `.cr-status` gap */
 
 /* The tested pairs, and the only place colour enters. Status colours are
    independent of the brand palettes and are never redefined by them, so these
-   read the feedback custom properties rather than anything palette-scoped. */
-.statusBadge[data-status='success'] {
-  --status-surface: var(--cr-success-surface);
-  --status-ink: var(--cr-success-ink);
-}
-
-.statusBadge[data-status='attention'] {
-  --status-surface: var(--cr-attention-surface);
-  --status-ink: var(--cr-attention-ink);
-}
-
-.statusBadge[data-status='danger'] {
-  --status-surface: var(--cr-danger-surface);
-  --status-ink: var(--cr-danger-ink);
-}
-
-.statusBadge[data-status='info'] {
-  --status-surface: var(--cr-info-surface);
-  --status-ink: var(--cr-info-ink);
-}
+   read the feedback custom properties rather than anything palette-scoped. One
+   copy for the whole slice lives in `styles/_status.scss`. */
+@include status.status-pairs('.statusBadge');
 
 /* Neutral is the absence of a status rather than a fifth one, so it takes the
    ordinary surface pair. It also renders no symbol — a glyph would imply a
@@ -80,14 +64,12 @@ $status-gap: 7px; /* crystal-allow-literal: core `.cr-status` gap */
 }
 
 .well {
-  display: inline-grid;
-  place-items: center;
+  @include status.status-well($cr-icon-action);
+
+  /* A wider glyph than the circle should not clip; the mixin's square is the
+     floor rather than the size. */
   min-inline-size: $cr-icon-action;
-  block-size: $cr-icon-action;
-  border-radius: 50%;
-  background: var(--status-surface);
-  color: var(--status-ink);
-  font-weight: 800;
+  inline-size: auto;
 }
 
 .word { white-space: nowrap; }
@@ -101,8 +83,5 @@ $status-gap: 7px; /* crystal-allow-literal: core `.cr-status` gap */
     box-shadow: none;
   }
 
-  /* The tint is gone in forced colours, so the well would be an invisible circle
-     around a glyph. The system pair keeps the symbol legible and the shape
-     readable without claiming a colour the user did not ask for. */
-  .well { background: Canvas; color: CanvasText; }
+  /* The well's own forced-colours pair comes with `status-well`. */
 }
