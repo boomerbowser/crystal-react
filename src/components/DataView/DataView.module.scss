@@ -1,0 +1,94 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* DataView — "Haze item fills on the surrounding material; item radius is the
+ * content radius; layout switches at a declared breakpoint."
+ *
+ * The breakpoint is a **container** query, not a media query, and that is the
+ * one design decision in this file. A media query asks how wide the *window* is,
+ * which is the wrong question: the same collection is a grid in a full-width
+ * page and a list in a 320px sidebar of the same window. A container query asks
+ * how wide the collection's own box is, which is the question the layout
+ * actually depends on.
+ *
+ * The switch disappears below that width rather than going inert, because a
+ * control that cannot change anything is worse than no control.
+ */
+
+.view {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-sm;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $cr-spacing-sm;
+  flex-wrap: wrap;
+}
+
+.tools { display: flex; align-items: center; gap: $cr-spacing-sm; }
+
+.switch { display: inline-flex; align-items: center; gap: $cr-spacing-2xs; }
+
+/* The switch is `SegmentedControl`, which brings its own strip material — the
+   one shared with the tab strip, in `styles/_strip.scss`. Nothing about it is
+   restated here. */
+
+.items {
+  display: grid;
+  gap: $cr-spacing-sm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One item per row. */
+.view[data-layout='list'] .items { grid-template-columns: minmax(0, 1fr); }
+
+.view[data-layout='grid'] .items {
+  grid-template-columns: repeat(auto-fill, minmax(var(--cell-min, #{$cr-layout-min-cell-width}), 1fr));
+}
+
+.item {
+  @include material.haze-fill(0);
+
+  box-sizing: border-box;
+  padding: var(--cr-space);
+  border-radius: var(--cr-radius);
+  color: var(--cr-text);
+}
+
+.placeholder { min-block-size: $cr-spacing-2xl; }
+
+.empty {
+  margin: 0;
+  padding: var(--cr-space);
+  color: var(--cr-muted);
+  text-align: center;
+}
+
+/* Below Crystal's small breakpoint the grid is a list and the switch is gone.
+ *
+ * The width is Crystal's rather than the caller's, and that is a limit rather
+ * than a choice: a container query's condition cannot read a custom property, so
+ * there is no way to pass one in. `$cr-breakpoint-sm` is the right constant to be
+ * stuck with — it is where Crystal's own shell steps down. */
+@container (max-width: #{$cr-breakpoint-sm}) {
+  .view[data-layout='grid'] .items { grid-template-columns: minmax(0, 1fr); }
+  .switch { display: none; }
+}
+
+:global([data-effects='opaque']) .item::before { background: var(--cr-surface); filter: none; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .item::before { background: var(--cr-surface); filter: none; }
+}
+
+@media (forced-colors: active) {
+  .item { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
+  .item::before { display: none; }
+}

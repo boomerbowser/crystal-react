@@ -1,0 +1,136 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+@use '../../styles/overlay' as overlay;
+
+/* OrganizationChart — "Haze nodes on the surrounding material; connectors use
+ * the rim colour".
+ *
+ * The connectors are drawn per row rather than per level, as a pair of rules on
+ * the row's pseudo-elements: a vertical line down the indented gutter and an
+ * elbow into the node. Drawing them per *level* would need a wrapper element per
+ * level, and React Aria renders the tree flat — every row is a sibling carrying
+ * its depth as a number, which is the same constraint `TreeView`'s indentation
+ * guides work around and the reason both use the depth rather than the nesting.
+ *
+ * The node is Haze and the row is not. The row is the target and the connector's
+ * canvas; the node is the content, and giving the whole row a fill would join
+ * every box into a band.
+ */
+
+$chart-connector: 1px;
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-2xs;
+  outline: none;
+}
+
+/* The row's focus ring belongs to the row, not the chart: a composite widget
+   holds focus for its active row. */
+.item { @include overlay.composite-focus; }
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  min-block-size: $cr-action-min-target;
+  padding-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step});
+  cursor: pointer;
+}
+
+/* The line down the gutter, and the elbow into the node. Both in the rim colour,
+   which is the catalogue's word — a connector is structure rather than ink, so
+   it takes the same colour the glass edges do. */
+.row::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step} - #{$cr-tree-indent-step} / 2);
+  inline-size: $chart-connector;
+  background: var(--cr-rim);
+  pointer-events: none;
+}
+
+.row::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step} - #{$cr-tree-indent-step} / 2);
+  inline-size: calc(#{$cr-tree-indent-step} / 2);
+  block-size: $chart-connector;
+  background: var(--cr-rim);
+  pointer-events: none;
+}
+
+/* A root has nothing above it to connect to. */
+.item[data-level='1'] .row::before,
+.item[data-level='1'] .row::after { display: none; }
+
+.chevron {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: $cr-icon-action;
+  block-size: $cr-icon-action;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.chevron svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+/* The end state, in CSS, correct at rest whether or not anything animated. */
+.item[data-expanded] .chevron svg { rotate: 90deg; }
+
+.chevronEmpty { cursor: default; }
+
+.node {
+  @include material.haze-fill(0);
+
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-xs;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  box-sizing: border-box;
+  padding: $cr-spacing-xs $cr-spacing-sm;
+  border-radius: var(--cr-radius);
+  color: var(--cr-text);
+}
+
+.leading { display: inline-flex; flex: none; }
+
+.names { display: flex; flex-direction: column; min-inline-size: 0; }
+
+.name { font-weight: 700; }
+
+.role {
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+/* Selection is label weight, here as everywhere. */
+.item[data-selected] .name { font-weight: 800; }
+.item[data-selected] .node { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+.item[data-selected] .role { color: inherit; }
+
+.item[data-hovered] .node { background: var(--cr-label-fill); }
+
+:global([data-effects='opaque']) .node::before { background: var(--cr-surface); filter: none; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .node::before { background: var(--cr-surface); filter: none; }
+}
+
+@media (forced-colors: active) {
+  .node { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
+  .node::before { display: none; }
+  .row::before, .row::after { background: CanvasText; }
+  /* Selection is a Highlight ring, never a fill. */
+  .item[data-selected] .node { background: Canvas; color: CanvasText; outline: 2px solid Highlight; }
+}

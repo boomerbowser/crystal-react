@@ -1098,7 +1098,7 @@ outstanding are below, with what each had to get right.
 
 ---
 
-### J — Data display (37) — 33 of 37
+### J — Data display (37) — 35 of 37
 
 `card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
@@ -1381,6 +1381,34 @@ whoever owns the data and can hold the row — which the promise now lets them d
   whose position they cannot see. And the accessible name is on a button *inside*
   the `gridcell`, not on the cell: the `td` is the grid position and the control
   inside it is the day.
+
+- [x] **`data-view`**, and the two places its catalogue line does not survive
+  contact. "The layout switch is a control with a pressed state" — it is a named
+  radio group instead, because picking one of two arrangements is a *choice*
+  rather than a pressed state, and Crystal and React Aria reach that
+  independently: `SegmentedControl` is a radio group, and React Aria's
+  `ToggleButtonGroup` renders `role="radiogroup"` with `aria-checked` the moment
+  its selection is single. What the clause rules out — two unlabelled icons whose
+  state is a colour — is ruled out at least as firmly, and using Crystal's own
+  control means there is one segmented strip in the library rather than two.
+
+  "Layout switches at a declared breakpoint" is a **container** query rather than
+  a media query, because the same collection is a grid in a full-width page and a
+  list in a narrow sidebar of the same window and only the container knows which.
+  The width is Crystal's `$cr-breakpoint-sm` rather than a prop, and that is a
+  limit rather than a choice: a container query's condition cannot read a custom
+  property. It is a real `ul` in both layouts, because a grid of items is still a
+  list of items — the arrangement is visual and the count is information.
+- [x] **`organization-chart`**, drawn vertically rather than as top-down boxes,
+  which is a decision about who it is for. The catalogue asks for "a tree;
+  collapse state is announced, and the chart is navigable by keyboard", and the
+  top-down layout is the one that makes both hard: the DOM order that reads
+  correctly is depth-first, the visual order is breadth-first, and every
+  implementation that reconciles them does it by positioning absolutely and
+  leaving the keyboard behind. A vertical hierarchy has the same connectors, the
+  same collapse and the same reading order, with React Aria's tree keyboard
+  behaviour for nothing. `treegrid` rather than `tree`, which is M-3 again and
+  for its reason.
 
 **What this slice had to write down rather than look up.** Crystal 2.0.0 publishes
 *action* geometry as tokens and badge, avatar, code, kbd and caption geometry only
