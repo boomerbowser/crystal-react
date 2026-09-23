@@ -100,6 +100,14 @@ const CASES = [
      same trap the segmented control's label hit, and the reason the handle
      carries `data-cr-handle`. */
   { story: 'data-display-image-compare--default', selector: '#storybook-root [data-cr-handle]', why: 'catalogue: the compare handle is a pill and reaches 44px' },
+
+  /* The resizer's *wrapper*, not `[role=slider]`: React Aria's real input is a
+     visually-hidden box inside it. It was 12px wide until a browser measured it
+     — the grip is a line, and a line is not a target — and the hit area now
+     extends inward over the header rather than straddling the boundary, where it
+     would steal the neighbouring header's presses. The ownership check below is
+     what would notice if it went back to straddling. */
+  { story: 'data-display-resizable-table--default', selector: '#storybook-root [role="columnheader"] [data-resizable-direction]', why: 'catalogue: the resizer is a 44px target that does not shift the column it borders' },
 ];
 
 /* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
@@ -185,7 +193,7 @@ await browser.close();
  * Fewer probes is not a better result. It is the same checks run against less of
  * the library. Raise this when cases are added; lowering it is a deliberate edit
  * somebody makes in the same commit. */
-const LEAST_PROBES = 71;
+const LEAST_PROBES = 73;
 if (probes < LEAST_PROBES) {
   failures.push(
     `${probes} controls were measured, and this suite measured ${LEAST_PROBES} `

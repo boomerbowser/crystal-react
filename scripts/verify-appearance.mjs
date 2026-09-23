@@ -321,6 +321,56 @@ for (const [id, selector, what] of DISABLED) {
   }
 }
 
+/* ------------------------------- a table's header band is actually painted */
+
+/* An unclosed block comment in `DataTable.module.scss` deleted every rule from
+ * the header down — column, cell, row, checkbox, resizer, footer — and *nothing
+ * here noticed*. The compiler is happy: an unterminated comment is valid CSS.
+ * `lint:tokens` strips comments before it looks for values. The types are
+ * unaffected, no unit test reads a stylesheet, and the other browser gates
+ * probed other components. It was found by opening the page and seeing a header
+ * 28px tall with 1px of padding — the user agent's defaults, showing through.
+ *
+ * `lint:tokens` now counts comment delimiters, which catches the cause. This
+ * catches the *symptom*, and catches it for any cause: a table whose header is
+ * not painted differently from its body is a table with no header band, however
+ * that happened. A relationship, not a colour, so it survives a palette change.
+ */
+{
+  await open('data-display-data-table--default', '#storybook-root [role="grid"]');
+
+  const seen = await page.evaluate(() => {
+    const header = document.querySelector('#storybook-root [role="columnheader"]');
+    const cell = document.querySelector('#storybook-root [role="rowheader"], #storybook-root [role="gridcell"]');
+    const read = (node) => node && ({
+      background: getComputedStyle(node).backgroundColor,
+      colour: getComputedStyle(node).color,
+      padding: getComputedStyle(node).padding,
+      height: Math.round(node.getBoundingClientRect().height),
+    });
+    return { header: read(header), cell: read(cell) };
+  });
+
+  if (!seen.header || !seen.cell) {
+    record('the data table renders a header and a body cell', false, 'one of them is missing');
+  } else {
+    record(
+      'a table header band is painted, and differs from the body',
+      seen.header.background !== seen.cell.background && seen.header.colour !== seen.cell.colour,
+      `the header's background is ${seen.header.background} and a body cell's is `
+      + `${seen.cell.background}; their inks are ${seen.header.colour} and ${seen.cell.colour}. `
+      + 'A header that matches its body is a header whose rule is not reaching it',
+    );
+    record(
+      'table cells carry the padding the stylesheet gives them',
+      seen.header.padding !== '1px' && seen.header.height > 40,
+      `the header's padding is ${seen.header.padding} and it is ${seen.header.height}px tall. `
+      + '`1px` is the user agent\'s default for a `th`, which is what shows through when the '
+      + 'rule that should be there is not',
+    );
+  }
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

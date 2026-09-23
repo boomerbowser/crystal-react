@@ -76,6 +76,40 @@ for (const file of walk(SRC)) {
   });
 }
 
+/* A block comment that never closes, which eats the rules after it.
+ *
+ * `/*` does not nest, so a comment missing its `*` and `/` runs to the *next*
+ * closing delimiter in the file and silently deletes every rule in between. It
+ * happened twice in one sitting, both times while rewriting a comment above a
+ * rule: `DataTable.module.scss` lost its entire header, cell, row, checkbox and
+ * resizer styling, and `Button.module.scss` lost only comment text because the
+ * next `*` and `/` happened to fall before the next rule.
+ *
+ * Every existing gate passed. Comments are stripped before the value check
+ * below; the compiler is happy, because an unclosed comment is valid CSS; the
+ * types are unaffected; no unit test reads a stylesheet; and the browser gates
+ * probed other components. What found it was opening the page in a browser and
+ * measuring a header that was 28px tall with 1px of padding — the user agent's
+ * defaults, showing through where the rule should have been.
+ *
+ * Counting delimiters is a complete check for this: the count can only differ
+ * if a comment is unterminated, and an unterminated comment is the only way a
+ * rule disappears without anything else noticing.
+ */
+for (const file of walk(SRC)) {
+  if (!/\.(scss|css)$/.test(file)) continue;
+  const source = readFileSync(file, 'utf8');
+  const opened = (source.match(/\/\*/g) ?? []).length;
+  const closed = (source.match(/\*\//g) ?? []).length;
+  if (opened !== closed) {
+    problems.push(
+      `${relative(ROOT, file)}  ${opened} block comment(s) opened and ${closed} closed — `
+      + 'an unclosed comment runs to the next one and deletes every rule in between, '
+      + 'and nothing else in this repository notices',
+    );
+  }
+}
+
 if (problems.length) {
   console.error(`${problems.length} hard-coded design value(s) — CONTRACT §1:\n`);
   for (const problem of problems) console.error('  - ' + problem);

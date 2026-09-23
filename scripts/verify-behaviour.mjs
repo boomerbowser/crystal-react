@@ -314,57 +314,83 @@ for (const { edge, flush, square } of EDGES) {
   /* eslint-enable no-await-in-loop */
 }
 
-/* --------------------------- the width a resizer reports is the width drawn */
+/* ------------------------------------------- a column that actually resizes */
 
 /* "The resizer is a slider: arrow keys resize, and the new width is announced."
  *
- * What is checked here is the *agreement*: the number the resizer announces and
- * the width the browser draws are the same. That is not a formality. React Aria
- * applies each computed width to its header cell as an inline style, and under
- * `table-layout: auto` a width on a cell is a suggestion the browser may
- * override from the content — so the resizer would go on announcing "598 pixels"
- * at a column that had become something else.
+ * The sequence is `Enter`, *then* the arrows, and finding that out is what
+ * closed D-18. React Aria gates the arrow keys on `editModeEnabled`, which is
+ * the table's `isKeyboardNavigationDisabled` — `Enter` on a focused resizer
+ * calls `startResize`, which disables the grid's own arrow-key navigation and
+ * hands the arrows to the resizer. Without it the keys arrive at the focused
+ * input, are not `defaultPrevented`, and do nothing at all; that is what three
+ * earlier attempts saw, and no amount of getting focus right would have fixed
+ * it. React Aria describes the resizer with "press Enter to start resizing"
+ * under keyboard modality, so the affordance is announced even though it is not
+ * guessable.
  *
- * The fixed layout that prevents it is React Aria's own, set inline by
- * `ResizableTableContainer` along with `width: min-content`. This gate is what
- * established that: a rule was added here on the assumption it was missing, and
- * planting `table-layout: auto` in its place changed nothing, because the inline
- * style had been there the whole time. What the check guards now is that nothing
- * in this library — or a future React Aria — takes it away.
- *
- * Not checked here: that an arrow key moves the column. React Aria's table is a
- * composite widget with a roving tab stop, and driving its internal focus from
- * Playwright did not reach the resizer — see D-18. The half that can be asserted
- * is asserted rather than the whole being skipped.
+ * Also checked: the number the resizer announces and the width the browser draws
+ * are the same. React Aria applies each computed width to its header cell as an
+ * inline style, and under `table-layout: auto` a width on a cell is a suggestion
+ * the browser may override from the content — so a resizer could go on
+ * announcing a width its column no longer has. The fixed layout that prevents
+ * that is React Aria's own, set inline by `ResizableTableContainer`.
  */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=data-display-resizable-table--default&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#storybook-root [role="grid"]');
   await page.waitForTimeout(300);
 
-  const seen = await page.evaluate(() => {
+  const measure = () => page.evaluate(() => {
     const header = document.querySelector('#storybook-root [role="columnheader"]');
     const resizer = document.querySelector('#storybook-root [role="columnheader"] input[type="range"]');
     const table = document.querySelector('#storybook-root [role="grid"]');
     return {
       drawn: header ? Math.round(header.getBoundingClientRect().width) : 0,
       announced: resizer?.getAttribute('aria-valuetext') ?? null,
+      resizing: resizer?.parentElement?.hasAttribute('data-resizing') ?? false,
       layout: table ? getComputedStyle(table).tableLayout : null,
     };
   });
 
-  const announced = Number.parseInt(seen.announced ?? '', 10);
+  const before = await measure();
+
+  /* The wrapper, clicked rather than `.focus()`ed. Two reasons, both learned the
+     hard way: a programmatic focus on a cell's child is taken back by the grid,
+     and React Aria's real input is a visually-hidden box *inside* the wrapper —
+     clicking it is refused because the wrapper intercepts the pointer, which is
+     the wrapper doing its job. */
+  await page.locator('#storybook-root [role="columnheader"] [data-resizable-direction]').first().click();
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(100);
+  const engaged = await measure();
+  for (let i = 0; i < 10; i += 1) await page.keyboard.press('ArrowRight');
+  await page.waitForTimeout(200);
+  const after = await measure();
+
   record(
-    'a resizable column is laid out to an authoritative width',
-    seen.layout === 'fixed',
-    `the table's table-layout is ${seen.layout}. Under \`auto\` a width on a header cell is a `
-    + 'suggestion the browser may override from the content, so the resizer reports a width the '
-    + 'column does not have',
+    'pressing Enter on the resizer enters resize mode',
+    engaged.resizing,
+    'the resizer never reported `data-resizing`, so the arrow keys below are being sent to a '
+    + 'control that has not taken them — which is what React Aria gates on, not on focus',
   );
   record(
-    'the width the resizer announces is the width that is drawn',
-    Number.isFinite(announced) && Math.abs(announced - seen.drawn) <= 1,
-    `the resizer announces ${seen.announced} and the column measures ${seen.drawn}px`,
+    'a column resizes from the keyboard',
+    after.drawn > before.drawn,
+    `the first column measured ${before.drawn}px before ten right-arrows and ${after.drawn}px after`,
+  );
+  record(
+    'the new width is announced',
+    after.announced !== before.announced && /pixels/.test(after.announced ?? ''),
+    `aria-valuetext was ${before.announced} and is ${after.announced}. A resizer whose value never `
+    + 'changes announces a width that is not the one on screen',
+  );
+  record(
+    'a resizable column is laid out to an authoritative width',
+    before.layout === 'fixed' && Math.abs(Number.parseInt(before.announced ?? '', 10) - before.drawn) <= 1,
+    `the table's table-layout is ${before.layout}, the resizer announced ${before.announced} and the `
+    + 'column measured ' + before.drawn + 'px. Under `auto` a width on a header cell is a suggestion '
+    + 'the browser may override from the content',
   );
 }
 

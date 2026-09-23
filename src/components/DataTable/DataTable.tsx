@@ -96,6 +96,15 @@ const CheckIcon = (
   </svg>
 );
 
+/* Some, not all. A dash rather than a check, because a select-all box drawn with
+   a check mark while one row of four is selected says "all of them" to anybody
+   who glances at it — which is what it did until a browser was pointed at it. */
+const DashIcon = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
+    <path d="M6 12h12" strokeLinecap="round" />
+  </svg>
+);
+
 export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function DataTable(
   { columns, rows, label, selectionMode = 'none', selectedKeys, defaultSelectedKeys,
     onSelectionChange, sortDescriptor, onSortChange, resizable = false,
@@ -206,7 +215,11 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
 function SelectionBox({ slot, label }: { slot: 'selection'; label: string }): ReactNode {
   return (
     <Checkbox slot={slot} aria-label={label} className={cx(styles['checkbox'])}>
-      <span aria-hidden="true" className={styles['box']}>{CheckIcon}</span>
+      {({ isIndeterminate }) => (
+        <span aria-hidden="true" className={styles['box']}>
+          {isIndeterminate ? DashIcon : CheckIcon}
+        </span>
+      )}
     </Checkbox>
   );
 }

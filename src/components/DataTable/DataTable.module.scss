@@ -21,7 +21,7 @@ $table-haze-inset: 6px; /* crystal-allow-literal: core `.cr-table-scroll::before
 $table-header-inset: 8px; /* crystal-allow-literal: the catalogue's stated header corner inset */
 $table-cell-block: 14px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
 $table-cell-inline: 18px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
-$resizer-width: 12px; /* crystal-allow-literal: the grip's width; its target is the header's height */
+$resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the edge; the target is the floor */
 
 .shell { display: flex; flex-direction: column; gap: $cr-spacing-sm; }
 
@@ -66,6 +66,7 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's width; its target is 
  * because the inline style had been there all along. The inline `width` also
  * outranks `inline-size: 100%` above, which is correct and worth knowing before
  * somebody tries to "fix" the table not filling its frame when resizing is on.
+ */
 
 .column, .selectColumn {
   position: relative;
@@ -98,19 +99,30 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's width; its target is 
   font-weight: 700;
 }
 
-/* "A 44px target that does not shift the column it borders." The height comes
-   from the header cell it fills; the width is the grip. It sits inside the
-   header's own box rather than straddling the boundary, because a resizer that
-   overhangs moves the edge it reports. */
+/* "A 44px target that does not shift the column it borders."
+ *
+ * Both halves, and they pull against each other. The height is the header cell
+ * it fills. The *width* was 12px until a browser measured it — the grip is a
+ * line, and a line is not a target — so the element is the target floor wide and
+ * the line is drawn at its trailing edge. The hit area therefore extends
+ * *inward*, over the header's own right-hand 44px, rather than straddling the
+ * boundary: straddling would put it over the neighbouring column, where it would
+ * steal that header's presses, and `verify:targets`' ownership check exists
+ * because that failure is invisible until somebody tries to sort.
+ *
+ * It does not shift the column either way: the element is absolutely positioned
+ * inside a header that is already `position: relative`.
+ */
 .resizer {
   position: absolute;
   inset-block: 0;
   inset-inline-end: 0;
-  inline-size: $resizer-width;
+  inline-size: $cr-action-min-target;
   cursor: col-resize;
   touch-action: none;
 }
 
+/* The line, on the boundary the resizer reports. */
 .resizer::before {
   content: '';
   position: absolute;

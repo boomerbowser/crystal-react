@@ -88,6 +88,22 @@ describe('DataTable', () => {
     expect(screen.queryByRole('slider', { name: /Plan/ })).toBeNull();
   });
 
+  /* A select-all drawn with a check mark while one row of four is selected says
+     "all of them" to anybody who glances at it. */
+  it('draws the select-all as partial when only some rows are selected', () => {
+    const { container } = renderWithCrystal(
+      <DataTable columns={columns} rows={rows} label="Workspaces" selectionMode="multiple"
+        defaultSelectedKeys={new Set(['gather'])} />,
+    );
+    /* A native checkbox carries this as a *property*, not an attribute — there
+       is no `aria-checked="mixed"` to look for on one. */
+    const all = screen.getByRole('checkbox', { name: 'Select all rows' }) as HTMLInputElement;
+    expect(all.indeterminate).toBe(true);
+    /* And the glyph follows the state rather than staying a check. */
+    const paths = [...container.querySelectorAll('label path')].map((p) => p.getAttribute('d'));
+    expect(paths).toContain('M6 12h12');
+  });
+
   it('shows the empty state instead of an empty body', () => {
     renderWithCrystal(
       <DataTable columns={columns} rows={[]} label="Workspaces" empty="No workspaces yet." />,
