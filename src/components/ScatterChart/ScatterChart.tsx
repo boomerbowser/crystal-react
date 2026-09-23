@@ -24,6 +24,7 @@ import { markerPath, seriesColour, seriesMarker } from '../../charts/channel.js'
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
 import { scaleLinear } from '../../charts/scales.js';
 import { chartGeometry } from '../../theme/chartTokens.js';
+import { MARK_TARGET } from '../../charts/target.js';
 import { cx } from '../../styles/cx.js';
 import styles from './ScatterChart.module.scss';
 
@@ -125,10 +126,10 @@ export function ScatterChart({
                       >
                         <rect
                           className={styles['target']}
-                          x={-chartGeometry.pointMax}
-                          y={-chartGeometry.pointMax}
-                          width={chartGeometry.pointMax * 2}
-                          height={chartGeometry.pointMax * 2}
+                          x={-MARK_TARGET / 2}
+                          y={-MARK_TARGET / 2}
+                          width={MARK_TARGET}
+                          height={MARK_TARGET}
                         />
                         <path className={styles['shape']} d={markerPath(seriesMarker(s), size)} />
                       </g>

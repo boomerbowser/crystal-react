@@ -23,6 +23,7 @@ import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
 import { seriesTable } from '../BarChart/BarChart.js';
 import { scaleLinear } from '../../charts/scales.js';
 import { chartGeometry } from '../../theme/chartTokens.js';
+import { MARK_TARGET } from '../../charts/target.js';
 import { cx } from '../../styles/cx.js';
 import type { ChartSeries } from '../../charts/types.js';
 import styles from './RadarChart.module.scss';
@@ -142,10 +143,10 @@ export function RadarChart({
                         >
                           <rect
                             className={styles['target']}
-                            x={-chartGeometry.pointMax}
-                            y={-chartGeometry.pointMax}
-                            width={chartGeometry.pointMax * 2}
-                            height={chartGeometry.pointMax * 2}
+                            x={-MARK_TARGET / 2}
+                            y={-MARK_TARGET / 2}
+                            width={MARK_TARGET}
+                            height={MARK_TARGET}
                           />
                           <circle className={styles['dot']} r={chartGeometry.pointMin / 2} />
                         </g>

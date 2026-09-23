@@ -394,6 +394,176 @@ for (const { edge, flush, square } of EDGES) {
   );
 }
 
+/* ------------------------------------- one tab stop per chart, arrows inside */
+
+/* Every chart in the catalogue lists `focus-visible` and most say each item is
+ * reachable. Reachable cannot mean one tab stop each — a scatter of two hundred
+ * points would be two hundred stops between the control before it and the one
+ * after — so the plot is one stop and the marks are a roving tabindex inside it.
+ *
+ * The marks are SVG `<g>` elements carrying `tabindex`, which is SVG 2 and which
+ * jsdom will happily let a unit test *believe*: `element.focus()` on an
+ * unfocusable node is not an error there, and `document.activeElement` follows.
+ * This is the only place the claim is tested against an engine that decides for
+ * itself. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=charts-bar-chart--grouped&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root [role="graphics-symbol"]');
+
+  const stops = await page.evaluate(() => ({
+    zero: document.querySelectorAll('#storybook-root svg [tabindex="0"]').length,
+    minusOne: document.querySelectorAll('#storybook-root svg [tabindex="-1"]').length,
+  }));
+  record(
+    'a chart is one tab stop, not one per mark',
+    stops.zero === 1 && stops.minusOne > 1,
+    `the plot has ${stops.zero} tab stops and ${stops.minusOne} roving marks. One stop per mark `
+    + 'would put a hundred stops between the control before the chart and the one after it',
+  );
+
+  await page.locator('#storybook-root [role="graphics-symbol"]').first().focus();
+  const landed = await page.evaluate(() => ({
+    tag: document.activeElement?.tagName,
+    label: document.activeElement?.getAttribute('aria-label'),
+  }));
+  record(
+    'a mark takes focus at all',
+    landed.tag === 'g' && Boolean(landed.label),
+    `focus landed on ${landed.tag} labelled ${landed.label}. An SVG group with a tabindex is `
+    + 'SVG 2, and if an engine declines it the whole keyboard model of the slice is decoration',
+  );
+
+  const first = await page.evaluate(() => document.activeElement?.getAttribute('aria-label'));
+  await page.keyboard.press('ArrowRight');
+  await page.waitForTimeout(60);
+  const second = await page.evaluate(() => document.activeElement?.getAttribute('aria-label'));
+  await page.keyboard.press('End');
+  await page.waitForTimeout(60);
+  const last = await page.evaluate(() => document.activeElement?.getAttribute('aria-label'));
+  await page.keyboard.press('ArrowRight');
+  await page.waitForTimeout(60);
+  const past = await page.evaluate(() => document.activeElement?.getAttribute('aria-label'));
+
+  record(
+    'an arrow key moves between marks',
+    Boolean(second) && second !== first,
+    `focus was on ${first} and after ArrowRight it is on ${second}`,
+  );
+  record(
+    'End reaches the last mark',
+    Boolean(last) && last !== second,
+    `End left focus on ${last}`,
+  );
+  record(
+    'the ends do not wrap',
+    past === last,
+    `an arrow past the last mark moved focus to ${past}. Wrapping silently is how a reader `
+    + 'loses their place in a chart whose shape they cannot see',
+  );
+
+  /* The focus ring has to be *on the mark*, not on the plot. `outline` on an SVG
+     element is honoured by every engine this library gates against, which is a
+     claim worth reading back rather than believing.
+
+     What this does **not** prove is whose rule painted it. Storybook loads
+     `crystal.css`, which carries `[tabindex]:focus-visible { outline: … }`, so
+     removing the library's own rule leaves this check green — measured, not
+     assumed. The library keeps its rule anyway, because a consumer who does not
+     load Crystal's element styles is exactly the case D-1 is about, and this
+     gate cannot see that consumer. */
+  const ring = await page.evaluate(() => {
+    const active = document.activeElement;
+    if (!active) return null;
+    const style = getComputedStyle(active);
+    return { width: style.outlineWidth, style: style.outlineStyle, tag: active.tagName };
+  });
+  record(
+    'a focused mark paints a focus ring',
+    ring !== null && ring.style !== 'none' && Number.parseFloat(ring.width) > 0,
+    `the focused ${ring?.tag} has outline-style ${ring?.style} at ${ring?.width}`,
+  );
+}
+
+/* --------------------------------------- a treemap is navigable as a tree */
+
+/* "Navigable as a tree" is the treemap's own clause and the one that cannot be
+ * checked without driving it: the level changes, which no snapshot of the first
+ * render shows. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=charts-treemap--default&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root [role="graphics-symbol"]');
+
+  const before = await page.evaluate(() => Array.from(
+    document.querySelectorAll('#storybook-root [role="graphics-symbol"]'),
+  ).map((mark) => mark.getAttribute('aria-label')?.split(',')[0]));
+
+  await page.locator('#storybook-root [role="graphics-symbol"]').first().focus();
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(120);
+
+  const after = await page.evaluate(() => ({
+    marks: Array.from(document.querySelectorAll('#storybook-root [role="graphics-symbol"]'))
+      .map((mark) => mark.getAttribute('aria-label')?.split(',')[0]),
+    crumbs: Array.from(document.querySelectorAll('#storybook-root nav li')).map((li) => li.textContent),
+  }));
+
+  record(
+    'Enter descends into a branch of a treemap',
+    JSON.stringify(after.marks) !== JSON.stringify(before) && after.marks.length > 0,
+    `the marks were ${before.join(', ')} and after Enter they are ${after.marks.join(', ')}`,
+  );
+  record(
+    'the breadcrumb says which level the reader is on',
+    after.crumbs.length > 1,
+    `the breadcrumb reads ${after.crumbs.join(' / ')}. Without it a reader who has descended `
+    + 'has no way to know it, which is the difference between navigation and a picture changing',
+  );
+
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(120);
+  const back = await page.evaluate(() => Array.from(
+    document.querySelectorAll('#storybook-root [role="graphics-symbol"]'),
+  ).map((mark) => mark.getAttribute('aria-label')?.split(',')[0]));
+  record(
+    'Escape comes back up',
+    JSON.stringify(back) === JSON.stringify(before),
+    `after Escape the marks are ${back.join(', ')} and they started as ${before.join(', ')}`,
+  );
+}
+
+/* ------------------------------------------ a hidden series is announced */
+
+/* "Toggles are buttons with a pressed state; hidden series are announced." The
+ * announcement is a live region, and a live region is only a live region if it
+ * is in the document *before* the text arrives — one rendered together with its
+ * message announces nothing. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=charts-chart-legend--toggling&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root button');
+
+  const region = await page.evaluate(() => {
+    const status = document.querySelector('#storybook-root [role="status"]');
+    return { present: Boolean(status), text: status?.textContent ?? null };
+  });
+  record(
+    'the legend has a live region before it has anything to say',
+    region.present && !region.text,
+    `the region is ${region.present ? 'present' : 'missing'} and reads "${region.text}". A live `
+    + 'region rendered together with its first message announces nothing at all',
+  );
+
+  await page.locator('#storybook-root button').first().click();
+  await page.waitForTimeout(120);
+  const spoke = await page.evaluate(
+    () => document.querySelector('#storybook-root [role="status"]')?.textContent ?? '',
+  );
+  record(
+    'turning a series off is announced in words',
+    /hidden|shown/.test(spoke),
+    `the live region reads "${spoke}" after the first entry was pressed`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

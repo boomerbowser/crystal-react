@@ -28,8 +28,15 @@ export default defineConfig({
          external on principle, not only for size: CONTRACT §1 says a library
          consumes Crystal's generated values rather than carrying a copy, and
          bundling it would inline a second copy of the token set that could then
-         drift from the installed one. */
-      external: (id) => /^(react|react-dom|react\/|react-dom\/|react-aria|react-aria-components|react-stately|@react-|@internationalized\/|@crystal-ui\/core|motion|motion-dom|motion-utils|qrcode\.react|react-imask|imask)/.test(id),
+         drift from the installed one.
+
+         The `d3-*` modules and their own dependencies are here for the ordinary
+         reason: they are dependencies, a consumer installs them once, and a copy
+         inlined here would be a second one beside whatever else in the
+         application already uses them. `check-bundle.mjs` caught them the first
+         time the charts were built, which is the third dependency that list has
+         been missing and the reason the check exists. */
+      external: (id) => /^(react|react-dom|react\/|react-dom\/|react-aria|react-aria-components|react-stately|@react-|@internationalized\/|@crystal-ui\/core|motion|motion-dom|motion-utils|qrcode\.react|react-imask|imask|d3-[a-z]+|internmap|delaunator|robust-predicates)/.test(id),
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',

@@ -12,3 +12,4 @@ export { Axes, type AxesProps, type AxisTick } from './Axes.js';
 export { useChartFrame } from './useChartFrame.js';
 export { useMarkNavigation, type MarkNavigation } from './useMarkNavigation.js';
 export { extent, valueDomain, stackedDomain } from './scales.js';
+export { MARK_TARGET } from './target.js';

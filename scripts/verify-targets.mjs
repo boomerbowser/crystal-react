@@ -108,6 +108,23 @@ const CASES = [
      would steal the neighbouring header's presses. The ownership check below is
      what would notice if it went back to straddling. */
   { story: 'data-display-resizable-table--default', selector: '#storybook-root [role="columnheader"] [data-resizable-direction]', why: 'catalogue: the resizer is a 44px target that does not shift the column it borders' },
+
+  /* Charts. Three targets that are each a target for a different reason.
+
+     A legend entry is a control the catalogue states as a pill that reaches 44px,
+     and it is the one chart control a pointer is expected to use.
+
+     A chart point is the case where the drawn mark is *deliberately* smaller than
+     the target: Crystal's point scale starts at 6px, and a 6px dot is not
+     something a thumb hits. The hit area is an invisible square round every point
+     and this is the only thing that would notice if it were dropped — nothing on
+     the screen changes when it goes.
+
+     The table disclosure is the control that carries the whole text equivalent of
+     every chart in the library. If it is not reachable the data is not either. */
+  { story: 'charts-chart-legend--toggling', selector: '#storybook-root button', why: 'catalogue: legend entries are pills and reach 44px' },
+  { story: 'charts-scatter-chart--default', selector: '#storybook-root [role="graphics-symbol"] rect', why: 'a 6px point on Crystal\'s point scale still owes a 44px hit area' },
+  { story: 'charts-bar-chart--grouped', selector: '#storybook-root summary', why: 'the control that opens the text equivalent every chart owes' },
 ];
 
 /* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
@@ -193,7 +210,7 @@ await browser.close();
  * Fewer probes is not a better result. It is the same checks run against less of
  * the library. Raise this when cases are added; lowering it is a deliberate edit
  * somebody makes in the same commit. */
-const LEAST_PROBES = 73;
+const LEAST_PROBES = 101;
 if (probes < LEAST_PROBES) {
   failures.push(
     `${probes} controls were measured, and this suite measured ${LEAST_PROBES} `

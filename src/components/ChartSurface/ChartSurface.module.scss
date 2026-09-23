@@ -63,9 +63,15 @@
 
 /* A mark takes the focus ring the rest of the system uses. `outline` on an SVG
    element is honoured by every engine this library gates against; the feathered
-   halo is a shadow and SVG shadows are filters, so the halo is drawn by the
-   surface's own filter-free approximation — the crisp core, at Crystal's offset
-   and width, which is the part of the recipe that carries the meaning. */
+   halo is a shadow and SVG shadows are filters, so this is the crisp core alone,
+   at Crystal's offset and width — the part of the recipe that carries the
+   meaning.
+
+   `crystal.css` also carries `[tabindex]:focus-visible`, so in any document that
+   loads it a mark would get a ring without this rule. That is not a reason to
+   drop it: a consumer who loads only this library's stylesheet is precisely the
+   case D-1 is about, and `verify:behaviour` cannot see that consumer — removing
+   this rule leaves its focus-ring check green. Measured, not assumed. */
 .canvas :focus-visible {
   outline: $cr-focus-core-width solid var(--cr-primary);
   outline-offset: $cr-focus-core-offset;

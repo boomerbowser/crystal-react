@@ -11,6 +11,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { line as d3line, area as d3area, curveLinear, curveMonotoneX } from 'd3-shape';
 import { markerPath, seriesColour, seriesDash, seriesMarker } from './channel.js';
 import { chartGeometry } from '../theme/chartTokens.js';
+import { MARK_TARGET } from '../charts/target.js';
 import styles from './Cartesian.module.scss';
 
 export type ChartCurve = 'linear' | 'smooth';
@@ -120,10 +121,10 @@ export function PointMarks({
                 for, and a reader is given the shape beside it. */}
             <rect
               className={styles['target']}
-              x={-chartGeometry.pointMax}
-              y={-chartGeometry.pointMax}
-              width={chartGeometry.pointMax * 2}
-              height={chartGeometry.pointMax * 2}
+              x={-MARK_TARGET / 2}
+              y={-MARK_TARGET / 2}
+              width={MARK_TARGET}
+              height={MARK_TARGET}
             />
             {visible ? <path className={styles['shape']} d={markerPath(marker, size)} /> : null}
           </g>

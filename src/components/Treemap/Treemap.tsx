@@ -59,15 +59,27 @@ export function Treemap({
   const marks = useMarkNavigation(children.length);
   const whole = total(root);
 
+  /* Descending and ascending both move focus to the first mark of the level
+     arrived at. Without it the focused element is removed by the very key that
+     changed the level, focus falls to the document, and the next `Escape` never
+     reaches this component — which is a reader one keystroke from being stranded
+     at the bottom of a tree. */
   const descend = (name: string) => {
     const child = children.find((one) => one.name === name);
-    if (child?.children?.length) setPath([...path, name]);
+    if (!child?.children?.length) return;
+    setPath([...path, name]);
+    marks.setActive(0);
+  };
+
+  const ascend = (to: number) => {
+    setPath(path.slice(0, to));
+    marks.setActive(0);
   };
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && path.length) {
       event.preventDefault();
-      setPath(path.slice(0, -1));
+      ascend(path.length - 1);
       return;
     }
     if (event.key === 'Enter' || event.key === ' ') {
@@ -96,7 +108,7 @@ export function Treemap({
                 {index === path.length ? (
                   <span aria-current="true">{name}</span>
                 ) : (
-                  <button type="button" onClick={() => setPath(path.slice(0, index))}>
+                  <button type="button" onClick={() => ascend(index)}>
                     {name}
                   </button>
                 )}
