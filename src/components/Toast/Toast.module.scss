@@ -1,0 +1,90 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+@use '../../styles/status';
+
+/* The stack. Fixed to the region's end corner, newest nearest the edge, and a
+   list because three toasts are three things. */
+.stack {
+  position: fixed;
+  z-index: 1000;
+  inset-block-end: $cr-spacing-md;
+  inset-inline-end: $cr-spacing-md;
+  display: flex;
+  flex-direction: column-reverse;
+  /* "Stacked with a 12px offset." */
+  gap: $cr-spacing-sm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* A measure rather than a width: wide enough for a sentence and a button,
+     narrow enough that a toast is not a panel, and it moves with the type
+     instead of staying still while the type grows. The other feedback panels
+     are bounded the same way. */
+  max-inline-size: min(92vw, 46ch);
+}
+
+/* "Resin with Haze reading fill and the clearest floating shadow." */
+.toast {
+  @include material.resin;
+  @include material.haze-fill;
+
+  display: flex;
+  align-items: flex-start;
+  gap: $cr-spacing-sm;
+  padding: $cr-spacing-sm $cr-spacing-md;
+  border-radius: $cr-shape-content-radius;
+  color: var(--cr-text);
+}
+
+@include material.opaque-fallback('.toast');
+@include status.status-pairs('.toast');
+
+.well {
+  @include status.status-well($cr-icon-size);
+
+  margin-block-start: $cr-spacing-2xs;
+}
+
+/* The live regions. Off the screen, present from the first render. */
+.announcement {
+  position: fixed;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.content { flex: 1; min-inline-size: 0; }
+
+.title { margin: 0; font-weight: 750; }
+
+.description {
+  margin: $cr-spacing-2xs 0 0;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+.action { flex: none; align-self: center; }
+
+.dismiss {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  margin: calc(-1 * #{$cr-spacing-xs});
+  border: 0;
+  border-radius: $cr-action-radius;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: pointer;
+}
+
+.dismiss:hover { color: var(--cr-text); }
+
+@media (forced-colors: active) {
+  .toast { background: Canvas; border: 1px solid CanvasText; box-shadow: none; }
+  .description { color: CanvasText; }
+  .dismiss { color: ButtonText; }
+}

@@ -1,0 +1,85 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+@use '../../styles/status';
+
+/* "Resin surface with Haze reading fill." */
+.notification {
+  @include material.resin;
+  @include material.haze-fill;
+
+  display: flex;
+  align-items: flex-start;
+  gap: $cr-spacing-sm;
+  padding: $cr-spacing-sm $cr-spacing-md;
+  border-radius: $cr-shape-content-radius;
+  color: var(--cr-text);
+  list-style: none;
+}
+
+@include material.opaque-fallback('.notification');
+@include status.status-pairs('.notification');
+
+.well {
+  @include status.status-well($cr-icon-size);
+
+  margin-block-start: $cr-spacing-2xs;
+}
+
+.content { flex: 1; min-inline-size: 0; }
+
+/* Unread is label weight and nothing else. No dot, no rail, no colour: a mark
+   beside the title offsets the title it points at, so the unread item stops
+   lining up with the others — Crystal's selection rule, doing the same job here.
+   Read is the lighter of the two, which makes unread the emphasis rather than
+   read the omission. */
+.title { margin: 0; font-weight: 500; }
+
+.notification[data-unread] .title { font-weight: 800; }
+
+/* The word "Unread", for a reader who cannot see the weight. Off the screen,
+   in the accessible name. */
+.said {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.body {
+  margin-block-start: $cr-spacing-2xs;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+.time {
+  display: block;
+  margin-block-start: $cr-spacing-2xs;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; margin-block-start: $cr-spacing-xs; }
+
+.dismiss {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  margin: calc(-1 * #{$cr-spacing-xs});
+  border: 0;
+  border-radius: $cr-action-radius;
+  background: transparent;
+  color: var(--cr-muted);
+  cursor: pointer;
+}
+
+.dismiss:hover { color: var(--cr-text); }
+
+@media (forced-colors: active) {
+  .notification { background: Canvas; border: 1px solid CanvasText; box-shadow: none; }
+  .body, .time { color: CanvasText; }
+  .dismiss { color: ButtonText; }
+}

@@ -30,8 +30,16 @@ import styles from './Button.module.scss';
  * promise it cannot keep, so Meridian withdrew it on 22 September 2026 and
  * `crystal.css` has no `.secondary` rule either. What it used to mean is
  * `resin`, which is the default.
+ *
+ * There *is* a `danger`, and this library was missing it. Crystal 2.1.0 restored
+ * `.cr-button.danger` as an **independent boundary** rather than a fill — a
+ * destructive action keeps the neutral reading pad and takes the danger ink on
+ * its perimeter, because a solid danger fill makes the label's contrast depend
+ * on a status colour that the palettes are explicitly not allowed to redefine.
+ * Adopted here rather than left out: when Crystal and a library diverge, the
+ * library adopts.
  */
-export type ButtonVariant = 'primary' | 'quiet' | 'resin';
+export type ButtonVariant = 'primary' | 'quiet' | 'danger' | 'resin';
 
 /**
  * Shape.
@@ -55,6 +63,8 @@ const VARIANT_CLASS: Record<ButtonVariant, string | undefined> = {
   /* The base surface, minus the reading pad: the whole Resin shell with the
      label directly on the material, which is what makes a quiet button quiet. */
   quiet: styles['quiet'],
+  /* The boundary, not a fill. See the note above. */
+  danger: styles['danger'],
   /* Resin is the base surface the stylesheet already applies, so this variant
      adds nothing — it exists so `variant="resin"` is sayable rather than implicit. */
   resin: undefined,

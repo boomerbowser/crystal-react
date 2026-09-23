@@ -1,0 +1,36 @@
+@use '../../styles/tokens' as *;
+
+.popconfirm { max-inline-size: 40ch; }
+
+.body { display: flex; flex-direction: column; gap: $cr-spacing-xs; }
+
+.question { margin: 0; font-weight: 750; }
+
+.description {
+  margin: 0;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+/* Cancel first in the DOM, which is what puts it under the focus that opens
+   here and under the first Tab. The visual order follows the reading order
+   rather than being reversed: the way out comes before the way on. */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $cr-spacing-xs;
+  margin-block-start: $cr-spacing-2xs;
+}
+
+.announcement {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .description { color: CanvasText; }
+}

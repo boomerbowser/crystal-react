@@ -165,3 +165,14 @@
   .button[data-focus-visible] { outline-color: Highlight; }
   .button::after { display: none; }
 }
+
+/* `.cr-button.danger` in Crystal 2.1.0: `border-color: var(--cr-danger-ink)`.
+   An independent boundary rather than a fill — the reading pad stays neutral, so
+   the label's contrast does not come to depend on a status colour, and status
+   colours are never redefined by a palette. */
+.danger { border-color: var(--cr-danger-ink); }
+
+@media (forced-colors: active) {
+  .danger { border-color: CanvasText; }
+}
+
