@@ -614,6 +614,52 @@ for (const [id, selector, what] of DISABLED) {
   await motion.close();
 }
 
+/* ------------------------------------------- the tour actually cuts its hole */
+
+/* The one check in this file that exists because a unit test cannot fail. The
+ * tour's spotlight is `clip-path` arithmetic on a measured rectangle, and jsdom
+ * measures nothing: every element is 0×0 there, so the component takes the
+ * branch where there is no box to cut and eight passing tests say nothing at all
+ * about the highlight.
+ *
+ * It found the defect it was written for. The first version used
+ * `clip-path: xywh(…) exclude xywh(…)`, which is not CSS — `clip-path` takes a
+ * single shape and has no combinator — so the declaration was dropped and the
+ * scrim had no hole in it. `getComputedStyle` reported `clip-path: none` in a
+ * real browser while the whole unit suite was green.
+ *
+ * Asserted as "the scrim is not painted over the target, and is painted away
+ * from it", which is the thing a reader sees, rather than as the text of a
+ * clip-path, which is a spelling. */
+{
+  await open('feedback-tour--a-guided-sequence', '#storybook-root button');
+  await page.getByRole('button', { name: 'Start the tour' }).click();
+  await page.waitForTimeout(400);
+  const lit = await page.evaluate(() => {
+    const dialog = document.querySelector('[role="dialog"]');
+    const scrim = dialog?.previousElementSibling;
+    const target = [...document.querySelectorAll('button')]
+      .find((one) => one.textContent === 'Projects');
+    if (!dialog || !scrim || !target) return null;
+    const box = target.getBoundingClientRect();
+    return {
+      overTarget: document
+        .elementsFromPoint(box.left + box.width / 2, box.top + box.height / 2)
+        .includes(scrim),
+      awayFromTarget: document
+        .elementsFromPoint(box.left + box.width / 2, box.top + 260)
+        .includes(scrim),
+    };
+  });
+  record(
+    'the tour cuts the step\'s target out of its scrim',
+    lit !== null && !lit.overTarget && lit.awayFromTarget,
+    `the scrim is ${lit?.overTarget ? '' : 'not '}painted over the target and `
+    + `${lit?.awayFromTarget ? 'is' : 'is not'} painted away from it. A tour whose spotlight `
+    + 'is an invalid clip-path is a scrim over everything, and every unit test still passes',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

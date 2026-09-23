@@ -18,7 +18,10 @@ const meta = {
           + 'cost target is met by coming in *under* it, and a tile that decided for itself '
           + 'would report every saving as a miss. The bar is a real `progress` element, and its '
           + `treatment is Crystal's own: the ${crystalTokens['slider.trackHeight']} band at the pill radius that \`crystal.css\` `
-          + 'already gives the range control. When slice L ships `progress`, this composes it.',
+          + 'already gives the range control. It is a native `<progress>` rather than the `Progress` '
+          + 'component, and that is a decision rather than an omission: this bar is '
+          + 'reinforcement for words that are already on the screen, so a component that names '
+          + 'itself would label it twice.',
       },
     },
   },

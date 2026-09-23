@@ -1619,9 +1619,88 @@ longer reach at all.
 twenty-four has one, because Crystal publishes no recipe for a mark arriving and
 this library does not author recipes. **R-21** records it with the reasoning.
 
-### L — Feedback (15)
+### L — Feedback (15) — complete
 
 `alert`, `toast`, `notification`, `progress`, `ring-progress`, `loader`, `skeleton`, `loading-overlay`, `empty-state`, `result`, `popconfirm`, `tour`, `semi-circle-progress`, `meter-group`, `banner`.
+
+**What each one is built around.** Every entry below is a sentence from
+`core/tokens/catalogue/06-feedback.json`, not a feature list.
+
+- **`progress`** — "indeterminate omits the value rather than faking one". There
+  is deliberately no `indeterminate` flag beside `value`, so "we do not know"
+  cannot be typed next to a number; `exactOptionalPropertyTypes` then stops a
+  *story* expressing it as `value: undefined` either. The track is the slider's
+  track, from `component.slider.trackHeight`, because "matching the slider track"
+  is a sentence about two components that must not drift.
+- **`ring-progress`**, **`semi-circle-progress`** — one stroke with the gauge,
+  `--cr-progress-ring-stroke`, published in core for exactly that. Both draw
+  through the charts' `arcPath` rather than a second annular sector.
+- **`meter-group`** — each segment is its own `role="meter"`: "63% disk, 22%
+  cache" is two measurements, and one element reporting a single number would
+  have to pick. Tints come from Crystal's chart series scale.
+- **`alert`** — `role="alert"` **only** for genuinely urgent interrupting
+  content. An assertive live region interrupts a screen reader mid-word, so
+  `urgent` is an explicit opt-in and is not implied by `danger`.
+- **`banner`** — "dismissal returns focus sensibly": the control being pressed is
+  the control being removed, so `returnFocusTo` exists to make the omission
+  visible rather than to hide it.
+- **`result`** — the outcome is in a real heading; six outcomes map onto four ink
+  pairs, because Crystal publishes no fifth and sixth semantic pair and inventing
+  two would be two more colours to hold at 4.5:1 across twelve combinations.
+- **`empty-state`** — "no-results and truly-empty are different states". `state`
+  is required with no default: a component with one empty state tells a reader
+  with three hundred projects that they have none.
+- **`loader`** — the text is required. A bare spinner tells a sighted reader that
+  something is happening and everyone else nothing.
+- **`skeleton`** — it *wraps* rather than replaces, which is the only way
+  `skeleton-resolve` can exist: a skeleton swapped out by its caller has already
+  unmounted when the data arrives. One live region, not one per line.
+- **`loading-overlay`** — the blocked region is `inert`. A scrim hides a region
+  and stops the mouse and does nothing about the tab key, which is why this wraps
+  its region rather than being dropped on top of it.
+- **`toast`** — "auto-dismiss must never remove the only route to an action",
+  enforced in the **type**: `ToastOptions` is a union where an `action` and a
+  `duration` cannot appear together. Not a runtime warning, which is something
+  you read after shipping.
+- **`notification`** — unread is label weight and nothing beside the label:
+  Crystal's selection rule one component along, because a mark beside the title
+  offsets the title it points at. Said in words too, since weight is not read out.
+- **`popconfirm`** — focus lands on **Cancel**. A confirmation exists because the
+  action is hard to undo, and one that puts the destructive choice under the key
+  the reader is already pressing has asked a question whose default answer is yes.
+- **`tour`** — escapable from every step, focus back to whatever had it when the
+  tour began, and the position in the panel's accessible name.
+
+**One shared vocabulary rather than five copies.** `src/feedback/status.ts` and
+`styles/_status.scss` hold Crystal's four glyphs and four ink pairs once;
+`StatusBadge` was moved onto them in the same pass. `src/feedback/ActivityArc.tsx`
+is the ring that an indeterminate `RingProgress` and a `Loader` both are.
+
+**Adopted, not dropped.** `Button` gained the `danger` variant this library was
+missing — Crystal 2.1.0 restored `.cr-button.danger` as an independent boundary
+rather than a fill, and when Crystal and a library diverge the library adopts.
+
+**Four gates that guarded nothing, found by planting them red.**
+
+1. The reduced-motion check asserted "the animation is gone" — `crystal.css`
+   carries a global `animation: none !important` under reduced motion, so it was
+   green with the component's own rules deleted. It asserts what the component
+   owns instead: the stopped bar fills the track, because a segment frozen two
+   fifths along reports a measurement nobody took.
+2. The forced-colours heatmap check passed because empty cells differ from
+   measured ones, not because intensities do.
+3. The toast lifespan test waited 400ms, which is shorter than a 30ms lifespan
+   plus a 440ms `toast-out` — so nothing could ever be observed leaving.
+4. The tour's spotlight was `clip-path: xywh(…) exclude xywh(…)`, which is not
+   CSS. The declaration was dropped, the scrim had no hole in it, and eight unit
+   tests passed because jsdom measures nothing and the component took the branch
+   where there is no box to cut.
+
+**What is not here.** No continuous motion recipe exists in Crystal — **D-19** in
+the core repository records that its catalogue asks three of these components to
+spin, sweep and travel while its motion chapter publishes fifty-four finite
+recipes and says nothing loops. Every continuous indicator here takes one
+duration, `--cr-flow`, and authors only the shape of the movement.
 
 ### M — Media (5)
 

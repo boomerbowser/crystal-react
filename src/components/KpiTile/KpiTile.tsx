@@ -13,11 +13,21 @@
  * coming in *under* it, and a tile that decided for itself would report every
  * saving as a miss.
  *
- * A note on the bar: Crystal ships no `progress` rule, and the `progress`
- * component belongs to slice L. The treatment here is Crystal's own bar, taken
- * from the range control it does style — an 8px track at the pill radius, the
- * primary fill on the soft one — rather than a new one invented for this tile.
- * When slice L lands, this composes that component instead.
+ * A note on the bar, which used to say "when slice L lands, this composes
+ * `Progress`". Slice L landed and it does not, deliberately.
+ *
+ * `Progress` names itself: it renders its own label and its own readout, and a
+ * bar that is *already* labelled by the sentence above it would then be labelled
+ * twice — the sentence, and a hidden copy of the same words inside the control.
+ * This bar is reinforcement for words that are on the screen already, which is
+ * the opposite of the standalone case `Progress` is for. So it stays a native
+ * `<progress>`: the value, the maximum and the role come from the platform
+ * rather than from three ARIA attributes that have to agree, and
+ * `aria-labelledby` points at the sentence that is really its name.
+ *
+ * What the two do share is the *treatment*: an 8px track at the pill radius with
+ * the primary fill on the soft one, from `component.slider.trackHeight`. One
+ * token, so the tile's bar and the feedback component cannot drift.
  */
 import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
 import { Card } from '../Card/Card.js';

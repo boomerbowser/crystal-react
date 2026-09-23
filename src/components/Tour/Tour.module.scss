@@ -1,0 +1,95 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+
+/* The tour covers the page, and that is deliberate: `aria-modal` says the rest
+   of the interface is not available, and a spotlight that let the target be
+   pressed would be saying two different things. The hole in the scrim is about
+   *seeing* the target, not reaching it. */
+.tour { position: fixed; inset: 0; z-index: 1100; }
+
+/* Mirage, with the step's target cut out of it. One element rather than a ring
+   drawn over the page: a ring has to out-stack everything between it and the
+   viewport, and a hole has nothing to fight. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--cr-mirage-fill);
+  backdrop-filter: blur(var(--cr-mirage-blur))
+    saturate(var(--cr-mirage-saturation))
+    brightness(var(--cr-mirage-brightness));
+}
+
+/* The cut is a `clip-path: path(evenodd, …)` written by the component, because
+   it is arithmetic on a measured rectangle and CSS cannot do it: `clip-path`
+   takes a single shape and has no combinator to subtract one from another.
+   See `spotlight()` — and see why, in the note there about the version of this
+   that used `xywh() exclude`, which is not CSS and was silently dropped.
+
+   Where `path()` is unavailable the scrim is simply whole: the step still reads
+   and the target is not lit. A tour that failed to open would be worse. */
+@supports not (clip-path: path('M0,0H1V1H0Z')) {
+  .scrim[data-cut] { clip-path: none !important; }
+}
+
+/* "Frost step panel over a Mirage scrim." */
+.panel {
+  @include material.frost;
+
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  inline-size: min(92vw, 40ch);
+  padding: $cr-spacing-md;
+  border-radius: $cr-shape-content-radius;
+  color: var(--cr-text);
+}
+
+@include material.opaque-fallback('.panel');
+
+/* Anchored under its target, once there is one to anchor to. */
+.panel[data-anchored] {
+  inset-block-start: calc(var(--panel-top) + #{$cr-spacing-sm});
+  inset-inline-start: var(--panel-left);
+  translate: none;
+}
+
+.position {
+  margin: 0 0 $cr-spacing-2xs;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.title { margin: 0; font-weight: 750; }
+
+.said {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.body {
+  margin-block-start: $cr-spacing-2xs;
+  font-size: var(--cr-text-body-size);
+  line-height: var(--cr-text-body-leading);
+  color: var(--cr-muted);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-xs;
+  margin-block-start: $cr-spacing-md;
+}
+
+.spacer { flex: 1; }
+
+@media (forced-colors: active) {
+  .scrim { background: Canvas; backdrop-filter: none; }
+  .panel { background: Canvas; border: 1px solid CanvasText; box-shadow: none; }
+  .body, .position { color: CanvasText; }
+}

@@ -196,4 +196,5 @@ export * from './LoadingOverlay/index.js';
 export * from './Toast/index.js';
 export * from './Notification/index.js';
 export * from './Popconfirm/index.js';
+export * from './Tour/index.js';
 

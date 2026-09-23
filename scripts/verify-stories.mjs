@@ -22,8 +22,8 @@ const ROOT = resolve(process.cwd(), 'src');
 /* What the library is at today. Raise these when you add; never lower them to
    make a build pass, which is the one way a ratchet stops being one. */
 const FLOOR = {
-  filesWithComponent: 91,
-  filesWithArgs: 85,
+  filesWithComponent: 106,
+  filesWithArgs: 100,
   filesWithArgTypes: 15,
   storiesWithPlay: 5,
   actionArgs: 18,
@@ -115,6 +115,8 @@ const RENDER_ONLY_BY_DESIGN = new Map([
   ['components/Tabs/Navigation.stories.tsx::TheSameStripWithDifferentSemantics', 'the pair is the point — identical material, different semantics'],
   ['components/TreeView/Hierarchies.stories.tsx::ExpandingIsMotion', 'the subject is what plays on expand, and a play function drives it'],
   ['components/SparkLine/SparkLine.stories.tsx::Comparable', 'three spark lines sharing one fixed domain; the subject is what the shared range does to three different series, and driving one of them would break the comparison'],
+  ['components/Tour/Tour.stories.tsx::AGuidedSequence', 'a tour is only itself when something is being pointed at, so the story is the page it runs over rather than the panel on its own'],
+  ['components/Toast/Toast.stories.tsx::AStack', 'the subject is the provider and the stack it owns, which is raised through useToasts rather than rendered by hand'],
 ]);
 
 function renderOnlySingleSubject(source, name) {

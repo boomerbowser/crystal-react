@@ -1,0 +1,79 @@
+import { useRef, useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Tour, type TourStep } from './Tour.js';
+import { Button } from '../Button/Button.js';
+
+const meta = {
+  title: 'Feedback/Tour',
+  component: Tour,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '"Focus moves to each step; **the sequence is escapable** and its position is '
+          + 'announced." Escapable is the word that shapes this: a tour is the one pattern in '
+          + 'the library that takes the whole interface away from someone who did not ask for '
+          + 'it, so every step carries a visible way out, Escape ends it from anywhere, and '
+          + 'ending returns focus to whatever had it when the tour began — not to the last '
+          + "step's target, which by then may be the thing the tour was explaining.\n\n"
+          + '**The highlight is a hole in the scrim, not a ring around the target.** A ring has '
+          + 'to out-stack everything between it and the viewport; a hole has nothing to fight. '
+          + "It takes the target's own radius, so a pill is cut as a pill.\n\n"
+          + 'The position is in the panel\'s accessible name, not only in small text beside it: '
+          + 'a reader who cannot see the progress has no other way to know whether they are '
+          + 'near the end.',
+      },
+    },
+  },
+  args: { steps: [], isOpen: false },
+} satisfies Meta<typeof Tour>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+function Guided(): React.JSX.Element {
+  const projects = useRef<HTMLButtonElement>(null);
+  const settings = useRef<HTMLButtonElement>(null);
+  const [step, setStep] = useState(0);
+  const [open, setOpen] = useState(false);
+
+  const steps: TourStep[] = [
+    {
+      target: projects,
+      title: 'Your projects live here',
+      children: 'Everything you own, and everything shared with you.',
+    },
+    {
+      target: settings,
+      title: 'Settings are per project',
+      children: 'Changing one never changes another.',
+    },
+    { title: 'That is the whole tour', children: 'You can start it again from the help menu.' },
+  ];
+
+  return (
+    <div style={{ display: 'grid', gap: 16, padding: 24 }}>
+      <div style={{ display: 'flex', gap: 12 }}>
+        <Button ref={projects}>Projects</Button>
+        <Button ref={settings} variant="quiet">Settings</Button>
+      </div>
+      <div>
+        <Button onPress={() => { setStep(0); setOpen(true); }}>Start the tour</Button>
+      </div>
+      <Tour
+        steps={steps}
+        isOpen={open}
+        step={step}
+        onStepChange={setStep}
+        onClose={() => setOpen(false)}
+      />
+    </div>
+  );
+}
+
+/* A tour is only itself when something is being pointed at, so the story is the
+   page it runs over rather than the panel on its own. */
+export const AGuidedSequence: Story = {
+  args: { steps: [], isOpen: false },
+  render: () => <Guided />,
+};
