@@ -1,0 +1,75 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+
+/* "Haze track with a primary arc." The track is the reading pad every other
+ * surface gets; the value is the palette's action colour, because a gauge is a
+ * reading of something rather than one of several series.
+ *
+ * The status colours are Crystal's feedback tokens, unchanged, and they are never
+ * the only signal: the band's name is beside the number and inside the meter's
+ * own text.
+ */
+
+.gauge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  inline-size: var(--gauge-size);
+}
+
+.dial {
+  position: relative;
+  inline-size: var(--gauge-size);
+  block-size: var(--gauge-size);
+}
+
+.arc {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.track { fill: var(--cr-content-fill); }
+
+.value { fill: var(--cr-primary); }
+
+.reading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--cr-text);
+}
+
+.number {
+  font-size: var(--cr-text-title-size);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.status {
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+.caption {
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+  text-align: center;
+}
+
+.gauge[data-status='success'] .value { fill: var(--cr-success-ink); }
+.gauge[data-status='attention'] .value { fill: var(--cr-attention-ink); }
+.gauge[data-status='danger'] .value { fill: var(--cr-danger-ink); }
+.gauge[data-status='info'] .value { fill: var(--cr-info-ink); }
+
+@media (forced-colors: active) {
+  .track { fill: Canvas; stroke: CanvasText; stroke-width: 1px; }
+  .value,
+  .gauge[data-status] .value { fill: Highlight; }
+}

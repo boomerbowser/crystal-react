@@ -162,3 +162,8 @@ export * from './LineChart/index.js';
 export * from './AreaChart/index.js';
 export * from './ChartLegend/index.js';
 export * from './ChartTooltip/index.js';
+export * from './PieChart/index.js';
+export * from './DonutChart/index.js';
+export * from './ScatterChart/index.js';
+export * from './SparkLine/index.js';
+export * from './Gauge/index.js';

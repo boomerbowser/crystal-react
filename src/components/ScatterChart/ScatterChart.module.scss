@@ -1,0 +1,32 @@
+@use '../../styles/tokens' as *;
+
+/* Points. The shape is the second channel — one per series, from Crystal's own
+ * marker set — and the 44px hit area is the same one the line chart's points
+ * carry, for the same reason: a six-pixel dot is not a target.
+ *
+ * Dense regions overlap, so the fill is held back a little. That is the
+ * "overlap treatment" the catalogue asks for: at full opacity a cluster is one
+ * blob, and the whole point of a scatter is how many are in it.
+ */
+
+.point .shape {
+  fill: var(--series-colour);
+  fill-opacity: 0.75;
+  transition: fill-opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.target { fill: transparent; }
+
+.point:focus-visible { outline: none; }
+
+.point[data-active] .shape,
+.point:hover .shape { fill-opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .point .shape { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .point .shape { fill: CanvasText; fill-opacity: 1; }
+  .point[data-active] .shape { fill: Highlight; }
+}

@@ -1,0 +1,64 @@
+@use '../../styles/tokens' as *;
+
+/* "Segments separated by a hairline in the surface colour."
+ *
+ * The separation is the `padAngle` in `charts/Radial.tsx` — a gap showing the
+ * ground through, not a border round each wedge — so there is no stroke here at
+ * all. Two adjacent segments read as two pieces of one circle rather than as two
+ * objects, which is what a pie is claiming.
+ *
+ * The label on a wedge is the second channel, so it has to be readable on every
+ * series colour. It is the ink Crystal puts on the action colour, which is the
+ * one ink the palette guarantees against a saturated ground of its own.
+ */
+
+.wedge .fill {
+  fill: var(--series-colour);
+  transition: opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.label {
+  fill: var(--cr-on-primary);
+  font-size: var(--cr-text-caption-size);
+  font-family: var(--cr-font);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.wedge:focus-visible { outline: none; }
+
+/* Emphasis on everything else, not on this one: a wedge that brightens changes
+   the colour a reader is matching to the legend. */
+.chart :global(svg) g:hover .wedge:not(:hover) .fill,
+.chart :global(svg) g:focus-within .wedge:not([data-active]) .fill {
+  opacity: 0.55;
+}
+
+.centre { overflow: visible; }
+
+.centreInner {
+  display: flex;
+  block-size: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--cr-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wedge .fill { transition: none; }
+}
+
+/* With one fill for everything the gap is no longer a separation, so the wedges
+   take a real stroke — the one place the hairline is a border rather than a gap. */
+@media (forced-colors: active) {
+  .wedge .fill {
+    fill: Canvas;
+    stroke: CanvasText;
+    stroke-width: 1px;
+  }
+  .wedge[data-active] .fill { fill: Highlight; }
+  .label { fill: CanvasText; }
+  .chart :global(svg) g:hover .wedge:not(:hover) .fill,
+  .chart :global(svg) g:focus-within .wedge:not([data-active]) .fill { opacity: 1; }
+}

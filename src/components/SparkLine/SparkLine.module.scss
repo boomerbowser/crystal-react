@@ -1,0 +1,41 @@
+@use '../../styles/tokens' as *;
+
+/* "Fixed aspect; no padding of its own." A spark line sits inside a sentence or
+ * a table cell, and anything it added around itself would be spacing the sentence
+ * did not ask for.
+ *
+ * "Stroke weight at small size" is Crystal's chart stroke, unchanged. A thinner
+ * line at a small size is the obvious adjustment and the wrong one: the line is
+ * already only twenty pixels tall, and thinning it is what makes a spark line
+ * disappear on a low-contrast surface.
+ */
+
+.spark {
+  display: inline-flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  vertical-align: middle;
+}
+
+.line {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.path {
+  fill: none;
+  stroke: var(--cr-chart-series-1);
+  stroke-width: var(--cr-chart-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.summary {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .path { stroke: CanvasText; }
+}
