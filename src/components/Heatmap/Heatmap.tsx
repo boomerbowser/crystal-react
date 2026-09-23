@@ -106,8 +106,8 @@ export function Heatmap({
               {rowLabels.map((rowLabel, r) => columnLabels.map((columnLabel, c) => {
                 const value = rows[r]?.[c];
                 const index = r * columnLabels.length + c;
-                const step = value === null || value === undefined
-                  ? 0 : intensityStep(value, low, high);
+                const missing = value === null || value === undefined;
+                const step = missing ? 0 : intensityStep(value, low, high);
                 const x = inner.x + c * (side + gap);
                 const y = inner.y + r * (side + gap);
                 return (
@@ -120,6 +120,7 @@ export function Heatmap({
                     className={styles['cell']}
                     data-active={marks.active === index ? '' : undefined}
                     data-empty={step === 0 ? '' : undefined}
+                    data-missing={missing ? '' : undefined}
                     style={{
                       '--cell-fill': intensityFill(step),
                       '--cell-ink': intensityInk(step),

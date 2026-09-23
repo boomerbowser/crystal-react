@@ -3,9 +3,10 @@
 /* The same ramp, the same gap and the same forced-colours answer as the heatmap:
  * there is one intensity scale in the system rather than one per chart.
  *
- * A day with no measurement is drawn as an outline, not as the palest step. "No
- * data" and "the least data" are different facts, and a calendar where an empty
- * day looks like a quiet one cannot be read at all.
+ * A day of nought is drawn as an outline rather than as the palest step, and a
+ * day nobody measured as a dashed one. Three states, three marks: "nothing
+ * happened", "nobody counted" and "this much happened" are three different
+ * facts, and a calendar that drew the first two alike would be inventing a zero.
  */
 
 .fill { fill: var(--cell-fill); }
@@ -15,6 +16,8 @@
   stroke: var(--cr-chart-grid);
   stroke-width: var(--cr-chart-hairline);
 }
+
+.day[data-missing] .fill { stroke-dasharray: 2 2; }
 
 .axisLabel {
   fill: var(--cr-muted);
@@ -42,6 +45,7 @@
     scale: var(--cell-strength);
   }
   .day[data-empty] .fill { fill: none; scale: 1; }
+  .day[data-missing] .fill { stroke-dasharray: 2 2; }
   .day[data-active] .fill { fill: Highlight; }
   .axisLabel { fill: CanvasText; }
 }

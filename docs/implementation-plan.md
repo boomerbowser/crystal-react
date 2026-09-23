@@ -1446,13 +1446,156 @@ in a later core release is greppable rather than remembered. `styles/_avatar.scs
 is the one that is shared, because the overflow chip must be the same circle as
 the people beside it.
 
-### K — Charts, statistics and visualisation (24)
+### K — Charts, statistics and visualisation (24) — complete
 
 `chart-surface`, `bar-chart`, `line-chart`, `area-chart`, `pie-chart`, `donut-chart`, `scatter-chart`, `radar-chart`, `spark-line`, `gauge`, `heatmap`, `funnel-chart`, `chart-legend`, `chart-tooltip`, `calendar-heatmap`, `treemap`, `sankey`, `candlestick-chart`, `waterfall-chart`, `bullet-chart`, `box-plot`, `histogram`, `geo-map`, `network-graph`.
 
 `chart-surface` first; everything else composes onto it. **Every chart owes a
 text equivalent of its data** — a chart is a second representation, never the only
 one, and colour never carries meaning alone.
+
+**What the slice needed from Crystal before it could start.** Crystal named
+twenty-four chart components in its catalogue and published nothing a chart could
+be drawn with: no series colours, no intensity ramp, and no stroke or point scale
+despite the catalogue saying "line weight follows the stroke scale" as though one
+existed. That is a missing recipe, and a missing recipe is authored in core.
+Crystal 2.1.0 now publishes six categorical colours per palette per mode, a
+five-step intensity ramp with the ink measured for each step, and nine geometry
+values — derived rather than picked, because what has to be true of seventy-two
+colours is a measurement, and asserted across all twelve palette-and-mode
+combinations. `R-20` carries the table here until 2.1.0 is on npm, and deletes
+itself when it is.
+
+- [x] **`chart-surface`**, and the two decisions every chart below it inherits.
+  `table` is a **required** prop: a chart that could be drawn without its text
+  equivalent eventually would be, and no chart in the slice renders a table of its
+  own. The table is folded behind a disclosure, which is a real trade rather than
+  a free one — a closed `<details>` keeps its content out of the accessibility
+  tree, so the numbers are one action away rather than nought, and what makes that
+  acceptable is that the control is in the tab order immediately after the plot.
+
+  The plot is drawn in CSS pixels at the measured width rather than in a scaled
+  `viewBox`. A fixed viewBox is far less code and it scales the stroke scale, the
+  point scale and every axis label with the window — a 2px line becoming 3.4px on
+  a wide screen is a design value that changes with the browser.
+
+- [x] **The keyboard model**, once, in `useMarkNavigation`. One tab stop per
+  chart and a roving tabindex between the marks: "each item is reachable" cannot
+  mean one tab stop each, because a two-hundred-point scatter would be two hundred
+  stops between the control before it and the one after. The marks are SVG groups
+  carrying `tabindex`, which is SVG 2 and which jsdom will let a unit test
+  *believe* — `element.focus()` on an unfocusable node is not an error there — so
+  `verify:behaviour` drives it in a real engine instead. No wrapping at the ends:
+  arriving silently back at the first point after the last is how a reader loses
+  their place in a chart whose shape they cannot see.
+
+- [x] **The second channel**, in `charts/channel.ts`, and which one depends on
+  what the mark is. Outlines take a dash, points take a shape, and **areas take a
+  label** — not a hatch, which is noise at the sizes charts use, and the catalogue
+  already asks for the label in its own words on every area mark it describes
+  ("each segment is labelled with its value", "intensity is paired with a value").
+  The requirement and the remedy turned out to be the same sentence.
+
+- [x] **`bar-chart`** and **`line-chart`**, which are the same rule from opposite
+  ends. A bar's marks are *lengths*, so the axis includes zero and the component
+  does not offer the alternative; a line's marks are *positions*, so the domain
+  fits the data, because a series between 412 and 418 drawn from zero is a flat
+  line that hides the whole story. Same data, different mark, different rule. A
+  fitted domain may leave zero out and may not *invent* the other side of it —
+  found by reading an axis offering −100 on a chart of counts.
+
+- [x] **`area-chart`**, whose stacked table carries the total: the total is what
+  the top edge of the picture asserts, and a reader should not have to add six
+  numbers to check it. The band is generated from a pair of accessors rather than
+  drawn forwards and walked back, because a reversed cubic is not the same cubic
+  with its points swapped — the walk is right for straight segments and quietly
+  wrong for every curve.
+
+- [x] **`pie-chart`**, **`donut-chart`**. A pie states its total, because that is
+  the assertion a pie makes and a reader cannot notice four per cent missing
+  without it. Order is the caller's and is never sorted: "the third segment" would
+  otherwise mean two different things in the picture and in the table. The donut's
+  ring thickness is Crystal's rather than the caller's, so a donut is the same
+  object at every size, and its centre is real text in the document.
+
+- [x] **`scatter-chart`**, sizing by **area**: equal differences in the data are
+  equal differences in ink, where mapping the value onto the diameter makes the
+  largest point three times the area it should be. The test checks that the
+  halfway value lands halfway in area and explicitly *not* halfway in width,
+  because both look right in a screenshot.
+
+- [x] **`spark-line`**, the one chart here that is not a `ChartSurface`. It is a
+  word in somebody else's sentence, and a table row holding six of them should not
+  become six figures and six tables — so the required `summary` *is* the text
+  equivalent. Required rather than recommended because every implementation that
+  made it optional shipped without it.
+
+- [x] **`gauge`** and **`bullet-chart`**, both `role="meter"` and neither a
+  progress bar: a meter is a measurement in a known range, a progress bar is a task
+  getting closer to finishing, and the two announce differently. The bullet's
+  target is in the meter's text and on the screen — told "62", a reader has been
+  told nothing — and every qualitative band is named, because a band with no name
+  is a colour.
+
+- [x] **`heatmap`**, **`calendar-heatmap`**, and one intensity scale for the
+  system rather than one per chart. Equal-width buckets, never quantiles:
+  quantiles put the same number of cells in every bucket, so a week where one day
+  had four times the traffic looks exactly like a week where every day was the
+  same. Three states, three marks — "this much happened", "nothing happened" and
+  "nobody counted" — because drawing the last two alike is a chart inventing a
+  zero. Under forced colours the ramp collapses to one colour, so the intensity
+  becomes the *size* of the mark; that was found by looking at a forced-colours
+  capture, not by reasoning about the stylesheet.
+
+- [x] **`funnel-chart`**, stating both shares. "Relative to what" is the question
+  a funnel exists to answer and there are two answers; people mean different
+  things by "conversion", so neither is picked silently. Bands rather than a
+  tapering trapezoid, because a trapezoid puts each stage's value in an area and
+  an area is the shape people read worst.
+
+- [x] **`radar-chart`**, **`box-plot`**, **`histogram`**, **`waterfall-chart`**,
+  **`candlestick-chart`**. A box plot *counts* its outliers: twelve dots are
+  twelve dots to a reader who can see them and nothing at all to one who cannot. A
+  histogram's bins meet by sharing edges rather than each having a width, because
+  a rounded width leaves a sub-pixel gap and a gap draws a range where nothing was
+  counted. A candlestick needs no second channel invented for it — hollow rose,
+  filled fell is how the instrument has been drawn since before screens had
+  colour.
+
+- [x] **`chart-legend`**, **`chart-tooltip`**. The legend announces what the
+  reader just did rather than what the data currently is: a live region that
+  speaks on every render is one people turn off. The tooltip is `aria-hidden` on
+  purpose — every value in it is already the label of the mark it describes, and
+  announcing both reads every number twice.
+
+- [x] **`treemap`**, **`sankey`**, **`geo-map`**, **`network-graph`**. The
+  treemap is *navigable as a tree* rather than a picture of one: one level at a
+  time, `Enter` to descend, `Escape` to return, a breadcrumb saying where you are.
+  The sankey names both ends of every link, because the nodes are the labels and
+  the links are the data. The geo map takes its topology from the caller — a
+  component that shipped a world outline would ship one political opinion about
+  borders and names to every product that used it. The network graph takes
+  positions rather than computing them: a force simulation is motion, and nothing
+  moves at rest.
+
+**What this slice had to write down rather than look up.** Two things, and the
+second was a surprise. `crystal.css` styles the element — `svg { width: 20px;
+height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8 }` — which is
+right for the thousand icons Crystal ships and wrong for every drawing that is
+not one, and a consumer loading the stylesheet gets it either way. That is D-1's
+hazard in a new place: a spark line came out twenty pixels square, and every
+filled mark took a body-ink outline inherited from an ancestor. And a label
+written straight onto a series colour has no ink that clears 4.5:1, because the
+series colours are all drawn at one lightness — Crystal's own Stone backing is
+the answer, as a halo round the glyphs rather than a pad behind them, because a
+pad has to be the size of text that has not been measured yet.
+
+**Dependencies.** `d3-scale`, `d3-shape`, `d3-hierarchy`, `d3-sankey` and
+`d3-geo` do the arithmetic. ISC and BSD-3, no paid licence, and every element on
+the screen is still written here: a charting library that owned the markup would
+own the materials, the focus ring and the forced-colours behaviour too, and none
+of those would be Crystal's. `check-bundle.mjs` caught all five being vendored
+into `dist/` the first time the charts were built.
 
 ### L — Feedback (15)
 

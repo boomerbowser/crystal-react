@@ -23,6 +23,11 @@ export const INTENSITY_STEPS = chartGeometry.intensitySteps;
  * here" and "the least of what happened here" are different facts, and a
  * calendar where an empty day looks like a quiet one is a calendar that cannot
  * be read. It returns 0, and the caller draws the ground.
+ *
+ * A *missing* measurement is a third case again, and it is not this function's:
+ * it has no value to pass in. Callers mark it separately, because a day nobody
+ * counted and a day on which nothing happened are as different as either is from
+ * a busy one — and drawing them the same is a chart inventing a zero.
  */
 export function intensityStep(value: number, low: number, high: number): number {
   if (value <= 0) return 0;

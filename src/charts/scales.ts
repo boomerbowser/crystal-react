@@ -35,7 +35,15 @@ export function valueDomain(
   if (fromZero) return [Math.min(0, low), Math.max(0, high)];
   if (low === high) return [low - 1, high + 1];
   const pad = (high - low) * 0.05;
-  return [low - pad, high + pad];
+  /* The padding never crosses zero. A fitted domain is allowed not to include
+     zero; it is not allowed to *invent* the other side of it. A series of counts
+     between 12 and 441, padded and rounded to a nice step, came out with −100 on
+     its axis — an axis offering a reading no count can have, on a chart whose
+     whole argument is where the values sit. */
+  return [
+    low >= 0 ? Math.max(0, low - pad) : low - pad,
+    high <= 0 ? Math.min(0, high + pad) : high + pad,
+  ];
 }
 
 /** Sums per category, for a stacked chart. */

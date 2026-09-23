@@ -9,8 +9,11 @@
  * measured against *that* step — which is the whole content of "intensity is
  * paired with a value".
  *
- * A cell with no measurement is not the bottom of the ramp. It is the plot
- * showing through, with a hairline so the position is still a cell.
+ * A cell of nought is not the bottom of the ramp: it is the plot showing
+ * through, with a hairline so the position is still a cell. A cell nobody
+ * measured is a third thing again and is drawn as a dashed one — "nothing
+ * happened" and "nobody counted" are as different from each other as either is
+ * from a busy cell, and a chart that drew them alike would be inventing a zero.
  */
 
 .fill {
@@ -22,6 +25,8 @@
   stroke: var(--cr-chart-grid);
   stroke-width: var(--cr-chart-hairline);
 }
+
+.cell[data-missing] .fill { stroke-dasharray: 3 3; }
 
 .value {
   fill: var(--cell-ink);
@@ -64,6 +69,7 @@
     scale: var(--cell-strength);
   }
   .cell[data-empty] .fill { fill: none; scale: 1; }
+  .cell[data-missing] .fill { stroke-dasharray: 3 3; }
   .cell[data-active] .fill { fill: Highlight; }
   .value { fill: Canvas; }
   .axisLabel { fill: CanvasText; }

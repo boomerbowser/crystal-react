@@ -100,7 +100,8 @@ export function GeoMap({
           <g transform={`translate(${inner.x},${inner.y})`} {...marks.containerProps}>
             {ordered.map((feature, index) => {
               const value = values[keyOf(feature)];
-              const step = value === undefined ? 0 : intensityStep(value, low, high);
+              const missing = value === undefined;
+              const step = missing ? 0 : intensityStep(value, low, high);
               return (
                 <g
                   key={keyOf(feature) || nameOf(feature)}
@@ -110,6 +111,7 @@ export function GeoMap({
                   className={styles['region']}
                   data-active={marks.active === index ? '' : undefined}
                   data-empty={step === 0 ? '' : undefined}
+                  data-missing={missing ? '' : undefined}
                   style={{
                     '--cell-fill': intensityFill(step),
                     '--cell-strength': String(step / INTENSITY_STEPS),

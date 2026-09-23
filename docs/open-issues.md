@@ -3,7 +3,7 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Two entries, and neither is ordinary work.**
+**Three entries, and none is ordinary work.**
 
 **R-17** has one part left and it is not in this repository's hands. All three
 of its items are answered: every story file declares `meta.component`; the
@@ -15,17 +15,15 @@ props, and both routes to an extractor that can are closed until one runs on
 TypeScript 7.
 
 **R-19** is a simplification that 2.1.0 makes possible and that cannot start
-until it is published.
-
-Closed entries are in [`closed-issues.md`](closed-issues.md), with the reasoning
-intact.
+until it is published. **R-20** is the same wait from the other side: a table of
+2.1.0's values carried here so slice K could be built at all.
 
 Closed entries are in [`closed-issues.md`](closed-issues.md), with the reasoning
 intact.
 
 Crystal's own tracker is `crystal-design-system/proposals/open-issues.md`. As of
-21 September 2026 it holds only D-4 and D-5, which need hardware, and M-3, which
-needs a decision from Meridian.
+23 September 2026 it holds D-4, which needs hardware, and D-17, a flake that
+needs its next occurrence with the artifact kept.
 
 ---
 
@@ -407,3 +405,47 @@ computed style. A static read of two stylesheets could not answer the same
 question about the preview, and it will not answer it here either — the library's
 `@layer crystal.component` and this library's CSS modules do not compete
 textually.
+
+---
+
+## R-20 · Crystal 2.1.0's chart vocabulary is transcribed here
+
+**Opened 23 September 2026, building slice K. Blocked on `@crystal-ui/core@2.1.0`
+being published.**
+
+Crystal 2.1.0 publishes the vocabulary charts are specified in: a six-colour
+series scale per palette per mode, a five-step intensity ramp with the ink
+measured for each step, and the stroke, point, hairline, bar-radius, cell-gap,
+ring-thickness, fill-opacity, link-opacity and gauge-sweep values the catalogue
+has referred to since 2.0 as though they existed. This library installs 2.0.0
+from npm, which publishes none of it.
+
+**So it is carried here**, in `src/theme/chartTokens.ts`. Without it every chart
+in the slice would paint nothing: a custom property that resolves to nothing
+throws no error and logs no warning, which is the failure
+`published-properties.test.tsx` exists to catch and the reason the shim publishes
+the properties rather than the charts falling back to literals.
+
+**What is duplicated is the output, not the derivation.** Crystal computes the
+scale from each palette's seed hue and asserts four things about the result
+across all twelve palette-and-mode combinations; re-implementing that arithmetic
+here would be a second implementation of a formula, which CONTRACT §1 forbids for
+the reason it always gives. A table of the values it produced cannot diverge
+silently — it can only be stale.
+
+**It removes itself.** `chartTokens()` yields nothing for a property the
+installed resolver already publishes, so the day the dependency moves to `^2.1.0`
+the whole file is inert. `chartTokens.test.ts` has a test whose only job is to
+fail then: *"is still needed: the installed core publishes no series scale"*.
+
+**`lint:tokens` knows about it.** The file is in a `TRANSCRIBED` set beside the
+`GENERATED` one, which is deliberately a list rather than a per-line exemption:
+the point is that the set is countable, that each entry is owed an open issue,
+and that it is supposed to be empty again after the next dependency bump.
+
+**Closing it needs** `@crystal-ui/core@2.1.0` on npm, then: bump the dependency,
+delete `src/theme/chartTokens.ts`, replace `chartGeometry` with
+`crystalTokens['chart.*']` from `tokens.generated.ts`, drop the `TRANSCRIBED`
+entry from `scripts/lint-tokens.mjs`, and re-run the four browser gates — the
+values are identical, so nothing should move, and if something does the table had
+gone stale and this entry is why.

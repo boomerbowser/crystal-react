@@ -20,6 +20,9 @@
 
 .region[data-empty] .shape { fill: none; }
 
+/* A region the join missed, as against one that measured nought. */
+.region[data-missing] .shape { stroke-dasharray: 3 3; }
+
 .region:focus-visible { outline: none; }
 
 .region:hover .shape,
@@ -44,6 +47,7 @@
        is drawn around. */
     stroke-width: calc(var(--cr-chart-hairline) + var(--cell-strength) * var(--cr-chart-stroke) * 1.5);
   }
-  .region[data-empty] .shape { stroke-dasharray: 2 3; }
+  .region[data-empty] .shape { fill: none; }
+  .region[data-missing] .shape { stroke-dasharray: 2 3; }
   .region[data-active] .shape { fill: Highlight; }
 }

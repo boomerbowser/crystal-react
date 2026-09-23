@@ -98,6 +98,7 @@ export function CalendarHeatmap({
             <g {...marks.containerProps}>
               {placed.map((day, index) => {
                 const step = day.value === null ? 0 : intensityStep(day.value, low, high);
+                const missing = day.value === null;
                 return (
                   <g
                     key={day.date}
@@ -108,6 +109,7 @@ export function CalendarHeatmap({
                     className={styles['day']}
                     data-active={marks.active === index ? '' : undefined}
                     data-empty={step === 0 ? '' : undefined}
+                    data-missing={missing ? '' : undefined}
                     style={{
                       '--cell-fill': intensityFill(step),
                       '--cell-ink': intensityInk(step),

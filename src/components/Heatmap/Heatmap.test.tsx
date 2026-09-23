@@ -39,6 +39,20 @@ describe('Heatmap', () => {
     for (const ink of inks) expect(ink).toMatch(/--cr-chart-on-heat-\d|--cr-muted/);
   });
 
+  /* Three states, three marks. A cell of nought and a cell nobody measured are
+     as different from each other as either is from a busy one, and drawing them
+     alike is a chart inventing a zero. */
+  it('tells a measured nought from a missing measurement', () => {
+    renderWithCrystal(
+      <Heatmap label="Incidents" rows={[[0, null]]} rowLabels={['Europe']} columnLabels={['Mon', 'Tue']} />,
+    );
+    const nought = screen.getByLabelText('Europe, Mon, 0');
+    const missing = screen.getByLabelText('Europe, Tue, no measurement');
+    expect(nought.hasAttribute('data-empty')).toBe(true);
+    expect(nought.hasAttribute('data-missing')).toBe(false);
+    expect(missing.hasAttribute('data-missing')).toBe(true);
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = renderWithCrystal(
       <Heatmap label="Incidents by day" rows={rows} rowLabels={rowLabels} columnLabels={columnLabels} />,
