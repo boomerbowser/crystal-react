@@ -1,0 +1,153 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+
+/* ChartSurface — "Haze plot fill on the surrounding material", and the plot area
+ * keeps the content radius.
+ *
+ * The fill goes on the plot box and not on the figure, because the figure also
+ * holds a caption, a legend and a disclosure, and those are text on whatever the
+ * chart was put on. Haze is a *reading ground for the marks*; giving it to the
+ * whole figure would put a second pad behind a caption that already has one from
+ * the card the chart usually sits in.
+ *
+ * Nothing here feathers a mark. The Haze layer is a pseudo-element behind the
+ * plot; the SVG above it is crisp, which is the same division of labour every
+ * other surface in this library makes between its fill and its content.
+ */
+
+.surface {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-xs;
+  margin: 0;
+  color: var(--cr-text);
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-2xs;
+}
+
+.title {
+  font-weight: 650;
+}
+
+.description {
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  color: var(--cr-muted);
+}
+
+.legend {
+  display: flex;
+}
+
+.plot {
+  position: relative;
+  inline-size: 100%;
+  border-radius: var(--cr-radius);
+  @include material.haze-fill;
+}
+
+.canvas {
+  display: block;
+  /* The measured width is written as an attribute; this keeps the drawn box and
+     the layout box the same one when the two disagree for a frame after a
+     resize, which is the only moment they can. */
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+
+/* A mark takes the focus ring the rest of the system uses. `outline` on an SVG
+   element is honoured by every engine this library gates against; the feathered
+   halo is a shadow and SVG shadows are filters, so the halo is drawn by the
+   surface's own filter-free approximation — the crisp core, at Crystal's offset
+   and width, which is the part of the recipe that carries the meaning. */
+.canvas :focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-primary);
+  outline-offset: $cr-focus-core-offset;
+  border-radius: $cr-focus-core-offset;
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+}
+
+.disclosure {
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+.summary {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-xs;
+  border-radius: $cr-action-radius;
+  color: var(--cr-muted);
+  cursor: pointer;
+  /* The platform marker is a triangle that means "open", which is the one thing
+     the two labels below already say. */
+  list-style: none;
+  &::-webkit-details-marker { display: none; }
+  &:focus-visible {
+    outline: $cr-focus-core-width solid var(--cr-primary);
+    outline-offset: $cr-focus-core-offset;
+  }
+}
+
+.summaryHide { display: none; }
+.disclosure[open] .summaryShow { display: none; }
+.disclosure[open] .summaryHide { display: inline; }
+
+.tableScroll {
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  text-align: start;
+
+  th,
+  td {
+    padding: $cr-spacing-2xs $cr-spacing-xs;
+    text-align: start;
+    border-block-end: 1px solid var(--cr-edge);
+    white-space: nowrap;
+  }
+
+  thead th {
+    font-weight: 650;
+    color: var(--cr-muted);
+  }
+}
+
+.tableCaption {
+  padding-block-end: $cr-spacing-2xs;
+  text-align: start;
+  color: var(--cr-muted);
+}
+
+/* Forced colours. The Haze fill is paint and goes; the plot keeps a boundary so
+   the drawn area is still an area, and the marks are the chart's own problem —
+   `channel.ts` explains why every series carries something that is not colour,
+   and this is the mode where that stops being a courtesy. */
+@media (forced-colors: active) {
+  .plot {
+    border: 1px solid CanvasText;
+    &::before { display: none; }
+  }
+  .canvas :focus-visible { outline-color: Highlight; }
+}

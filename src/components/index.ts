@@ -154,3 +154,7 @@ export * from './DataView/index.js';
 export * from './OrganizationChart/index.js';
 export * from './DataTable/index.js';
 export * from './ResizableTable/index.js';
+
+/* Slice K — charts. `ChartSurface` first; everything else composes onto it. */
+export * from './ChartSurface/index.js';
+export * from './BarChart/index.js';

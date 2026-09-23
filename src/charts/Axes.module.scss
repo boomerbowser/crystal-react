@@ -1,0 +1,32 @@
+@use '../styles/tokens' as *;
+
+/* Axis furniture. Three colours and all three are Crystal's:
+ * `--cr-chart-grid` behind the data, `--cr-chart-axis` for the rule the marks
+ * stand on, and the muted ink for the numbers — which is ink and therefore owes
+ * the text contrast floor, not the 3:1 one the marks owe.
+ */
+
+.grid {
+  stroke: var(--cr-chart-grid);
+  stroke-width: 1px;
+}
+
+.axis {
+  stroke: var(--cr-chart-axis);
+  stroke-width: 1px;
+}
+
+.tick {
+  fill: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  font-family: var(--cr-font);
+}
+
+/* Forced colours replaces the palette. The grid must stay *behind* the data in
+   the only way that remains — it is the same colour as everything else now, so
+   it becomes the thinner, dashed one. */
+@media (forced-colors: active) {
+  .grid { stroke: CanvasText; stroke-dasharray: 2 4; }
+  .axis { stroke: CanvasText; }
+  .tick { fill: CanvasText; }
+}

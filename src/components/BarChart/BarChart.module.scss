@@ -1,0 +1,47 @@
+@use '../../styles/tokens' as *;
+
+/* Bars. The colour is written inline, per series, because it is the one thing
+ * about a mark that is data rather than design — which series this is. Everything
+ * else about how a bar looks is here.
+ *
+ * Nothing moves at rest, and a bar chart at rest is every bar chart nobody is
+ * touching. The only transition is the one a person started: the hover and focus
+ * emphasis.
+ */
+
+.marks {
+  /* The focus ring is drawn by the surface; this is what makes it possible to
+     put one round a group of paths at all. */
+  outline: none;
+}
+
+.bar .fill {
+  fill: var(--series-colour);
+  transition: opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+/* Emphasis by opacity on everything *else*, not by brightening this one: a bar
+   that lightens on hover changes the colour a reader is comparing against its
+   neighbours, and the comparison is the chart. */
+.marks:hover .bar:not(:hover) .fill,
+.marks:focus-within .bar:not([data-active]) .fill {
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar .fill { transition: none; }
+}
+
+/* Forced colours takes every fill to the same one, so the bars would become a
+   single block. They keep their boundary, which is what separates them, and the
+   active one takes the system's own highlight. */
+@media (forced-colors: active) {
+  .bar .fill {
+    fill: Canvas;
+    stroke: CanvasText;
+    stroke-width: 1px;
+  }
+  .marks:hover .bar:not(:hover) .fill,
+  .marks:focus-within .bar:not([data-active]) .fill { opacity: 1; }
+  .bar[data-active] .fill { fill: Highlight; }
+}

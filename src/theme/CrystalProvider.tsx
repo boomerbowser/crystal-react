@@ -29,6 +29,7 @@ import type {
   CrystalTheme, CrystalThemeInput, CrystalThemeValues, CrystalDirection, CrystalMode,
 } from './types.js';
 import { usePreferredMode, usePrefersReducedTransparency, useForcedColors } from './usePreferredScheme.js';
+import { chartTokens } from './chartTokens.js';
 
 const core = preferences;
 
@@ -132,6 +133,10 @@ function scopeStyle(theme: CrystalThemeValues): CSSProperties {
 
   return {
     ...resolved,
+    /* Crystal 2.1.0's chart vocabulary, for as long as this library installs
+       2.0.0. It yields nothing for a property `resolved` already carries, so the
+       version bump switches it off rather than requiring anybody to notice. */
+    ...chartTokens(theme.palette, theme.mode, resolved as Record<string, unknown>),
     '--cr-atmosphere': `${theme.atmosphere}`,
     '--cr-translucency': `${theme.translucency}`,
     '--cr-elevation': `${theme.elevation}`,
