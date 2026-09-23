@@ -16,11 +16,15 @@
  * tab stop for the chart and arrow keys between the bars, which is
  * `useMarkNavigation` and its reasons.
  */
-import { useId, type CSSProperties, type ReactNode } from 'react';
+import { useId, useRef, type CSSProperties, type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
+import { ChartLegend } from '../ChartLegend/ChartLegend.js';
+import { ChartTooltip } from '../ChartTooltip/ChartTooltip.js';
 import { Axes, type AxisTick } from '../../charts/Axes.js';
 import { seriesColour } from '../../charts/channel.js';
+import { drawnSeries, seriesLegend } from '../../charts/series.js';
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
+import { useMarkTooltip, type MarkTip } from '../../charts/useMarkTooltip.js';
 import { scaleBand, scaleLinear, stackedDomain, valueDomain } from '../../charts/scales.js';
 import type { ChartSeries } from '../../charts/types.js';
 import { chartGeometry } from '../../theme/chartTokens.js';
@@ -42,28 +46,53 @@ export interface BarChartProps extends Omit<ChartSurfaceProps, 'children' | 'tab
 
 export function BarChart({
   series, categories, stacked = false, ticks = 5,
-  format = (value) => String(value), table, className, ...surface
+  format = (value) => String(value), table, legend, className, ...surface
 }: BarChartProps): ReactNode {
   const id = useId();
-  const marks = useMarkNavigation(series.length * categories.length);
+  const drawn = drawnSeries(series);
+  const marks = useMarkNavigation(drawn.length * categories.length);
+  const tip = useMarkTooltip(marks);
+  /* Where each mark ended up, handed from the drawing to the panel that points
+     at it. A ref rather than state because it is not a fact about the chart, it
+     is this render's own arithmetic; see `ChartSurface`'s `tooltip`. */
+  const tips = useRef<MarkTip[]>([]);
 
   return (
     <ChartSurface
       {...surface}
-      table={table ?? seriesTable(series, categories, format)}
+      table={table ?? seriesTable(drawn.map((one) => one.series), categories, format)}
       empty={surface.empty ?? categories.length === 0}
+      legend={legend === undefined && series.length > 1
+        ? <ChartLegend entries={seriesLegend(series)} />
+        : legend}
+      tooltip={(frame) => {
+        const at = tip.index === null ? undefined : tips.current[tip.index];
+        return at ? (
+          <ChartTooltip
+            shown={tip.shown}
+            x={at.x}
+            y={at.y}
+            bounds={{ width: frame.width, height: frame.height }}
+            title={at.title}
+            rows={at.rows}
+          />
+        ) : null;
+      }}
       className={cx(styles['chart'], className)}
     >
       {(frame) => {
         const { inner } = frame;
         const band = scaleBand().domain(categories.map(String)).range([0, inner.width]).padding(0.2);
-        const domain = stacked ? stackedDomain(series, categories.length) : valueDomain(series);
+        const visible = drawn.map((one) => one.series);
+        const domain = stacked
+          ? stackedDomain(visible, categories.length)
+          : valueDomain(visible);
         const value = scaleLinear().domain(domain).nice(ticks).range([inner.height, 0]);
         /* Inner band: where a grouped chart puts each series inside its
            category. A stacked chart has one bar per category, so its inner band
            is the whole of the outer one. */
         const inner$ = scaleBand()
-          .domain(series.map((one) => one.name))
+          .domain(drawn.map((one) => one.series.name))
           .range([0, band.bandwidth()])
           .padding(stacked ? 0 : 0.08);
         const width = stacked ? band.bandwidth() : inner$.bandwidth();
@@ -78,12 +107,17 @@ export function BarChart({
            directions rather than cancelling. */
         const up = categories.map(() => 0);
         const down = categories.map(() => 0);
+        /* Handed over by reference before it is filled: the entries are written
+           as the marks below are constructed, and `tooltip` is called after
+           that. One array, not two passes over the scales. */
+        const built: MarkTip[] = [];
+        tips.current = built;
 
         return (
           <>
             <Axes frame={frame} value={valueTicks} category={categoryTicks} />
-            <g {...marks.containerProps} className={styles['marks']}>
-              {series.map((one, s) => (
+            <g {...tip.containerProps} className={styles['marks']}>
+              {drawn.map(({ series: one, channel, slot }) => (
                 <g key={one.name}>
                   {categories.map((category, c) => {
                     const datum = one.values[c];
@@ -102,11 +136,17 @@ export function BarChart({
                       top = value(Math.max(0, datum));
                       bottom = value(Math.min(0, datum));
                     }
-                    const index = s * categories.length + c;
+                    const index = slot * categories.length + c;
+                    built[index] = {
+                      x: x + width / 2,
+                      y: inner.y + top,
+                      title: category,
+                      rows: [{ name: one.name, value: format(datum), index: channel }],
+                    };
                     return (
                       <g
                         key={category}
-                        {...marks.markProps(index)}
+                        {...tip.markProps(index)}
                         role="graphics-symbol"
                         aria-label={`${category}, ${one.name}, ${format(datum)}`}
                         className={styles['bar']}
@@ -117,7 +157,7 @@ export function BarChart({
                            rule in every sheet, including the one that has to
                            replace it when the operating system takes the palette
                            away. */
-                        style={{ '--series-colour': seriesColour(s) } as CSSProperties}
+                        style={{ '--series-colour': seriesColour(channel) } as CSSProperties}
                       >
                         <path className={styles['fill']}
                           d={barPath(x, inner.y + top, width, Math.max(0, bottom - top), datum >= 0)}
@@ -128,7 +168,7 @@ export function BarChart({
                 </g>
               ))}
             </g>
-            <desc id={id}>{`${series.length} series across ${categories.length} categories`}</desc>
+            <desc id={id}>{`${drawn.length} series across ${categories.length} categories`}</desc>
           </>
         );
       }}

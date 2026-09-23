@@ -16,10 +16,14 @@
  * twelve numbers, and a reader who cannot see the shape needs all twelve rather
  * than a description of the outline.
  */
-import { type CSSProperties, type ReactNode } from 'react';
+import { useRef, type CSSProperties, type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
+import { ChartLegend } from '../ChartLegend/ChartLegend.js';
+import { ChartTooltip } from '../ChartTooltip/ChartTooltip.js';
 import { seriesColour, seriesDash } from '../../charts/channel.js';
+import { drawnSeries, seriesLegend } from '../../charts/series.js';
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
+import { useMarkTooltip, type MarkTip } from '../../charts/useMarkTooltip.js';
 import { seriesTable } from '../BarChart/BarChart.js';
 import { scaleLinear } from '../../charts/scales.js';
 import { chartGeometry } from '../../theme/chartTokens.js';
@@ -42,10 +46,13 @@ export interface RadarChartProps extends Omit<ChartSurfaceProps, 'children' | 't
 
 export function RadarChart({
   series, axes, domain, rings = 4, format = (value) => String(value),
-  table, className, height = 320, ...surface
+  table, legend, className, height = 320, ...surface
 }: RadarChartProps): ReactNode {
-  const marks = useMarkNavigation(series.length * axes.length);
-  const values = series.flatMap((one) => one.values)
+  const drawn = drawnSeries(series);
+  const marks = useMarkNavigation(drawn.length * axes.length);
+  const tip = useMarkTooltip(marks);
+  const tips = useRef<MarkTip[]>([]);
+  const values = drawn.flatMap((one) => one.series.values)
     .filter((value): value is number => value !== null);
   const [low, high] = domain ?? [0, Math.max(1, ...values)];
 
@@ -55,8 +62,24 @@ export function RadarChart({
       height={height}
       /* Room outside the ring for the axis labels, which is where they go. */
       insets={{ top: 28, right: 72, bottom: 28, left: 72 }}
-      table={table ?? seriesTable(series, axes, format)}
+      table={table ?? seriesTable(drawn.map((one) => one.series), axes, format)}
       empty={surface.empty ?? axes.length === 0}
+      legend={legend === undefined && series.length > 1
+        ? <ChartLegend entries={seriesLegend(series)} mark="line" />
+        : legend}
+      tooltip={(frame) => {
+        const shown = tip.index === null ? undefined : tips.current[tip.index];
+        return shown ? (
+          <ChartTooltip
+            shown={tip.shown}
+            x={shown.x}
+            y={shown.y}
+            bounds={{ width: frame.width, height: frame.height }}
+            title={shown.title}
+            rows={shown.rows}
+          />
+        ) : null;
+      }}
       className={cx(styles['chart'], className)}
     >
       {(frame) => {
@@ -72,6 +95,8 @@ export function RadarChart({
           Math.cos(angle(index)) * scale(value),
           Math.sin(angle(index)) * scale(value),
         ];
+        const built: MarkTip[] = [];
+        tips.current = built;
 
         return (
           <g transform={`translate(${centreX},${centreY})`}>
@@ -111,15 +136,15 @@ export function RadarChart({
               })}
             </g>
 
-            <g {...marks.containerProps}>
-              {series.map((one, s) => {
+            <g {...tip.containerProps}>
+              {drawn.map(({ series: one, channel, slot }) => {
                 const points = axes.map((_, index) => at(index, one.values[index] ?? low));
-                const dash = seriesDash(s);
+                const dash = seriesDash(channel);
                 return (
                   <g
                     key={one.name}
                     className={styles['series']}
-                    style={{ '--series-colour': seriesColour(s) } as CSSProperties}
+                    style={{ '--series-colour': seriesColour(channel) } as CSSProperties}
                   >
                     <polygon
                       className={styles['area']}
@@ -130,11 +155,20 @@ export function RadarChart({
                       const datum = one.values[index];
                       if (datum === null || datum === undefined) return null;
                       const [x, y] = points[index]!;
-                      const mark = s * axes.length + index;
+                      const mark = slot * axes.length + index;
+                      /* Plot coordinates, not the group's: everything under this
+                         `<g>` is drawn relative to the centre, and the panel is
+                         positioned in the plot the group sits in. */
+                      built[mark] = {
+                        x: centreX + x,
+                        y: centreY + y,
+                        title: axis,
+                        rows: [{ name: one.name, value: format(datum), index: channel }],
+                      };
                       return (
                         <g
                           key={axis}
-                          {...marks.markProps(mark)}
+                          {...tip.markProps(mark)}
                           role="graphics-symbol"
                           aria-label={`${axis}, ${one.name}, ${format(datum)}`}
                           className={styles['point']}

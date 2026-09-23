@@ -461,6 +461,33 @@ for (const { edge, flush, square } of EDGES) {
     + 'loses their place in a chart whose shape they cannot see',
   );
 
+  /* The tooltip's keyboard half. A chart tooltip cannot hang off hover: there
+     is one focusable plot and the cursor inside it is a roving `tabindex`, so a
+     reader who never touches a pointer would otherwise get no panel at all.
+     jsdom cannot test this honestly either — it has no focus of its own to
+     follow, and `:focus-within` is not resolved there. */
+  const panel = '#storybook-root [aria-hidden="true"][data-shown]';
+  const withFocus = await page.locator(panel).count();
+  record(
+    'the tooltip follows the keyboard cursor, not only the pointer',
+    withFocus === 1,
+    `${withFocus} tooltip panels are shown while a mark has focus. A chart whose values `
+    + 'appear only under a pointer has no values for anyone who does not use one',
+  );
+
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(60);
+  const afterEscape = await page.locator(panel).count();
+  await page.keyboard.press('ArrowLeft');
+  await page.waitForTimeout(60);
+  const afterMove = await page.locator(panel).count();
+  record(
+    'Escape dismisses the tooltip and moving on brings it back',
+    afterEscape === 0 && afterMove === 1,
+    `after Escape ${afterEscape} panels are shown and after the next arrow key ${afterMove}. `
+    + 'A dismissal that outlives the mark it dismissed is a chart whose tooltip never returns',
+  );
+
   /* The focus ring has to be *on the mark*, not on the plot. `outline` on an SVG
      element is honoured by every engine this library gates against, which is a
      claim worth reading back rather than believing.

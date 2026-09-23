@@ -390,8 +390,14 @@ for (const [id, selector, what] of DISABLED) {
 {
   await open('charts-pie-chart--default', '#storybook-root svg');
   const wedge = await page.evaluate(() => {
-    const path = document.querySelector('#storybook-root [role="graphics-symbol"] path');
-    const svg = document.querySelector('#storybook-root svg');
+    const path = document.querySelector(
+      '#storybook-root svg[role="group"] [role="graphics-symbol"] path',
+    );
+    /* The *canvas*, not the first svg on the page. A legend's swatches are svgs
+       too, and they are deliberately icon-sized — a check that took the first
+       one would report the swatch's 20px as the plot's width and fail a chart
+       that is drawn perfectly. */
+    const svg = document.querySelector('#storybook-root svg[role="group"]');
     return {
       stroke: path ? getComputedStyle(path).stroke : null,
       fill: path ? getComputedStyle(path).fill : null,
@@ -421,6 +427,8 @@ for (const [id, selector, what] of DISABLED) {
 
   await open('charts-spark-line--default', '#storybook-root svg');
   const spark = await page.evaluate(() => {
+    /* A spark line draws no surface and so has no `role="group"` canvas: it is
+       the whole story, and the first svg on the page is the right one. */
     const svg = document.querySelector('#storybook-root svg');
     const path = document.querySelector('#storybook-root svg path');
     const box = svg?.getBoundingClientRect();
@@ -455,7 +463,9 @@ for (const [id, selector, what] of DISABLED) {
 {
   await open('charts-pie-chart--default', '#storybook-root text');
   const label = await page.evaluate(() => {
-    const text = document.querySelector('#storybook-root [role="graphics-symbol"] text');
+    const text = document.querySelector(
+      '#storybook-root svg[role="group"] [role="graphics-symbol"] text',
+    );
     if (!text) return null;
     const style = getComputedStyle(text);
     return {
@@ -477,6 +487,62 @@ for (const [id, selector, what] of DISABLED) {
     `paint-order is ${label?.paintOrder}. The default draws the stroke over the fill, which `
     + 'thickens the glyphs with the backing colour instead of haloing them',
   );
+}
+
+/* ------------------------------------- the second channel survives forced colours */
+
+/* The one condition under which colour is not available at all, and therefore
+ * the only condition in which "distinguishable without colour alone" is being
+ * tested rather than asserted. Two charts, because they answer it two different
+ * ways: a line has a categorical second channel — the dash — and a heatmap has
+ * an ordered one, where a dash would say nothing about *how much*.
+ *
+ * This was checked by hand while the charts were built, and by hand it found
+ * two real defects: a measured zero and a missing measurement drew identically,
+ * and an axis of counts ran to −100. Neither would have been found by a gate
+ * that did not emulate this mode, and nothing was guarding it afterwards. */
+{
+  await page.emulateMedia({ forcedColors: 'active' });
+
+  await open('charts-line-chart--default', '#storybook-root svg path');
+  const dashes = await page.evaluate(() => [...document.querySelectorAll(
+    '#storybook-root svg[role="group"] path',
+  )]
+    .map((path) => getComputedStyle(path).strokeDasharray)
+    .filter((dash) => dash && dash !== 'none'));
+  record(
+    'a line series past the first is dashed, so it reads with no colour at all',
+    dashes.length > 0,
+    'no path in the line chart has a stroke-dasharray. With forced colours every '
+    + 'series is CanvasText, so the dash is the whole of what separates them',
+  );
+
+  await open('charts-heatmap--default', '#storybook-root [role="graphics-symbol"]');
+  const cells = await page.evaluate(() => {
+    const seen = new Set();
+    for (const cell of document.querySelectorAll(
+      '#storybook-root svg[role="group"] [role="graphics-symbol"]',
+    )) {
+      /* Cells with no measurement are excluded deliberately. They are drawn at
+         a fixed size by a rule of their own, so counting them would let this
+         check pass on "some cells are empty and some are not" — which is true
+         of a heatmap whose intensities have all collapsed to one size. */
+      if (cell.hasAttribute('data-empty') || cell.hasAttribute('data-missing')) continue;
+      const fill = cell.querySelector('rect, path');
+      if (!fill) continue;
+      seen.add(getComputedStyle(fill).scale);
+    }
+    return [...seen];
+  });
+  record(
+    'heatmap cells at different intensities are different sizes',
+    cells.length > 2,
+    `the measured cells compute ${cells.length} distinct scale(s): ${cells.join(', ')}. `
+    + 'Forced colours takes the intensity ramp away, so a cell that does not shrink with '
+    + 'its value carries no quantity at all',
+  );
+
+  await page.emulateMedia({ forcedColors: 'none' });
 }
 
 await browser.close();

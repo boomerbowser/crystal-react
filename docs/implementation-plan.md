@@ -1597,6 +1597,28 @@ own the materials, the focus ring and the forced-colours behaviour too, and none
 of those would be Crystal's. `check-bundle.mjs` caught all five being vendored
 into `dist/` the first time the charts were built.
 
+**What a reviewer met first, and what it cost.** Three defects survived every
+gate in the slice because each was a hole in the *shape* of the library rather
+than a fault in any component. A tooltip existed and no chart used one, so every
+value was on its mark for a screen reader and nowhere for a sighted reader —
+fixed with `useMarkTooltip`, which joins hover and the roving cursor into one
+index so the panel cannot describe a different mark from the one the ring is on.
+A multi-series chart named its series only in `aria-label`s and the folded-away
+table, so the picture had no key — fixed by having the four series charts and the
+pie render a `ChartLegend` themselves unless the caller passes one, `null`
+included. And hiding a series could only be done by filtering the array, which
+repaints every series after it and leaves the legend describing the wrong
+colours — fixed with `hidden` on `ChartSeries` and `drawnSeries()`, which keeps a
+series' **channel** (its colour and dash) apart from its **slot** (its place in
+the mark numbering). A fourth, smaller: `useMarkNavigation` lost the plot's only
+tab stop when the data shrank under `active`, which is a chart a keyboard can no
+longer reach at all.
+
+**What is deferred, and said out loud.** The catalogue asks `bar-chart` and
+`pie-chart` for an enter motion and `line-chart` for a draw-on; none of the
+twenty-four has one, because Crystal publishes no recipe for a mark arriving and
+this library does not author recipes. **R-21** records it with the reasoning.
+
 ### L — Feedback (15)
 
 `alert`, `toast`, `notification`, `progress`, `ring-progress`, `loader`, `skeleton`, `loading-overlay`, `empty-state`, `result`, `popconfirm`, `tour`, `semi-circle-progress`, `meter-group`, `banner`.

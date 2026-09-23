@@ -18,17 +18,21 @@
  */
 import { type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
+import { ChartLegend } from '../ChartLegend/ChartLegend.js';
+import { ChartTooltip } from '../ChartTooltip/ChartTooltip.js';
 import { seriesTable } from '../BarChart/BarChart.js';
 import { Axes, type AxisTick } from '../../charts/Axes.js';
 import {
   PointMarks, SeriesLine, seriesBand, seriesPath, type ChartCurve, type PlotPoint,
 } from '../../charts/Cartesian.js';
 import { seriesColour } from '../../charts/channel.js';
+import { drawnSeries, seriesLegend } from '../../charts/series.js';
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
+import { useMarkTooltip, type MarkTip } from '../../charts/useMarkTooltip.js';
 import { scaleLinear, scalePoint, stackedDomain, valueDomain } from '../../charts/scales.js';
 import type { ChartSeries } from '../../charts/types.js';
 import { cx } from '../../styles/cx.js';
-import type { CSSProperties } from 'react';
+import { useRef, type CSSProperties } from 'react';
 import styles from './AreaChart.module.scss';
 
 export interface AreaChartProps extends Omit<ChartSurfaceProps, 'children' | 'table'> {
@@ -45,23 +49,43 @@ export interface AreaChartProps extends Omit<ChartSurfaceProps, 'children' | 'ta
 
 export function AreaChart({
   series, categories, stacked = false, curve = 'linear', points = false, ticks = 5,
-  format = (value) => String(value), table, className, ...surface
+  format = (value) => String(value), table, legend, className, ...surface
 }: AreaChartProps): ReactNode {
-  const marks = useMarkNavigation(series.length * categories.length);
+  const drawn = drawnSeries(series);
+  const marks = useMarkNavigation(drawn.length * categories.length);
+  const tip = useMarkTooltip(marks);
+  const tips = useRef<MarkTip[]>([]);
 
   return (
     <ChartSurface
       {...surface}
-      table={table ?? areaTable(series, categories, format, stacked)}
+      table={table ?? areaTable(drawn.map((one) => one.series), categories, format, stacked)}
       empty={surface.empty ?? categories.length === 0}
+      legend={legend === undefined && series.length > 1
+        ? <ChartLegend entries={seriesLegend(series)} />
+        : legend}
+      tooltip={(frame) => {
+        const at = tip.index === null ? undefined : tips.current[tip.index];
+        return at ? (
+          <ChartTooltip
+            shown={tip.shown}
+            x={at.x}
+            y={at.y}
+            bounds={{ width: frame.width, height: frame.height }}
+            title={at.title}
+            rows={at.rows}
+          />
+        ) : null;
+      }}
       className={cx(styles['chart'], className)}
     >
       {(frame) => {
         const { inner } = frame;
         const across = scalePoint().domain(categories.map(String)).range([0, inner.width]);
+        const visible = drawn.map((one) => one.series);
         const domain = stacked
-          ? stackedDomain(series, categories.length)
-          : valueDomain(series, { fromZero: true });
+          ? stackedDomain(visible, categories.length)
+          : valueDomain(visible, { fromZero: true });
         const value = scaleLinear().domain(domain).nice(ticks).range([inner.height, 0]);
 
         const valueTicks: AxisTick[] = value.ticks(ticks)
@@ -72,7 +96,9 @@ export function AreaChart({
         /* Where each series' own baseline runs. Unstacked it is zero for all of
            them; stacked it is the running total under this one. */
         const below = categories.map(() => 0);
-        const layers = series.map((one) => {
+        const built: MarkTip[] = [];
+        tips.current = built;
+        const layers = drawn.map(({ series: one, channel, slot }) => {
           const top: (PlotPoint | null)[] = [];
           const base: number[] = [];
           one.values.forEach((datum, index) => {
@@ -85,6 +111,12 @@ export function AreaChart({
               y: inner.y + value(to),
               label: format(stacked ? to : datum),
             };
+            built[slot * categories.length + index] = {
+              x: top[index].x,
+              y: top[index].y,
+              title: categories[index] ?? '',
+              rows: [{ name: one.name, value: top[index].label ?? '', index: channel }],
+            };
           });
           return { top, base };
         });
@@ -92,9 +124,9 @@ export function AreaChart({
         return (
           <>
             <Axes frame={frame} value={valueTicks} category={categoryTicks} />
-            <g {...marks.containerProps}>
-              {series.map((one, s) => {
-                const layer = layers[s]!;
+            <g {...tip.containerProps}>
+              {drawn.map(({ series: one, channel, slot }) => {
+                const layer = layers[slot]!;
                 /* A stacked layer's floor moves with the data; an unstacked one
                    is the zero line. Both are the same band with a different
                    floor, which is why there is one path here and not two cases. */
@@ -105,18 +137,18 @@ export function AreaChart({
                   <g key={one.name} className={styles['series']}>
                     <path
                       className={styles['area']}
-                      style={{ '--series-colour': seriesColour(s) } as CSSProperties}
+                      style={{ '--series-colour': seriesColour(channel) } as CSSProperties}
                       d={seriesBand(layer.top, floor, curve)}
                     />
-                    <SeriesLine d={seriesPath(layer.top, curve)} seriesIndex={s} />
+                    <SeriesLine d={seriesPath(layer.top, curve)} seriesIndex={channel} />
                     <PointMarks
                       points={layer.top}
-                      seriesIndex={s}
+                      seriesIndex={channel}
                       seriesName={one.name}
                       categories={categories}
-                      offset={s * categories.length}
+                      offset={slot * categories.length}
                       active={marks.active}
-                      markProps={marks.markProps}
+                      markProps={tip.markProps}
                       visible={points}
                     />
                   </g>

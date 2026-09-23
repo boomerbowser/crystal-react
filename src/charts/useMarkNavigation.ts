@@ -20,6 +20,14 @@
  */
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 
+/** What a mark takes from the roving cursor: its place in the tab order, the
+ *  node the cursor moves focus to, and the report that it arrived. */
+export interface MarkProps {
+  tabIndex: number;
+  ref: (node: SVGGElement | null) => void;
+  onFocus: () => void;
+}
+
 export interface MarkNavigation {
   /** Which mark holds the roving tab stop. */
   active: number;
@@ -66,12 +74,20 @@ export function useMarkNavigation(count: number): MarkNavigation {
     move(to);
   }, [active, count, move]);
 
+  /* The tab stop, which is not simply `active`. A chart whose data shrinks — six
+     categories replaced with three — leaves `active` past the end, and then no
+     mark carries `tabIndex: 0` and Tab skips the whole plot. The state is not
+     corrected, because the reader may be about to get their marks back; the stop
+     is clamped, because a chart nobody can tab into is a chart with no keyboard
+     at all. */
+  const stop = Math.min(active, Math.max(0, count - 1));
+
   return {
     active,
     setActive: move,
     containerProps: { onKeyDown },
     markProps: (index: number) => ({
-      tabIndex: index === active ? 0 : -1,
+      tabIndex: index === stop ? 0 : -1,
       ref: (node: SVGGElement | null) => {
         if (node) marks.current.set(index, node);
         else marks.current.delete(index);

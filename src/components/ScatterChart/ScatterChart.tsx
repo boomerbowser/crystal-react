@@ -17,11 +17,14 @@
  * Both axes fit their data. A scatter's marks are positions in both directions,
  * so the bar chart's zero rule does not apply in either.
  */
-import { type CSSProperties, type ReactNode } from 'react';
+import { useRef, type CSSProperties, type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
+import { ChartLegend } from '../ChartLegend/ChartLegend.js';
+import { ChartTooltip } from '../ChartTooltip/ChartTooltip.js';
 import { Axes, type AxisTick } from '../../charts/Axes.js';
 import { markerPath, seriesColour, seriesMarker } from '../../charts/channel.js';
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
+import { useMarkTooltip, type MarkTip } from '../../charts/useMarkTooltip.js';
 import { scaleLinear } from '../../charts/scales.js';
 import { chartGeometry } from '../../theme/chartTokens.js';
 import { MARK_TARGET } from '../../charts/target.js';
@@ -59,16 +62,34 @@ export function ScatterChart({
   formatX = (value) => String(value),
   formatY = (value) => String(value),
   formatSize = (value) => String(value),
-  table, className, ...surface
+  table, legend, className, ...surface
 }: ScatterChartProps): ReactNode {
   const all = series.flatMap((one) => one.points);
   const marks = useMarkNavigation(all.length);
+  const tip = useMarkTooltip(marks);
+  const tips = useRef<MarkTip[]>([]);
 
   return (
     <ChartSurface
       {...surface}
       table={table ?? scatterTable(series, xLabel, yLabel, formatX, formatY, formatSize)}
       empty={surface.empty ?? all.length === 0}
+      legend={legend === undefined && series.length > 1
+        ? <ChartLegend entries={series.map((one, index) => ({ name: one.name, index }))} mark="point" />
+        : legend}
+      tooltip={(frame) => {
+        const at = tip.index === null ? undefined : tips.current[tip.index];
+        return at ? (
+          <ChartTooltip
+            shown={tip.shown}
+            x={at.x}
+            y={at.y}
+            bounds={{ width: frame.width, height: frame.height }}
+            title={at.title}
+            rows={at.rows}
+          />
+        ) : null;
+      }}
       className={cx(styles['chart'], className)}
     >
       {(frame) => {
@@ -101,10 +122,12 @@ export function ScatterChart({
           .map((tick) => ({ offset: across(tick), label: formatX(tick) }));
 
         let index = -1;
+        const built: MarkTip[] = [];
+        tips.current = built;
         return (
           <>
             <Axes frame={frame} value={valueTicks} category={categoryTicks} />
-            <g {...marks.containerProps}>
+            <g {...tip.containerProps}>
               {series.map((one, s) => (
                 <g key={one.name}>
                   {one.points.map((point) => {
@@ -113,10 +136,22 @@ export function ScatterChart({
                     const size = point.size === undefined
                       ? chartGeometry.pointMin * 1.5
                       : Math.sqrt(area(point.size));
+                    built[at] = {
+                      x: inner.x + across(point.x),
+                      y: inner.y + up(point.y),
+                      title: point.name ?? one.name,
+                      rows: [
+                        { name: xLabel, value: formatX(point.x), index: s },
+                        { name: yLabel, value: formatY(point.y) },
+                        ...(point.size === undefined
+                          ? []
+                          : [{ name: 'Size', value: formatSize(point.size) }]),
+                      ],
+                    };
                     return (
                       <g
                         key={`${point.x},${point.y},${point.name ?? at}`}
-                        {...marks.markProps(at)}
+                        {...tip.markProps(at)}
                         role="graphics-symbol"
                         aria-label={label(point, one.name, xLabel, yLabel, formatX, formatY, formatSize)}
                         className={styles['point']}

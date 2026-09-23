@@ -3,7 +3,7 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Three entries, and none is ordinary work.**
+**Four entries, and none is ordinary work.**
 
 **R-17** has one part left and it is not in this repository's hands. All three
 of its items are answered: every story file declares `meta.component`; the
@@ -449,3 +449,39 @@ delete `src/theme/chartTokens.ts`, replace `chartGeometry` with
 entry from `scripts/lint-tokens.mjs`, and re-run the four browser gates — the
 values are identical, so nothing should move, and if something does the table had
 gone stale and this entry is why.
+
+---
+
+## R-21 · No chart has an enter motion, and the catalogue asks three of them for one
+
+*(Opened 23 September 2026, closing out slice K.)*
+
+**What is missing.** `core/tokens/catalogue/10-charts.json` lists "enter motion"
+on `bar-chart` and `pie-chart` and "draw-on motion" on `line-chart`. None of the
+twenty-four components has any. Every chart in this library appears fully drawn,
+in one frame, and stays that way.
+
+**Why it was left.** Crystal has no recipe for it. `core/docs/motion.md`
+publishes fifty-four recipes and not one is a mark growing from a baseline or a
+path drawing itself; `--cr-motion-*` carries durations and easings but nothing
+that says how long a hundred bars should take between them, or whether they
+stagger. Inventing that here is exactly what `extend-crystal-not-the-library`
+forbids, and inventing it badly is worse than nothing: a chart is the one place
+where motion is read as data, and a bar that eases past its value before settling
+has *shown the reader a number that is not true*.
+
+**It is a deliberate deferral, not an oversight**, and it is consistent with the
+rest of Crystal 2.0 rather than an exception to it: nothing moves at rest, and a
+chart that has finished drawing is at rest. What is missing is only the one-shot
+motion a person starts by causing the chart to appear.
+
+**What it is not.** It is not an accessibility gap. `prefers-reduced-motion`
+already resolves to "no motion" here trivially, every value is on its mark and in
+the table, and no state in any chart is carried by movement.
+
+**Closing it needs** the recipe authored in core first — a named enter for a
+mark, with a duration, an easing, a stagger and a stated maximum number of marks
+past which it does not stagger at all — then one implementation here that every
+chart composes, and a `verify:behaviour` check that it is gone under
+`prefers-reduced-motion: reduce`.
+

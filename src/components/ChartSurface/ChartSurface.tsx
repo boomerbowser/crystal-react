@@ -55,8 +55,15 @@ export interface ChartSurfaceProps extends Omit<HTMLAttributes<HTMLElement>, 'ch
   insets?: Partial<ChartInsets>;
   /** Rendered above the plot — a `ChartLegend`, usually. */
   legend?: ReactNode;
-  /** Rendered over the plot, positioned by the chart. */
-  tooltip?: ReactNode;
+  /**
+   * Rendered over the plot, positioned by the chart.
+   *
+   * As a function it is called with the measured frame **after** `children`,
+   * in the same render pass. Charts rely on that order: the positions a tooltip
+   * has to be placed at are computed while the marks are drawn, and a chart
+   * hands them across in a ref rather than building its scales twice.
+   */
+  tooltip?: ReactNode | ((frame: ChartFrame) => ReactNode);
   /** Nothing to draw yet. The caption, the frame and the control all stay. */
   loading?: boolean;
   /** Nothing to draw, and nothing coming. */
@@ -117,7 +124,7 @@ export function ChartSurface({
             chart waiting for data is at rest. The plot is held at its size so the
             page does not jump when the numbers arrive. */}
         {loading ? <p className={styles['empty']}>{'Loading'}</p> : null}
-        {tooltip}
+        {empty || loading ? null : typeof tooltip === 'function' ? tooltip(frame) : tooltip}
       </div>
 
       <ChartTable

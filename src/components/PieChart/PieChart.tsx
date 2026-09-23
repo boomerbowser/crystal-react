@@ -16,10 +16,13 @@
  * in the caller's order, and a component that re-ordered silently would make
  * "the third segment" mean two things in the picture and in the table.
  */
-import { type CSSProperties, type ReactNode } from 'react';
+import { useRef, type CSSProperties, type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
+import { ChartLegend } from '../ChartLegend/ChartLegend.js';
+import { ChartTooltip } from '../ChartTooltip/ChartTooltip.js';
 import { seriesColour } from '../../charts/channel.js';
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
+import { useMarkTooltip, type MarkTip } from '../../charts/useMarkTooltip.js';
 import { wedges } from '../../charts/Radial.js';
 import { cx } from '../../styles/cx.js';
 import styles from './PieChart.module.scss';
@@ -44,9 +47,11 @@ export interface PieChartProps extends Omit<ChartSurfaceProps, 'children' | 'tab
 export function PieChart({
   slices, hole = 0, centre, format = (value) => String(value),
   formatShare = (share) => `${Math.round(share * 100)}%`,
-  table, className, height = 260, ...surface
+  table, legend, className, height = 260, ...surface
 }: PieChartProps): ReactNode {
   const marks = useMarkNavigation(slices.length);
+  const tip = useMarkTooltip(marks);
+  const tips = useRef<MarkTip[]>([]);
   const total = slices.reduce((sum, one) => sum + Math.max(0, one.value), 0);
 
   return (
@@ -58,6 +63,26 @@ export function PieChart({
       insets={{ top: 8, right: 8, bottom: 8, left: 8 }}
       table={table ?? pieTable(slices, format, formatShare, total)}
       empty={surface.empty ?? slices.length === 0}
+      /* A wedge carries its share as a label and its name nowhere. On a pie the
+         legend is not decoration, it is the only place the slice is named — so
+         it is here by default, and `legend={null}` is how a caller who has
+         named them some other way says so. */
+      legend={legend === undefined && slices.length > 1
+        ? <ChartLegend entries={slices.map((one, index) => ({ name: one.name, index }))} />
+        : legend}
+      tooltip={(frame) => {
+        const at = tip.index === null ? undefined : tips.current[tip.index];
+        return at ? (
+          <ChartTooltip
+            shown={tip.shown}
+            x={at.x}
+            y={at.y}
+            bounds={{ width: frame.width, height: frame.height }}
+            title={at.title}
+            rows={at.rows}
+          />
+        ) : null;
+      }}
       className={cx(styles['chart'], className)}
     >
       {(frame) => {
@@ -66,13 +91,28 @@ export function PieChart({
         const cx$ = inner.x + inner.width / 2;
         const cy = inner.y + inner.height / 2;
         const drawn = wedges(slices, { radius, hole });
+        const built: MarkTip[] = [];
+        tips.current = built;
+        drawn.forEach((wedge) => {
+          built[wedge.index] = {
+            /* The centroid is relative to the circle's middle; the panel is
+               placed in the plot the circle sits in. */
+            x: cx$ + wedge.centroid[0],
+            y: cy + wedge.centroid[1],
+            title: wedge.name,
+            rows: [
+              { name: 'Value', value: format(wedge.value), index: wedge.index },
+              { name: 'Share', value: formatShare(wedge.share) },
+            ],
+          };
+        });
 
         return (
-          <g transform={`translate(${cx$},${cy})`} {...marks.containerProps}>
+          <g transform={`translate(${cx$},${cy})`} {...tip.containerProps}>
             {drawn.map((wedge) => (
               <g
                 key={wedge.name}
-                {...marks.markProps(wedge.index)}
+                {...tip.markProps(wedge.index)}
                 role="graphics-symbol"
                 aria-label={`${wedge.name}, ${format(wedge.value)}, ${formatShare(wedge.share)} of ${format(total)}`}
                 className={styles['wedge']}

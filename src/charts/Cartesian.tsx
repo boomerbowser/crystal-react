@@ -11,6 +11,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { line as d3line, area as d3area, curveLinear, curveMonotoneX } from 'd3-shape';
 import { markerPath, seriesColour, seriesDash, seriesMarker } from './channel.js';
 import { chartGeometry } from '../theme/chartTokens.js';
+import type { MarkProps } from './useMarkNavigation.js';
 import { MARK_TARGET } from '../charts/target.js';
 import styles from './Cartesian.module.scss';
 
@@ -71,11 +72,10 @@ export function seriesArea(
   return generator(points as PlotPoint[]) ?? '';
 }
 
-export interface MarkProps {
-  tabIndex: number;
-  ref: (node: SVGGElement | null) => void;
-  onFocus: () => void;
-}
+/* Re-exported where the points that consume it live. It is declared beside the
+   hook that produces it, so a chart that adds a handler — the tooltip's pointer
+   enter, for instance — widens one type rather than two. */
+export type { MarkProps } from './useMarkNavigation.js';
 
 export interface PointMarksProps {
   points: readonly (PlotPoint | null)[];
