@@ -1,0 +1,81 @@
+@use '../../styles/tokens' as *;
+
+/* "Frost panel. Panel radius; never covers the point it describes."
+ *
+ * Frost rather than Haze: this is a surface that floats over the plot, and Frost
+ * is Crystal's intermediate surface. The plot underneath it is the thing a reader
+ * is looking at, so the panel is the material that lets some of it through.
+ *
+ * Positioned by four custom properties rather than by four rules, because the
+ * side it takes is decided in JavaScript from the point's position and the panel
+ * has to move every frame under a pointer. One `translate` is one composited
+ * change; four class swaps are four style recalculations.
+ */
+
+.tooltip {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: 1;
+  translate: calc(var(--tooltip-x) + var(--tooltip-offset-x)) calc(var(--tooltip-y) + var(--tooltip-offset-y));
+  display: none;
+  min-inline-size: max-content;
+  max-inline-size: $cr-overlay-tooltip-max-width;
+  padding: $cr-spacing-xs $cr-spacing-sm;
+  border: 1px solid var(--cr-edge);
+  border-radius: var(--cr-radius);
+  background: var(--cr-acrylic-fill);
+  backdrop-filter: blur(var(--cr-acrylic-blur)) saturate(var(--cr-acrylic-saturation));
+  box-shadow: var(--cr-shadow-float);
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  pointer-events: none;
+}
+
+.tooltip[data-shown] {
+  display: block;
+  transform: translate(var(--tooltip-translate-x), var(--tooltip-translate-y));
+}
+
+.title {
+  margin: 0 0 $cr-spacing-2xs;
+  font-weight: 700;
+}
+
+.rows { margin: 0; }
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: $cr-spacing-2xs;
+}
+
+.swatch {
+  flex: none;
+  inline-size: $cr-spacing-xs;
+  block-size: $cr-spacing-xs;
+  border-radius: 50%;
+  background: var(--series-colour);
+  /* A baseline-aligned flex item with no text needs telling where its baseline
+     is, or it sits on the row's descender. */
+  align-self: center;
+}
+
+.name { color: var(--cr-muted); }
+
+.value {
+  margin-inline-start: auto;
+  padding-inline-start: $cr-spacing-sm;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (forced-colors: active) {
+  .tooltip {
+    background: Canvas;
+    backdrop-filter: none;
+    border-color: CanvasText;
+  }
+  .swatch { background: CanvasText; }
+}

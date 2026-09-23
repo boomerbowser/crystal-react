@@ -6,10 +6,10 @@
  * the DOM owns the materials, the focus ring and the forced-colours behaviour
  * too, and none of those would be Crystal's.
  */
-import { scaleBand, scaleLinear } from 'd3-scale';
+import { scaleBand, scaleLinear, scalePoint } from 'd3-scale';
 import type { ChartSeries } from './types.js';
 
-export { scaleBand, scaleLinear };
+export { scaleBand, scaleLinear, scalePoint };
 
 /** The extent of every value across every series, `null`s ignored. */
 export function extent(series: readonly ChartSeries[]): [number, number] {

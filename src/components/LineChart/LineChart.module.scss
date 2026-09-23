@@ -1,0 +1,28 @@
+@use '../../styles/tokens' as *;
+
+/* The line itself is styled in `charts/Cartesian.module.scss`, shared with the
+ * area and the scatter. What is here is the one thing only a line chart does:
+ * dim the *other* series while one is under the pointer or the cursor, so a
+ * reader following one line through a crossing can see which one it is.
+ */
+
+.series {
+  transition: opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.chart :global(svg) > g:hover .series:not(:hover),
+.chart :global(svg) > g:focus-within .series:not(:focus-within) {
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .series { transition: none; }
+}
+
+/* Under forced colours the series are already one colour and the dashes are what
+   tell them apart; dimming would take away the only remaining difference between
+   a faint solid line and a faint dashed one. */
+@media (forced-colors: active) {
+  .chart :global(svg) > g:hover .series:not(:hover),
+  .chart :global(svg) > g:focus-within .series:not(:focus-within) { opacity: 1; }
+}

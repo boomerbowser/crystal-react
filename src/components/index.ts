@@ -158,3 +158,7 @@ export * from './ResizableTable/index.js';
 /* Slice K — charts. `ChartSurface` first; everything else composes onto it. */
 export * from './ChartSurface/index.js';
 export * from './BarChart/index.js';
+export * from './LineChart/index.js';
+export * from './AreaChart/index.js';
+export * from './ChartLegend/index.js';
+export * from './ChartTooltip/index.js';

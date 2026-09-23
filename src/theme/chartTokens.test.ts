@@ -18,6 +18,12 @@ describe('the chart token shim', () => {
           expect(tokens[`--cr-chart-series-${i}`], `${palette} ${mode} series ${i}`)
             .toMatch(/^#[0-9A-F]{6}$/);
         }
+        for (let i = 1; i <= 5; i += 1) {
+          expect(tokens[`--cr-chart-heat-${i}`], `${palette} ${mode} heat ${i}`)
+            .toMatch(/^#[0-9A-Fa-f]{6}$/);
+          expect(tokens[`--cr-chart-on-heat-${i}`], `${palette} ${mode} ink ${i}`)
+            .toMatch(/^#[0-9A-Fa-f]{6}$/);
+        }
         expect(tokens['--cr-chart-axis'], `${palette} ${mode} axis`).toBeDefined();
         expect(tokens['--cr-chart-grid'], `${palette} ${mode} grid`).toBeDefined();
       }
