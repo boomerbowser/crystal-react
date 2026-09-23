@@ -176,3 +176,7 @@ export * from './CalendarHeatmap/index.js';
 export * from './RadarChart/index.js';
 export * from './FunnelChart/index.js';
 export * from './BulletChart/index.js';
+export * from './Treemap/index.js';
+export * from './Sankey/index.js';
+export * from './GeoMap/index.js';
+export * from './NetworkGraph/index.js';

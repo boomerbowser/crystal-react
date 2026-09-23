@@ -1,0 +1,43 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+
+/* "Haze node fills; edges are hairlines; focus ring on a node."
+ *
+ * The edges sit behind the nodes in document order rather than by z-index, which
+ * is how SVG paints: an edge crossing a node would otherwise cut it in half, and
+ * a node in a dense graph is the thing a reader is aiming at.
+ */
+
+.edge {
+  stroke: var(--cr-chart-grid);
+  stroke-width: var(--cr-chart-hairline);
+}
+
+.dot {
+  fill: var(--series-colour);
+  stroke: var(--cr-surface);
+  stroke-width: var(--cr-chart-hairline);
+  transition: opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.target { fill: transparent; }
+
+.node:focus-visible { outline: none; }
+
+.node[data-active] .dot,
+.node:hover .dot { stroke: var(--cr-text); stroke-width: var(--cr-chart-stroke); }
+
+.chart :global(svg) > g:hover .node:not(:hover) .dot,
+.chart :global(svg) > g:focus-within .node:not([data-active]) .dot { opacity: 0.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dot { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .edge { stroke: CanvasText; }
+  .dot { fill: Canvas; stroke: CanvasText; }
+  .node[data-active] .dot { fill: Highlight; }
+  .chart :global(svg) > g:hover .node:not(:hover) .dot,
+  .chart :global(svg) > g:focus-within .node:not([data-active]) .dot { opacity: 1; }
+}

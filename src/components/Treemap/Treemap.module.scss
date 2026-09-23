@@ -1,0 +1,67 @@
+@use '../../styles/tokens' as *;
+@use '../../charts/label' as chart;
+
+/* Rectangles that meet along hairlines, and a breadcrumb that says which level
+ * they are.
+ *
+ * The separation is the layout's own inner padding rather than a stroke: two
+ * adjacent rectangles show the plot between them, which is the same "gap, not a
+ * border" the pie's segments use.
+ */
+
+.fill {
+  fill: var(--series-colour);
+  transition: opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.label { @include chart.chart-label; }
+
+.cell[data-branch] { cursor: pointer; }
+
+.cell:focus-visible { outline: none; }
+
+.chart :global(svg) > g:hover .cell:not(:hover) .fill,
+.chart :global(svg) > g:focus-within .cell:not([data-active]) .fill { opacity: 0.55; }
+
+.breadcrumb { font-size: var(--cr-text-caption-size); }
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crumb + .crumb::before {
+  content: '›';
+  margin-inline-end: $cr-spacing-2xs;
+  color: var(--cr-muted);
+}
+
+.crumb button {
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-xs;
+  border: 0;
+  border-radius: $cr-action-radius;
+  background: transparent;
+  color: var(--cr-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.crumb [aria-current] { font-weight: 700; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fill { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .fill { fill: Canvas; stroke: CanvasText; stroke-width: 1px; }
+  .cell[data-active] .fill { fill: Highlight; }
+  .label { fill: CanvasText; stroke: Canvas; }
+  .chart :global(svg) > g:hover .cell:not(:hover) .fill,
+  .chart :global(svg) > g:focus-within .cell:not([data-active]) .fill { opacity: 1; }
+}

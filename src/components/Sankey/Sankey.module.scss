@@ -1,0 +1,46 @@
+@use '../../styles/tokens' as *;
+@use '../../charts/label' as chart;
+
+/* Links, and the nodes they run between.
+ *
+ * A link is drawn as a stroked path whose width is its volume — not as a filled
+ * ribbon — because a stroke of a given width is one number, and a ribbon is two
+ * edges that have to be kept in agreement.
+ *
+ * The nodes are `aria-hidden`: every node's name is already in the label of every
+ * link that touches it, and announcing the columns as well would read each name
+ * once for itself and once per flow.
+ */
+
+.flow {
+  fill: none;
+  stroke: var(--series-colour);
+  stroke-opacity: var(--cr-chart-link-opacity);
+  transition: stroke-opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.link:focus-visible { outline: none; }
+
+.link:hover .flow,
+.link[data-active] .flow { stroke-opacity: 1; }
+
+.node { fill: var(--cr-text); }
+
+.nodeLabel {
+  @include chart.chart-label;
+  font-weight: 450;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow { transition: none; }
+}
+
+/* One colour, so opacity is the only thing separating two crossing links — and
+   opacity is what forced colours removes. They become outlines instead: a
+   crossing is then two edges over one another rather than a solid mass. */
+@media (forced-colors: active) {
+  .flow { stroke: CanvasText; stroke-opacity: 0.4; }
+  .link[data-active] .flow { stroke: Highlight; stroke-opacity: 1; }
+  .node { fill: CanvasText; }
+  .nodeLabel { fill: CanvasText; stroke: Canvas; }
+}
