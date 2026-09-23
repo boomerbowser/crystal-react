@@ -1,0 +1,48 @@
+@use '../../styles/tokens' as *;
+
+/* A box, two whiskers, two caps, a median rule and the outliers.
+ *
+ * The box is the series colour at the fill opacity — it is an extent, and an
+ * extent that hides the gridlines behind it is an extent a reader cannot place.
+ * The median is a full-strength rule, because it is the one number in the figure
+ * that is a value rather than a range.
+ */
+
+.quartiles {
+  fill: var(--cr-chart-series-1);
+  fill-opacity: var(--cr-chart-fill-opacity);
+  stroke: var(--cr-chart-series-1);
+  stroke-width: var(--cr-chart-hairline);
+}
+
+.whisker,
+.cap {
+  stroke: var(--cr-chart-series-1);
+  stroke-width: var(--cr-chart-hairline);
+}
+
+.median {
+  stroke: var(--cr-chart-series-1);
+  stroke-width: var(--cr-chart-stroke);
+}
+
+.outlier {
+  fill: var(--cr-chart-series-1);
+  fill-opacity: 0.8;
+}
+
+.box:focus-visible { outline: none; }
+
+.chart :global(svg) > g:hover .box:not(:hover),
+.chart :global(svg) > g:focus-within .box:not([data-active]) { opacity: 0.55; }
+
+@media (forced-colors: active) {
+  .quartiles { fill: Canvas; stroke: CanvasText; }
+  .whisker,
+  .cap,
+  .median { stroke: CanvasText; }
+  .outlier { fill: CanvasText; }
+  .box[data-active] .quartiles { fill: Highlight; }
+  .chart :global(svg) > g:hover .box:not(:hover),
+  .chart :global(svg) > g:focus-within .box:not([data-active]) { opacity: 1; }
+}

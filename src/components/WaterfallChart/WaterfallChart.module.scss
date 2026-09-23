@@ -1,0 +1,49 @@
+@use '../../styles/tokens' as *;
+
+/* "Increase, decrease and total colour from the status tokens."
+ *
+ * Crystal's feedback inks, unchanged, and not the series scale: a waterfall's
+ * three kinds of bar are a *meaning* — this went up, this went down, this is
+ * where we are — rather than three series, and meanings in Crystal are the
+ * status colours.
+ *
+ * Never colour alone. The sign is written into every label and into the table's
+ * change column, and a total is a different *shape* as well as a different
+ * colour: it runs from the axis where the others float.
+ */
+
+.step .fill { transition: opacity var(--cr-state) var(--cr-ease-settle); }
+
+.step[data-kind='increase'] .fill { fill: var(--cr-success-ink); }
+.step[data-kind='decrease'] .fill { fill: var(--cr-danger-ink); }
+.step[data-kind='total'] .fill { fill: var(--cr-info-ink); }
+
+.step:focus-visible { outline: none; }
+
+.connector {
+  stroke: var(--cr-chart-axis);
+  stroke-width: 1px;
+  stroke-dasharray: 3 3;
+}
+
+.chart :global(svg) > g:hover .step:not(:hover) .fill,
+.chart :global(svg) > g:focus-within .step:not([data-active]) .fill { opacity: 0.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .step .fill { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .step .fill,
+  .step[data-kind='increase'] .fill,
+  .step[data-kind='decrease'] .fill,
+  .step[data-kind='total'] .fill {
+    fill: Canvas;
+    stroke: CanvasText;
+    stroke-width: 1px;
+  }
+  .step[data-active] .fill { fill: Highlight; }
+  .connector { stroke: CanvasText; }
+  .chart :global(svg) > g:hover .step:not(:hover) .fill,
+  .chart :global(svg) > g:focus-within .step:not([data-active]) .fill { opacity: 1; }
+}

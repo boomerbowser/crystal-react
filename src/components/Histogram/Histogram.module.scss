@@ -1,0 +1,30 @@
+@use '../../styles/tokens' as *;
+
+/* Bins. The same bar treatment as the bar chart — the radius on the value end
+ * only, the base on the axis — and one series colour, because a histogram has
+ * one series by definition: it is a count of one thing.
+ */
+
+.bin .fill {
+  fill: var(--series-colour);
+  transition: opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.bin:focus-visible { outline: none; }
+
+.chart :global(svg) > g:hover .bin:not(:hover) .fill,
+.chart :global(svg) > g:focus-within .bin:not([data-active]) .fill { opacity: 0.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bin .fill { transition: none; }
+}
+
+/* One colour for every bin means the boundary between two of them is the only
+   thing separating them, and forced colours takes the fill away. They keep a
+   rim, which is what a bin is: a box over a range. */
+@media (forced-colors: active) {
+  .bin .fill { fill: Canvas; stroke: CanvasText; stroke-width: 1px; }
+  .bin[data-active] .fill { fill: Highlight; }
+  .chart :global(svg) > g:hover .bin:not(:hover) .fill,
+  .chart :global(svg) > g:focus-within .bin:not([data-active]) .fill { opacity: 1; }
+}

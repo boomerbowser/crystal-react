@@ -167,3 +167,7 @@ export * from './DonutChart/index.js';
 export * from './ScatterChart/index.js';
 export * from './SparkLine/index.js';
 export * from './Gauge/index.js';
+export * from './Histogram/index.js';
+export * from './WaterfallChart/index.js';
+export * from './CandlestickChart/index.js';
+export * from './BoxPlot/index.js';

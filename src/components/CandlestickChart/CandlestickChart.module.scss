@@ -1,0 +1,56 @@
+@use '../../styles/tokens' as *;
+
+/* "Rise and fall colour from the status tokens, never red and green alone."
+ *
+ * The second channel is the fill, and it is not an invention: a candle that rose
+ * has been drawn hollow and one that fell filled since long before screens had
+ * colour. So a reader with no colour at all still reads the chart, and one with
+ * no picture at all gets the direction in words from the mark's label and the
+ * table's own column.
+ */
+
+.candle .wick {
+  stroke: var(--cr-text);
+  stroke-width: 1px;
+}
+
+.candle .body {
+  stroke-width: var(--cr-chart-hairline);
+  transition: opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.candle[data-direction='rose'] .body {
+  fill: var(--cr-canvas);
+  stroke: var(--cr-success-ink);
+}
+
+.candle[data-direction='rose'] .wick { stroke: var(--cr-success-ink); }
+
+.candle[data-direction='fell'] .body {
+  fill: var(--cr-danger-ink);
+  stroke: var(--cr-danger-ink);
+}
+
+.candle[data-direction='fell'] .wick { stroke: var(--cr-danger-ink); }
+
+.candle:focus-visible { outline: none; }
+
+.chart :global(svg) > g:hover .candle:not(:hover) .body,
+.chart :global(svg) > g:focus-within .candle:not([data-active]) .body { opacity: 0.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .candle .body { transition: none; }
+}
+
+/* Forced colours keeps exactly the distinction the convention is built on:
+   hollow rose, filled fell, and the stroke is the one colour there is. */
+@media (forced-colors: active) {
+  .candle .wick,
+  .candle[data-direction='rose'] .wick,
+  .candle[data-direction='fell'] .wick { stroke: CanvasText; }
+  .candle[data-direction='rose'] .body { fill: Canvas; stroke: CanvasText; }
+  .candle[data-direction='fell'] .body { fill: CanvasText; stroke: CanvasText; }
+  .candle[data-active] .body { fill: Highlight; stroke: Highlight; }
+  .chart :global(svg) > g:hover .candle:not(:hover) .body,
+  .chart :global(svg) > g:focus-within .candle:not([data-active]) .body { opacity: 1; }
+}
