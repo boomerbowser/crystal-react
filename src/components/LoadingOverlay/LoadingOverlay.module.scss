@@ -1,0 +1,36 @@
+@use '../../styles/tokens' as *;
+
+.region { position: relative; }
+
+.content { border-radius: inherit; }
+
+/* Mirage, at region scope. The same layer a dialog puts between itself and the
+   scene, one level down — a filter rather than a dark fill, so it draws its
+   chroma from the region it is over instead of inventing a colour. "Inherits
+   the region's radius": a square wash over a rounded panel says the page is
+   blocked, not the panel. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  background: var(--cr-mirage-fill);
+  backdrop-filter: blur(var(--cr-mirage-blur))
+    saturate(var(--cr-mirage-saturation))
+    brightness(var(--cr-mirage-brightness));
+}
+
+:global([data-effects='opaque']) .scrim {
+  background: var(--cr-mirage-fallback-fill);
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .scrim { background: var(--cr-mirage-fallback-fill); backdrop-filter: none; }
+}
+
+@media (forced-colors: active) {
+  .scrim { background: Canvas; backdrop-filter: none; border: 1px solid CanvasText; }
+}

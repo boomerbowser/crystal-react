@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../charts/svg' as chart;
 
 .ring {
   display: inline-flex;
@@ -10,18 +9,9 @@
 
 .plot { position: relative; display: grid; place-items: center; }
 
-/* `crystal.css` styles the element — `svg { width: 20px; height: 20px; fill:
-   none; stroke: currentColor }` — which is right for Crystal's icons and wrong
-   for every drawing that is not one. Same hazard as the charts, same undo. */
-.canvas {
-  @include chart.chart-canvas;
-
-  position: absolute;
-  inset: 0;
-}
-
-.track { fill: var(--cr-primary-soft); }
-.arc { fill: var(--cr-primary); }
+/* The ring is `ActivityArc` and brings its own rules; what is left here is the
+   box it sits in. */
+.canvas { position: absolute; inset: 0; }
 
 .centre {
   position: relative;
@@ -39,48 +29,4 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
-}
-
-.ring[data-state='error'] .arc { fill: var(--cr-danger-ink); }
-.ring[data-state='paused'] .arc { fill: var(--cr-muted); }
-
-/* The indeterminate ring turns. The rotation is on the **canvas**, not on the
-   arc: an `<svg>` root is laid out as an ordinary CSS box, so `border-box` and
-   `50% 50%` mean the middle of the drawn ring and nothing has to be reasoned
-   about. Rotating the arc inside the view box does not — `transform-box:
-   view-box` resolves an origin against the SVG viewport rather than against the
-   user space `arcPath` draws in, and every combination of the two was measured
-   sending the arc into orbit around the ring by between 15 and 100 pixels. The
-   full-circle track underneath turns with it and cannot be seen to.
-
-   Crystal publishes no recipe for a continuous activity indicator, so the shape
-   of this is the component's and only the duration is Crystal's — D-19. */
-.ring:not([data-determinate]) .canvas {
-  transform-box: border-box;
-  transform-origin: 50% 50%;
-  animation-name: turn;
-  animation-duration: calc(var(--cr-motion-enabled) * #{$cr-motion-duration-flow} / var(--cr-motion-speed));
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-.ring[data-state='paused'] .canvas { animation-play-state: paused; }
-
-@keyframes turn {
-  to { rotate: 360deg; }
-}
-
-/* "Reduced motion replaces spin with a static, still-legible state." A ring
-   stopped mid-spin reads as a value nobody set, so the arc becomes the whole
-   circle at reduced strength: busy, and plainly not a measurement. */
-@media (prefers-reduced-motion: reduce) {
-  .ring:not([data-determinate]) .canvas { animation: none; }
-  .ring:not([data-determinate]) .arc { opacity: 0.55; }
-}
-
-@media (forced-colors: active) {
-  .track { fill: Canvas; stroke: CanvasText; stroke-width: 1px; }
-  .arc { fill: Highlight; }
-  .ring[data-state='error'] .arc,
-  .ring[data-state='paused'] .arc { fill: CanvasText; }
 }

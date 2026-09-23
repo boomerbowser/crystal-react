@@ -1,0 +1,18 @@
+@use '../../styles/tokens' as *;
+
+.loader {
+  display: inline-flex;
+  align-items: center;
+  gap: $cr-spacing-xs;
+  color: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+}
+
+.hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

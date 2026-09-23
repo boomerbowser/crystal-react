@@ -1,0 +1,62 @@
+@use '../../styles/tokens' as *;
+
+.skeleton { display: block; }
+
+.shapes { display: flex; flex-direction: column; gap: $cr-spacing-xs; }
+
+/* Visually hidden. The words are the announcement, not a caption. */
+.announcement {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* "Haze fill with a slow luminance sweep." The fill is the surface Haze
+   composites to; the sweep is a highlight passing across it. */
+.box {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  inline-size: 100%;
+  border-radius: $cr-choice-box-radius;
+  background: var(--cr-surface-alt);
+}
+
+.box[data-shape='text'] { block-size: var(--cr-text-body-leading); }
+.box[data-shape='title'] { block-size: var(--cr-text-heading-leading); }
+.box[data-shape='block'] { block-size: $cr-spacing-2xl; border-radius: $cr-shape-content-radius; }
+.box[data-shape='circle'] { inline-size: $cr-spacing-2xl; block-size: $cr-spacing-2xl; border-radius: 50%; }
+
+.box::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inline-size: 60%;
+  background: linear-gradient(90deg, transparent, var(--cr-surface), transparent);
+  /* One period for every continuous indicator in this library — see
+     `ActivityArc` and D-19. */
+  animation-name: sweep;
+  animation-duration: calc(var(--cr-motion-enabled) * #{$cr-motion-duration-flow} / var(--cr-motion-speed));
+  animation-timing-function: #{$cr-motion-easing-settle};
+  animation-iteration-count: infinite;
+}
+
+@keyframes sweep {
+  from { inset-inline-start: -60%; }
+  to { inset-inline-start: 100%; }
+}
+
+/* The sweep is the whole of the movement, so removing it leaves the shape
+   exactly as legible as it was: a filled placeholder. Nothing has to stand in
+   for it, which is why this is one line and the progress bar's is four. */
+@media (prefers-reduced-motion: reduce) {
+  .box::after { display: none; }
+}
+
+@media (forced-colors: active) {
+  .box { background: Canvas; border: 1px solid CanvasText; }
+  .box::after { display: none; }
+}
