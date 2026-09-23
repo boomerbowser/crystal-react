@@ -180,3 +180,9 @@ export * from './Treemap/index.js';
 export * from './Sankey/index.js';
 export * from './GeoMap/index.js';
 export * from './NetworkGraph/index.js';
+
+/* Slice L — feedback. */
+export * from './Progress/index.js';
+export * from './RingProgress/index.js';
+export * from './SemiCircleProgress/index.js';
+export * from './MeterGroup/index.js';

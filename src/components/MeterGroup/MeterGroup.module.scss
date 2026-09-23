@@ -1,0 +1,71 @@
+@use '../../styles/tokens' as *;
+
+.group { display: flex; flex-direction: column; gap: $cr-spacing-xs; inline-size: 100%; }
+
+.heading {
+  margin: 0;
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-text);
+}
+
+/* "Track keeps the content radius; segments meet without gaps." One flex row
+   with `overflow: hidden`, so the radius belongs to the track and the segments
+   simply end where the next begins. */
+.track {
+  display: flex;
+  overflow: hidden;
+  block-size: $cr-slider-track-height;
+  border-radius: $cr-shape-content-radius;
+  background: var(--cr-surface-alt);
+  box-shadow: inset 0 1px 1px var(--cr-control-edge);
+}
+
+.segment { block-size: 100%; background: var(--segment-colour); }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $cr-spacing-xs $cr-spacing-md;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--cr-text-caption-size);
+}
+
+.entry { display: inline-flex; align-items: center; gap: $cr-spacing-2xs; }
+
+/* Round, like the status badge's well, and on the spacing rhythm rather than at
+   a size chosen by eye. Crystal publishes no legend-swatch token; what it does
+   publish is a scale, and a swatch that sits on it stays in proportion when the
+   scale moves. */
+.swatch {
+  flex: none;
+  inline-size: $cr-spacing-sm;
+  block-size: $cr-spacing-sm;
+  border-radius: 50%;
+  background: var(--segment-colour);
+}
+
+.name { color: var(--cr-text); }
+.value { color: var(--cr-muted); font-variant-numeric: tabular-nums; }
+
+/* `--segment-colour` arrives from the component, which reads Crystal's chart
+   series scale through `seriesColour()` — the same function the charts use.
+   A meter group is not a chart, but "several things on one picture, told apart
+   by colour" is exactly the problem that scale was derived for, and a second
+   scale invented here would be a second one to keep at 3:1. */
+
+[data-status='success'] { --segment-colour: var(--cr-success-ink); }
+[data-status='attention'] { --segment-colour: var(--cr-attention-ink); }
+[data-status='danger'] { --segment-colour: var(--cr-danger-ink); }
+[data-status='info'] { --segment-colour: var(--cr-info-ink); }
+
+/* Colour is gone, and the names in the legend are what is left — which is the
+   reason the legend is not optional. The segments keep their boundaries with a
+   rule between them so the proportions stay readable. */
+@media (forced-colors: active) {
+  .track { background: Canvas; border: 1px solid CanvasText; }
+  .segment { background: Canvas; border-inline-end: 1px solid CanvasText; }
+  .segment:last-child { border-inline-end: 0; }
+  .swatch { background: Canvas; border: 1px solid CanvasText; }
+}

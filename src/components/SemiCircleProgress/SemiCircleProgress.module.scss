@@ -1,0 +1,53 @@
+@use '../../styles/tokens' as *;
+@use '../../charts/svg' as chart;
+
+.semi { display: inline-flex; flex-direction: column; align-items: center; gap: $cr-spacing-xs; }
+
+.plot { position: relative; }
+
+.canvas {
+  @include chart.chart-canvas;
+
+  position: absolute;
+  inset: 0;
+}
+
+/* The catalogue calls the track Haze. Haze is a feathered paint *layer* — a
+   backdrop filter behind a fill — and an SVG path has no layer to put behind
+   it, so what carries across is the reading ground rather than the recipe: the
+   same `--cr-surface-alt` the linear track uses, which is what Haze composites
+   to over Crystal's own foundation. Inventing a `--cr-haze-fill` here would be
+   a property nobody publishes. */
+.track { fill: var(--cr-surface-alt); }
+.arc { fill: var(--cr-primary); }
+
+.readout {
+  display: flex;
+  align-items: baseline;
+  gap: $cr-spacing-xs;
+  margin: 0;
+  font-size: var(--cr-text-caption-size);
+}
+
+.label { color: var(--cr-text); }
+.value { color: var(--cr-muted); font-variant-numeric: tabular-nums; }
+
+.hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Indeterminate is the whole arc at reduced strength, which is true rather than
+   decorative: the work is in flight and the position is unknown. Nothing
+   travels — a segment sliding along a half circle and jumping back reads as a
+   value that reset. */
+.semi:not([data-determinate]) .arc { opacity: 0.45; }
+
+@media (forced-colors: active) {
+  .track { fill: Canvas; stroke: CanvasText; stroke-width: 1px; }
+  .arc { fill: Highlight; }
+}

@@ -1,0 +1,98 @@
+@use '../../styles/tokens' as *;
+
+/* The track is the slider's track. `$cr-slider-track-height` is Crystal's
+   `component.slider.trackHeight`, and the catalogue's "matching the slider
+   track" is a sentence about two components that must not drift — so this reads
+   the same token rather than a second 8. */
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: $cr-spacing-2xs;
+  inline-size: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $cr-spacing-sm;
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+}
+
+/* Visually hidden, still named. The bar keeps its accessible name either way. */
+.hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.label { color: var(--cr-text); }
+.value { color: var(--cr-muted); font-variant-numeric: tabular-nums; }
+
+.track {
+  position: relative;
+  overflow: hidden;
+  block-size: $cr-slider-track-height;
+  border-radius: $cr-slider-track-height;
+  background: var(--cr-surface-alt);
+  box-shadow: inset 0 1px 1px var(--cr-control-edge);
+}
+
+.fill {
+  block-size: 100%;
+  border-radius: $cr-slider-track-height;
+  background: var(--cr-primary);
+  /* The width is set inline from the value. A transition rather than a keyframe
+     animation, because the movement is *from where it was to where it is* and
+     nobody knows the first of those at author time. */
+  transition: inline-size calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
+    #{$cr-motion-easing-settle};
+}
+
+/* Indeterminate: a segment that travels the track. Crystal publishes no recipe
+   for a continuous activity indicator — its fifty-four are finite, spring-fitted
+   transitions — so the *shape* of this movement is the component's and only its
+   timing is Crystal's. D-19 records that gap. */
+.progress:not([data-determinate]) .fill {
+  position: absolute;
+  inline-size: 40%;
+  transition: none;
+  animation-name: travel;
+  animation-duration: calc(var(--cr-motion-enabled) * #{$cr-motion-duration-flow} / var(--cr-motion-speed));
+  animation-timing-function: #{$cr-motion-easing-settle};
+  animation-iteration-count: infinite;
+}
+
+@keyframes travel {
+  from { inset-inline-start: -40%; }
+  to { inset-inline-start: 100%; }
+}
+
+.progress[data-state='error'] .fill { background: var(--cr-danger-ink); }
+.progress[data-state='paused'] .fill { background: var(--cr-muted); animation-play-state: paused; }
+
+/* "Reduced motion replaces the movement with a static, still-legible state."
+   A full track rather than an empty one: the bar is busy, and an indeterminate
+   bar drawn empty reads as nought per cent. */
+@media (prefers-reduced-motion: reduce) {
+  .fill { transition: none; }
+
+  .progress:not([data-determinate]) .fill {
+    position: static;
+    animation: none;
+    inline-size: 100%;
+    opacity: 0.55;
+  }
+}
+
+@media (forced-colors: active) {
+  .track { background: Canvas; border: 1px solid CanvasText; }
+  .fill { background: Highlight; }
+  .progress[data-state='error'] .fill,
+  .progress[data-state='paused'] .fill { background: CanvasText; }
+}
