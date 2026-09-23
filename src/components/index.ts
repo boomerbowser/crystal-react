@@ -152,3 +152,5 @@ export * from './NavigationTree/index.js';
 export * from './Calendar/index.js';
 export * from './DataView/index.js';
 export * from './OrganizationChart/index.js';
+export * from './DataTable/index.js';
+export * from './ResizableTable/index.js';

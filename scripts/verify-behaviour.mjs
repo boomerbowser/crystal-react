@@ -314,6 +314,60 @@ for (const { edge, flush, square } of EDGES) {
   /* eslint-enable no-await-in-loop */
 }
 
+/* --------------------------- the width a resizer reports is the width drawn */
+
+/* "The resizer is a slider: arrow keys resize, and the new width is announced."
+ *
+ * What is checked here is the *agreement*: the number the resizer announces and
+ * the width the browser draws are the same. That is not a formality. React Aria
+ * applies each computed width to its header cell as an inline style, and under
+ * `table-layout: auto` a width on a cell is a suggestion the browser may
+ * override from the content — so the resizer would go on announcing "598 pixels"
+ * at a column that had become something else.
+ *
+ * The fixed layout that prevents it is React Aria's own, set inline by
+ * `ResizableTableContainer` along with `width: min-content`. This gate is what
+ * established that: a rule was added here on the assumption it was missing, and
+ * planting `table-layout: auto` in its place changed nothing, because the inline
+ * style had been there the whole time. What the check guards now is that nothing
+ * in this library — or a future React Aria — takes it away.
+ *
+ * Not checked here: that an arrow key moves the column. React Aria's table is a
+ * composite widget with a roving tab stop, and driving its internal focus from
+ * Playwright did not reach the resizer — see D-18. The half that can be asserted
+ * is asserted rather than the whole being skipped.
+ */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=data-display-resizable-table--default&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root [role="grid"]');
+  await page.waitForTimeout(300);
+
+  const seen = await page.evaluate(() => {
+    const header = document.querySelector('#storybook-root [role="columnheader"]');
+    const resizer = document.querySelector('#storybook-root [role="columnheader"] input[type="range"]');
+    const table = document.querySelector('#storybook-root [role="grid"]');
+    return {
+      drawn: header ? Math.round(header.getBoundingClientRect().width) : 0,
+      announced: resizer?.getAttribute('aria-valuetext') ?? null,
+      layout: table ? getComputedStyle(table).tableLayout : null,
+    };
+  });
+
+  const announced = Number.parseInt(seen.announced ?? '', 10);
+  record(
+    'a resizable column is laid out to an authoritative width',
+    seen.layout === 'fixed',
+    `the table's table-layout is ${seen.layout}. Under \`auto\` a width on a header cell is a `
+    + 'suggestion the browser may override from the content, so the resizer reports a width the '
+    + 'column does not have',
+  );
+  record(
+    'the width the resizer announces is the width that is drawn',
+    Number.isFinite(announced) && Math.abs(announced - seen.drawn) <= 1,
+    `the resizer announces ${seen.announced} and the column measures ${seen.drawn}px`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

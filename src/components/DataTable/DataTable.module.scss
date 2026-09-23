@@ -1,0 +1,200 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* DataTable — Crystal's table surface, shared with `Table`.
+ *
+ * The material is the same recipe `crystal.css` gives `.cr-table`, for the
+ * obvious reason: a reader should not be able to tell from the paint whether a
+ * table happens to be interactive. Resin shell, Haze fill inset 6px, hairline
+ * separators, the primary-soft header band with its corners inset 8px from the
+ * shell's radius.
+ *
+ * What is different is the resizer, and it is the one piece of geometry with a
+ * rule of its own: "a 44px target that does not shift the column it borders".
+ * Both halves matter. It reaches the floor by filling the header cell's height
+ * and carrying its own width, and it is positioned *inside* the header's box
+ * rather than straddling the boundary — a resizer that overhangs moves the
+ * column edge it is supposed to be reporting.
+ */
+
+$table-haze-inset: 6px; /* crystal-allow-literal: core `.cr-table-scroll::before` */
+$table-header-inset: 8px; /* crystal-allow-literal: the catalogue's stated header corner inset */
+$table-cell-block: 14px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
+$table-cell-inline: 18px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
+$resizer-width: 12px; /* crystal-allow-literal: the grip's width; its target is the header's height */
+
+.shell { display: flex; flex-direction: column; gap: $cr-spacing-sm; }
+
+.scroller {
+  @include material.haze-fill($table-haze-inset);
+
+  display: block;
+  overflow: auto;
+  max-inline-size: 100%;
+  border: 1px solid var(--cr-rim);
+  border-radius: var(--cr-radius);
+  background: var(--cr-resin-fill);
+  box-shadow: var(--cr-shadow-content);
+  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.scroller:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+@include material.opaque-fallback('.scroller');
+
+.table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  outline: none;
+}
+
+/* Resizing's layout is React Aria's, not this file's.
+ *
+ * `ResizableTableContainer` sets `table-layout: fixed` and `width: min-content`
+ * on the table *inline*, which is what makes the per-column widths it computes
+ * authoritative and lets the container scroll when their sum exceeds the frame.
+ * A rule here would be redundant — and was: one was added on the assumption that
+ * the fixed layout was missing, and `verify:behaviour` showed it guarded nothing
+ * because the inline style had been there all along. The inline `width` also
+ * outranks `inline-size: 100%` above, which is correct and worth knowing before
+ * somebody tries to "fix" the table not filling its frame when resizing is on.
+
+.column, .selectColumn {
+  position: relative;
+  padding: $table-cell-block $table-cell-inline;
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+  font-weight: 800;
+  text-align: start;
+  outline: none;
+  cursor: default;
+}
+
+.column[data-sort-direction] { cursor: pointer; }
+
+.column[data-focus-visible], .selectColumn[data-focus-visible],
+.cell[data-focus-visible], .selectCell[data-focus-visible], .row[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(#{$cr-focus-core-offset} * -1);
+  box-shadow: var(--cr-focus-ring);
+}
+
+.header tr > :first-child { border-start-start-radius: calc(var(--cr-radius) - #{$table-header-inset}); }
+.header tr > :last-child { border-start-end-radius: calc(var(--cr-radius) - #{$table-header-inset}); }
+
+.columnLabel { display: inline-block; }
+.columnLabel[data-align='end'] { text-align: end; inline-size: 100%; }
+
+.selectHeading {
+  font-size: var(--cr-text-caption-size);
+  font-weight: 700;
+}
+
+/* "A 44px target that does not shift the column it borders." The height comes
+   from the header cell it fills; the width is the grip. It sits inside the
+   header's own box rather than straddling the boundary, because a resizer that
+   overhangs moves the edge it reports. */
+.resizer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: $resizer-width;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.resizer::before {
+  content: '';
+  position: absolute;
+  inset-block: $cr-spacing-2xs;
+  inset-inline-end: calc(#{$resizer-width} / 2);
+  inline-size: 1px;
+  background: var(--cr-on-primary-soft);
+  opacity: 0.4;
+}
+
+.resizer[data-resizing]::before, .resizer[data-hovered]::before { opacity: 1; }
+
+.resizer[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: calc(#{$cr-focus-core-offset} * -1);
+}
+
+.cell, .selectCell {
+  padding: $table-cell-block $table-cell-inline;
+  border-block-end: 1px solid var(--cr-edge);
+  vertical-align: top;
+  outline: none;
+}
+
+.cellInner { display: block; }
+.cellInner[data-align='end'] { text-align: end; font-variant-numeric: tabular-nums; }
+
+.body tr:last-child :is(td, th) { border-block-end: 0; }
+
+.row[data-hovered] :is(td, th) { background: var(--cr-label-fill); }
+
+/* Selection is label weight — "not a check badge on the row". The checkbox is
+   the control that makes the selection; the row shows that it *is* selected by
+   being heavier, as every selected thing in Crystal does. */
+.row[data-selected] :is(td, th) {
+  font-weight: 800;
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+}
+
+.checkbox { display: inline-flex; cursor: pointer; }
+
+.box {
+  display: inline-grid;
+  place-items: center;
+  inline-size: $cr-choice-box-size;
+  block-size: $cr-choice-box-size;
+  border: 1px solid var(--cr-outline);
+  border-radius: $cr-choice-box-radius;
+  background: var(--cr-surface);
+  color: transparent;
+}
+
+.box svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.checkbox[data-selected] .box, .checkbox[data-indeterminate] .box {
+  background: var(--cr-primary);
+  border-color: var(--cr-primary);
+  color: var(--cr-on-primary);
+}
+
+.checkbox[data-focus-visible] .box {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+.empty {
+  padding: var(--cr-space);
+  text-align: center;
+  color: var(--cr-muted);
+}
+
+.footer { display: flex; align-items: center; justify-content: space-between; gap: $cr-spacing-sm; }
+
+@media (forced-colors: active) {
+  .scroller { background: Canvas; border: 1px solid CanvasText; box-shadow: none; backdrop-filter: none; }
+  .scroller::before { display: none; }
+  .column, .selectColumn { background: Canvas; color: CanvasText; border-block-end: 1px solid CanvasText; }
+  .cell, .selectCell { border-block-end: 1px solid CanvasText; }
+  /* Selection is a Highlight ring, never a fill: Chromium's text backplate
+     erases a filled row's words. */
+  .row[data-selected] :is(td, th) { background: Canvas; color: CanvasText; outline: 2px solid Highlight; }
+  .box { background: Canvas; color: Canvas; border: 1px solid CanvasText; }
+  .checkbox[data-selected] .box { background: Highlight; color: HighlightText; border-color: Highlight; }
+  .resizer::before { background: CanvasText; opacity: 1; }
+}

@@ -1098,7 +1098,7 @@ outstanding are below, with what each had to get right.
 
 ---
 
-### J — Data display (37) — 35 of 37
+### J — Data display (37) — complete
 
 `card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
@@ -1409,6 +1409,33 @@ whoever owns the data and can hold the row — which the promise now lets them d
   same collapse and the same reading order, with React Aria's tree keyboard
   behaviour for nothing. `treegrid` rather than `tree`, which is M-3 again and
   for its reason.
+
+- [x] **`data-table`** and **`resizable-table`**, which end the slice. This is
+  React Aria's `Table` where this library's `Table` is a plain one, and the split
+  is the catalogue's own three entries. A static table is a *document*: a reader
+  moves through it with their screen reader's table commands, and a plain
+  `<table>` is what those commands are for. An interactive one is a *grid
+  widget* — roving focus, arrow keys moving a cursor between cells, controls
+  inside cells — and `role="grid"` is what tells assistive technology to switch
+  from reading mode to interaction mode. Rendering the interactive one as a plain
+  table leaves every one of those keys doing nothing.
+
+  Selection is label weight, "not a check badge on the row": the checkbox makes
+  the selection and the row shows it is selected by being heavier. React Aria
+  composes each checkbox's name from its own label *plus* the row's text value,
+  so the label passed in is the verb alone — "Select Gather" announces as "Select
+  Gather Gather", which is how that was found. `resizable-table` is the same
+  component with resizing on and every column resizable unless it says otherwise,
+  because a second implementation would be a second table to keep in step.
+
+  Two things this cost that are worth the record. A `table-layout: fixed` rule
+  was added here on the assumption the fixed layout was missing, and planting
+  `auto` in its place changed nothing: `ResizableTableContainer` sets it inline
+  along with `width: min-content`, and had all along. The rule is gone and the
+  comment says why. And the arrow-key half of the resizer's contract is **not**
+  verified — React Aria's roving focus could not be driven to the control from
+  Playwright in three different ways — which is D-18, with what was tried and
+  three ways out.
 
 **What this slice had to write down rather than look up.** Crystal 2.0.0 publishes
 *action* geometry as tokens and badge, avatar, code, kbd and caption geometry only
