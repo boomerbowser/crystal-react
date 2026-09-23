@@ -70,6 +70,27 @@ const config: StorybookConfig = {
    * If Crystal is ever linked locally again — `pnpm link` for a change being
    * developed across both repositories — the hazard returns with it, and
    * `--force` on the Storybook command is the per-session answer. */
+
+  /* React Stately's virtualizer layouts read `process.env` in the browser.
+   *
+   * Vite does not define `process` — it is a Node global and there is no Node in
+   * a page — so `ListLayout.getVisibleLayoutInfos` throws `process is not
+   * defined` the moment a `Virtualizer` renders. Nothing in this library used a
+   * layout until `virtual-scroller` did, which is why it surfaced only now and
+   * as a story failure rather than a type error.
+   *
+   * `process.env.NODE_ENV` is replaced with a real value so a library branching
+   * on it gets the right branch, and a bare `process.env` with an empty object
+   * so any other read is `undefined` rather than a crash. Vite replaces the
+   * longer key first, so the two do not fight. */
+  viteFinal: async (viteConfig) => ({
+    ...viteConfig,
+    define: {
+      ...viteConfig.define,
+      'process.env.NODE_ENV': JSON.stringify(process.env['NODE_ENV'] ?? 'production'),
+      'process.env': '{}',
+    },
+  }),
 };
 
 export default config;

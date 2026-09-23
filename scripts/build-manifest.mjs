@@ -78,6 +78,11 @@ const NAMED_DIFFERENTLY = {
   CrystalProvider: 'theme-provider',
   /* The component *is* the element; the transition is what it does to it. */
   SharedElement: 'shared-element-transition',
+  /* React Aria's name, and the better one: the catalogue calls it a
+     `virtual-scroller` after the primereact component it lists for parity, but
+     what the library re-exports is React Aria's `Virtualizer` and calling it
+     anything else would send a reader looking for the wrong export. */
+  Virtualizer: 'virtual-scroller',
   Abbr: 'abbreviation',
   TextArea: 'textarea',
   /* The catalogue spells these as one word; Crystal spells them the way React

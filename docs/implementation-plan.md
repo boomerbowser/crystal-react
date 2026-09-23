@@ -1098,7 +1098,7 @@ outstanding are below, with what each had to get right.
 
 ---
 
-### J — Data display (37) — 29 of 37
+### J — Data display (37) — 32 of 37
 
 `card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
@@ -1320,6 +1320,45 @@ whoever owns the data and can hold the row — which the promise now lets them d
   Resin scrollbar `.cr-table-scroll` gives it: a compact horizontal scroller is a
   control plane, and a scroll container with nothing focusable in it cannot be
   reached without a pointer.
+
+- [x] **`carousel`**, and the autoplay that is not there. Crystal's rule is that
+  nothing moves at rest, the catalogue says "never autoplay without a pause
+  control", and the recipes say "explicit next/previous navigation; never
+  autoplay" — three statements of one thing, and the catalogue assigns autoplay
+  *policy* to the product, so a product that must have it owns both the timer and
+  the control. The movement is on the **arriving slide** rather than the track,
+  because `carousel-next` and `carousel-previous` are a 3D swing-in and animating
+  the track as well would move the same thing twice; the scroll itself is
+  instant, by `scrollIntoView` rather than arithmetic on `scrollLeft`, which is
+  negative in some engines in a right-to-left locale and zero-at-the-right in
+  others. The index follows a passive scroll listener rather than an
+  `IntersectionObserver`, which delivers nothing in the in-app preview browser
+  (D-5).
+- [x] **`navigation-tree`** — M-3's other half, and three things checked rather
+  than assumed. React Aria's `NavigationTree` renders a **`treegrid` of pressable
+  rows carrying `data-href`**, not a nested set of `a` elements, whatever the
+  name suggests. It does **not** set `aria-current`: it computes `data-current`
+  and `data-current-ancestor` for styling and stops, so the catalogue's
+  "aria-current on the active destination" is this library's to supply — and
+  supplying it took a third attempt, because passing the attribute to
+  `NavigationTreeItem` typechecks and is then filtered out of the DOM, and
+  putting it on the row's content leaves it on a descendant of the element a
+  reader lands on. And a React context provider placed around a collection is not
+  visible to the children React Aria renders *in its own pass*, which is what the
+  second attempt failed on.
+- [x] **`virtual-scroller`** — already implemented, and now named. It is React
+  Aria's `Virtualizer`, re-exported, so the manifest's translation table maps the
+  export to the catalogue id the way it does for `CrystalProvider`. What it did
+  not have was the story R-18 taught this library to require: Crystal's half of
+  this component is the *scroll surface*, which is composed rather than implied,
+  and a component whose Crystal half is a composition cannot be reviewed from its
+  signature. Two thousand rows on a Frost `ScrollArea`.
+
+  It also surfaced a bundling defect that had been latent: React Stately's
+  layouts read `process.env` in the browser, Vite does not define `process`, and
+  `ListLayout` threw `process is not defined` the moment a `Virtualizer`
+  rendered. Nothing in this library used a layout until now. `.storybook/main.ts`
+  defines both `process.env.NODE_ENV` and a bare `process.env`.
 
 **What this slice had to write down rather than look up.** Crystal 2.0.0 publishes
 *action* geometry as tokens and badge, avatar, code, kbd and caption geometry only

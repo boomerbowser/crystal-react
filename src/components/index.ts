@@ -147,3 +147,5 @@ export * from './Marquee/index.js';
 export * from './ImageList/index.js';
 export * from './ImageCompare/index.js';
 export * from './Table/index.js';
+export * from './Carousel/index.js';
+export * from './NavigationTree/index.js';

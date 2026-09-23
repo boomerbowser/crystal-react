@@ -1,0 +1,103 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+@use '../../styles/overlay' as overlay;
+
+/* NavigationTree — Haze rows, and the current destination marked by weight.
+ *
+ * Haze rather than Resin, for the reason `TreeView` gives: a navigation tree
+ * sits *in* a panel rather than floating above one, and a Resin row inside a
+ * Resin sidebar would be Resin containing Resin, which reads as neither pane.
+ *
+ * The current row is **heavier**. That is Crystal's rule for "this is the one
+ * you are on" everywhere — selection is label weight alone, nothing is drawn
+ * beside the label — and the soft fill is the second signal, never the only one.
+ * `data-current-ancestor` gives a collapsed branch the same weight at lower
+ * strength, so a reader can see which branch the current page is inside without
+ * expanding it.
+ */
+
+.nav { display: block; }
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  outline: none;
+}
+
+/* The row's focus ring belongs to the row, not to the tree: a composite widget
+   holds focus for its active row, so ringing the container would ring the whole
+   tree on every arrow key. */
+.item {
+  @include overlay.composite-focus;
+
+  color: inherit;
+  text-decoration: none;
+}
+
+.row {
+  @include material.haze-fill(0);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  min-block-size: $cr-action-min-target;
+  padding-inline-end: $cr-spacing-sm;
+  /* One rule for every level. `--cr-tree-level` is 0 at the root. */
+  padding-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step});
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  color: var(--cr-text);
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.item[data-hovered] .row { background: var(--cr-label-fill); }
+
+/* The destination you are on. Weight first; the fill is the second signal. */
+.item[data-current] .row {
+  font-weight: 800;
+  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary-soft);
+}
+
+/* The branch it is inside, so a collapsed branch still shows where you are. */
+.item[data-current-ancestor]:not([data-current]) .row { font-weight: 700; }
+
+.chevron {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: $cr-icon-action;
+  block-size: $cr-icon-action;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.chevron svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+/* The end state, in CSS, correct at rest whether or not anything animated —
+   the rule `Burger` established and `Accordion` follows. */
+.item[data-expanded] > * .chevron svg { rotate: 90deg; }
+
+.chevronEmpty { cursor: default; }
+
+.icon { display: inline-flex; flex: none; }
+
+.label { min-inline-size: 0; }
+
+:global([data-effects='opaque']) .row::before { background: var(--cr-surface); filter: none; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .row::before { background: var(--cr-surface); filter: none; }
+}
+
+@media (forced-colors: active) {
+  .row { background: Canvas; color: CanvasText; }
+  .row::before { display: none; }
+  /* Selection is a Highlight ring, never a fill: Chromium's text backplate
+     erases the words of a filled row. */
+  .item[data-current] .row { background: Canvas; color: CanvasText; outline: 2px solid Highlight; }
+}

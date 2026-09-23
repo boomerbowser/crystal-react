@@ -17,6 +17,12 @@
  * scroll contract and the right scrollbar — and that focus survives recycling,
  * which is React Aria's to deliver and Crystal's to require.
  *
+ * **The scroll surface is composed, not implied.** Nothing here supplies it: a
+ * `Virtualizer` windows a collection and the collection is put inside a
+ * `ScrollArea` by whoever assembles them. `Virtualizer.stories.tsx` shows that
+ * assembly, because a component whose Crystal half is a composition is a
+ * component nobody can review from its signature.
+ *
  * It takes a layout: `ListLayout` for rows of a known or estimated height,
  * `GridLayout` for a grid of cells, `TableLayout` for a table. Row sizing strategy
  * and the data are the product's.
