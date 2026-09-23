@@ -27,11 +27,11 @@ import {
   DateField, DateInput as AriaDateInput, DateSegment,
   TimeField,
   DatePicker as AriaDatePicker, DateRangePicker as AriaDateRangePicker,
-  Calendar, RangeCalendar, CalendarGrid, CalendarGridHeader, CalendarHeaderCell,
-  CalendarGridBody, CalendarCell, Heading,
+  Calendar, RangeCalendar,
   Label, Button, Popover, Dialog, Text, FieldError,
   type DateValue,
 } from 'react-aria-components';
+import { CalendarBody } from '../Calendar/Calendar.js';
 import { cx } from '../../styles/cx.js';
 import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import { FieldGroupShell } from '../FormField/FieldShell.js';
@@ -44,11 +44,6 @@ const CalendarIcon = (
   </svg>
 );
 
-const Chevron = ({ back }: { back: boolean }) => (
-  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-    <path d={back ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6'} />
-  </svg>
-);
 
 interface FieldExtras {
   label: ReactNode;
@@ -133,28 +128,6 @@ export function TimeInput({
   );
 }
 
-/** The calendar body, shared by every picker that opens one. */
-function CalendarBody(): React.JSX.Element {
-  return (
-    <>
-      <header className={cx(styles['calendarHeader'])}>
-        {/* Named by React Aria from the calendar itself, so they are not two
-            buttons called "Previous" on a range picker with two months. */}
-        <Button slot="previous" className={cx(styles['navButton'])}><Chevron back /></Button>
-        <Heading className={cx(styles['heading'])} />
-        <Button slot="next" className={cx(styles['navButton'])}><Chevron back={false} /></Button>
-      </header>
-      <CalendarGrid className={cx(styles['grid'])}>
-        <CalendarGridHeader>
-          {(day) => <CalendarHeaderCell className={cx(styles['weekday'])}>{day}</CalendarHeaderCell>}
-        </CalendarGridHeader>
-        <CalendarGridBody>
-          {(date) => <CalendarCell date={date} className={cx(styles['cell'])} />}
-        </CalendarGridBody>
-      </CalendarGrid>
-    </>
-  );
-}
 
 export interface DatePickerProps extends DateInputProps {
   /** Reject dates the product cannot accept — a booked day, a weekend. */

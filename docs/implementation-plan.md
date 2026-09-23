@@ -1098,7 +1098,7 @@ outstanding are below, with what each had to get right.
 
 ---
 
-### J — Data display (37) — 32 of 37
+### J — Data display (37) — 33 of 37
 
 `card`, `table`, `data-table`, `list`, `description-list`, `avatar`, `avatar-group`, `badge`, `status-badge`, `indicator`, `image`, `timeline`, `accordion`, `collapse`, `spoiler`, `carousel`, `statistic`, `code`, `kbd`, `theme-icon`, `authored-bubble`, `caption`, `calendar`, `data-view`, `virtual-scroller`, `image-list`, `organization-chart`, `rolling-number`, `image-compare`, `marquee`, `overlay-badge`, `navigation-tree`, `resizable-table`, `stat-card`, `kpi-tile`, `trend-indicator`, `delta-badge`.
 
@@ -1359,6 +1359,28 @@ whoever owns the data and can hold the row — which the promise now lets them d
   `ListLayout` threw `process is not defined` the moment a `Virtualizer`
   rendered. Nothing in this library used a layout until now. `.storybook/main.ts`
   defines both `process.env.NODE_ENV` and a bare `process.env`.
+
+- [x] **`calendar`**, which existed and could not be reached. "Usable on its own
+  rather than only inside a picker" is the catalogue's first clause, and the
+  month grid was inside `DatePicker` where a booking view that wanted a calendar
+  and no field had to copy it. The grid moved to `Calendar` and `DatePicker`
+  consumes `CalendarBody` — one month grid in the library rather than two that
+  drift — with the picker's popover carrying the material and the standalone
+  component carrying the Frost panel, because Frost inside Frost reads as
+  neither pane.
+
+  Standing on its own turned up a defect the picker had hidden: the month
+  header was a `<header>`, which is a `banner` landmark, and a banner inside the
+  calendar's own `application` role is an axe violation. Inside a dialog the
+  element is scoped away and nothing complained. It is a `div` now.
+
+  Two things about React Aria's date grid are worth having written down, because
+  both read like defects and are not. The weekday row is `aria-hidden` **on
+  purpose** — each day announces its whole date, "Wednesday, September 23,
+  2026", so a reader hears the weekday without cross-referencing a column header
+  whose position they cannot see. And the accessible name is on a button *inside*
+  the `gridcell`, not on the cell: the `td` is the grid position and the control
+  inside it is the day.
 
 **What this slice had to write down rather than look up.** Crystal 2.0.0 publishes
 *action* geometry as tokens and badge, avatar, code, kbd and caption geometry only
