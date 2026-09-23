@@ -1,0 +1,40 @@
+@use '../../styles/tokens' as *;
+@use '../../charts/label' as chart;
+
+/* Bands that meet, and a label that reads on whichever of them it lands on.
+ *
+ * The label is Stone-backed like the pie's, for the same reason: it sits on a
+ * series colour, and no ink in any palette clears 4.5:1 on one of those.
+ */
+
+.fill {
+  fill: var(--series-colour);
+  transition: opacity var(--cr-state) var(--cr-ease-settle);
+}
+
+.label { @include chart.chart-label; }
+
+/* Outside the band it is on the plot rather than on paint, so it takes the
+   ordinary ink and no backing. */
+.label[data-outside] {
+  fill: var(--cr-text);
+  stroke: none;
+}
+
+.stage:focus-visible { outline: none; }
+
+.chart :global(svg) > g:hover .stage:not(:hover) .fill,
+.chart :global(svg) > g:focus-within .stage:not([data-active]) .fill { opacity: 0.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fill { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .fill { fill: Canvas; stroke: CanvasText; stroke-width: 1px; }
+  .stage[data-active] .fill { fill: Highlight; }
+  .label,
+  .label[data-outside] { fill: CanvasText; stroke: Canvas; }
+  .chart :global(svg) > g:hover .stage:not(:hover) .fill,
+  .chart :global(svg) > g:focus-within .stage:not([data-active]) .fill { opacity: 1; }
+}

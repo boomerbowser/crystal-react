@@ -1,0 +1,50 @@
+@use '../../styles/tokens' as *;
+
+/* "Haze fill inside each series polygon" at Crystal's fill opacity, so two
+ * overlapping series stay two — and the outline carries the dash as well, because
+ * two polygons at a quarter opacity are two very similar shapes and the edge is
+ * what a reader follows round.
+ */
+
+.ring,
+.spoke {
+  fill: none;
+  stroke: var(--cr-chart-grid);
+  stroke-width: var(--cr-chart-hairline);
+}
+
+.axisLabel {
+  fill: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  font-family: var(--cr-font);
+}
+
+.area {
+  fill: var(--series-colour);
+  fill-opacity: var(--cr-chart-fill-opacity);
+  stroke: var(--series-colour);
+  stroke-width: var(--cr-chart-stroke);
+  stroke-linejoin: round;
+}
+
+.dot { fill: var(--series-colour); }
+
+.target { fill: transparent; }
+
+.point:focus-visible { outline: none; }
+
+.point[data-active] .dot,
+.point:hover .dot {
+  transform: scale(1.6);
+}
+
+@media (forced-colors: active) {
+  .ring,
+  .spoke { stroke: CanvasText; stroke-dasharray: 2 4; }
+  .axisLabel { fill: CanvasText; }
+  /* One colour left, so the fill goes and the dash is the whole difference
+     between two series. */
+  .area { fill: none; stroke: CanvasText; }
+  .dot { fill: CanvasText; }
+  .point[data-active] .dot { fill: Highlight; }
+}

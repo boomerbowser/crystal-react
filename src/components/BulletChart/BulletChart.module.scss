@@ -1,0 +1,69 @@
+@use '../../styles/tokens' as *;
+
+/* A row: the bands behind, the measure through them, the target across them.
+ *
+ * Built from elements rather than from SVG, because every part of it is a
+ * rectangle positioned along one axis — which is what a stylesheet is for — and
+ * because the meter role and its text then sit on a real element rather than on
+ * a group.
+ */
+
+.bullet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: $cr-spacing-2xs;
+}
+
+.label { font-weight: 650; }
+
+.track {
+  position: relative;
+  block-size: $cr-slider-track-height * 3;
+  border-radius: $cr-action-radius;
+  background: var(--cr-content-fill);
+  overflow: hidden;
+}
+
+.range {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--range-from);
+  inline-size: calc(var(--range-to) - var(--range-from));
+  background: var(--range-fill);
+}
+
+/* Through the middle, at a third of the row's height: a measure as tall as its
+   bands would hide them, and the bands are the context the measure is read in. */
+.measure {
+  position: absolute;
+  inset-block: 33%;
+  inset-inline-start: 0;
+  inline-size: var(--measure-to);
+  border-start-end-radius: $cr-action-radius;
+  border-end-end-radius: $cr-action-radius;
+  background: var(--cr-text);
+}
+
+/* "The target is a crisp marker, not a bar": full height, no material, no
+   radius. It is a line across the reading, and it is the only thing here that
+   does not soften. */
+.target {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--target-at);
+  inline-size: $cr-indicator-line-width;
+  translate: calc($cr-indicator-line-width / -2);
+  background: var(--cr-primary);
+}
+
+.reading {
+  font-size: var(--cr-text-caption-size);
+  color: var(--cr-muted);
+}
+
+@media (forced-colors: active) {
+  .track { border: 1px solid CanvasText; background: Canvas; }
+  .range { background: Canvas; border-inline-end: 1px solid CanvasText; }
+  .measure { background: CanvasText; }
+  .target { background: Highlight; }
+}
