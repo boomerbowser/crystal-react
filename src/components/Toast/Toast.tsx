@@ -173,14 +173,24 @@ export function Toast({
 
   useEffect(() => { void play('toast-in'); }, [play]);
 
+  /* `onDismiss` is a new closure on every provider render, and the provider
+     re-renders whenever *any* toast arrives or leaves. Depending on it directly
+     made `leave` new every time, which made the lifespan effect below tear its
+     timer down and start it again — so a toast's countdown restarted every time
+     another toast appeared, and in a busy stack the oldest one could outlive
+     them all. Held in a ref, `leave` is stable and each toast's clock is its
+     own. */
+  const dismiss = useRef(onDismiss);
+  dismiss.current = onDismiss;
+
   const leave = useCallback(() => {
     if (leaving.current) return;
     leaving.current = true;
     /* Awaited, then removed. `useMotion`'s promise is what makes an exit recipe
        possible: unmounting on the state change would play `toast-out` into a
        node that is no longer in the document. */
-    void play('toast-out').then(onDismiss);
-  }, [play, onDismiss]);
+    void play('toast-out').then(() => dismiss.current());
+  }, [play]);
 
   useEffect(() => {
     if (duration === null || duration === undefined) return undefined;

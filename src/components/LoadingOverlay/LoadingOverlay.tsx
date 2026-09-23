@@ -45,7 +45,17 @@ export const LoadingOverlay = forwardRef<HTMLDivElement, LoadingOverlayProps>(
       <div {...props} ref={ref} className={cx(styles['region'], className)} data-loading={loading ? '' : undefined}>
         {/* `inert` rather than `aria-hidden` and `pointer-events: none`: those
             are two thirds of the job and leave the tab key alone. */}
-        <div className={styles['content']} inert={loading}>{children}</div>
+        {/* `data-cr-blocked` is always present and says which state it is in.
+            A gate that had to find the region by its `inert` attribute could
+            only ever crash when the attribute went missing, and a crash is not
+            a failing check. */}
+        <div
+          className={styles['content']}
+          data-cr-blocked={loading ? 'true' : 'false'}
+          inert={loading}
+        >
+          {children}
+        </div>
         {loading ? (
           <div className={styles['scrim']}>
             <Loader label={label} size={size} hideLabel={hideLabel} />

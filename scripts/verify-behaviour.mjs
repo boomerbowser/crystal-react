@@ -591,6 +591,65 @@ for (const { edge, flush, square } of EDGES) {
   );
 }
 
+/* ------------------------------------------------- inert, and a contained tour */
+
+/* Two claims the unit tests state and cannot check, both about the keyboard.
+ *
+ * jsdom does not implement `inert` for focus at all: a `<button>` inside an
+ * inert subtree is still focusable there, so `LoadingOverlay`'s "focus does not
+ * enter it" is green in jsdom whether the attribute is `inert` or `aria-hidden`
+ * — and `aria-hidden` is the version of this that ships broken, because it hides
+ * the region from a screen reader while leaving every control in the tab order.
+ *
+ * And `aria-modal="true"` on the tour is a claim about the keyboard, not the
+ * pointer. The scrim covers the page and blocks the mouse; Tab is a different
+ * question, and a tour that let Tab walk onto the very control it is
+ * spotlighting would be telling assistive technology something false. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=feedback-loading-overlay--blocked&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root [data-cr-blocked="true"]');
+  await page.evaluate(() => { document.body.focus(); });
+  const reached = [];
+  for (let press = 0; press < 6; press += 1) {
+    /* eslint-disable no-await-in-loop -- tabbing is a sequence */
+    await page.keyboard.press('Tab');
+    reached.push(await page.evaluate(() => {
+      const inert = document.querySelector('#storybook-root [data-cr-blocked="true"]');
+      return Boolean(inert && document.activeElement && inert.contains(document.activeElement));
+    }));
+    /* eslint-enable no-await-in-loop */
+  }
+  record(
+    'focus does not enter a region a loading overlay has blocked',
+    reached.every((inside) => !inside),
+    `six presses of Tab put focus inside the blocked region ${reached.filter(Boolean).length} `
+    + 'time(s). jsdom ignores `inert` for focus entirely, so the unit test for this is green '
+    + 'with `aria-hidden` in its place — which hides the region from a screen reader and '
+    + 'leaves every control in the tab order',
+  );
+
+  await page.goto(`${ORIGIN}/iframe.html?id=feedback-tour--a-guided-sequence&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: 'Start the tour' }).click();
+  await page.waitForSelector('[role="dialog"]');
+  const stayed = [];
+  for (let press = 0; press < 8; press += 1) {
+    /* eslint-disable no-await-in-loop -- as above */
+    await page.keyboard.press('Tab');
+    stayed.push(await page.evaluate(() => {
+      const dialog = document.querySelector('[role="dialog"]');
+      return Boolean(dialog && document.activeElement && dialog.contains(document.activeElement));
+    }));
+    /* eslint-enable no-await-in-loop */
+  }
+  record(
+    'a tour that says it is modal keeps the keyboard inside it',
+    stayed.every(Boolean),
+    `Tab left the tour on ${stayed.filter((inside) => !inside).length} of 8 presses. A scrim `
+    + 'blocks the pointer and does nothing about Tab, so `aria-modal="true"` over one is a '
+    + 'claim about a containment that is not there',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

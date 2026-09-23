@@ -83,6 +83,11 @@ export function Popconfirm({
               variant={destructive ? 'danger' : 'primary'}
               isDisabled={pending}
               onPress={() => onConfirm?.()}
+              /* Both controls close it. Without this an uncontrolled caller
+                 confirms and the popover stays open, still asking. In the
+                 controlled case React Aria routes through `onOpenChange`, so a
+                 caller holding it open while `pending` still can. */
+              slot="close"
             >
               {pending ? pendingLabel : confirmLabel}
             </Button>

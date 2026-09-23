@@ -1696,6 +1696,31 @@ rather than a fill, and when Crystal and a library diverge the library adopts.
    tests passed because jsdom measures nothing and the component took the branch
    where there is no box to cut.
 
+**Five more found after the slice was first called done**, and every one of
+them changed what ships:
+
+- **Every `show()` reset every visible toast's countdown.** `onDismiss` is a new
+  closure on each provider render, so the lifespan effect tore its timer down and
+  started it again whenever *any* toast arrived — in a busy stack the oldest one
+  outlived them all. Invisible to every test that raises one toast; the test that
+  catches it keeps toasts arriving and asserts the first left *on time*, since
+  waiting for it to go passes either way.
+- **The tour said `aria-modal="true"` and let Tab walk out of it**, onto the very
+  control it was spotlighting. Contained with `FocusTrap` now, and checked by
+  pressing Tab eight times in a real engine.
+- **An uncontrolled `Popconfirm` never closed after Confirm** — only Cancel
+  carried `slot="close"`.
+- **`Skeleton`'s live region was born with its text in it**, which is the exact
+  hazard the toast stack is built to avoid.
+- **`LoadingOverlay`'s "focus does not enter it" was a claim no unit test could
+  make**: jsdom ignores `inert` for focus entirely, so the test is green with
+  `aria-hidden` in its place — the version that ships broken, hiding the region
+  from a screen reader while leaving every control in the tab order.
+
+Twice in this slice a gate identified an element by its position in the DOM and
+broke silently when something was inserted beside it. Both now use a stable
+attribute, which is the cheaper habit.
+
 **What is not here.** No continuous motion recipe exists in Crystal — **D-19** in
 the core repository records that its catalogue asks three of these components to
 spin, sweep and travel while its motion chapter publishes fifty-four finite

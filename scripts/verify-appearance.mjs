@@ -636,11 +636,10 @@ for (const [id, selector, what] of DISABLED) {
   await page.getByRole('button', { name: 'Start the tour' }).click();
   await page.waitForTimeout(400);
   const lit = await page.evaluate(() => {
-    const dialog = document.querySelector('[role="dialog"]');
-    const scrim = dialog?.previousElementSibling;
+    const scrim = document.querySelector('[data-cr-tour="scrim"]');
     const target = [...document.querySelectorAll('button')]
       .find((one) => one.textContent === 'Projects');
-    if (!dialog || !scrim || !target) return null;
+    if (!scrim || !target) return null;
     const box = target.getBoundingClientRect();
     return {
       overTarget: document

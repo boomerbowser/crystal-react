@@ -20,6 +20,19 @@
  * than the target being painted. It follows the target's own radius, so a pill
  * is cut as a pill.
  *
+ * **`aria-modal` has to be true of the keyboard, not only of the pointer.** The
+ * scrim covers the page and so blocks the mouse; it does nothing at all about
+ * Tab, and a tour that let Tab walk onto the very control it is spotlighting
+ * would be telling assistive technology something false. Focus is contained with
+ * `FocusTrap`, which is React Aria's `FocusScope`, contains it — containment
+ * only. The other two jobs are done here and each for a reason the scope cannot
+ * cover: focus moves **in** onto the panel rather than onto its first button,
+ * because the panel's name carries the step and its position while "Next"
+ * announces "Next"; and focus is given **back** after the scope has gone,
+ * because doing it inside `close()` had the containment pull it straight back in
+ * on the same tick, and `FocusScope`'s own `restoreFocus` records the active
+ * element after the panel has already taken focus and so restores to the panel.
+ *
  * **Position is measured, not guessed.** The target is read with
  * `getBoundingClientRect` on mount, on resize and on scroll. jsdom reports zero
  * for all of it, which is not a reason to avoid measuring — it is the reason the
@@ -30,6 +43,7 @@ import {
   type ReactNode, type RefObject,
 } from 'react';
 import { Portal } from '../Portal/Portal.js';
+import { FocusTrap } from '../FocusTrap/FocusTrap.js';
 import { Button } from '../Button/Button.js';
 import styles from './Tour.module.scss';
 
@@ -73,12 +87,25 @@ export function Tour({
   const panel = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState<Box | null>(null);
 
-  /* Whatever had focus when the tour began. Captured once, because by the end
-     the last step's target may have been replaced by what the tour was
-     explaining. */
+  /* Whatever had focus when the tour opened. Written during render, on the
+     first pass where it is open — a ref callback focuses the panel during the
+     same commit, so anything later reads the panel back. Idempotent, and
+     cleared when the tour closes. */
   const returnTo = useRef<HTMLElement | null>(null);
+  if (isOpen && returnTo.current === null && typeof document !== 'undefined') {
+    returnTo.current = document.activeElement as HTMLElement | null;
+  }
+
+  /* Given back after the scope has unmounted, which is what this effect's
+     position guarantees: by the time it runs on the closing render there is no
+     containment left to pull focus in again. */
+  const wasOpen = useRef(false);
   useEffect(() => {
-    if (isOpen) returnTo.current = document.activeElement as HTMLElement | null;
+    if (!isOpen && wasOpen.current) {
+      returnTo.current?.focus();
+      returnTo.current = null;
+    }
+    wasOpen.current = isOpen;
   }, [isOpen]);
 
   const current = steps[step];
@@ -116,10 +143,7 @@ export function Tour({
     };
   }, [isOpen, measure]);
 
-  const close = useCallback(() => {
-    onClose?.();
-    returnTo.current?.focus();
-  }, [onClose]);
+  const close = useCallback(() => { onClose?.(); }, [onClose]);
 
   /* Focus lands on the panel itself rather than on its first button: the panel
      is what the reader has just been moved to, and its name carries the step,
@@ -163,9 +187,15 @@ export function Tour({
             jsdom measures nothing and had no box to cut. */}
         <div
           className={styles['scrim']}
+          /* A stable hook for the gate that checks the hole. Finding it by DOM
+             position broke the moment `FocusTrap` was added between the two —
+             the scrim stopped being the dialog's previous sibling and the check
+             reported the scrim painting nowhere. */
+          data-cr-tour="scrim"
           data-cut={box ? '' : undefined}
           style={box ? { clipPath: spotlight(box) } as React.CSSProperties : undefined}
         />
+        <FocusTrap isActive autoFocus={false} restoreFocus={false}>
         <div
           ref={attach}
           role="dialog"
@@ -206,6 +236,7 @@ export function Tour({
             </Button>
           </div>
         </div>
+        </FocusTrap>
       </div>
     </Portal>
   );

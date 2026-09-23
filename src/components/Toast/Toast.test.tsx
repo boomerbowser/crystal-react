@@ -109,4 +109,37 @@ describe('Toast', () => {
     );
     await expectNoAxeViolations(container);
   });
+
+  /* The defect this exists for: `onDismiss` is a new closure on every provider
+     render, so depending on it made `leave` new every time, which made the
+     lifespan effect tear its timer down and start it again — and a toast's
+     countdown restarted every time *another* toast arrived. In a busy stack the
+     oldest one outlived them all.
+
+     A single-toast test cannot see it, which is why every test above missed it.
+     This one keeps toasts arriving while the first is counting down. */
+  it('keeps each toast on its own clock while others arrive', async () => {
+    let api: ReturnType<typeof useToasts> | null = null;
+    renderWithCrystal(
+      <ToastProvider defaultDuration={120}><Raise onReady={(one) => { api = one; }} /></ToastProvider>,
+    );
+    act(() => { screen.getByRole('button', { name: 'Raise' }).click(); });
+    act(() => { api!.show({ title: 'First' }); });
+
+    for (let arrival = 0; arrival < 8; arrival += 1) {
+      // eslint-disable-next-line no-await-in-loop -- the arrivals are the point
+      await new Promise((settle) => { setTimeout(settle, 90); });
+      // eslint-disable-next-line no-loop-func -- `api` is stable by now
+      act(() => { api!.show({ title: `Later ${arrival}` }); });
+    }
+
+    /* No `waitFor`: the assertion is that it left *on time*. Its own 120ms plus
+       the 440ms exit puts it gone by about 560ms, well before the last arrival
+       at 720ms. A toast whose clock was being restarted by its neighbours would
+       still be here — and would leave eventually, which is why waiting for it to
+       go would pass either way. */
+    const said = screen.getAllByRole('listitem').map((item) => item.textContent ?? '');
+    expect(said.some((text) => text.includes('First'))).toBe(false);
+    expect(said.length).toBeGreaterThan(0);
+  });
 });

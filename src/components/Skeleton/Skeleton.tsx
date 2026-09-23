@@ -20,7 +20,7 @@
  * material and the shapes to say it with.
  */
 import {
-  forwardRef, useEffect, useRef, type HTMLAttributes, type ReactNode,
+  forwardRef, useEffect, useRef, useState, type HTMLAttributes, type ReactNode,
 } from 'react';
 import { useMotion } from '../../motion/useMotion.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
@@ -44,6 +44,11 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(function Skele
 }, ref): ReactNode {
   const [scope, play] = useMotion();
   const waited = useRef(loading);
+  /* The region is rendered empty and filled in an effect. A live region created
+     with its text already inside it is one screen readers may never announce —
+     the same hazard the toast stack is built around, one component along. */
+  const [said, setSaid] = useState('');
+  useEffect(() => { setSaid(loading ? label : ''); }, [loading, label]);
 
   useEffect(() => {
     /* Only on the transition out of loading, and only if there was one. A
@@ -58,7 +63,7 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(function Skele
         <>
           {/* One region for the whole placeholder. Twelve lines announcing
               themselves twelve times is not more information. */}
-          <span role="status" className={styles['announcement']}>{label}</span>
+          <span role="status" className={styles['announcement']}>{said}</span>
           <div aria-hidden="true" className={styles['shapes']}>{placeholder}</div>
         </>
       ) : children}

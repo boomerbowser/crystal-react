@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
 import { Popconfirm } from './Popconfirm.js';
 import { Button } from '../Button/Button.js';
 
@@ -42,5 +42,19 @@ describe('Popconfirm', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
     expect(await screen.findByRole('button', { name: 'Cancel' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Working' })).toBeDisabled();
+  });
+
+  /* Both controls close it. Without `slot="close"` on confirm, an uncontrolled
+     caller confirms and the popover stays open, still asking the question it
+     has just been answered. */
+  it('closes itself after confirming', async () => {
+    renderWithCrystal(
+      <Popconfirm label="Delete this project?" onConfirm={() => {}}>
+        <Button>Delete</Button>
+      </Popconfirm>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Confirm' }));
+    await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); });
   });
 });
