@@ -1,0 +1,31 @@
+/* A label drawn on top of a mark, and how it stays readable there.
+ *
+ * A series colour clears 3:1 against the chart's ground, which is the floor a
+ * *mark* owes. A label sitting on that mark owes 4.5:1 against the mark, and
+ * nothing guarantees it: the series colours are all drawn at one lightness, and
+ * neither of a palette's inks reaches 4.5 on that lightness. A percentage
+ * written straight onto a wedge is unreadable in half the palettes, and it looks
+ * fine in a screenshot of the other half.
+ *
+ * Crystal has the answer already and it is Stone — "a 55% light / 60% dark label
+ * backing" that exists for exactly this, a label on paint whose colour nobody
+ * controls. Here it is a halo round the glyphs rather than a pad behind them,
+ * because a pad has to be the size of the text and a chart label is drawn before
+ * anything has been measured. `paint-order` puts the halo under the fill, so it
+ * is drawn once rather than once per glyph edge.
+ *
+ * The ink is then the body ink, which is what Stone is designed to carry.
+ */
+@mixin chart-label {
+  fill: var(--cr-text);
+  font-size: var(--cr-text-caption-size);
+  font-family: var(--cr-font);
+  font-weight: 700;
+  paint-order: stroke fill;
+  stroke: var(--cr-stone-fill);
+  /* Twice Crystal's Stone feather, so the halo is about as wide either side of a
+     glyph edge as the feathered pad is soft. */
+  stroke-width: calc(var(--cr-stone-feather) * 2);
+  stroke-linejoin: round;
+  pointer-events: none;
+}

@@ -1,5 +1,6 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material';
+@use '../../charts/svg' as chart;
 
 /* "Entries are pills and reach 44px." Both are Crystal's action geometry, so
  * both come from Crystal's action tokens rather than from numbers chosen here.
@@ -65,6 +66,7 @@
    series the entry is *for*, and a faded one would make the reader work out
    whether they are looking at a pale series or a hidden one. */
 .swatch {
+  @include chart.chart-canvas;
   flex: none;
   inline-size: $cr-icon-size;
   block-size: $cr-icon-size;

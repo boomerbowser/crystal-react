@@ -371,6 +371,114 @@ for (const [id, selector, what] of DISABLED) {
   }
 }
 
+/* ------------------------------------------ a chart is not a thousand icons */
+
+/* `crystal.css` styles the element: `svg { width: 20px; height: 20px; fill:
+ * none; stroke: currentColor; stroke-width: 1.8 }`. That is right for the icons
+ * Crystal ships and wrong for every drawing that is not one, and a consumer
+ * loading the stylesheet gets it either way — the D-1 hazard, in a new place.
+ *
+ * All five declarations reach a chart and each breaks something different. The
+ * two that are invisible in a unit test and obvious on a screen: a spark line
+ * comes out twenty pixels square, because a CSS `width` outranks the `width`
+ * attribute; and every wedge, bar and cell takes a one-and-a-bit pixel outline in
+ * the body ink, inherited from an ancestor rather than set on the mark, so
+ * reading the mark's own rules never explains it.
+ *
+ * Both are checked against the element, because `charts/_svg.scss` is only a
+ * claim until something reads back what the browser did with it. */
+{
+  await open('charts-pie-chart--default', '#storybook-root svg');
+  const wedge = await page.evaluate(() => {
+    const path = document.querySelector('#storybook-root [role="graphics-symbol"] path');
+    const svg = document.querySelector('#storybook-root svg');
+    return {
+      stroke: path ? getComputedStyle(path).stroke : null,
+      fill: path ? getComputedStyle(path).fill : null,
+      svgWidth: svg ? Math.round(svg.getBoundingClientRect().width) : 0,
+    };
+  });
+
+  record(
+    'a chart mark is not outlined by the icon reset',
+    wedge.stroke === 'none',
+    `a wedge's stroke is ${wedge.stroke}. Nothing in the chart's own stylesheet strokes it — `
+    + 'that is `svg { stroke: currentColor }` from `crystal.css`, inherited through the '
+    + 'canvas, and it draws a body-ink outline round every filled mark in the library',
+  );
+  record(
+    'a chart mark still paints its own fill',
+    wedge.fill !== 'none' && wedge.fill !== null,
+    `a wedge's fill is ${wedge.fill}. The icon reset also sets \`fill: none\`, and a chart `
+    + 'that resets the stroke without the fill is a chart of invisible marks',
+  );
+  record(
+    'a plot is as wide as it was measured, not as wide as an icon',
+    wedge.svgWidth > 200,
+    `the plot's svg is ${wedge.svgWidth}px wide. \`svg { width: 20px }\` outranks the width `
+    + 'attribute, so a chart that does not override it is drawn at icon size',
+  );
+
+  await open('charts-spark-line--default', '#storybook-root svg');
+  const spark = await page.evaluate(() => {
+    const svg = document.querySelector('#storybook-root svg');
+    const path = document.querySelector('#storybook-root svg path');
+    const box = svg?.getBoundingClientRect();
+    return {
+      width: box ? Math.round(box.width) : 0,
+      height: box ? Math.round(box.height) : 0,
+      stroke: path ? getComputedStyle(path).stroke : null,
+    };
+  });
+  record(
+    'a spark line is the size it was asked for',
+    spark.width > 40 && spark.height < 40 && spark.height > 8,
+    `the spark line is ${spark.width}x${spark.height}. Twenty by twenty is the icon reset `
+    + 'winning over the width and height attributes',
+  );
+  record(
+    'a spark line draws its own stroke',
+    spark.stroke !== 'none' && spark.stroke !== null,
+    `the spark line's path stroke is ${spark.stroke}`,
+  );
+}
+
+/* --------------------------------------------- a label on a mark is readable */
+
+/* A series colour clears 3:1 against the chart's ground, which is the floor a
+ * mark owes. A label written on that mark owes 4.5:1 against the mark, and
+ * nothing gives it that: the series colours are all drawn at one lightness, and
+ * neither of a palette's inks reaches 4.5 on it. Crystal's answer is Stone, and
+ * this is the check that Stone is actually behind the label — the halo is a
+ * `paint-order` away from being drawn on top of the glyphs instead, which looks
+ * like a bolder label and reads like nothing. */
+{
+  await open('charts-pie-chart--default', '#storybook-root text');
+  const label = await page.evaluate(() => {
+    const text = document.querySelector('#storybook-root [role="graphics-symbol"] text');
+    if (!text) return null;
+    const style = getComputedStyle(text);
+    return {
+      paintOrder: style.paintOrder,
+      stroke: style.stroke,
+      strokeWidth: style.strokeWidth,
+      fill: style.fill,
+    };
+  });
+  record(
+    'a label on a mark is backed rather than written straight onto it',
+    label !== null && label.stroke !== 'none' && Number.parseFloat(label.strokeWidth) > 1,
+    `the label's backing is ${label?.stroke} at ${label?.strokeWidth}. Without it the ink sits `
+    + 'directly on a series colour, where no ink in any palette clears 4.5:1',
+  );
+  record(
+    'the backing is behind the label, not over it',
+    label !== null && /stroke/.test(label.paintOrder),
+    `paint-order is ${label?.paintOrder}. The default draws the stroke over the fill, which `
+    + 'thickens the glyphs with the backing colour instead of haloing them',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

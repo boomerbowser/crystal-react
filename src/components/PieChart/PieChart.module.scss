@@ -1,4 +1,5 @@
 @use '../../styles/tokens' as *;
+@use '../../charts/label' as chart;
 
 /* "Segments separated by a hairline in the surface colour."
  *
@@ -8,8 +9,9 @@
  * objects, which is what a pie is claiming.
  *
  * The label on a wedge is the second channel, so it has to be readable on every
- * series colour. It is the ink Crystal puts on the action colour, which is the
- * one ink the palette guarantees against a saturated ground of its own.
+ * series colour — which no ink is on its own. It is Crystal's Stone backing that
+ * makes it so; `charts/_label.scss` sets out why, and why the backing is a halo
+ * here rather than a pad.
  */
 
 .wedge .fill {
@@ -17,13 +19,7 @@
   transition: opacity var(--cr-state) var(--cr-ease-settle);
 }
 
-.label {
-  fill: var(--cr-on-primary);
-  font-size: var(--cr-text-caption-size);
-  font-family: var(--cr-font);
-  font-weight: 700;
-  pointer-events: none;
-}
+.label { @include chart.chart-label; }
 
 .wedge:focus-visible { outline: none; }
 
@@ -58,7 +54,7 @@
     stroke-width: 1px;
   }
   .wedge[data-active] .fill { fill: Highlight; }
-  .label { fill: CanvasText; }
+  .label { fill: CanvasText; stroke: Canvas; }
   .chart :global(svg) g:hover .wedge:not(:hover) .fill,
   .chart :global(svg) g:focus-within .wedge:not([data-active]) .fill { opacity: 1; }
 }

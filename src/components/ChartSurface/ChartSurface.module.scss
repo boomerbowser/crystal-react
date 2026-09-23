@@ -1,5 +1,6 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material';
+@use '../../charts/svg' as chart;
 
 /* ChartSurface — "Haze plot fill on the surrounding material", and the plot area
  * keeps the content radius.
@@ -51,12 +52,12 @@
 }
 
 .canvas {
+  @include chart.chart-canvas;
   display: block;
   /* The measured width is written as an attribute; this keeps the drawn box and
      the layout box the same one when the two disagree for a frame after a
      resize, which is the only moment they can. */
   inline-size: 100%;
-  block-size: auto;
   overflow: visible;
 }
 
