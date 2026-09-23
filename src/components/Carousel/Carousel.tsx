@@ -101,8 +101,13 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     /* `scrollIntoView` rather than arithmetic on `scrollLeft`: in a right-to-left
        locale `scrollLeft` is negative in some engines and zero-at-the-right in
        others, and every carousel that has ever done the arithmetic has been wrong
-       in one of them. Instant, because the movement is the recipe's. */
-    element?.scrollIntoView({ behavior: 'auto', inline: 'start', block: 'nearest' });
+       in one of them. Instant, because the movement is the recipe's.
+     *
+     * Called optionally because jsdom does not implement it — there is no layout
+     * there to scroll. That is not defensive coding against a browser; it is the
+     * test environment having nothing to move, and the index still changes, which
+     * is the part a unit test can see. CI found this and a local run did not. */
+    element?.scrollIntoView?.({ behavior: 'auto', inline: 'start', block: 'nearest' });
   }, [count]);
 
   /* The reader can also swipe, so the index follows the scroll position rather
