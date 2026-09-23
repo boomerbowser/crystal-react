@@ -1,0 +1,47 @@
+@use '../../styles/tokens' as *;
+
+/* The same ramp, the same gap and the same forced-colours answer as the heatmap:
+ * there is one intensity scale in the system rather than one per chart.
+ *
+ * A day with no measurement is drawn as an outline, not as the palest step. "No
+ * data" and "the least data" are different facts, and a calendar where an empty
+ * day looks like a quiet one cannot be read at all.
+ */
+
+.fill { fill: var(--cell-fill); }
+
+.day[data-empty] .fill {
+  fill: none;
+  stroke: var(--cr-chart-grid);
+  stroke-width: var(--cr-chart-hairline);
+}
+
+.axisLabel {
+  fill: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  font-family: var(--cr-font);
+}
+
+.day:focus-visible { outline: none; }
+
+.day:hover .fill,
+.day[data-active] .fill {
+  stroke: var(--cr-text);
+  stroke-width: var(--cr-chart-stroke);
+}
+
+/* As the heatmap: with one colour left, the intensity becomes the size of the
+   mark rather than its paint. */
+@media (forced-colors: active) {
+  .fill {
+    fill: CanvasText;
+    stroke: CanvasText;
+    stroke-width: 1px;
+    transform-box: fill-box;
+    transform-origin: center;
+    scale: var(--cell-strength);
+  }
+  .day[data-empty] .fill { fill: none; scale: 1; }
+  .day[data-active] .fill { fill: Highlight; }
+  .axisLabel { fill: CanvasText; }
+}

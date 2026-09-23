@@ -171,3 +171,5 @@ export * from './Histogram/index.js';
 export * from './WaterfallChart/index.js';
 export * from './CandlestickChart/index.js';
 export * from './BoxPlot/index.js';
+export * from './Heatmap/index.js';
+export * from './CalendarHeatmap/index.js';

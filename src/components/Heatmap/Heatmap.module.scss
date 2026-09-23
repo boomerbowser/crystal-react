@@ -1,0 +1,70 @@
+@use '../../styles/tokens' as *;
+
+/* Cells, their ink, and the one place in the slice where the ink is decided per
+ * mark rather than once.
+ *
+ * Crystal's intensity ramp ships five grounds and five inks, each pair measured
+ * at 4.5:1. The cell writes both onto itself as custom properties, so the number
+ * on a pale cell and the number on a strong one are each the ink that was
+ * measured against *that* step — which is the whole content of "intensity is
+ * paired with a value".
+ *
+ * A cell with no measurement is not the bottom of the ramp. It is the plot
+ * showing through, with a hairline so the position is still a cell.
+ */
+
+.fill {
+  fill: var(--cell-fill);
+}
+
+.cell[data-empty] .fill {
+  fill: none;
+  stroke: var(--cr-chart-grid);
+  stroke-width: var(--cr-chart-hairline);
+}
+
+.value {
+  fill: var(--cell-ink);
+  font-size: var(--cr-text-caption-size);
+  font-family: var(--cr-font);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.axisLabel {
+  fill: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  font-family: var(--cr-font);
+}
+
+.cell:focus-visible { outline: none; }
+
+.cell:hover .fill,
+.cell[data-active] .fill {
+  stroke: var(--cr-text);
+  stroke-width: var(--cr-chart-stroke);
+}
+
+/* Forced colours takes the ramp away and leaves one colour, which would leave a
+   heatmap carrying nothing at all: every cell the same, and the only thing the
+   chart is for gone. The number in the cell is the first answer and it is not
+   enough — a matrix with small cells has no room for it.
+   
+   So the intensity becomes the *size* of the mark. Each cell is filled and
+   scaled to its own step about its own centre, so a strong cell fills its square
+   and a weak one is a small one inside it. That is a second channel in the mode
+   that most needs one, and it is the same information the paint was carrying. */
+@media (forced-colors: active) {
+  .fill {
+    fill: CanvasText;
+    stroke: CanvasText;
+    stroke-width: 1px;
+    transform-box: fill-box;
+    transform-origin: center;
+    scale: var(--cell-strength);
+  }
+  .cell[data-empty] .fill { fill: none; scale: 1; }
+  .cell[data-active] .fill { fill: Highlight; }
+  .value { fill: Canvas; }
+  .axisLabel { fill: CanvasText; }
+}
