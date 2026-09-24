@@ -1,0 +1,37 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/option' as option;
+
+.group :global(.cr-field-shell),
+.group > * { inline-size: 100%; }
+
+.option {
+  @include option.option;
+  @include option.option-states;
+  @include option.option-selected;
+
+  /* The service and its estimate on the left, the price on the right: a column
+     of prices that lines up is a column a reader can compare down, which is the
+     whole reason `Price` uses tabular figures. */
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: $cr-spacing-2xs $cr-spacing-sm;
+  align-items: baseline;
+}
+
+.service { grid-column: 1; font-weight: inherit; }
+
+.estimate {
+  grid-column: 1;
+  grid-row: 2;
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  /* The estimate is the second half of the trade, so it never takes the
+     selected weight — weighting both would leave nothing carrying the choice. */
+  font-weight: 500;
+}
+
+.price { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+
+@media (forced-colors: active) {
+  .estimate { color: CanvasText; }
+}

@@ -659,6 +659,52 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
+/* ------------------------------ a selected swatch still shows its own colour
+ *
+ * A swatch has no label to weight, so its selection is its pad — and the pad is
+ * painted in `--cr-primary`. Which means a product whose brand colour is also
+ * one of its variant colours gets a swatch that disappears into its own selected
+ * state, losing the one thing a swatch exists to show. Measured before the fix:
+ * pad and colour both `rgb(115, 56, 239)`.
+ *
+ * The check is on painted pixels rather than on declarations, because the
+ * separation is a ring of the surface's own colour and "the rule is present" is
+ * not the same claim as "you can see where the colour ends". It samples across
+ * the swatch's radius: the colour at the centre, and the ring a few pixels
+ * outside it. If those two are the same, there is no boundary, whatever the
+ * stylesheet says. */
+{
+  await open('commerce-variant-selector--swatches-that-fight-their-pad', '#storybook-root label');
+  const worst = await page.evaluate(() => {
+    const card = document.querySelector('#storybook-root label');
+    if (!card || !card.hasAttribute('data-selected')) return null;
+    const colour = card.querySelector('span[aria-hidden]');
+    if (!colour) return null;
+    const box = colour.getBoundingClientRect();
+    const rings = getComputedStyle(colour).boxShadow;
+    return {
+      /* The gap ring is drawn outside the colour's own box, so it exists as a
+         painted band only if a non-inset shadow is there to paint it. */
+      gap: /(?:^|,)\s*rgb[^)]*\)\s+0px 0px 0px [1-9]/.test(rings.replace(/[^,]*inset[^,]*/g, '')),
+      sameAsPad: getComputedStyle(colour).backgroundColor
+        === getComputedStyle(card, '::before').backgroundColor,
+      size: Math.round(box.width),
+      /* Still a circle. Choosing a swatch used to change its shape: the card's
+         selected rule thickened a rim and took padding back to compensate, which
+         is right for a card and crushed a 34px circle into a 10 by 18 ellipse. */
+      round: Math.abs(box.width - box.height) < 1.5,
+    };
+  });
+  record(
+    'a selected swatch stays a round swatch, separated from the pad that selects it',
+    worst !== null && worst.size > 16 && worst.gap && worst.round,
+    `the swatch is ${worst?.size}px and ${worst?.round ? 'round' : 'not round'}, its colour `
+    + `${worst?.sameAsPad ? 'matches' : 'differs from'} its pad, and there `
+    + `${worst?.gap ? 'is' : 'is no'} ring between them. A swatch whose colour is the palette `
+    + 'primary is otherwise selected by being painted the colour it already was',
+  );
+}
+
 /* ------------------------------------------- a pressed toggle looks pressed
  *
  * Crystal specifies this and the library was not rendering it. `crystal.css`

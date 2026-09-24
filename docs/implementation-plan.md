@@ -2033,6 +2033,58 @@ this slice had itself just written.
    Bringing the field back and putting them in it are two renders, and the focus
    belongs in the second.
 
+**Done: the choice groups (3).** `variant-selector`, `payment-method`,
+`shipping-selector`.
+
+The same thing three times — a radio group whose options are cards with a Haze
+fill — so the card lives once, in `src/styles/_option.scss`, beside `_status.scss`
+and `_field.scss` and for the same reason. All three are built on `RadioGroup`
+rather than on React Aria directly, which is what keeps the field shell that
+carries the validity React Aria *resolved*: a server saying "choose a delivery
+method" has to move the group exactly as a local rule would.
+
+**Selection is label weight here, and that is Crystal's rule for this shape
+rather than a compromise.** `crystal.css` gives a selected *button* the primary
+reading pad and gives `[role=tab][aria-selected=true]` only `font-weight: 800`.
+The difference is the distinction: a pressed button is an action in its on state,
+an option is a choice among peers. Both catalogue entries say the same —
+"selection is label weight, never a check mark", "the selected one carries label
+weight" — so an option painting itself primary would be shouting a choice the
+reader has just quietly made.
+
+**The swatch is the case with no label**, and it cost two defects that only a
+browser could see.
+
+1. **A selected swatch disappeared into its own selected state.** With no label
+   to weight, a swatch's selection is its pad, and the pad is `--cr-primary` — so
+   a product whose brand colour is also one of its variant colours gets a swatch
+   selected by being painted the colour it already was. Measured: pad and colour
+   both `rgb(115, 56, 239)`. The fix is two rings and the outer one is
+   load-bearing — a gap in the *surface's* colour, which works because it never
+   has to contrast with either side: the colour is drawn against it on the inside
+   and the pad on the outside. Where the gap and the colour match, which is white
+   on white, the inner hairline separates them. Each ring covers the case the
+   other cannot.
+2. **Choosing a swatch changed its shape.** The card's selected rule thickens a
+   rim and takes a pixel of padding back so the card does not grow — right for a
+   card, and applied to a 44px circle it crushed a 34px colour into a 10 by 18
+   ellipse. The mixin is split now, so a shape only takes the selected treatment
+   written for it. Found by the gate written for the first defect, on its first
+   run, which is the argument for writing the gate before believing the fix.
+
+**Two boundaries stated rather than assumed.** An unavailable variant stays and
+says why, because removing it means a shopper who cannot find the large sees a
+product that does not come in large and goes elsewhere — same information, and
+only one of them tells the reader anything. And `payment-method` renders no card
+field: one typed into an input this library drew would put every product using
+Crystal inside PCI scope, and the failure does not look like one — it would work,
+look right, and pass everything in this repository.
+
+**Planting.** Nine: the card field, the provider mounting only while chosen, the
+unavailable variant surviving, the swatch's name, the absent check mark, and the
+swatch's two halves in a browser — the gap ring and the roundness — each planted
+on its own.
+
 **And an export rule, from an asymmetry the review found.** The commerce slice's
 vocabulary was public and the feedback slice's was not — which meant
 `FeedbackStatus`, a *public prop type* of `Alert`, `Banner` and `StatusBadge`,

@@ -1,0 +1,96 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/option' as option;
+@use '../../styles/material' as material;
+
+/* Variants wrap: a size run is eight of them and a colour run can be twenty. */
+.group > * { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; }
+
+.variant {
+  @include option.option-states;
+}
+
+/* The pill. Its label is its name and its weight is its selection. */
+.pill {
+  @include option.option;
+  @include option.option-selected;
+
+  border-radius: $cr-action-radius;
+  inline-size: auto;
+  justify-content: center;
+  gap: $cr-spacing-2xs;
+}
+
+/* Why it cannot be chosen, in the option's own text rather than in a tooltip
+   nobody hovers. Lighter than the label, because the label is still the thing
+   being read. */
+.why { color: var(--cr-muted); font-size: var(--cr-text-caption-size); font-weight: 500; }
+
+/* The swatch. "Swatch variants are circles."
+ *
+ * The pad is the selection, because a colour has no weight to take. The colour
+ * sits inset inside it, so choosing one shrinks the colour rather than drawing a
+ * ring around it — an outline at an offset is how Crystal draws focus, and an
+ * option wearing one goes on looking focused after focus has left. */
+.swatch {
+  @include material.haze-fill(0);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  inline-size: $cr-action-min-target;
+  block-size: $cr-action-min-target;
+  padding: $cr-spacing-2xs;
+  border: 1px solid var(--cr-outline);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.colour {
+  inline-size: 100%;
+  block-size: 100%;
+  border-radius: 50%;
+  background: var(--cr-surface-alt);
+
+  /* Two rings, and the outer one is the load-bearing half.
+   *
+   * A hairline inside the colour handles a swatch that matches the *page* —
+   * white on white is the obvious case. It does not handle a swatch that
+   * matches the **pad**, and that case is not hypothetical: the selected pad is
+   * `--cr-primary`, so a product whose brand colour is a variant colour gets a
+   * swatch that vanishes into its own selected state. Measured with a swatch set
+   * to `var(--cr-primary)`: pad and colour both `rgb(115, 56, 239)`, and a 0.18
+   * alpha hairline between two identical purples separates nothing. A selected
+   * swatch that cannot show which colour was selected has lost the only job it
+   * has.
+   *
+   * So the outer ring is the surface's own colour, sitting in the pad's padding
+   * as a gap. It works because it does not have to contrast with either one:
+   * the colour is drawn against it on the inside and the pad is drawn against it
+   * on the outside, and where the gap and the colour *do* match — white again —
+   * the inner hairline is what separates them. Each ring covers the case the
+   * other cannot. */
+  box-shadow:
+    inset 0 0 0 1px var(--cr-control-edge),
+    0 0 0 2px var(--cr-surface);
+  transition: scale calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
+    #{$cr-motion-easing-settle};
+}
+
+/* Chosen: the pad tints and the colour draws back into it. Both, because the
+   pad alone can be lost against a swatch of a similar colour. */
+.swatch[data-selected]::before { background: var(--cr-primary); filter: none; }
+.swatch[data-selected] .colour { scale: 0.78; }
+
+.swatch[data-disabled] { cursor: not-allowed; }
+.swatch[data-disabled] .colour { opacity: $cr-action-disabled-opacity; }
+
+@media (prefers-reduced-motion: reduce) { .colour { transition: none; } }
+
+@media (forced-colors: active) {
+  .why { color: CanvasText; }
+  .swatch { border: 1px solid CanvasText; }
+  .swatch[data-selected] { border: 2px solid Highlight; }
+  .colour { box-shadow: inset 0 0 0 1px CanvasText; }
+}

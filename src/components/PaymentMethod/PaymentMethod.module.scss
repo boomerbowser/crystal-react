@@ -1,0 +1,37 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/option' as option;
+
+.group > * { inline-size: 100%; }
+
+.option {
+  @include option.option;
+  @include option.option-states;
+  @include option.option-selected;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: $cr-spacing-2xs $cr-spacing-sm;
+  align-items: center;
+}
+
+.mark { grid-row: 1 / span 2; display: inline-flex; }
+.mark svg, .mark img { inline-size: $cr-icon-action; block-size: auto; }
+
+.name { grid-column: 2; }
+
+.detail {
+  grid-column: 2;
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  font-weight: 500;
+}
+
+.new { display: grid; gap: $cr-spacing-xs; }
+
+/* The provider's element sits under the option it belongs to, indented so it
+   reads as part of that choice rather than as a section of the form. */
+.provider { padding-inline-start: $cr-spacing-md; }
+
+@media (forced-colors: active) {
+  .detail { color: CanvasText; }
+}

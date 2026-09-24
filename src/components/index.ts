@@ -215,3 +215,6 @@ export * from './QuantityStepper/index.js';
 export * from './WishlistButton/index.js';
 export * from './SortSelect/index.js';
 export * from './CouponInput/index.js';
+export * from './ShippingSelector/index.js';
+export * from './PaymentMethod/index.js';
+export * from './VariantSelector/index.js';

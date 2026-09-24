@@ -1,0 +1,98 @@
+/* The option card, shared by the three choice groups in the commerce slice.
+ *
+ * `variant-selector`, `payment-method` and `shipping-selector` are the same
+ * thing three times — a radio group whose options are cards with a Haze fill —
+ * and each would otherwise decide separately what a selected option looks like.
+ * That is the divergence `_status.scss` and `_field.scss` exist to prevent.
+ *
+ * **Selection is label weight, and that is not a compromise here — it is what
+ * Crystal specifies for this shape.** `crystal.css` gives a selected *button*
+ * the primary reading pad, and gives `[role=tab][aria-selected=true]` only
+ * `font-weight: 800`. The difference is the distinction: a pressed button is an
+ * action in its on state, and an option is a choice among peers. Both catalogue
+ * entries agree — "selection is label weight, never a check mark", "the selected
+ * one carries label weight" — so an option that painted itself primary would be
+ * shouting a choice the reader has just quietly made.
+ *
+ * Weight is typographic rather than chromatic, so this never rests on colour
+ * alone, which is the reason Crystal chose it.
+ */
+@use 'tokens' as *;
+@use 'material';
+
+@mixin option {
+  @include material.haze-fill(0);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-sm;
+  box-sizing: border-box;
+  padding: $cr-spacing-sm $cr-spacing-md;
+  border: 1px solid var(--cr-outline);
+  border-radius: $cr-shape-content-radius;
+  min-block-size: $cr-action-min-target;
+  color: var(--cr-text);
+  cursor: pointer;
+
+  /* An option is a choice, so the whole card is the target — not a dot with a
+     label beside it that a thumb has to find. */
+  inline-size: 100%;
+}
+
+@mixin option-states {
+  &[data-hovered] { filter: brightness(1.04); }
+
+  &[data-focus-visible] {
+    outline: $cr-focus-core-width solid var(--cr-focus-core);
+    outline-offset: $cr-focus-core-offset;
+    box-shadow: var(--cr-focus-ring);
+  }
+
+  /* "Unavailable options stay perceivable and say why." Perceivable, so not the
+     usual disabled fade to the point of illegibility: the ink stays a tested
+     muted pair and the card is struck through its own rim instead. What says
+     why is the text, which is the component's job rather than this file's. */
+  &[data-disabled] {
+    cursor: not-allowed;
+    color: var(--cr-muted);
+    border-style: dashed;
+  }
+
+  @media (forced-colors: active) {
+    & { border: 1px solid CanvasText; color: CanvasText; }
+    &[data-selected] { border: 2px solid Highlight; }
+    &[data-disabled] { color: GrayText; border-color: GrayText; }
+  }
+}
+
+/* The selected treatment for an option **that has a label**, which is a separate
+ * mixin rather than part of `option-states` for a reason that cost a defect.
+ *
+ * It thickens the rim and takes a pixel of padding back so the card does not
+ * grow — correct for a card, and quietly wrong for a circle. Applied to a 44px
+ * swatch, the card's padding crushed a 34px colour into a 10 by 18 ellipse: a
+ * swatch that changed shape when you chose it. Measured, not noticed; the unit
+ * tests were all green and jsdom has no boxes to be wrong about.
+ *
+ * So the rule is where it belongs: on the shape it was written for. Crystal's
+ * own rule for a selected option is the weight, and the rim thickens with it so
+ * the choice is legible to somebody who cannot resolve a weight difference — a
+ * boundary is not a fill, and it is not the focus ring's shape, which is an
+ * outline *outside* the box at an offset. */
+@mixin option-selected {
+  &[data-selected] {
+    font-weight: 800;
+    border-color: var(--cr-outline);
+    border-width: 2px;
+    padding: calc(#{$cr-spacing-sm} - 1px) calc(#{$cr-spacing-md} - 1px);
+  }
+}
+
+/* The set. Vertical by default because these options carry a price and an
+   estimate each, and a row of them wraps into something no reader can scan. */
+@mixin option-set {
+  display: grid;
+  gap: $cr-spacing-xs;
+  inline-size: 100%;
+}
