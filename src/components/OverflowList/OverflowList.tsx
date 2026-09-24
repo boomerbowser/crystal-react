@@ -30,7 +30,7 @@
  * The trigger is a pill that reaches the minimum target, like every other action.
  */
 import {
-  Children, useCallback, useEffect, useRef, useState,
+  Children, Fragment, isValidElement, useCallback, useEffect, useRef, useState,
   type CSSProperties, type HTMLAttributes, type ReactNode,
 } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -50,10 +50,32 @@ export interface OverflowListProps extends Omit<HTMLAttributes<HTMLDivElement>, 
   renderOverflow: (hidden: readonly ReactNode[], count: number) => ReactNode;
 }
 
+/* The items, with a top-level fragment opened out.
+ *
+ * `Children.toArray` counts a fragment as one child, so a caller who wrapped
+ * their row in `<>…</>` — which JSX invites, and which every other component
+ * here treats as transparent — hands this one item. The row then measures one
+ * item, finds that it does not fit, and moves *everything* into the overflow
+ * menu: a bar of seven commands renders as the words "1 more" and nothing else.
+ * It typechecks, it throws nothing, and the commands are still reachable, so
+ * the only symptom is a toolbar that looks empty.
+ *
+ * Opened out here rather than in each caller, because the caller cannot see the
+ * problem: there is nothing about `children: ReactNode` that says a fragment
+ * means something different from the elements inside it.
+ */
+function itemsOf(children: ReactNode): ReactNode[] {
+  return Children.toArray(children).flatMap((child) => (
+    isValidElement(child) && child.type === Fragment
+      ? Children.toArray((child.props as { children?: ReactNode }).children)
+      : [child]
+  ));
+}
+
 export function OverflowList({
   children, gap, renderOverflow, className, style, ...props
 }: OverflowListProps): React.JSX.Element {
-  const items = Children.toArray(children);
+  const items = itemsOf(children);
   const row = useRef<HTMLDivElement | null>(null);
   /* Each item's width, taken once while every item was laid out. This is what
      makes the row able to grow back. */

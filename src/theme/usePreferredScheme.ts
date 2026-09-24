@@ -12,26 +12,8 @@
  * exists for. The naive version renders the wrong answer first and corrects it,
  * which is a flash of the wrong theme on every load.
  */
-import { useCallback, useSyncExternalStore } from 'react';
+import { useMediaQuery } from './useMediaQuery.js';
 
-function useMediaQuery(query: string, serverValue: boolean): boolean {
-  const subscribe = useCallback((notify: () => void) => {
-    if (typeof window === 'undefined' || !window.matchMedia) return () => undefined;
-    const list = window.matchMedia(query);
-    list.addEventListener('change', notify);
-    return () => list.removeEventListener('change', notify);
-  }, [query]);
-
-  return useSyncExternalStore(
-    subscribe,
-    () => (typeof window !== 'undefined' && window.matchMedia
-      ? window.matchMedia(query).matches
-      : serverValue),
-    /* The server cannot know, so it renders Crystal's default and the first client
-       render agrees with it. Guessing differently is a hydration mismatch. */
-    () => serverValue,
-  );
-}
 
 /** `dark` when the operating system asks for it, `light` otherwise. */
 export function usePreferredMode(): 'light' | 'dark' {

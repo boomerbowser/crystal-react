@@ -1077,6 +1077,57 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
+/* ------------------------------------------------- a command bar that narrows
+ *
+ * "Overflow to a menu." In a unit test every element is zero wide, so the
+ * measuring row concludes that everything fits and the affordance is never
+ * rendered at all — the overflow behaviour has no observable there, which is
+ * why the unit test asserts reachability and this one asserts the overflow.
+ *
+ * What must hold is both halves at once: something has to fall out of the row,
+ * and nothing may fall off the page. A row that simply clipped would satisfy
+ * the first and silently delete functionality at narrow widths.
+ */
+{
+  await open('screens-commandbar--overflowing', '#storybook-root [role="toolbar"]');
+  const COMMANDS = 7; /* what the story is given */
+  const narrowed = await page.evaluate(() => {
+    const toolbar = document.querySelector('#storybook-root [role="toolbar"]');
+    const bar = toolbar.getBoundingClientRect();
+    const buttons = [...toolbar.querySelectorAll('button')];
+    const affordance = buttons.find((one) => /\d+ more$/i.test(one.textContent ?? ''));
+    const commands = buttons.filter((one) => one !== affordance);
+    return {
+      shown: commands.length,
+      hidden: Number(/(\d+) more/i.exec(affordance?.textContent ?? '')?.[1] ?? NaN),
+      /* Nothing may sit outside the bar it belongs to: a row that clips instead
+         of overflowing deletes functionality at narrow widths. */
+      allWithin: commands.every((one) => {
+        const box = one.getBoundingClientRect();
+        return box.left >= bar.left - 1 && box.right <= bar.right + 1;
+      }),
+      /* An item that overflows leaves the toolbar's roving tab index with it,
+         so the trigger that reaches it has to be inside the toolbar. */
+      inToolbar: affordance !== undefined && toolbar.contains(affordance),
+      /* And the row must actually be as wide as the bar. A measuring row that is
+         a non-growing flex item measures its own content and concludes nothing
+         fits — which reads as an over-eager overflow rule rather than as a row
+         102px wide inside a 558px bar. */
+      rowFillsBar: toolbar.firstElementChild.clientWidth > bar.width * 0.9,
+    };
+  });
+  record(
+    'a narrowed command bar overflows exactly what does not fit, and keeps the count',
+    narrowed !== null && narrowed.shown > 0 && narrowed.hidden > 0
+      && narrowed.shown + narrowed.hidden === COMMANDS
+      && narrowed.allWithin && narrowed.inToolbar && narrowed.rowFillsBar,
+    `${narrowed?.shown} shown plus ${narrowed?.hidden} counted as hidden, against `
+    + `${COMMANDS} given; all inside the bar: ${narrowed?.allWithin}; the row fills the `
+    + `bar: ${narrowed?.rowFillsBar}. Every command is either in the row or counted by `
+    + 'the affordance, and a command that is neither has been deleted at this width',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

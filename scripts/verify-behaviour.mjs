@@ -746,6 +746,81 @@ for (const { edge, flush, square } of EDGES) {
   );
 }
 
+/* ------------------------------------------------- screens: order and width
+ *
+ * Two clauses from slice O that are geometry, and geometry is the one thing the
+ * unit tests genuinely cannot reach — this environment gives every element a
+ * width of zero and implements no `matchMedia` at all.
+ */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=screens-workspace--default&viewMode=story`, { waitUntil: 'networkidle' });
+  if (await waitFor('a workspace lays out its panes', page.locator('#storybook-root section').first())) {
+    /* "Focus order follows the visual order." Both orders exist only once there
+       are boxes: the tab order comes from the document and the visual order from
+       the positions, and a `grid-column`, an `order`, or a `direction` moves one
+       without touching the other. A workspace where they disagree tabs from the
+       left pane to the right to the middle, and nothing in the source looks
+       wrong. This is the only place the question has an answer. */
+    const order = await page.evaluate(() => {
+      const panes = [...document.querySelectorAll('#storybook-root section[aria-label]')];
+      const documentOrder = panes.map((one) => one.getAttribute('aria-label'));
+      const visualOrder = [...panes]
+        .sort((a, b) => {
+          const boxA = a.getBoundingClientRect();
+          const boxB = b.getBoundingClientRect();
+          /* Reading order: down first, then along, so a wrapped row still reads
+             the way a person reads it. */
+          return Math.abs(boxA.top - boxB.top) > 4 ? boxA.top - boxB.top : boxA.left - boxB.left;
+        })
+        .map((one) => one.getAttribute('aria-label'));
+      return { documentOrder, visualOrder, laidOut: panes.every((one) => one.getBoundingClientRect().width > 0) };
+    });
+    record(
+      'a workspace is read in the order it is seen',
+      order.laidOut && order.documentOrder.length > 1
+        && order.documentOrder.join() === order.visualOrder.join(),
+      `the document order is ${order.documentOrder.join(', ')} and the visual order is `
+      + `${order.visualOrder.join(', ')}. When they disagree a reader tabs from the left `
+      + 'pane to the right to the middle, and nothing in the source looks wrong',
+    );
+  }
+}
+
+{
+  /* "Collapses to a stack below the layout breakpoint." Crystal's `md` is
+     850px, so the two viewports are chosen to sit either side of it rather than
+     near it — a gate measured at the boundary tests the rounding, not the rule. */
+  const layoutAt = async (width) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto(`${ORIGIN}/iframe.html?id=screens-masterdetail--default&viewMode=story`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('#storybook-root section[aria-label]');
+    await page.waitForTimeout(300);
+    return page.evaluate(() => {
+      const panes = [...document.querySelectorAll('#storybook-root section[aria-label]')];
+      const boxes = panes.map((one) => one.getBoundingClientRect());
+      return {
+        panes: panes.length,
+        /* Side by side means they share a row; stacked means there is one. */
+        sideBySide: boxes.length === 2 && Math.abs(boxes[0].top - boxes[1].top) < 4,
+        state: document.querySelector('#storybook-root [data-cr-state]')?.dataset.crState,
+      };
+    });
+  };
+
+  const wide = await layoutAt(1200);
+  const narrow = await layoutAt(600);
+  await page.setViewportSize({ width: 1280, height: 900 });
+
+  record(
+    'a master detail is two panes wide and one pane narrow',
+    wide.panes === 2 && wide.sideBySide
+      && narrow.panes === 1 && narrow.state === 'narrow',
+    `at 1200px there are ${wide.panes} panes side by side (${wide.sideBySide}); at 600px `
+    + `there are ${narrow.panes}, in state ${narrow.state}. A stack showing both would be `
+    + 'the list and the detail in sequence, which is a page rather than a master detail',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

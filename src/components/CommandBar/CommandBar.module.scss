@@ -1,0 +1,20 @@
+@use '../../styles/tokens' as *;
+
+/* "Pill; overflow to a menu." The pill is the bar's own shape; the actions
+   inside it are pills by being Crystal actions, which is where that geometry
+   already lives. */
+.bar { border-radius: $cr-action-radius; }
+
+/* The measuring row has to be as wide as the bar, or it measures itself.
+ *
+ * `Toolbar` is a nowrap flex container, so a child that is not told to grow
+ * shrinks to its content — and `OverflowList` then reads *that* as the space
+ * available and concludes nothing fits. The visible symptom is a 560px command
+ * bar showing the words "7 more" and no commands at all, which looks like an
+ * overflow rule that is far too eager rather than a row that is 102px wide.
+ * `min-inline-size: 0` with it, because a flex item's automatic minimum size is
+ * its content and would stop it shrinking below the row it is meant to measure. */
+.row {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}

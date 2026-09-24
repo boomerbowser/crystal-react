@@ -241,3 +241,7 @@ export * from './PermissionScreen/index.js';
 export * from './Screen/index.js';
 export * from './PageHeader/index.js';
 export * from './StatusBar/index.js';
+export * from './SplitView/index.js';
+export * from './CommandBar/index.js';
+export * from './MasterDetail/index.js';
+export * from './Workspace/index.js';

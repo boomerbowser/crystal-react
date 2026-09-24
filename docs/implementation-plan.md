@@ -2372,6 +2372,53 @@ was deciding what they are *not* allowed to add.
   isolated `::before` beneath the content, which is what "text stays crisp"
   means; a mixin of our own would have been that recipe a feather-width off.
 
+**Round three: the multi-pane views.** Every one of the four composes something
+that already existed, and the round's value was that composing found defects
+inventing would have shipped.
+
+- **`SplitView` is `Resizable` plus one state.** The separator, its
+  `aria-valuenow`, its keyboard travel and its 44px target are all already
+  Crystal's. What is new is `collapsed`, and it is a component rather than a prop
+  because of what collapsing has to do to the divider: a separator between one
+  region and nothing announces a value it cannot change, and a keyboard user who
+  lands on it can press arrow keys at it forever. So collapsing removes it.
+- **`CommandBar` is `Toolbar` plus `OverflowList`, and the pair had a defect
+  neither half had.** `Toolbar` is a nowrap flex container, so the measuring row
+  inside it was a flex item that never grew: it shrank to its own content and
+  then read *that* as the space available. A 560px command bar rendered the words
+  "7 more" and no commands at all, which looks like an overflow rule that is far
+  too eager rather than a row 102px wide inside a 558px bar. Found by the gate,
+  at a width, because there is no width in a unit test to find it at.
+- **A fragment was one item, and that is `OverflowList`'s defect, not this
+  one's.** `Children.toArray` counts `<>…</>` as a single child, so a caller who
+  wrapped their row the way JSX invites handed the list one item; the row
+  measured it, found it did not fit, and moved *everything* into the overflow.
+  It typechecks, throws nothing, and leaves every command reachable, so the only
+  symptom is a toolbar that looks empty. Fixed where the behaviour lives —
+  `OverflowList` now opens out a top-level fragment — rather than in the
+  component that happened to notice, which is the `CompareTable` lesson applied
+  a second time.
+- **`MasterDetail`'s one sentence is "only when the layout has collapsed"**, and
+  the word doing the work is *only*. Wide, moving focus takes the reader out of
+  the list they are still arrowing down. Collapsed, the detail has replaced the
+  list, so leaving focus behind leaves it on nothing. The same action means two
+  things depending on a media query — and this environment implements no
+  `matchMedia` at all, so a test written without noticing drives the wide path
+  twice and passes. The query is supplied explicitly in the unit test and the
+  layout itself is measured at two viewports in `verify:behaviour`.
+- **`Workspace`'s "focus order follows visual order" is the clause no type can
+  enforce and no unit test can see**, because both orders are geometry: the tab
+  order comes from the document and the visual order from the boxes. The gate
+  walks one and compares it against the other, and planting `direction: rtl`
+  turned the visual order round while leaving the document order and every unit
+  test untouched — which is exactly the drift it exists for.
+- **The third `matchMedia` subscription was extracted rather than written.**
+  `useMediaQuery` now has its own module, read by the preferred scheme, reduced
+  transparency and this breakpoint; and the breakpoint itself comes from the
+  generated token export rather than being retyped as `850`.
+
+`verify:appearance` goes 47 → 48 and `verify:behaviour` 40 → 42.
+
 **Two tests were caught being unable to fail**, both in the same file and both
 found by strengthening rather than by running. A page header's description is
 hidden by a CSS-module rule, and jsdom applies no CSS — `toBeInTheDocument` on

@@ -1,0 +1,38 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+
+.wrap {
+  display: grid;
+  min-block-size: 0;
+  grid-template-columns: minmax(0, $cr-layout-sidebar-width) minmax(0, 1fr);
+  gap: $cr-spacing-md;
+}
+
+/* "Frost list pane; Haze detail surface." The list is an intermediate surface
+   beside the content; the detail is the content, so it takes the protective
+   fill a reading surface owes its text rather than a material of its own. */
+.list {
+  @include material.frost;
+
+  min-inline-size: 0;
+  border-radius: $cr-shape-content-radius;
+}
+
+.detail {
+  @include material.haze-fill;
+
+  min-inline-size: 0;
+  padding: $cr-spacing-lg;
+  border-radius: $cr-shape-content-radius;
+}
+
+/* "Collapses to a stack below the layout breakpoint." One column, and one pane
+   in it: a stack that showed both would be the list and the detail in sequence,
+   which is a page, not a master–detail. */
+.stacked { grid-template-columns: minmax(0, 1fr); }
+
+@include material.opaque-fallback('.list');
+
+@media (forced-colors: active) {
+  .list, .detail { border: 1px solid CanvasText; }
+}

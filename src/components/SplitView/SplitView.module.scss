@@ -1,0 +1,4 @@
+/* "Inherits per pane." The split view draws nothing: two panes that carried a
+   material of their own would be two materials side by side inside whatever
+   already holds them. What it owns is that a collapsed pane takes no room. */
+.collapsed { display: contents; }

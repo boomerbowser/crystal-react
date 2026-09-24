@@ -34,4 +34,29 @@ describe('OverflowList', () => {
     );
     expect(seen).toBeGreaterThanOrEqual(0);
   });
+
+  /* A fragment is one child to `Children.toArray`, and JSX invites wrapping a
+     row in one. Counted that way the row measures a single item, decides it
+     does not fit, and moves *everything* into the overflow: seven commands
+     render as the words "1 more" and nothing else. It typechecks and throws
+     nothing, so the only symptom is a toolbar that looks empty.
+   *
+   * What is asserted is the number of item cells, because that is the only part
+   * of the count this environment can see: every element here is zero wide, so
+   * nothing ever overflows and the visible items are the same either way. One
+   * cell holding three spans and three cells holding one each look identical to
+   * `getByText` and are not the same row. */
+  it('opens out a fragment rather than counting it as one item', () => {
+    const { container } = renderWithCrystal(
+      <OverflowList renderOverflow={(_hidden, count) => <button type="button">{count} more</button>}>
+        <>
+          <span>Alpha</span>
+          <span>Beta</span>
+          <span>Gamma</span>
+        </>
+      </OverflowList>,
+    );
+    const cells = container.querySelectorAll('[class*="item"]');
+    expect(cells.length).toBeGreaterThanOrEqual(3);
+  });
 });
