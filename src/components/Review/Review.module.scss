@@ -1,0 +1,36 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+.review {
+  @include material.haze-fill;
+
+  display: grid;
+  gap: $cr-spacing-xs;
+  border-radius: $cr-shape-content-radius;
+  padding: $cr-spacing-md;
+  color: var(--cr-text);
+}
+
+.rating { display: flex; }
+.title { margin: 0; font-size: var(--cr-text-subheading-size); font-weight: 750; }
+.body { line-height: var(--cr-text-body-leading); }
+
+.who {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: $cr-spacing-xs;
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+}
+
+/* The author is the one part of the footer that is not metadata about the
+   review — it is who is speaking. */
+.author { color: var(--cr-text); font-weight: 700; }
+
+.badge { font-weight: 700; color: var(--cr-success-ink); }
+
+@media (forced-colors: active) {
+  .review { border: 1px solid CanvasText; }
+  .who, .badge { color: CanvasText; }
+}

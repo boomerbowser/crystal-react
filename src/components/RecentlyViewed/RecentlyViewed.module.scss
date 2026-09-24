@@ -1,0 +1,26 @@
+@use '../../styles/tokens' as *;
+
+.strip { display: grid; gap: $cr-spacing-sm; }
+
+.heading { margin: 0; font-size: var(--cr-text-heading-size); font-weight: 750; }
+
+.scroller { inline-size: 100%; }
+
+.row {
+  display: flex;
+  gap: $cr-spacing-md;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each cell holds its width rather than shrinking to fit: a strip whose cards
+   get narrower as more are added is a strip that reflows every time somebody
+   looks at another product. */
+.cell { flex: 0 0 $cr-layout-min-cell-width; }
+
+.empty { margin: 0; color: var(--cr-muted); }
+
+@media (forced-colors: active) {
+  .empty { color: CanvasText; }
+}

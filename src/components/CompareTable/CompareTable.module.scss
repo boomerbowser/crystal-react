@@ -1,0 +1,30 @@
+@use '../../styles/tokens' as *;
+
+/* "Sticky first column and header." Both, because a comparison read at the
+   twelfth row with the product names scrolled away is four columns of numbers
+   belonging to nobody. */
+.compare :global(thead th) { position: sticky; inset-block-start: 0; z-index: 2; }
+
+.compare :global(th[scope='row']) {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: var(--cr-surface);
+}
+
+/* The corner cell sits at both intersections and has to outrank both. */
+.compare :global(thead th:first-child) { z-index: 3; }
+
+/* "Differences are marked, not only coloured." The word is in the row header's
+   text and this is the second signal — never the first, and never the only. */
+.note { color: var(--cr-muted); font-weight: 500; font-size: var(--cr-text-caption-size); }
+
+/* The tint is found through the mark rather than through a flag on the row,
+   which keeps the two from disagreeing: there is one place that decides a row
+   differs, and both the word and the colour come from it. */
+.compare :global(tbody tr):has(.differs) { background: var(--cr-surface-alt); }
+
+@media (forced-colors: active) {
+  .note { color: CanvasText; }
+  .compare :global(th[scope='row']) { background: Canvas; }
+}

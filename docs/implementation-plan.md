@@ -2134,6 +2134,68 @@ ones is the state that actually misleads.
 announcement's silence on mount, the focus return, and both halves of the summary
 structure.
 
+**Done: the catalogue (7).** `product-card`, `product-gallery`, `review`,
+`rating-summary`, `filter-panel`, `compare-table`, `recently-viewed`.
+
+Four of the seven are mostly composition — `product-gallery` is `Gallery`,
+`rating-summary`'s bars are a `MeterGroup`, `review`'s body is a `Spoiler` and
+its rating a `Rating`, `recently-viewed` is a `ScrollArea` — and that is the
+point rather than a shortcut. `product-gallery` in particular is worth naming as
+a *rename with a narrower API*, because the temptation in a commerce slice is to
+build a second viewer with "product" in its name and discover a year later that
+only one of the two had the focus fix.
+
+**`product-card` is exactly two tab stops**, which is a correction of what almost
+every storefront does. A card wrapped in an anchor gives a screen reader one
+enormous link whose name is every word on the card — "Harbour print A2 39.99
+reduced from 49.99 four point five out of five in stock add to basket" — and
+nests the Add control inside it, which is invalid and behaves differently in
+every browser. It also takes away the two things a reader wants as two decisions.
+The pointer still gets a large target, because the name's hit area is stretched
+over the card by the stylesheet: an affordance, not a second control.
+
+**`compare-table` states its differences in text and computes them.** A reader
+comparing four products across twelve attributes is looking for the rows where
+they differ — that is the entire task — and a table that marks those by tinting
+them has answered the question for people who can see the tint and for nobody
+else. The mark is in the row header's own words, and the tint is found *through*
+the mark with `:has()` so the two cannot disagree. And it is computed rather than
+declared, for the reason the discount badge refuses a percentage: a flag from
+outside is a claim nobody can check, and it goes stale the moment a product joins
+the comparison.
+
+**`filter-panel` announces the set, not the checkbox.** Filtering is the one
+interaction where the reader's action happens here and its whole effect happens
+somewhere else. A checkbox going on says "checked" and nothing about the four
+hundred products that just became eleven — so what is applied and how many
+results it leaves are said together, in one region, because from the reader's
+side they are one fact.
+
+**`rating-summary` states the average and the count**, because either alone is a
+different claim: 4.8 from three people and from three thousand are not the same
+fact, and a bar at 60% could be six votes or six hundred. Nothing rated is the
+*absence* of an average rather than an average of nought — "0 out of 5" tells a
+reader the product was rated badly.
+
+**`recently-viewed` takes Resin**, which is read off Crystal's scroll contract
+rather than chosen: Frost goes on panels and reading surfaces, Resin on compact
+or *horizontal* scrollers. The test asserts it, because that is exactly the sort
+of rule that silently goes the other way when nobody writes down which sentence
+decided it.
+
+**One gate guarded nothing and was found by planting it.** "Renders nothing at
+all when there is nothing to show" asserted `textContent` was empty — and an
+empty strip with a heading and an empty list has no text content either, so it
+passed with the whole guard deleted. It asserts the structure now. Same shape as
+slice M's lesson from the other direction: the assertion was trivially true of
+the failing case, not only of the passing one.
+
+**Planting.** Nine: the card's link and its nested control, the action going with
+availability, the difference in words, the difference being computed, zero
+ratings not being a zero average, the Resin scrollbar, the silent filter panel,
+and the empty strip — twice, once to find that the first version of its test was
+worthless.
+
 **And an export rule, from an asymmetry the review found.** The commerce slice's
 vocabulary was public and the feedback slice's was not — which meant
 `FeedbackStatus`, a *public prop type* of `Alert`, `Banner` and `StatusBadge`,
