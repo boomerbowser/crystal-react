@@ -22,8 +22,8 @@ const ROOT = resolve(process.cwd(), 'src');
 /* What the library is at today. Raise these when you add; never lower them to
    make a build pass, which is the one way a ratchet stops being one. */
 const FLOOR = {
-  filesWithComponent: 134,
-  filesWithArgs: 128,
+  filesWithComponent: 135,
+  filesWithArgs: 129,
   filesWithArgTypes: 15,
   storiesWithPlay: 5,
   actionArgs: 18,

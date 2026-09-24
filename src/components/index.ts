@@ -229,3 +229,4 @@ export * from './Review/index.js';
 export * from './RecentlyViewed/index.js';
 export * from './CompareTable/index.js';
 export * from './FilterPanel/index.js';
+export * from './AddressForm/index.js';

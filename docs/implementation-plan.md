@@ -1863,7 +1863,7 @@ and never trust jsdom for one.** Three of the four above are invisible to a DOM
 that has no layout, and the two worst were geometry. A component whose entire job
 is to show one picture larger needs a gate that has seen the picture.
 
-### N — Commerce (24) — in progress
+### N — Commerce (24) — complete
 
 `price`, `price-range`, `discount-badge`, `quantity-stepper`, `variant-selector`, `stock-indicator`, `product-card`, `product-gallery`, `cart-item`, `cart-summary`, `coupon-input`, `checkout-steps`, `payment-method`, `address-form`, `order-summary`, `shipping-selector`, `delivery-estimate`, `wishlist-button`, `review`, `rating-summary`, `filter-panel`, `sort-select`, `compare-table`, `recently-viewed`.
 
@@ -2195,6 +2195,69 @@ availability, the difference in words, the difference being computed, zero
 ratings not being a zero average, the Resin scrollbar, the silent filter panel,
 and the empty strip — twice, once to find that the first version of its test was
 worthless.
+
+**Done: the address form (1).** `address-form`, and it is last because it is the
+one with a scope trap in it.
+
+**The library ships the shape; the product ships the countries.** The catalogue
+puts "countries supported and their field rules" on the product, and that line is
+worth defending rather than quietly ignoring. A design system that ships a table
+of countries has taken on a data set that is wrong the week it is written and
+wrong differently every year after — postcodes change, administrative divisions
+are renamed and abolished, and which countries a shop delivers to is a commercial
+decision this library has no view on. Worse, a wrong table is *invisible*: the
+form renders, and one country's addresses are quietly unusable.
+
+So `commerce/address.ts` publishes `AddressDescriptor` and the renderer honours
+it, and the reference descriptors live in the stories where they are examples
+rather than a source of truth somebody might import. That is a real division
+rather than a dodge: everything hard and general — field order being honoured,
+autofill tokens reaching the controls, required-ness reaching them, validation
+landing on the field it is about — lives in the library and is tested there.
+
+**The country selector is first and is not one of the descriptor's fields.**
+Everything below it is decided by it, so a country picked last is a form filled
+in wrong and then rearranged under the reader's hands. The story shows three
+countries that genuinely disagree, and Japan is the one that makes the case:
+addresses are written largest-first with the postcode leading, so a single
+hard-coded form has that country backwards for every reader in it.
+
+**`autoComplete` is required on a descriptor field, not optional**, and it goes
+on selects as well as inputs. Autofill that completes three of four fields and
+stops is worse than none, because the reader has to find the one it missed. The
+order test reads the tokens rather than the labels, which is both the sturdier
+signal and the more meaningful one: the tokens are a fixed vocabulary, so it
+asserts what each position *is* rather than what a fixture happened to call it.
+
+**Planting.** Four: the field order (against one fixed order for every country),
+the tokens, the tokens on a select, and validating while the reader is still
+typing — which is telling somebody off for not having finished.
+
+---
+
+**Slice N is complete: 24 of 24, and the library is at 247 of 285.**
+
+Three things are worth carrying out of it.
+
+1. **Two false header sentences, both caught by measuring rather than reading.**
+   `NumberInput` claimed React Aria gives a `spinbutton` with `aria-valuenow`;
+   `Button`'s new `isSelected` claimed to render the appearance Crystal specifies
+   for a pressed action. Neither was true, and the second has a cause worth
+   knowing: **Crystal styles the element inside `@layer crystal.component`, and a
+   CSS-module class in this package is unlayered, so the package's own rule wins
+   without a specificity contest.** That is what cascade layers are for, and it
+   means any Crystal element-selector recipe silently loses here. Before writing
+   "Crystal already does X", open it and measure.
+2. **Crystal has two selection vocabularies and they are not interchangeable.** A
+   selected *button* takes the primary reading pad and weight 800; a selected
+   *tab* takes the weight alone. An action in an on state gets the fill; a choice
+   among peers gets the weight. Where there is no label to weight at all — a
+   thumbnail, a swatch — the pad is what is left, and it is never an outline,
+   because an outline at an offset is how focus is drawn.
+3. **R-22 is open and is Meridian's.** The catalogue calls the quantity stepper
+   "a spin button" and React Aria removes that role on purpose, with its own
+   comment: "we can't focus a spin button with VO". Crystal asks for a role the
+   accessible primitive takes away.
 
 **And an export rule, from an asymmetry the review found.** The commerce slice's
 vocabulary was public and the feedback slice's was not — which meant
