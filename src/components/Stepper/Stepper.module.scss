@@ -104,3 +104,72 @@ button.control[data-focus-visible] {
   .step[data-state='current'] .marker { outline: 2px solid Highlight; }
   .step:not(:last-child)::after { background: CanvasText; }
 }
+
+/* ---------------------------------------------------- the pill shape
+ *
+ * The catalogue's `checkout-steps`: "Haze step fills", "steps are pills;
+ * connectors are hairlines". Everything semantic is shared with the marker
+ * shape above — the ordered list, `aria-current`, the state said in words — and
+ * only the drawing differs.
+ *
+ * The marker stays, holding the number or the check mark, but it stops being a
+ * Resin disc and becomes the leading glyph inside the pill: a pill with a
+ * floating disc in it is two materials deep, and Resin never contains Resin.
+ */
+.stepper[data-shape='pill'] .control {
+  @include material.haze-fill(0);
+
+  display: inline-flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  box-sizing: border-box;
+  padding: $cr-spacing-2xs $cr-spacing-sm;
+  border: 1px solid var(--cr-outline);
+  border-radius: $cr-action-radius;
+  min-block-size: $cr-action-min-target;
+  color: inherit;
+}
+
+.stepper[data-shape='pill'] .marker {
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  border: 0;
+  inline-size: auto;
+  block-size: auto;
+  filter: none;
+}
+
+/* "Connectors are hairlines", against the marker shape's 2px track. */
+.stepper[data-shape='pill'] .step:not(:last-child)::after {
+  background: var(--cr-outline);
+}
+
+.stepper[data-shape='pill'][data-orientation='horizontal'] .step:not(:last-child)::after {
+  inset-inline-start: 100%;
+  inset-inline-end: calc(#{$cr-spacing-md} * -1);
+  inset-block-start: 50%;
+  block-size: 1px;
+}
+
+.stepper[data-shape='pill'][data-orientation='vertical'] .step:not(:last-child)::after {
+  inset-block-start: 100%;
+  inset-block-end: calc(#{$cr-spacing-md} * -1);
+  inset-inline-start: calc(#{$cr-action-min-target} / 2);
+  inline-size: 1px;
+}
+
+/* The current step carries the weight, which is the rule everywhere else in
+   Crystal and is already what the marker shape does. The rim thickens with it so
+   the position is legible to somebody who cannot resolve a weight difference. */
+.stepper[data-shape='pill'] .step[data-state='current'] .control {
+  border-width: 2px;
+  border-color: var(--cr-primary);
+  padding: calc(#{$cr-spacing-2xs} - 1px) calc(#{$cr-spacing-sm} - 1px);
+}
+
+@media (forced-colors: active) {
+  .stepper[data-shape='pill'] .control { border: 1px solid CanvasText; }
+  .stepper[data-shape='pill'] .step[data-state='current'] .control { border: 2px solid Highlight; }
+}
+

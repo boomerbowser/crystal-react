@@ -1,0 +1,100 @@
+import { describe, expect, it, vi } from 'vitest';
+import { useRef, useState } from 'react';
+import userEvent from '@testing-library/user-event';
+import { expectNoAxeViolations } from '../../test/axe.js';
+import { renderWithCrystal, screen } from '../../test/render.js';
+import { CartItem } from './CartItem.js';
+
+function Harness({ onRemove }: { onRemove?: () => void } = {}) {
+  const [quantity, setQuantity] = useState(1);
+  return (
+    <CartItem
+      name="Harbour print"
+      nameText="Harbour print"
+      quantity={quantity}
+      onQuantityChange={setQuantity}
+      unitPrice={{ amount: 40, currency: 'GBP' }}
+      subtotal={{ amount: 40 * quantity, currency: 'GBP' }}
+      maxQuantity={5}
+      {...(onRemove === undefined ? {} : { onRemove })}
+    />
+  );
+}
+
+describe('CartItem', () => {
+  /* "Quantity changes announce the new subtotal." The stepper already says the
+     quantity — it is the value of the control being operated. What the reader
+     does not have is what it did to the money, which is why they touched it. */
+  it('announces the new subtotal when the quantity changes', async () => {
+    const user = userEvent.setup();
+    renderWithCrystal(<Harness />);
+    await user.click(screen.getByRole('button', { name: /One more/ }));
+    expect(screen.getByText('2 × Harbour print, £80.00')).toBeInTheDocument();
+  });
+
+  /* A line that renders showing two of something has not just been changed to
+     two. Nothing speaks at rest. */
+  it('says nothing about a quantity it started at', () => {
+    renderWithCrystal(<Harness />);
+    expect(screen.queryByText(/× Harbour print/)).toBeNull();
+  });
+
+  /* The control they pressed is the control that has just been unmounted.
+     Without somewhere to send them, focus falls to the body and a keyboard
+     reader starts again from the top of the page. */
+  it('sends focus somewhere that still exists after removal', async () => {
+    const user = userEvent.setup();
+    function WithReturn() {
+      const after = useRef<HTMLButtonElement>(null);
+      const [gone, setGone] = useState(false);
+      return (
+        <>
+          {gone ? null : (
+            <CartItem
+              name="Harbour print"
+              nameText="Harbour print"
+              quantity={1}
+              onQuantityChange={() => {}}
+              unitPrice={{ amount: 40, currency: 'GBP' }}
+              subtotal={{ amount: 40, currency: 'GBP' }}
+              onRemove={() => setGone(true)}
+              returnFocusTo={after}
+            />
+          )}
+          <button type="button" ref={after}>Checkout</button>
+        </>
+      );
+    }
+    renderWithCrystal(<WithReturn />);
+    await user.click(screen.getByRole('button', { name: 'Remove Harbour print' }));
+    expect(screen.getByRole('button', { name: 'Checkout' })).toHaveFocus();
+    expect(document.body).not.toHaveFocus();
+  });
+
+  /* Thirty lines in a basket, and thirty controls called "Remove". */
+  it('names its remove control after what it removes', () => {
+    renderWithCrystal(<Harness onRemove={vi.fn()} />);
+    expect(screen.getByRole('button', { name: 'Remove Harbour print' })).toBeInTheDocument();
+  });
+
+  /* The subtotal is given, never multiplied here: rounding, bundling and
+     per-line discounts are the product's arithmetic. */
+  it('shows the subtotal it was given', () => {
+    renderWithCrystal(
+      <CartItem
+        name="Harbour print"
+        nameText="Harbour print"
+        quantity={3}
+        onQuantityChange={() => {}}
+        unitPrice={{ amount: 40, currency: 'GBP' }}
+        subtotal={{ amount: 108, currency: 'GBP' }}
+      />,
+    );
+    expect(screen.getByText('£108.00')).toBeInTheDocument();
+  });
+
+  it('has no axe violations', async () => {
+    const { container } = renderWithCrystal(<Harness onRemove={vi.fn()} />);
+    await expectNoAxeViolations(container);
+  });
+});

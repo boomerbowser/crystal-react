@@ -1,0 +1,50 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* "Haze content fill on the surrounding material; content radius." */
+.item {
+  @include material.haze-fill;
+
+  /* Flex rather than a five-column grid, and no container query: the line wraps
+     on its own when the space runs out, which is the same behaviour at any
+     width without a breakpoint anybody has to maintain. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $cr-spacing-md;
+  border-radius: $cr-shape-content-radius;
+  padding: $cr-spacing-md;
+  color: var(--cr-text);
+}
+
+/* The thumbnail is the product's, at the product's size. Crystal publishes no
+   thumbnail scale, and inventing one here is authoring a token in a consumer —
+   so this gives it a radius and a block and nothing else. */
+.media { display: flex; }
+.media img { block-size: auto; border-radius: $cr-shape-content-radius; }
+
+.text { display: grid; gap: $cr-spacing-2xs; flex: 1 1 $cr-layout-min-cell-width; min-inline-size: 0; }
+.name { margin: 0; font-weight: 750; }
+.detail, .unit { margin: 0; color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+
+.quantity { inline-size: auto; }
+.subtotal { margin: 0; font-weight: 750; margin-inline-start: auto; }
+
+/* Updating: the line goes quiet and keeps its figures. A basket line being
+   recalculated is still a line, and a spinner over the top takes away the only
+   numbers the reader had. */
+.item[data-updating] { opacity: 0.72; }
+
+.announcement {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .item { border: 1px solid CanvasText; }
+  .detail, .unit { color: CanvasText; }
+}

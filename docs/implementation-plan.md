@@ -2085,6 +2085,55 @@ unavailable variant surviving, the swatch's name, the absent check mark, and the
 swatch's two halves in a browser — the gap ring and the roundness — each planted
 on its own.
 
+**Done: the cart (4).** `cart-item`, `cart-summary`, `order-summary`,
+`checkout-steps`.
+
+**`checkout-steps` is `Stepper` with a shape**, and the catalogue is why. It
+gives `stepper` "circular markers; connector 2px" on a Haze track and
+`checkout-steps` "steps are pills; connectors are hairlines" — two *drawings* and
+one set of semantics. Writing the semantics twice would be two places for
+`aria-current="step"` and the state wording to drift, and the wording is what
+carries the meaning to anybody not looking at the markers. So `Stepper` gained
+`shape`, and the check mark stays where it already was: `complete` is the one
+place in Crystal the glyph is right, because there it means *validated*.
+
+**`cart-summary` is a description list, and that is the requirement rather than a
+choice.** A summary built from rows of two spans is, to anything that is not a
+pair of eyes, a stream of words and numbers in which "Shipping" and "£3.99" are
+two unrelated pieces of text that happen to be adjacent. `<dl>` says which amount
+belongs to which line for free. The total is marked with `<strong>` rather than
+only drawn larger, because size is what a sighted reader uses to find it and the
+rest need the markup. And "updating" keeps its figures: a total being
+recalculated is still a number, and a spinner over the top takes away the only
+thing the reader had.
+
+**`cart-item` announces the subtotal, not the quantity.** The stepper already
+says the quantity — it is the value of the control being operated. What the
+reader does not have is what it did to the money, which is the reason they
+touched it. The line's subtotal rather than the order's, because this component
+knows one and not the other, and announcing an order total it was never given
+would be guessing. Removal takes a `returnFocusTo` for the reason `Banner` does:
+the control they pressed is the control that has just been unmounted.
+
+**One defect worth naming, because the test that caught it nearly did not.** The
+announcement was written into a `useRef` from an effect — which changes nothing
+on the page, so the live region held the empty string it first rendered with.
+The test that found it asserts the text is *in the document*; a test that had
+asserted on the component's own idea of what it would say would have passed. The
+comment on the `useState` says so, because the next person to reach for a ref
+there will have the same instinct.
+
+**`order-summary`'s mapping is its one judgement.** `pending` is info — waiting
+is the ordinary outcome of placing an order, not a warning about it. `shipped`
+and `delivered` are both success, because a fifth colour for "even better" is a
+distinction with no meaning. `cancelled` is danger, which deserves a second look;
+the word is what is read, and a neutral cancelled order sitting in a list of live
+ones is the state that actually misleads.
+
+**Planting.** Six: the description list, the marked total, the quantity
+announcement's silence on mount, the focus return, and both halves of the summary
+structure.
+
 **And an export rule, from an asymmetry the review found.** The commerce slice's
 vocabulary was public and the feedback slice's was not — which meant
 `FeedbackStatus`, a *public prop type* of `Alert`, `Banner` and `StatusBadge`,

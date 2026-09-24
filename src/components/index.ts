@@ -218,3 +218,7 @@ export * from './CouponInput/index.js';
 export * from './ShippingSelector/index.js';
 export * from './PaymentMethod/index.js';
 export * from './VariantSelector/index.js';
+export * from './CheckoutSteps/index.js';
+export * from './CartItem/index.js';
+export * from './CartSummary/index.js';
+export * from './OrderSummary/index.js';

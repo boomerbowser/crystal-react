@@ -1,0 +1,37 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* "Haze content fill on the surrounding material; content radius." */
+.order {
+  @include material.haze-fill;
+
+  display: grid;
+  gap: $cr-spacing-md;
+  border-radius: $cr-shape-content-radius;
+  padding: $cr-spacing-md;
+  color: var(--cr-text);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $cr-spacing-sm;
+}
+
+.who { display: grid; gap: $cr-spacing-2xs; }
+.reference { margin: 0; font-weight: 750; font-size: var(--cr-text-subheading-size); }
+.placed { margin: 0; color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+
+.actions { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; }
+
+/* A cancelled order is not a live one, and reads quieter without losing the
+   contrast its own words need — the status badge is what carries the state, so
+   this is only the surrounding text stepping back. */
+.order[data-state='cancelled'] .placed { color: var(--cr-muted); }
+
+@media (forced-colors: active) {
+  .order { border: 1px solid CanvasText; }
+  .placed { color: CanvasText; }
+}

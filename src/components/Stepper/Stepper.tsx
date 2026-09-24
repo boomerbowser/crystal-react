@@ -18,6 +18,14 @@
  * one this is; `<ol>` says both for free, and the "of 4" in the name says it
  * again in the place a reader actually hears it.
  *
+ * **Two geometries, because the catalogue names two.** `stepper` is "circular
+ * markers; connector 2px" on a Haze track; `checkout-steps` is "steps are pills;
+ * connectors are hairlines". They are not the same drawing and they are not two
+ * components either — everything above this line is identical between them, and
+ * a second implementation would be a second place for `aria-current` and the
+ * state wording to drift. So the shape is a prop, and `CheckoutSteps` is this
+ * with that prop set and a commerce default for its name.
+ *
  * **Navigable only where navigation is real.** A step with an `onNavigate` is a
  * button; one without is not focusable at all. A disabled-looking control that
  * takes focus and does nothing is worse than one that is plainly inert, and a
@@ -45,6 +53,11 @@ export interface StepperProps {
   onNavigate?: (id: string) => void;
   /** Laid out down the block axis rather than across. */
   orientation?: 'horizontal' | 'vertical';
+  /**
+   * `marker` is the catalogue's `stepper` — circular markers on a Haze track.
+   * `pill` is its `checkout-steps` — pills with hairline connectors.
+   */
+  shape?: 'marker' | 'pill';
   /** Names the list, so two steppers are distinguishable. */
   'aria-label'?: string;
   /**
@@ -63,13 +76,14 @@ const DEFAULT_STATE_LABELS: Record<StepState, string> = {
 };
 
 export function Stepper({
-  steps, onNavigate, orientation = 'horizontal',
+  steps, onNavigate, orientation = 'horizontal', shape = 'marker',
   stateLabels = DEFAULT_STATE_LABELS, className, ...props
 }: StepperProps): React.JSX.Element {
   return (
     <ol
       aria-label={props['aria-label'] ?? 'Progress'}
       data-orientation={orientation}
+      data-shape={shape}
       className={cx(styles['stepper'], className)}
     >
       {steps.map((step, index) => {

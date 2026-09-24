@@ -1,0 +1,53 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* "Haze content fill on the surrounding material; content radius." */
+.summary {
+  @include material.haze-fill;
+
+  border-radius: $cr-shape-content-radius;
+  padding: $cr-spacing-md;
+  color: var(--cr-text);
+}
+
+.lines { display: grid; gap: $cr-spacing-xs; margin: 0; }
+
+.line { display: flex; align-items: baseline; justify-content: space-between; gap: $cr-spacing-md; }
+
+.term { margin: 0; display: flex; flex-direction: column; }
+
+.note { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+
+/* A column of amounts has to line up down its own length, which is what `Price`
+   already does — this only has to stop the flex row from squashing it. */
+.amount { margin: 0; flex: none; }
+
+/* The total is separated by a rule rather than by a gap: a gap is a pause and a
+   rule is a statement that what follows is a different kind of line. */
+.line[data-total] {
+  margin-block-start: $cr-spacing-2xs;
+  padding-block-start: $cr-spacing-sm;
+  border-block-start: 1px solid var(--cr-control-edge);
+  font-size: var(--cr-text-subheading-size);
+}
+
+.empty { margin: 0; color: var(--cr-muted); }
+
+/* Updating: the figures stay and go quiet. Replacing a total with a spinner
+   takes away the only thing the reader had. */
+.summary[data-updating] .lines { opacity: 0.72; }
+
+.announcement {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .summary { border: 1px solid CanvasText; }
+  .note, .empty { color: CanvasText; }
+  .line[data-total] { border-block-start-color: CanvasText; }
+}
