@@ -21,7 +21,7 @@
  */
 import { useId, useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { markerPath, seriesColour, seriesDash, seriesMarker } from '../../charts/channel.js';
-import { chartGeometry } from '../../theme/chartTokens.js';
+import { chartGeometry } from '../../theme/chartGeometry.js';
 import { cx } from '../../styles/cx.js';
 import styles from './ChartLegend.module.scss';
 

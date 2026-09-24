@@ -37,17 +37,16 @@
  * leaving towards. Inert while the recipe is unavailable, and wrong the day it
  * arrives, which is the worst order for a defect to appear in.
  *
- * Those recipes are published in `@crystal-ui/core` 2.1.0, and this library is
- * pinned to `^2.0.0` until that release is out. So the movement is asked for
- * and, until then, does not arrive: `getRecipe` is asked rather than assumed,
- * because `useMotion` throws on a recipe it does not have and it is right to —
- * a movement that silently does nothing is worse than one that says so. A stack
- * with no recipe behaves exactly as a stack under `prefers-reduced-motion`: the
- * state change applies in full and the decoration is absent. Nothing about the
- * focus contract, the back control or the semantics waits for the bump.
+ * Both recipes are Crystal's, published in `@crystal-ui/core` 2.1.0 and
+ * required here. There was a `getRecipe` guard while this library was still
+ * pinned to `^2.0.0` and the recipes were unreachable; it is gone with the
+ * pin, and deliberately, because it was the right shape for exactly one
+ * situation and the wrong shape for every other. A missing recipe is now a
+ * mistake rather than a version skew, and `useMotion` throwing on one is how a
+ * mistake becomes visible. A guard would turn it back into a stack that
+ * silently does not move.
  */
 import { useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
-import { getRecipe } from '../../motion/useMotion.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { useDirection } from '../../theme/hooks.js';
 import { Button } from '../Button/Button.js';
@@ -103,9 +102,6 @@ export function ViewStack({
        the alternative is the document body, which is the top of the page. */
     region.current?.focus();
 
-    /* Asked rather than assumed: see the note above. Absent, the state change
-       has already happened and only the decoration is missing. */
-    if (getRecipe(ARRIVES) === undefined) return;
     void (views.length > was ? playPush : playPop)(ARRIVES);
   }, [views.length, top, playPush, playPop]);
 

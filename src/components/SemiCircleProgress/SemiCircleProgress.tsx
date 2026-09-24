@@ -20,7 +20,7 @@ import {
   forwardRef, useEffect, useId, useRef, type HTMLAttributes, type ReactNode,
 } from 'react';
 import { arcPath } from '../../charts/Radial.js';
-import { chartGeometry } from '../../theme/chartTokens.js';
+import { chartGeometry } from '../../theme/chartGeometry.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';

@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ViewStack } from './ViewStack.js';
+import { useState } from 'react';
+import { ViewStack, type StackedView } from './ViewStack.js';
+import { Button } from '../Button/Button.js';
 
 const meta = {
   title: 'Screens/ViewStack',
@@ -53,3 +55,37 @@ export const Pushed: Story = {
     ],
   },
 };
+
+/* Drivable, because the thing worth checking about a stack is what happens
+   *between* two states and a static story has only one. A push and a pop are
+   the same recipe pointing opposite ways, and nothing short of pushing and
+   then popping can tell whether the second one points the other way. */
+function Drivable(): React.JSX.Element {
+  const [depth, setDepth] = useState(1);
+  const views: StackedView[] = [
+    {
+      id: 'inbox',
+      label: 'Inbox',
+      children: (
+        <div style={{ padding: 16 }}>
+          <Button onPress={() => { setDepth(2); }}>Open the message</Button>
+        </div>
+      ),
+    },
+    {
+      id: 'message',
+      label: 'The quarterly figures',
+      children: <p style={{ padding: 16 }}>They are attached.</p>,
+    },
+  ];
+
+  return (
+    <ViewStack
+      views={views.slice(0, depth)}
+      onPop={() => { setDepth(1); }}
+      data-testid="stack"
+    />
+  );
+}
+
+export const Drives: Story = { render: () => <Drivable /> };

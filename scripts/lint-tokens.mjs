@@ -42,7 +42,7 @@ const GENERATED = new Set(['src/styles/_tokens.scss', 'src/theme/tokens.generate
  *
  * A file here still owes a header saying which release it was copied from and a
  * test that fails when the installed core starts publishing the values itself. */
-const TRANSCRIBED = new Set(['src/theme/chartTokens.ts']);
+const TRANSCRIBED = new Set([]);
 
 const COLOUR = /#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\bhsla?\s*\(/;
 /* A length with a unit that is not a bare 0 or a 1px hairline. */

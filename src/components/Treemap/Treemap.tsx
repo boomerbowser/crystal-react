@@ -24,7 +24,7 @@ import { hierarchy, treemap as d3treemap } from 'd3-hierarchy';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
 import { seriesColour } from '../../charts/channel.js';
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
-import { chartGeometry } from '../../theme/chartTokens.js';
+import { chartGeometry } from '../../theme/chartGeometry.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Treemap.module.scss';
 

@@ -12,7 +12,7 @@
  * of the distribution, and a scale that flattens it is a scale that answers the
  * question before the reader asks it.
  */
-import { chartGeometry } from '../theme/chartTokens.js';
+import { chartGeometry } from '../theme/chartGeometry.js';
 
 export const INTENSITY_STEPS = chartGeometry.intensitySteps;
 

@@ -10,7 +10,7 @@
  * real stroke — that is the one place the two are not the same thing.
  */
 import { arc as d3arc, pie as d3pie } from 'd3-shape';
-import { chartGeometry } from '../theme/chartTokens.js';
+import { chartGeometry } from '../theme/chartGeometry.js';
 
 export interface Wedge {
   name: string;

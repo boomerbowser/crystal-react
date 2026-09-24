@@ -23,7 +23,7 @@ import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
 import {
   INTENSITY_STEPS, intensityFill, intensityInk, intensityStep,
 } from '../../charts/intensity.js';
-import { chartGeometry } from '../../theme/chartTokens.js';
+import { chartGeometry } from '../../theme/chartGeometry.js';
 import { cx } from '../../styles/cx.js';
 import styles from './CalendarHeatmap.module.scss';
 

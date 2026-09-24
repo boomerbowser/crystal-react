@@ -26,7 +26,7 @@ import { markerPath, seriesColour, seriesMarker } from '../../charts/channel.js'
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
 import { useMarkTooltip, type MarkTip } from '../../charts/useMarkTooltip.js';
 import { scaleLinear } from '../../charts/scales.js';
-import { chartGeometry } from '../../theme/chartTokens.js';
+import { chartGeometry } from '../../theme/chartGeometry.js';
 import { MARK_TARGET } from '../../charts/target.js';
 import { cx } from '../../styles/cx.js';
 import styles from './ScatterChart.module.scss';

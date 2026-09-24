@@ -23,7 +23,7 @@ import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurfa
 import { seriesColour } from '../../charts/channel.js';
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
 import { scaleLinear } from '../../charts/scales.js';
-import { chartGeometry } from '../../theme/chartTokens.js';
+import { chartGeometry } from '../../theme/chartGeometry.js';
 import { MARK_TARGET } from '../../charts/target.js';
 import { cx } from '../../styles/cx.js';
 import styles from './NetworkGraph.module.scss';

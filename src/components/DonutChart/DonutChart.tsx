@@ -18,7 +18,7 @@
  */
 import { type ReactNode } from 'react';
 import { PieChart, type PieChartProps } from '../PieChart/PieChart.js';
-import { chartGeometry } from '../../theme/chartTokens.js';
+import { chartGeometry } from '../../theme/chartGeometry.js';
 
 export interface DonutChartProps extends Omit<PieChartProps, 'hole'> {
   /** As a proportion of the radius. Crystal's declared thickness by default. */

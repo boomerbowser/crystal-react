@@ -22,7 +22,7 @@ import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurfa
 import { Axes, type AxisTick } from '../../charts/Axes.js';
 import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
 import { scaleBand, scaleLinear } from '../../charts/scales.js';
-import { chartGeometry } from '../../theme/chartTokens.js';
+import { chartGeometry } from '../../theme/chartGeometry.js';
 import { cx } from '../../styles/cx.js';
 import styles from './WaterfallChart.module.scss';
 

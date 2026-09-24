@@ -23,7 +23,7 @@
  * Six of each, because the scale is six. A seventh series repeats the first
  * colour, which is exactly when the second channel stops being a courtesy.
  */
-import { CHART_SERIES_COUNT } from '../theme/chartTokens.js';
+import { CHART_SERIES_COUNT } from '../theme/chartGeometry.js';
 
 export { CHART_SERIES_COUNT };
 

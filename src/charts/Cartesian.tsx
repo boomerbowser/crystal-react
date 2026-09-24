@@ -10,7 +10,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { line as d3line, area as d3area, curveLinear, curveMonotoneX } from 'd3-shape';
 import { markerPath, seriesColour, seriesDash, seriesMarker } from './channel.js';
-import { chartGeometry } from '../theme/chartTokens.js';
+import { chartGeometry } from '../theme/chartGeometry.js';
 import type { MarkProps } from './useMarkNavigation.js';
 import { MARK_TARGET } from '../charts/target.js';
 import styles from './Cartesian.module.scss';

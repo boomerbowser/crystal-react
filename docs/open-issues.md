@@ -3,7 +3,20 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Six entries, and none is ordinary work.**
+**Four entries, and none is ordinary work.**
+
+**R-20 and R-23 closed on 24 September 2026**, when `@crystal-ui/core@2.1.0` was
+published and this library's dependency moved to `^2.1.0`. Both were designed to
+announce their own obsolescence and both did: the chart shim carried a test
+whose only job was to fail the day the installed core began publishing the
+series scale, and it was the single failure in a suite of 1692 on the bump. All
+thirteen transcribed values matched their published tokens exactly, which is the
+only reassuring way for a transcription to end. `chartTokens.ts` is gone;
+`chartGeometry.ts` reads the same numbers from the generated export, where they
+cannot go stale. The view stack's `getRecipe` guard is gone with it, and the
+check it was waiting for — that a pop is a push mirrored, and right-to-left a
+push mirrored again — is in `verify:behaviour`, read from the running
+animation's first keyframe across all four combinations.
 
 **R-17** has one part left and it is not in this repository's hands. All three
 of its items are answered: every story file declares `meta.component`; the
@@ -14,11 +27,10 @@ remains is that `react-docgen` cannot resolve a component's *own* inherited
 props, and both routes to an extractor that can are closed until one runs on
 TypeScript 7.
 
-**R-19** is a simplification that 2.1.0 makes possible and that cannot start
-until it is published. **R-20** is the same wait from the other side: a table of
-2.1.0's values carried here so slice K could be built at all. **R-23** is the
-third of that family and the plainest: a component here asks Crystal for two
-recipes that exist, in a version this library cannot yet resolve.
+**R-19** is the last of the family that waited on 2.1.0, and the only one that
+did not close with the bump: it is a judgement about each place this library
+paints a Resin control, not a deletion, and it asks to be measured before it is
+made.
 
 **R-22** is a disagreement rather than a gap: the catalogue asks a component for
 an ARIA role that the accessible primitive underneath it removes on purpose, and
@@ -414,50 +426,6 @@ textually.
 
 ---
 
-## R-20 · Crystal 2.1.0's chart vocabulary is transcribed here
-
-**Opened 23 September 2026, building slice K. Blocked on `@crystal-ui/core@2.1.0`
-being published.**
-
-Crystal 2.1.0 publishes the vocabulary charts are specified in: a six-colour
-series scale per palette per mode, a five-step intensity ramp with the ink
-measured for each step, and the stroke, point, hairline, bar-radius, cell-gap,
-ring-thickness, fill-opacity, link-opacity and gauge-sweep values the catalogue
-has referred to since 2.0 as though they existed. This library installs 2.0.0
-from npm, which publishes none of it.
-
-**So it is carried here**, in `src/theme/chartTokens.ts`. Without it every chart
-in the slice would paint nothing: a custom property that resolves to nothing
-throws no error and logs no warning, which is the failure
-`published-properties.test.tsx` exists to catch and the reason the shim publishes
-the properties rather than the charts falling back to literals.
-
-**What is duplicated is the output, not the derivation.** Crystal computes the
-scale from each palette's seed hue and asserts four things about the result
-across all twelve palette-and-mode combinations; re-implementing that arithmetic
-here would be a second implementation of a formula, which CONTRACT §1 forbids for
-the reason it always gives. A table of the values it produced cannot diverge
-silently — it can only be stale.
-
-**It removes itself.** `chartTokens()` yields nothing for a property the
-installed resolver already publishes, so the day the dependency moves to `^2.1.0`
-the whole file is inert. `chartTokens.test.ts` has a test whose only job is to
-fail then: *"is still needed: the installed core publishes no series scale"*.
-
-**`lint:tokens` knows about it.** The file is in a `TRANSCRIBED` set beside the
-`GENERATED` one, which is deliberately a list rather than a per-line exemption:
-the point is that the set is countable, that each entry is owed an open issue,
-and that it is supposed to be empty again after the next dependency bump.
-
-**Closing it needs** `@crystal-ui/core@2.1.0` on npm, then: bump the dependency,
-delete `src/theme/chartTokens.ts`, replace `chartGeometry` with
-`crystalTokens['chart.*']` from `tokens.generated.ts`, drop the `TRANSCRIBED`
-entry from `scripts/lint-tokens.mjs`, and re-run the four browser gates — the
-values are identical, so nothing should move, and if something does the table had
-gone stale and this entry is why.
-
----
-
 ## R-21 · No chart has an enter motion, and the catalogue asks three of them for one
 
 *(Opened 23 September 2026, closing out slice K.)*
@@ -541,44 +509,3 @@ typable numeric field whose bounds are announced — or Crystal states that the
 role is required and accepts what it costs on VoiceOver. The first is very
 likely right, but it is a change to a published specification, and this library
 does not get to make one by shipping something else and saying nothing.
-
-## R-23 · The view stack asks for a movement it cannot reach yet
-
-`ViewStack` is built against `view-push-in` and `view-push-out` — Crystal's
-recipes for a view arriving along the reading direction, and for the view it
-covers travelling a fraction of that distance behind it. They were authored in
-core for this component, because the catalogue had named the view stack since
-2.0 and published nothing it could move with: the nearest recipe was `page-in`,
-which arrives forward on the block axis and says "new location" where a stack
-means "one step deeper".
-
-They ship in `@crystal-ui/core@2.1.0`. This library is pinned to `^2.0.0`, so
-today `getRecipe('view-push-in')` returns nothing here.
-
-**Why it matters, and why it is not urgent.** `useMotion` throws on a recipe it
-does not have, and that is the right behaviour — a movement that silently does
-nothing is a defect nobody can see. So `ViewStack` asks rather than assumes, and
-without the recipe it behaves exactly as it does under
-`prefers-reduced-motion`: the push happens, focus moves, the back control works,
-and the decoration is absent. Nothing in the accessibility contract waits for
-this. What is missing is the thing a reader would notice and could not name — a
-stack whose depth is legible from the way it moves.
-
-**One part of it cannot be verified until then, and that is the part worth
-watching.** A push and a pop are the same recipe pointing opposite ways, so the
-component holds two motion hooks with fixed orientations rather than one whose
-mirror is recomputed — a single hook would animate a pop with the push's
-orientation and arrive from the edge it was leaving towards. That is exactly the
-kind of claim this repository plants red before trusting, and it cannot be
-planted: with no recipe to resolve, both paths do nothing and both look
-identical. When 2.1.0 lands, the pop direction is a browser check — push, pop,
-and assert the arriving view enters from opposite edges — and it should be
-planted by swapping the two hooks over before it is believed.
-
-**Where.** `src/components/ViewStack/ViewStack.tsx`, the `getRecipe` guard;
-`core/tokens/motion-recipes.json` and `core/tokens/catalogue/13-screens.json` in
-the design system.
-
-**What closing it takes.** Meridian publishes 2.1.0; this library's dependency
-moves to `^2.1.0` with R-19; the guard comes out, because by then the recipe is
-a requirement rather than a hope, and a missing one should throw again.

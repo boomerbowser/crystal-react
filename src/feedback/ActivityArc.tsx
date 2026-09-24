@@ -25,7 +25,7 @@
  */
 import { type ReactNode } from 'react';
 import { arcPath } from '../charts/Radial.js';
-import { chartGeometry } from '../theme/chartTokens.js';
+import { chartGeometry } from '../theme/chartGeometry.js';
 import { cx } from '../styles/cx.js';
 import styles from './ActivityArc.module.scss';
 

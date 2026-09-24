@@ -27,7 +27,7 @@ import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
 import { useMarkTooltip, type MarkTip } from '../../charts/useMarkTooltip.js';
 import { scaleBand, scaleLinear, stackedDomain, valueDomain } from '../../charts/scales.js';
 import type { ChartSeries } from '../../charts/types.js';
-import { chartGeometry } from '../../theme/chartTokens.js';
+import { chartGeometry } from '../../theme/chartGeometry.js';
 import { cx } from '../../styles/cx.js';
 import styles from './BarChart.module.scss';
 

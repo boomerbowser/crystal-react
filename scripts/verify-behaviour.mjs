@@ -859,6 +859,74 @@ for (const { edge, flush, square } of EDGES) {
   }
 }
 
+/* -------------------------------------------- a stack that knows which way
+ *
+ * "A pop is a push mirrored, and right-to-left is a push mirrored again."
+ *
+ * This is R-23's check, and it could not be written until `@crystal-ui/core`
+ * 2.1.0 was published: with no `view-push-in` to resolve, both directions did
+ * nothing and looked identical, so the claim was unfalsifiable rather than
+ * untested. Two motion hooks with fixed orientations were written on the
+ * strength of the argument alone — a single hook would animate a pop with the
+ * push's orientation, arriving from the edge it was leaving towards — and an
+ * argument is not evidence.
+ *
+ * Read from the running animation's first keyframe rather than from a sampled
+ * position, because a position mid-flight is a race and a keyframe is a fact.
+ */
+{
+  const startsAt = async (dir, action) => {
+    await page.goto(
+      `${ORIGIN}/iframe.html?id=screens-viewstack--drives&viewMode=story&globals=direction:${dir}`,
+      { waitUntil: 'networkidle' },
+    );
+    await page.waitForSelector('#storybook-root section[aria-label]');
+    await page.waitForTimeout(300);
+
+    await page.getByRole('button', { name: 'Open the message' }).click();
+    if (action === 'pop') {
+      await page.waitForTimeout(900);
+      await page.getByRole('button', { name: /Back to/ }).click();
+    }
+    await page.waitForTimeout(90);
+
+    return page.evaluate(() => {
+      const view = document.querySelector('#storybook-root section[aria-label]');
+      const running = view?.getAnimations()[0];
+      if (!running) return null;
+      let first;
+      try {
+        first = running.effect.getKeyframes().map((k) => k.transform).filter(Boolean)[0];
+      } catch { return null; }
+      const travel = /translateX\((-?[\d.]+)%\)/.exec(first ?? '');
+      return travel ? Number(travel[1]) : null;
+    });
+  };
+
+  const ltrPush = await startsAt('ltr', 'push');
+  const ltrPop = await startsAt('ltr', 'pop');
+  const rtlPush = await startsAt('rtl', 'push');
+  const rtlPop = await startsAt('rtl', 'pop');
+
+  const signs = [ltrPush, ltrPop, rtlPush, rtlPop];
+  record(
+    'a pushed view arrives from the edge the stack is moving away from',
+    signs.every((one) => typeof one === 'number' && one !== 0)
+      /* A pop is a push mirrored. */
+      && Math.sign(ltrPush) === -Math.sign(ltrPop)
+      /* Right-to-left is a push mirrored again. */
+      && Math.sign(ltrPush) === -Math.sign(rtlPush)
+      /* Which leaves the fourth determined, and worth asserting because a
+         reorientation applied twice is the case a sign flip gets wrong. */
+      && Math.sign(rtlPush) === -Math.sign(rtlPop)
+      /* Reading direction: a left-to-right push comes from the right. */
+      && ltrPush > 0,
+    `the arriving view starts at ltr push ${ltrPush}%, ltr pop ${ltrPop}%, rtl push `
+    + `${rtlPush}%, rtl pop ${rtlPop}%. Two of these pointing the same way is a stack `
+    + 'whose back gesture arrives from the edge it is leaving towards',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));
