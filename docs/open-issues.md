@@ -417,6 +417,39 @@ today, and deleting a rule this library needs because the library "now ships it"
 is how a component stops looking like Crystal in a version nobody is running
 yet.
 
+**The measurement is done, for `Button`, and it changes the shape of the
+question.** 24 September 2026, against 2.1.0 installed: a computed-style diff
+between this library's `Button` and a `.cr-button.primary` planted into the same
+page. They agree on background, colour, radius, border, padding, box-shadow,
+backdrop-filter, the `::before` reading pad and the `::after` sheen — everything
+the Resin recipe is made of. They differ on exactly two properties:
+
+| | this library | core 2.1.0 renders |
+| --- | --- | --- |
+| `min-height` | 44px | 48px |
+| `font-weight` | 700 | 750 |
+
+**Both differences are core disagreeing with itself, not this library drifting.**
+`.cr-button` in `@layer crystal.reset` sets 44px and 750; `:is(button,
+a.cr-button)` in `@layer crystal.component` sets 48px, and a later layer wins
+regardless of specificity, so the reset rule never renders. The published token
+says 44px, this library reads it, and the web preview has always drawn 48px.
+That is filed against the design system as **D-20**, and R-19 should not move
+until it is answered: adopting a value that core's own token contradicts would
+be adopting the bug.
+
+**And the duplication is not what it looked like.** The premise was that this
+library carries a second copy of a surface core now ships, and that one of them
+can go. It cannot go by deletion: this library's components render
+`<button class="_button_hash">` and core's control surface is keyed on
+`.cr-button`, so deleting the library's rules leaves the components unpainted
+rather than falling through to Crystal's. The real options are to have components
+wear Crystal's class names as well as their own — which makes core the painter
+and leaves this library only what is genuinely React-shaped — or to keep both
+and add a gate that diffs them so they cannot part. The first is a sweep across
+roughly twenty components and changes what ships; the second is cheap and
+catches the next D-20 automatically. Neither is a deletion.
+
 **Worth measuring first, the way D-11's third divergence finally was:** render a
 story with and without this library's own control CSS, against 2.1.0, and diff
 computed style. A static read of two stylesheets could not answer the same
