@@ -85,6 +85,27 @@ export const Gallery = forwardRef<HTMLDivElement, GalleryProps>(function Gallery
     }
   }, [active, open]);
 
+  /* Closing returns focus to the thumbnail the reader ended on.
+   *
+   * React Aria restores focus to the thumbnail they *opened*, which is the
+   * right default and the wrong answer here: after moving through the set, that
+   * thumbnail is no longer the selected one, so focus would sit on one picture
+   * while the strip's roving cursor sat on another — and the next arrow key
+   * would jump from somewhere the reader is not.
+   *
+   * Claiming it synchronously is not a race with the restoration. React Aria
+   * defers on purpose: it restores inside a `requestAnimationFrame` and only if
+   * focus is still on the body by then, on the reasoning that anything else
+   * means focus "has been purposefully moved elsewhere". This is that move. The
+   * guarantee that focus never lands on the body is still the dependency's;
+   * only the destination is ours. */
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    const closing = wasOpen.current && !open;
+    wasOpen.current = open;
+    if (closing) thumbs.current.get(active)?.focus();
+  }, [active, open]);
+
   const move = useCallback((to: number) => {
     if (items.length === 0) return;
     setActive(Math.min(items.length - 1, Math.max(0, to)));

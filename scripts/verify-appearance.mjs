@@ -659,6 +659,104 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
+/* ------------------------------------------- selection is not a focus ring
+ *
+ * A gallery thumbnail has no label to weight, so Crystal's other half of the
+ * selection rule applies: the reading pad is tinted in `--cr-primary` with the
+ * feather off, exactly as core paints a selected control. The check is that the
+ * selected thumbnail differs from an unselected one *and* that the difference
+ * is not an outline — a 2px primary outline is how Crystal paints focus, so a
+ * selection drawn that way is a thumbnail that looks focused, and goes on
+ * looking focused after focus has left the strip. */
+{
+  await open('media-gallery--a-set', '[role="option"]');
+  const marks = await page.evaluate(() => {
+    const [selected, other] = document.querySelectorAll('[role="option"]');
+    if (!selected || !other) return null;
+    const pad = (el) => getComputedStyle(el, '::before').backgroundColor;
+    const ring = (el) => getComputedStyle(el).outlineStyle;
+    return {
+      differs: pad(selected) !== pad(other),
+      ringed: ring(selected) !== 'none',
+      sameWidth: Math.round(selected.getBoundingClientRect().width)
+        === Math.round(other.getBoundingClientRect().width),
+    };
+  });
+  record(
+    'a selected thumbnail is tinted, not outlined',
+    marks !== null && marks.differs && !marks.ringed && marks.sameWidth,
+    `the selected thumbnail's pad ${marks?.differs ? 'differs' : 'matches'}, it is `
+    + `${marks?.ringed ? '' : 'not '}outlined, and selecting it `
+    + `${marks?.sameWidth ? 'moves nothing' : 'resizes the thumbnail'}. An outline is what focus `
+    + 'is drawn with; two states drawn alike are one state',
+  );
+}
+
+/* ---------------------------------------------- a lightbox has a picture in it
+ *
+ * Two claims in one place, because they failed as one. The item is laid out at
+ * a real size, and a zoomed item is reachable from a scroll position of zero.
+ *
+ * The first is here because it shipped false. `max-inline-size: 100%` on the
+ * picture resolved against an item that was itself sized by the picture, and a
+ * cyclic percentage resolves against zero: the item measured 0x0 and the viewer
+ * showed nothing, in every browser, while every unit test passed — jsdom
+ * measures nothing, so it had no size to disagree with. A component whose whole
+ * job is to show one picture larger needs a gate that has seen the picture.
+ *
+ * The second is the claim about panning. A scroll container scrolls forward
+ * from its content origin and a scroll position cannot go negative, so an
+ * enlargement that grows in both directions from the centre puts half of itself
+ * where nothing can reach it — a transform does exactly that, and so does a
+ * centring rule. Both halves are measured at scrollLeft/scrollTop zero, which
+ * is where a reader starts. */
+{
+  await open('media-lightbox--from-a-thumbnail', '#storybook-root button');
+  await page.locator('#storybook-root button').first().click();
+  await page.waitForSelector('[role="dialog"]');
+  await page.waitForTimeout(400);
+
+  const measure = () => page.evaluate(() => {
+    const picture = document.querySelector('[role="dialog"] img');
+    if (!picture) return null;
+    const frame = picture.closest('div')?.parentElement;
+    if (!frame) return null;
+    const p = picture.getBoundingClientRect();
+    const f = frame.getBoundingClientRect();
+    return {
+      picture: [Math.round(p.width), Math.round(p.height)],
+      fromOrigin: [Math.round(p.left - f.left), Math.round(p.top - f.top)],
+      pannable: [frame.scrollWidth - frame.clientWidth, frame.scrollHeight - frame.clientHeight],
+      scrolled: [frame.scrollLeft, frame.scrollTop],
+    };
+  });
+
+  const fit = await measure();
+  record(
+    'a lightbox lays its picture out at a real size',
+    fit !== null && fit.picture[0] > 200 && fit.picture[1] > 200,
+    `the picture measures ${fit?.picture?.join('x')}. A percentage limit against a `
+    + 'container the picture itself sizes is a cyclic percentage, and resolves to zero',
+  );
+
+  const zoomIn = page.getByRole('button', { name: 'Zoom in' });
+  await zoomIn.click();
+  await zoomIn.click();
+  await zoomIn.click();
+  await page.waitForTimeout(600);
+  const zoomed = await measure();
+  record(
+    'a zoomed lightbox item can be panned to from where the reader starts',
+    zoomed !== null
+      && zoomed.pannable[0] > 100 && zoomed.pannable[1] > 100
+      && zoomed.scrolled[0] === 0 && zoomed.scrolled[1] === 0
+      && zoomed.fromOrigin[0] >= 0 && zoomed.fromOrigin[1] >= 0,
+    `at zoom there is ${zoomed?.pannable?.join('x')} to scroll and the picture starts `
+    + `${zoomed?.fromOrigin?.join(',')} from the frame's origin. A negative offset is a `
+    + 'region no scrollbar, no arrow key and no screen reader can reach',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

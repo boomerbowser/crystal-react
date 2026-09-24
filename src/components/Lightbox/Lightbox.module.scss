@@ -55,20 +55,51 @@
 .actions { display: flex; align-items: center; gap: $cr-spacing-2xs; }
 
 /* The pan. `overflow: auto` is the whole mechanism: the engine's own scrolling,
-   its own scrollbars, its own arrow-key behaviour. */
+   its own scrollbars, its own arrow-key behaviour.
+ *
+ * The item is *not* centred here, and that is deliberate. A scroll container
+ * only ever scrolls forward from its content origin — a scroll position cannot
+ * go negative — so anything a centring rule pushes above or to the left of that
+ * origin is in a region no scrollbar, no arrow key and no screen reader can
+ * reach. Centring belongs inside the item, where it moves the picture within a
+ * box that starts at the origin rather than moving the box itself. */
 .frame {
   overflow: auto;
   display: grid;
-  place-items: center;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
 }
 
+/* The zoom is the item's *size*, not a transform on it.
+ *
+ * A transform paints outside the box without changing it, so a scaled item
+ * leaves the scroll container's content the size it always was: nothing to
+ * scroll, nothing to pan, and half the picture off the edge. Sizing the box is
+ * what gives the platform something to scroll — which is the whole claim this
+ * component makes about panning.
+ *
+ * Both percentages resolve against the grid area, which is definite: the
+ * frame's own width, and the `1fr` row of a wrapper with a set height. So the
+ * item is exactly the frame at 1x and a multiple of it after that, and the
+ * picture inside is contained by a box that always has a real size.
+ *
+ * That definiteness is also the bug this replaces. `max-inline-size: 100%` on
+ * the picture used to resolve against a *content-sized* item — the item's size
+ * depended on the picture and the picture's limit depended on the item — and a
+ * cyclic percentage like that is resolved against zero. The item measured 0x0
+ * in every browser, so the lightbox showed no picture at all while eight unit
+ * tests passed, because jsdom measures nothing and had no size to disagree
+ * with. */
 .item {
-  scale: var(--lightbox-zoom, 1);
-  transform-origin: center;
-  transition: scale calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
-    #{$cr-motion-easing-settle};
+  inline-size: calc(100% * var(--lightbox-zoom, 1));
+  block-size: calc(100% * var(--lightbox-zoom, 1));
+  display: grid;
+  place-items: center;
+  transition:
+    inline-size calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
+      #{$cr-motion-easing-settle},
+    block-size calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
+      #{$cr-motion-easing-settle};
 }
 
 .item :global(img),

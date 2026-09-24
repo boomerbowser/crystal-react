@@ -1,4 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
+import { useState } from 'react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithCrystal, screen } from '../../test/render.js';
 import { Lightbox } from './Lightbox.js';
@@ -26,7 +28,16 @@ describe('Lightbox', () => {
     expect(status).toHaveTextContent('Zoomed to 150 per cent');
 
     await user.click(screen.getByRole('button', { name: 'Zoom out' }));
-    expect(status).toBeEmptyDOMElement();
+    expect(status).toHaveTextContent('Fit to the frame');
+
+    /* The keyboard half, which the first version of this test never pressed a
+       key for. The shortcut is deliberately ignored over a control — `+` on the
+       zoom button would fire twice — so the key goes to the picture. */
+    const picture = screen.getByRole('dialog').querySelector('img');
+    fireEvent.keyDown(picture!, { key: '+' });
+    expect(status).toHaveTextContent('Zoomed to 150 per cent');
+    fireEvent.keyDown(picture!, { key: '-' });
+    expect(status).toHaveTextContent('Fit to the frame');
   });
 
   /* Pan is the platform's: once there is something to pan to, the item's scroll
@@ -66,6 +77,50 @@ describe('Lightbox', () => {
       <Lightbox isOpen label="Harbour at dusk"><img alt="" src="/1.jpg" /></Lightbox>,
     );
     expect(screen.getByRole('button', { name: 'Close Harbour at dusk' })).toBeInTheDocument();
+  });
+
+  /* "Closing returns focus to the thumbnail." React Aria's restoration does
+     this, and nothing asserted it — a claim held by a dependency is still a
+     claim this component makes. */
+  it('returns focus to whatever opened it', async () => {
+    const user = userEvent.setup();
+    function Harness() {
+      const [open, setOpen] = useState(false);
+      return (
+        <>
+          <button type="button" onClick={() => setOpen(true)}>Open the photograph</button>
+          <Lightbox isOpen={open} onOpenChange={setOpen} label="Harbour at dusk">
+            <img alt="" src="/1.jpg" />
+          </Lightbox>
+        </>
+      );
+    }
+    renderWithCrystal(<Harness />);
+    const trigger = screen.getByRole('button', { name: 'Open the photograph' });
+    await user.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    await waitFor(() => { expect(trigger).toHaveFocus(); });
+  });
+
+  /* "Position announced." A dialog's name is read when the reader arrives in
+     it; changing that name while they are already inside announces nothing, so
+     the position has to be said as well as named. */
+  it('says the item out loud when it changes under the reader', () => {
+    const { rerender } = renderWithCrystal(
+      <Lightbox isOpen label="Harbour at dusk" position="1 of 3">
+        <img alt="" src="/1.jpg" />
+      </Lightbox>,
+    );
+    /* Nothing on arrival: the name has just been read. */
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+
+    rerender(
+      <Lightbox isOpen label="The long bridge" position="2 of 3">
+        <img alt="" src="/2.jpg" />
+      </Lightbox>,
+    );
+    expect(screen.getByRole('status')).toHaveTextContent('The long bridge, 2 of 3');
   });
 
   it('closes on Escape', async () => {

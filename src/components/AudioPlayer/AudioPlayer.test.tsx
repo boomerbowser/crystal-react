@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { createRef } from 'react';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen } from '../../test/render.js';
 import { AudioPlayer } from './AudioPlayer.js';
@@ -36,15 +37,15 @@ describe('AudioPlayer', () => {
   /* The element is the product's half — sources, playlists, streaming are all
      done on it — so it is handed over rather than hidden. */
   it('hands the element to the caller', () => {
-    let seen: HTMLAudioElement | null = null;
-    function Probe() {
-      const ref = { current: null as HTMLAudioElement | null };
-      seen = ref.current;
-      return <AudioPlayer label="Episode 4" mediaRef={ref} />;
-    }
-    const { container } = renderWithCrystal(<Probe />);
-    expect(container.querySelector('audio')).not.toBeNull();
-    expect(seen).toBeNull();
+    /* The first version of this test read `ref.current` during the render that
+       creates the ref and asserted it was null, which is true of any component
+       and of no component — it would have passed with `mediaRef` ignored
+       entirely. What the claim is about is what the caller holds *after* the
+       render. */
+    const ref = createRef<HTMLAudioElement>();
+    const { container } = renderWithCrystal(<AudioPlayer label="Episode 4" mediaRef={ref} />);
+    expect(ref.current).not.toBeNull();
+    expect(ref.current).toBe(container.querySelector('audio'));
   });
 
   it('has no axe violations', async () => {

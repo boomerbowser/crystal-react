@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent } from '@testing-library/react';
 import { expectNoAxeViolations } from '../../test/axe.js';
@@ -76,6 +77,19 @@ describe('VideoPlayer', () => {
     screen.getByRole('button', { name: 'Outside' }).focus();
     await user.keyboard(' ');
     expect(played).toBe(0);
+  });
+
+  /* The element is the product's half — sources, tracks, streaming and
+     playlists all happen on it — so it is handed over rather than hidden. */
+  it('hands the element to the caller', () => {
+    const ref = createRef<HTMLVideoElement>();
+    const { container } = renderWithCrystal(
+      <VideoPlayer label="The tour" mediaRef={ref}>
+        <source src="/tour.mp4" type="video/mp4" />
+      </VideoPlayer>,
+    );
+    expect(ref.current).not.toBeNull();
+    expect(ref.current).toBe(container.querySelector('video'));
   });
 
   it('has no axe violations', async () => {

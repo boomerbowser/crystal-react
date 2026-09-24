@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen } from '../../test/render.js';
@@ -50,6 +51,36 @@ describe('Gallery', () => {
     expect(screen.getByRole('dialog', { name: /Harbour at dusk\s*1 of 3/ })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Next' }));
     expect(screen.getByRole('dialog', { name: /The long bridge\s*2 of 3/ })).toBeInTheDocument();
+  });
+
+  /* The name is read on arrival; it is not read again when it changes under a
+     reader whose focus is sitting on the Next button. So the position has to be
+     announced as well as named — the first version of this suite asserted only
+     the name, and passed with nothing announced at all. */
+  it('announces the item it moved to', async () => {
+    const user = userEvent.setup();
+    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    await user.tab();
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    await user.click(screen.getByRole('button', { name: 'Next' }));
+    expect(screen.getByRole('status')).toHaveTextContent('The long bridge, 2 of 3');
+  });
+
+  /* "Closing returns focus to the thumbnail the reader opened — and, if they
+     moved through the set while it was open, to the one they ended on."
+     Returning them to a picture they have since left would be returning them to
+     the wrong place. */
+  it('returns focus to the item the reader ended on', async () => {
+    const user = userEvent.setup();
+    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    await user.tab();
+    await user.keyboard('{Enter}');
+    await user.click(screen.getByRole('button', { name: 'Next' }));
+    await user.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(screen.getByRole('option', { name: 'The long bridge' })).toHaveFocus();
+    });
   });
 
   it('does not offer a way past either end of the set', async () => {

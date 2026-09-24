@@ -26,7 +26,7 @@
  * nobody can see is a feature for people who already know it is there.
  */
 import {
-  useCallback, useId, useRef, useState,
+  useCallback, useEffect, useId, useRef, useState,
   type KeyboardEvent, type ReactNode,
 } from 'react';
 import {
@@ -80,6 +80,35 @@ export function Lightbox({
   const id = useId();
   const [zoom, setZoom] = useState(1);
   const frame = useRef<HTMLDivElement>(null);
+
+  /* What changed, said out loud.
+   *
+   * The item and the zoom share one live region rather than having one each,
+   * because they are one fact — what the reader is looking at — and two regions
+   * would race to describe it.
+   *
+   * The item is in here at all because a dialog's accessible name is read when
+   * the reader arrives in the dialog and is *not* read again when it changes
+   * underneath them. A gallery changes it on every press of Next, with focus
+   * sitting on that button: naming the new picture is necessary and is not
+   * sufficient. */
+  const said = position === undefined ? label : `${label}, ${position}`;
+  const before = useRef<{ zoom: number; said: string } | null>(null);
+  const [announcement, setAnnouncement] = useState('');
+
+  useEffect(() => {
+    const was = before.current;
+    before.current = { zoom, said };
+    /* Nothing on arrival — the name has just been read, and repeating it is
+       noise at the one moment the reader does not need it. */
+    if (was === null) return;
+    if (was.said !== said) { setAnnouncement(said); return; }
+    if (was.zoom !== zoom) {
+      setAnnouncement(zoom > MIN_ZOOM
+        ? `Zoomed to ${Math.round(zoom * 100)} per cent`
+        : 'Fit to the frame');
+    }
+  }, [zoom, said]);
 
   const change = useCallback((by: number) => {
     setZoom((at) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round((at + by) * 100) / 100)));
@@ -156,11 +185,10 @@ export function Lightbox({
 
           {caption ? <p className={styles['caption']}>{caption}</p> : null}
 
-          {/* The zoom, said. The buttons change nothing a screen reader would
-              otherwise notice — the picture is the same picture. */}
-          <span role="status" className={styles['announcement']}>
-            {zoom > MIN_ZOOM ? `Zoomed to ${Math.round(zoom * 100)} per cent` : ''}
-          </span>
+          {/* The zoom and the item, said. Neither changes anything a screen
+              reader would otherwise notice: the picture stays the same picture
+              and the dialog stays the same dialog. */}
+          <span role="status" className={styles['announcement']}>{announcement}</span>
           </div>
         </AriaDialog>
       </Modal>

@@ -1769,10 +1769,23 @@ picture-in-picture, `autoplay` being refused.
   component that read arrow keys itself would answer "what do arrows do here"
   differently depending on the zoom, which is a mode nobody was told about — and
   it is what leaves the arrows free for a gallery to move between items with.
+
+  That only works if the container has something to scroll, and for a while it
+  did not: see the defect below. The zoom is now the item's **size**, not a
+  transform on it, and the item is laid out from the frame's origin rather than
+  centred on it.
 - **`gallery`** — the thumbnails are one tab stop with a roving `tabindex`, the
   same argument the charts make about marks. The position is part of the viewer's
   accessible name, because a reader who cannot see the strip has no other way to
-  know where in the set they are.
+  know where in the set they are — **and is announced as well as named**, because
+  a dialog's name is read when the reader arrives in it and is not read again
+  when it changes underneath them.
+
+  Selection on a thumbnail is Crystal's other half of the selection rule. There
+  is no label to weight, so the selected thumbnail takes the tinted reading pad
+  core paints a selected control with, and explicitly **not** the outline: a 2px
+  primary outline is how Crystal paints focus, and a thumbnail wearing one goes
+  on looking focused after focus has left the strip.
 
 **One extension to an existing component, stated rather than smuggled.**
 `Slider` gained `valueText`, a narrow escape hatch that sets `aria-valuetext`
@@ -1783,8 +1796,7 @@ the formatted one. It had to go on the `<input type="range">` React Aria renders
 inside the thumb, which is the element carrying the `slider` role; an attribute
 on the thumb's own `<div>` lands on a wrapper nothing reads.
 
-**Two gates that guarded nothing, found by planting all twelve of the slice's
-claims red.**
+**Two gates that guarded nothing, found by planting the slice's claims red.**
 
 1. `expect(container.querySelector('[role="group"]')).toBeNull()` — the lightbox
    is portalled to `body`, so a query scoped to the render container finds
@@ -1799,6 +1811,49 @@ And twice more a check identified an element by its position in the DOM and
 reported the wrong thing: the first `[role="status"]` in the player is the
 transport's buffering region, which is empty and always will be. The same
 mistake as slice L's, which is now three times.
+
+**Then a review of the slice found four more, and the worst of them had shipped
+the component's whole purpose broken.** Recorded in full because the pattern is
+the transferable part.
+
+1. **The lightbox showed no picture.** `max-inline-size: 100%` on the item's
+   image resolved against an item that was itself sized by that image — a cyclic
+   percentage, which Chromium resolves against **zero**. The item measured 0×0 in
+   every browser. Eight unit tests passed, because jsdom measures nothing and so
+   had no size to disagree with, and no gate had ever looked at the picture. The
+   fix makes both percentages resolve against the grid area, which is definite
+   for reasons of its own.
+2. **Nothing could be panned to.** `scale` paints outside the box without
+   changing it, so the scroll container saw the content it always had. And a
+   scroll position cannot go negative, so *centring* an oversized child — by
+   transform or by `place-items` — puts half of it where no scrollbar, no arrow
+   key and no screen reader can reach. Both halves are now measured at scroll
+   zero, which is where a reader starts.
+3. **`hands the element to the caller` was vacuous.** It read `ref.current`
+   *during* the render that creates the ref and asserted it was null — true of
+   any component and of no component. It would have passed with `mediaRef`
+   ignored entirely, and it was not among the claims planted because it read like
+   a test of a value rather than of a behaviour. `VideoPlayer` had no such test
+   at all; it has one now.
+4. **`zooms from a control and from the keyboard` never pressed a key.** Half a
+   claim, asserted by its own title.
+
+Two claims also turned out to be held by a dependency and asserted by nobody —
+that closing returns focus to the thumbnail, and that the gallery returns it to
+the thumbnail the reader *ended* on. The first was true and is now tested. The
+second was false: React Aria restores focus to the thumbnail they opened, which
+after moving through the set leaves focus on one picture while the strip's roving
+cursor sits on another. Claiming it synchronously is not a race — React Aria
+restores inside a `requestAnimationFrame` and only if focus is still on the body
+by then, deferring on purpose to anything that "has been purposefully moved
+elsewhere". The guarantee that focus never lands on the body is still the
+dependency's; only the destination is ours.
+
+**The lesson to carry.** Slice L's rule was *plant anything that turns on time or
+on absence*. This slice adds: **plant anything whose subject is a measurement,
+and never trust jsdom for one.** Three of the four above are invisible to a DOM
+that has no layout, and the two worst were geometry. A component whose entire job
+is to show one picture larger needs a gate that has seen the picture.
 
 ### N — Commerce (24)
 
