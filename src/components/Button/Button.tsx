@@ -54,6 +54,20 @@ export interface ButtonProps extends Omit<AriaButtonProps, 'className' | 'style'
   children?: ReactNode;
   variant?: ButtonVariant;
   shape?: ButtonShape;
+  /**
+   * Makes this a toggle: `aria-pressed`, and the appearance Crystal already
+   * specifies for a pressed action — the reading pad in `--cr-primary` with its
+   * feather off, `--cr-on-primary` ink, and the label at weight 800.
+   *
+   * Absent rather than `false` when it is not given, because a button that is
+   * not a toggle must not report a pressed state at all: `aria-pressed="false"`
+   * on an ordinary action tells a reader there is a state here to watch.
+   *
+   * `IconButton` has had this since the actions slice. Having it on one shape
+   * of the same control and not the other is the inconsistency, and Crystal's
+   * own stylesheet has styled `button[aria-pressed=true]` throughout.
+   */
+  isSelected?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -71,7 +85,7 @@ const VARIANT_CLASS: Record<ButtonVariant, string | undefined> = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { children, variant = 'resin', shape = 'pill', className, style, ...props },
+  { children, variant = 'resin', shape = 'pill', isSelected, className, style, ...props },
   forwardedRef,
 ) {
   /* `once` coalesces a repeat of the same recipe while it is still running, so a
@@ -93,6 +107,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     <AriaButton
       {...props}
       ref={mergeRefs<HTMLButtonElement>(scope as never, forwardedRef)}
+      {...(isSelected === undefined ? {} : { 'aria-pressed': isSelected })}
       className={classes}
       {...(style ? { style } : {})}
       onPressStart={(event) => {

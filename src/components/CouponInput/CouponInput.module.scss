@@ -1,0 +1,42 @@
+@use '../../styles/tokens' as *;
+
+.coupon { display: grid; gap: $cr-spacing-xs; }
+
+/* "Field and action share one pill row." The action aligns to the bottom of the
+   row rather than the centre, because the field is taller than its control — it
+   carries a label above and a message below, and centring against the whole
+   field floats the button beside the label instead of beside the input. */
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: $cr-spacing-xs;
+}
+
+.field { flex: 1; min-inline-size: 0; }
+
+/* The applied state is a statement, not a field: there is nothing left to type. */
+.applied {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  margin: 0;
+  font-weight: 750;
+  color: var(--cr-text);
+}
+
+/* A check mark here means validated, which is the one legitimate use of the
+   glyph in Crystal. It never means "selected". */
+.tick { color: var(--cr-success-ink); }
+
+.announcement {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .applied, .tick { color: CanvasText; }
+}

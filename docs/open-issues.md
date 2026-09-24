@@ -3,7 +3,7 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Four entries, and none is ordinary work.**
+**Five entries, and none is ordinary work.**
 
 **R-17** has one part left and it is not in this repository's hands. All three
 of its items are answered: every story file declares `meta.component`; the
@@ -17,6 +17,10 @@ TypeScript 7.
 **R-19** is a simplification that 2.1.0 makes possible and that cannot start
 until it is published. **R-20** is the same wait from the other side: a table of
 2.1.0's values carried here so slice K could be built at all.
+
+**R-22** is a disagreement rather than a gap: the catalogue asks a component for
+an ARIA role that the accessible primitive underneath it removes on purpose, and
+which of the two is right is not this library's call to make quietly.
 
 Closed entries are in [`closed-issues.md`](closed-issues.md), with the reasoning
 intact.
@@ -485,3 +489,53 @@ past which it does not stagger at all — then one implementation here that ever
 chart composes, and a `verify:behaviour` check that it is gone under
 `prefers-reduced-motion: reduce`.
 
+## R-22 · The catalogue asks the quantity stepper for a role React Aria removes
+
+**What the catalogue says.** `core/tokens/catalogue/12-commerce.json`, on
+`quantity-stepper`: "**A spin button**: the value is typable, and the bounds are
+announced when reached."
+
+**What ships.** Not a spin button. `QuantityStepper` is built on React Aria's
+`NumberField`, which computes the spin-button props and then strips every one of
+them before they reach the input:
+
+```js
+// override the spinbutton role, we can't focus a spin button with VO
+role: null,
+'aria-roledescription': !isIOS() ? stringFormatter.format('numberField') : null,
+'aria-valuemax': null,
+'aria-valuemin': null,
+'aria-valuenow': null,
+```
+
+That is `@react-aria/numberfield`'s own source and its own comment, not an
+inference from the rendered output. What arrives instead is an ordinary text
+input with `inputmode="numeric"` and `aria-roledescription="Number field"`, whose
+value is read as its text.
+
+**Why it is not simply a defect here.** The reason React Aria gives is a real
+one: a `spinbutton` cannot be focused with VoiceOver, so honouring the
+catalogue's wording would produce a control that some readers cannot reach at
+all. Trading reachability for a role name is not an improvement, and "material
+specifications may improve, never regress" applies to the accessible surface as
+much as to the visual one.
+
+**What it costs, and what was done about it.** Stripping `aria-valuemin` and
+`aria-valuemax` takes the bounds off the control entirely — so the second half of
+the catalogue's sentence, "the bounds are announced when reached", is not
+something the primitive can deliver either. The component announces them itself,
+in a polite live region, on a change rather than on mount. That part is
+*implemented*, not deferred; it is only the role that is not there.
+
+**Where it also matters.** `NumberInput` has the same primitive underneath and
+the same absence. Its header claimed the opposite until this was found — a stale
+sentence asserting `aria-valuenow` that nobody had checked against the rendered
+output — which is worth recording on its own: a header is a source somebody will
+believe, and this one misled the author of this very component.
+
+**Closing it needs a decision from Meridian**, not a change here. Either the
+catalogue's wording moves to what an accessible number field actually is — a
+typable numeric field whose bounds are announced — or Crystal states that the
+role is required and accepts what it costs on VoiceOver. The first is very
+likely right, but it is a change to a published specification, and this library
+does not get to make one by shipping something else and saying nothing.

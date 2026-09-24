@@ -7,9 +7,17 @@
  * `<input type="number">` silently drops values it cannot parse, formats
  * according to the browser rather than the locale, scrolls the value on a mouse
  * wheel over the field, and announces nothing about its bounds. React Aria gives
- * a `spinbutton` with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`,
- * locale-aware parsing through `@internationalized/number`, and arrow keys that
- * step — which the catalogue requires.
+ * locale-aware parsing through `@internationalized/number` and arrow keys that
+ * step, which is what the catalogue requires.
+ *
+ * What it deliberately does *not* give is the `spinbutton` role. It computes the
+ * spin-button props and then strips them — `role: null`, `aria-valuenow: null`,
+ * `aria-valuemin: null`, `aria-valuemax: null` — with the reason in its own
+ * comment: "we can't focus a spin button with VO". What arrives instead is an
+ * ordinary text input with `inputmode="numeric"` and
+ * `aria-roledescription="Number field"`, and the value is read as the input's
+ * text. This header used to claim the opposite, which is worth naming: a stale
+ * sentence in a header is a source somebody will believe.
  *
  * The steppers are pointer affordances and nothing more. Each is short so the
  * pair reaches the field's height together; making each 44px would make the field

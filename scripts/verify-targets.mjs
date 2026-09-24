@@ -138,6 +138,13 @@ const CASES = [
      to make them smaller still. */
   { story: 'media-media-controls--with-volume-and-skip', selector: '#storybook-root button', why: 'catalogue: pill; 44px targets throughout' },
   { story: 'media-lightbox--from-a-thumbnail', selector: '#storybook-root button', why: 'the control that opens a viewer is an ordinary action' },
+
+  /* Slice N. The quantity stepper is the one entry in the catalogue that says
+     "**both** controls reach 44px" — each one, not the pair, which is the
+     opposite of the decision `NumberInput` makes about its chevrons and for a
+     reason the catalogue states: this is pressed with a thumb, beside a Remove
+     control it must not be mistaken for. */
+  { story: 'commerce-quantity-stepper--default', selector: '#storybook-root button', why: 'catalogue: pill; both controls reach 44px' },
 ];
 
 /* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
@@ -223,7 +230,7 @@ await browser.close();
  * Fewer probes is not a better result. It is the same checks run against less of
  * the library. Raise this when cases are added; lowering it is a deliberate edit
  * somebody makes in the same commit. */
-const LEAST_PROBES = 105;
+const LEAST_PROBES = 107;
 if (probes < LEAST_PROBES) {
   failures.push(
     `${probes} controls were measured, and this suite measured ${LEAST_PROBES} `

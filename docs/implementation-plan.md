@@ -1927,6 +1927,76 @@ day in a zone behind Greenwich, so a single fixture cannot see `toISOString`
 being wrong. Whatever the offset, one of an early and a late instant crosses; in
 UTC itself neither does, which is the one place the defect does not exist.
 
+**Done: the controls (4).** `quantity-stepper`, `wishlist-button`, `sort-select`,
+`coupon-input`.
+
+**The stepper is not `NumberInput` with a different stylesheet**, and the
+difference is one number. `NumberInput` says of its chevrons that "making each
+44px would make the field 88px tall", which is right for a form where the arrow
+keys are the primary route. The catalogue says of this one: "Pill; **both
+controls reach 44px**." A stepper beside a price is pressed with a thumb, on a
+phone, next to a Remove control it must not be mistaken for. Same primitive,
+opposite geometry decision, and neither is a variant of the other.
+
+**Building it found R-22, and a false sentence in this repository.** The
+catalogue calls the stepper "a spin button". React Aria's `NumberField` computes
+the spin-button props and then strips every one of them — `role: null`,
+`aria-valuenow: null`, `aria-valuemin: null`, `aria-valuemax: null` — with the
+reason in its own source comment: "we can't focus a spin button with VO". So the
+catalogue asks for a role the accessible primitive removes on purpose, which is
+Meridian's to resolve rather than this library's to decide quietly.
+
+Two consequences worth separating. The role is *deferred*, filed as R-22. The
+bounds are *not*: stripping `aria-valuemin` and `aria-valuemax` takes them off
+the control entirely, so the live region here is not a nicety over the top of the
+primitive — it is the only thing that conveys them, and "announced when reached"
+is met in full. Announced on a change and never on mount, because a stepper that
+opens at its minimum has not reached anything.
+
+`NumberInput`'s own header had claimed the opposite — that React Aria "gives a
+`spinbutton` with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`" — and
+that sentence is what sent this component's first draft down the wrong road. It
+is corrected. A header is a source somebody will believe, and this one was
+believed by the next person to read it.
+
+**The wishlist button's name does not move.** "A name that says what it will do"
+has two readings and only one is safe: a name that flips to "Remove" once the
+item is saved is announced as "Remove from wishlist, **pressed**", and pressed
+says the item is in the list while the name says pressing is what puts it there.
+The safe reading is that the name is a verb phrase rather than a noun, with
+`aria-pressed` carrying the state — the decision `MediaControls` already made
+about play and pause. The item is in the name too, because thirty controls called
+"Save to wishlist" are thirty identical rows in an element list.
+
+That needed `Button` to gain `isSelected`, which `IconButton` has had since the
+actions slice. Not an invention: Crystal's stylesheet has always specified
+`button[aria-pressed=true]` — the reading pad in `--cr-primary` with its feather
+off, `--cr-on-primary` ink, weight 800 — and having the state on one shape of the
+control and not the other was the inconsistency.
+
+**The sort select announces the ordering** because pressing it silently rewrites
+a list the reader is not looking at. A sighted reader sees the list flip; a
+screen reader hears the select close and then nothing. A select's value and "the
+list beneath you has been reordered" are not the same statement. Everything else
+is `Select`, deliberately.
+
+**The coupon field's answer is the whole component.** It is one of the few places
+in a checkout where a reader has done something and cannot tell whether it
+worked. Failure is an `alert` and success a `status` — the same split the
+feedback slice made between `Alert` and `Banner` — the field applies on Enter as
+well as from the control, and applying disables the action rather than replacing
+it with a spinner, because a control that vanishes under the cursor mid-press is
+one the reader has to find again.
+
+**Planting.** Seven more: the stepper's bound announcement and its silence on
+mount, its refusal of a fraction, its two 44px targets in a real browser, the
+wishlist name staying put, the sort select's silence on mount, the coupon's
+Enter, and its alert-not-status. Two of the tests were also wrong rather than the
+code — a stepper bounded to a single step has no value that is not a bound, so
+the clearing half could never be seen, and the fraction guard turned out to
+reject the decimal separator at the parser rather than round after it, which is
+the stronger behaviour and a different claim.
+
 ### O — Screens (15)
 
 `screen`, `page-header`, `view-stack`, `master-detail`, `split-view`, `command-bar`, `status-bar`, `workspace`, `focus-mode`, `empty-screen`, `error-screen`, `loading-screen`, `offline-screen`, `not-found-screen`, `permission-screen`.

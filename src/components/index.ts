@@ -211,3 +211,7 @@ export * from './PriceRange/index.js';
 export * from './DiscountBadge/index.js';
 export * from './StockIndicator/index.js';
 export * from './DeliveryEstimate/index.js';
+export * from './QuantityStepper/index.js';
+export * from './WishlistButton/index.js';
+export * from './SortSelect/index.js';
+export * from './CouponInput/index.js';
