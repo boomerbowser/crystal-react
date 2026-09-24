@@ -872,6 +872,136 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
+/* ------------------------------------------ what only a browser can be asked
+ *
+ * Four claims the commerce slice makes in its own headers, every one of them a
+ * geometry or a cascade question that jsdom answers `0` to and therefore cannot
+ * be asked in a unit test. They were all true the first time they were
+ * measured. That is exactly when a claim is worth a gate: it is not being fixed
+ * here, it is being stopped from rotting quietly.
+ */
+{
+  await open('commerce-compare-table--default', '#storybook-root table');
+  /* Sticky positions against the nearest *scrolling* ancestor, so this is a
+     question about the whole chain — a stray `overflow` on the table, or a
+     scroll wrapper that stops being the scroller, silently unpins both heads
+     and nothing else notices. The story is wider than it is tall by design, so
+     the gate clamps the scroller rather than hoping the runner's window is
+     narrow. */
+  const pinned = await page.evaluate(() => {
+    const table = document.querySelector('#storybook-root table');
+    const scroller = table.parentElement;
+    scroller.style.maxBlockSize = '180px';
+    scroller.style.maxInlineSize = '380px';
+    const head = table.querySelector('thead th:nth-child(2)');
+    const rowHead = table.querySelector('tbody th[scope="row"]');
+    if (!head || !rowHead) return null;
+    const before = { top: head.getBoundingClientRect().top, left: rowHead.getBoundingClientRect().left };
+    scroller.scrollTop = 120;
+    scroller.scrollLeft = 160;
+    const after = { top: head.getBoundingClientRect().top, left: rowHead.getBoundingClientRect().left };
+    return {
+      travelled: scroller.scrollTop > 0 && scroller.scrollLeft > 0,
+      headHeld: Math.abs(before.top - after.top) < 2,
+      rowHeld: Math.abs(before.left - after.left) < 2,
+      /* A sticky head that is transparent is a head with the rows sliding
+         through it, which is worse than no head at all. */
+      headOpaque: !getComputedStyle(head).backgroundColor.startsWith('rgba(0, 0, 0, 0'),
+      stacked: Number(getComputedStyle(head).zIndex) > Number(getComputedStyle(rowHead).zIndex),
+    };
+  });
+  record(
+    'a compare table keeps both its heads while it is scrolled',
+    pinned !== null && pinned.travelled && pinned.headHeld && pinned.rowHeld
+      && pinned.headOpaque && pinned.stacked,
+    `scrolled both ways, the column head held ${pinned?.headHeld} and the row head `
+    + `${pinned?.rowHeld}. Sticky is resolved against the nearest scrolling ancestor, so `
+    + 'a wrapper that stops scrolling unpins the heads without changing a line of this rule',
+  );
+
+  /* `:has(.differs)` names a CSS-module class from inside a selector. If the
+     transformer does not hash it there, the rule is syntactically perfect,
+     matches nothing, and the row that differs looks exactly like the row that
+     does not — a tint that fails by being absent. */
+  const tint = await page.evaluate(() => {
+    const rows = [...document.querySelectorAll('#storybook-root tbody tr')];
+    const grounds = rows.map((r) => getComputedStyle(r).backgroundColor);
+    return { rows: rows.length, distinct: new Set(grounds).size };
+  });
+  record(
+    'a compare table tints the rows whose values differ',
+    tint !== null && tint.rows > 1 && tint.distinct > 1,
+    `${tint?.rows} rows carry ${tint?.distinct} distinct grounds. A module class named `
+    + 'inside :has() is hashed or it is not, and an unhashed one matches nothing at all',
+  );
+}
+
+{
+  await open('commerce-recently-viewed--default', '#storybook-root ul');
+  /* The sentence this component's header leads with. A horizontal strip that
+     has not been given an axis does not stop scrolling — it hands its overflow
+     to the document, and the whole page starts sliding sideways. */
+  const strip = await page.evaluate(() => {
+    const FOCUSABLE = 'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex="-1"])';
+    const el = document.querySelector('#storybook-root [data-cr-scroll-axis="x"]');
+    const doc = document.scrollingElement;
+    if (!el) return null;
+    return {
+      pageHeld: doc.scrollWidth <= doc.clientWidth + 1,
+      stripScrolls: el.scrollWidth > el.clientWidth + 1,
+      /* The tab stop is conditional by design: five links are already five
+         stops, and a sixth that announces nothing in front of them is noise.
+         So the reachability question is "focusable one way or the other". */
+      reachable: el.querySelector(FOCUSABLE) !== null || el.getAttribute('tabindex') === '0',
+    };
+  });
+  record(
+    'a recently-viewed strip scrolls itself and not the page',
+    strip !== null && strip.pageHeld && strip.stripScrolls && strip.reachable,
+    `the page scrolls sideways: ${!strip?.pageHeld}; the strip scrolls: ${strip?.stripScrolls}. `
+    + 'An overflow nobody claimed becomes the document’s, and a document that scrolls '
+    + 'sideways moves every fixed thing on it',
+  );
+}
+
+{
+  await open('commerce-checkout-steps--default', '#storybook-root ol');
+  /* Resin never contains Resin. In the pill shape the marker stops being a
+     floating disc and becomes the leading glyph, so the pill is the only
+     material in the step. The override has to reach every layer the material
+     mixin set — and a mixin that painted a pseudo-element instead of the
+     element would walk straight through `background: none`. */
+  const pill = await page.evaluate(() => {
+    const ol = document.querySelector('#storybook-root ol');
+    const byClass = (re) => [...ol.querySelectorAll('*')].find((e) => re.test(String(e.className)));
+    const control = byClass(/control/);
+    const marker = byClass(/marker/);
+    if (!control || !marker) return null;
+    const flat = (el) => {
+      const own = getComputedStyle(el);
+      const pad = getComputedStyle(el, '::before');
+      return own.backgroundColor === 'rgba(0, 0, 0, 0)' && own.boxShadow === 'none'
+        && own.backdropFilter === 'none' && pad.content === 'none';
+    };
+    const box = marker.getBoundingClientRect();
+    return {
+      shape: ol.dataset.shape,
+      markerFlat: flat(marker),
+      /* A glyph is as wide as its character; a disc is a 44px target. */
+      markerIsGlyph: box.width < 30,
+      controlFilled: getComputedStyle(control, '::before').content !== 'none',
+    };
+  });
+  record(
+    'a pill step carries one material, not a disc inside a pill',
+    pill !== null && pill.shape === 'pill' && pill.markerFlat && pill.markerIsGlyph
+      && pill.controlFilled,
+    `the marker is flat: ${pill?.markerFlat}, and a glyph rather than a disc: `
+    + `${pill?.markerIsGlyph}. Resin never contains Resin, and an override that misses `
+    + 'one layer of a material leaves the rest of it floating in the pill',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

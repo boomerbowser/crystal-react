@@ -93,6 +93,39 @@ describe('CartItem', () => {
     expect(screen.getByText('£108.00')).toBeInTheDocument();
   });
 
+  /* Two live regions updating in one tick. Both are owed: the stepper's
+     catalogue line asks for the bound, this one's asks for the subtotal. The
+     assertion is that neither replaced the other and that the constraint is
+     ahead of its consequence in the DOM, which is what decides the order a
+     screen reader reads them in. */
+  it('announces the bound and the subtotal, constraint first', async () => {
+    function AtTheBound(): React.JSX.Element {
+      const [quantity, setQuantity] = useState(2);
+      return (
+        <CartItem
+          name="Harbour print"
+          nameText="Harbour print"
+          quantity={quantity}
+          onQuantityChange={setQuantity}
+          unitPrice={{ amount: 40, currency: 'GBP' }}
+          subtotal={{ amount: 40 * quantity, currency: 'GBP' }}
+          maxQuantity={3}
+        />
+      );
+    }
+
+    const user = userEvent.setup();
+    renderWithCrystal(<AtTheBound />);
+    await user.click(screen.getByRole('button', { name: /One more/ }));
+
+    const spoken = screen.getAllByRole('status').map((one) => one.textContent ?? '');
+    const bound = spoken.findIndex((one) => /largest/i.test(one));
+    const money = spoken.findIndex((one) => /120\.00/.test(one));
+    expect(bound).toBeGreaterThanOrEqual(0);
+    expect(money).toBeGreaterThanOrEqual(0);
+    expect(bound).toBeLessThan(money);
+  });
+
   it('has no axe violations', async () => {
     const { container } = renderWithCrystal(<Harness onRemove={vi.fn()} />);
     await expectNoAxeViolations(container);

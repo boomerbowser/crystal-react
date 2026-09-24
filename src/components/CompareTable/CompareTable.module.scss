@@ -2,8 +2,15 @@
 
 /* "Sticky first column and header." Both, because a comparison read at the
    twelfth row with the product names scrolled away is four columns of numbers
-   belonging to nobody. */
-.compare :global(thead th) { position: sticky; inset-block-start: 0; z-index: 2; }
+   belonging to nobody.
+
+   The column head is already sticky: `Table` gives every `thead th` its
+   `position` and offset, and Crystal's own `.cr-table` does the same. Repeating
+   them here would be two copies of one rule at equal specificity, settled by
+   source order — that is a drift waiting for an import to be reordered, not a
+   belt and braces. What this component adds is the one thing only it knows:
+   where the two sticky axes cross, the column head is in front. */
+.compare :global(thead th) { z-index: 2; }
 
 .compare :global(th[scope='row']) {
   position: sticky;

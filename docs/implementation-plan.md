@@ -2268,6 +2268,42 @@ is the Crystal vocabulary beside it, so that a product building something Crysta
 has no component for reaches for Crystal's own symbols rather than picking four
 of its own.
 
+**A sixth round, after the slice was already pushed.** Four of the slice's
+headers made claims only a browser can be asked — sticky table heads, a `:has()`
+rule naming a CSS-module class, a strip that scrolls itself rather than the page,
+a pill step carrying one material — and not one of them had a gate. They were
+measured. All four were true, which is exactly when a claim is worth gating: it
+is not being fixed, it is being stopped from rotting quietly. `verify:appearance`
+goes 41 → 45.
+
+Three of the four planted red on the first try. The fourth would not, and that
+was the finding:
+
+1. **A gate you cannot plant red against the component under test is telling you
+   where the behaviour actually lives.** Removing `position: sticky` from
+   `CompareTable` changed nothing, because `Table` already declares it — and so
+   does Crystal's own `.cr-table`. The component was carrying a second copy of a
+   rule at *equal specificity*, where the winner is decided by source order
+   alone: a drift waiting for an import to be reordered, not a belt and braces.
+   The duplicate is gone; what is left is the one thing only this component
+   knows, which is that where the two sticky axes cross the column head is in
+   front. The gate now plants red against `Table`'s declaration and against the
+   stacking, which is where the two halves really are.
+2. **`PaymentMethod` had an uncontrolled mode that hosted nothing.** The provider
+   slot was mounted on `value === newMethodValue`, reading a prop the group's own
+   props make optional — so a consumer using `defaultValue` got a radio that was
+   selectable, looked chosen, and mounted no payment element. It typechecked, it
+   passed every existing test, and it failed with no error and nothing on screen.
+   It now asks React Aria for the state both modes share. The new test fails
+   against the old component and passes against the new one, and no other test
+   moves — which is the shape of a bug that is invisible from the controlled path.
+3. **Two live regions at a bound is the intended reading, and is now pinned.**
+   Raising a quantity to the maximum updates the stepper's region and the cart
+   line's in one tick: the constraint, then its consequence. Both are owed by
+   different catalogue sentences, so merging them would drop one. What was
+   missing was anything holding the order, which DOM position decides — a test
+   now fails if the regions are reordered or if either falls silent.
+
 ### O — Screens (15)
 
 `screen`, `page-header`, `view-stack`, `master-detail`, `split-view`, `command-bar`, `status-bar`, `workspace`, `focus-mode`, `empty-screen`, `error-screen`, `loading-screen`, `offline-screen`, `not-found-screen`, `permission-screen`.

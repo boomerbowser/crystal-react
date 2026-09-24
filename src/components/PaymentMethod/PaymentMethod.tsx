@@ -22,8 +22,8 @@
  * Everything else is the option group the shipping selector uses — the same
  * cards, the same rule that selection is label weight rather than a fill.
  */
-import { type ReactNode } from 'react';
-import { Radio as AriaRadio } from 'react-aria-components';
+import { useContext, type ReactNode } from 'react';
+import { Radio as AriaRadio, RadioGroupStateContext } from 'react-aria-components';
 import { RadioGroup, type RadioGroupProps } from '../Checkbox/Checkbox.js';
 import { cx } from '../../styles/cx.js';
 import styles from './PaymentMethod.module.scss';
@@ -53,19 +53,37 @@ export interface PaymentMethodProps
   /** The value that selects the provider's element. */
   newMethodValue?: string;
   newMethodLabel?: ReactNode;
-  /** The chosen method, so the provider's element shows only when it is chosen. */
-  value?: string;
+}
+
+/* Whether the provider's element is mounted is asked of the radio group's own
+   state rather than of a `value` prop.
+ *
+ * The obvious version of this reads a `value` the caller passed. It typechecks,
+ * it works in every controlled example, and it fails silently for anyone using
+ * the `defaultValue` the group's props also offer: `value` is `undefined`
+ * forever, so the option is selectable, looks chosen, and mounts nothing. A
+ * component whose one job is to host somebody else's payment element cannot
+ * have an uncontrolled mode that quietly hosts nothing.
+ *
+ * React Aria publishes the state both modes share, which is the answer to the
+ * question actually being asked — "is this option the chosen one" — rather than
+ * to a proxy for it. */
+function ProviderSlot(
+  { when, children }: { when: string; children: ReactNode },
+): React.JSX.Element | null {
+  const state = useContext(RadioGroupStateContext);
+  if (state?.selectedValue !== when) return null;
+  return <div className={styles['provider']}>{children}</div>;
 }
 
 export function PaymentMethod({
   methods = [], label = 'Payment method', provider,
   newMethodValue = 'new', newMethodLabel = 'A different card',
-  value, className, ...props
+  className, ...props
 }: PaymentMethodProps): React.JSX.Element {
   return (
     <RadioGroup
       {...props}
-      {...(value === undefined ? {} : { value })}
       label={label}
       className={cx(styles['group'], className)}
     >
@@ -95,9 +113,7 @@ export function PaymentMethod({
               that talks to a payment processor; four of them sitting behind
               unchosen options is four sessions opened for nothing, and one of
               them is focusable inside a card the reader did not pick. */}
-          {value === newMethodValue ? (
-            <div className={styles['provider']}>{provider}</div>
-          ) : null}
+          <ProviderSlot when={newMethodValue}>{provider}</ProviderSlot>
         </div>
       ) : null}
     </RadioGroup>

@@ -16,6 +16,16 @@
  * one and not the other; a component announcing an order total it was not given
  * would be guessing.
  *
+ * **At a bound, two regions speak, and that is the intended reading.** The
+ * stepper owes "the bounds are announced when reached" and this line owes the
+ * new subtotal, so raising a quantity to the maximum updates both live regions
+ * in one tick: the constraint, then its consequence. They are two facts rather
+ * than one said twice, and merging them into a single region would drop
+ * whichever of the two catalogue sentences lost. DOM order decides which is
+ * heard first, and the stepper precedes this line's region, so the constraint
+ * arrives ahead of the consequence. The test pins that, because it is the kind
+ * of ordering that survives by accident until somebody moves a node.
+ *
  * **Removal is undoable, which means the undo is a control and not a gesture.**
  * A basket line removed by mistake is a purchase that does not happen, and
  * "press Ctrl+Z" is not an affordance. So removal hands the product an undo to

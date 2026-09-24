@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen } from '../../test/render.js';
 import { PaymentMethod } from './PaymentMethod.js';
@@ -43,6 +44,21 @@ describe('PaymentMethod', () => {
     rerenderWithCrystal(
       <PaymentMethod methods={methods} provider={<div data-testid="provider" />} value="new" />,
     );
+    expect(screen.getByTestId('provider')).toBeInTheDocument();
+  });
+
+  /* The same question asked the other way round. The group's props offer
+     `defaultValue` as well as `value`, and a component that reads only the
+     controlled one is selectable, looks chosen, and mounts nothing — a failure
+     with no error, no warning and nothing on screen to notice. */
+  it('mounts the provider element for an uncontrolled group too', async () => {
+    const user = userEvent.setup();
+    renderWithCrystal(
+      <PaymentMethod methods={methods} provider={<div data-testid="provider" />} defaultValue="visa" />,
+    );
+    expect(screen.queryByTestId('provider')).toBeNull();
+
+    await user.click(screen.getByRole('radio', { name: 'A different card' }));
     expect(screen.getByTestId('provider')).toBeInTheDocument();
   });
 
