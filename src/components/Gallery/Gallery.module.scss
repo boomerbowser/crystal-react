@@ -1,0 +1,36 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+
+.gallery { inline-size: 100%; }
+
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $cr-spacing-sm;
+  padding: 0;
+  margin: 0;
+}
+
+/* "Thumbnails are Haze; thumbnails keep the content radius." */
+.thumb {
+  @include material.haze-fill;
+
+  overflow: hidden;
+  border-radius: $cr-shape-content-radius;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.thumb :global(img) { display: block; inline-size: 100%; block-size: auto; }
+
+/* Selection is the roving cursor's position, and Crystal's rule is that nothing
+   is drawn beside a label to mark it — but a thumbnail has no label to weight.
+   What it has is a perimeter, so the selected one takes the palette's own
+   outline, which is the same shape the focus ring uses and is therefore already
+   the language of "this one". */
+.thumb[aria-selected='true'] { outline: 2px solid var(--cr-primary); outline-offset: 2px; }
+
+@media (forced-colors: active) {
+  .thumb { border: 1px solid CanvasText; }
+  .thumb[aria-selected='true'] { outline-color: Highlight; }
+}

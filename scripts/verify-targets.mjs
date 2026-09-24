@@ -132,6 +132,12 @@ const CASES = [
      nothing about the drawn × says how much of it a fingertip meets. */
   { story: 'feedback-banner--dismissible', selector: '#storybook-root button', why: 'catalogue: the dismiss control is a 44px pill' },
   { story: 'feedback-alert--dismissible', selector: '#storybook-root button', why: 'the same control, doing the same job, at the same floor' },
+  /* Slice M. "Pill; 44px targets throughout" is the transport's own entry, and a
+     media bar is where the floor is hardest to keep: every control on it is a
+     small glyph, and the bar is the one surface where a designer's instinct is
+     to make them smaller still. */
+  { story: 'media-media-controls--with-volume-and-skip', selector: '#storybook-root button', why: 'catalogue: pill; 44px targets throughout' },
+  { story: 'media-lightbox--from-a-thumbnail', selector: '#storybook-root button', why: 'the control that opens a viewer is an ordinary action' },
 ];
 
 /* Not in the list, deliberately: `navigation-links--in-running-text`. An anchor
@@ -217,7 +223,7 @@ await browser.close();
  * Fewer probes is not a better result. It is the same checks run against less of
  * the library. Raise this when cases are added; lowering it is a deliberate edit
  * somebody makes in the same commit. */
-const LEAST_PROBES = 103;
+const LEAST_PROBES = 105;
 if (probes < LEAST_PROBES) {
   failures.push(
     `${probes} controls were measured, and this suite measured ${LEAST_PROBES} `

@@ -198,3 +198,10 @@ export * from './Notification/index.js';
 export * from './Popconfirm/index.js';
 export * from './Tour/index.js';
 
+/* Slice M — media. */
+export * from './MediaControls/index.js';
+export * from './AudioPlayer/index.js';
+export * from './VideoPlayer/index.js';
+export * from './Lightbox/index.js';
+export * from './Gallery/index.js';
+

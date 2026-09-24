@@ -650,6 +650,61 @@ for (const { edge, flush, square } of EDGES) {
   );
 }
 
+/* --------------------------------------------- captions, in an engine that has them */
+
+/* "Captions are supported and **their state is announced**." jsdom parses a
+ * `<track>` and populates no `textTracks` for it, so the state this component
+ * reads does not exist there at all — the unit tests can say a player with
+ * nothing to caption offers no control, and nothing more. Everything past that
+ * is here.
+ *
+ * The claim is deliberately about the *track*, not about the button: a toggle
+ * that flipped its own `aria-pressed` and left the track alone would look
+ * right, read right, and show no subtitles. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=media-video-player--with-captions&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root video');
+  const control = page.getByRole('button', { name: 'Captions' });
+  record(
+    'a video with a caption track offers a control for it',
+    await control.count() === 1,
+    `${await control.count()} caption controls were found on a player with a track`,
+  );
+
+  const before = await page.evaluate(() => {
+    const video = document.querySelector('#storybook-root video');
+    return [...(video?.textTracks ?? [])].map((track) => track.mode);
+  });
+  await control.click();
+  await page.waitForTimeout(200);
+  const after = await page.evaluate(() => {
+    const video = document.querySelector('#storybook-root video');
+    return {
+      modes: [...(video?.textTracks ?? [])].map((track) => track.mode),
+      pressed: document.querySelector('#storybook-root [aria-label="Captions"]')?.getAttribute('aria-pressed'),
+      /* Every live region in the player, joined. Taking the first one found the
+         transport's buffering region, which is empty and always will be —
+         another check identified by DOM position rather than by what it is. */
+      said: [...document.querySelectorAll('#storybook-root [role="status"]')]
+        .map((region) => region.textContent ?? '').join(' ').trim(),
+    };
+  });
+
+  record(
+    'the caption control turns the track on, not just itself',
+    before.every((mode) => mode !== 'showing') && after.modes.includes('showing'),
+    `the track went from ${before.join(', ') || 'none'} to ${after.modes.join(', ') || 'none'}. `
+    + 'A toggle that flips its own pressed state and leaves the track alone looks right, '
+    + 'reads right, and shows no subtitles',
+  );
+  record(
+    'the control carries the track\'s state and the change is said',
+    after.pressed === 'true' && /on/i.test(after.said),
+    `the control reports aria-pressed=${after.pressed} and the announcement is "${after.said}". `
+    + 'A reader who cannot see subtitles appear has nothing else to go on',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

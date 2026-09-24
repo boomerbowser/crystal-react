@@ -1,0 +1,47 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+
+/* "Resin plane. Pill; 44px targets throughout." The targets belong to
+   `IconButton`, which already carries the floor; what is here is the plane. */
+.controls {
+  @include material.resin;
+
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-2xs;
+  padding: $cr-spacing-2xs $cr-spacing-sm;
+  border-radius: $cr-action-radius;
+  color: var(--cr-text);
+}
+
+@include material.opaque-fallback('.controls');
+
+.time {
+  flex: none;
+  font-size: var(--cr-text-caption-size);
+  font-variant-numeric: tabular-nums;
+  color: var(--cr-muted);
+}
+
+/* The scrubber takes the room. Its own label and output are hidden, so what is
+   left is the track — the times either side of it are this component's. */
+.scrubber { flex: 1; min-inline-size: 0; }
+
+/* Wide enough to be operable with a pointer and narrow enough not to compete
+   with the scrubber — two of Crystal's largest spacing steps rather than a
+   number chosen by eye, so it moves with the scale. */
+.volume { flex: none; inline-size: calc(#{$cr-spacing-2xl} * 2); }
+
+.announcement {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .controls { background: Canvas; border: 1px solid CanvasText; box-shadow: none; }
+  .time { color: CanvasText; }
+}

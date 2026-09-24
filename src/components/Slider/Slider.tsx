@@ -18,7 +18,7 @@
  * reverses because React Aria does it — dragging left must increase the value in
  * a right-to-left locale, and no amount of CSS can express that.
  */
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import {
   Slider as AriaSlider, SliderTrack, SliderThumb, SliderOutput, Label,
   type SliderProps as AriaSliderProps,
@@ -41,6 +41,22 @@ export interface SliderProps extends Omit<AriaSliderProps<number>, 'className' |
    * this component exists to prevent.
    */
   formatOptions?: Intl.NumberFormatOptions;
+  /**
+   * What the thumb announces, when `Intl.NumberFormat` cannot say it.
+   *
+   * The narrow escape hatch from the rule above, and it is narrow on purpose:
+   * the only values that need it are the ones no number format expresses, and
+   * the case it was added for is a media time. `1:23` is right on the screen and
+   * wrong in an announcement — a screen reader reads it as "one colon
+   * twenty-three" — while `{ style: 'unit', unit: 'second' }` says "3,600
+   * seconds" for an hour-long film.
+   *
+   * It sets `aria-valuetext` and nothing else, so the **visible** output is
+   * still the formatted number and the two still describe the same value in two
+   * notations rather than saying two different things. A caller reaching for
+   * this to relabel an ordinary number wants `formatOptions`.
+   */
+  valueText?: (value: number) => string;
   /** Labels beneath the track, evenly spaced. */
   ticks?: readonly ReactNode[];
   /** Hide the numeric output. The value is still announced. */
@@ -48,9 +64,27 @@ export interface SliderProps extends Omit<AriaSliderProps<number>, 'className' |
   className?: string;
 }
 
+/* `aria-valuetext` belongs on the `<input type="range">` React Aria renders
+   inside the thumb — that input is the element with the `slider` role, and an
+   attribute put on the thumb's own `<div>` lands on a wrapper nothing reads.
+   React Aria owns the input's props and writes `aria-valuetext` from
+   `formatOptions`, so the override is applied to the node afterwards rather
+   than passed through: the value it is derived from is React's, and the write
+   is idempotent. */
+function ValueText({ input, text }: {
+  input: React.RefObject<HTMLInputElement | null>;
+  text: string;
+}): null {
+  useEffect(() => {
+    input.current?.setAttribute('aria-valuetext', text);
+  }, [input, text]);
+  return null;
+}
+
 export function Slider({
-  label, formatOptions, ticks, hideOutput = false, className, ...props
+  label, formatOptions, valueText, ticks, hideOutput = false, className, ...props
 }: SliderProps): React.JSX.Element {
+  const input = useRef<HTMLInputElement>(null);
   return (
     <AriaSlider
       {...props}
@@ -74,7 +108,8 @@ export function Slider({
               className={cx(styles['fill'])}
               style={{ '--cr-fill-size': `${state.getThumbPercent(0) * 100}%` } as React.CSSProperties}
             />
-            <SliderThumb className={cx(styles['thumb'])} />
+            <SliderThumb className={cx(styles['thumb'])} {...(valueText ? { inputRef: input } : {})} />
+            {valueText ? <ValueText input={input} text={valueText(state.getThumbValue(0))} /> : null}
           </>
         )}
       </SliderTrack>

@@ -1,0 +1,57 @@
+@use '../../styles/tokens' as *;
+
+.player { position: relative; inline-size: 100%; }
+
+.surface {
+  position: relative;
+  overflow: hidden;
+  border-radius: $cr-shape-content-radius;
+  background: var(--cr-surface-alt);
+  line-height: 0;
+}
+
+.video { inline-size: 100%; block-size: auto; display: block; }
+
+/* "The motion of showing and hiding controls" is Crystal's, and Crystal's rule
+   is that nothing moves at rest — so the bar is not on a timer that fades it
+   away while nobody is doing anything. It is there whenever a pointer is over
+   the video or focus is inside the player, which is a person every time.
+
+   It never disappears from the *keyboard*: `focus-within` keeps it while any
+   control in it has focus, so tabbing along the bar cannot make the bar vanish
+   under the reader's own focus. */
+.bar {
+  position: absolute;
+  inset-inline: $cr-spacing-sm;
+  inset-block-end: $cr-spacing-sm;
+  opacity: 0;
+  transition: opacity calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
+    #{$cr-motion-easing-settle};
+}
+
+.player:hover .bar,
+.player:focus-within .bar { opacity: 1; }
+
+/* A pointer that cannot hover — a touch screen — never triggers the first rule,
+   so the bar is simply always there. */
+@media (hover: none) {
+  .bar { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar { transition: none; }
+}
+
+.announcement {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .surface { border: 1px solid CanvasText; }
+  .bar { opacity: 1; }
+}

@@ -1,0 +1,95 @@
+@use '../../styles/tokens' as *;
+
+/* "Mirage scrim; the item sits above it." A filter rather than a dark fill, so
+   the wash takes its chroma from whatever is behind it instead of inventing a
+   colour the scene does not have. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: stretch;
+  background: var(--cr-mirage-fill);
+  backdrop-filter: blur(var(--cr-mirage-blur))
+    saturate(var(--cr-mirage-saturation))
+    brightness(var(--cr-mirage-brightness));
+}
+
+:global([data-effects='opaque']) .scrim {
+  background: var(--cr-mirage-fallback-fill);
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .scrim { background: var(--cr-mirage-fallback-fill); backdrop-filter: none; }
+}
+
+.modal { display: contents; }
+
+/* "The scrim is full-bleed" and the item keeps its own aspect, so the viewer is
+   a layout rather than a panel: no material of its own, nothing to read the item
+   against but the wash. */
+.viewer {
+  inline-size: 100%;
+  block-size: 100%;
+  outline: none;
+}
+
+/* The shortcut wrapper, which is also the layout: one element rather than two,
+   because a second box between the dialog and its rows would be a box with no
+   job. */
+.keys {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: $cr-spacing-sm;
+  block-size: 100%;
+  padding: $cr-spacing-md;
+}
+
+.header { display: flex; align-items: center; gap: $cr-spacing-sm; }
+
+.label { margin: 0; flex: 1; min-inline-size: 0; color: var(--cr-text); font-weight: 750; }
+
+.position { margin-inline-start: $cr-spacing-xs; color: var(--cr-muted); font-weight: 500; }
+
+.actions { display: flex; align-items: center; gap: $cr-spacing-2xs; }
+
+/* The pan. `overflow: auto` is the whole mechanism: the engine's own scrolling,
+   its own scrollbars, its own arrow-key behaviour. */
+.frame {
+  overflow: auto;
+  display: grid;
+  place-items: center;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.item {
+  scale: var(--lightbox-zoom, 1);
+  transform-origin: center;
+  transition: scale calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
+    #{$cr-motion-easing-settle};
+}
+
+.item :global(img),
+.item :global(video) { max-inline-size: 100%; max-block-size: 100%; display: block; }
+
+.caption { margin: 0; text-align: center; color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+
+.announcement {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .scrim { background: Canvas; backdrop-filter: none; }
+  .label, .caption, .position { color: CanvasText; }
+}

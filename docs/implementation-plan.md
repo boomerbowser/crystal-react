@@ -1727,13 +1727,78 @@ spin, sweep and travel while its motion chapter publishes fifty-four finite
 recipes and says nothing loops. Every continuous indicator here takes one
 duration, `--cr-flow`, and authors only the shape of the movement.
 
-### M — Media (5)
+### M — Media (5) — complete
 
 `video-player`, `audio-player`, `media-controls`, `gallery`, `lightbox`.
 
 Real `video` and `audio` elements underneath. Captions with announced state, a
 scrubber that is a slider rather than a progress bar, and keyboard transport that
 does not trap focus.
+
+**The element is the source of truth, not a copy of it.** `useMediaElement`
+reads every value from the `<audio>` or `<video>` and sets none of them: the
+controls call methods, the element fires events, the events move the state. A
+player that kept its own `isPlaying` is wrong the first time anything else
+touches the media — and plenty does: the operating system's media keys, a
+Bluetooth headset's pause button, another tab taking audio focus,
+picture-in-picture, `autoplay` being refused.
+
+**What each one is built around.**
+
+- **`media-controls`** — "play and pause are **one toggle with a pressed
+  state**". Two buttons swapped by state means the one a reader has focused
+  disappears under them the moment they press it, and focus falls to the
+  document. And "the scrubber is a **slider announcing time, not a progress
+  bar**": a progress bar reports, a slider is operated. It also has to *say* a
+  time — `1:23` reads as "one colon twenty-three" — so `src/media/time.ts`
+  publishes two notations, one for the screen and one for the announcement, and
+  owns both so the two players cannot format a second differently.
+- **`audio-player`** — a real `<audio>`, handed to the caller through `mediaRef`
+  because sources, playlists and streaming are the product's half and all of
+  them are done on the element. The browser's own `controls` are off: two sets of
+  controls for one element is two tab stops per action and two places a state can
+  be shown differently.
+- **`video-player`** — "captions are supported and their state is announced": the
+  toggle is over `textTracks`, its pressed state is the track's real `mode`, and
+  the change is said in words. "Keyboard shortcuts do not trap focus" is two
+  separate promises — no document-level listener, which is the shape that steals
+  the space bar from the page, and no shortcut that takes a key from the control
+  the reader is on.
+- **`lightbox`** — **pan is the platform's**. The enlarged item lives in a scroll
+  container the reader tabs to, so arrow keys are the engine's own scrolling. A
+  component that read arrow keys itself would answer "what do arrows do here"
+  differently depending on the zoom, which is a mode nobody was told about — and
+  it is what leaves the arrows free for a gallery to move between items with.
+- **`gallery`** — the thumbnails are one tab stop with a roving `tabindex`, the
+  same argument the charts make about marks. The position is part of the viewer's
+  accessible name, because a reader who cannot see the strip has no other way to
+  know where in the set they are.
+
+**One extension to an existing component, stated rather than smuggled.**
+`Slider` gained `valueText`, a narrow escape hatch that sets `aria-valuetext`
+when `Intl.NumberFormat` cannot say the value. The component deliberately rejects
+a formatting function — the visible output and the announcement must agree by
+construction — so this sets the announcement only, and the visible number stays
+the formatted one. It had to go on the `<input type="range">` React Aria renders
+inside the thumb, which is the element carrying the `slider` role; an attribute
+on the thumb's own `<div>` lands on a wrapper nothing reads.
+
+**Two gates that guarded nothing, found by planting all twelve of the slice's
+claims red.**
+
+1. `expect(container.querySelector('[role="group"]')).toBeNull()` — the lightbox
+   is portalled to `body`, so a query scoped to the render container finds
+   nothing whatever the component does.
+2. "Space on the play toggle is the button's Space" counted plays and passed with
+   the guard deleted, because React Aria's button does not let the press bubble
+   as a second toggle. It presses `m` at the focused scrubber now, where the
+   difference is the video muting or not — and with `fireEvent`, because
+   `userEvent` does not dispatch a printable keydown at a range input at all.
+
+And twice more a check identified an element by its position in the DOM and
+reported the wrong thing: the first `[role="status"]` in the player is the
+transport's buffering region, which is empty and always will be. The same
+mistake as slice L's, which is now three times.
 
 ### N — Commerce (24)
 
