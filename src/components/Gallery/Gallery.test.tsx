@@ -83,6 +83,36 @@ describe('Gallery', () => {
     });
   });
 
+  /* The viewer is mounted while it is closed, so moving along the strip changes
+     the item it is pointed at before the reader has arrived in it. Arriving to
+     find an announcement already waiting is being told what changed while you
+     were not there. */
+  it('arrives silent, however the reader got to the item', async () => {
+    const user = userEvent.setup();
+    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    await user.tab();
+    await user.keyboard('{ArrowRight}{ArrowRight}');
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('dialog', { name: /Rain on the quay/ })).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
+
+  /* A zoom is something the reader did to one picture, in one sitting. Coming
+     back to the set later and finding it still at 400 per cent is the viewer
+     remembering something on their behalf that they did not ask it to. */
+  it('opens fit to the frame however it was left', async () => {
+    const user = userEvent.setup();
+    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    await user.tab();
+    await user.keyboard('{Enter}');
+    await user.click(screen.getByRole('button', { name: 'Zoom in' }));
+    expect(screen.getByRole('status')).toHaveTextContent('Zoomed to 150 per cent');
+    await user.keyboard('{Escape}');
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('button', { name: 'Zoom out' })).toBeDisabled();
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
+
   it('does not offer a way past either end of the set', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Gallery items={items} label="Photographs" />);

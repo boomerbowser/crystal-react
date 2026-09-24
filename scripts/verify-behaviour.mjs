@@ -705,6 +705,47 @@ for (const { edge, flush, square } of EDGES) {
   );
 }
 
+/* ------------------------------------------ a gallery hands focus back correctly
+ *
+ * The claim is that closing returns focus to the thumbnail the reader ended on,
+ * not the one they opened. It rests on an ordering: the component claims focus
+ * synchronously, and React Aria's restoration then stands down because it only
+ * acts inside a `requestAnimationFrame` and only if focus is still on the body.
+ * jsdom emulates both, which makes the unit test a statement about jsdom's
+ * scheduler. This is the evidence. */
+{
+  await page.goto(
+    `${ORIGIN}/iframe.html?id=media-gallery--a-set&viewMode=story`,
+    { waitUntil: 'networkidle' },
+  );
+  await page.waitForSelector('#storybook-root [role="option"]');
+  await page.locator('#storybook-root [role="option"]').first().focus();
+  await page.keyboard.press('Enter');
+  await page.waitForSelector('[role="dialog"]');
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.waitForTimeout(200);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(500);
+
+  const landed = await page.evaluate(() => {
+    const thumbs = [...document.querySelectorAll('#storybook-root [role="option"]')];
+    return {
+      at: thumbs.indexOf(document.activeElement),
+      selected: thumbs.findIndex((one) => one.getAttribute('aria-selected') === 'true'),
+      onBody: document.activeElement === document.body,
+    };
+  });
+
+  record(
+    'closing a gallery leaves focus on the thumbnail the reader ended on',
+    landed.at === 1 && landed.selected === 1 && !landed.onBody,
+    `focus landed on thumbnail ${landed.at} while thumbnail ${landed.selected} is the `
+    + `selected one${landed.onBody ? ', having fallen to the body' : ''}. Focus on one `
+    + 'picture while the roving cursor is on another makes the next arrow key jump from '
+    + 'somewhere the reader is not',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

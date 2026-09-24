@@ -1849,6 +1849,14 @@ by then, deferring on purpose to anything that "has been purposefully moved
 elsewhere". The guarantee that focus never lands on the body is still the
 dependency's; only the destination is ours.
 
+Two more came out of reviewing that review. The viewer is mounted while it is
+closed, so a gallery pointing it at another item moved the announcement before
+anybody had arrived in it — a reader who arrowed along the strip and pressed
+Enter was told what had changed while they were not there. And the zoom outlived
+the sitting: closing and reopening the set found it still at 400 per cent.
+`isOpen` is required now and `defaultOpen` is gone, because a viewer that resets
+on close has to be told when it is closed.
+
 **The lesson to carry.** Slice L's rule was *plant anything that turns on time or
 on absence*. This slice adds: **plant anything whose subject is a measurement,
 and never trust jsdom for one.** Three of the four above are invisible to a DOM

@@ -43,7 +43,13 @@ const MIN_ZOOM = 1;
 const MAX_ZOOM = 4;
 
 export interface LightboxProps
-  extends Omit<ModalOverlayProps, 'className' | 'children' | 'style'> {
+  extends Omit<ModalOverlayProps, 'className' | 'children' | 'style' | 'defaultOpen' | 'isOpen'> {
+  /**
+   * Whether the viewer is open. Required, and `defaultOpen` is not offered:
+   * closing puts the zoom back and stops the announcements, and a component
+   * that is not told when it is closed cannot do either.
+   */
+  isOpen: boolean;
   /** What is being shown. The dialog's accessible name. */
   label: string;
   /** The item. An `img`, a `video`, anything with its own aspect. */
@@ -74,7 +80,7 @@ const MinusIcon = (
 );
 
 export function Lightbox({
-  label, children, caption, position, actions, onKeyShortcut,
+  isOpen, label, children, caption, position, actions, onKeyShortcut,
   zoomInLabel = 'Zoom in', zoomOutLabel = 'Zoom out', className, ...props
 }: LightboxProps): ReactNode {
   const id = useId();
@@ -99,8 +105,15 @@ export function Lightbox({
   useEffect(() => {
     const was = before.current;
     before.current = { zoom, said };
-    /* Nothing on arrival — the name has just been read, and repeating it is
-       noise at the one moment the reader does not need it. */
+    /* Nothing is said to a reader who is not in the viewer. The component is
+       mounted while it is closed, so a gallery pointing it at a different item
+       moves `said` before anybody has arrived — and arriving to find an
+       announcement already waiting is being told what changed while you were
+       not there. Recording it anyway is what makes the arrival silent: by the
+       time the viewer opens, the new item is already what it was last told. */
+    if (!isOpen) return;
+    /* Nothing on arrival either — the name has just been read, and repeating it
+       is noise at the one moment the reader does not need it. */
     if (was === null) return;
     if (was.said !== said) { setAnnouncement(said); return; }
     if (was.zoom !== zoom) {
@@ -108,7 +121,17 @@ export function Lightbox({
         ? `Zoomed to ${Math.round(zoom * 100)} per cent`
         : 'Fit to the frame');
     }
-  }, [zoom, said]);
+  }, [isOpen, zoom, said]);
+
+  /* Closed is a resting state, and a resting state has no zoom in it. A zoom is
+     something the reader did to one picture in one sitting; coming back to the
+     set later and finding it still at 400 per cent is the viewer remembering
+     something on their behalf that they never asked it to. */
+  useEffect(() => {
+    if (isOpen) return;
+    setZoom(MIN_ZOOM);
+    setAnnouncement('');
+  }, [isOpen]);
 
   const change = useCallback((by: number) => {
     setZoom((at) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round((at + by) * 100) / 100)));
@@ -125,7 +148,7 @@ export function Lightbox({
   }, [change, onKeyShortcut]);
 
   return (
-    <ModalOverlay {...props} className={cx(styles['scrim'])}>
+    <ModalOverlay {...props} isOpen={isOpen} className={cx(styles['scrim'])}>
       <Modal className={cx(styles['modal'])}>
         <AriaDialog
           aria-labelledby={`${id}-label`}

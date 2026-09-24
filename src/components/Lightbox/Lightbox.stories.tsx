@@ -31,7 +31,7 @@ const meta = {
       },
     },
   },
-  args: { label: 'Harbour at dusk', children: null },
+  args: { label: 'Harbour at dusk', children: null, isOpen: false },
 } satisfies Meta<typeof Lightbox>;
 
 export default meta;
@@ -58,6 +58,6 @@ function Opened(): React.JSX.Element {
 /* Opened from a control rather than rendered open, because "closing returns
    focus to the thumbnail" is only true of a viewer something opened. */
 export const FromAThumbnail: Story = {
-  args: { label: 'Harbour at dusk', children: null },
+  args: { label: 'Harbour at dusk', children: null, isOpen: false },
   render: () => <Opened />,
 };
