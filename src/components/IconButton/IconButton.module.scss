@@ -1,12 +1,25 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* IconButton and CloseButton — one icon, and a target big enough to hit.
  *
- * The target floor is the whole point. A 24px icon is a 24px picture and a 44px
+ * The target floor is the whole point. A 24px icon is a 24px picture and a 48px
  * place to press, and the two are different things: growing the visible control
- * to 44px makes a toolbar of icons look clumsy, so the padding does it instead
+ * to 48px makes a toolbar of icons look clumsy, so the padding does it instead
  * and the shape stays square.
+ *
+ * R-19, swept — and the sweep inverted this file. Crystal paints every `<button>`
+ * as a Resin control by element selector, not by class, so `resin` never needed
+ * declaring: it is what a button already is. What needed declaring is `quiet`.
+ *
+ * That was a live defect rather than a tidiness argument. A quiet icon button set
+ * `background: transparent` and nothing else, so it kept Crystal's 20px backdrop
+ * blur, Crystal's float shadow and Crystal's 80%-white feathered reading pad —
+ * measured in a browser, not inferred. It was transparent in exactly one
+ * property and opaque in every other. Taking a coat off means taking the whole
+ * coat off.
+ *
+ * So `resin` declares nothing at all now, and this file says only what a quiet
+ * control is and what Crystal does not specify.
  */
 
 .iconButton {
@@ -15,45 +28,58 @@
   justify-content: center;
   inline-size: $cr-action-min-target;
   block-size: $cr-action-min-target;
+  /* Square, so the target comes from the box rather than from padding, and the
+     icon stays the size it was drawn. */
   padding: 0;
-  border: 1px solid transparent;
   border-radius: $cr-action-radius;
-  background: transparent;
-  color: var(--cr-text);
-  cursor: pointer;
 }
 
-.resin {
-  /* An icon button is a button; the label it protects is a glyph. */
-  @include material.haze-fill;
-  border-color: var(--cr-rim);
-  background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-}
+.iconButton svg { inline-size: $cr-icon-action; block-size: $cr-icon-action; }
 
 .circle { border-radius: 50%; }
 
-.iconButton:hover:not(:disabled) { background: var(--cr-surface-alt); }
+/* Quiet: the whole coat off, not just the fill.
+ *
+ * The rim, the shadow and the blur are Crystal's `:is(button, …)` rule, and both
+ * feathered layers are its `::before` and `::after`. A quiet control sits on the
+ * surface it is on, which means none of them. */
+.quiet {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
 
-/* A toggle that is on takes the selected pair, which is the same pair Crystal
-   uses for every selected surface — not a colour chosen for this control. */
-.iconButton[aria-pressed='true'] {
+.quiet::before,
+.quiet::after {
+  display: none;
+}
+
+/* A quiet control has no material to lift, so hover is a fill. Crystal's hover
+   returns a Resin control to the Resin fill, which says nothing here — there is
+   no Resin fill to return to. The resin variant is left to Crystal's own hover. */
+.quiet:hover:not(:disabled) { background: var(--cr-surface-alt); }
+
+/* A toggle that is on.
+ *
+ * Crystal paints this by tinting the reading pad, and a quiet control has no pad
+ * — the same gap the quiet button has. So the state has to be a fill here, and
+ * it takes the selected pair Crystal uses for every selected surface rather than
+ * a colour chosen for this control. The resin variant needs none of this: its
+ * pad is there, and Crystal tints it. */
+.quiet[aria-pressed='true'] {
   background: var(--cr-primary-soft);
   color: var(--cr-on-primary-soft);
 }
 
-.iconButton:disabled { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-
-.iconButton svg { inline-size: $cr-icon-action; block-size: $cr-icon-action; }
-
-:global([data-effects='opaque']) .resin {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
+/* Reduced transparency. Crystal flattens its material containers under this
+   query and carries no rule for a control, so removing diffusion from the
+   control itself is this library's. Quiet has none to remove. */
 @media (prefers-reduced-transparency: reduce) {
-  .resin { background: var(--cr-surface); backdrop-filter: none; }
+  .iconButton:not(.quiet) {
+    background: var(--cr-surface);
+    backdrop-filter: none;
+  }
 }
 
 @media (forced-colors: active) {

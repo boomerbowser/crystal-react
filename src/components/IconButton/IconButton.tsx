@@ -55,7 +55,10 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       onPressStart={() => play('press')}
       className={cx(
         styles['iconButton'],
-        variant === 'resin' ? styles['resin'] : undefined,
+        /* Nothing for `resin`: Crystal paints every `<button>` as a Resin
+           control already, so the variant is the absence of a class. `quiet`
+           is the one that has work to do — it takes that coat off. */
+        variant === 'resin' ? undefined : styles['quiet'],
         circle ? styles['circle'] : undefined,
         className,
       )}
