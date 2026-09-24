@@ -564,6 +564,17 @@ and the decoration is absent. Nothing in the accessibility contract waits for
 this. What is missing is the thing a reader would notice and could not name — a
 stack whose depth is legible from the way it moves.
 
+**One part of it cannot be verified until then, and that is the part worth
+watching.** A push and a pop are the same recipe pointing opposite ways, so the
+component holds two motion hooks with fixed orientations rather than one whose
+mirror is recomputed — a single hook would animate a pop with the push's
+orientation and arrive from the edge it was leaving towards. That is exactly the
+kind of claim this repository plants red before trusting, and it cannot be
+planted: with no recipe to resolve, both paths do nothing and both look
+identical. When 2.1.0 lands, the pop direction is a browser check — push, pop,
+and assert the arriving view enters from opposite edges — and it should be
+planted by swapping the two hooks over before it is believed.
+
 **Where.** `src/components/ViewStack/ViewStack.tsx`, the `getRecipe` guard;
 `core/tokens/motion-recipes.json` and `core/tokens/catalogue/13-screens.json` in
 the design system.

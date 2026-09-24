@@ -27,7 +27,7 @@
  * shell painting Plastic would be a second foundation over the first, and
  * Plastic is the foundation precisely because there is one of it.
  */
-import { useId, type HTMLAttributes, type ReactNode } from 'react';
+import { type HTMLAttributes, type ReactNode } from 'react';
 import { useShellScroll } from '../AppShell/scrollContext.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Screen.module.scss';
@@ -54,14 +54,12 @@ export function Screen({
      the landmark rule actually asks. The shell publishes the node itself. */
   const shellOwnsTheMain = useShellScroll() !== null;
   const Region = shellOwnsTheMain ? 'section' : 'main';
-  const id = useId();
 
   return (
     <Region
       {...props}
       aria-label={label}
       className={cx(styles['screen'], className)}
-      id={props.id ?? id}
     >
       {header}
       <div className={cx(styles['content'])}>{children}</div>

@@ -821,6 +821,44 @@ for (const { edge, flush, square } of EDGES) {
   );
 }
 
+{
+  /* "role=toolbar with one tab stop." Asserted in the header, and until now
+     measured nowhere: jsdom has a tab order, but React Aria's roving tab index
+     is driven by focus events and element geometry, and the thing being claimed
+     is about what a *reader* reaches with the Tab key. A bar of seven commands
+     that each took a stop would put seven presses between them and the next
+     field, which is the whole reason the role exists. */
+  await page.goto(`${ORIGIN}/iframe.html?id=screens-commandbar--default&viewMode=story`, { waitUntil: 'networkidle' });
+  if (await waitFor('a command bar renders', page.locator('#storybook-root [role="toolbar"] button').first())) {
+    const stops = await page.evaluate(async () => {
+      const toolbar = document.querySelector('#storybook-root [role="toolbar"]');
+      const inside = (node) => node !== null && toolbar.contains(node);
+      /* Start from the document, so the first Tab is the one that enters. */
+      document.body.focus();
+      return { commands: toolbar.querySelectorAll('button').length, inside: inside(document.activeElement) };
+    });
+
+    await page.keyboard.press('Tab');
+    const entered = await page.evaluate(() => {
+      const toolbar = document.querySelector('#storybook-root [role="toolbar"]');
+      return toolbar.contains(document.activeElement);
+    });
+    await page.keyboard.press('Tab');
+    const left = await page.evaluate(() => {
+      const toolbar = document.querySelector('#storybook-root [role="toolbar"]');
+      return !toolbar.contains(document.activeElement);
+    });
+
+    record(
+      'a command bar is one tab stop, however many commands it holds',
+      stops.commands > 1 && !stops.inside && entered && left,
+      `the bar holds ${stops.commands} commands; one Tab entered it: ${entered}; the next `
+      + `Tab left it: ${left}. A toolbar whose commands each take a stop puts one press `
+      + 'per command between the reader and the next field',
+    );
+  }
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

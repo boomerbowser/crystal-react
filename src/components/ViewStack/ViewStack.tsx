@@ -18,11 +18,24 @@
  * icon in a div is unreachable by keyboard and unnamed to a screen reader, and
  * the browser's own back button is not a route the product offered.
  *
- * **On the movement.** Crystal authors `view-push-in` and `view-push-out` — a
- * view arriving from the inline-end edge, and the view it covers travelling a
+ * **On the movement.** Crystal authors `view-push-in` — a view arriving from the
+ * inline-end edge — and `view-push-out`, the view it covers travelling a
  * fraction of that distance behind it. Two recipes rather than four, because a
  * pop is a push mirrored and right-to-left is a push mirrored again, which is
  * what `reorient` points.
+ *
+ * Only the arrival is played here, and that is a consequence of the stack rather
+ * than an omission: the covered view is *unmounted*, so there is nothing left to
+ * play a departure on. `view-push-out` is for a stack that keeps its views
+ * mounted, which is a different component.
+ *
+ * A push and a pop are the same recipe pointing opposite ways, so there are two
+ * hooks with fixed orientations rather than one whose mirror is recomputed. A
+ * single hook would have to change its `reorient` as the stack moved, and the
+ * value it animates with is the one captured when the hook rendered — so the
+ * pop would play with the push's orientation and arrive from the edge it was
+ * leaving towards. Inert while the recipe is unavailable, and wrong the day it
+ * arrives, which is the worst order for a defect to appear in.
  *
  * Those recipes are published in `@crystal-ui/core` 2.1.0, and this library is
  * pinned to `^2.0.0` until that release is out. So the movement is asked for
@@ -68,7 +81,11 @@ export function ViewStack({
   views, onPop, backLabel = 'Back to {label}', className, ...props
 }: ViewStackProps): React.JSX.Element {
   const direction = useDirection();
-  const [scope, play] = useMotion({ reorient: { mirrorInline: direction === 'rtl' } });
+  const rtl = direction === 'rtl';
+  /* Forward: from the inline-end edge, mirrored for right-to-left. */
+  const [pushScope, playPush] = useMotion({ reorient: { mirrorInline: rtl } });
+  /* Back: the same recipe pointing the other way, mirrored again for RTL. */
+  const [popScope, playPop] = useMotion({ reorient: { mirrorInline: !rtl } });
   const top = views.at(-1);
   const beneath = views.at(-2);
   const previousDepth = useRef(views.length);
@@ -88,8 +105,9 @@ export function ViewStack({
 
     /* Asked rather than assumed: see the note above. Absent, the state change
        has already happened and only the decoration is missing. */
-    if (getRecipe(ARRIVES) !== undefined) void play(ARRIVES);
-  }, [views.length, top, play]);
+    if (getRecipe(ARRIVES) === undefined) return;
+    void (views.length > was ? playPush : playPop)(ARRIVES);
+  }, [views.length, top, playPush, playPop]);
 
   if (top === undefined) {
     return <div {...props} className={cx(styles['stack'], className)} />;
@@ -103,7 +121,7 @@ export function ViewStack({
     >
       <section
         key={top.id}
-        ref={mergeRefs(region, scope as never)}
+        ref={mergeRefs(region, pushScope as never, popScope as never)}
         aria-label={top.label}
         /* Focusable as the target of the move above, never a tab stop: a region
            a keyboard stops on for no reason announces nothing. */

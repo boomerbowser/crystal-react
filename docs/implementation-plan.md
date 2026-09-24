@@ -2475,8 +2475,6 @@ inventing would have shipped.
   the control that leaves belongs inside the task, where it cannot be hidden by
   the thing it undoes.
 
-**Slice O is complete: 15 of 15, and the library is at 262 of 285.**
-
 **Two tests were caught being unable to fail**, both in the same file and both
 found by strengthening rather than by running. A page header's description is
 hidden by a CSS-module rule, and jsdom applies no CSS — `toBeInTheDocument` on
@@ -2486,13 +2484,36 @@ because the crumbs had been given `key` where the type asks for `id`; the count
 was true either way. The first moved to `verify:appearance`, which goes 45 → 47;
 the second now asserts the crumbs as well as the landmark.
 
-### O — Screens (15)
+**A review pass after the slice was pushed found four more**, and two of them
+are the same defect the slice had just written a component to prevent.
 
-`screen`, `page-header`, `view-stack`, `master-detail`, `split-view`, `command-bar`, `status-bar`, `workspace`, `focus-mode`, `empty-screen`, `error-screen`, `loading-screen`, `offline-screen`, `not-found-screen`, `permission-screen`.
+- **`ViewStack` played the arrival with the push's orientation on a pop.** One
+  motion hook, whose `reorient` was computed from the reading direction alone, so
+  a pop would have animated the returning view in from the edge it was leaving
+  towards. Inert today, because the recipe is unreachable until 2.1.0 — and wrong
+  the day it arrives, which is the worst order for a defect to appear in. Two
+  hooks now, with fixed orientations. The header also claimed `view-push-out` was
+  used, and it cannot be: the covered view is unmounted, so there is nothing left
+  to play a departure on. It says so now.
+- **`Workspace` dropped focus to the document body**, which is exactly what
+  `FocusMode` had been built that morning to prevent. Turning focus mode on
+  unmounts the other panes, and a reader whose focus was in one of them lands on
+  the body with nothing said. The same continuous focus tracking, the same "only
+  when the pane focus was in has gone" condition.
+- **`SplitView` spread `Resizable`'s vocabulary onto a plain `div`** when
+  collapsed. React puts an unrecognised prop straight onto the DOM node, so it
+  rendered `<div minsize="200" orientation="horizontal">`: invalid markup, a
+  warning in development, silence in production. Nothing caught it because no
+  test and no story passed one of those alongside `collapse` — a defect that
+  needs two props at once to appear.
+- **"One tab stop" was asserted in `CommandBar`'s header and measured nowhere.**
+  It is a claim about what a reader reaches with the Tab key, which is a browser
+  question; `verify:behaviour` goes 42 → 43. Its first plant was a false green —
+  replacing `Toolbar` with a `div` removed `role="toolbar"` too, so the locator
+  never resolved and the run failed under a different name. The faithful plant
+  keeps the role and removes only the roving tab index.
 
-Whole views and their chrome, including the states a view can be in before it has
-content — loading, empty, error, offline, not found, unauthorised — which products
-otherwise improvise separately and inconsistently.
+**Slice O is complete: 15 of 15, and the library is at 262 of 285.**
 
 ### P — Blocks (20)
 

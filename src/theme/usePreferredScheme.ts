@@ -7,10 +7,9 @@
  * scope, and `forced-colors` for the mode where the operating system is painting
  * rather than the design system.
  *
- * `useSyncExternalStore` rather than `useEffect` plus state, because the value has
- * a server snapshot and a subscription — which is exactly the shape that hook
- * exists for. The naive version renders the wrong answer first and corrects it,
- * which is a flash of the wrong theme on every load.
+ * The subscription itself is `useMediaQuery`, which these share with
+ * `MasterDetail`'s layout breakpoint; what is here is only which queries Crystal
+ * asks and what each answer means.
  */
 import { useMediaQuery } from './useMediaQuery.js';
 

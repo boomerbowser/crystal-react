@@ -40,6 +40,31 @@ describe('SplitView', () => {
     expect(screen.queryByText('List')).toBeNull();
   });
 
+  /* `minSize` and the rest are `Resizable`'s vocabulary, and React puts an
+     unrecognised prop straight onto the DOM node. A collapsed split view that
+     spread them rendered `<div minsize="200" orientation="horizontal">`: invalid
+     markup, a warning in development, silence in production. Nothing caught it
+     because nothing passed one alongside `collapse`. */
+  it('does not leak the resizing vocabulary onto the collapsed element', () => {
+    const { container } = renderWithCrystal(
+      <SplitView
+        aria-label="Resize the list"
+        secondary={<div>Detail</div>}
+        collapse="secondary"
+        minSize={200}
+        maxSize={600}
+        orientation="horizontal"
+      >
+        <div>List</div>
+      </SplitView>,
+    );
+    const collapsed = container.querySelector('[data-cr-state="collapsed"]');
+    expect(collapsed).not.toBeNull();
+    for (const leaked of ['minsize', 'maxsize', 'orientation', 'issize', 'onsizechange']) {
+      expect(collapsed?.hasAttribute(leaked)).toBe(false);
+    }
+  });
+
   it('has no axe violations', async () => {
     const { container } = renderWithCrystal(
       <SplitView aria-label="Resize the list" secondary={<div>Detail</div>} defaultSize={200}>

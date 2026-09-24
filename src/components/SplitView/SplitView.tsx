@@ -49,7 +49,15 @@ export interface SplitViewProps extends Omit<HTMLAttributes<HTMLDivElement>, 'on
 }
 
 export function SplitView({
-  children, secondary, collapse = 'none', className, ...props
+  children, secondary, collapse = 'none', className,
+  /* Named so they can be *withheld* from the collapsed branch. They are
+     `Resizable`'s vocabulary, and React puts an unrecognised prop straight onto
+     the DOM node: a collapsed split view spreading them renders
+     `<div minsize="200" orientation="horizontal">`, which is invalid markup, a
+     console warning in development, and silence in production. Nothing in the
+     tests or the stories passed one alongside `collapse`, so nothing saw it. */
+  size, defaultSize, minSize, maxSize, orientation, isDisabled, onSizeChange,
+  ...props
 }: SplitViewProps): React.JSX.Element {
   if (collapse !== 'none') {
     /* One pane, no divider. `data-cr-state` so the collapse is legible to a
@@ -71,6 +79,13 @@ export function SplitView({
       data-cr-state="at-rest"
       className={className}
       {...(secondary === undefined ? {} : { secondary })}
+      {...(size === undefined ? {} : { size })}
+      {...(defaultSize === undefined ? {} : { defaultSize })}
+      {...(minSize === undefined ? {} : { minSize })}
+      {...(maxSize === undefined ? {} : { maxSize })}
+      {...(orientation === undefined ? {} : { orientation })}
+      {...(isDisabled === undefined ? {} : { isDisabled })}
+      {...(onSizeChange === undefined ? {} : { onSizeChange })}
     >
       {children}
     </Resizable>
