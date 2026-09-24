@@ -1,0 +1,5 @@
+/* "Inherits." Focus mode paints nothing — it is a decision about what is
+   rendered, not a surface. What it owns is that the task fills what the chrome
+   was using. */
+.wrap { display: grid; min-block-size: 0; }
+.task { min-block-size: 0; }

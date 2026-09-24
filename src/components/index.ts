@@ -245,3 +245,5 @@ export * from './SplitView/index.js';
 export * from './CommandBar/index.js';
 export * from './MasterDetail/index.js';
 export * from './Workspace/index.js';
+export * from './ViewStack/index.js';
+export * from './FocusMode/index.js';

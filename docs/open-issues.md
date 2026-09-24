@@ -3,7 +3,7 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Five entries, and none is ordinary work.**
+**Six entries, and none is ordinary work.**
 
 **R-17** has one part left and it is not in this repository's hands. All three
 of its items are answered: every story file declares `meta.component`; the
@@ -16,7 +16,9 @@ TypeScript 7.
 
 **R-19** is a simplification that 2.1.0 makes possible and that cannot start
 until it is published. **R-20** is the same wait from the other side: a table of
-2.1.0's values carried here so slice K could be built at all.
+2.1.0's values carried here so slice K could be built at all. **R-23** is the
+third of that family and the plainest: a component here asks Crystal for two
+recipes that exist, in a version this library cannot yet resolve.
 
 **R-22** is a disagreement rather than a gap: the catalogue asks a component for
 an ARIA role that the accessible primitive underneath it removes on purpose, and
@@ -539,3 +541,33 @@ typable numeric field whose bounds are announced — or Crystal states that the
 role is required and accepts what it costs on VoiceOver. The first is very
 likely right, but it is a change to a published specification, and this library
 does not get to make one by shipping something else and saying nothing.
+
+## R-23 · The view stack asks for a movement it cannot reach yet
+
+`ViewStack` is built against `view-push-in` and `view-push-out` — Crystal's
+recipes for a view arriving along the reading direction, and for the view it
+covers travelling a fraction of that distance behind it. They were authored in
+core for this component, because the catalogue had named the view stack since
+2.0 and published nothing it could move with: the nearest recipe was `page-in`,
+which arrives forward on the block axis and says "new location" where a stack
+means "one step deeper".
+
+They ship in `@crystal-ui/core@2.1.0`. This library is pinned to `^2.0.0`, so
+today `getRecipe('view-push-in')` returns nothing here.
+
+**Why it matters, and why it is not urgent.** `useMotion` throws on a recipe it
+does not have, and that is the right behaviour — a movement that silently does
+nothing is a defect nobody can see. So `ViewStack` asks rather than assumes, and
+without the recipe it behaves exactly as it does under
+`prefers-reduced-motion`: the push happens, focus moves, the back control works,
+and the decoration is absent. Nothing in the accessibility contract waits for
+this. What is missing is the thing a reader would notice and could not name — a
+stack whose depth is legible from the way it moves.
+
+**Where.** `src/components/ViewStack/ViewStack.tsx`, the `getRecipe` guard;
+`core/tokens/motion-recipes.json` and `core/tokens/catalogue/13-screens.json` in
+the design system.
+
+**What closing it takes.** Meridian publishes 2.1.0; this library's dependency
+moves to `^2.1.0` with R-19; the guard comes out, because by then the recipe is
+a requirement rather than a hope, and a missing one should throw again.

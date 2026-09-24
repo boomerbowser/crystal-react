@@ -2304,7 +2304,7 @@ was the finding:
    missing was anything holding the order, which DOM position decides — a test
    now fails if the regions are reordered or if either falls silent.
 
-### O — Screens (15) — in progress
+### O — Screens (15) — complete
 
 `screen`, `page-header`, `view-stack`, `master-detail`, `split-view`,
 `command-bar`, `status-bar`, `workspace`, `focus-mode`, `empty-screen`,
@@ -2418,6 +2418,64 @@ inventing would have shipped.
   generated token export rather than being retyped as `850`.
 
 `verify:appearance` goes 47 → 48 and `verify:behaviour` 40 → 42.
+
+**Round four: the two that touched core.**
+
+- **Crystal had named the view stack and published nothing it could move with.**
+  The catalogue has said since 2.0 that views "enter and leave along the reading
+  direction", and the nearest recipe was `page-in` — a view arriving *forward* on
+  the block axis, which is a different movement saying a different thing. A stack
+  built on it says "new location" where it means "one step deeper". So
+  `view-push-in` and `view-push-out` were authored in **core**, not invented
+  here, which is the standing rule and was the right call twice over: core's
+  build refused them until the catalogue claimed them — *every animation must
+  belong to a documented component* — and its validator refused them again until
+  each carried a spring fitted to its authored duration. Neither check exists in
+  this repository.
+
+  Two recipes rather than four. A pop is a push mirrored and right-to-left is a
+  push mirrored again, and `reorient` already points an authored movement without
+  copying it; a second copy is a second fitted spring to keep in step with the
+  first.
+
+  **They are not reachable from here yet.** This library is pinned to
+  `@crystal-ui/core@^2.0.0` and the recipes ship in 2.1.0, which is Meridian's to
+  publish. `useMotion` throws on a recipe it does not have — correctly, because a
+  movement that silently does nothing is worse than one that says so — so the
+  stack asks `getRecipe` rather than assuming, and until the bump it behaves
+  exactly as it does under `prefers-reduced-motion`: the state change in full,
+  the decoration absent. Nothing about focus, the back control or the semantics
+  waits for it. Tracked with R-19.
+
+- **"Returns on pop" was implemented, found to be a lie, and replaced with the
+  truth.** The intended contract is that focus returns to the exact control the
+  reader left. A stack cannot give that: it shows one view at a time, so the
+  control was *unmounted* with its view, and a reference kept to it is a detached
+  node that `focus()` accepts and silently ignores. The first implementation
+  stored one, and would have looked right, passed a test that never unmounted
+  anything, and put every reader at the top of the page in production. It now
+  returns focus to the view, which is what it can truthfully restore, and the
+  header says why rather than implying more.
+
+- **Two components learned the same thing about effects.** `FocusMode` must know
+  whether focus was in the chrome *before* the chrome unmounts, and the obvious
+  version reads `document.activeElement` in the effect that notices the change —
+  by which point the chrome has gone and the answer is always `body`, so the
+  check passes every time and moves focus never. There is no lifecycle point
+  between "still focused" and "gone"; `useLayoutEffect` is after the mutation
+  too. Focus has to be followed as it moves. The naive version was written first
+  here, and the test caught it.
+
+- **`FocusMode`'s catalogue sentence contains a tension**, and it is resolved in
+  the open rather than half-implemented: "nothing becomes unreachable, only
+  hidden". Chrome that is genuinely reachable has not been hidden; chrome that is
+  `visibility: hidden` is the worst of both, invisible and still in the tab
+  order. The reading that makes both halves true is about the mode — nothing is
+  lost because leaving is always available — so the chrome is not rendered and
+  the control that leaves belongs inside the task, where it cannot be hidden by
+  the thing it undoes.
+
+**Slice O is complete: 15 of 15, and the library is at 262 of 285.**
 
 **Two tests were caught being unable to fail**, both in the same file and both
 found by strengthening rather than by running. A page header's description is

@@ -1,0 +1,6 @@
+/* "Inherits per view." The stack paints nothing: a view carries whatever
+   material it holds, and a stack that painted would be a surface behind every
+   one of them. What it owns is that only the top view occupies the space. */
+.stack { display: grid; min-block-size: 0; }
+.view { min-inline-size: 0; grid-area: 1 / 1; }
+.back { justify-self: start; }
