@@ -1863,12 +1863,69 @@ and never trust jsdom for one.** Three of the four above are invisible to a DOM
 that has no layout, and the two worst were geometry. A component whose entire job
 is to show one picture larger needs a gate that has seen the picture.
 
-### N — Commerce (24)
+### N — Commerce (24) — in progress
 
 `price`, `price-range`, `discount-badge`, `quantity-stepper`, `variant-selector`, `stock-indicator`, `product-card`, `product-gallery`, `cart-item`, `cart-summary`, `coupon-input`, `checkout-steps`, `payment-method`, `address-form`, `order-summary`, `shipping-selector`, `delivery-estimate`, `wishlist-button`, `review`, `rating-summary`, `filter-panel`, `sort-select`, `compare-table`, `recently-viewed`.
 
 `payment-method` defers to the host provider's own element and never handles raw
 card data, which keeps PCI scope out of the library entirely.
+
+Built in six rounds rather than one, each with its own planting pass: the atoms,
+the controls, the choice groups, the cart, the catalogue, and the address form
+last because it is the one with a scope trap in it.
+
+**Done: the atoms (5).** `price`, `price-range`, `discount-badge`,
+`stock-indicator`, `delivery-estimate`.
+
+`src/commerce/` came first, the way `feedback/status.ts` and `media/time.ts` did.
+Nine components in this slice render an amount, and each of them would otherwise
+decide separately how a number becomes a currency — which is precisely what the
+catalogue means when it says Crystal "left every store to reinvent … currency
+formatting". So the unit of exchange is `Money`, an amount *with* its currency:
+`29.99` is not a price, it is a price in something somebody has to remember.
+Every rule about where the separator goes, whether the symbol leads, and how many
+fraction digits a currency has is `Intl`'s, reached through `NumberFormatter` so
+the locale comes from `CrystalProvider` rather than from the call site.
+
+**What the catalogue's wording decided, in each case.**
+
+- **"A percentage alone is not a claim."** `DiscountBadge` refuses a `percent`
+  prop. A percentage handed in from outside is a number nobody can check — twenty
+  per cent off *something* — so it takes the two amounts and computes the
+  reduction, which is what stops the badge disagreeing with the price beside it.
+  An increase and a cross-currency ratio both render nothing rather than
+  asserting something the component has just worked out is false.
+- **"Reads as a sentence rather than two numbers with a dash."** A dash means
+  nothing out loud, and a reader who cannot see the layout cannot tell an upper
+  bound from an instalment. `PriceRange` joins its ends with words, and the words
+  are a prop because word order is not English's to lend. A range whose ends are
+  equal, or whose ends are in two currencies, is not a range and collapses.
+- **"An absolute date, not only a relative phrase."** "Arrives in 3 days" stops
+  being true the moment it is cached or read the next morning, and it is
+  unanswerable — deciding whether a parcel beats a Friday needs a date. So
+  `DeliveryEstimate` always renders one, with the relative phrase additional.
+- **"Words carry the state."** `StockIndicator` is a `StatusBadge` with the
+  availability vocabulary in front of it, not a second badge drawing the same
+  well. Backorder is `info` rather than `attention`: it can be bought, it simply
+  arrives later, and the attention colour would report a problem where there is
+  an ordinary outcome.
+
+**One thing the one-string rule does and does not forbid.** `NumberFormatter`
+refuses a separate spoken form, because "1.2M" and `1204893` are two different
+values and the one a screen reader reads is the one nobody checks. A pill reading
+"20% off" whose accessible name reads "£40.00, reduced from £50.00, 20% off" is
+not that: it is the same fact stated more completely, which is the pattern the
+notification's "Unread." and the gallery's position already use. Where a product
+needs the currency spelled out because `$` is ambiguous, `currencyDisplay="name"`
+spells it out **for everybody** — that is the case the rule does govern.
+
+**Planting.** Eight claims planted red: the range's two collapses and its
+dash-free sentence, the badge's refusal of an increase, backorder's status, the
+estimate's live region, its unavailable wording, and its `datetime`. The last one
+needed two instants rather than one — a date at local midnight has the same UTC
+day in a zone behind Greenwich, so a single fixture cannot see `toISOString`
+being wrong. Whatever the offset, one of an early and a late instant crosses; in
+UTC itself neither does, which is the one place the defect does not exist.
 
 ### O — Screens (15)
 

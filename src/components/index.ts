@@ -205,3 +205,9 @@ export * from './VideoPlayer/index.js';
 export * from './Lightbox/index.js';
 export * from './Gallery/index.js';
 
+/* Commerce (slice N). */
+export * from './Price/index.js';
+export * from './PriceRange/index.js';
+export * from './DiscountBadge/index.js';
+export * from './StockIndicator/index.js';
+export * from './DeliveryEstimate/index.js';

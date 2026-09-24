@@ -659,6 +659,35 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
+/* ------------------------------------------------------- a discount is a pill
+ *
+ * "Pill" is the catalogue's geometry for it, and a pill is not a radius token —
+ * it is a radius at least half the element's height, which is the only
+ * definition that survives the element changing size. `--cr-action-radius` is
+ * large enough for every size the badge comes in, but asserting that the token
+ * is *applied* is asserting a spelling; what a reader sees is whether the ends
+ * are round. */
+{
+  await open('commerce-discount-badge--default', '#storybook-root span');
+  const pill = await page.evaluate(() => {
+    const badge = document.querySelector('#storybook-root span');
+    if (!badge) return null;
+    const box = badge.getBoundingClientRect();
+    return {
+      radius: Number.parseFloat(getComputedStyle(badge).borderTopLeftRadius),
+      half: box.height / 2,
+      height: box.height,
+    };
+  });
+  record(
+    'a discount badge is a pill, whatever its height',
+    pill !== null && pill.height > 0 && pill.radius >= pill.half,
+    `its radius is ${pill?.radius}px against a half-height of ${pill?.half}px. A pill is a `
+    + 'radius at least half the height, which is the only definition that survives the '
+    + 'element changing size',
+  );
+}
+
 /* ------------------------------------------- selection is not a focus ring
  *
  * A gallery thumbnail has no label to weight, so Crystal's other half of the

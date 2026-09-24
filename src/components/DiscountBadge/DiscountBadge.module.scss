@@ -1,0 +1,31 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
+
+/* A Haze fill in a pill, with a status accent and no perimeter stroke.
+ *
+ * The same composition `DeltaBadge` uses and for the same reason: a discount is
+ * typography beside a price, not a control, and a floating glass pill in a
+ * column of figures reads as something you could press. The fill is inset by `0`
+ * because `--cr-haze-inset` exists to stop a fill short of an exposed glass
+ * perimeter, and there is no perimeter here to protect.
+ */
+.discount {
+  @include material.haze-fill(0);
+
+  display: inline-flex;
+  align-items: baseline;
+  box-sizing: border-box;
+  padding: $cr-spacing-2xs $cr-spacing-xs;
+  border-radius: $cr-action-radius;
+  /* A reduction is a favourable fact, so the accent is the success ink. */
+  color: var(--cr-success-ink);
+  font-size: var(--cr-text-caption-size);
+  line-height: var(--cr-text-caption-leading);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .discount { color: CanvasText; border: 1px solid CanvasText; }
+}
