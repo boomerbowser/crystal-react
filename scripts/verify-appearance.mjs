@@ -659,6 +659,46 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
+/* ------------------------------------------- a pressed toggle looks pressed
+ *
+ * Crystal specifies this and the library was not rendering it. `crystal.css`
+ * carries `:is(button[aria-pressed=true], …)` with its reading pad in
+ * `--cr-primary`, `--cr-on-primary` ink and the label at weight 800 — in
+ * `@layer crystal.component`, which an unlayered module class in this package
+ * outranks without a specificity contest. That is what cascade layers are for,
+ * and it meant a consumer saw none of it: measured, the pad stayed at the
+ * neutral Haze fill and the weight stayed at 700 while `aria-pressed` said
+ * true.
+ *
+ * So this compares the two states rather than checking that a token is spelled
+ * somewhere. A toggle whose on state is indistinguishable from its off state is
+ * a toggle with no state. */
+{
+  const toggle = async (id) => {
+    await open(id, '#storybook-root button');
+    return page.evaluate(() => {
+      const control = document.querySelector('#storybook-root button');
+      if (!control) return null;
+      return {
+        pressed: control.getAttribute('aria-pressed'),
+        pad: getComputedStyle(control, '::before').backgroundColor,
+        weight: Number.parseInt(getComputedStyle(control).fontWeight, 10),
+      };
+    });
+  };
+  const off = await toggle('commerce-wishlist-button--default');
+  const on = await toggle('commerce-wishlist-button--saved');
+  record(
+    'a pressed toggle carries Crystal\'s selected recipe, pad and weight',
+    off !== null && on !== null
+      && off.pressed === 'false' && on.pressed === 'true'
+      && on.pad !== off.pad && on.weight > off.weight,
+    `off is ${off?.pad} at weight ${off?.weight}, on is ${on?.pad} at weight ${on?.weight}. `
+    + 'Crystal styles the element and this package styles a class, so the library\'s own '
+    + 'rule wins the layer contest and a consumer sees whichever one this package wrote',
+  );
+}
+
 /* ------------------------------------------------------- a discount is a pill
  *
  * "Pill" is the catalogue's geometry for it, and a pill is not a radius token —

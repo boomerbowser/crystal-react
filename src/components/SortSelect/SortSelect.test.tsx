@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen } from '../../test/render.js';
@@ -21,7 +22,49 @@ describe('SortSelect', () => {
 
     await user.click(screen.getByRole('button', { name: /Sort by/ }));
     await user.click(screen.getByRole('option', { name: 'Newest' }));
-    expect(screen.getByRole('status')).toHaveTextContent('Sorted by Newest');
+    await waitFor(() => {
+      expect(screen.getByRole('status')).toHaveTextContent('Sorted by Newest');
+    });
+  });
+
+  /* Said after the list has moved, not when moving it was asked for. Most
+     orderings are a round trip; a reader told "sorted by newest" who then
+     arrives at the old list has been told something false by the one thing
+     whose job was to tell them the truth. */
+  it('waits for the list to actually be reordered', async () => {
+    const user = userEvent.setup();
+    let finish = () => {};
+    const reorder = vi.fn(() => new Promise<void>((resolve) => { finish = resolve; }));
+    renderWithCrystal(
+      <SortSelect options={options} defaultSelectedKey="relevance" onSelectionChange={reorder} />,
+    );
+    await user.click(screen.getByRole('button', { name: /Sort by/ }));
+    await user.click(screen.getByRole('option', { name: 'Newest' }));
+
+    expect(reorder).toHaveBeenCalled();
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+
+    finish();
+    await waitFor(() => {
+      expect(screen.getByRole('status')).toHaveTextContent('Sorted by Newest');
+    });
+  });
+
+  /* A sort that failed is the product's to report, and this component saying it
+     succeeded would be worse than silence. */
+  it('says nothing when the reorder fails', async () => {
+    const user = userEvent.setup();
+    renderWithCrystal(
+      <SortSelect
+        options={options}
+        defaultSelectedKey="relevance"
+        onSelectionChange={() => Promise.reject(new Error('the server refused'))}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: /Sort by/ }));
+    await user.click(screen.getByRole('option', { name: 'Newest' }));
+    await new Promise((resolve) => { setTimeout(resolve, 50); });
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
   /* A list that arrives sorted has not been reordered. */

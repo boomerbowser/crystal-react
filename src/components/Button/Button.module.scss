@@ -125,6 +125,47 @@
   background: var(--cr-primary);
 }
 
+/* A toggle that is on.
+ *
+ * Crystal specifies this and the library was not rendering it. `crystal.css`
+ * carries `:is(button[aria-pressed=true], …) { color: var(--cr-on-primary) }`
+ * with its `::before` in `--cr-primary`, and the label at weight 800 — but that
+ * rule lives in `@layer crystal.component`, and a module class here is
+ * unlayered, so the library's own `.button` outranks it without a specificity
+ * contest. That is exactly what cascade layers are *for*, and it means a
+ * consumer of this package saw none of it. Measured in a browser rather than
+ * assumed: the pad stayed at the neutral Haze fill and the weight stayed at 700.
+ *
+ * So the recipe is written here, in the library's own layer, with Crystal's own
+ * values. It is the same pad `primary` paints, which is the point — a pressed
+ * toggle *is* the action in its on state, and the pair is the palette's tested
+ * one rather than a colour chosen for toggles.
+ *
+ * The weight is the other half, and it is the half that is not a colour:
+ * "selection is label weight" is Crystal's rule for every selected thing, and
+ * it is what keeps this readable where the fill is not. */
+.button[aria-pressed='true'] {
+  color: var(--cr-on-primary);
+  font-weight: 800;
+}
+
+.button[aria-pressed='true']::before {
+  background: var(--cr-primary);
+  /* Crisp, like `primary`'s: a reading ground whose job is to make the label
+     independent of the backdrop cannot itself be a feathered tint. */
+  filter: none;
+}
+
+/* Quiet has no pad to tint, so a quiet toggle carries the weight alone — which
+   is the rule the pad is only ever reinforcing. */
+.quiet[aria-pressed='true'] { color: var(--cr-text); }
+
+@media (forced-colors: active) {
+  /* A fill is erased by the forced-colours palette, so the pressed state falls
+     back to the ring Crystal specifies for a selected control there. */
+  .button[aria-pressed='true'] { outline: 2px solid Highlight; outline-offset: 2px; }
+}
+
 /* The pad is what makes a label's contrast independent of what is behind the
    control, so removing it means a quiet button's label reads against the Resin
    fill and therefore against the backdrop. On Crystal's own foundation that is a

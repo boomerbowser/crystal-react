@@ -30,7 +30,7 @@
  * `MediaControls` avoids with its single play toggle.
  */
 import {
-  forwardRef, useId, useRef, type FormEvent, type ReactNode,
+  forwardRef, useEffect, useId, useRef, type FormEvent, type ReactNode,
 } from 'react';
 import { Button } from '../Button/Button.js';
 import { TextInput } from '../TextInput/TextInput.js';
@@ -70,6 +70,23 @@ export const CouponInput = forwardRef<HTMLInputElement, CouponInputProps>(
     const id = useId();
     const field = useRef<HTMLInputElement>(null);
 
+    /* Focus goes back to the field once the code is gone — in an effect, and
+       keyed on the code going away, because the applied state and the form are
+       two entirely different trees. At the moment Remove is pressed the input
+       this ref names does not exist yet: focusing it there focuses nothing, and
+       the reader is left on a control that has just removed itself. Bringing
+       the field back and then putting them in it are two separate renders, and
+       this is the second one.
+
+       `wasApplied` rather than `applied === undefined`, so this does not fire
+       on a component that simply mounts without a code. */
+    const wasApplied = useRef(applied !== undefined);
+    useEffect(() => {
+      const removed = wasApplied.current && applied === undefined;
+      wasApplied.current = applied !== undefined;
+      if (removed) field.current?.focus();
+    }, [applied]);
+
     const apply = (event: FormEvent) => {
       event.preventDefault();
       const code = value.trim();
@@ -88,14 +105,7 @@ export const CouponInput = forwardRef<HTMLInputElement, CouponInputProps>(
             {applied}
           </p>
           {onRemove ? (
-            <Button
-              variant="quiet"
-              onPress={() => {
-                onRemove();
-                /* The field is what is there once the code is gone. */
-                field.current?.focus();
-              }}
-            >
+            <Button variant="quiet" onPress={onRemove}>
               {removeLabel(applied)}
             </Button>
           ) : null}

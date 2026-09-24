@@ -1997,6 +1997,51 @@ the clearing half could never be seen, and the fraction guard turned out to
 reject the decimal separator at the parser rather than round after it, which is
 the stronger behaviour and a different claim.
 
+**Then a review of the round found three more**, and one of them was a sentence
+this slice had itself just written.
+
+1. **A pressed toggle did not look pressed, and the reason is the layer
+   contest.** `Button` gained `isSelected` with a comment claiming it renders
+   "the appearance Crystal already specifies for a pressed action". Measured in a
+   browser: it did not. `crystal.css` carries that rule as
+   `:is(button[aria-pressed=true], …)` in `@layer crystal.component`, and a CSS
+   module class in this package is *unlayered*, so the library's own `.button`
+   outranks it without a specificity contest — which is exactly what cascade
+   layers are for and exactly what makes this easy to miss. The recipe is written
+   here now, in the library's own layer, with Crystal's values: the reading pad
+   in `--cr-primary`, `--cr-on-primary` ink, the label at weight 800. The
+   wishlist pill's filled heart went with it, because two treatments for one
+   state is how a reader ends up hunting for a difference between them; the icon
+   shape keeps the fill, having no label to weight.
+
+   **This is the second false header sentence in one slice**, after
+   `NumberInput`'s. Both were written from what a dependency or a stylesheet
+   was expected to do rather than from what it was seen doing, and both were
+   caught by measuring. A `verify:appearance` check now compares the two states
+   rather than checking that a token is spelled somewhere.
+2. **The sort select announced before the list had moved.** Most orderings are a
+   round trip, and the component does not own the list, so the only moment it can
+   honestly say the list has been reordered is when the handler that reorders it
+   has finished. `onSelectionChange` may return a promise now and the
+   announcement waits for it; if it rejects, nothing is said, because a sort that
+   failed is the product's to report and this component claiming success would be
+   worse than silence.
+3. **The coupon field focused an input that did not exist.** Applied and unapplied
+   are two entirely different trees, so at the moment Remove is pressed the field
+   the ref names has not been mounted yet — `field.current?.focus()` there
+   focused nothing and left the reader on a control that had just removed itself.
+   Bringing the field back and putting them in it are two renders, and the focus
+   belongs in the second.
+
+**And an export rule, from an asymmetry the review found.** The commerce slice's
+vocabulary was public and the feedback slice's was not — which meant
+`FeedbackStatus`, a *public prop type* of `Alert`, `Banner` and `StatusBadge`,
+could not be named by the products that have to pass one. The rule is now
+explicit: a type that appears in a component's public props is exported, and so
+is the Crystal vocabulary beside it, so that a product building something Crystal
+has no component for reaches for Crystal's own symbols rather than picking four
+of its own.
+
 ### O — Screens (15)
 
 `screen`, `page-header`, `view-stack`, `master-detail`, `split-view`, `command-bar`, `status-bar`, `workspace`, `focus-mode`, `empty-screen`, `error-screen`, `loading-screen`, `offline-screen`, `not-found-screen`, `permission-screen`.

@@ -85,7 +85,7 @@ export const WishlistButton = forwardRef<HTMLButtonElement, WishlistButtonProps>
     }
 
     return (
-      <Button {...shared} aria-label={label} className={cx(styles['wish'], styles['pill'], className)}>
+      <Button {...shared} aria-label={label} className={cx(styles['pill'], className)}>
         <span aria-hidden="true" className={styles['mark']}>{Heart}</span>
         {children ?? 'Save'}
       </Button>

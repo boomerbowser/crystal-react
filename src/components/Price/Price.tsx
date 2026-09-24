@@ -16,7 +16,7 @@
  * inside a sentence can turn them off.
  */
 import { NumberFormatter, type NumberFormatterProps } from '../NumberFormatter/NumberFormatter.js';
-import { moneyFormat, type Money } from '../../commerce/money.js';
+import { moneyFormat, type CurrencyDisplay, type Money } from '../../commerce/money.js';
 
 export interface PriceProps extends Omit<NumberFormatterProps, 'value' | 'format'> {
   /** The amount and its currency. */
@@ -26,7 +26,7 @@ export interface PriceProps extends Omit<NumberFormatterProps, 'value' | 'format
    * is locale-aware: `USD` is `$` to a reader in the United States and `US$` to
    * one in Britain.
    */
-  currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code' | 'name';
+  currencyDisplay?: CurrencyDisplay;
 }
 
 export function Price({ value, currencyDisplay, ...props }: PriceProps): React.JSX.Element {

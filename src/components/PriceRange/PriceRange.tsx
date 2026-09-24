@@ -21,7 +21,7 @@
  */
 import { Text, type TextProps } from '../Text/Text.js';
 import { Price } from '../Price/Price.js';
-import { sameCurrency, type Money } from '../../commerce/money.js';
+import { sameCurrency, type CurrencyDisplay, type Money } from '../../commerce/money.js';
 
 export interface PriceRangeProps extends Omit<TextProps, 'children'> {
   /** The lower bound, and the whole price when there is no upper one. */
@@ -35,7 +35,7 @@ export interface PriceRangeProps extends Omit<TextProps, 'children'> {
   sentence?: (from: React.ReactNode, to: React.ReactNode) => React.ReactNode;
   /** The sentence for a single price. */
   fromSentence?: (from: React.ReactNode) => React.ReactNode;
-  currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code' | 'name';
+  currencyDisplay?: CurrencyDisplay;
 }
 
 export function PriceRange({

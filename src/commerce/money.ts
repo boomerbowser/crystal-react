@@ -22,6 +22,12 @@
  */
 import type { NumberFormatOptions } from '@internationalized/number';
 
+/**
+ * How `Intl` renders the currency. Named here because three components take it
+ * and a union repeated three times is three places to forget an option.
+ */
+export type CurrencyDisplay = 'symbol' | 'narrowSymbol' | 'code' | 'name';
+
 /** An amount with the currency it is denominated in. */
 export interface Money {
   /** The amount, in major units. `29.99`, not `2999`. */
@@ -42,7 +48,7 @@ export interface Money {
  */
 export function moneyFormat(
   money: Money,
-  currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code' | 'name',
+  currencyDisplay?: CurrencyDisplay,
 ): NumberFormatOptions {
   return {
     style: 'currency',

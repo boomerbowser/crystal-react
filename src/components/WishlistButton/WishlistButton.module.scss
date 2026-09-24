@@ -1,21 +1,18 @@
 @use '../../styles/tokens' as *;
 
-/* The saved state is the icon filling in, which is a change of the mark itself
-   rather than a ring around the control — Crystal reserves a coloured perimeter
-   for focus, and `StatusBadge` gives the argument in full.
+/* The pill needs nothing here. `Button` carries the pressed state in Crystal's
+   own vocabulary — the reading pad in `--cr-primary`, `--cr-on-primary` ink and
+   the label at weight 800 — and a filled heart on top of that would be a second
+   treatment for one state. Two signals for one fact is how a reader ends up
+   looking for a difference between them.
  *
- * It is never the *only* signal: `aria-pressed` carries the state to anything
- * that reads, and the pill's words are beside it. */
+ * The icon shape is the case that needs one. A circle has a tinted pad but no
+ * label to weight, so the mark filling in *is* the weight half of the rule —
+ * the same argument the gallery thumbnail settles, and the same conclusion:
+ * never an outline, because an outline is what focus is drawn with. */
 .wish[aria-pressed='true'] svg { fill: currentColor; }
 
 .pill { display: inline-flex; align-items: center; gap: $cr-spacing-2xs; }
 
 .mark { display: inline-flex; }
 .mark svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
-
-@media (forced-colors: active) {
-  /* A fill is erased by the forced-colours palette, so the pressed state falls
-     back to the system's own selected colours, which is what Crystal specifies
-     for a selected control there. */
-  .wish[aria-pressed='true'] svg { fill: Highlight; }
-}

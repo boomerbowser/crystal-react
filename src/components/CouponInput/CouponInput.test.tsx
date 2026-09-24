@@ -83,3 +83,28 @@ describe('CouponInput', () => {
     await expectNoAxeViolations(container);
   });
 });
+
+describe('CouponInput, after removing a code', () => {
+  /* "The field is what is there once the code is gone." The applied state and
+     the form are two entirely different trees, so the input the ref points at
+     does not exist at the moment Remove is pressed — focusing it there focuses
+     nothing at all. */
+  it('puts focus in the field it just brought back', async () => {
+    const user = userEvent.setup();
+    function Harness() {
+      const [applied, setApplied] = useState<string | undefined>('HARBOUR10');
+      return (
+        <CouponInput
+          value=""
+          onValueChange={() => {}}
+          onApply={() => {}}
+          {...(applied === undefined ? {} : { applied })}
+          onRemove={() => setApplied(undefined)}
+        />
+      );
+    }
+    renderWithCrystal(<Harness />);
+    await user.click(screen.getByRole('button', { name: 'Remove HARBOUR10' }));
+    expect(screen.getByRole('textbox', { name: 'Discount code' })).toHaveFocus();
+  });
+});
