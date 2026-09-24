@@ -17,9 +17,9 @@
    content the scroller is both the fix and the usual shape of an application. */
 .appShell {
   display: grid;
-  grid-template-areas: 'header header' 'sidebar main';
+  grid-template-areas: 'header header' 'sidebar main' 'footer footer';
   grid-template-columns: var(--cr-shell-sidebar, #{$cr-layout-sidebar-width}) minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   block-size: 100dvh;
   overflow: hidden;
   background: var(--cr-canvas);
@@ -29,6 +29,10 @@
 .collapsed { grid-template-columns: 0 minmax(0, 1fr); }
 
 .header { grid-area: header; min-width: 0; }
+
+/* The `contentinfo` band. It sits below both columns rather than beside the
+   content, because it is about the view rather than part of it. */
+.footer { grid-area: footer; min-width: 0; }
 
 .sidebar {
   grid-area: sidebar;
@@ -57,7 +61,7 @@
    for a product decides too much. */
 @media (max-width: $cr-breakpoint-md) {
   .appShell {
-    grid-template-areas: 'header' 'main';
+    grid-template-areas: 'header' 'main' 'footer';
     grid-template-columns: minmax(0, 1fr);
   }
   .sidebar { display: none; }

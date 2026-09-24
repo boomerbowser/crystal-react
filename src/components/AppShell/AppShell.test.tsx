@@ -33,4 +33,24 @@ describe('AppShell', () => {
     );
     expect(screen.queryByRole('navigation', { name: 'Sections' })).toBeNull();
   });
+  /* The header listed four landmarks and the file drew two of them: there was no
+     footer slot at all, so `contentinfo` was a sentence rather than a region. A
+     reader jumping by landmark to find what is true of the view — saved, syncing,
+     offline — had nowhere to land. */
+  it('renders the contentinfo landmark it promises', () => {
+    renderWithCrystal(
+      <AppShell footer={<p>All changes saved</p>}>
+        <p>The view</p>
+      </AppShell>,
+    );
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('All changes saved');
+  });
+
+  /* And stays absent when nothing was given it: an empty landmark is one more
+     entry in the list with nothing behind it. */
+  it('renders no footer when there is nothing to put in it', () => {
+    renderWithCrystal(<AppShell><p>The view</p></AppShell>);
+    expect(screen.queryByRole('contentinfo')).toBeNull();
+  });
+
 });

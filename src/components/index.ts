@@ -247,3 +247,8 @@ export * from './MasterDetail/index.js';
 export * from './Workspace/index.js';
 export * from './ViewStack/index.js';
 export * from './FocusMode/index.js';
+
+/* Blocks — composed arrangements that solve a recognisable product problem. */
+export * from './DashboardShell/index.js';
+export * from './MetricsRow/index.js';
+export * from './AnalyticsPanel/index.js';

@@ -2515,6 +2515,64 @@ are the same defect the slice had just written a component to prevent.
 
 **Slice O is complete: 15 of 15, and the library is at 262 of 285.**
 
+### P — Blocks (20) — in progress
+
+`dashboard-shell`, `metrics-row`, `analytics-panel`, `data-table-block`,
+`crud-form-block`, `settings-block`, `auth-block`, `profile-block`,
+`activity-feed`, `notification-centre`, `player-shell`, `playlist-block`,
+`storefront-block`, `product-detail-block`, `checkout-block`, `cart-drawer`,
+`pricing-block`, `onboarding-block`, `search-block`, `editor-block`.
+
+The catalogue's own framing is the constraint: "a component is a primitive with
+one job and a contract, while a block is **opinionated by design** — and a design
+system that cannot tell the two apart ships opinions as if they were primitives."
+So the question in every one of these is what the opinion actually is, and
+whether anything else in it should have been left to the component underneath.
+
+**Round one: the dashboard.**
+
+- **`AppShell` promised a landmark it had no slot for.** Its header listed
+  `banner`, `navigation`, `main` and `contentinfo`; the file rendered `div`,
+  `nav` and `main`, and there was no footer prop at all. The sentence was true of
+  the design and false of the file, which is the most expensive kind of comment —
+  a reader looking for the slot concluded it was theirs to build. `dashboard-shell`
+  is the first thing in the catalogue that needs all four, so the slot was added
+  where it belongs rather than improvised in the block, and the header now says
+  which of the four the shell draws, which it delegates, and to what.
+- **`DashboardShell`'s opinion is one line long**, and that is the honest size of
+  it: the content is a grid that reflows by *container* width. Everything else is
+  passed through, because a block that intercepted the shell's props would be a
+  second API for the same regions, drifting from the first. Container rather than
+  viewport because a dashboard inside a split view is narrower than the window,
+  and a media query would give it three columns in a 300px pane.
+- **`MetricsRow` is a list, and that is the whole semantics clause.** "A labelled
+  list of figures": a screen reader saying "list, four items" before the first
+  one tells the reader how much is coming, which is most of what a summary band
+  is for. Four sibling divs say nothing. Its loading state announces once for the
+  band rather than once per tile — the `LoadingScreen` shape again — and its
+  empty state is a state rather than an absent row, because a bare `map` over
+  nothing renders a gap where a band should be.
+- **`AnalyticsPanel` replaces the chart in three of its four states.** A chart
+  that is loading, empty or failed is usually drawn as an empty plot with axes,
+  which says "zero" to anyone reading it — and zero is a number the data did not
+  say. Each state replaces the plot and says which it is in words, while the
+  heading and controls stay, because they are how the reader changes the range
+  that might fix it. `error` is an alert and `empty` is not, for the reason
+  `ErrorScreen` is and `EmptyScreen` is not.
+- **An axe assertion passed against the state that had no defect in it.**
+  `MetricsRow`'s live region was a direct child of its `ul`, which may contain
+  only `li` — a real violation rather than a pedantic one, because it is what
+  makes a screen reader disagree with the browser about how many items the list
+  has. The unit test asserted no violations against the at-rest render, which
+  has no live region in it at all, so it passed in a world where the loading
+  render was malformed. The browser run on the loading *story* caught it. The
+  assertion now runs over both states, and the region sits outside the list.
+
+- **The table equivalent is not this block's to add**, and that is deliberate:
+  `ChartSurface` takes `table` as a required prop, so a chart in this library
+  cannot exist without the same data as text. A panel that accepted a bare
+  `<svg>` as its chart would be a way around that requirement.
+
 ### P — Blocks (20)
 
 `dashboard-shell`, `metrics-row`, `analytics-panel`, `data-table-block`, `crud-form-block`, `settings-block`, `auth-block`, `profile-block`, `activity-feed`, `notification-centre`, `player-shell`, `playlist-block`, `storefront-block`, `product-detail-block`, `checkout-block`, `cart-drawer`, `pricing-block`, `onboarding-block`, `search-block`, `editor-block`.

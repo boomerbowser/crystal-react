@@ -1,0 +1,13 @@
+@use '../../styles/tokens' as *;
+
+/* "Content grid." The one thing this adds to the shell's arrangement: a grid the
+   view's regions sit in, reflowing by *container* width rather than viewport,
+   so a dashboard inside a split view reflows with the pane it is in. */
+.grid {
+  display: grid;
+  gap: $cr-spacing-md;
+  padding: $cr-spacing-md;
+  container-type: inline-size;
+  grid-template-columns: repeat(auto-fit, minmax($cr-layout-min-cell-width, 1fr));
+  align-content: start;
+}
