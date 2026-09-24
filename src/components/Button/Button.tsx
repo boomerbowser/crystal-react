@@ -72,18 +72,25 @@ export interface ButtonProps extends Omit<AriaButtonProps, 'className' | 'style'
   style?: React.CSSProperties;
 }
 
+/* Crystal's own variant class names, as literals rather than module classes.
+ *
+ * `.cr-button.primary`, `.cr-button.quiet::before` and `.cr-button.danger` are
+ * core's rules, and a hashed module class cannot satisfy them. Emitting the
+ * plain names is what lets Crystal paint the variants too, which is the whole
+ * point of the sweep — this library stopped re-describing them. */
 const VARIANT_CLASS: Record<ButtonVariant, string | undefined> = {
-  primary: styles['primary'],
-  /* The base surface, minus the reading pad: the whole Resin shell with the
-     label directly on the material, which is what makes a quiet button quiet. */
-  quiet: styles['quiet'],
-  /* The boundary, not a fill. See the note above. */
-  danger: styles['danger'],
-  /* Resin is the base surface the stylesheet already applies, so this variant
-     adds nothing — it exists so `variant="resin"` is sayable rather than implicit. */
+  /* The reading pad in the action colour, with the palette's tested ink pair. */
+  primary: 'primary',
+  /* No pad at all: the label sits directly on the Resin shell. */
+  quiet: 'quiet',
+  /* An independent boundary rather than a fill, so the label's contrast never
+     comes to depend on a status colour. */
+  danger: 'danger',
+  /* Resin is the base surface Crystal already applies to every `<button>`, so
+     this variant adds nothing — it exists so `variant="resin"` is sayable
+     rather than implicit. */
   resin: undefined,
 };
-
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { children, variant = 'resin', shape = 'pill', isSelected, className, style, ...props },
   forwardedRef,
@@ -93,8 +100,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
      The scope is Motion's, and it cancels anything in flight on unmount. */
   const [scope, play] = useMotion({ once: true });
 
+  /* `cr-button` is what makes Crystal the painter: core keys the Resin material
+     on the `button` element and the geometry on this class, so wearing it is the
+     whole of what this library has to do to look like Crystal. */
   const classes = cx(
     styles['button'],
+    'cr-button',
     VARIANT_CLASS[variant],
     shape === 'card' && styles['card'],
     className,
