@@ -29,11 +29,11 @@
  * heading; otherwise it is text, and the product's own heading lives below.
  */
 import {
-  forwardRef, useEffect, useState,
+  forwardRef,
   type ElementType, type HTMLAttributes, type ReactNode,
 } from 'react';
 import { cx } from '../../styles/cx.js';
-import { useShellScroll } from '../AppShell/scrollContext.js';
+import { useScrolledPast } from '../AppShell/useScrolledPast.js';
 import styles from './AppBar.module.scss';
 
 /* `title` on an HTML element is the tooltip attribute, and it is a string. The
@@ -60,26 +60,10 @@ export const AppBar = forwardRef<HTMLElement, AppBarProps>(function AppBar(
   { title, titleAs: Title = 'p', actions, isCondensed = false, isBanner = true, className, children, ...props },
   ref,
 ) {
-  const [scrolled, setScrolled] = useState(false);
-  const shellScroll = useShellScroll();
+  const scrolled = useScrolledPast();
   /* A `header` outside sectioning content is a banner implicitly, so declining
      the role means declining the element. */
   const Band = (isBanner ? 'header' : 'div') as ElementType;
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-    const region = shellScroll?.current ?? null;
-    const target: HTMLElement | Window = region ?? window;
-
-    const read = () => {
-      const top = region ? region.scrollTop : window.scrollY;
-      setScrolled(top > 0);
-    };
-    read();
-
-    target.addEventListener('scroll', read, { passive: true });
-    return () => target.removeEventListener('scroll', read);
-  }, [shellScroll]);
 
   return (
     <>

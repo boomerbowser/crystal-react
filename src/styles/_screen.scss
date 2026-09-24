@@ -1,0 +1,41 @@
+@use 'tokens' as *;
+
+/* The frame a whole-view state shares.
+ *
+ * Six of the catalogue's screens — empty, error, loading, offline, not found,
+ * permission — are the same drawing with different words: a view with one thing
+ * in the middle of it. What the *screen* owns is the framing, and it is
+ * deliberately only the framing.
+ *
+ * The card is `Result` or `EmptyState`, and both of those already carry
+ * `haze-fill` and the content radius. The catalogue's "Haze content fill on the
+ * surrounding material" is therefore already satisfied by the component inside,
+ * and painting it again here would put a Haze pad inside a Haze pad: two
+ * materials deep, for one piece of content, with the outer one visible only as
+ * a slightly wrong rectangle behind the inner one. A screen paints nothing.
+ *
+ * Safe areas are the other half of "full-bleed; safe areas respected". A view
+ * that fills the display fills the notch and the home indicator with it, so the
+ * padding is the larger of the spacing step and the inset — `max()` rather than
+ * a sum, because on a device with no insets the sum would be the spacing twice.
+ */
+@mixin state-screen {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-block-size: 100%;
+  padding-block:
+    max(#{$cr-spacing-xl}, env(safe-area-inset-top))
+    max(#{$cr-spacing-xl}, env(safe-area-inset-bottom));
+  padding-inline:
+    max(#{$cr-spacing-lg}, env(safe-area-inset-left))
+    max(#{$cr-spacing-lg}, env(safe-area-inset-right));
+}
+
+/* The card stops at the reading measure. A `Result` stretched to a 1500px
+   display puts its heading and its actions at opposite ends of a line nobody
+   tracks across. */
+@mixin state-screen-card {
+  inline-size: 100%;
+  max-inline-size: $cr-layout-reading-max;
+}

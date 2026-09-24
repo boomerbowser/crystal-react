@@ -1,0 +1,4 @@
+@use '../../styles/screen' as screen;
+
+.screen { @include screen.state-screen; }
+.card { @include screen.state-screen-card; }

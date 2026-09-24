@@ -1,0 +1,20 @@
+@use '../../styles/screen' as screen;
+@use '../../styles/tokens' as *;
+
+/* Not `state-screen`: the others centre one card, and this one stands in for the
+   view that is coming. Skeletons that match the shape of what is arriving have
+   to sit where that content will sit, which is the top of the region, at its
+   width — centring them would move everything the moment the real thing landed. */
+.screen {
+  box-sizing: border-box;
+  min-block-size: 100%;
+  padding-block:
+    max(#{$cr-spacing-lg}, env(safe-area-inset-top))
+    max(#{$cr-spacing-lg}, env(safe-area-inset-bottom));
+  padding-inline:
+    max(#{$cr-spacing-lg}, env(safe-area-inset-left))
+    max(#{$cr-spacing-lg}, env(safe-area-inset-right));
+}
+
+.centred { @include screen.state-screen; }
+.card { @include screen.state-screen-card; }

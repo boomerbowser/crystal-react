@@ -1,0 +1,51 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/material';
+
+/* "Frost band or inherits." Frost is the default because a page header is chrome
+   above a reading surface, and `inherits` is what `isPlain` asks for: a header
+   inside a panel that is already a material would be a band of Frost on Frost. */
+.header {
+  display: grid;
+  gap: $cr-spacing-xs;
+  box-sizing: border-box;
+  padding-block: $cr-spacing-lg;
+  padding-inline: $cr-spacing-lg;
+  transition: padding-block $cr-motion-duration-state #{$cr-motion-easing-settle};
+}
+
+.banded { @include material.frost; }
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $cr-spacing-md;
+  flex-wrap: wrap;
+}
+
+.title { margin: 0; }
+.description { margin: 0; color: var(--cr-muted); }
+
+/* "Actions are pills" — which is Crystal's action geometry, so the actions
+   carry it by being actions rather than by being told to here. What this owns is
+   that they sit together and do not wrap under the title one at a time. */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-xs;
+  flex: none;
+}
+
+/* Condensed: the band tightens and the description goes. The title, the
+   breadcrumbs and the actions all stay — condensing is the header taking less
+   room, never the header taking things away from the reader. */
+.condensed { padding-block: $cr-spacing-xs; }
+.condensed .description { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .header { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .banded { border-block-end: 1px solid CanvasText; }
+}

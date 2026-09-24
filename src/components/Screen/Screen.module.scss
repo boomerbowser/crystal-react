@@ -1,0 +1,18 @@
+@use '../../styles/tokens' as *;
+
+/* "Plastic foundation with Frost chrome." The foundation is the page's, not
+   this component's — a screen inside a shell would be a second Plastic plane
+   over the first, and Plastic is the foundation precisely because there is one
+   of it. What the screen owns is the arrangement of its regions. */
+.screen {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  box-sizing: border-box;
+  min-block-size: 100%;
+  /* "Full-bleed; safe areas respected." Full-bleed is the whole point, so the
+     insets are the only padding, and they are zero where there are none. */
+  padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom);
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+}
+
+.content { min-block-size: 0; }

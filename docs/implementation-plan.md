@@ -2304,6 +2304,83 @@ was the finding:
    missing was anything holding the order, which DOM position decides — a test
    now fails if the regions are reordered or if either falls silent.
 
+### O — Screens (15) — in progress
+
+`screen`, `page-header`, `view-stack`, `master-detail`, `split-view`,
+`command-bar`, `status-bar`, `workspace`, `focus-mode`, `empty-screen`,
+`error-screen`, `loading-screen`, `offline-screen`, `not-found-screen`,
+`permission-screen`.
+
+Whole views and their chrome, including the states a view can be in before it
+has content — loading, empty, error, offline, not found, unauthorised — which
+products otherwise improvise separately and inconsistently.
+
+**Round one: the six state screens.** Every one is a composition, and the work
+was deciding what they are *not* allowed to add.
+
+- **They do not paint.** `Result` and `EmptyState` already carry the Haze fill
+  and the content radius the catalogue asks of these screens, so painting them
+  again would put a Haze pad inside a Haze pad — two materials deep for one piece
+  of content, the outer one visible only as a slightly wrong rectangle behind the
+  inner one. The same shape as the disc that was argued out of the pill step in
+  slice N. A state screen owns the frame: the view's height, its safe areas, and
+  a cap at the reading measure.
+- **`ErrorScreen` is assertive and `OfflineScreen` is polite** — the same
+  drawing, one word apart, and the word is the whole difference in how it
+  arrives. `Result` sets no role of its own, because it is used for successes
+  too, and a success announced as an alert is a component shouting about good
+  news. `NotFoundScreen` is neither: nothing failed, and a missing thing is a
+  fact about the address.
+- **The catalogue's clauses became required props.** "Never only a code" is
+  `title` required and `code` an extra, so the arrangement showing `0x80070005`
+  and nothing else does not typecheck. "Offers a route onward" is `actions`
+  required on `NotFoundScreen`, because that is the half products skip. "Which
+  permission and why" is both.
+- **`LoadingScreen` composes `Skeleton`, not `Loader`**, because "skeletons match
+  the shape of what is coming" — and it renders *one* skeleton holding every
+  shape. `Skeleton` owns a live region, so the count of skeletons is the count of
+  times the wait is announced; twelve shapes as twelve skeletons is a screen
+  reader saying the same sentence twelve times. "Announced once" turned out to be
+  a structural claim about nesting, not a wording one.
+
+**Round two: the view and its chrome.**
+
+- **`Screen` asks whether a `main` already exists rather than being told.**
+  `AppShell` renders one, so a screen that always rendered its own would give a
+  product two the moment it used both. The shell publishes its scrolling region
+  through `ShellScrollContext`, and the element it publishes *is* that `<main>` —
+  the same node, not a proxy — so the screen becomes a labelled `<section>` when
+  there is one above it and the main when there is not. A prop would have put the
+  failure where nobody looks.
+- **The `h1` contest is settled in one direction.** Three components could claim
+  it. `PageHeader` owns it; `Screen` draws no heading at all and only names its
+  landmark; a state screen takes level 1 because it has replaced the view, and
+  steps down when it has not. Tested as "exactly one h1" across all three at
+  once, which is the only arrangement where the rule can be wrong.
+- **`useScrolledPast` was extracted rather than copied.** `PageHeader` condenses
+  on the same signal `AppBar` uses for elevation, and inside a shell the window
+  never scrolls — so a second copy would have drifted into a header that
+  condenses in a shell and not on a page, with nothing to say which was right.
+  The slice N finding, applied before it could become a defect.
+- **`StatusBar` escalates by moving the message, not by changing a role.** The
+  obvious implementation swaps `role="status"` for `role="alert"` on one element,
+  and on several screen readers that does nothing: a live region's politeness is
+  taken when it is inserted, not when its role attribute changes. The text
+  updates, the urgency does not, and the bug is invisible to everybody who can
+  see the bar. Two regions, the message in exactly one.
+- **Stone is worn, not rebuilt.** Core's `.cr-stone` puts the feather on an
+  isolated `::before` beneath the content, which is what "text stays crisp"
+  means; a mixin of our own would have been that recipe a feather-width off.
+
+**Two tests were caught being unable to fail**, both in the same file and both
+found by strengthening rather than by running. A page header's description is
+hidden by a CSS-module rule, and jsdom applies no CSS — `toBeInTheDocument` on
+it passes in the world where condensing is broken. And a breadcrumbs test that
+counted one navigation landmark was counting a landmark with nothing in it,
+because the crumbs had been given `key` where the type asks for `id`; the count
+was true either way. The first moved to `verify:appearance`, which goes 45 → 47;
+the second now asserts the crumbs as well as the landmark.
+
 ### O — Screens (15)
 
 `screen`, `page-header`, `view-stack`, `master-detail`, `split-view`, `command-bar`, `status-bar`, `workspace`, `focus-mode`, `empty-screen`, `error-screen`, `loading-screen`, `offline-screen`, `not-found-screen`, `permission-screen`.

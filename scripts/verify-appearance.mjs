@@ -1002,6 +1002,81 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
+/* ------------------------------------------------------ screens: the chrome
+ *
+ * Two claims from slice O that jsdom is structurally unable to answer. The unit
+ * tests for both were written to assert what *is* answerable there — a declared
+ * state, a region's role — precisely so that neither of them quietly became a
+ * test that cannot fail.
+ */
+{
+  await open('screens-pageheader--condensed', '#storybook-root header');
+  /* "Condensing is the header taking less room, never taking things away." In
+     jsdom the description is in the document whether the rule that hides it
+     reaches or not, because there is no stylesheet to disagree with — so
+     `toBeInTheDocument` on it would pass in the world where condensing is
+     broken. Here there is one. */
+  const condensed = await page.evaluate(() => {
+    const header = document.querySelector('#storybook-root header');
+    const description = [...header.querySelectorAll('p')]
+      .find((one) => one.textContent?.startsWith('Everything booked'));
+    const heading = header.querySelector('h1');
+    const action = header.querySelector('button');
+    if (!description || !heading || !action) return null;
+    const box = (el) => el.getBoundingClientRect();
+    return {
+      state: header.dataset.crState,
+      descriptionHidden: getComputedStyle(description).display === 'none'
+        || box(description).height === 0,
+      /* The half that matters more: the things that stay, stayed. */
+      headingShown: box(heading).height > 0,
+      actionShown: box(action).height > 0,
+    };
+  });
+  record(
+    'a condensed page header sheds its description and keeps its actions',
+    condensed !== null && condensed.state === 'condensed' && condensed.descriptionHidden
+      && condensed.headingShown && condensed.actionShown,
+    `condensed=${condensed?.state}, the description is hidden: `
+    + `${condensed?.descriptionHidden}, the action is shown: ${condensed?.actionShown}. `
+    + 'A header that drops its actions when the reader scrolls takes the controls away at '
+    + 'the moment they went looking for them',
+  );
+}
+
+{
+  await open('screens-statusbar--error', '#storybook-root [role="alert"]');
+  /* "Full-bleed; text stays crisp." Stone is a feathered backing, and the whole
+     reason core paints it on an isolated `::before` at `z-index: -1` is that a
+     feather applied to the element would feather the label with it. This is the
+     check that the backing is soft and the text on it is not — which no
+     assertion about class names can make. */
+  const stone = await page.evaluate(() => {
+    const bar = document.querySelector('#storybook-root .cr-stone');
+    if (!bar) return null;
+    const backing = getComputedStyle(bar, '::before');
+    const said = bar.querySelector('[role="alert"]');
+    return {
+      backingPaints: backing.content !== 'none'
+        && backing.backgroundColor !== 'rgba(0, 0, 0, 0)',
+      backingFeathered: backing.filter !== 'none' && backing.filter !== '',
+      /* Neither the bar nor the text it holds may carry the feather itself. */
+      barCrisp: getComputedStyle(bar).filter === 'none',
+      textCrisp: said !== null && getComputedStyle(said).filter === 'none',
+      escalated: said?.textContent !== '',
+    };
+  });
+  record(
+    'a status bar feathers its backing and not its words',
+    stone !== null && stone.backingPaints && stone.backingFeathered
+      && stone.barCrisp && stone.textCrisp && stone.escalated,
+    `the backing paints ${stone?.backingPaints} and is feathered ${stone?.backingFeathered}, `
+    + `while the bar is crisp ${stone?.barCrisp} and its text ${stone?.textCrisp}. A feather `
+    + 'on the element is a feather on the label, which is the failure the isolated paint '
+    + 'layer exists to avoid',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({
