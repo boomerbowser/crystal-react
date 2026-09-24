@@ -27,7 +27,13 @@
   gap: $cr-action-gap;
 
   font: inherit;
-  font-weight: 700;
+  /* Crystal's own weight for an action, adopted rather than approximated: core
+     renders `.cr-button` at 750 and this said 700, which is a divergence nobody
+     could see and everybody would inherit. It is a literal on both sides —
+     Crystal publishes `action.radius`, `minTarget`, `padding*`, `gap` and
+     `disabledOpacity`, and no weight — so this is the one action value that
+     cannot come from a token yet, and it wants one. */
+  font-weight: 750;
   color: var(--cr-text);
   text-decoration: none;
   cursor: pointer;

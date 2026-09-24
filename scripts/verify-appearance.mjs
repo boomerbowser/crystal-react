@@ -1128,6 +1128,101 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
+/* ------------------------------------- this library's control against Crystal's
+ *
+ * R-19. This library paints its own Resin control surface, in SCSS, because
+ * Crystal 2.0.0 described a surface no consumer could obtain — it lived only in
+ * the documentation site's stylesheet, which is not in the package. 2.1.0 ships
+ * it, and the obvious reading was that one of the two copies could now go.
+ *
+ * It cannot go by deletion, and measuring is what showed that: components here
+ * render `<button class="_button_hash">` while Crystal's surface is keyed on
+ * `.cr-button`, so deleting these rules leaves the components unpainted rather
+ * than falling through to Crystal's. What is left is a second implementation of
+ * a specification that no longer has to be second — and the thing that matters
+ * about a second implementation is not that it exists but that it drifts.
+ *
+ * So this is the gate instead of the sweep. It renders one of this library's
+ * buttons and one of Crystal's into the same page, under the same theme, and
+ * requires them to agree. A rule added to either side that the other does not
+ * have fails here, on the property, with both values named.
+ *
+ * The first run of it found two disagreements. One was this library's — a
+ * `font-weight` of 700 against Crystal's 750, adopted. The other was Crystal
+ * disagreeing with itself, and is D-20.
+ */
+{
+  await open('actions-button--primary', '#storybook-root button');
+
+  /* Every property the Resin recipe is made of, plus the geometry the catalogue
+     names. Deliberately not "all of them": a computed-style dump differs on
+     dozens of inherited properties that say nothing about the surface. */
+  const SURFACE = [
+    'backgroundColor', 'color', 'borderTopLeftRadius', 'borderTopWidth', 'borderTopColor',
+    'paddingTop', 'paddingLeft', 'minHeight', 'fontWeight', 'boxShadow', 'backdropFilter',
+    'display', 'alignItems', 'justifyContent', 'columnGap',
+  ];
+
+  const comparison = await page.evaluate((props) => {
+    const ours = document.querySelector('#storybook-root button');
+    const theirs = document.createElement('button');
+    theirs.className = 'cr-button primary';
+    theirs.textContent = ours.textContent;
+    ours.parentElement.append(theirs);
+
+    const read = (el) => {
+      const own = getComputedStyle(el);
+      const pad = getComputedStyle(el, '::before');
+      const sheen = getComputedStyle(el, '::after');
+      const out = {};
+      for (const p of props) out[p] = own[p];
+      out['::before background'] = pad.backgroundColor;
+      out['::before content'] = pad.content;
+      out['::after content'] = sheen.content;
+      return out;
+    };
+
+    const a = read(ours);
+    const b = read(theirs);
+    theirs.remove();
+
+    const differs = [];
+    for (const key of Object.keys(a)) {
+      if (a[key] !== b[key]) differs.push({ property: key, library: a[key], crystal: b[key] });
+    }
+    return { differs, checked: Object.keys(a).length };
+  }, SURFACE);
+
+  /* Known divergences, each with a reason and each self-removing.
+   *
+   * `minHeight` is D-20: Crystal renders 48px and publishes `action.minTarget`
+   * as 44px, and this library reads the token — correctly. It is fixed in core
+   * and unreleased, so the difference stands until the next core version is
+   * installed here.
+   *
+   * The exception names **both** values, and that is not pedantry. Written as
+   * "the library differs from Crystal's 48px" it also excused a library button
+   * that had drifted to 60px for reasons of its own — planting that is what
+   * showed it, and an exception broad enough to cover the next defect is how a
+   * gate stops guarding. Written as the exact pair, it stops applying the moment
+   * either side moves: when core republishes, this library reads 48px, the pair
+   * no longer matches, and there is no difference left to excuse. */
+  const D20 = { property: 'minHeight', library: '44px', crystal: '48px' };
+  const expected = (one) => (
+    one.property === D20.property && one.library === D20.library && one.crystal === D20.crystal
+  );
+
+  const unexplained = comparison.differs.filter((one) => !expected(one));
+  record(
+    "this library's control surface still renders what Crystal's does",
+    unexplained.length === 0 && comparison.checked > 10,
+    `${comparison.checked} properties compared; unexplained differences: `
+    + unexplained.map((d) => `${d.property} — this library ${d.library}, Crystal ${d.crystal}`).join('; ')
+    + '. A second implementation of a specification does not fail by existing, it '
+    + 'fails by drifting, and this is the only thing that notices',
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

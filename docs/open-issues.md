@@ -438,6 +438,36 @@ That is filed against the design system as **D-20**, and R-19 should not move
 until it is answered: adopting a value that core's own token contradicts would
 be adopting the bug.
 
+**Meridian chose the gate over the sweep, 24 September 2026, and it is in.**
+`verify:appearance` renders one of this library's buttons and one of Crystal's
+into the same page under the same theme and requires them to agree across
+eighteen properties — the whole Resin recipe plus the geometry the catalogue
+names. A rule added to either side that the other does not have fails there, on
+the property, with both values printed. 48 checks became 49.
+
+The two differences it found on its first run are closed. The `font-weight` was
+this library's, and 750 is adopted — it is a literal on both sides, because
+Crystal publishes `radius`, `minTarget`, `padding*`, `gap` and `disabledOpacity`
+for an action and no weight, so it is the one action value that cannot come from
+a token yet and wants one. The `min-height` was D-20, now answered at 48px in
+core and awaiting a release; it stands as the gate's single exception, written
+as the exact pair `44px` against `48px` so that it stops applying the moment
+either side moves.
+
+**That exception was too broad on the first attempt, and planting is what showed
+it.** Written as "the library differs from Crystal's 48px" it also excused a
+library button that had drifted to 60px for reasons of its own — an exception
+wide enough to cover the next defect, which is how a gate stops guarding.
+
+**The sweep is not closed, only not chosen.** Having components wear Crystal's
+class names as well as their own would make core the painter and leave this
+library only what is genuinely React-shaped, and it remains the better end state.
+It is a change across roughly twenty components that alters what ships, and it
+belongs with the larger extension of Crystal's component recipes rather than
+ahead of it — most of what this library implements is outside the scope of what
+Crystal has recipes for at all, and deciding the painter before deciding the
+recipes is the wrong order.
+
 **And the duplication is not what it looked like.** The premise was that this
 library carries a second copy of a surface core now ships, and that one of them
 can go. It cannot go by deletion: this library's components render
