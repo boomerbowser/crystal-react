@@ -76,9 +76,28 @@
 /* One element that is the shell and the control at once — a select's trigger,
    a cascader's. Everything `control` gives, except the inherited radius, which
    it keeps as its own. */
+/* A control that is also its own shell.
+ *
+ * Both callers put this on the same element as `shell` — a Select's button and a
+ * Cascader's — and it used to `@include control`, which sets `background:
+ * transparent` and `border: 0`. Those are right for a control that sits *inside*
+ * a shell and wrong for one that is the shell: they erased the well the line
+ * above had just painted.
+ *
+ * Measured in an address form, the Select was the only field of five with no
+ * fill, and no border either — `border: 0` left `borderColor` resolving to
+ * `currentColor`, so it read as the text ink rather than the outline. Its four
+ * text-field siblings, and Crystal's own `.cr-field-shell`, all render the Resin
+ * fill. So this takes the parts of `control` that describe a control and leaves
+ * the two that unpaint a surface. */
 @mixin trigger {
-  @include control;
+  flex: 1;
+  min-width: 0;
+  min-height: $cr-action-min-target;
+  padding: $cr-action-padding-block $cr-action-padding-inline;
   border-radius: var(--cr-radius);
+  font: inherit;
+  color: inherit;
   cursor: pointer;
   text-align: start;
 }

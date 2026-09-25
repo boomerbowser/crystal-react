@@ -12,12 +12,20 @@
 .field { @include field.field; }
 .label { @include field.label; }
 .shell { @include field.shell; }
-/* One element, both roles. It was `@include field.control` here, whose
-   `border-radius: inherit` reached past the shell — because the shell *is* this
-   element — to the field, which has none. The trigger rendered square while
-   every other field in the library was a 28px well. */
-.control { @include field.trigger; }
+/* One element, both roles — this button *is* the shell. It was
+   `@include field.control` here, whose `border-radius: inherit` reached past the
+   shell to the field, which has none, so the trigger rendered square while every
+   other field was a 28px well. `field.trigger` fixed the radius and kept
+   `control`'s transparent background, which left this the one field in a form
+   with no fill at all. It no longer does either. */
+.trigger { @include field.trigger; }
 
+/* The native select is a control *inside* a shell rather than being one, so it
+   takes the recipe that unpaints. The distinction is the whole of the bug above:
+   one class was doing both jobs. */
+.control { @include field.control; }
+
+.trigger:focus,
 .control:focus { outline: none; }
 .shell:focus-within { @include field.focus-ring; }
 /* Two selectors for one state. The shell carries `data-invalid` when this

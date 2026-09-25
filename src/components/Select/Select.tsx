@@ -64,7 +64,7 @@ export function Select({
       <Label className={cx(styles['label'])}>{label}</Label>
       {/* The validity React Aria resolved, not the one the caller declared, so a
           server's rejection moves the field exactly as a local rule would. */}
-      <FieldButtonShell isInvalid={isInvalid} className={cx(styles['shell'], styles['control'])}>
+      <FieldButtonShell isInvalid={isInvalid} className={cx(styles['shell'], styles['trigger'])}>
         <SelectValue className={cx(styles['value'])}>
           {({ selectedText, isPlaceholder }) => (
             <span className={cx(isPlaceholder ? styles['placeholder'] : undefined)}>
