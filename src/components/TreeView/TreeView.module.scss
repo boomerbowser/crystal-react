@@ -1,5 +1,6 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/overlay' as overlay;
+@use '../../styles/material' as material;
 
 /* TreeView — Haze rows on whatever surface holds them.
  *
@@ -84,6 +85,9 @@
 }
 
 .chevron {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;

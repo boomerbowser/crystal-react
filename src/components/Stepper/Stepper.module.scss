@@ -46,6 +46,9 @@
 }
 
 .control {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   position: relative;
   z-index: 1;
   display: flex;

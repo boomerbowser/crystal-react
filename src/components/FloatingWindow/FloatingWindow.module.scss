@@ -14,6 +14,9 @@
 /* The handle reaches the minimum target: a title bar smaller than 44px is a
    drag target most pointers miss and most fingers cannot hit at all. */
 .bar {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   display: flex;
   align-items: center;
   /* It is a `<button>`, so the user-agent's own button styling has to go before

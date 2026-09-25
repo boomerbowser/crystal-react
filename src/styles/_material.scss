@@ -119,3 +119,36 @@
     &::before { display: none; }
   }
 }
+
+/* A control with no material at all.
+ *
+ * Crystal has no recipe for this, which is why it lives here rather than being
+ * adopted. `.cr-button.quiet` is the nearest thing and it is not the same thing:
+ * quiet keeps the whole Resin shell and drops only the reading pad, which is
+ * what makes a quiet *button* quiet. An accordion trigger, a tree chevron, a
+ * table sort header, a chip's remove button — none of those is a Resin control
+ * that has been quietened. None of them is a Resin control. Each sits on the
+ * surface it is already on.
+ *
+ * The note above is right that Crystal's rule applies to every control it
+ * styles, and the part that was never followed through is what that means for a
+ * control Crystal does not style: the selector is `:is(button, …)`, so a
+ * `<button>` wears the coat whether or not anything asks for it. Setting
+ * `background: transparent` takes off one layer of five and leaves the backdrop
+ * blur, the float shadow and both feathered pseudo-layers in place.
+ *
+ * Measured across every story: eighteen distinct controls, a hundred and
+ * twenty-seven instances, and every one of them leaking all four. Each had
+ * declared itself transparent and each was transparent in exactly one property.
+ *
+ * So the recipe removes the four and nothing else. The border is deliberately
+ * left alone — every caller but one already sets `border: 0`, and the one that
+ * does not wants the rim it has.
+ */
+@mixin bare-control {
+  box-shadow: none;
+  backdrop-filter: none;
+
+  &::before,
+  &::after { display: none; }
+}

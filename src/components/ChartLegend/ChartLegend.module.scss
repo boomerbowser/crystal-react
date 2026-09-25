@@ -49,6 +49,9 @@
 }
 
 .toggle {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   cursor: pointer;
   /* Off is the lighter one. Weight alone, in both directions from the same
      rule, so there is one place the pair is decided. */

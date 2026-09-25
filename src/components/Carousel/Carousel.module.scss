@@ -95,6 +95,9 @@
    through its own padding rather than a grown hit area, because a row of these
    sits close enough that grown areas would overlap. */
 .indicator {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   display: inline-grid;
   place-items: center;
   inline-size: $cr-action-min-target;

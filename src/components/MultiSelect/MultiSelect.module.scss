@@ -1,5 +1,6 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
 
 /* MultiSelect — a field shell whose value is a set of chips.
  *
@@ -30,6 +31,9 @@
    chips, not their container. Chips carry remove buttons, and a button inside a
    button is not something a browser can render. */
 .opener {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   flex: 1;
   display: flex;
   align-items: center;

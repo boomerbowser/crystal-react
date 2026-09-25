@@ -18,6 +18,9 @@
 .section { position: relative; }
 
 .trigger {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   display: inline-flex;
   align-items: center;
   gap: $cr-spacing-2xs;

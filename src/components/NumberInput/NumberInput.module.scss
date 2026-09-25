@@ -1,5 +1,6 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
 
 /* NumberInput — the field anatomy with steppers. */
 
@@ -31,6 +32,9 @@
    field, which is a field that looks like a mistake. They are pointer
    affordances; the arrow keys are the primary route and always reach the value. */
 .stepper {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   display: flex;
   align-items: center;
   justify-content: center;

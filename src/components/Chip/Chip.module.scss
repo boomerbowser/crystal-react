@@ -1,4 +1,5 @@
 @use '../../styles/tokens' as *;
+@use '../../styles/material' as material;
 
 /* Chip — a compact pill for a value, a filter or a selection.
  *
@@ -28,7 +29,10 @@
 }
 
 /* The target around the picture. Transparent, centred, and 44px tall. */
-.pressable { position: relative; cursor: pointer; }
+.pressable {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+ position: relative; cursor: pointer; }
 
 .pressable::after {
   content: '';
@@ -60,6 +64,9 @@
 /* The label half of a chip that is both selectable and removable. It carries the
    press behaviour; the pill around it carries the material. */
 .chipLabel {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   display: flex;
   align-items: center;
   min-block-size: 100%;
@@ -81,6 +88,9 @@
 }
 
 .remove {
+  /* Crystal paints every <button>; a bare control has to take that off. */
+  @include material.bare-control;
+
   position: relative;
   flex: none;
   display: flex;
