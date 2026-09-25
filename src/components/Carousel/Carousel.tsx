@@ -164,7 +164,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       <div className={styles['controls']}>
         <button
           type="button"
-          className={styles['step']}
+          className="cr-button"
           disabled={atStart}
           onClick={() => { goTo(index - 1, 'previous'); }}
         >
@@ -192,7 +192,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
 
         <button
           type="button"
-          className={styles['step']}
+          className="cr-button"
           disabled={atEnd}
           onClick={() => { goTo(index + 1, 'next'); }}
         >

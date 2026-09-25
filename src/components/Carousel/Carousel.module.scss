@@ -70,35 +70,15 @@
 }
 
 /* The step controls are Resin pills at the target floor, like every action. */
-.step {
-  @include material.resin;
-  @include material.haze-fill();
+/* R-19, swept. `.step` was a second copy of `.cr-button` — the Resin material,
+   the pill geometry, the focus recipe and the disabled pair. Crystal paints
+   every `<button>` with the material by element selector and `.cr-button` adds
+   the geometry, so the class going on is the whole of it. `:focus-visible` and
+   `:disabled` are Crystal's own selectors and reach this element directly; they
+   were only ever repeated here because this file believed it was the painter.
 
-  display: inline-flex;
-  align-items: center;
-  gap: $cr-action-gap;
-  box-sizing: border-box;
-  min-block-size: $cr-action-min-target;
-  padding: $cr-action-padding-block $cr-action-padding-inline;
-  border-radius: $cr-action-radius;
-  color: var(--cr-text);
-  font: inherit;
-  font-weight: 750;
-  cursor: pointer;
-}
-
-@include material.opaque-fallback('.step');
-
-.step:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
-}
-
-/* A disabled step is still announced and still says why by its own presence at
-   the end of the run — it is not hidden, because a control that disappears
-   changes the layout under the reader's hand. */
-.step:disabled { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+   Nothing is left to declare, so there is no `.step` rule. The arrows and the
+   label are the component's, and they are below. */
 
 .stepLabel { white-space: nowrap; }
 
