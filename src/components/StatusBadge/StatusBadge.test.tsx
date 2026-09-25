@@ -24,7 +24,11 @@ describe('StatusBadge', () => {
      glyph: a symbol would imply a meaning the state does not have. */
   it('shows no symbol for neutral', () => {
     renderWithCrystal(<StatusBadge status="neutral" data-testid="badge">Draft</StatusBadge>);
-    expect(screen.getByTestId('badge').children).toHaveLength(1);
+    /* The symbol, not the child count. Counting children asserted this through
+       a wrapper around the word, which is no longer there — Crystal paints
+       `span.cr-status > span` as the well, so a span around the word would be
+       painted as a second one. The symbol is what the rule is about. */
+    expect(screen.getByTestId('badge').querySelector('[aria-hidden="true"]')).toBeNull();
     expect(screen.getByText('Draft')).toBeInTheDocument();
   });
 

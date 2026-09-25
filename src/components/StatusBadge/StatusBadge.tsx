@@ -71,12 +71,14 @@ export const StatusBadge = forwardRef<HTMLSpanElement, StatusBadgeProps>(functio
       {...props}
       ref={mergeRefs(ref, scope)}
       data-status={status}
-      className={cx(styles['statusBadge'], className)}
+      className={cx(styles['statusBadge'], 'cr-status', className)}
     >
       {symbol === null ? null : (
         <span aria-hidden="true" className={styles['well']}>{symbol}</span>
       )}
-      <span className={styles['word']}>{children}</span>
+      {/* Bare text, not a span: Crystal's well is `span.cr-status > span`, so a
+          second span here is painted as a second well. */}
+      {children}
     </span>
   );
 });
