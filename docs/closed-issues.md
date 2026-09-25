@@ -899,3 +899,179 @@ The push-ordering trap this entry named is gone with the sibling checkout rather
 than fixed: there is no order to get wrong, because CI no longer reads the
 design system from disk at all. It installs the same published package a
 contributor does.
+
+## R-19 · The control surface is implemented twice, and one of them can go
+
+**Found 21 September 2026. Blocked on `@crystal-ui/core@2.1.0` being published.**
+
+Crystal 2.1.0 ships the Resin interaction surface: the fill, the rim, the
+`::before` Haze layer, the `::after` optical sheen, `--cr-control-color` and
+`--cr-control-light`, and the reduced-transparency and forced-colours
+adaptations of all of it — plus `.cr-control`, `.cr-field-shell`,
+`.cr-indicator`, `.cr-resin-haze` and `.cr-tag`. Until then it shipped none of
+that. It lived only in the documentation site's own stylesheet, which is not in
+the package and never was, and `components.md` told a consumer to load it.
+
+**That is why this library has its own copy.** It was not a design decision. The
+specification described a surface no consumer could obtain, so the surface was
+rebuilt here in SCSS from the same prose — which is the exact duplication
+`libraries/CONTRACT.md` §1 exists to forbid, arrived at because the alternative
+was shipping components that did not look like Crystal.
+
+**What closing it means**, and it is a judgement rather than a sweep: for each
+place this library paints a Resin control, decide whether the library's own
+declaration is still needed or whether `crystal.css` now supplies it. Some will
+be needed — a React component styling a shell that wraps a native input is not
+the same problem as a stylesheet styling `button` — and the ones that are should
+say so. The ones that are not are a second copy of a specification, drifting
+from the day they were written.
+
+**Do not start before 2.1.0 is installed here.** The dependency is `^2.0.0`
+today, and deleting a rule this library needs because the library "now ships it"
+is how a component stops looking like Crystal in a version nobody is running
+yet.
+
+**The measurement is done, for `Button`, and it changes the shape of the
+question.** 24 September 2026, against 2.1.0 installed: a computed-style diff
+between this library's `Button` and a `.cr-button.primary` planted into the same
+page. They agree on background, colour, radius, border, padding, box-shadow,
+backdrop-filter, the `::before` reading pad and the `::after` sheen — everything
+the Resin recipe is made of. They differ on exactly two properties:
+
+| | this library | core 2.1.0 renders |
+| --- | --- | --- |
+| `min-height` | 44px | 48px |
+| `font-weight` | 700 | 750 |
+
+**Both differences are core disagreeing with itself, not this library drifting.**
+`.cr-button` in `@layer crystal.reset` sets 44px and 750; `:is(button,
+a.cr-button)` in `@layer crystal.component` sets 48px, and a later layer wins
+regardless of specificity, so the reset rule never renders. The published token
+says 44px, this library reads it, and the web preview has always drawn 48px.
+That is filed against the design system as **D-20**, and R-19 should not move
+until it is answered: adopting a value that core's own token contradicts would
+be adopting the bug.
+
+**Meridian chose the gate over the sweep, 24 September 2026, and it is in.**
+`verify:appearance` renders one of this library's buttons and one of Crystal's
+into the same page under the same theme and requires them to agree across
+eighteen properties — the whole Resin recipe plus the geometry the catalogue
+names. A rule added to either side that the other does not have fails there, on
+the property, with both values printed. 48 checks became 49.
+
+The two differences it found on its first run are closed. The `font-weight` was
+this library's, and 750 is adopted — it is a literal on both sides, because
+Crystal publishes `radius`, `minTarget`, `padding*`, `gap` and `disabledOpacity`
+for an action and no weight, so it is the one action value that cannot come from
+a token yet and wants one. The `min-height` was D-20, now answered at 48px in
+core and awaiting a release; it stands as the gate's single exception, written
+as the exact pair `44px` against `48px` so that it stops applying the moment
+either side moves.
+
+**That exception was too broad on the first attempt, and planting is what showed
+it.** Written as "the library differs from Crystal's 48px" it also excused a
+library button that had drifted to 60px for reasons of its own — an exception
+wide enough to cover the next defect, which is how a gate stops guarding.
+
+**The sweep is not closed, only not chosen.** Having components wear Crystal's
+class names as well as their own would make core the painter and leave this
+library only what is genuinely React-shaped, and it remains the better end state.
+It is a change across roughly twenty components that alters what ships, and it
+belongs with the larger extension of Crystal's component recipes rather than
+ahead of it — most of what this library implements is outside the scope of what
+Crystal has recipes for at all, and deciding the painter before deciding the
+recipes is the wrong order.
+
+**And the duplication is not what it looked like.** The premise was that this
+library carries a second copy of a surface core now ships, and that one of them
+can go. It cannot go by deletion: this library's components render
+`<button class="_button_hash">` and core's control surface is keyed on
+`.cr-button`, so deleting the library's rules leaves the components unpainted
+rather than falling through to Crystal's. The real options are to have components
+wear Crystal's class names as well as their own — which makes core the painter
+and leaves this library only what is genuinely React-shaped — or to keep both
+and add a gate that diffs them so they cannot part. The first is a sweep across
+roughly twenty components and changes what ships; the second is cheap and
+catches the next D-20 automatically. Neither is a deletion.
+
+**Worth measuring first, the way D-11's third divergence finally was:** render a
+story with and without this library's own control CSS, against 2.1.0, and diff
+computed style. A static read of two stylesheets could not answer the same
+question about the preview, and it will not answer it here either — the library's
+`@layer crystal.component` and this library's CSS modules do not compete
+textually.
+
+---
+
+**Closed 24 September 2026, by the sweep, at Meridian's direction.** "Perform the
+R-19 sweep and undo the gate we chose, as we had meant the sweep initially."
+
+**The premise above is wrong, and measuring is what showed it.** It says core's
+control surface is keyed on `.cr-button`, so a component rendering
+`<button class="_button_hash">` cannot fall through to it. Crystal's Resin recipe
+is keyed on
+
+    :is(button, a.cr-button, .cr-control, .cr-field-shell, .cr-resin-haze, .cr-status)
+
+— on the **element**. Planting a bare `<button>` with no class at all beside this
+library's, in the same page, it already resolves to the Resin fill, the rim, the
+float shadow, the 20px backdrop blur, `position: relative`, `isolation: isolate`
+and both feathered pseudo-layers. What a bare button lacks is the *geometry*, and
+the geometry is what `.cr-button` adds. Deleting the library's rules was never
+going to leave the components unpainted. It stops this library painting over a
+coat that was already there.
+
+The class going on is not enough by itself, and that half of the reasoning held:
+a module class is unlayered and Crystal styles inside `@layer crystal.component`,
+so the duplicate has to come out as the class goes in. Both halves, per
+component, measured each time against a planted Crystal element with the target
+at zero differences and a plant pass to prove the zero could move.
+
+**What the sweep found, which is more than it removed.**
+
+- **Every `<button>` in this library that declared itself transparent was
+  transparent in exactly one property.** Crystal paints the coat by element, so
+  `background: transparent` takes off one layer of five and leaves the backdrop
+  blur, the float shadow and both feathered layers. Across all 488 stories:
+  eighteen distinct controls, a hundred and twenty-seven instances, every one
+  leaking all four — accordion triggers, tree chevrons, quantity steppers, chip
+  remove buttons, calendar navigation, the dismiss button of all four feedback
+  surfaces, carousel indicators, table sort headers, chart legend toggles. Closed
+  with one `bare-control` mixin, because Crystal has no recipe to adopt:
+  `.cr-button.quiet` keeps the Resin shell and drops only the reading pad, which
+  is what makes a quiet *button* quiet, and none of these is a Resin control that
+  has been quietened.
+- **The Select was the only field in a form of five with no fill.**
+  `field.trigger` included `field.control`, whose `background: transparent` and
+  `border: 0` are right for a control inside a shell and wrong for one that *is*
+  the shell. One class was doing both jobs; they are separate now.
+- **D-20 resolves on contact.** A swept control stops reading `action.minTarget`
+  and starts wearing the class, so it renders Crystal's 48px without waiting for
+  the core release. Every control still at 44px is one the sweep has not reached
+  — and `verify:targets` cannot see it, because its floor is exactly 44px.
+- **`line-height` was 25.6px against Crystal's 20.8px**, from `font: inherit`
+  resetting a value core sets. The gate could not have caught it: `lineHeight`
+  was not among the eighteen properties it compared.
+
+**What the library kept**, and it is the answer to what "genuinely React-shaped"
+means here: the motion engine's transform origin, the card radius Crystal
+documents in prose but publishes no rule for, reduced transparency for a control
+(Crystal flattens its containers and carries no control rule), the forced-colours
+system pair, and the ink for a quiet toggle that is on — Crystal tints a reading
+pad and a quiet control has none.
+
+**The gate is gone, and `verify:appearance` is back to 48 checks.** It was kept
+until last on purpose: it was the instrument each component was proved through,
+and removing it first would have removed the evidence. Its D-20 exception went
+unused from the first swept component onward, exactly as it was written to.
+
+**What the sweep did not reach, and why.** Crystal has no recipe for a floating
+Resin panel, so `FloatingWindow`, `Toast`, `Notification` and `MediaControls`
+keep `material.resin` on their shells; none for a navigation link, so `NavLink`
+keeps a weight of 550 that `.cr-button`'s 750 would destroy; none for a nav rail
+item or a drag handle. Those are recipes to author in core, not classes to wear
+here — `extend-crystal-not-the-library` — and they are the larger extension this
+entry was right to say comes first. The field family is the other one: seventeen
+components reach `.cr-field-shell`'s recipe through `field.shell`, which
+re-declares it by hand under a comment that correctly says Crystal owns it.
+

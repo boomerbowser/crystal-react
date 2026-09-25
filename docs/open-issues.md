@@ -27,11 +27,6 @@ remains is that `react-docgen` cannot resolve a component's *own* inherited
 props, and both routes to an extractor that can are closed until one runs on
 TypeScript 7.
 
-**R-19** is the last of the family that waited on 2.1.0, and the only one that
-did not close with the bump: it is a judgement about each place this library
-paints a Resin control, not a deletion, and it asks to be measured before it is
-made.
-
 **R-22** is a disagreement rather than a gap: the catalogue asks a component for
 an ARIA role that the accessible primitive underneath it removes on purpose, and
 which of the two is right is not this library's call to make quietly.
@@ -383,109 +378,6 @@ in both directions.
 can refuse a claim, but it cannot *discover*. Nothing tells a story that `Button`
 has `onPress` until somebody writes it and `tsc` agrees. Discovery comes back
 the day either route above opens.
-
----
-
-## R-19 · The control surface is implemented twice, and one of them can go
-
-**Found 21 September 2026. Blocked on `@crystal-ui/core@2.1.0` being published.**
-
-Crystal 2.1.0 ships the Resin interaction surface: the fill, the rim, the
-`::before` Haze layer, the `::after` optical sheen, `--cr-control-color` and
-`--cr-control-light`, and the reduced-transparency and forced-colours
-adaptations of all of it — plus `.cr-control`, `.cr-field-shell`,
-`.cr-indicator`, `.cr-resin-haze` and `.cr-tag`. Until then it shipped none of
-that. It lived only in the documentation site's own stylesheet, which is not in
-the package and never was, and `components.md` told a consumer to load it.
-
-**That is why this library has its own copy.** It was not a design decision. The
-specification described a surface no consumer could obtain, so the surface was
-rebuilt here in SCSS from the same prose — which is the exact duplication
-`libraries/CONTRACT.md` §1 exists to forbid, arrived at because the alternative
-was shipping components that did not look like Crystal.
-
-**What closing it means**, and it is a judgement rather than a sweep: for each
-place this library paints a Resin control, decide whether the library's own
-declaration is still needed or whether `crystal.css` now supplies it. Some will
-be needed — a React component styling a shell that wraps a native input is not
-the same problem as a stylesheet styling `button` — and the ones that are should
-say so. The ones that are not are a second copy of a specification, drifting
-from the day they were written.
-
-**Do not start before 2.1.0 is installed here.** The dependency is `^2.0.0`
-today, and deleting a rule this library needs because the library "now ships it"
-is how a component stops looking like Crystal in a version nobody is running
-yet.
-
-**The measurement is done, for `Button`, and it changes the shape of the
-question.** 24 September 2026, against 2.1.0 installed: a computed-style diff
-between this library's `Button` and a `.cr-button.primary` planted into the same
-page. They agree on background, colour, radius, border, padding, box-shadow,
-backdrop-filter, the `::before` reading pad and the `::after` sheen — everything
-the Resin recipe is made of. They differ on exactly two properties:
-
-| | this library | core 2.1.0 renders |
-| --- | --- | --- |
-| `min-height` | 44px | 48px |
-| `font-weight` | 700 | 750 |
-
-**Both differences are core disagreeing with itself, not this library drifting.**
-`.cr-button` in `@layer crystal.reset` sets 44px and 750; `:is(button,
-a.cr-button)` in `@layer crystal.component` sets 48px, and a later layer wins
-regardless of specificity, so the reset rule never renders. The published token
-says 44px, this library reads it, and the web preview has always drawn 48px.
-That is filed against the design system as **D-20**, and R-19 should not move
-until it is answered: adopting a value that core's own token contradicts would
-be adopting the bug.
-
-**Meridian chose the gate over the sweep, 24 September 2026, and it is in.**
-`verify:appearance` renders one of this library's buttons and one of Crystal's
-into the same page under the same theme and requires them to agree across
-eighteen properties — the whole Resin recipe plus the geometry the catalogue
-names. A rule added to either side that the other does not have fails there, on
-the property, with both values printed. 48 checks became 49.
-
-The two differences it found on its first run are closed. The `font-weight` was
-this library's, and 750 is adopted — it is a literal on both sides, because
-Crystal publishes `radius`, `minTarget`, `padding*`, `gap` and `disabledOpacity`
-for an action and no weight, so it is the one action value that cannot come from
-a token yet and wants one. The `min-height` was D-20, now answered at 48px in
-core and awaiting a release; it stands as the gate's single exception, written
-as the exact pair `44px` against `48px` so that it stops applying the moment
-either side moves.
-
-**That exception was too broad on the first attempt, and planting is what showed
-it.** Written as "the library differs from Crystal's 48px" it also excused a
-library button that had drifted to 60px for reasons of its own — an exception
-wide enough to cover the next defect, which is how a gate stops guarding.
-
-**The sweep is not closed, only not chosen.** Having components wear Crystal's
-class names as well as their own would make core the painter and leave this
-library only what is genuinely React-shaped, and it remains the better end state.
-It is a change across roughly twenty components that alters what ships, and it
-belongs with the larger extension of Crystal's component recipes rather than
-ahead of it — most of what this library implements is outside the scope of what
-Crystal has recipes for at all, and deciding the painter before deciding the
-recipes is the wrong order.
-
-**And the duplication is not what it looked like.** The premise was that this
-library carries a second copy of a surface core now ships, and that one of them
-can go. It cannot go by deletion: this library's components render
-`<button class="_button_hash">` and core's control surface is keyed on
-`.cr-button`, so deleting the library's rules leaves the components unpainted
-rather than falling through to Crystal's. The real options are to have components
-wear Crystal's class names as well as their own — which makes core the painter
-and leaves this library only what is genuinely React-shaped — or to keep both
-and add a gate that diffs them so they cannot part. The first is a sweep across
-roughly twenty components and changes what ships; the second is cheap and
-catches the next D-20 automatically. Neither is a deletion.
-
-**Worth measuring first, the way D-11's third divergence finally was:** render a
-story with and without this library's own control CSS, against 2.1.0, and diff
-computed style. A static read of two stylesheets could not answer the same
-question about the preview, and it will not answer it here either — the library's
-`@layer crystal.component` and this library's CSS modules do not compete
-textually.
 
 ---
 

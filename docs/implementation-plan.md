@@ -2442,10 +2442,11 @@ inventing would have shipped.
   `@crystal-ui/core@^2.0.0` and the recipes ship in 2.1.0, which is Meridian's to
   publish. `useMotion` throws on a recipe it does not have — correctly, because a
   movement that silently does nothing is worse than one that says so — so the
-  stack asks `getRecipe` rather than assuming, and until the bump it behaves
+  stack asked `getRecipe` rather than assuming, and until the bump it behaved
   exactly as it does under `prefers-reduced-motion`: the state change in full,
   the decoration absent. Nothing about focus, the back control or the semantics
-  waits for it. Tracked with R-19.
+  waited for it. 2.1.0 is installed and the recipes are here, so the guard is
+  gone and the stack plays them.
 
 - **"Returns on pop" was implemented, found to be a lie, and replaced with the
   truth.** The intended contract is that focus returns to the exact control the
