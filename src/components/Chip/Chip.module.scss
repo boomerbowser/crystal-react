@@ -35,6 +35,17 @@
  position: relative; cursor: pointer; }
 
 .pressable::after {
+  /* There is one `::after` per element, and Crystal's sheen is on it too — so
+     switching this back on after `bare-control` means taking back everything
+     Crystal's rule says about it, not just `display`. The gradient would
+     otherwise paint across the chip, and `pointer-events: none` would leave the
+     box inert. This box is not decoration: it is the hit target, and Crystal's
+     rule had been disabling it since 2.1.0 was installed. */
+  display: block;
+  background: none;
+  pointer-events: auto;
+  z-index: 0;
+
   content: '';
   position: absolute;
   inset-block: 50%;
@@ -64,8 +75,9 @@
 /* The label half of a chip that is both selectable and removable. It carries the
    press behaviour; the pill around it carries the material. */
 .chipLabel {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
+  /* `bare-control` is on `.pressable`, which is on this element in both of
+     Chip's shapes. Repeating it here would re-hide `.pressable::after` from
+     further down the file, and that `::after` is the hit target. */
 
   display: flex;
   align-items: center;
@@ -110,6 +122,17 @@
    button's flex layout, and the button grew to 48px — a 32px chip rendering 52px
    tall. The story is what showed it. */
 .remove::after {
+  /* There is one `::after` per element, and Crystal's sheen is on it too — so
+     switching this back on after `bare-control` means taking back everything
+     Crystal's rule says about it, not just `display`. The gradient would
+     otherwise paint across the chip, and `pointer-events: none` would leave the
+     box inert. This box is not decoration: it is the hit target, and Crystal's
+     rule had been disabling it since 2.1.0 was installed. */
+  display: block;
+  background: none;
+  pointer-events: auto;
+  z-index: 0;
+
   content: '';
   position: absolute;
   inset-block-start: 50%;

@@ -21,10 +21,18 @@
  * layer does not help Crystal here — an unlayered declaration wins whatever its
  * specificity. Every declaration left below is one Crystal does not make.
  *
- * Selectors still key off React Aria's `data-*` attributes where the state is
- * React's to publish. Where the state is in the DOM — `:disabled`,
- * `:focus-visible`, `[aria-pressed]` — Crystal's own selectors reach it and
- * there is nothing for this file to say.
+ * No `data-*` selector survives here. Every state this file used to describe —
+ * `:disabled`, `:focus-visible`, `[aria-pressed]`, hover — is in the DOM, and
+ * Crystal's own selectors reach it.
+ *
+ * Hover is the one that changed what ships. This file lifted brightness on
+ * `[data-hovered]`, attributed to "the one Crystal writes for its own filled
+ * button" — `.cr-button:hover`. That rule is in `@layer crystal.reset` and
+ * `:is(button, a.cr-button):hover { filter: none }` is in
+ * `@layer crystal.component`, which wins because it is later, not because it is
+ * more specific. So Crystal's button does not brighten, this one no longer does
+ * either, and the discrepancy is filed against core as D-21 rather than papered
+ * over here.
  */
 
 .button {
