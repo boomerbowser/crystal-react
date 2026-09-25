@@ -21,8 +21,9 @@
    diffuses what is behind it, so the number needs something stable to sit on. */
 .page,
 .arrow {
-  @include material.resin;
-  @include material.haze-fill;
+  /* An arrow is a `<button>`, and Crystal already paints it. What stays is the
+     geometry, which is this component's: a square-ish target with tabular
+     figures beside it. */
   display: inline-flex;
   align-items: center;
   justify-content: center;

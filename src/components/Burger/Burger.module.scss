@@ -2,8 +2,10 @@
 @use '../../styles/material' as material;
 
 .burger {
-  @include material.resin;
-  @include material.haze-fill;
+  /* A burger is a `<button>`, and Crystal paints every `<button>` as a Resin
+     control by element selector. These two lines were that recipe, restated. The
+     shape is square rather than a pill, so it keeps its own geometry — but not
+     its own material. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
