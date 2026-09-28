@@ -18,8 +18,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: $cr-spacing-2xs;
-  padding: $cr-spacing-2xs $cr-spacing-sm;
-  min-block-size: $cr-action-min-target;
   cursor: pointer;
 }
 
@@ -37,7 +35,9 @@
   align-items: center;
   gap: $cr-spacing-2xs;
   min-inline-size: $cr-spacing-xl;
-  min-block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-xs});
+  /* Not a native control, so Crystal's floor does not reach it; it takes the
+     floor by name, which keeps an empty MultiSelect as tall as a text field. */
+  min-block-size: field.$field-control-floor;
   padding: 0;
   border: 0;
   background: none;
@@ -125,5 +125,3 @@
 @media (forced-colors: active) {
   .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
 }
-
-@include field.shell-fallbacks('.shell');

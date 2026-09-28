@@ -55,7 +55,9 @@
   justify-content: center;
   flex: 0 0 auto;
   inline-size: $cr-action-min-target;
-  min-block-size: $cr-action-min-target;
+  /* "Both controls reach 44px" — the floor Crystal gives the value beside them,
+     so the pill is a field's height rather than taller. */
+  min-block-size: field.$field-control-floor;
   border: 0;
   border-radius: inherit;
   background: transparent;
@@ -73,7 +75,7 @@
 
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; }
 
+/* The shell's forced-colours border is Crystal's. */
 @media (forced-colors: active) {
-  .shell { border: 1px solid CanvasText; }
   .step { color: CanvasText; }
 }

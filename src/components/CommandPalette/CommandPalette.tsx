@@ -157,7 +157,7 @@ export function CommandPalette({
                     compose into `aria-labelledby` pointing at the input *and*
                     the label, which names the field something nobody asked for.
                     A label element is also the one a click can focus. */}
-                <SearchField className={cx(styles['field'])} autoFocus>
+                <SearchField className={cx(styles['field'], 'cr-field-shell')} autoFocus>
                   <VisuallyHidden as="span"><Label>{label}</Label></VisuallyHidden>
                   <span className={cx(styles['searchIcon'])} aria-hidden="true">{SearchIcon}</span>
                   <Input placeholder={placeholder} className={cx(styles['input'])} />

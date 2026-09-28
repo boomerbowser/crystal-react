@@ -71,7 +71,7 @@ export function ColorInput({
       className={cx(styles['field'], className)}
     >
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group className={cx(styles['shell'])}>
+      <Group className={cx(styles['shell'], 'cr-field-shell')}>
         <AriaColorSwatch className={cx(styles['swatch'])} />
         <Input className={cx(styles['control'])} />
       </Group>
@@ -306,7 +306,7 @@ export function ColorPicker({
             label: inside a group that is already announced as "Accent", a field
             called "Accent" says nothing a listener did not just hear. */}
         <ColorField className={cx(styles['field'])} aria-label="Hexadecimal value">
-          <Group className={cx(styles['shell'])}>
+          <Group className={cx(styles['shell'], 'cr-field-shell')}>
             <AriaColorSwatch className={cx(styles['swatch'])} />
             <Input className={cx(styles['control'])} />
           </Group>

@@ -24,5 +24,3 @@
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-
-@include field.shell-fallbacks('.shell');

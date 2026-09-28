@@ -64,7 +64,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function T
           {/* The validity React Aria resolved, not the one the caller declared:
               a server's rejection has to move the field exactly as a local rule
               would. */}
-          <FieldShell isInvalid={isInvalid} className={cx(styles['shell'])}>
+          <FieldShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
             <Input
               ref={forwardedRef}
               className={cx(styles['input'])}

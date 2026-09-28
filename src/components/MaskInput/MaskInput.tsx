@@ -79,7 +79,7 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(function M
       <label htmlFor={fieldId} className={cx(styles['label'])}>{label}</label>
       <div
         ref={shellScope as never}
-        className={cx(styles['shell'])}
+        className={cx(styles['shell'], 'cr-field-shell')}
         {...(invalid ? { 'data-invalid': true } : {})}
       >
         <IMaskInput

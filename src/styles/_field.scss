@@ -38,20 +38,18 @@
  * in every story, since the beginning. Autoprefixer adds the prefix for Safari
  * on its own; the job here is to write the property once. */
 @mixin shell {
-  /* Crystal styles .cr-field-shell with the control recipe, so every text input, textarea, select, combobox, date picker and tags input in this library inherits the fill from here. */
-  @include material.haze-fill;
-  position: relative;
-  isolation: isolate;
+  /* The shell is Crystal's `.cr-field-shell` (2.2.0), which every caller now wears:
+     the Resin surround, the Haze well, the rim, the 20px radius, the 8px inset and
+     the sheen, as written. Meridian ruled on 28 September 2026 (D-24) that the
+     library adopts it rim and all; until then this mixin painted its own shell
+     with the outline colour as the edge. Crystal's accessibility chapter records
+     how the rim is treated.
+
+     What stays is layout Crystal does not decide for a React field — a shell that
+     fills its row rather than sitting inline — and the origin the field motion
+     deforms around. */
   display: flex;
   align-items: center;
-  border: 1px solid var(--cr-outline);
-  border-radius: var(--cr-radius);
-  background: var(--cr-resin-fill);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  /* Crystal's own float shadow, which already carries both optical rims. This
-     line used to write one rim by hand over the content shadow — half the recipe,
-     restated rather than referenced, and half the elevation. */
-  box-shadow: var(--cr-shadow-float);
   transform-origin: center;
 }
 
@@ -61,16 +59,27 @@
    `@include control` on the shell itself is therefore wrong — `inherit` then
    reaches past the shell to the field, which has no radius, and the whole
    control renders square. Use `trigger` for an element that is both. */
+/* The floor Crystal gives a control inside a field shell —
+   `.cr-field-shell :is(input, select, textarea) { min-height: 44px; border-radius: 12px }`.
+   Published only as that rule, so it is named here once. */
+$field-control-floor: 44px; /* crystal-allow-literal: core `.cr-field-shell :is(input,select,textarea)` min-height */
+
+/* The height a shell reaches around that floor: Crystal's 8px inset on each side
+   and the 1px rim. For an element that must be exactly as tall as a field
+   without holding a native control — a trigger, a pin well's width. */
+$field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* crystal-allow-literal: the shell's 1px rim, twice */
+
 @mixin control {
   flex: 1;
   min-width: 0;
-  min-height: $cr-action-min-target;
-  padding: $cr-action-padding-block $cr-action-padding-inline;
-  border: 0;
-  border-radius: inherit;
-  background: transparent;
-  font: inherit;
-  color: inherit;
+  /* The height floor, the 12px radius, the transparent fill and the absent
+     border are Crystal's, from the rule above, which reaches every native control
+     inside the shell. This used to set its own 48px floor and inherit the shell's
+     radius, which made a field 74px tall inside Crystal's 8px inset instead of the
+     62 Crystal draws. What is left is the text's position: no block padding, so
+     the control is exactly Crystal's 44px, and inline padding that puts the text
+     roughly where it sat before the shell inset by 8px. */
+  padding: 0 $cr-spacing-sm;
 }
 
 /* One element that is the shell and the control at once — a select's trigger,
@@ -93,13 +102,22 @@
 @mixin trigger {
   flex: 1;
   min-width: 0;
-  min-height: $cr-action-min-target;
-  padding: $cr-action-padding-block $cr-action-padding-inline;
-  border-radius: var(--cr-radius);
+  /* A trigger is its own shell, so it takes the height a shell reaches around a
+     44px control — Crystal's 8px inset on each side and the 1px rim. The inset
+     and the 20px radius are the shell's, as written; what a text field's input
+     adds inside that inset, the trigger's contents add with `trigger-content`. */
+  min-height: $field-height;
   font: inherit;
   color: inherit;
   cursor: pointer;
   text-align: start;
+}
+
+/* The inline padding a text field's input has inside the shell, for the value
+   and the disclosure of a trigger, so a Select's text starts where a TextInput's
+   does in the same form. */
+@mixin trigger-content {
+  padding-inline: $cr-spacing-sm;
 }
 
 /* The ring belongs to the shell, so it traces the control rather than the bare
@@ -136,32 +154,14 @@
 @mixin leading-icon {
   display: flex;
   align-items: center;
-  padding-inline-start: $cr-action-padding-inline;
+  /* Inside the shell's 8px inset, so the glyph sits where the text of a field
+     without one begins. */
+  padding-inline-start: $cr-spacing-sm;
   color: var(--cr-muted);
   pointer-events: none;
 }
 
-/* Every fallback route for the shell, in one place. Each one keeps the shape and
-   the hierarchy and drops only the diffusion. */
-@mixin shell-fallbacks($selector) {
-  :global([data-effects='opaque']) #{$selector} {
-    background: var(--cr-surface);
-    backdrop-filter: none;
-  }
-
-  @media (prefers-reduced-transparency: reduce) {
-    #{$selector} {
-      background: var(--cr-surface);
-      backdrop-filter: none;
-    }
-  }
-
-  @media (forced-colors: active) {
-    #{$selector} {
-      background: Field;
-      border: 1px solid FieldText;
-      backdrop-filter: none;
-    }
-    #{$selector}:focus-within { outline-color: Highlight; }
-  }
-}
+/* No fallback mixin. Crystal's `.cr-field-shell` publishes all three routes —
+   `[data-effects=opaque]`, reduced transparency and forced colours — for the
+   element itself, so a local copy restated them and, in forced colours, lost to
+   Crystal's `!important` anyway. */

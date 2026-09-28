@@ -72,7 +72,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
       {...(style ? { style } : {})}
     >
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group className={cx(styles['shell'])}>
+      <Group className={cx(styles['shell'], 'cr-field-shell')}>
         {/* Decoration: hidden from assistive technology, and not pressable. */}
         <span className={cx(styles['leadingIcon'])} aria-hidden="true">{SearchIcon}</span>
         <Input

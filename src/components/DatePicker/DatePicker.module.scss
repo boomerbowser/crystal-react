@@ -17,8 +17,10 @@
   flex: 1;
   display: flex;
   align-items: center;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-action-padding-inline;
+  /* Segments are spans, not a native control, so Crystal's 44px floor for a
+     control inside a field shell is taken here by name. */
+  min-block-size: field.$field-control-floor;
+  padding-inline: $cr-spacing-sm;
   font-variant-numeric: tabular-nums;
 }
 
@@ -71,5 +73,3 @@
   .cell[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
   .segment[data-focused] { background: Highlight; color: HighlightText; }
 }
-
-@include field.shell-fallbacks('.shell');

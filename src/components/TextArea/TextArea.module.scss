@@ -14,7 +14,9 @@
 .field { @include field.field; }
 .label { @include field.label; }
 .shell { @include field.shell; align-items: stretch; }
-.control { @include field.control; resize: vertical; }
+/* Lines of text, not one: block padding so the first and last line clear the
+   well's 12px corners, which a single-line input centres away from instead. */
+.control { @include field.control; padding-block: $cr-spacing-xs; resize: vertical; }
 
 .autosize {
   field-sizing: content;
@@ -50,5 +52,3 @@
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-
-@include field.shell-fallbacks('.shell');

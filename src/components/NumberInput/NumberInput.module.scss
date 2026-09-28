@@ -23,7 +23,9 @@
   display: flex;
   flex-direction: column;
   align-self: stretch;
-  padding: $cr-spacing-2xs;
+  /* No padding of its own: the shell's 8px inset is the margin now, and the two
+     20px steppers and their gap fill exactly the 44px the input sets. */
+  padding: 0;
   gap: $cr-spacing-2xs;
 }
 
@@ -63,5 +65,3 @@
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-
-@include field.shell-fallbacks('.shell');

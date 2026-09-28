@@ -1172,6 +1172,67 @@ for (const [id, selector, what] of DISABLED) {
   record('both states of the switch were measured', first.on !== second.on, 'the click did not change the switch, so only one state was compared');
 }
 
+/* ---------------------------------------------- a field is Crystal's field
+ *
+ * Meridian ruled on 28 September 2026 (D-24) that this library adopts Crystal's
+ * `.cr-field-shell` as written: the rim, the 20px radius, the 8px inset, the
+ * sheen, and the 44px floor for the control inside — which makes a single-line
+ * field 62px tall. Until then every field painted its own shell with the outline
+ * colour for an edge, the content radius, no inset, and a 48px control, and was
+ * 58px. So a Crystal field shell around a native input is planted beside every
+ * field shell in the input stories, and the two must agree on the material and,
+ * for a field of one line, on the height. A shell that forgets the class, or a
+ * local rule that restates a different value, shows up here as a difference.
+ */
+{
+  const FIELD_STORIES = [
+    'inputs-text-and-choice--text-family',
+    'inputs-text-and-choice--choice-family',
+    'inputs-temporal-colour-and-files--temporal',
+    'inputs-temporal-colour-and-files--colour',
+    'inputs-composite--filtering',
+    'inputs-composite--tokens',
+  ];
+  for (const id of FIELD_STORIES) {
+    await open(id, '#storybook-root [class*="_field_"]');
+    const seen = await page.evaluate(() => {
+      const shells = [...document.querySelectorAll('#storybook-root [class*="_shell_"], #storybook-root [class*="_well_"]')]
+        .filter((el) => el.querySelector('input, select, textarea, button') !== null || el.tagName === 'BUTTON')
+        .filter((el) => el.closest('table, [role=grid]') === null);
+      const out = [];
+      for (const shell of shells) {
+        const planted = document.createElement('div');
+        planted.className = 'cr-field-shell';
+        planted.append(document.createElement('input'));
+        shell.parentElement.append(planted);
+        const a = getComputedStyle(shell), b = getComputedStyle(planted);
+        const invalid = shell.matches('[data-invalid], [data-invalid] *');
+        const props = ['backgroundColor', 'backdropFilter', 'borderTopWidth', 'borderTopLeftRadius', 'paddingTop', 'paddingLeft'];
+        if (!invalid) props.push('borderTopColor');
+        const differs = props.filter((k) => a[k] !== b[k]).map((k) => `${k} ${a[k]} (Crystal ${b[k]})`);
+        for (const k of ['backgroundColor', 'filter', 'inset']) {
+          if (getComputedStyle(shell, '::before')[k] !== getComputedStyle(planted, '::before')[k]) differs.push(`haze ${k}`);
+        }
+        if (getComputedStyle(shell, '::after').backgroundImage === 'none') differs.push('no sheen');
+        const multiline = shell.querySelector('textarea') !== null;
+        const height = shell.getBoundingClientRect().height, crystal = planted.getBoundingClientRect().height;
+        if (!multiline && Math.abs(height - crystal) > 0.5) differs.push(`height ${height} (Crystal ${crystal})`);
+        planted.remove();
+        const name = shell.closest('[class*="_field_"]')?.querySelector('label, [class*="_label_"]')?.textContent?.trim() ?? shell.className;
+        out.push({ name, wears: shell.classList.contains('cr-field-shell'), differs });
+      }
+      return out;
+    });
+    record(`${id}: fields were found to compare`, seen.length > 0, 'no field shells in the story, so nothing was compared');
+    const wrong = seen.filter((one) => !one.wears || one.differs.length > 0);
+    record(
+      `${id}: every field is Crystal's field shell`,
+      wrong.length === 0,
+      wrong.map((one) => `${one.name}: ${one.wears ? '' : 'does not wear .cr-field-shell; '}${one.differs.join(', ')}`).join(' | '),
+    );
+  }
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

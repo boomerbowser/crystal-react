@@ -92,7 +92,7 @@ function Field({
       <Label className={cx(styles['label'])}>{label}</Label>
       {/* The validity React Aria resolved, not the one the caller declared, so a
           server's rejection moves the field exactly as a local rule would. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'])}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
         {/* Focus never leaves this input. The highlighted row is named through
             `aria-activedescendant`, which React Aria maintains. */}
         <Input className={cx(styles['control'])} {...(placeholder ? { placeholder } : {})} />

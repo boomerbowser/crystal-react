@@ -401,7 +401,26 @@ day: 2.2.0 is published and installed.)*
 guard failed on the bump as it was written to, and is now the opposite check — a
 floor, because this library plays recipes that exist only from 2.2.0 (the three
 continuous indicators and `mark-in`), and on anything older `useMotion` throws for
-an unknown recipe. The surface sweep below is what remains.
+an unknown recipe.
+
+Phase B has landed component by component, each measured against Crystal's
+class planted beside it: bare controls wear `.cr-bare` and `bare-control` is
+gone; navigation links and rail destinations wear `.cr-nav-item`; the drag
+handle wears `.cr-drag-handle`; the floating window and media controls are the
+Resin plane; the tables stop restating their frame; the card is Crystal's Haze;
+badges, keys and the overlaid caption wear their surfaces; every transient
+overlay is Frost; the dialog is Crystal's over Mirage; the switch is Crystal's
+native switch. **The field shell** landed last, after Meridian ruled D-24 on 28
+September 2026 that the library adopts `.cr-field-shell` as written, rim
+included: every field shell wears it, `field.shell` keeps only layout, the
+`shell-fallbacks` mixin is gone because Crystal publishes all three routes, and
+the control inside takes Crystal's 44px floor and 12px radius — so a
+single-line field is Crystal's 62px rather than 58, and a pin well is square at
+that height. `verify:appearance` plants a Crystal field beside every field in
+the six input stories and fails on any material difference or a single-line
+height that is not Crystal's; it was seen red on the previous build in all six.
+What remains is the manifest carrying `surface`, one check per surface, and the
+motion bindings.
 
 **What changed upstream.** The R-19 sweep stopped where Crystal had no recipe:
 `NavLink` kept a weight of 550 because `.cr-button`'s 750 would destroy it, the

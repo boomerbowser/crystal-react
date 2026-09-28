@@ -42,14 +42,14 @@
 .disclosure {
   display: flex;
   align-items: center;
-  padding-inline-end: $cr-action-padding-inline;
+  @include field.trigger-content;
   color: var(--cr-muted);
   pointer-events: none;
 }
 
 .disclosure svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
-.value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.value { @include field.trigger-content; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .placeholder { color: var(--cr-muted); }
 
 /* The list is a Frost panel: a transient overlay is Frost, never Resin. */
@@ -98,5 +98,3 @@
 @media (forced-colors: active) {
   .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
 }
-
-@include field.shell-fallbacks('.shell');

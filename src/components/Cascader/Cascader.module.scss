@@ -9,9 +9,9 @@
 .trigger { @include field.trigger; }
 
 .shell:focus-within { @include field.focus-ring; }
-.value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.value { @include field.trigger-content; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .placeholder { color: var(--cr-muted); }
-.disclosure { display: flex; align-items: center; padding-inline-end: $cr-action-padding-inline; color: var(--cr-muted); pointer-events: none; }
+.disclosure { @include field.trigger-content; display: flex; align-items: center; color: var(--cr-muted); pointer-events: none; }
 .disclosure svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
 .popover {
@@ -65,5 +65,3 @@
 @media (forced-colors: active) {
   .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
 }
-
-@include field.shell-fallbacks('.shell');

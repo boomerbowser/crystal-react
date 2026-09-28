@@ -82,7 +82,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
       {/* The validity React Aria resolved, not the one the caller declared, so a
           server's rejection moves the field exactly as a local rule would. Over
           the limit is this component's own judgement and is added to it. */}
-      <FieldShell isInvalid={isInvalid || over} className={cx(styles['shell'])}>
+      <FieldShell isInvalid={isInvalid || over} className={cx(styles['shell'], 'cr-field-shell')}>
         <AriaTextArea
           ref={forwardedRef}
           rows={rows}

@@ -8,21 +8,19 @@
 
 .wells { display: flex; gap: $cr-spacing-xs; }
 
+/* "Square-ish wells at the field radius; 44px minimum." Each well is Crystal's
+   field shell — its 20px radius and 8px inset — around a cell that takes
+   Crystal's 44px floor, so the well is as tall as every other field and as wide
+   as it is tall. */
 .well {
   @include field.shell;
-  inline-size: $cr-action-min-target;
-  block-size: calc(#{$cr-action-min-target} + #{$cr-spacing-xs});
-  border-radius: var(--cr-radius);
+  inline-size: field.$field-height;
   justify-content: center;
 }
 
 .cell {
   inline-size: 100%;
-  block-size: 100%;
   padding: 0;
-  border: 0;
-  border-radius: inherit;
-  background: transparent;
   font: inherit;
   font-size: var(--cr-text-heading-size);
   font-variant-numeric: tabular-nums;
@@ -39,5 +37,3 @@
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-
-@include field.shell-fallbacks('.well');

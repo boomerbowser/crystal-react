@@ -10,7 +10,6 @@
   @include field.shell;
   flex-wrap: wrap;
   gap: $cr-spacing-2xs;
-  padding: $cr-spacing-2xs $cr-spacing-sm;
 }
 
 .shell:focus-within { @include field.focus-ring; }
@@ -23,9 +22,9 @@
 .entry {
   flex: 1;
   min-inline-size: calc(#{$cr-action-min-target} * 2);
-  min-block-size: $cr-chip-height;
-  border: 0;
-  background: transparent;
+  /* Height, border and fill are Crystal's rule for a native control inside a
+     field shell: the 44px floor, no border, transparent. */
+  padding-inline: $cr-spacing-2xs;
   font: inherit;
   color: inherit;
 }
@@ -43,5 +42,3 @@
 
 .count { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-
-@include field.shell-fallbacks('.shell');

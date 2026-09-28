@@ -133,7 +133,7 @@ function Field({
       <span id={labelId} className={cx(styles['label'])}>{label}</span>
       <div
         ref={shellScope as never}
-        className={cx(styles['shell'])}
+        className={cx(styles['shell'], 'cr-field-shell')}
         {...(invalid ? { 'data-invalid': true } : {})}
         onClick={() => entry.current?.focus()}
       >

@@ -164,7 +164,7 @@ export function MultiSelect({
             (shellScope as unknown as { current: HTMLDivElement | null }).current = node;
             shellRef.current = node;
           }}
-          className={cx(styles['shell'])}
+          className={cx(styles['shell'], 'cr-field-shell')}
           {...(invalid ? { 'data-invalid': true } : {})}
         >
           {selected.map((id) => (

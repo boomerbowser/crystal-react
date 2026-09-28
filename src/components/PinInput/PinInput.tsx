@@ -129,7 +129,7 @@ export function PinInput({
         className={cx(styles['wells'])}
       >
         {Array.from({ length }, (_, index) => (
-          <div key={index} className={cx(styles['well'])} {...(invalid ? { 'data-invalid': true } : {})}>
+          <div key={index} className={cx(styles['well'], 'cr-field-shell')} {...(invalid ? { 'data-invalid': true } : {})}>
             <input
               ref={(node) => { cells.current[index] = node; }}
               className={cx(styles['cell'])}

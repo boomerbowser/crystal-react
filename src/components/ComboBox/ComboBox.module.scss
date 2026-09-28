@@ -81,5 +81,3 @@
 @media (forced-colors: active) {
   .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
 }
-
-@include field.shell-fallbacks('.shell');

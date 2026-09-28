@@ -97,5 +97,3 @@
   .swatchOption[data-selected] { outline-color: Highlight; }
   .thumb { border-color: CanvasText; }
 }
-
-@include field.shell-fallbacks('.shell');

@@ -128,7 +128,7 @@ export function Cascader({
         <Button
           aria-labelledby={labelId}
           isDisabled={isDisabled}
-          className={cx(styles['shell'], styles['trigger'])}
+          className={cx(styles['shell'], 'cr-field-shell', styles['trigger'])}
         >
           <span className={cx(styles['value'], shown ? undefined : styles['placeholder'])}>
             {shown || placeholder}

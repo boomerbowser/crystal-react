@@ -64,14 +64,15 @@
 .field {
   @include field.shell;
   gap: $cr-spacing-xs;
-  padding-inline: $cr-spacing-sm;
 }
 
 .field:focus-within {
   @include field.focus-ring;
 }
 
-.searchIcon { display: inline-flex; flex: none; color: var(--cr-muted); }
+/* Inside the shell's own 8px inset, so the glyph sits where it did when the
+   shell was padded locally. */
+.searchIcon { display: inline-flex; flex: none; padding-inline-start: $cr-spacing-2xs; color: var(--cr-muted); }
 .searchIcon svg {
   inline-size: $cr-icon-size;
   block-size: $cr-icon-size;
