@@ -47,8 +47,8 @@ export interface DockProps {
 
 export function Dock({ items, currentId, className, ...props }: DockProps): React.JSX.Element {
   return (
-    <nav aria-label={props['aria-label'] ?? 'Destinations'} className={cx(styles['dock'], className)}>
-      <ul className={cx(styles['group'])}>
+    <nav aria-label={props['aria-label'] ?? 'Destinations'} className={cx(styles['dock'], 'cr-dock', className)}>
+      <ul className={cx(styles['group'], 'cr-dock-inner')}>
         {items.map((item) => {
           const isCurrent = item.id === currentId;
           return (

@@ -22,9 +22,10 @@ import styles from './Toolbar.module.scss';
 
 export interface ToolbarProps extends Omit<AriaToolbarProps, 'className' | 'children' | 'style'> {
   /**
-   * `resin` floats the toolbar as its own control plane. `inherit` is for a
-   * toolbar inside a surface that already carries a material — Resin never
-   * contains Resin.
+   * `resin` floats the toolbar as its own control plane: Crystal's `.cr-dock`,
+   * whose buttons carry no material of their own. `inherit` is for a toolbar
+   * inside a surface that already carries a material — Resin never contains
+   * Resin.
    */
   variant?: 'resin' | 'inherit';
   /** Accessible name. A toolbar with several on a page needs one to be told apart. */
@@ -45,7 +46,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       className={cx(
         styles['toolbar'],
         orientation === 'vertical' ? styles['vertical'] : undefined,
-        variant === 'resin' ? styles['resin'] : undefined,
+        variant === 'resin' ? cx(styles['resin'], 'cr-dock') : undefined,
         className,
       )}
     >

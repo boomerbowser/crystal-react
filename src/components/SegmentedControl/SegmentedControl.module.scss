@@ -4,10 +4,8 @@
 
 /* SegmentedControl — a pill strip of mutually exclusive options.
  *
- * **Selection is label weight.** Crystal's rule, and this is the control where it
- * is most often broken: a segmented control whose selected option is a coloured
- * fill has chosen colour as the signal, and the reader who cannot distinguish it
- * has nothing.
+ * **Selection is weight and the primary fill**, as Crystal's dock draws it —
+ * see `styles/_strip.scss`. The weight is what makes it more than colour.
  *
  * The strip and its pills are `styles/_strip.scss`, shared with the tab list,
  * which is the same material carrying different semantics. Everything here is
@@ -18,15 +16,10 @@
 .group { @include field.field; }
 .legend { @include field.label; }
 
-/* `align-self: start` because the strip is a control and its wrapper is a column
-   flex: a flex child stretches to the cross axis by default, and a segmented
-   control spanning the page reads as a broken tab bar. */
 .strip { @include strip.strip; }
 
 .segment { @include strip.pill; }
 .segment[data-selected] { @include strip.pill-selected; }
-
-.segment[data-hovered]:not([data-selected]) { color: var(--cr-text); }
 
 .segment[data-focus-visible] { @include strip.pill-focus; }
 
@@ -36,5 +29,4 @@
 .description { color: var(--cr-muted); }
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
-@include strip.strip-fallbacks('.strip');
-@include strip.strip-forced-colors('.strip', '.segment[data-selected]');
+@include strip.pill-forced-colors('.segment[data-selected]');

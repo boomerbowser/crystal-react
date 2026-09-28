@@ -1,9 +1,8 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* Toolbar — a grouped set of controls with one tab stop.
  *
- * Resin when it floats as its own plane, inherited when it sits inside a surface
+ * A dock when it floats as its own plane, inherited when it sits inside a surface
  * that already has one. The group reaches the minimum target height so a row of
  * small icon buttons is still a comfortable strip to hit.
  */
@@ -18,28 +17,9 @@
 
 .vertical { flex-direction: column; align-items: stretch; }
 
-.resin {
-  /* A toolbar is a dock. */
-  @include material.haze-fill;
-  padding: $cr-spacing-2xs;
-  border: 1px solid var(--cr-rim);
-  border-radius: $cr-action-radius;
-  background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-}
-
+/* A floating toolbar is Crystal's dock, worn as `.cr-dock` by the component:
+   the Resin plane, its Haze fill, its fallbacks, and buttons that lose their own
+   Resin — until 28 September each button inside kept its Resin coat, which is
+   Resin inside Resin. Crystal has no vertical dock, so a vertical one keeps the
+   content radius rather than becoming a very tall pill. */
 .vertical.resin { border-radius: var(--cr-radius); }
-
-:global([data-effects='opaque']) .resin {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .resin { background: var(--cr-surface); backdrop-filter: none; }
-}
-
-@media (forced-colors: active) {
-  .resin { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
-}

@@ -58,7 +58,7 @@ export function BottomNavigation({
     <nav
       ref={measure}
       aria-label={props['aria-label'] ?? 'Destinations'}
-      className={cx(styles['bar'], className)}
+      className={cx(styles['bar'], 'cr-dock', className)}
       style={height === null ? undefined : { ['--cr-bottom-navigation-block-size' as string]: `${height}px` }}
     >
       <ul className={cx(styles['list'])}>

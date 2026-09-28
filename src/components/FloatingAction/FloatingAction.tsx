@@ -125,7 +125,7 @@ export function ActionBar({
   if (!isVisible) return null;
 
   return (
-    <Toolbar aria-label={label} className={cx(styles['actionBar'], className)}>
+    <Toolbar variant="resin" aria-label={label} className={cx(styles['actionBar'], className)}>
       <span className={cx(styles['count'])}>{selectedCount} selected</span>
       {children}
       {/* The bar appearing and the size of the selection are the same piece of

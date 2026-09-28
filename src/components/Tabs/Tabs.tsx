@@ -7,10 +7,11 @@
  * between a tab and its panel, and the automatic-versus-manual activation
  * distinction. Crystal owns the material and the one semantic rule.
  *
- * **Selection is label weight.** The selected tab is heavier; the soft fill under
- * it is a second signal, not the only one. The strip is Resin, shared with the
- * segmented control through `styles/_strip.scss` — the same material carrying
- * different semantics. A segmented control picks a *value* and announces as a
+ * **Selection is weight and the primary fill**, as Crystal's dock draws a
+ * selected control: the tab is heavier and filled, so selection never rests on
+ * colour alone. The strip is Crystal's `.cr-dock`, shared with the segmented
+ * control through `styles/_strip.scss` — the same material carrying different
+ * semantics. A segmented control picks a *value* and announces as a
  * radio group; a tab list picks a *view* and promises a panel will change. The
  * catalogue rules out borrowing one for the other by name: "never
  * `aria-selected` outside a tablist".
@@ -69,7 +70,7 @@ export function Tabs({
     <AriaTabs {...props} className={cx(styles['tabs'], className)}>
       {visible ? <span id={labelId} className={cx(styles['label'])}>{label}</span> : null}
       <TabList
-        className={cx(styles['strip'])}
+        className={cx(styles['strip'], 'cr-dock')}
         items={items}
         {...(visible ? { 'aria-labelledby': labelId } : { 'aria-label': nameable })}
       >

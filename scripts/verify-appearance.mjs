@@ -1233,6 +1233,81 @@ for (const [id, selector, what] of DISABLED) {
   }
 }
 
+/* ------------------------------------------------ a strip is Crystal's dock
+ *
+ * Crystal's catalogue names the tab strip, the segmented control, the toolbar,
+ * the command bar, the action bar, the button group, the split button, the dock
+ * and the bottom navigation as the `dock` surface (D-23, 28 September 2026), and
+ * `.cr-dock` is its recipe. So a `.cr-dock` is planted beside each of them and the
+ * two must agree on the material: the Resin plane, its rim and shadow, and the
+ * Haze fill it holds.
+ *
+ * The labels inside are checked too, where the library restates them. Crystal
+ * keys a dock's controls on `button`, and a tab is `div[role=tab]`, a segment is
+ * a radio `label`, and a destination is a link, so none of them can wear it; they
+ * restate `.cr-dock button` instead (the switch's arrangement), and a planted
+ * `.cr-dock button`, selected and not, is what they must equal.
+ */
+{
+  const DOCKS = [
+    ['navigation-tabs-and-breadcrumbs--tab-strip', '[role=tablist]', '[role=tab]'],
+    ['navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', '[role=radiogroup] [class*="_strip_"]', 'label'],
+    ['utility-toolbar-and-transition--floating', '[role=toolbar][class*="_resin_"]', 'bare'],
+    ['screens-commandbar--default', '[role=toolbar]', 'bare'],
+    ['actions-icon-group-and-floating--groups', '[class*="_buttonGroup_"]', null],
+    ['navigation-rails-and-bars--dock-bar', 'nav[class*="_dock_"]', 'a'],
+    ['navigation-rails-and-bars--bottom-bar', 'nav[class*="_bar_"]', null],
+  ];
+  for (const [id, selector, labels] of DOCKS) {
+    await open(id, '#storybook-root');
+    const seen = await page.evaluate(([selector, labels]) => {
+      const strips = [...document.querySelectorAll(`#storybook-root ${selector}`)];
+      const out = [];
+      for (const strip of strips) {
+        const planted = document.createElement('div');
+        planted.className = 'cr-dock';
+        planted.innerHTML = '<button type="button" aria-selected="true">Planted</button><button type="button">Planted</button>';
+        strip.parentElement.append(planted);
+        const differs = [];
+        const a = getComputedStyle(strip), b = getComputedStyle(planted);
+        for (const k of ['backgroundColor', 'backdropFilter', 'borderTopColor', 'borderTopWidth', 'boxShadow', 'borderTopLeftRadius']) {
+          if (a[k] !== b[k]) differs.push(`plane ${k} ${a[k]} (Crystal ${b[k]})`);
+        }
+        for (const k of ['content', 'backgroundColor', 'filter', 'inset']) {
+          const x = getComputedStyle(strip, '::before')[k], y = getComputedStyle(planted, '::before')[k];
+          if (x !== y) differs.push(`haze ${k} ${x} (Crystal ${y})`);
+        }
+        /* A dock's buttons carry no material of their own: Resin never contains
+           Resin, and until 28 September every button in a floating toolbar did. */
+        if (labels === 'bare') {
+          for (const button of strip.querySelectorAll('button')) {
+            const m = getComputedStyle(button);
+            if (m.backdropFilter !== 'none') differs.push(`a button inside has its own backdrop ${m.backdropFilter}`);
+            if (getComputedStyle(button, '::after').display !== 'none') differs.push('a button inside has its own sheen');
+          }
+        } else if (labels) {
+          const items = [...strip.querySelectorAll(labels)];
+          const current = items.find((el) => el.matches('[data-selected], [aria-selected=true], [aria-current]:not([aria-current=false])'));
+          const other = items.find((el) => el !== current);
+          for (const [mine, crystal, state] of [[current, planted.children[0], 'selected'], [other, planted.children[1], 'unselected']]) {
+            if (!mine) { differs.push(`no ${state} label found`); continue; }
+            const m = getComputedStyle(mine), c = getComputedStyle(crystal);
+            for (const k of ['backgroundColor', 'color', 'fontWeight', 'paddingTop', 'paddingLeft', 'minHeight', 'height', 'borderTopLeftRadius', 'boxShadow']) {
+              if (m[k] !== c[k]) differs.push(`${state} ${k} ${m[k]} (Crystal ${c[k]})`);
+            }
+          }
+        }
+        planted.remove();
+        out.push(differs);
+      }
+      return out;
+    }, [selector, labels]);
+    record(`${id}: a dock-surface strip was found`, seen.length > 0, `nothing matched ${selector}`);
+    const wrong = seen.filter((differs) => differs.length > 0);
+    record(`${id}: the strip is Crystal's dock`, wrong.length === 0, wrong.map((differs) => differs.join(', ')).join(' | '));
+  }
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

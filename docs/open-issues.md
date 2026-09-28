@@ -45,8 +45,10 @@ intact.
 
 Crystal's own tracker is `crystal-design-system/proposals/open-issues.md`. As of
 28 September 2026 it holds D-4, which needs hardware, D-17, a flake that needs
-its next occurrence with the artifact kept, and D-21, a hover treatment that is
-Meridian's to rule on.
+its next occurrence with the artifact kept, D-21, a hover treatment that is
+Meridian's to rule on, D-25, three findings from this library's surface sweep,
+and D-26, the dock controls and the grouped dock that this library restates
+until Crystal draws them.
 
 ---
 
@@ -419,6 +421,24 @@ single-line field is Crystal's 62px rather than 58, and a pin well is square at
 that height. `verify:appearance` plants a Crystal field beside every field in
 the six input stories and fails on any material difference or a single-line
 height that is not Crystal's; it was seen red on the previous build in all six.
+**The docks** followed, once Crystal's catalogue named them (D-23): the tab
+strip, the segmented control, a floating toolbar (and so the command bar and
+the action bar), the dock and the bottom navigation wear `.cr-dock` (the dock
+with `.cr-dock-inner` for its Stone backing) and their local Resin, Haze and
+fallbacks are gone. A floating toolbar's buttons had each kept their own Resin
+coat — Resin inside Resin — and are bare now. The bottom navigation is the
+catalogue's pill, with one Haze fill rather than one per destination. **Tabs and
+segments now take the primary fill when selected, not primary-soft:** the
+catalogue entries, `.cr-dock`'s selected rule and the documentation site all
+say primary, and the soft fill was this library's. Because Crystal keys a dock's
+controls on `button` and a tab, a radio label and a link are not buttons, the
+pills restate `.cr-dock button` — 52px, 13/18 padding, 700 over 800 — and are
+compared with a planted one. The button group and split button keep their
+touching segments and hairline, which `.cr-dock` does not draw, and gain the
+dock's rim, which was the one property they lacked. Both gaps are filed
+upstream as D-26. `verify:appearance` plants a `.cr-dock` beside every one of
+these; it was red on the previous build in all seven stories.
+
 What remains is the manifest carrying `surface`, one check per surface, and the
 motion bindings.
 

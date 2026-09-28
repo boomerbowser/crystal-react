@@ -60,8 +60,8 @@
 /* An action bar is centred rather than cornered: it belongs to a selection in
    the content, not to the page. */
 .actionBar {
-  /* The bar is the material and its actions are bare, the same structure as a dock. */
-  @include material.haze-fill;
+  /* The bar is Crystal's dock — `Toolbar`'s `resin` variant wears `.cr-dock` — so
+     what is here is only where it floats. */
   position: fixed;
   inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
   inset-inline: 0;
@@ -69,28 +69,19 @@
   margin-inline: auto;
   inline-size: max-content;
   max-inline-size: calc(100% - var(--cr-space) * 2);
-  display: flex;
-  align-items: center;
-  gap: $cr-action-gap;
-  padding: $cr-spacing-2xs $cr-spacing-sm;
-  border: 1px solid var(--cr-rim);
-  border-radius: $cr-action-radius;
-  background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
 }
 
 .count { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
 
-:global([data-effects='opaque']) :is(.floating, .actionBar) {
+:global([data-effects='opaque']) .floating {
   background: var(--cr-surface);
   backdrop-filter: none;
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .floating, .actionBar { background: var(--cr-surface); backdrop-filter: none; }
+  .floating { background: var(--cr-surface); backdrop-filter: none; }
 }
 
 @media (forced-colors: active) {
-  .floating, .actionBar { background: ButtonFace; border-color: ButtonText; backdrop-filter: none; }
+  .floating { background: ButtonFace; border-color: ButtonText; backdrop-filter: none; }
 }

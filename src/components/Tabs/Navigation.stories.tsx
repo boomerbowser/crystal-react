@@ -59,8 +59,8 @@ const meta = {
     docs: {
       description: {
         component:
-          '**Selection is label weight.** The selected tab is heavier; the soft fill beneath it is a '
-          + 'second signal rather than the only one, which is what keeps selection off colour alone. '
+          '**Selection is weight and the primary fill.** The strip is Crystal\'s dock, and the selected '
+          + 'tab is heavier as well as filled, which is what keeps selection off colour alone. '
           + 'In forced colours the fill goes and a ring takes its place, because Chromium paints an '
           + 'opaque backplate behind text and a filled label disappears under it.\n\n'
           + 'A tab list and a segmented control are the same material and different semantics. A tab '

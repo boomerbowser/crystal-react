@@ -7,10 +7,10 @@
  * that borrows tab semantics announces its options as tabs, and a reader then
  * expects a panel to change — which is a promise the control did not make.
  *
- * **Selection is label weight.** This is the control where Crystal's rule is most
- * often broken, because a coloured pill is the obvious thing to draw. Weight is
- * typographic rather than chromatic, so it survives greyscale, forced colours and
- * a poor screen; the soft fill beneath it is a second signal, not the only one.
+ * **Selection is weight and the primary fill.** The fill is Crystal's dock, which
+ * the catalogue names for this control; the weight is what keeps selection off
+ * colour alone, because it is typographic rather than chromatic and survives
+ * greyscale, forced colours and a poor screen.
  * In forced colours the fill goes and a ring takes its place, because Chromium's
  * text backplate erases a filled label.
  */
@@ -56,7 +56,7 @@ export function SegmentedControl({
       {labelHidden
         ? (hiddenStringLabel ? null : <VisuallyHidden as="span"><Label>{label}</Label></VisuallyHidden>)
         : <Label className={cx(styles['legend'])}>{label}</Label>}
-      <div className={cx(styles['strip'])}>
+      <div className={cx(styles['strip'], 'cr-dock')}>
         {options.map((option) => (
           <Radio
             key={option.value}

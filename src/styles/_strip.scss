@@ -1,7 +1,7 @@
 @use 'tokens' as *;
 @use 'material' as material;
 
-/* The Resin pill strip, and the pills inside it.
+/* The pill strip, and the pills inside it.
  *
  * Two controls draw this: a segmented control, which picks a value, and a tab
  * list, which picks a view. They are different semantics — a radio group and a
@@ -13,96 +13,74 @@
  * stays as it was, and two controls that are supposed to look alike stop looking
  * alike with nothing failing.
  *
- * **Selection is label weight.** Not a check mark, which in Crystal means
- * validated, and not a mark set beside the label, which would offset the very
- * thing it points at and stop the selected pill lining up with the others. The
- * soft fill under the weight is a second signal rather than the only one — and it
- * is the one that goes in forced colours, where Chromium's text backplate paints
- * over a filled label and erases it.
+ * **The strip is Crystal's dock.** Crystal's catalogue names both a tab strip
+ * and a segmented control as the `dock` surface (D-23, 28 September 2026), and
+ * `.cr-dock` is the recipe: a Resin plane holding one Haze fill under labels that
+ * carry no material of their own. The caller wears the class; nothing of the
+ * material is written here.
+ *
+ * **The pills restate `.cr-dock button`, because they are not buttons.** Crystal
+ * keys the dock's controls on the element — `.cr-dock button` — and React Aria
+ * renders a tab as `div[role=tab]` and a segment as a `label` around a hidden
+ * radio, so the rule cannot reach them. The values below are that rule's, as the
+ * installed 2.2.0 computes them, and `verify:appearance` plants a
+ * `.cr-dock button` beside each pill and fails on any difference: the same
+ * arrangement as the switch. The day Crystal's dock reaches a tab and a radio
+ * label (filed upstream as D-26), this becomes a class and the restatement goes.
+ *
+ * **Selection is weight and the primary fill.** 800 over 700, and the primary
+ * fill with its ink — what the tab and segmented-control entries specify and what
+ * the dock draws. Weight is typographic, so selection never rests on colour
+ * alone, and nothing is drawn beside the label. Until 28 September this was
+ * primary-soft, which was the library's, not Crystal's. In forced colours the fill
+ * goes, because Chromium's text backplate paints over a filled label, and a
+ * Highlight ring carries it.
  */
 
-/* Only the unprefixed `backdrop-filter` is ever written in this library; see the
-   note in `_field.scss` for what happened the one time it was not. */
+/* Layout only; the material is `.cr-dock`'s. Inline, and aligned to the start of
+   a column parent, because a strip is a control and a flex child stretches across
+   its parent by default — a segmented control spanning the page reads as a broken
+   tab bar. */
 @mixin strip {
-  /* The strip is the material and the pills are bare — structural, not decorative. Measured in Crystal: the strip's ::before paints at 80%, and a pill's ::before and ::after are both display:none. */
-  @include material.haze-fill;
   display: inline-flex;
   align-self: start;
-  align-items: stretch;
-  padding: $cr-spacing-2xs;
-  border: 1px solid var(--cr-rim);
-  border-radius: $cr-action-radius;
-  background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
 }
 
-/* One pill. Regular until selected — the weight *is* the selection.
-   
-   The pill is the 44px target less the strip's padding on both sides, so the
-   strip reaches the floor without each pill overshooting it — and then the hit
-   area is put back. Measured in a browser, a pill in a 45.6px strip was 36px
-   tall: the strip met the catalogue's "44px minimum" and the thing a finger
-   actually lands on did not. Nothing caught it, because no test in this library
-   measures a target and jsdom reports every box as zero.
-   
-   The pseudo-element grows the target into the strip's own padding without
-   moving a pixel. Neighbouring pills sit side by side, so the extra height
-   overlaps nothing. */
+/* `.cr-dock button`, restated for a tab and a radio label. */
 @mixin pill {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-xs});
-  padding-inline: $cr-action-padding-inline;
+  min-block-size: 52px; /* crystal-allow-literal: `.cr-dock button` min-height, which a div cannot wear */
+  padding: 13px 18px; /* crystal-allow-literal: `.cr-dock button` padding */
   border-radius: $cr-action-radius;
-  color: var(--cr-muted);
-  font-weight: 550;
+  color: var(--cr-text);
+  font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    inset-block: 50%;
-    block-size: $cr-action-min-target;
-    transform: translateY(-50%);
-  }
 }
 
+/* `.cr-dock button:is([aria-pressed=true], [aria-selected=true])`. */
 @mixin pill-selected {
   font-weight: 800;
-  color: var(--cr-on-primary-soft);
-  background: var(--cr-primary-soft);
+  color: var(--cr-on-primary);
+  background: var(--cr-primary);
+  box-shadow: 0 3px 7px var(--cr-shadow-contact); /* crystal-allow-literal: `.cr-dock button` selected shadow */
 }
 
+/* `.cr-dock button:focus-visible`: the core outside the pill, and the halo under
+   the rim's highlight. */
 @mixin pill-focus {
   outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(-1 * #{$cr-focus-core-offset});
-  box-shadow: var(--cr-focus-ring);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: inset 0 2px 1px var(--cr-rim), var(--cr-focus-ring); /* crystal-allow-literal: `.cr-dock button:focus-visible` rim highlight */
 }
 
-/* Resin needs a backdrop to diffuse. Where the viewer has asked for less of it,
-   or the renderer cannot produce it, the strip becomes the surface colour rather
-   than a translucent fill over nothing. */
-@mixin strip-fallbacks($selector) {
-  :global([data-effects='opaque']) #{$selector} {
-    background: var(--cr-surface);
-    backdrop-filter: none;
-  }
-
-  @media (prefers-reduced-transparency: reduce) {
-    #{$selector} { background: var(--cr-surface); backdrop-filter: none; }
-  }
-}
-
-/* In forced colours the fill is erased by the text backplate, so selection is a
-   ring and the weight — never a background. */
-@mixin strip-forced-colors($strip, $selected) {
+/* No fallback mixin: `.cr-dock` publishes its own opaque, reduced-transparency
+   and forced-colours routes. What Crystal's forced-colours rule for the selected
+   control cannot reach — it is keyed on `button` too — is the ring, here. */
+@mixin pill-forced-colors($selected) {
   @media (forced-colors: active) {
-    #{$strip} { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
-    #{$selected} { background: none; outline: 2px solid Highlight; color: CanvasText; }
+    #{$selected} { background: Canvas; color: CanvasText; outline: 2px solid Highlight; outline-offset: -3px; } /* crystal-allow-literal: `.cr-dock button` forced-colours ring */
   }
 }

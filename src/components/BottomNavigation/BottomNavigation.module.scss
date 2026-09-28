@@ -1,21 +1,26 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
+/* Crystal's dock, worn as `.cr-dock`: the catalogue's "Pill" and its Resin
+   plane, with the one Haze fill under every label that `.cr-dock` carries. Until
+   28 September this was a Resin band with square lower corners, and each
+   destination painted a Haze fill of its own. */
 .bar {
-  @include material.resin;
   position: sticky;
   inset-block-end: 0;
   z-index: 1;
-  /* Zero everywhere it does not apply, so there is no branch and nothing to
-     detect — a phone's home indicator is the only place it is not zero. */
-  padding-block-end: env(safe-area-inset-bottom, 0px);
-  border-radius: $cr-shape-content-radius $cr-shape-content-radius 0 0;
+  /* The safe area as a margin, so the pill floats above a phone's home
+     indicator and keeps the dock's own padding. Zero everywhere it does not
+     apply, so there is no branch and nothing to detect. */
+  margin-block-end: env(safe-area-inset-bottom, 0px);
 }
 
+/* The list fills the dock; `.cr-dock` is a flex row, and a list that does not
+   grow in it measures its own content and the equal slots collapse. */
 .list {
   display: flex;
+  flex: 1;
   margin: 0;
-  padding: $cr-spacing-2xs;
+  padding: 0;
   list-style: none;
 }
 
@@ -39,12 +44,6 @@
   cursor: pointer;
 }
 
-/* The Haze content fill, at the shared definition. Inset 0: a slot is
-   full-bleed inside the bar and has no exposed glass perimeter to hold the fill
-   back from. This is the surface where the fill matters most — content scrolls
-   underneath it continuously. */
-.item { @include material.haze-fill(0); }
-
 .item[aria-current] { font-weight: 800; }
 .item[aria-current] .icon { color: var(--cr-primary); }
 
@@ -67,11 +66,9 @@
   box-shadow: var(--cr-focus-ring);
 }
 
-@include material.opaque-fallback('.bar');
-
+/* The dock's opaque, reduced-transparency and forced-colours routes are
+   Crystal's. */
 @media (forced-colors: active) {
-  .bar { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
-  .item::before { content: none; }
   /* A fill is erased by Chromium's text backplate, so the current destination
      is a ring. */
   .item[aria-current] { outline: 2px solid Highlight; color: CanvasText; }

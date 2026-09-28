@@ -11,11 +11,19 @@
  */
 
 .buttonGroup {
-  /* A group is one plane, like Crystal's .cr-dock: the strip carries the material and the buttons inside it carry none. */
+  /* A group is one plane, like Crystal's `.cr-dock`, and the catalogue names it
+     the dock surface. It does not wear the class, because a dock spaces its
+     buttons 4px apart inside 9px of padding and a group's segments touch, square
+     against each other with a hairline between. Crystal has no grouped dock;
+     that is filed upstream (D-26) rather than invented here, and until it exists
+     the dock's material is restated — Resin fill, rim, float shadow, Haze. */
   @include material.haze-fill;
   display: inline-flex;
   align-items: stretch;
   border-radius: $cr-action-radius;
+  /* The dock's rim, which the group lacked when it was measured against
+     `.cr-dock` — the one property on which they differed. */
+  border: 1px solid var(--cr-rim);
   /* The plane is the group's, not each button's, so the children sit on it
      rather than each carrying their own. */
   background: var(--cr-resin-fill);
