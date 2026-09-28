@@ -150,7 +150,7 @@ export function FloatingWindow({
       {...(isModal ? { role: 'dialog', 'aria-modal': true } : {})}
       aria-label={label}
       data-modal={isModal || undefined}
-      className={cx(styles['window'], className)}
+      className={cx(styles['window'], 'cr-resin', 'panel', className)}
       style={{
         insetInlineStart: `${rect.x}px`,
         insetBlockStart: `${rect.y}px`,

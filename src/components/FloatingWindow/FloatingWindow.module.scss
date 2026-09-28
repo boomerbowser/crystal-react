@@ -1,13 +1,14 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
+/* "Resin panel." Crystal's `.cr-resin.panel` (2.2.0): the Resin plane — fill,
+   rim, float shadow, backdrop blur and its two optical layers — at the Frost
+   panel's radius. The shell used the local Resin mixin, which carried the plane
+   and neither optical layer. What is left here is what makes it a window. */
 .window {
-  @include material.resin;
   position: fixed;
   z-index: 3;
   display: flex;
   flex-direction: column;
-  border-radius: $cr-shape-content-radius;
   overflow: hidden;
 }
 
@@ -52,7 +53,6 @@
   scrollbar-gutter: stable;
 }
 
-@include material.opaque-fallback('.window');
 
 @media (forced-colors: active) {
   .window { background: Canvas; border-color: CanvasText; backdrop-filter: none; }

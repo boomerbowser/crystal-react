@@ -106,7 +106,7 @@ export const MediaControls = forwardRef<HTMLDivElement, MediaControlsProps>(
     const known = Number.isFinite(duration) && duration > 0;
 
     return (
-      <div {...props} ref={ref} className={cx(styles['controls'], className)} data-buffering={isBuffering ? '' : undefined}>
+      <div {...props} ref={ref} className={cx(styles['controls'], 'cr-resin', className)} data-buffering={isBuffering ? '' : undefined}>
         {onSkip ? (
           <IconButton
             label={`Back ${skipBy} seconds`}

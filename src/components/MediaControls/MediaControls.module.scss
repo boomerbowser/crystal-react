@@ -1,20 +1,18 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 
-/* "Resin plane. Pill; 44px targets throughout." The targets belong to
-   `IconButton`, which already carries the floor; what is here is the plane. */
+/* "Resin plane. Pill; 44px targets throughout." The plane is Crystal's
+   `.cr-resin` (2.2.0), whose own radius is the pill; the targets belong to
+   `IconButton`, which already carries the floor. The catalogue gives this the
+   `resin-panel` surface while its geometry says "Pill" — the two differ only in
+   radius, and the geometry is what a reader sees, so this wears the pill. The
+   disagreement is reported upstream. */
 .controls {
-  @include material.resin;
-
   display: flex;
   align-items: center;
   gap: $cr-spacing-2xs;
   padding: $cr-spacing-2xs $cr-spacing-sm;
-  border-radius: $cr-action-radius;
   color: var(--cr-text);
 }
-
-@include material.opaque-fallback('.controls');
 
 .time {
   flex: none;
