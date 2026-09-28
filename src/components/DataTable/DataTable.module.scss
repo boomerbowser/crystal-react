@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* DataTable — Crystal's table surface, shared with `Table`.
  *
@@ -17,7 +16,6 @@
  * column edge it is supposed to be reporting.
  */
 
-$table-haze-inset: 6px; /* crystal-allow-literal: core `.cr-table-scroll::before` */
 $table-header-inset: 8px; /* crystal-allow-literal: the catalogue's stated header corner inset */
 $table-cell-block: 14px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
 $table-cell-inline: 18px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
@@ -25,28 +23,18 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
 
 .shell { display: flex; flex-direction: column; gap: $cr-spacing-sm; }
 
+/* The frame is Crystal's `.cr-table-scroll`: the Resin frame, the rim, the
+   content shadow, the 6px-inset Haze fill under the rows, the Resin scrollbar,
+   contained overscroll, and both fallbacks. This file restated every one of those
+   beside the class, down to a literal for the inset with an exemption saying it
+   was core's — two copies of a recipe with one of them able to drift. Its focus
+   ring is Crystal's too, which reaches any element with a tab index. What stays
+   is the gutter, which Crystal does not set and a table whose rows arrive after
+   it renders needs. */
 .scroller {
-  @include material.haze-fill($table-haze-inset);
-
   display: block;
-  overflow: auto;
-  max-inline-size: 100%;
-  border: 1px solid var(--cr-rim);
-  border-radius: var(--cr-radius);
-  background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-content);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  overscroll-behavior: contain;
   scrollbar-gutter: stable;
 }
-
-.scroller:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
-}
-
-@include material.opaque-fallback('.scroller');
 
 .table {
   inline-size: 100%;
