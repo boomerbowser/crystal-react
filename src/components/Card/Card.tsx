@@ -32,7 +32,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
 ) {
   const named = Boolean(props['aria-label'] ?? props['aria-labelledby']);
   const Element = named ? 'section' : 'div';
-  const classes = cx(styles['card'], className);
+  const classes = cx(styles['card'], 'cr-haze', className);
 
   return (
     <Element {...props} ref={ref as never} className={classes}>

@@ -1,71 +1,24 @@
 @use '../../styles/tokens' as *;
 
-/* Card — a Haze content fill.
+/* Card — Crystal's Haze reading surface, `.cr-haze` (2.2.0).
  *
- * Haze IS its feathered edge: an 80% fill with a 1.95px feather on an isolated
- * paint layer, and crisp text above it. The feather belongs to the paint only —
- * text, icons, hit areas and focus rings are never blurred, which is why the fill
- * lives on a pseudo-element rather than on the card itself.
+ * The fill is an 80% Haze layer on an isolated `::before`, feathered, over the
+ * content shadow, with crisp text above it; inside a Resin frame it recesses
+ * instead of rising. This file wrote every part of that out by hand — the
+ * isolated layer, the fill, the feather, the shadow, both fallbacks, and the
+ * recess keyed on `.cr-resin`, a class nothing in this library emitted — and it
+ * is all Crystal's now. The card wears the class and Crystal paints it.
+ *
+ * Measured against a planted `.cr-haze` before the change, the card differed in
+ * one thing that was not its own padding: a border in `--cr-edge`, which Crystal's
+ * Haze surface does not draw. A card is not a control, so no boundary contrast
+ * rests on it, and the library adopts where it diverges — so it goes.
+ *
+ * Motion is not this file's. Crystal 2.2.0 gives a card `list-in` and `list-out`,
+ * which belong to the collection a card arrives in and leaves, not to
+ * a card standing alone — bound where the collection is, not here.
  */
 
 .card {
-  position: relative;
-  isolation: isolate;
-  /* Transparent, because the fill is the ::before layer. Setting a background
-     here as well would double the opacity and break the 80% recipe. */
-  background: transparent;
-  border: 1px solid var(--cr-edge);
-  border-radius: var(--cr-radius);
-  color: var(--cr-text);
   padding: var(--cr-space);
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  background: var(--cr-haze-fill);
-  filter: blur(var(--cr-haze-feather));
-  box-shadow: var(--cr-shadow-content);
-}
-
-/* Haze inside a Resin frame is a content well, not a floating card: it sits IN
-   the frame. The light source is overhead throughout Crystal, so recession
-   inverts the pair — an inset shadow where the frame occludes the light, a
-   highlight returning along the bottom. Scoped to that composition only, because
-   a standalone Haze card genuinely is raised. */
-:global(.cr-resin) .card,
-:global(.cr-glass) .card {
-  box-shadow: inset 0 1px 2px var(--cr-control-edge), inset 0 -1px 0 var(--cr-rim);
-}
-
-:global(.cr-resin) .card::before,
-:global(.cr-glass) .card::before {
-  box-shadow: none;
-}
-
-/* Every route that removes diffusion keeps the shape, the readable pair and the
-   hierarchy — it never flattens the card away. */
-:global([data-effects='opaque']) .card::before {
-  background: var(--cr-surface);
-  filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .card::before {
-    background: var(--cr-surface);
-    filter: none;
-  }
-}
-
-@media (forced-colors: active) {
-  .card {
-    background: Canvas;
-    color: CanvasText;
-    border: 1px solid CanvasText;
-  }
-  .card::before { display: none; }
 }
