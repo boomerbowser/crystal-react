@@ -74,7 +74,7 @@ export function NavRail({
               <a
                 href={item.href}
                 {...(isCurrent ? { 'aria-current': 'page' as const } : {})}
-                className={cx(styles['item'])}
+                className={cx(styles['item'], 'cr-nav-item')}
               >
                 {item.icon ? (
                   <span className={cx(styles['icon'])} aria-hidden="true">{item.icon}</span>

@@ -1,46 +1,39 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
-/* NavLink — a Resin pill with a Haze fill under its label.
+/* NavLink — a navigation entry, Crystal's `.cr-nav-item` (2.2.0).
  *
- * The catalogue's material line is "Resin shell with Haze fill", and the Haze is
- * not decoration: Resin diffuses whatever is behind it, so a label sitting
- * directly on it is read against a moving, unpredictable backdrop. The 80%
- * content fill is what gives the text something stable to sit on. That is the
- * same reason `.cr-control` paints one in Crystal's own stylesheet.
+ * "None of its own: a navigation entry is furniture on the panel beneath it."
+ * Crystal's catalogue said "Resin shell with Haze fill" until 2.2.0, and this
+ * file painted exactly that — a floating capsule per link. Crystal's reference
+ * implementation, the documentation site's side menu, never did: it is Plastic,
+ * and its own comment says why — a column of floating capsules is the legibility
+ * noise the material hierarchy exists to prevent. 2.2.0 published that entry as
+ * a recipe and the catalogue now names it, so the link wears the class and
+ * Crystal paints it: muted at rest, the text colour and a surface-alt fill on
+ * hover, and the current entry at weight 800 on the same fill.
+ *
+ * **The current-location dot is still this file's.** Crystal's catalogue
+ * specifies one — "optional icon, label and current-location dot", with the dot
+ * among what Crystal supplies, because current location and selection are
+ * different things and the category says so: "current location is a dot;
+ * selection within a set is label weight." `.cr-nav-item` draws no dot, and
+ * neither does the side menu it was lifted from, so Crystal disagrees with itself
+ * here; that is filed against the design system as D-22. Until it is answered
+ * this library keeps the dot the catalogue asks for, in a slot reserved whether
+ * or not it is drawn, so the label never moves.
+ *
+ * The rest is layout, which is this component's: it fills the row it sits in,
+ * and it has slots for an icon and a trailing count.
  */
 
 .navLink {
-  position: relative;
-  isolation: isolate;
   display: flex;
-  align-items: center;
-  gap: $cr-action-gap;
-  min-block-size: $cr-action-min-target;
-  padding: $cr-action-padding-block $cr-action-padding-inline;
-  border: 1px solid var(--cr-rim);
-  border-radius: $cr-action-radius;
-  background: var(--cr-resin-fill);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  box-shadow: var(--cr-shadow-float);
-  color: var(--cr-text);
-  font-weight: 550;
-  text-decoration: none;
-  cursor: pointer;
 }
 
-/* The Haze fill, at the shared definition rather than a second copy of it.
-   Inset `0` and not Crystal's `--cr-haze-inset`, deliberately: a navigation row
-   is full-bleed inside its rail and has no exposed glass perimeter to hold the
-   fill back from. Stating it as an argument is the point — a hand-written
-   `inset: 0` sitting beside nine hand-written `inset: 8px` is indistinguishable
-   from an oversight, which is most of how this defect survived. */
-.navLink {
-  @include material.haze-fill(0);
-}
+.icon { display: inline-flex; flex: none; }
+.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
-/* The current-location dot's slot, reserved whether or not the dot is drawn.
-   Twice the marker line's thickness, so a dot and a line read as the same weight
+/* Twice the marker line's thickness, so a dot and a line read as the same weight
    of mark rather than two unrelated sizes. */
 .dot {
   flex: none;
@@ -52,47 +45,12 @@
 
 .dot[data-empty] { background: none; }
 
-.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
-.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
-
 .label { min-inline-size: 0; }
-.trailing { margin-inline-start: auto; color: var(--cr-muted); }
-
-/* Current location is the dot; the weight is the signal underneath it, for a
-   reader who cannot resolve a 6px circle. Neither is colour. */
-.navLink[aria-current] { font-weight: 800; }
-.navLink[aria-current] .icon { color: var(--cr-text); }
-
-.navLink[data-hovered] { background: var(--cr-surface-alt); }
-
-.navLink[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
-}
-
-.navLink[data-disabled] {
-  opacity: $cr-action-disabled-opacity;
-  cursor: not-allowed;
-}
-
-/* Resin needs a backdrop to diffuse; without one it is a translucent fill over
-   nothing. Where the viewer has asked for less, the pill becomes the surface. */
-:global([data-effects='opaque']) .navLink {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .navLink { background: var(--cr-surface); backdrop-filter: none; }
-}
+.trailing { margin-inline-start: auto; }
 
 @media (forced-colors: active) {
-  .navLink { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
-  .navLink::before { content: none; }
-  /* A fill is erased by Chromium's text backplate, so the current entry is a
-     ring and the dot — never a background. */
-  .navLink[aria-current] { outline: 2px solid Highlight; color: CanvasText; }
+  /* Crystal's entry already rings the current one in Highlight. The dot is this
+     file's, so its system colour is too. */
   .dot { background: Highlight; }
   .dot[data-empty] { background: none; }
 }

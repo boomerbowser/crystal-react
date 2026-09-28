@@ -36,18 +36,22 @@
   list-style: none;
 }
 
+/* Each destination is Crystal's navigation entry, `.cr-nav-item` (2.2.0): muted
+   at rest, the surface-alt fill and the text colour on hover, and the current
+   one at weight 800 on the same fill. The catalogue's surface for a rail is
+   `[frost, nav-item]` — the Frost panel and entries that are furniture on it.
+
+   The current destination used to be a Resin capsule with a Haze fill, floated
+   off the Frost rail. That is what the catalogue's prose still says — "Resin
+   active destination" — while its checked surface field says `nav-item`; the
+   surface is the one the build validates and the documentation site renders, so
+   it is the one this follows, and the prose is corrected upstream. A Resin
+   capsule on a Frost panel was one more floating plane in a column the material
+   hierarchy says should be quiet.
+
+   What stays is layout: the row fills the rail. */
 .item {
   display: flex;
-  align-items: center;
-  gap: $cr-action-gap;
-  min-block-size: $cr-action-min-target;
-  padding: $cr-action-padding-block $cr-action-padding-inline;
-  border: 1px solid transparent;
-  border-radius: $cr-action-radius;
-  color: var(--cr-text);
-  font-weight: 550;
-  text-decoration: none;
-  cursor: pointer;
 }
 
 .rail[data-collapsed] .item {
@@ -58,23 +62,13 @@
      `verify-targets.mjs` the day the story that addresses this state was
      written, and invisible before that because jsdom reports every box as zero.
      Hiding the label must not shrink the hit area; that is the whole contract
-     of a collapsed rail. */
+     of a collapsed rail. And square means both axes: Crystal's entry is 44px
+     tall, so the block floor is restated here beside the inline one. */
   min-inline-size: $cr-action-min-target;
+  min-block-size: $cr-action-min-target;
 }
 
-/* The active destination is Resin, lifted off the Frost rail, with a Haze fill
-   under its label — Resin diffuses what is behind it, so the label needs
-   something stable to sit on. Inset 0: a rail row is full-bleed inside the
-   panel and has no exposed glass perimeter to hold the fill back from. */
-.item[aria-current] {
-  @include material.resin;
-  @include material.haze-fill(0);
-  font-weight: 800;
-}
-
-.item[aria-current] .icon { color: var(--cr-text); }
-
-.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
+.icon { display: inline-flex; flex: none; }
 .icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
 .label { min-inline-size: 0; }
@@ -94,7 +88,7 @@
   border: 0;
 }
 
-.badge { margin-inline-start: auto; color: var(--cr-muted); }
+.badge { margin-inline-start: auto; }
 
 .footer {
   margin-block-start: auto;
@@ -102,27 +96,9 @@
   border-block-start: 1px solid var(--cr-rim);
 }
 
-.item:hover { background: var(--cr-surface-alt); }
-
-.item:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
-}
-
 @include material.opaque-fallback('.rail');
-@include material.opaque-fallback('.item[aria-current]');
 
 @media (forced-colors: active) {
   .rail { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
-  .item { border-color: transparent; }
-  /* A fill is erased by Chromium's text backplate, so the current destination
-     is a ring — never a background. */
-  .item[aria-current] {
-    background: Canvas;
-    backdrop-filter: none;
-    outline: 2px solid Highlight;
-    color: CanvasText;
-  }
-  .item[aria-current]::before { content: none; }
+  /* The current entry's Highlight ring is Crystal's, on `.cr-nav-item`. */
 }

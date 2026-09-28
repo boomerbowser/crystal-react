@@ -49,7 +49,7 @@ export function NavLink({
       {...props}
       href={href}
       {...(isCurrent ? { 'aria-current': 'page' as const } : {})}
-      className={cx(styles['navLink'], className)}
+      className={cx(styles['navLink'], 'cr-nav-item', className)}
     >
       {/* Always rendered, drawn only when current. Removing it when it is not
           current is what would move the label. */}
