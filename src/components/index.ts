@@ -252,3 +252,4 @@ export * from './FocusMode/index.js';
 export * from './DashboardShell/index.js';
 export * from './MetricsRow/index.js';
 export * from './AnalyticsPanel/index.js';
+export * from './DataTableBlock/index.js';

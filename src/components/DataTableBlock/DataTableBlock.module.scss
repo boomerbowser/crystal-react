@@ -1,0 +1,29 @@
+@use '../../styles/tokens' as *;
+
+/* "Table surface with Frost overlays." The block adds no material: the table
+   keeps its own surface, and the filters' menus bring their own Frost. A block
+   that painted a pad behind a table would put the table two materials deep. */
+.block {
+  display: grid;
+  gap: $cr-spacing-md;
+  min-inline-size: 0;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $cr-spacing-md;
+  flex-wrap: wrap;
+  /* The toolbar swaps with the filters when a selection starts. Holding the row's
+     height keeps the table from jumping under the pointer that just selected. */
+  min-block-size: $cr-action-min-target;
+}
+
+.heading { margin: 0; }
+.filters, .toolbar { display: flex; align-items: center; gap: $cr-spacing-xs; flex-wrap: wrap; }
+
+/* Selection is label weight, here as on the rows the count describes. */
+.count { font-weight: 800; padding-inline: $cr-spacing-xs; }
+
+.pages { justify-self: center; }
