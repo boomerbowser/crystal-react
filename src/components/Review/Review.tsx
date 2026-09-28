@@ -23,9 +23,11 @@
  * to make rather than ours to remove. So they are a `<footer>` with the date in
  * a `<time>`, which is the markup that says what they are.
  */
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useMemo, type HTMLAttributes, type ReactNode } from 'react';
 import { Spoiler } from '../Spoiler/Spoiler.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useListItemMotion } from '../../motion/ListPresence.js';
 import styles from './Review.module.scss';
 
 export interface ReviewProps extends Omit<HTMLAttributes<HTMLElement>, 'children' | 'title'> {
@@ -56,8 +58,13 @@ export const Review = forwardRef<HTMLElement, ReviewProps>(function Review({
 }, ref): ReactNode {
   const body = <div className={styles['body']}>{children}</div>;
 
+  /* In a product's `ListPresence`, this arrives with `list-in` when it is
+     added and leaves with `list-out` when it is removed; anywhere else,
+     nothing. */
+  const scope = useListItemMotion();
+  const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
   return (
-    <article {...props} ref={ref} className={cx(styles['review'], className)}>
+    <article {...props} ref={merged as never} className={cx(styles['review'], className)}>
       {rating ? <div className={styles['rating']}>{rating}</div> : null}
       {title ? <h3 className={styles['title']}>{title}</h3> : null}
 

@@ -39,8 +39,9 @@ import {
   SearchField, Input,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { ListPresence } from '../../motion/ListPresence.js';
+import { PresentChip } from '../Chip/PresentChip.js';
 import { ArrivingPopover } from '../../overlays/ArrivingPopover.js';
-import { Chip } from '../Chip/Chip.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
 import type { SelectOption } from '../Select/Select.js';
@@ -168,17 +169,19 @@ export function MultiSelect({
           className={cx(styles['shell'], 'cr-field-shell')}
           {...(invalid ? { 'data-invalid': true } : {})}
         >
-          {selected.map((id) => (
-            <Chip
-              key={id}
-              {...(isDisabled
-                ? {}
-                : { onRemove: () => set(selected.filter((each) => each !== id)) })}
-              removeLabel={`Remove ${textFor(id)}`}
-            >
-              {labelFor(id)}
-            </Chip>
-          ))}
+          <ListPresence>
+            {selected.map((id) => (
+              <PresentChip
+                key={id}
+                {...(isDisabled
+                  ? {}
+                  : { onRemove: () => set(selected.filter((each) => each !== id)) })}
+                removeLabel={`Remove ${textFor(id)}`}
+              >
+                {labelFor(id)}
+              </PresentChip>
+            ))}
+          </ListPresence>
           {/* Fills the rest of the shell, so the whole empty area opens the list
               rather than only the chevron. */}
           <Button

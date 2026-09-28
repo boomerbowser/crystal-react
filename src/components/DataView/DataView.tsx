@@ -36,6 +36,7 @@ import {
 } from 'react';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl.js';
 import { cx } from '../../styles/cx.js';
+import { ListPresence, PresenceItem } from '../../motion/ListPresence.js';
 import styles from './DataView.module.scss';
 
 /** How the collection is arranged. */
@@ -122,9 +123,15 @@ export const DataView = forwardRef<HTMLElement, DataViewProps>(function DataView
         <ul className={styles['items']}>
           {loading ? (
             <li aria-hidden="true" className={cx(styles['item'], styles['placeholder'])} />
-          ) : items.map((item) => (
-            <li key={item.id} className={styles['item']}>{item.content}</li>
-          ))}
+          ) : (
+            /* An item added after the view first rendered arrives with `list-in`;
+               one removed leaves with `list-out`. */
+            <ListPresence>
+              {items.map((item) => (
+                <PresenceItem key={item.id} className={styles['item']}>{item.content}</PresenceItem>
+              ))}
+            </ListPresence>
+          )}
         </ul>
       )}
     </section>

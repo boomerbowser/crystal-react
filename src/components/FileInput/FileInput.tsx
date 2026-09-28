@@ -24,6 +24,7 @@
 import { useId, type CSSProperties, type ReactNode } from 'react';
 import { FileTrigger, DropZone as AriaDropZone, Text } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { ListPresence, PresenceItem } from '../../motion/ListPresence.js';
 import { Button } from '../Button/Button.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './FileInput.module.scss';
@@ -156,45 +157,50 @@ function UploadedFiles({ files, onRemove }: {
     <>
       {files.length > 0 ? (
         <ul className={cx(styles['files'])}>
-          {files.map((file) => (
-            <li key={file.id} className={cx(styles['file'])}>
-              <span className={cx(styles['fileName'])}>{file.name}</span>
-              {file.size !== undefined ? (
-                <span className={cx(styles['fileSize'])}>{readableSize(file.size)}</span>
-              ) : null}
-              {file.progress !== undefined ? (
-                <>
-                  {/* A real progressbar: the bar is a picture of the number, and
-                      the number is what a screen reader reads. */}
-                  <div
-                    role="progressbar"
-                    aria-label={`Uploading ${file.name}`}
-                    aria-valuenow={Math.round(file.progress * 100)}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    className={cx(styles['progressTrack'])}
-                  >
+          {/* A file joins the list with `list-in` as it is chosen and leaves with
+              `list-out` when it is removed; the files already there when the
+              list first renders do neither. */}
+          <ListPresence>
+            {files.map((file) => (
+              <PresenceItem key={file.id} className={cx(styles['file'])}>
+                <span className={cx(styles['fileName'])}>{file.name}</span>
+                {file.size !== undefined ? (
+                  <span className={cx(styles['fileSize'])}>{readableSize(file.size)}</span>
+                ) : null}
+                {file.progress !== undefined ? (
+                  <>
+                    {/* A real progressbar: the bar is a picture of the number, and
+                        the number is what a screen reader reads. */}
                     <div
-                      className={cx(styles['progressFill'])}
-                      style={{ '--cr-progress': `${file.progress * 100}%` } as CSSProperties}
-                    />
-                  </div>
-                  <span className={cx(styles['fileSize'])}>{Math.round(file.progress * 100)}%</span>
-                </>
-              ) : null}
-              {file.error ? <span role="alert" className={cx(styles['error'])}>{file.error}</span> : null}
-              {onRemove ? (
-                <button
-                  type="button"
-                  aria-label={`Remove ${file.name}`}
-                  onClick={() => onRemove(file.id)}
-                  className={cx(styles['remove'], 'cr-bare')}
-                >
-                  {CrossIcon}
-                </button>
-              ) : null}
-            </li>
-          ))}
+                      role="progressbar"
+                      aria-label={`Uploading ${file.name}`}
+                      aria-valuenow={Math.round(file.progress * 100)}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      className={cx(styles['progressTrack'])}
+                    >
+                      <div
+                        className={cx(styles['progressFill'])}
+                        style={{ '--cr-progress': `${file.progress * 100}%` } as CSSProperties}
+                      />
+                    </div>
+                    <span className={cx(styles['fileSize'])}>{Math.round(file.progress * 100)}%</span>
+                  </>
+                ) : null}
+                {file.error ? <span role="alert" className={cx(styles['error'])}>{file.error}</span> : null}
+                {onRemove ? (
+                  <button
+                    type="button"
+                    aria-label={`Remove ${file.name}`}
+                    onClick={() => onRemove(file.id)}
+                    className={cx(styles['remove'], 'cr-bare')}
+                  >
+                    {CrossIcon}
+                  </button>
+                ) : null}
+              </PresenceItem>
+            ))}
+          </ListPresence>
         </ul>
       ) : null}
       {/* The arrival and completion of an upload are events, not only pictures. */}

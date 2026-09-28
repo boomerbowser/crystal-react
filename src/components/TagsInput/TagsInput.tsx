@@ -25,7 +25,8 @@ import {
   type KeyboardEvent, type ReactNode,
 } from 'react';
 import { cx } from '../../styles/cx.js';
-import { Chip } from '../Chip/Chip.js';
+import { ListPresence } from '../../motion/ListPresence.js';
+import { PresentChip } from '../Chip/PresentChip.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { useFieldMotion } from '../FormField/useInvalidMotion.js';
 import styles from './TagsInput.module.scss';
@@ -140,21 +141,23 @@ function Field({
         {...(invalid ? { 'data-invalid': true } : {})}
         onClick={() => entry.current?.focus()}
       >
-        {tags.map((tag) => (
-          <Chip
-            key={tag}
-            onRemove={() => {
-              remove(tag);
-              /* Removing the last chip destroys the element that had focus, and
-                 the browser then focuses the body — which drops a keyboard user
-                 out of the form. Focus goes where they were working. */
-              entry.current?.focus();
-            }}
-            removeLabel={`Remove ${tag}`}
-          >
-            {tag}
-          </Chip>
-        ))}
+        <ListPresence>
+          {tags.map((tag) => (
+            <PresentChip
+              key={tag}
+              onRemove={() => {
+                remove(tag);
+                /* Removing the last chip destroys the element that had focus, and
+                   the browser then focuses the body — which drops a keyboard user
+                   out of the form. Focus goes where they were working. */
+                entry.current?.focus();
+              }}
+              removeLabel={`Remove ${tag}`}
+            >
+              {tag}
+            </PresentChip>
+          ))}
+        </ListPresence>
         <input
           ref={entry}
           className={cx(styles['entry'])}

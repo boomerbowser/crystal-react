@@ -14,6 +14,7 @@
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { ListPresence, PresenceItem } from '../../motion/ListPresence.js';
 import styles from './Timeline.module.scss';
 
 /** The four states the catalogue lists. */
@@ -49,27 +50,33 @@ export const Timeline = forwardRef<HTMLElement, TimelineProps>(function Timeline
 ) {
   return (
     <ol {...props} ref={ref as never} aria-label={label} className={cx(styles['timeline'], className)}>
-      {items.map((item) => {
-        const status = item.status ?? 'upcoming';
-        return (
-          <li
-            key={item.id}
-            className={styles['event']}
-            data-status={status}
-            aria-current={status === 'current' ? 'step' : undefined}
-          >
-            <span aria-hidden="true" className={styles['marker']}>{item.marker}</span>
-            <span className={styles['body']}>
-              <span className={styles['title']}>{item.title}</span>
-              {item.statusLabel === undefined ? null : (
-                <span className={styles['status']}>{item.statusLabel}</span>
-              )}
-              {item.meta === undefined ? null : <span className={styles['meta']}>{item.meta}</span>}
-              {item.children}
-            </span>
-          </li>
-        );
-      })}
+      {/* An event added after the timeline first rendered arrives with
+          `list-in`. The catalogue gives it no exit: events are recorded, not
+          withdrawn. */}
+      <ListPresence>
+        {items.map((item) => {
+          const status = item.status ?? 'upcoming';
+          return (
+            <PresenceItem
+              key={item.id}
+              leaves={false}
+              className={styles['event']}
+              data-status={status}
+              aria-current={status === 'current' ? 'step' : undefined}
+            >
+              <span aria-hidden="true" className={styles['marker']}>{item.marker}</span>
+              <span className={styles['body']}>
+                <span className={styles['title']}>{item.title}</span>
+                {item.statusLabel === undefined ? null : (
+                  <span className={styles['status']}>{item.statusLabel}</span>
+                )}
+                {item.meta === undefined ? null : <span className={styles['meta']}>{item.meta}</span>}
+                {item.children}
+              </span>
+            </PresenceItem>
+          );
+        })}
+      </ListPresence>
     </ol>
   );
 });

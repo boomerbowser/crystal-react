@@ -23,11 +23,13 @@
  * nothing to press; the name stays a link, because the product page is still
  * where a reader goes to find out when it will be back.
  */
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useMemo, type HTMLAttributes, type ReactNode } from 'react';
 import { Price } from '../Price/Price.js';
 import { DiscountBadge } from '../DiscountBadge/DiscountBadge.js';
 import { StockIndicator } from '../StockIndicator/StockIndicator.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useListItemMotion } from '../../motion/ListPresence.js';
 import type { Money } from '../../commerce/money.js';
 import type { Availability } from '../../commerce/availability.js';
 import styles from './ProductCard.module.scss';
@@ -56,8 +58,13 @@ export const ProductCard = forwardRef<HTMLElement, ProductCardProps>(function Pr
   name, href, price, was, media, availability, availabilityLabel, rating,
   action, aside, className, ...props
 }, ref): ReactNode {
+  /* In a product's `ListPresence`, this arrives with `list-in` when it is
+     added and leaves with `list-out` when it is removed; anywhere else,
+     nothing. */
+  const scope = useListItemMotion();
+  const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
   return (
-    <article {...props} ref={ref} className={cx(styles['card'], className)}>
+    <article {...props} ref={merged as never} className={cx(styles['card'], className)}>
       {media ? (
         <div aria-hidden="true" className={styles['media']}>{media}</div>
       ) : null}

@@ -1260,6 +1260,43 @@ for (const [label, open, recipe] of [
   );
 }
 
+/* A collection's items: the values a field starts with play nothing; a value
+   committed arrives with `list-in`; a value removed stays long enough to play
+   `list-out`, inert while it does, and then goes. And an item component outside
+   a collection — a card on a page — never plays either. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=inputs-composite--tokens&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const chips = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root .cr-field-shell')][0]
+    .querySelectorAll(':scope > [class*="_chip"]').length);
+  const played = (name, extra = '') => page.evaluate(([name, extra]) =>
+    [...document.querySelectorAll('#storybook-root .cr-field-shell')][0].querySelectorAll(`:scope > ${extra}[data-cr-motion-name="${name}"]`).length, [name, extra]);
+  const atRest = await played('list-in') + await played('list-out');
+  const before = await chips();
+  const entry = page.locator('#storybook-root .cr-field-shell input').first();
+  await entry.click();
+  await entry.fill('Arrival');
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(150);
+  const arrived = await played('list-in');
+  await page.locator('#storybook-root .cr-field-shell button[aria-label^="Remove"]').first().click();
+  await page.waitForTimeout(60);
+  const leaving = await played('list-out', '[inert]');
+  const during = await chips();
+  await page.waitForTimeout(900);
+  const after = await chips();
+  record(
+    'list-in and list-out on a tags field: nothing at rest, the committed value arrives, the removed one leaves inert and then goes',
+    atRest === 0 && arrived === 1 && leaving === 1 && during === before + 1 && after === before,
+    `at rest ${atRest}; ${before} chips, then list-in on ${arrived}; removing, list-out on ${leaving} inert chip(s) with ${during} still shown; after, ${after}`,
+  );
+
+  await page.goto(`${ORIGIN}/iframe.html?id=data-display-card--default&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(600);
+  const loose = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-cr-motion-name^="list-"]').length);
+  record('a card that is not in a collection plays neither list recipe', loose === 0, `${loose} element(s) played a list recipe on load`);
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

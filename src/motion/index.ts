@@ -3,6 +3,8 @@ export { usePreset } from './usePreset.js';
 export { usePresetMotion } from './usePresetMotion.js';
 export { Arrival } from './Arrival.js';
 export { Departure } from './Departure.js';
+export { ListPresence, PresenceItem, useListItemMotion } from './ListPresence.js';
+export type { ListItemMotionOptions } from './ListPresence.js';
 export { useContinuous } from './useContinuous.js';
 export { useChangeMotion, usePlayOnChange, entered } from './useChangeMotion.js';
 export type { ContinuousRecipe } from './useContinuous.js';

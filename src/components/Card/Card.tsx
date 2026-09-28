@@ -9,8 +9,10 @@
  * It renders a `section` when given an accessible name and a `div` otherwise,
  * because a landmark without a name is noise in a screen reader's landmark list.
  */
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useMemo, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useListItemMotion } from '../../motion/ListPresence.js';
 import styles from './Card.module.scss';
 
 export interface CardProps extends HTMLAttributes<HTMLElement> {
@@ -34,8 +36,13 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
   const Element = named ? 'section' : 'div';
   const classes = cx(styles['card'], 'cr-haze', className);
 
+  /* In a product's `ListPresence`, this arrives with `list-in` when it is
+     added and leaves with `list-out` when it is removed; anywhere else,
+     nothing. */
+  const scope = useListItemMotion();
+  const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
   return (
-    <Element {...props} ref={ref as never} className={classes}>
+    <Element {...props} ref={merged as never} className={classes}>
       {children}
     </Element>
   );

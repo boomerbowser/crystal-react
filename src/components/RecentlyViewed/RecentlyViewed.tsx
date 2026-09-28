@@ -27,9 +27,10 @@
  * heading over a void; a first-time reader is told about a feature they have not
  * used instead of being shown the shop.
  */
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { Children, forwardRef, isValidElement, type HTMLAttributes, type ReactNode } from 'react';
 import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { cx } from '../../styles/cx.js';
+import { ListPresence, PresenceItem } from '../../motion/ListPresence.js';
 import styles from './RecentlyViewed.module.scss';
 
 export interface RecentlyViewedProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
@@ -66,10 +67,16 @@ export const RecentlyViewed = forwardRef<HTMLElement, RecentlyViewedProps>(
             horizontal scrollers and Frost to panels and reading surfaces. */}
         <ScrollArea axis="x" variant="resin" className={cx(styles['scroller'])}>
           <ul className={styles['row']}>
-            {(Array.isArray(children) ? children : [children]).map((one, index) => (
-              // eslint-disable-next-line react/no-array-index-key -- the caller's own children, in their order
-              <li key={index} className={styles['cell']}>{one}</li>
-            ))}
+            {/* Keyed by the caller's own keys, so an item viewed just now arrives
+                with `list-in` at the front rather than every item shifting a
+                slot and the last one looking new. */}
+            <ListPresence>
+              {Children.toArray(children).map((one) => (
+                <PresenceItem key={isValidElement(one) ? one.key : String(one)} leaves={false} className={styles['cell']}>
+                  {one}
+                </PresenceItem>
+              ))}
+            </ListPresence>
           </ul>
         </ScrollArea>
       </section>

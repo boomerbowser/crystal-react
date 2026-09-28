@@ -40,13 +40,15 @@
  * `returnFocusTo` for, and the same answer.
  */
 import {
-  forwardRef, useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type RefObject,
+  forwardRef, useMemo, useEffect, useRef, useState, type HTMLAttributes, type ReactNode, type RefObject,
 } from 'react';
 import { useNumberFormatter } from 'react-aria';
 import { Button } from '../Button/Button.js';
 import { QuantityStepper } from '../QuantityStepper/QuantityStepper.js';
 import { Price } from '../Price/Price.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useListItemMotion } from '../../motion/ListPresence.js';
 import { moneyFormat, type Money } from '../../commerce/money.js';
 import styles from './CartItem.module.scss';
 
@@ -102,10 +104,15 @@ export const CartItem = forwardRef<HTMLElement, CartItemProps>(function CartItem
     ));
   }, [quantity, subtotal.amount, nameText, announceQuantity, money]);
 
+  /* In a product's `ListPresence`, this arrives with `list-in` when it is
+     added and leaves with `list-out` when it is removed; anywhere else,
+     nothing. */
+  const scope = useListItemMotion();
+  const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
   return (
     <article
       {...props}
-      ref={ref}
+      ref={merged as never}
       aria-label={nameText}
       {...(isUpdating ? { 'data-updating': '' } : {})}
       className={cx(styles['item'], className)}
