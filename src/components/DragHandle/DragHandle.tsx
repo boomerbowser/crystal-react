@@ -82,14 +82,13 @@ export const DragHandle = forwardRef<HTMLDivElement, DragHandleProps>(function D
         disabled={isDisabled}
         aria-label={handleLabel}
         data-cr-state={isDragging ? 'dragging' : 'at-rest'}
-        className={cx(styles['handle'])}
-      >
-        <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-          <circle cx="9" cy="6" r="1.4" /><circle cx="15" cy="6" r="1.4" />
-          <circle cx="9" cy="12" r="1.4" /><circle cx="15" cy="12" r="1.4" />
-          <circle cx="9" cy="18" r="1.4" /><circle cx="15" cy="18" r="1.4" />
-        </svg>
-      </button>
+        /* Crystal's lift keys on this. */
+        data-dragging={isDragging || undefined}
+        /* Crystal's drag handle (2.2.0): a bare control with a grip and a lift.
+           The grip is Crystal's too — a dot grid in the handle's own ink — so the
+           six-circle glyph this drew is gone rather than drawn twice. */
+        className={cx(styles['handle'], 'cr-bare', 'cr-drag-handle')}
+      />
     </div>
   );
 });

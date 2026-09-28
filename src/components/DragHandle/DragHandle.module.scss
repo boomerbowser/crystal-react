@@ -13,21 +13,11 @@
   touch-action: none;
 }
 
-.handle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-inline-size: $cr-action-min-target;
-  min-block-size: $cr-action-min-target;
-  border: 0;
-  border-radius: $cr-action-radius;
-  background: transparent;
-  color: var(--cr-muted);
-  cursor: grab;
-}
-
-.handle:hover { color: var(--cr-text); }
-.handle[data-cr-state='dragging'] { cursor: grabbing; }
+/* The handle is Crystal's `.cr-bare .cr-drag-handle`: no coat, the 44px target,
+   a grip in the handle's own ink, the grab cursor, and a lift while it is held.
+   Nothing about the control itself is left for this file to say. What is this
+   file's is the item, below: the handle says it can be grabbed, and the thing
+   being carried is what rises. */
 
 .dragging {
   box-shadow: var(--cr-shadow-float);
