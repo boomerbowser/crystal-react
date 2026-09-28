@@ -87,13 +87,13 @@ export function Dialog({ title, children, className, ...props }: DialogProps): R
         <MotionOverlay
           {...props}
           isOpen
-          className={cx(styles['scrim'])}
+          className={cx(styles['scrim'], 'cr-mirage')}
           {...wash}
         >
           <Modal>
             <MotionDialog
               aria-labelledby={titleId}
-              className={cx(styles['dialog'], className)}
+              className={cx(styles['dialog'], 'cr-dialog', className)}
               {...dismissal}
             >
               <Heading slot="title" id={titleId} className={cx(styles['title'])}>

@@ -8,35 +8,42 @@
  * page is the Mirage scrim beneath it rather than elevation above it.
  */
 
+/* The scrim is Crystal's Mirage, `.cr-mirage` (2.2.0): chroma drawn from the real
+   backdrop rather than an invented overlay gradient, which is why it is a filter
+   and not just a dark fill — and its fallbacks. What is left is the layout. */
 .scrim {
   position: fixed;
   inset: 0;
   display: grid;
   place-items: center;
   padding: var(--cr-space);
-  /* Mirage draws its chroma from the actual backdrop rather than an invented
-     overlay gradient, which is why it is a filter and not just a dark fill. */
-  background: var(--cr-mirage-fill);
-  backdrop-filter: blur(var(--cr-mirage-blur)) saturate(var(--cr-mirage-saturation)) brightness(var(--cr-mirage-brightness));
 }
 
-/* The surface holds the material and the height ceiling; the body inside it is
-   what scrolls. That split is the rule Crystal states for the edge fade — a mask
-   fades an element's own fill and border along with its content, so a surface
-   that also scrolls would dissolve itself — and it is better behaviour anyway: a
-   title that scrolls out of a tall dialog takes its context with it. */
+/* The surface is Crystal's `.cr-dialog` (2.2.0): the 80% feathered Haze fill on its
+   own paint layer, so the feather never touches text, with its rim and shadow and
+   both fallbacks. Three things stay here, and each is a disagreement with the class
+   rather than a copy of it:
+
+   - The catalogue's dialog geometry is the content radius; `.cr-dialog` draws the
+     Frost panel radius.
+   - The body scrolls, not the surface. `.cr-dialog` scrolls itself, and Crystal's
+     own edge-fade rule says why that is wrong — a mask fades an element's fill and
+     border along with its content, so a surface that scrolls dissolves itself. It
+     is better behaviour anyway: a title that scrolls out of a tall dialog takes its
+     context with it.
+   - The padding is the component's: at least the catalogue's 12px from content to
+     the feathered edge, at the page's own spacing.
+
+   Both disagreements go to Crystal. */
 .dialog {
-  position: relative;
-  isolation: isolate;
   display: flex;
   flex-direction: column;
   max-width: 560px;  /* crystal-allow-literal: reading measure, not a material value */
   width: 100%;
   max-height: 85vh;
   padding: var(--cr-space);
-  border: 1px solid var(--cr-edge);
   border-radius: var(--cr-radius);
-  background: transparent;
+  overflow: visible;
   color: var(--cr-text);
 }
 
@@ -44,19 +51,6 @@
   /* A flex child will not shrink below its content without this, and a body that
      cannot shrink is a dialog that grows past its ceiling instead of scrolling. */
   min-height: 0;
-}
-
-/* The Haze fill lives on its own paint layer so the feather never touches text. */
-.dialog::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  background: var(--cr-haze-fill);
-  filter: blur(var(--cr-haze-feather));
-  box-shadow: var(--cr-shadow-float);
 }
 
 .dialog:focus { outline: none; }
@@ -67,32 +61,4 @@
   line-height: var(--cr-text-heading-leading);
   letter-spacing: var(--cr-text-heading-tracking);
   font-weight: 750;
-}
-
-:global([data-effects='opaque']) .dialog::before {
-  background: var(--cr-surface);
-  filter: none;
-}
-
-:global([data-effects='opaque']) .scrim {
-  background: var(--cr-mirage-fallback-fill);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .dialog::before { background: var(--cr-surface); filter: none; }
-  .scrim {
-    background: var(--cr-mirage-fallback-fill);
-    backdrop-filter: none;
-  }
-}
-
-@media (forced-colors: active) {
-  .dialog {
-    background: Canvas;
-    color: CanvasText;
-    border: 1px solid CanvasText;
-  }
-  .dialog::before { display: none; }
-  .scrim { background: Canvas; backdrop-filter: none; }
 }
