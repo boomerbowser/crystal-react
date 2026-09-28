@@ -163,11 +163,26 @@ function motionUsed(componentId) {
     .filter((file) => /\.tsx?$/.test(file) && !/\.(test|stories)\./.test(file))
     .map((file) => join(dir, file));
   const shared = new Set();
+  const resolveFrom = (from, spec) => ['.tsx', '.ts'].map((extension) => join(dirname(from), spec + extension)).find(existsSync);
   for (const file of files) {
-    for (const [, spec] of readFileSync(file, 'utf8').matchAll(/from '(\.\.\/\.\.\/(?:feedback|charts|media|overlays|commerce|form)\/[^']+)\.js'/g)) {
-      for (const extension of ['.tsx', '.ts']) {
-        const candidate = join(dir, spec + extension);
-        if (existsSync(candidate)) shared.add(candidate);
+    const source = readFileSync(file, 'utf8');
+    for (const [, spec] of source.matchAll(/from '(\.\.\/\.\.\/(?:feedback|charts|media|overlays|commerce|form)\/[^']+)\.js'/g)) {
+      const found = resolveFrom(file, spec);
+      if (found) shared.add(found);
+    }
+    /* A helper that lives in a neighbour's directory — \`../FormField/FieldShell\`,
+       which plays the field recipes for every text field — is shared in the same
+       sense, and so is what that helper imports from its own directory
+       (\`FieldShell\` plays through \`./useInvalidMotion\`). A neighbour's *component*
+       file, \`../Button/Button\`, is not: it is reported under its own name. */
+    for (const [, neighbour, name] of source.matchAll(/from '\.\.\/([A-Z]\w*)\/(\w+)\.js'/g)) {
+      if (name === neighbour) continue;
+      const helper = resolveFrom(file, `../${neighbour}/${name}`);
+      if (!helper) continue;
+      shared.add(helper);
+      for (const [, local] of readFileSync(helper, 'utf8').matchAll(/from '\.\/(\w+)\.js'/g)) {
+        const next = resolveFrom(helper, `./${local}`);
+        if (next) shared.add(next);
       }
     }
   }
@@ -176,7 +191,7 @@ function motionUsed(componentId) {
     /* Only count a name in a file that actually uses a hook that plays it.
        Without this, Button's `variant="resin"` was reported as a Resin preset:
        a string that happens to match a preset name is not a call. */
-    const playsRecipes = /\buse(Motion|Continuous|MarkArrival)\b/.test(source);
+    const playsRecipes = /\buse(?!\w*Reduced)(\w*Motion|Continuous|MarkArrival)\b/.test(source);
     const playsPresets = source.includes('usePreset');
     if (!playsRecipes && !playsPresets) continue;
     for (const match of source.matchAll(/'([a-z][a-z-]*)'/g)) {
