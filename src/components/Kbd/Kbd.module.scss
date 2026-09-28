@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* Kbd — "a Resin cap with a defined lower rim".
  *
@@ -16,14 +15,20 @@
 
 $kbd-radius: 8px; /* crystal-allow-literal: the catalogue's stated cap radius */
 
+/* A cap is Crystal's compact display, `.cr-resin-haze` (2.2.0) — the catalogue
+   gives `kbd` the compact surface, which is Resin with Haze under the glyph. This
+   painted the Resin alone, so a glyph on a 20% fill read against whatever was
+   behind the page; it has the Haze pad now. The lip below is the key's own. */
 .kbd {
-  @include material.resin;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   min-inline-size: $cr-indicator-size;
+  /* A cap sits in a line of text; the compact display's block padding is a
+     tag's, and taking it made every cap 55px tall. */
+  padding-block: 0;
   padding-inline: $cr-spacing-2xs;
   border-radius: $kbd-radius;
   color: var(--cr-text);
@@ -38,7 +43,9 @@ $kbd-radius: 8px; /* crystal-allow-literal: the catalogue's stated cap radius */
   box-shadow: var(--cr-shadow-float), inset 0 -2px 0 var(--cr-control-edge);
 }
 
-@include material.opaque-fallback('.kbd');
+/* Filled to the edge, like the badge: an 8px inset on a 20px cap would leave the
+   glyph mostly outside the pad it is there for. */
+.kbd::before { inset: 0; }
 
 @media (forced-colors: active) {
   .kbd {

@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* A Haze fill in a pill, with a status accent and no perimeter stroke.
  *
@@ -10,7 +9,11 @@
  * perimeter, and there is no perimeter here to protect.
  */
 .discount {
-  @include material.haze-fill(0);
+  /* The Haze fill is Crystal's `.cr-haze` (2.2.0), which this wears; its pad
+     already fills to the edge, which is what this painted by hand. */
+  /* Crystal's surface carries a transparent 1px border; this badge has none, and
+     taking it grew every badge by two pixels in each direction. */
+  border: 0;
 
   display: inline-flex;
   align-items: baseline;

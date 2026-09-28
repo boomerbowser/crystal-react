@@ -84,6 +84,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
       aria-hidden="true"
       className={cx(
         styles['badge'],
+        'cr-resin-haze',
         dot && styles['dot'],
         children ? styles['attached'] : undefined,
         children ? styles[PLACEMENT_CLASS[placement]] : undefined,

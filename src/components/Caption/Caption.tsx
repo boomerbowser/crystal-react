@@ -61,7 +61,7 @@ export const Caption = forwardRef<HTMLElement, CaptionProps>(function Caption(
       ) : (
         <figcaption
           ref={mergeRefs(scope)}
-          className={cx(styles['caption'], overlaid ? styles['overlaid'] : undefined)}
+          className={cx(styles['caption'], overlaid && styles['overlaid'], overlaid && 'cr-stone')}
         >
           {caption}
         </figcaption>

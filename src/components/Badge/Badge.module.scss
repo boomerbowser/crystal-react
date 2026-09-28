@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* Badge — a Resin shell with a Haze fill.
  *
@@ -21,8 +20,8 @@ $badge-dot-size: 8px; /* crystal-allow-literal: a marker, not a container; wants
 $badge-ring-width: 2px;
 
 .badge {
-  @include material.resin;
-  @include material.haze-fill(0);
+  /* The Resin shell and its Haze fill are Crystal's compact display,
+     `.cr-resin-haze` (2.2.0), which the badge wears. */
 
   display: inline-flex;
   align-items: center;
@@ -30,6 +29,9 @@ $badge-ring-width: 2px;
   box-sizing: border-box;
   min-inline-size: $cr-indicator-size;
   min-block-size: $cr-indicator-size;
+  /* The compact display's own block padding is a tag's; a 20px count badge has
+     none, and taking it made every badge 55px tall. */
+  padding-block: 0;
   padding-inline: $cr-spacing-2xs;
   border-radius: $cr-action-radius;
   color: var(--cr-text);
@@ -42,7 +44,11 @@ $badge-ring-width: 2px;
   white-space: nowrap;
 }
 
-@include material.opaque-fallback('.badge');
+/* Crystal insets a compact display's Haze pad by `--cr-haze-inset`, 8px — right
+   for a tag, and on a 20px badge a pad a few pixels across with the digit mostly
+   outside it. The badge fills to its own edge, as it always has; measured against
+   a planted `.cr-resin-haze`, this is the one material difference. */
+.badge::before { inset: 0; }
 
 .dot {
   min-inline-size: $badge-dot-size;

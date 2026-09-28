@@ -53,7 +53,7 @@ export const DeltaBadge = forwardRef<HTMLSpanElement, DeltaBadgeProps>(function 
       {...props}
       ref={ref}
       data-state={state}
-      className={cx(styles['delta'], className)}
+      className={cx(styles['delta'], 'cr-haze', className)}
     >
       <span aria-hidden="true">{`${deltaSign(value)}${magnitude}`}</span>
       {/* Said in words, because a synthesiser may or may not expand "+" and

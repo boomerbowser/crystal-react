@@ -72,7 +72,7 @@ export const DiscountBadge = forwardRef<HTMLSpanElement, DiscountBadgeProps>(
     )))(formatted);
 
     return (
-      <span {...props} ref={ref} className={cx(styles['discount'], className)}>
+      <span {...props} ref={ref} className={cx(styles['discount'], 'cr-haze', className)}>
         <span aria-hidden="true">{brief}</span>
         <VisuallyHidden>{whole}</VisuallyHidden>
       </span>

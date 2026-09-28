@@ -28,7 +28,7 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(function Kbd(
   ref,
 ) {
   return (
-    <kbd {...props} ref={ref} className={cx(styles['kbd'], className)}>
+    <kbd {...props} ref={ref} className={cx(styles['kbd'], 'cr-resin-haze', className)}>
       {name === undefined ? children : (
         <>
           <span aria-hidden="true">{children}</span>

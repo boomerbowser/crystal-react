@@ -41,33 +41,11 @@ $caption-inset: 12px; /* crystal-allow-literal: the catalogue's stated inset fro
   margin-block-start: 0;
   padding: $cr-spacing-xs;
   border-radius: var(--cr-radius);
-  /* Stone, and the text above it. The fill is a separate layer because the
-     feather belongs to the paint: feathering the element would blur the words
-     this backing exists to make readable. */
+  /* The backing is Crystal's Stone, `.cr-stone` (2.2.0), which an overlaid caption
+     wears: the fill on an isolated, feathered layer beneath crisp words, and both
+     fallbacks, which keep the protection as the surface colour rather than drop
+     it — what Stone guards is contrast. This wrote all of that out by hand. */
   color: var(--cr-text);
-  isolation: isolate;
-}
-
-.overlaid::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  background: var(--cr-stone-fill);
-  filter: blur(var(--cr-stone-feather));
-}
-
-/* Removing diffusion keeps the protection: the backing becomes the surface
-   colour rather than disappearing, because what it guards is contrast. */
-:global([data-effects='opaque']) .overlaid::before {
-  background: var(--cr-surface);
-  filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .overlaid::before { background: var(--cr-surface); filter: none; }
 }
 
 @media (forced-colors: active) {
