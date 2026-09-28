@@ -37,7 +37,7 @@ if (!SOURCE) {
 
 const catalogue = JSON.parse(readFileSync(SOURCE, 'utf8'));
 
-/* The closed vocabulary every catalogue entry's \`surface\` is drawn from, beside
+/* The closed vocabulary every catalogue entry's `surface` is drawn from, beside
    the catalogue it describes. Crystal's build fails closed on an entry whose
    surface is not in it, so this fails closed too rather than writing an
    unexplained name into the manifest. */
@@ -138,7 +138,7 @@ const PRESET_IDS = new Set(['plastic', 'frost', 'resin', 'haze', 'stone', 'mirag
    "what moves, and when" is the question an assistant most often has to answer
    about a design system, and it is invisible from the type signature. */
 /* catalogue id -> the export that implements it, the inverse of the table above,
-   so \`textarea\` is looked for as \`TextArea\` and not as a \`Textarea\` that does
+   so `textarea` is looked for as `TextArea` and not as a `Textarea` that does
    not exist — which reported every text area as playing nothing. */
 const EXPORT_FOR = Object.fromEntries(Object.entries(NAMED_DIFFERENTLY)
   .flatMap(([name, ids]) => (Array.isArray(ids) ? ids : [ids]).map((id) => [id, name])));
@@ -177,16 +177,27 @@ function motionUsed(componentId) {
       const found = resolveFrom(file, spec);
       if (found) shared.add(found);
     }
-    /* A helper that lives in a neighbour's directory — \`../FormField/FieldShell\`,
+    /* A helper that lives in a neighbour's directory — `../FormField/FieldShell`,
        which plays the field recipes for every text field — is shared in the same
        sense, and so is what that helper imports from its own directory
-       (\`FieldShell\` plays through \`./useInvalidMotion\`). A neighbour's *component*
-       file, \`../Button/Button\`, is not: it is reported under its own name. */
+       (`FieldShell` plays through `./useInvalidMotion`). A neighbour's *component*
+       file, `../Button/Button`, is not: it is reported under its own name. */
+    /* The collection recipes live in `motion/ListPresence`, which plays exactly
+       `list-in` and `list-out` for whatever uses it — unlike `useContinuous`,
+       which names all three continuous recipes as a type and would credit every
+       caller with all three. So that one module is followed, from a component
+       or from a helper it uses. */
+    const followListPresence = (from) => {
+      const found = resolveFrom(from, from.includes('/components/') ? '../../motion/ListPresence' : '../motion/ListPresence');
+      if (found && /motion\/ListPresence\.js'/.test(readFileSync(from, 'utf8'))) shared.add(found);
+    };
+    followListPresence(file);
     for (const [, neighbour, name] of source.matchAll(/from '\.\.\/([A-Z]\w*)\/(\w+)\.js'/g)) {
       if (name === neighbour) continue;
       const helper = resolveFrom(file, `../${neighbour}/${name}`);
       if (!helper) continue;
       shared.add(helper);
+      followListPresence(helper);
       for (const [, local] of readFileSync(helper, 'utf8').matchAll(/from '\.\/(\w+)\.js'/g)) {
         const next = resolveFrom(helper, `./${local}`);
         if (next) shared.add(next);
@@ -201,10 +212,10 @@ function motionUsed(componentId) {
     const playsRecipes = /\buse(?!\w*Reduced)(\w*Motion|Continuous|MarkArrival)\b|<Arrival\b|\brecipe="[a-z]/.test(source);
     const playsPresets = source.includes('usePreset');
     if (!playsRecipes && !playsPresets) continue;
-    /* Single-quoted names, and a recipe handed to \`<Arrival recipe="menu-in" />\`,
+    /* Single-quoted names, and a recipe handed to `<Arrival recipe="menu-in" />`,
        which is JSX and double-quoted — the one form the first pattern missed,
        and the reason every menu, popover and tooltip read as arriving with
-       nothing. Only as a \`recipe=\` attribute: \`slot="selection"\` is not a
+       nothing. Only as a `recipe=` attribute: `slot="selection"` is not a
        binding. */
     const names = [
       ...[...source.matchAll(/'([a-z][a-z-]*)'/g)].map((match) => match[1]),
@@ -231,7 +242,7 @@ const components = catalogue.categories.flatMap((category) =>
     states: component.states,
     material: component.material,
     /* What the component is made of, from Crystal's closed vocabulary, back to
-       front — each id names a class in \`surfaces\` below. */
+       front — each id names a class in `surfaces` below. */
     surface: component.surface ?? [],
     geometry: component.geometry,
     semantics: component.semantics,
