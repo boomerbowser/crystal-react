@@ -22,6 +22,7 @@ import {
 import { cx } from '../../styles/cx.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { Arrival } from '../../motion/Arrival.js';
+import { Departure } from '../../motion/Departure.js';
 import { OverlayArrow } from '../OverlayArrow/OverlayArrow.js';
 import styles from './Tooltip.module.scss';
 
@@ -34,8 +35,8 @@ export interface TooltipProps extends Omit<AriaTooltipProps, 'className' | 'chil
 export function Tooltip({
   hasArrow = true, children, className, ...props
 }: TooltipProps): React.JSX.Element {
-  /* `tooltip-in` on the mount that is the opening; `tooltip-out` is owed and not
-     yet played, for the reason given in Menu. */
+  /* `tooltip-in` on the mount that is the opening; `tooltip-out` as it closes,
+     held on screen by React Aria until it has played (see `Departure`). */
   const [scope, play] = useMotion();
   return (
     <AriaTooltip
@@ -48,9 +49,14 @@ export function Tooltip({
       data-cr-overlay="frost"
       className={cx(styles['tooltip'], 'cr-frost', className)}
     >
-      <Arrival play={play} recipe="tooltip-in" />
-      {hasArrow ? <OverlayArrow /> : null}
-      {children}
+      {({ isExiting }) => (
+        <>
+          <Arrival play={play} recipe="tooltip-in" />
+          <Departure isExiting={isExiting} play={play} recipe="tooltip-out" scope={scope} />
+          {hasArrow ? <OverlayArrow /> : null}
+          {children}
+        </>
+      )}
     </AriaTooltip>
   );
 }

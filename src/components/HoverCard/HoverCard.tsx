@@ -35,6 +35,7 @@ import { Popover as AriaPopover, Dialog, DialogTrigger } from 'react-aria-compon
 import { cx } from '../../styles/cx.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { Arrival } from '../../motion/Arrival.js';
+import { Departure } from '../../motion/Departure.js';
 import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps, overlayMaterialClass } from '../../overlays/surface.js';
 import styles from './HoverCard.module.scss';
 
@@ -97,14 +98,19 @@ export function HoverCard({
         ref={scope as never}
         className={cx(styles['card'], overlayMaterialClass(material), className)}
       >
-        <Arrival play={play} recipe="popover-in" />
-        <SurfaceProvider surface={material}>
-          {/* The card is hoverable: the pointer travelling into it must not
-              close it, which is what the counter is for. */}
-          <Dialog aria-label={label} className={cx(styles['body'])} {...intent}>
-            {children}
-          </Dialog>
-        </SurfaceProvider>
+        {({ isExiting }) => (
+          <>
+            <Arrival play={play} recipe="popover-in" />
+            <Departure isExiting={isExiting} play={play} recipe="popover-out" scope={scope} />
+            <SurfaceProvider surface={material}>
+              {/* The card is hoverable: the pointer travelling into it must not
+                  close it, which is what the counter is for. */}
+              <Dialog aria-label={label} className={cx(styles['body'])} {...intent}>
+                {children}
+              </Dialog>
+            </SurfaceProvider>
+          </>
+        )}
       </AriaPopover>
     </DialogTrigger>
   );

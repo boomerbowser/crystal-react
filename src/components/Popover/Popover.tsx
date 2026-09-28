@@ -22,6 +22,7 @@ import {
 import { cx } from '../../styles/cx.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { Arrival } from '../../motion/Arrival.js';
+import { Departure } from '../../motion/Departure.js';
 import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps, overlayMaterialClass } from '../../overlays/surface.js';
 import { OverlayArrow } from '../OverlayArrow/OverlayArrow.js';
 import styles from './Popover.module.scss';
@@ -39,22 +40,27 @@ export function Popover({
   label, hasArrow = false, children, className, ...props
 }: PopoverProps): React.JSX.Element {
   const material = useOverlayMaterial();
-  /* `popover-in` on the mount that is the opening; `popover-out` is owed and not
-     yet played, for the reason given in Menu. */
+  /* `popover-in` on the mount that is the opening; `popover-out` as it closes,
+     held on screen by React Aria until it has played (see `Departure`). */
   const [scope, play] = useMotion();
 
   return (
     <AriaPopover {...props} ref={scope as never} className={cx(styles['popover'], overlayMaterialClass(material), className)} {...overlayMaterialProps(material)}>
-      <Arrival play={play} recipe="popover-in" />
-      {hasArrow ? <OverlayArrow /> : null}
-      {/* A `Dialog` rather than a bare div, because React Aria puts the focus
-          behaviour there: content a person can reach has to be reachable and has
-          to give focus back. A popover holding only text is still a place focus
-          can land, and still needs a name. */}
-      <Dialog aria-label={label} className={cx(styles['body'])}>
-        {/* Anything opened from inside this is opening on top of it. */}
-        <SurfaceProvider surface={material}>{children}</SurfaceProvider>
-      </Dialog>
+      {({ isExiting }) => (
+        <>
+          <Arrival play={play} recipe="popover-in" />
+          <Departure isExiting={isExiting} play={play} recipe="popover-out" scope={scope} />
+          {hasArrow ? <OverlayArrow /> : null}
+          {/* A `Dialog` rather than a bare div, because React Aria puts the focus
+              behaviour there: content a person can reach has to be reachable and
+              has to give focus back. A popover holding only text is still a place
+              focus can land, and still needs a name. */}
+          <Dialog aria-label={label} className={cx(styles['body'])}>
+            {/* Anything opened from inside this is opening on top of it. */}
+            <SurfaceProvider surface={material}>{children}</SurfaceProvider>
+          </Dialog>
+        </>
+      )}
     </AriaPopover>
   );
 }

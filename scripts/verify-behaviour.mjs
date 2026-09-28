@@ -1211,7 +1211,53 @@ for (const [id, trigger, recipe] of [
     atRest === 0 && after === 1 && open > 0,
     `played before ${atRest}, after opening ${after}; open surfaces ${open}`,
   );
+  /* And it leaves with its exit: still on screen, exiting and playing it, a
+     moment after it was dismissed — React Aria held it for the recipe — and
+     gone once the recipe has played. */
+  const exit = recipe.replace(/-in$/, '-out');
+  await page.waitForTimeout(700);
   await page.keyboard.press('Escape');
+  await page.waitForTimeout(60);
+  const leaving = await page.evaluate((exit) => document.querySelectorAll(`[data-exiting][data-cr-motion-name="${exit}"]`).length, exit);
+  await page.waitForTimeout(1500);
+  const left = await page.evaluate(() => document.querySelectorAll('[data-exiting]').length);
+  record(
+    `${exit} on ${id}: dismissed, the popover stays for its exit and then goes`,
+    leaving === 1 && left === 0,
+    `a moment after dismissal ${leaving} surface(s) were exiting with ${exit}; after it ${left} remained`,
+  );
+}
+
+/* The same for the anchored overlays that are components of their own: a menu,
+   a popover and a tooltip on the page. Opened by a press (a tooltip by keyboard
+   focus, which is how it opens for somebody without a pointer), dismissed with
+   Escape; each arrives with its recipe and leaves with its exit, held on screen
+   until the exit has played. */
+for (const [label, open, recipe] of [
+  ['Actions', 'click', 'menu-in'],
+  ['Details', 'click', 'popover-in'],
+  ['', 'focus', 'tooltip-in'],
+]) {
+  await page.goto(`${ORIGIN}/iframe.html?id=overlays-anchored-surfaces--on-the-page&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const trigger = page.locator('#storybook-root button').filter({ hasText: label ? new RegExp(`^${label}$`) : /^$/ }).first();
+  const exit = recipe.replace(/-in$/, '-out');
+  const count = (name, extra = '') => page.evaluate(([name, extra]) => document.querySelectorAll(`${extra}[data-cr-motion-name="${name}"]`).length, [name, extra]);
+  const before = await count(recipe);
+  if (open === 'click') await trigger.click();
+  else { await page.keyboard.press('Tab'); await trigger.focus(); }
+  await page.waitForTimeout(900);
+  const arrived = await count(recipe);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(60);
+  const leaving = await count(exit, '[data-exiting]');
+  await page.waitForTimeout(1500);
+  const left = await page.evaluate(() => document.querySelectorAll('[data-exiting]').length);
+  record(
+    `${recipe} and ${exit}: the ${label || 'icon button\'s tooltip'} arrives with its recipe, and leaves with its exit`,
+    before === 0 && arrived === 1 && leaving === 1 && left === 0,
+    `before opening ${before}, opened ${arrived}, a moment after Escape ${leaving} exiting with ${exit}, after it ${left} remained`,
+  );
 }
 
 await browser.close();

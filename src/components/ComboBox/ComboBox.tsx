@@ -103,7 +103,7 @@ function Field({
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
-      <ArrivingPopover recipe="popover-in" className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
+      <ArrivingPopover recipe="popover-in" exit="popover-out" className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
         {isLoading ? (
           /* In words. A spinner alone tells a reader who cannot see it that
              nothing is happening. */

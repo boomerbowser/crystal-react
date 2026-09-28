@@ -80,7 +80,7 @@ export function Select({
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
       {/* Frost: a transient overlay is Frost, never Resin. */}
-      <ArrivingPopover recipe="menu-in" className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
+      <ArrivingPopover recipe="menu-in" exit="menu-out" className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
         <ListBox items={options} className={cx(styles['list'])}>
           {(option) => (
             <ListBoxItem

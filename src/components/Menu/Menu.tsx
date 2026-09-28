@@ -26,6 +26,7 @@ import {
 import { cx } from '../../styles/cx.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { Arrival } from '../../motion/Arrival.js';
+import { Departure } from '../../motion/Departure.js';
 import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps, overlayMaterialClass } from '../../overlays/surface.js';
 import styles from './Menu.module.scss';
 
@@ -53,11 +54,11 @@ export function Menu<T extends object>({
   label, triggerRef, className, ...props
 }: MenuProps<T>): React.JSX.Element {
   const material = useOverlayMaterial();
-  /* The catalogue's `menu-in`, on the surface, on the mount that is the opening.
-     `menu-out` is owed too and is not yet played: React Aria unmounts the
-     popover as it closes, and holding it for an exit needs `AnimatePresence`
-     around React Aria's own overlay lifecycle — recorded in
-     docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md. */
+  /* The catalogue's `menu-in`, on the surface, on the mount that is the opening,
+     and `menu-out` as it closes. React Aria unmounts the popover when it closes,
+     which is why the exit was once recorded as needing a new structure; it
+     needed none — React Aria holds an exiting overlay for its running
+     animations, and `Departure` starts the recipe where it will find it. */
   const [scope, play] = useMotion();
 
   return (
@@ -67,15 +68,20 @@ export function Menu<T extends object>({
       className={cx(styles['popover'], overlayMaterialClass(material))}
       {...overlayMaterialProps(material)}
     >
-      <Arrival play={play} recipe="menu-in" />
-      {/* A submenu opened from here is opening on top of this surface. */}
-      <SurfaceProvider surface={material}>
-        <AriaMenu
-          {...props}
-          {...(label ? { 'aria-label': label } : {})}
-          className={cx(styles['menu'], 'cr-scroll-resin', className)}
-        />
-      </SurfaceProvider>
+      {({ isExiting }) => (
+        <>
+          <Arrival play={play} recipe="menu-in" />
+          <Departure isExiting={isExiting} play={play} recipe="menu-out" scope={scope} />
+          {/* A submenu opened from here is opening on top of this surface. */}
+          <SurfaceProvider surface={material}>
+            <AriaMenu
+              {...props}
+              {...(label ? { 'aria-label': label } : {})}
+              className={cx(styles['menu'], 'cr-scroll-resin', className)}
+            />
+          </SurfaceProvider>
+        </>
+      )}
     </Popover>
   );
 }
