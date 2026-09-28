@@ -17,7 +17,9 @@
  * ordinary text input with `inputmode="numeric"` and
  * `aria-roledescription="Number field"`, and the value is read as the input's
  * text. This header used to claim the opposite, which is worth naming: a stale
- * sentence in a header is a source somebody will believe.
+ * sentence in a header is a source somebody will believe. The catalogue used to
+ * ask for `role=spinbutton` too; since R-22 was ruled on 28 September 2026 it
+ * asks for this — a typable numeric field whose bounds are announced.
  *
  * The steppers are pointer affordances and nothing more. Each is short so the
  * pair reaches the field's height together; making each 44px would make the field

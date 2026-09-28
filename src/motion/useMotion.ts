@@ -74,6 +74,12 @@ export interface UseMotionOptions {
   readonly reorient?: Reorientation;
 }
 
+/** Where a mark sits in a staggered arrival: its position and how many arrive. */
+export interface StaggerPosition {
+  readonly index: number;
+  readonly count: number;
+}
+
 export interface Reorientation {
   /** Negate the inline component: a movement from the right becomes one from the left. */
   readonly mirrorInline?: boolean;
@@ -123,11 +129,26 @@ export function reorientRecipe(recipe: CrystalRecipe, how: Reorientation): Cryst
     },
   );
 
+  /* A background position is geometry too: the skeleton's sweep moves its
+     highlight from `200% 0` to `-200% 0`, left to right. Mirroring negates the
+     horizontal component so the highlight travels in reading direction; the block
+     axis has no horizontal sweep to turn. */
+  const mirrorPosition = (position: string): string => {
+    if (!mirrorInline || toBlockAxis) return position;
+    const [x, ...rest] = position.trim().split(/\s+/);
+    return [x === undefined ? '0' : negate(x), ...rest].join(' ');
+  };
+
   return {
     ...recipe,
-    keyframes: recipe.keyframes.map((frame) => (
-      typeof frame.transform === 'string' ? { ...frame, transform: rewrite(frame.transform) } : frame
-    )),
+    keyframes: recipe.keyframes.map((frame) => {
+      let next = frame;
+      if (typeof frame.transform === 'string') next = { ...next, transform: rewrite(frame.transform) };
+      if (typeof frame.backgroundPosition === 'string') {
+        next = { ...next, backgroundPosition: mirrorPosition(frame.backgroundPosition) };
+      }
+      return next;
+    }),
   };
 }
 
@@ -138,7 +159,7 @@ export function reorientRecipe(recipe: CrystalRecipe, how: Reorientation): Cryst
  * authors a list of frames each holding several properties. The frames carry
  * explicit offsets, which become Motion's `times`.
  */
-function toMotionKeyframes(recipe: CrystalRecipe): {
+export function toMotionKeyframes(recipe: CrystalRecipe): {
   values: DOMKeyframesDefinition;
   times: number[] | undefined;
   frameCount: number;
@@ -167,6 +188,40 @@ function toMotionKeyframes(recipe: CrystalRecipe): {
 }
 
 /**
+ * The Motion transition for one play of a recipe — shared by every hook that plays
+ * Crystal's recipes, so a spring, a loop and a stagger are decided in one place.
+ *
+ * A spring is a continuous solution from one value to another, so it can only
+ * describe a two-keyframe animation — Motion refuses more, and it is right to:
+ * "settle from A to B" has no meaning across four waypoints. Crystal authors most
+ * recipes as three or four frames and fits each spring so its settling time EQUALS
+ * the authored duration, so the two forms agree by construction: where Motion can
+ * take the spring it gets the real physics, and where it cannot, the duration it
+ * falls back to is the one that spring was fitted to produce.
+ *
+ * A continuous recipe travels at constant speed and repeats until stopped. It
+ * carries no spring — a loop has no rest position to settle to — so it never takes
+ * the spring branch.
+ */
+export function transitionFor(
+  recipe: CrystalRecipe,
+  durationMs: number,
+  delayMs: number,
+  frameCount: number,
+  times: number[] | undefined,
+): Record<string, unknown> {
+  const web = recipe.spring?.platform?.web;
+  const delay = delayMs > 0 ? { delay: delayMs / 1000 } : {};
+  if (recipe.loop) {
+    return { duration: durationMs / 1000, ease: 'linear', repeat: Infinity, ...(times ? { times } : {}) };
+  }
+  if (web && frameCount === 2) {
+    return { type: 'spring', stiffness: web.stiffness, damping: web.damping, mass: web.mass, ...delay };
+  }
+  return { duration: durationMs / 1000, ease: [0.22, 0.65, 0.22, 1], ...(times ? { times } : {}), ...delay };
+}
+
+/**
  * Returns `[scope, play]`.
  *
  * Attach `scope` to the element the recipe plays on. `play(name)` is imperative
@@ -185,15 +240,23 @@ function toMotionKeyframes(recipe: CrystalRecipe): {
  */
 export function useMotion(
   options: UseMotionOptions = {},
-): [ReturnType<typeof useAnimate>[0], (name: CrystalRecipeName) => Promise<void>] {
+): [
+  ReturnType<typeof useAnimate>[0],
+  (name: CrystalRecipeName, position?: StaggerPosition) => Promise<void>,
+  () => void,
+] {
   const [scope, animate] = useAnimate();
+  /* The one thing a continuous recipe needs that a transition does not: a way to
+     end it. It repeats until stopped, and the moment to stop is the caller's —
+     the work it reports has resolved. */
+  const current = useRef<{ stop: () => void } | null>(null);
   const { resolveDuration, reduceMotion } = useCrystalTheme();
   const running = useRef<string | null>(null);
   const once = options.once ?? false;
   const mirrorInline = options.reorient?.mirrorInline ?? false;
   const toBlockAxis = options.reorient?.toBlockAxis ?? false;
 
-  const play = useCallback(async (name: CrystalRecipeName): Promise<void> => {
+  const play = useCallback(async (name: CrystalRecipeName, position?: StaggerPosition): Promise<void> => {
     const element = scope.current as HTMLElement | null;
     if (!element) return;
 
@@ -219,23 +282,17 @@ export function useMotion(
     element.dataset['crMotionState'] = 'running';
 
     const { values, times, frameCount } = toMotionKeyframes(recipe);
-    const web = recipe.spring?.platform?.web;
 
-    /* A spring is a continuous solution from one value to another, so it can only
-       describe a two-keyframe animation — Motion refuses more, and it is right
-       to: "settle from A to B" has no meaning across four waypoints.
-     *
-     * Crystal authors most recipes as three or four frames (press overshoots,
-     * recovers, and returns), and fits each recipe's spring so that its settling
-     * time EQUALS the authored duration. So the two forms agree by construction,
-     * and the split below loses nothing: where Motion can take the spring it gets
-     * the real physics, and where it cannot, the duration it falls back to is the
-     * one that spring was fitted to produce. */
-    const transition = web && frameCount === 2
-      ? { type: 'spring' as const, stiffness: web.stiffness, damping: web.damping, mass: web.mass }
-      : { duration: duration / 1000, ease: [0.22, 0.65, 0.22, 1] as const, ...(times ? { times } : {}) };
+    /* A staggered mark waits its turn, scaled by the same speed as the movement.
+       Past the recipe's ceiling every mark arrives together, and a mark that does
+       not know how many there are does not stagger — it cannot know it is last. */
+    const delay = recipe.stagger && position && position.count <= recipe.stagger.maxMarks
+      ? resolveDuration(position.index * recipe.stagger.step)
+      : 0;
 
-    await animate(element, values, transition)
+    const controls = animate(element, values, transitionFor(recipe, duration, delay, frameCount, times));
+    current.current = controls;
+    await controls
       .then(() => {
         if (running.current === name) element.dataset['crMotionState'] = 'finished';
       })
@@ -245,7 +302,13 @@ export function useMotion(
       .finally(() => { if (running.current === name) running.current = null; });
   }, [scope, animate, resolveDuration, reduceMotion, once, mirrorInline, toBlockAxis]);
 
-  return [scope, play];
+  const stop = useCallback((): void => {
+    current.current?.stop();
+    current.current = null;
+    running.current = null;
+  }, []);
+
+  return [scope, play, stop];
 }
 
 export type { AnimationSequence };

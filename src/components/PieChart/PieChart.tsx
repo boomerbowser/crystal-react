@@ -25,6 +25,7 @@ import { useMarkNavigation } from '../../charts/useMarkNavigation.js';
 import { useMarkTooltip, type MarkTip } from '../../charts/useMarkTooltip.js';
 import { wedges } from '../../charts/Radial.js';
 import { cx } from '../../styles/cx.js';
+import { useMarkArrival } from '../../charts/useMarkArrival.js';
 import styles from './PieChart.module.scss';
 
 export interface PieSlice {
@@ -50,6 +51,7 @@ export function PieChart({
   table, legend, className, height = 260, ...surface
 }: PieChartProps): ReactNode {
   const marks = useMarkNavigation(slices.length);
+  const arrival = useMarkArrival();
   const tip = useMarkTooltip(marks);
   const tips = useRef<MarkTip[]>([]);
   const total = slices.reduce((sum, one) => sum + Math.max(0, one.value), 0);
@@ -108,7 +110,7 @@ export function PieChart({
         });
 
         return (
-          <g transform={`translate(${cx$},${cy})`} {...tip.containerProps}>
+          <g transform={`translate(${cx$},${cy})`} {...tip.containerProps} ref={arrival as never}>
             {drawn.map((wedge) => (
               <g
                 key={wedge.name}
@@ -117,7 +119,14 @@ export function PieChart({
                 aria-label={`${wedge.name}, ${format(wedge.value)}, ${formatShare(wedge.share)} of ${format(total)}`}
                 className={styles['wedge']}
                 data-active={marks.active === wedge.index ? '' : undefined}
-                style={{ '--series-colour': seriesColour(wedge.index) } as CSSProperties}
+                /* A segment grows out of the centre, which is this group's own
+                   origin: the parent translates to it. Crystal's `mark-in`, once. */
+                data-mark-in=""
+                style={{
+                  '--series-colour': seriesColour(wedge.index),
+                  transformBox: 'view-box',
+                  transformOrigin: '0px 0px',
+                } as CSSProperties}
               >
                 <path className={styles['fill']} d={wedge.path} />
                 {/* The label is the second channel. It is drawn only where the

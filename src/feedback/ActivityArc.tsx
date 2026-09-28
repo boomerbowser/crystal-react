@@ -24,6 +24,7 @@
  * to. `verify:appearance` holds it.
  */
 import { type ReactNode } from 'react';
+import { useContinuous } from '../motion/useContinuous.js';
 import { arcPath } from '../charts/Radial.js';
 import { chartGeometry } from '../theme/chartGeometry.js';
 import { cx } from '../styles/cx.js';
@@ -51,9 +52,13 @@ export function ActivityArc({
   const stroke = chartGeometry.ringStroke;
   const radius = size / 2;
   const determinate = fraction !== undefined;
+  /* Crystal's `activity-turn`, while the work is pending and only then. Paused or
+     failed work is not pending, so the arc stops where it is. */
+  const scope = useContinuous('activity-turn', !determinate && state === 'at-rest');
 
   return (
     <svg
+      ref={scope as never}
       className={cx(styles['canvas'], className)}
       width={size}
       height={size}

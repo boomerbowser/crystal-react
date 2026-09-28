@@ -17,23 +17,13 @@
 .track { fill: var(--cr-primary-soft); }
 .arc { fill: var(--activity-colour); }
 
-/* The canvas turns, not the arc — see the component. Crystal publishes no recipe
-   for a continuous activity indicator, so the shape of this is the library's and
-   only the duration is Crystal's: one period, `--cr-flow`, for every continuous
-   indicator here. D-19 records the gap. */
+/* The canvas turns, not the arc — see the component. The turn is Crystal's
+   `activity-turn` (D-19, 2.2.0), played while the work is pending; this only puts
+   its origin at the centre. It used to be a keyframe of this library's own, on
+   Crystal's period and nobody's shape. */
 .canvas:not([data-determinate]) {
   transform-box: border-box;
   transform-origin: 50% 50%;
-  animation-name: turn;
-  animation-duration: calc(var(--cr-motion-enabled) * #{$cr-motion-duration-flow} / var(--cr-motion-speed));
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-.canvas[data-state='paused'] { animation-play-state: paused; }
-
-@keyframes turn {
-  to { rotate: 360deg; }
 }
 
 /* "Reduced motion replaces spin with a static, still-legible state." Not the arc
@@ -41,6 +31,16 @@
    was cancelled at reads as a *position*, and the whole point of this shape is
    that there is no position. The ring becomes one uniform dimmed circle
    instead — plainly busy, plainly not a measurement. */
+/* Keyed on the motion hook's answer as well as the media query: the provider
+   folds the operating system's setting and a product's `reduceMotion` into one,
+   and the query alone saw only the first. The query stays for the moment before
+   hydration, when no script has answered yet. */
+.canvas[data-cr-motion-state='instant']:not([data-determinate]) .track {
+  fill: var(--activity-colour);
+  opacity: 0.45;
+}
+.canvas[data-cr-motion-state='instant']:not([data-determinate]) .arc { display: none; }
+
 @media (prefers-reduced-motion: reduce) {
   .canvas:not([data-determinate]) .track {
     fill: var(--activity-colour);

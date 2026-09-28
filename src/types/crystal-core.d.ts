@@ -15,6 +15,8 @@ interface CrystalKeyframe {
   readonly transform?: string;
   readonly opacity?: number;
   readonly clipPath?: string;
+  /** The skeleton's luminance sweep (2.2.0). */
+  readonly backgroundPosition?: string;
   readonly offset?: number;
 }
 
@@ -47,6 +49,16 @@ interface CrystalRecipe {
   /** Fitted upstream so the spring's settling time equals the authored duration.
    *  Absent on a travelling loop, which is linear by definition. */
   readonly spring?: CrystalSpring;
+  /** A continuous indicator of pending work (2.2.0): repeats until stopped. Only
+   *  `activity-turn`, `activity-travel` and `skeleton-sweep` carry it. */
+  readonly loop?: boolean;
+  readonly direction?: 'normal';
+  readonly easing?: 'linear';
+  /** A recipe that shows data and must never pass its value (2.2.0). */
+  readonly overshoot?: 'never';
+  /** Marks arriving in sequence (2.2.0): `step` ms apart, up to `maxMarks`;
+   *  past that every mark arrives together. */
+  readonly stagger?: { readonly step: number; readonly maxMarks: number };
 }
 
 interface CrystalAnimation {

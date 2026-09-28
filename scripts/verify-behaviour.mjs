@@ -927,6 +927,119 @@ for (const { edge, flush, square } of EDGES) {
   );
 }
 
+/* --------------------------------------------- continuous indicators (D-19)
+ *
+ * Crystal 2.2.0 publishes three recipes that repeat, for work that is genuinely
+ * pending, and one rule: nothing else loops, and none of them runs at rest or
+ * under reduced motion. jsdom cannot see an animation at all, so the claim is
+ * read here from the running animation itself — infinite, linear, at Crystal's
+ * one period — and then from the same story under reduced motion, where there
+ * must be none and the element must say it was resolved instantly. A static
+ * fallback the stylesheet keys on that answer is what the reader then sees.
+ */
+{
+  const FLOW = 1200;
+  for (const reduce of ['no-preference', 'reduce']) {
+    const own = await browser.newPage();
+    await own.emulateMedia({ reducedMotion: reduce });
+    for (const [what, id, selector] of [
+      ['the loader', 'feedback-loader--medium', 'svg'],
+      ['the indeterminate bar', 'feedback-progress--indeterminate', '[class*="runner"]'],
+    ]) {
+      await own.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+      await own.waitForTimeout(150);
+      const seen = await own.evaluate((sel) => {
+        const element = document.querySelector(`#storybook-root ${sel}`);
+        if (!element) return null;
+        const running = element.getAnimations()[0];
+        const timing = running?.effect.getComputedTiming();
+        return {
+          state: element.dataset['crMotionState'] ?? null,
+          iterations: timing ? String(timing.iterations) : null,
+          duration: timing ? Math.round(Number(timing.duration)) : null,
+          easing: running ? running.effect.getTiming().easing : null,
+        };
+      }, selector);
+      if (reduce === 'reduce') {
+        record(
+          `${what} does not move under reduced motion`,
+          seen !== null && seen.state === 'instant' && seen.iterations === null,
+          `saw ${JSON.stringify(seen)}; a continuous indicator under reduced motion is the whole track, static`,
+        );
+      } else {
+        record(
+          `${what} repeats Crystal's continuous recipe while pending`,
+          seen !== null && seen.iterations === 'Infinity' && seen.duration === FLOW && seen.easing === 'linear',
+          `saw ${JSON.stringify(seen)}; expected an infinite linear loop at motion.flow (${FLOW}ms)`,
+        );
+      }
+    }
+    await own.close();
+  }
+}
+
+/* ------------------------------------------------ a data mark arriving (R-21)
+ *
+ * `mark-in` grows each mark from its baseline, once, critically damped. The three
+ * things that make it honest are geometric, so they are measured frame by frame
+ * with the page's animation clock slowed tenfold: a bar's edge on the zero line
+ * never moves, no mark is ever drawn taller than its value, and a mark waiting
+ * for its turn is parked at the first frame rather than drawn at full height and
+ * then collapsed. Under reduced motion, nothing arrives: every mark is at its
+ * value from the first frame.
+ */
+{
+  const measure = async (reduce) => {
+    const own = await browser.newPage();
+    await own.emulateMedia({ reducedMotion: reduce });
+    const cdp = await own.context().newCDPSession(own);
+    await cdp.send('Animation.enable');
+    await cdp.send('Animation.setPlaybackRate', { playbackRate: 0.1 });
+    await own.goto(`${ORIGIN}/iframe.html?id=charts-bar-chart--below-zero&viewMode=story`, { waitUntil: 'commit' });
+    await own.waitForSelector('#storybook-root [data-mark-in]');
+    const seen = await own.evaluate(async () => {
+      const marks = [...document.querySelectorAll('#storybook-root [data-mark-in]')];
+      const scaleOf = (m) => { const t = getComputedStyle(m).transform; return t === 'none' ? 1 : new DOMMatrix(t).d; };
+      const lastAtStart = scaleOf(marks.at(-1));
+      const edges = marks.map(() => ({ top: [], bottom: [] }));
+      let tallest = 0;
+      const start = performance.now();
+      while (performance.now() - start < 7000) {
+        marks.forEach((m, i) => {
+          tallest = Math.max(tallest, scaleOf(m));
+          const box = m.getBoundingClientRect();
+          if (box.height > 0.5) { edges[i].top.push(box.top); edges[i].bottom.push(box.bottom); }
+        });
+        await new Promise(requestAnimationFrame);
+      }
+      const spread = (xs) => (xs.length ? Math.max(...xs) - Math.min(...xs) : 0);
+      /* For each mark, the edge that did not move. A bar above zero keeps its
+         bottom; one below keeps its top. Either way one edge is fixed. */
+      const fixed = edges.map((e) => Math.min(spread(e.top), spread(e.bottom)));
+      const moved = edges.map((e) => Math.max(spread(e.top), spread(e.bottom)));
+      return { lastAtStart, tallest, worstFixed: Math.max(...fixed), leastMoved: Math.min(...moved), count: marks.length };
+    });
+    await own.close();
+    return seen;
+  };
+
+  const arriving = await measure('no-preference');
+  record(
+    'chart marks grow from the zero line, never past their value, and wait their turn unseen',
+    arriving.count > 1 && arriving.leastMoved > 5 && arriving.worstFixed < 0.5
+      && arriving.tallest <= 1.0001 && arriving.lastAtStart < 0.05,
+    `${JSON.stringify(arriving)}: every mark must move (> 5px), keep one edge on the baseline (< 0.5px), `
+    + 'never scale past 1, and the last mark must be parked at its first frame, not drawn full height',
+  );
+
+  const reduced = await measure('reduce');
+  record(
+    'chart marks arrive at their values under reduced motion',
+    reduced.count > 1 && reduced.lastAtStart === 1 && reduced.leastMoved < 0.5,
+    `${JSON.stringify(reduced)}: under reduced motion every mark is at its value from the first frame`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

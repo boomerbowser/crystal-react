@@ -13,19 +13,22 @@
  * is a full target. Same primitive underneath, opposite geometry decision, and
  * neither is a stylesheet variant of the other.
  *
- * **"A spin button: the value is typable."** The second half is what this
- * delivers and the first half is not available to deliver. React Aria's
+ * **"A typable numeric field … not role=spinbutton."** Crystal 2.2.0's wording,
+ * since Meridian ruled on R-22 on 28 September 2026. It used to read "A spin
+ * button: the value is typable", and the first half of that was not available to
+ * deliver. React Aria's
  * `NumberField` computes the spin-button props and then strips them — `role:
  * null`, `aria-valuenow: null`, `aria-valuemin: null`, `aria-valuemax: null` —
  * with the reason in its own source comment: "we can't focus a spin button with
  * VO". What ships is a text input with `inputmode="numeric"` and
  * `aria-roledescription="Number field"`, whose value is read as its text.
  *
- * That is a deviation from the catalogue's wording, not a shortcut, and it is
- * filed as R-22 rather than decided here: Crystal asks for a role the accessible
- * primitive removes on purpose, and which of the two is wrong is not a call this
- * component gets to make quietly. What is not negotiable is the part the role
- * was there for — the value is typable, and the arrow keys step.
+ * That was a deviation from the catalogue's wording, and it was filed as R-22
+ * rather than decided here, because which of the two was wrong was not a call
+ * this component got to make quietly. Meridian ruled for the reachable control:
+ * a role VoiceOver cannot focus is a regression of the accessible surface, and
+ * the catalogue now describes what ships. What was never negotiable is the part
+ * the role was there for — the value is typable, and the arrow keys step.
  *
  * **"The bounds are announced when reached."** With `aria-valuemin` and
  * `aria-valuemax` stripped, the bounds are on nothing: the live region here is

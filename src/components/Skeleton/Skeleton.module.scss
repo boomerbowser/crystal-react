@@ -30,33 +30,23 @@
 .box[data-shape='block'] { block-size: $cr-spacing-2xl; border-radius: $cr-shape-content-radius; }
 .box[data-shape='circle'] { inline-size: $cr-spacing-2xl; block-size: $cr-spacing-2xl; border-radius: 50%; }
 
-.box::after {
-  content: '';
-  position: absolute;
-  inset-block: 0;
-  inline-size: 60%;
-  background: linear-gradient(90deg, transparent, var(--cr-surface), transparent);
-  /* One period for every continuous indicator in this library — see
-     `ActivityArc` and D-19. */
-  animation-name: sweep;
-  animation-duration: calc(var(--cr-motion-enabled) * #{$cr-motion-duration-flow} / var(--cr-motion-speed));
-  animation-timing-function: #{$cr-motion-easing-settle};
-  animation-iteration-count: infinite;
-}
-
-@keyframes sweep {
-  from { inset-inline-start: -60%; }
-  to { inset-inline-start: 100%; }
+/* The sweep is Crystal's `skeleton-sweep` (D-19, 2.2.0), which moves this
+   highlight's background position from 200% to -200% — so the highlight is part
+   of the box's own background, where the recipe can reach it, rather than a
+   pseudo-element Motion cannot animate. At rest it sits wholly outside the box,
+   which is also exactly the reduced-motion state: a plain filled placeholder. */
+.box {
+  background-image: linear-gradient(90deg, transparent 40%, var(--cr-surface) 50%, transparent 60%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  background-position: 200% 0;
 }
 
 /* The sweep is the whole of the movement, so removing it leaves the shape
    exactly as legible as it was: a filled placeholder. Nothing has to stand in
-   for it, which is why this is one line and the progress bar's is four. */
-@media (prefers-reduced-motion: reduce) {
-  .box::after { display: none; }
-}
-
+   for it — with no movement the highlight simply stays outside the box — which is
+   why reduced motion needs no rule here at all. Forced colours paints the box
+   itself, so the gradient goes with its background. */
 @media (forced-colors: active) {
   .box { background: Canvas; border: 1px solid CanvasText; }
-  .box::after { display: none; }
 }

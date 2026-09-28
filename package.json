@@ -50,7 +50,7 @@
     "react-dom": "^18.2.0 || ^19.0.0"
   },
   "dependencies": {
-    "@crystal-ui/core": "^2.1.0",
+    "@crystal-ui/core": "^2.2.0",
     "@internationalized/date": "^3.12.4",
     "@internationalized/number": "^3.6.8",
     "d3-geo": "^3.1.1",

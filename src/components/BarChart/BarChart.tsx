@@ -29,6 +29,7 @@ import { scaleBand, scaleLinear, stackedDomain, valueDomain } from '../../charts
 import type { ChartSeries } from '../../charts/types.js';
 import { chartGeometry } from '../../theme/chartGeometry.js';
 import { cx } from '../../styles/cx.js';
+import { useMarkArrival } from '../../charts/useMarkArrival.js';
 import styles from './BarChart.module.scss';
 
 export interface BarChartProps extends Omit<ChartSurfaceProps, 'children' | 'table'> {
@@ -51,6 +52,7 @@ export function BarChart({
   const id = useId();
   const drawn = drawnSeries(series);
   const marks = useMarkNavigation(drawn.length * categories.length);
+  const arrival = useMarkArrival();
   const tip = useMarkTooltip(marks);
   /* Where each mark ended up, handed from the drawing to the panel that points
      at it. A ref rather than state because it is not a fact about the chart, it
@@ -88,6 +90,7 @@ export function BarChart({
           ? stackedDomain(visible, categories.length)
           : valueDomain(visible);
         const value = scaleLinear().domain(domain).nice(ticks).range([inner.height, 0]);
+        const baseline = inner.y + Math.min(inner.height, Math.max(0, value(0)));
         /* Inner band: where a grouped chart puts each series inside its
            category. A stacked chart has one bar per category, so its inner band
            is the whole of the outer one. */
@@ -116,7 +119,7 @@ export function BarChart({
         return (
           <>
             <Axes frame={frame} value={valueTicks} category={categoryTicks} />
-            <g {...tip.containerProps} className={styles['marks']}>
+            <g {...tip.containerProps} ref={arrival as never} className={styles['marks']}>
               {drawn.map(({ series: one, channel, slot }) => (
                 <g key={one.name}>
                   {categories.map((category, c) => {
@@ -157,7 +160,15 @@ export function BarChart({
                            rule in every sheet, including the one that has to
                            replace it when the operating system takes the palette
                            away. */
-                        style={{ '--series-colour': seriesColour(channel) } as CSSProperties}
+                        /* Crystal's `mark-in` grows each bar from the zero line —
+                           above it upward, below it downward — so the origin is the
+                           baseline, in the plot's own coordinates. */
+                        data-mark-in=""
+                        style={{
+                          '--series-colour': seriesColour(channel),
+                          transformBox: 'view-box',
+                          transformOrigin: `0px ${baseline}px`,
+                        } as CSSProperties}
                       >
                         <path className={styles['fill']}
                           d={barPath(x, inner.y + top, width, Math.max(0, bottom - top), datum >= 0)}

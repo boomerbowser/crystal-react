@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@crystal-ui/core':
-        specifier: ^2.1.0
-        version: 2.1.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: ^2.2.0
+        version: 2.2.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@internationalized/date':
         specifier: ^3.12.4
         version: 3.12.4
@@ -827,8 +827,8 @@ packages:
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
 
-  '@crystal-ui/core@2.1.0':
-    resolution: {integrity: sha512-sLLEdVcJa18Y9kp+itWzsGJfTr6faLp34VCuJSbWg0nimgl4P9lho/5nIsOnN4Ra/W2r3rATMdkDnIabKN216A==}
+  '@crystal-ui/core@2.2.0':
+    resolution: {integrity: sha512-NN+MnigJySNW1OoPoF/fv41fCOqU+YmhhPeYzDUPLJWSluleJUsL97Kel2Vhz8kXC7oO9msN5Bs/fsIrawI2ng==}
 
   '@csstools/color-helpers@5.1.0':
     resolution: {integrity: sha512-S11EXWJyy0Mz5SYvRmY8nJYTFFd1LCNV+7cXyAgQtOOuzb4EsgfqDufL+9esx72/eLhsRdGZwaldu/h+E4t4BA==}
@@ -4969,7 +4969,7 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
 
-  '@crystal-ui/core@2.1.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@crystal-ui/core@2.2.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       gsap: 3.15.0
       motion: 13.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)

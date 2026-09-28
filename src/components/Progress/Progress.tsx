@@ -34,6 +34,7 @@ import {
   forwardRef, useEffect, useId, useRef, type HTMLAttributes, type ReactNode,
 } from 'react';
 import { useMotion } from '../../motion/useMotion.js';
+import { useContinuous } from '../../motion/useContinuous.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Progress.module.scss';
@@ -75,6 +76,11 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progr
   const at = determinate ? clamp(value, min, max) : min;
   const fraction = max > min ? (at - min) / (max - min) : 0;
   const said = valueLabel ?? (determinate ? `${Math.round(fraction * 100)}%` : busyLabel);
+  /* Crystal's `activity-travel` while the work is pending and cannot be measured.
+     Paused or failed work is not pending. The recipe moves the element by its own
+     width, so it plays on a runner as wide as the track, carrying the segment —
+     played on the segment itself, a 40% bar would cross only 80% of the way. */
+  const runner = useContinuous('activity-travel', !determinate && state === 'at-rest');
 
   /* The settle is marked *after* the value has been applied, and only when it
      actually changed. A recipe played on mount would be ambient movement, which
@@ -113,10 +119,13 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progr
           : { 'aria-valuetext': said })}
         className={styles['track']}
       >
-        <div
-          className={styles['fill']}
-          style={determinate ? { inlineSize: `${fraction * 100}%` } : undefined}
-        />
+        {determinate ? (
+          <div className={styles['fill']} style={{ inlineSize: `${fraction * 100}%` }} />
+        ) : (
+          <div ref={runner as never} className={styles['runner']}>
+            <div className={styles['fill']} />
+          </div>
+        )}
       </div>
     </div>
   );

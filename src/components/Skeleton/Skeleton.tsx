@@ -23,6 +23,7 @@ import {
   forwardRef, useEffect, useRef, useState, type HTMLAttributes, type ReactNode,
 } from 'react';
 import { useMotion } from '../../motion/useMotion.js';
+import { useContinuous } from '../../motion/useContinuous.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Skeleton.module.scss';
@@ -86,9 +87,13 @@ export interface SkeletonBoxProps extends HTMLAttributes<HTMLSpanElement> {
 export function SkeletonBox({
   shape = 'text', width, height, className, style, ...props
 }: SkeletonBoxProps): ReactNode {
+  /* A box exists only while its skeleton is loading, so being mounted is being
+     pending: Crystal's `skeleton-sweep` runs from mount to unmount. */
+  const sweep = useContinuous('skeleton-sweep', true);
   return (
     <span
       {...props}
+      ref={sweep as never}
       data-shape={shape}
       className={cx(styles['box'], className)}
       style={{ ...style, ...(width ? { inlineSize: width } : {}), ...(height ? { blockSize: height } : {}) }}

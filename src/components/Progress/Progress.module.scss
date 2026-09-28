@@ -54,37 +54,39 @@
     #{$cr-motion-easing-settle};
 }
 
-/* Indeterminate: a segment that travels the track. Crystal publishes no recipe
-   for a continuous activity indicator — its fifty-four are finite, spring-fitted
-   transitions — so the *shape* of this movement is the component's and only its
-   timing is Crystal's. D-19 records that gap. */
-.progress:not([data-determinate]) .fill {
+/* Indeterminate: a segment that travels the track, on Crystal's `activity-travel`
+   (D-19, 2.2.0). The recipe translates by the element's own width, so what moves
+   is a runner as wide as the track and the segment rides at its inline start:
+   from -100% the segment is wholly before the track, at 100% wholly past it.
+   Linear, where this library's own keyframe used the settle curve — a continuous
+   indicator travels at constant speed, and that is Crystal's ruling now. */
+.runner {
   position: absolute;
-  inline-size: 40%;
-  transition: none;
-  animation-name: travel;
-  animation-duration: calc(var(--cr-motion-enabled) * #{$cr-motion-duration-flow} / var(--cr-motion-speed));
-  animation-timing-function: #{$cr-motion-easing-settle};
-  animation-iteration-count: infinite;
+  inset: 0;
 }
 
-@keyframes travel {
-  from { inset-inline-start: -40%; }
-  to { inset-inline-start: 100%; }
+.runner .fill {
+  inline-size: 40%;
+  transition: none;
 }
 
 .progress[data-state='error'] .fill { background: var(--cr-danger-ink); }
-.progress[data-state='paused'] .fill { background: var(--cr-muted); animation-play-state: paused; }
+.progress[data-state='paused'] .fill { background: var(--cr-muted); }
 
 /* "Reduced motion replaces the movement with a static, still-legible state."
    A full track rather than an empty one: the bar is busy, and an indeterminate
    bar drawn empty reads as nought per cent. */
+/* Keyed on the motion hook's answer, which includes a product's `reduceMotion`
+   as well as the operating system's; the query stays for before hydration. */
+.runner[data-cr-motion-state='instant'] .fill {
+  inline-size: 100%;
+  opacity: 0.55;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fill { transition: none; }
 
-  .progress:not([data-determinate]) .fill {
-    position: static;
-    animation: none;
+  .runner .fill {
     inline-size: 100%;
     opacity: 0.55;
   }

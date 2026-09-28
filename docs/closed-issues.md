@@ -1075,3 +1075,117 @@ entry was right to say comes first. The field family is the other one: seventeen
 components reach `.cr-field-shell`'s recipe through `field.shell`, which
 re-declares it by hand under a comment that correctly says Crystal owns it.
 
+## R-21 · No chart has an enter motion, and the catalogue asks three of them for one
+
+*(Opened 23 September 2026, closing out slice K.)*
+
+**What is missing.** `core/tokens/catalogue/10-charts.json` lists "enter motion"
+on `bar-chart` and `pie-chart` and "draw-on motion" on `line-chart`. None of the
+twenty-four components has any. Every chart in this library appears fully drawn,
+in one frame, and stays that way.
+
+**Why it was left.** Crystal has no recipe for it. `core/docs/motion.md`
+publishes fifty-four recipes and not one is a mark growing from a baseline or a
+path drawing itself; `--cr-motion-*` carries durations and easings but nothing
+that says how long a hundred bars should take between them, or whether they
+stagger. Inventing that here is exactly what `extend-crystal-not-the-library`
+forbids, and inventing it badly is worse than nothing: a chart is the one place
+where motion is read as data, and a bar that eases past its value before settling
+has *shown the reader a number that is not true*.
+
+**It is a deliberate deferral, not an oversight**, and it is consistent with the
+rest of Crystal 2.0 rather than an exception to it: nothing moves at rest, and a
+chart that has finished drawing is at rest. What is missing is only the one-shot
+motion a person starts by causing the chart to appear.
+
+**What it is not.** It is not an accessibility gap. `prefers-reduced-motion`
+already resolves to "no motion" here trivially, every value is on its mark and in
+the table, and no state in any chart is carried by movement.
+
+**Closing it needs** the recipe authored in core first — a named enter for a
+mark, with a duration, an easing, a stagger and a stated maximum number of marks
+past which it does not stagger at all — then one implementation here that every
+chart composes, and a `verify:behaviour` check that it is gone under
+`prefers-reduced-motion: reduce`.
+
+**Closed 28 September 2026.** Meridian adopted the recipe this entry asked for, in
+core: `mark-in` (Crystal 2.2.0). A mark grows from its baseline when a chart first
+appears — 500ms, staggered 24ms per mark up to 24 marks and all together past
+that — and it declares `overshoot: "never"`, so Crystal fits it critically damped
+whatever its material. The deferral's reasoning is what made that the requirement
+rather than a preference.
+
+One implementation, `src/charts/useMarkArrival.ts`, composed by `BarChart`,
+`LineChart` and `PieChart`: marks carry `data-mark-in` and their baseline as
+`transform-origin` — the zero line for a bar or a series (the floor of the plot
+when zero is not in it), the centre for a segment — and the arrival plays once, on
+the first render that has marks in it, never when the data changes.
+
+`verify:behaviour` holds it, measured frame by frame with the page's animation
+clock slowed tenfold: every bar keeps one edge on the zero line (a bar below zero
+keeps its top), no mark is ever drawn past its value, the last one is held at its
+first frame until its turn, and under `prefers-reduced-motion: reduce` every mark
+is at its value from the first frame. Each was planted red — an origin at the top
+of the plot, the reduced-motion branch removed — except the third, which stayed
+green with this library's own code for it removed: Motion's `fill: both` holds a
+delayed mark at its first frame already, so the code was deleted and the check
+kept for what it guards.
+
+## R-22 · The catalogue asks the quantity stepper for a role React Aria removes
+
+**What the catalogue says.** `core/tokens/catalogue/12-commerce.json`, on
+`quantity-stepper`: "**A spin button**: the value is typable, and the bounds are
+announced when reached."
+
+**What ships.** Not a spin button. `QuantityStepper` is built on React Aria's
+`NumberField`, which computes the spin-button props and then strips every one of
+them before they reach the input:
+
+```js
+// override the spinbutton role, we can't focus a spin button with VO
+role: null,
+'aria-roledescription': !isIOS() ? stringFormatter.format('numberField') : null,
+'aria-valuemax': null,
+'aria-valuemin': null,
+'aria-valuenow': null,
+```
+
+That is `@react-aria/numberfield`'s own source and its own comment, not an
+inference from the rendered output. What arrives instead is an ordinary text
+input with `inputmode="numeric"` and `aria-roledescription="Number field"`, whose
+value is read as its text.
+
+**Why it is not simply a defect here.** The reason React Aria gives is a real
+one: a `spinbutton` cannot be focused with VoiceOver, so honouring the
+catalogue's wording would produce a control that some readers cannot reach at
+all. Trading reachability for a role name is not an improvement, and "material
+specifications may improve, never regress" applies to the accessible surface as
+much as to the visual one.
+
+**What it costs, and what was done about it.** Stripping `aria-valuemin` and
+`aria-valuemax` takes the bounds off the control entirely — so the second half of
+the catalogue's sentence, "the bounds are announced when reached", is not
+something the primitive can deliver either. The component announces them itself,
+in a polite live region, on a change rather than on mount. That part is
+*implemented*, not deferred; it is only the role that is not there.
+
+**Where it also matters.** `NumberInput` has the same primitive underneath and
+the same absence. Its header claimed the opposite until this was found — a stale
+sentence asserting `aria-valuenow` that nobody had checked against the rendered
+output — which is worth recording on its own: a header is a source somebody will
+believe, and this one misled the author of this very component.
+
+**Closing it needs a decision from Meridian**, not a change here. Either the
+catalogue's wording moves to what an accessible number field actually is — a
+typable numeric field whose bounds are announced — or Crystal states that the
+role is required and accepts what it costs on VoiceOver. The first is very
+likely right, but it is a change to a published specification, and this library
+does not get to make one by shipping something else and saying nothing.
+
+**Closed 28 September 2026.** Meridian ruled for the reachable control. Crystal
+2.2.0's catalogue describes `quantity-stepper` as "a typable numeric field: the
+value is read as its text, and the bounds are announced when reached. Not
+role=spinbutton", and `number-input` the same way; the old sentences are quoted in
+Crystal's `tools/extend-catalogue-5.cjs`. Nothing changed here, because this
+library already shipped what the catalogue now says — the headers of both
+components record the ruling in place of the disagreement.

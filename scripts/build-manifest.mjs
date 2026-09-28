@@ -138,13 +138,31 @@ function motionUsed(componentId) {
   if (!dir || !existsSync(dir)) return { recipes: [], presets: [] };
   const recipes = new Set();
   const presets = new Set();
-  for (const file of readdirSync(dir)) {
-    if (!/\.tsx?$/.test(file) || /\.test\./.test(file)) continue;
-    const source = readFileSync(join(dir, file), 'utf8');
-    /* Only count a name in a file that actually imports the hook that plays it.
+  /* A component's own files, and one level of what they import from the library's
+     shared modules. Motion that plays through a shared piece is still this
+     component's: the loader turns through `feedback/ActivityArc`, and three charts
+     arrive through `charts/useMarkArrival`. Reading only the component's directory
+     reported both as playing nothing. One level, not a walk of the graph — a
+     component that imports another *component* is credited with its own motion
+     only, because the other one is reported under its own name. */
+  const files = readdirSync(dir)
+    .filter((file) => /\.tsx?$/.test(file) && !/\.(test|stories)\./.test(file))
+    .map((file) => join(dir, file));
+  const shared = new Set();
+  for (const file of files) {
+    for (const [, spec] of readFileSync(file, 'utf8').matchAll(/from '(\.\.\/\.\.\/(?:feedback|charts|media|overlays|commerce|form)\/[^']+)\.js'/g)) {
+      for (const extension of ['.tsx', '.ts']) {
+        const candidate = join(dir, spec + extension);
+        if (existsSync(candidate)) shared.add(candidate);
+      }
+    }
+  }
+  for (const file of [...files, ...shared]) {
+    const source = readFileSync(file, 'utf8');
+    /* Only count a name in a file that actually uses a hook that plays it.
        Without this, Button's `variant="resin"` was reported as a Resin preset:
        a string that happens to match a preset name is not a call. */
-    const playsRecipes = source.includes('useMotion');
+    const playsRecipes = /\buse(Motion|Continuous|MarkArrival)\b/.test(source);
     const playsPresets = source.includes('usePreset');
     if (!playsRecipes && !playsPresets) continue;
     for (const match of source.matchAll(/'([a-z][a-z-]*)'/g)) {

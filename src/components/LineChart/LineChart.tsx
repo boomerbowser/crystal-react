@@ -33,6 +33,7 @@ import { useMarkTooltip, type MarkTip } from '../../charts/useMarkTooltip.js';
 import { scaleLinear, scalePoint, valueDomain } from '../../charts/scales.js';
 import type { ChartSeries } from '../../charts/types.js';
 import { cx } from '../../styles/cx.js';
+import { useMarkArrival } from '../../charts/useMarkArrival.js';
 import styles from './LineChart.module.scss';
 
 export interface LineChartProps extends Omit<ChartSurfaceProps, 'children' | 'table'> {
@@ -55,6 +56,7 @@ export function LineChart({
 }: LineChartProps): ReactNode {
   const drawn = drawnSeries(series);
   const marks = useMarkNavigation(drawn.length * categories.length);
+  const arrival = useMarkArrival();
   const tip = useMarkTooltip(marks);
   const tips = useRef<MarkTip[]>([]);
 
@@ -88,6 +90,7 @@ export function LineChart({
           .domain(valueDomain(drawn.map((one) => one.series), { fromZero }))
           .nice(ticks)
           .range([inner.height, 0]);
+        const baseline = inner.y + Math.min(inner.height, Math.max(0, value(0)));
 
         const valueTicks: AxisTick[] = value.ticks(ticks)
           .map((tick) => ({ offset: value(tick), label: format(tick) }));
@@ -114,9 +117,16 @@ export function LineChart({
         return (
           <>
             <Axes frame={frame} value={valueTicks} category={categoryTicks} />
-            <g {...tip.containerProps}>
+            <g {...tip.containerProps} ref={arrival as never}>
               {drawn.map(({ series: one, channel, slot }) => (
-                <g key={one.name} className={styles['series']}>
+                /* A series rises from the zero line, or from the floor of the plot
+                   when zero is not in it — Crystal's `mark-in`, once. */
+                <g
+                  key={one.name}
+                  className={styles['series']}
+                  data-mark-in=""
+                  style={{ transformBox: 'view-box', transformOrigin: `0px ${baseline}px` }}
+                >
                   <SeriesLine d={seriesPath(plotted[slot] ?? [], curve)} seriesIndex={channel} />
                   <PointMarks
                     points={plotted[slot] ?? []}

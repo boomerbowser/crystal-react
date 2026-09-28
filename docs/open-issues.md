@@ -3,11 +3,20 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Four entries, and none is ordinary work — plus R-24, which is ordinary work
-waiting on a release.** R-24 is the adoption of Crystal 2.2.0's component recipes:
-the four surfaces this library rebuilt locally are published upstream now, and
-the day they are installed here, `src/styles/coreVersion.test.ts` fails and the
-migration in `docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md` runs.
+**Two entries.** R-17 has one part left, and it is not in this repository's hands.
+R-24 is the rest of the adoption of Crystal 2.2.0: the release is installed, its
+new motion is played, and what remains is wearing its surface classes and deleting
+the local copies — the migration in
+`docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md`, phase B.
+
+**R-21 and R-22 closed on 28 September 2026**, both by rulings Meridian made on
+Crystal's side. Charts now arrive with `mark-in`, a recipe authored in core —
+critically damped so that no bar ever shows a value it does not have — and the
+catalogue now describes the reachable number field this library always shipped,
+rather than a spin button VoiceOver cannot focus. D-19's continuous indicators
+closed with them: the loader, the progress indicators and the skeleton play
+Crystal's `activity-turn`, `activity-travel` and `skeleton-sweep` instead of
+loops of this library's own.
 
 **R-20 and R-23 closed on 24 September 2026**, when `@crystal-ui/core@2.1.0` was
 published and this library's dependency moved to `^2.1.0`. Both were designed to
@@ -31,16 +40,13 @@ remains is that `react-docgen` cannot resolve a component's *own* inherited
 props, and both routes to an extractor that can are closed until one runs on
 TypeScript 7.
 
-**R-22** is a disagreement rather than a gap: the catalogue asks a component for
-an ARIA role that the accessible primitive underneath it removes on purpose, and
-which of the two is right is not this library's call to make quietly.
-
 Closed entries are in [`closed-issues.md`](closed-issues.md), with the reasoning
 intact.
 
 Crystal's own tracker is `crystal-design-system/proposals/open-issues.md`. As of
-23 September 2026 it holds D-4, which needs hardware, and D-17, a flake that
-needs its next occurrence with the artifact kept.
+28 September 2026 it holds D-4, which needs hardware, D-17, a flake that needs
+its next occurrence with the artifact kept, and D-21, a hover treatment that is
+Meridian's to rule on.
 
 ---
 
@@ -385,95 +391,17 @@ the day either route above opens.
 
 ---
 
-## R-21 · No chart has an enter motion, and the catalogue asks three of them for one
-
-*(Opened 23 September 2026, closing out slice K.)*
-
-**What is missing.** `core/tokens/catalogue/10-charts.json` lists "enter motion"
-on `bar-chart` and `pie-chart` and "draw-on motion" on `line-chart`. None of the
-twenty-four components has any. Every chart in this library appears fully drawn,
-in one frame, and stays that way.
-
-**Why it was left.** Crystal has no recipe for it. `core/docs/motion.md`
-publishes fifty-four recipes and not one is a mark growing from a baseline or a
-path drawing itself; `--cr-motion-*` carries durations and easings but nothing
-that says how long a hundred bars should take between them, or whether they
-stagger. Inventing that here is exactly what `extend-crystal-not-the-library`
-forbids, and inventing it badly is worse than nothing: a chart is the one place
-where motion is read as data, and a bar that eases past its value before settling
-has *shown the reader a number that is not true*.
-
-**It is a deliberate deferral, not an oversight**, and it is consistent with the
-rest of Crystal 2.0 rather than an exception to it: nothing moves at rest, and a
-chart that has finished drawing is at rest. What is missing is only the one-shot
-motion a person starts by causing the chart to appear.
-
-**What it is not.** It is not an accessibility gap. `prefers-reduced-motion`
-already resolves to "no motion" here trivially, every value is on its mark and in
-the table, and no state in any chart is carried by movement.
-
-**Closing it needs** the recipe authored in core first — a named enter for a
-mark, with a duration, an easing, a stagger and a stated maximum number of marks
-past which it does not stagger at all — then one implementation here that every
-chart composes, and a `verify:behaviour` check that it is gone under
-`prefers-reduced-motion: reduce`.
-
-## R-22 · The catalogue asks the quantity stepper for a role React Aria removes
-
-**What the catalogue says.** `core/tokens/catalogue/12-commerce.json`, on
-`quantity-stepper`: "**A spin button**: the value is typable, and the bounds are
-announced when reached."
-
-**What ships.** Not a spin button. `QuantityStepper` is built on React Aria's
-`NumberField`, which computes the spin-button props and then strips every one of
-them before they reach the input:
-
-```js
-// override the spinbutton role, we can't focus a spin button with VO
-role: null,
-'aria-roledescription': !isIOS() ? stringFormatter.format('numberField') : null,
-'aria-valuemax': null,
-'aria-valuemin': null,
-'aria-valuenow': null,
-```
-
-That is `@react-aria/numberfield`'s own source and its own comment, not an
-inference from the rendered output. What arrives instead is an ordinary text
-input with `inputmode="numeric"` and `aria-roledescription="Number field"`, whose
-value is read as its text.
-
-**Why it is not simply a defect here.** The reason React Aria gives is a real
-one: a `spinbutton` cannot be focused with VoiceOver, so honouring the
-catalogue's wording would produce a control that some readers cannot reach at
-all. Trading reachability for a role name is not an improvement, and "material
-specifications may improve, never regress" applies to the accessible surface as
-much as to the visual one.
-
-**What it costs, and what was done about it.** Stripping `aria-valuemin` and
-`aria-valuemax` takes the bounds off the control entirely — so the second half of
-the catalogue's sentence, "the bounds are announced when reached", is not
-something the primitive can deliver either. The component announces them itself,
-in a polite live region, on a change rather than on mount. That part is
-*implemented*, not deferred; it is only the role that is not there.
-
-**Where it also matters.** `NumberInput` has the same primitive underneath and
-the same absence. Its header claimed the opposite until this was found — a stale
-sentence asserting `aria-valuenow` that nobody had checked against the rendered
-output — which is worth recording on its own: a header is a source somebody will
-believe, and this one misled the author of this very component.
-
-**Closing it needs a decision from Meridian**, not a change here. Either the
-catalogue's wording moves to what an accessible number field actually is — a
-typable numeric field whose bounds are announced — or Crystal states that the
-role is required and accepts what it costs on VoiceOver. The first is very
-likely right, but it is a change to a published specification, and this library
-does not get to make one by shipping something else and saying nothing.
-
 ## R-24 · Crystal 2.2.0 publishes the recipes this library restates, and the sweep's second half is due when it lands
 
 *(Opened 28 September 2026, with the proposal in
-`docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md`. Blocked on
-`@crystal-ui/core@2.2.0` being published and installed here.)*
+`docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md`. Unblocked the same
+day: 2.2.0 is published and installed.)*
+
+**Where it stands.** 2.2.0 is installed and the dependency is `^2.2.0`. The version
+guard failed on the bump as it was written to, and is now the opposite check — a
+floor, because this library plays recipes that exist only from 2.2.0 (the three
+continuous indicators and `mark-in`), and on anything older `useMotion` throws for
+an unknown recipe. The surface sweep below is what remains.
 
 **What changed upstream.** The R-19 sweep stopped where Crystal had no recipe:
 `NavLink` kept a weight of 550 because `.cr-button`'s 750 would destroy it, the
@@ -497,13 +425,9 @@ wear `cr-drag-handle`; `FloatingWindow` and `MediaControls` wear `cr-resin panel
 component manifest gains each component's `surface`, read from the catalogue,
 and `verify:appearance` gains one check per surface.
 
-**Why it cannot start now.** This library resolves `@crystal-ui/core` from npm,
-not from the local checkout. A recipe authored in core is invisible here until
-Meridian publishes, and wearing a class the installed stylesheet does not define
-leaves a component unpainted — the mistake R-19 warned about. So the guard is the
-R-20 pattern: `src/styles/coreVersion.test.ts` passes on 2.1.x and fails the
-moment 2.2.0 or later is installed, or the moment `.cr-bare` appears in the
-installed stylesheet, whichever comes first.
+**Why it waited.** This library resolves `@crystal-ui/core` from npm, not from
+the local checkout, and wearing a class the installed stylesheet does not define
+leaves a component unpainted — the mistake R-19 warned about.
 
 **What is not blocked, and shipped alongside this entry.** Phase A of the
 proposal — everything the installed 2.1.0 already publishes and this library was

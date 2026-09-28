@@ -1,41 +1,49 @@
-/* The test whose only job is to fail on the day Crystal 2.2.0 is installed.
+/* The floor under the Crystal this library plays.
  *
- * R-24 in `docs/open-issues.md`: Crystal 2.2.0 publishes the recipes this
- * library rebuilt locally — `.cr-bare` for the `bare-control` mixin, `.cr-nav-item`
- * for `NavLink` and the rail item, `.cr-drag-handle`, `.cr-resin.panel`, the
- * native switch — and names every component's surface. The migration in
- * `docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md` cannot run until
- * the installed core carries them, and must run as soon as it does, or the
- * library goes on shipping a second copy of a recipe Crystal now owns.
+ * Until 28 September 2026 this file had the opposite job: the R-20 pattern, a test
+ * whose only purpose was to fail the day Crystal 2.2.0 was installed, so that the
+ * migration to its recipes (R-24) could not be forgotten. It failed on the bump, as
+ * it was written to, and it said "run the migration".
  *
- * This is the R-20 pattern: a shim that announces its own obsolescence. It reads
- * the installed package rather than the dependency range, because the range is
- * what was asked for and the installed version is what is true.
+ * The migration's first step made it a floor instead. The loader, the progress
+ * indicators and the skeleton now play `activity-turn`, `activity-travel` and
+ * `skeleton-sweep`, and three charts play `mark-in` — recipes that exist only from
+ * 2.2.0. On anything older `useMotion` throws for an unknown recipe, so a
+ * dependency range that let 2.1 back in would ship components that crash the
+ * moment something starts loading. The dependency says `^2.2.0`; this checks what
+ * is actually installed, because the range is what was asked for and the installed
+ * version is what is true.
+ *
+ * What remains of R-24 — wearing `.cr-bare`, `.cr-nav-item`, `.cr-drag-handle`,
+ * `.cr-resin.panel` and deleting the local copies — is tracked in
+ * `docs/open-issues.md`, not in a failing test.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
+import motionRecipes from '@crystal-ui/core/motion-recipes' with { type: 'json' };
 
 /* The package does not export its manifest, so it is found from a file it does
    export: `./css` is `assets/crystal.css`, and the manifest is two levels up. */
 const require = createRequire(import.meta.url);
 const stylesheetPath = require.resolve('@crystal-ui/core/css');
-const stylesheet = readFileSync(stylesheetPath, 'utf8');
 const installed = JSON.parse(readFileSync(join(dirname(stylesheetPath), '..', 'package.json'), 'utf8')) as { version: string };
-
 const [major = 0, minor = 0] = installed.version.split('.').map(Number);
-const hasSurfaceRecipes = major > 2 || (major === 2 && minor >= 2);
+
+/* Every recipe this library plays that an older Crystal does not have. */
+const PLAYED_FROM_2_2 = ['activity-turn', 'activity-travel', 'skeleton-sweep', 'mark-in'];
 
 describe('the installed @crystal-ui/core', () => {
-  it('does not yet publish the recipes this library restates (R-24 — when this fails, run the 2.2 migration)', () => {
-    expect(hasSurfaceRecipes, `@crystal-ui/core ${installed.version} is installed. Crystal 2.2.0 publishes .cr-bare, `
-      + '.cr-nav-item, .cr-drag-handle, .cr-resin.panel and the native switch. Wear them and delete the local copies — '
-      + 'docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md, phase B — then delete this test.').toBe(false);
-    /* The version could move without the recipes, or the recipes could land in
-       a patch. Both halves are checked so neither can pass for the wrong reason. */
-    for (const selector of ['.cr-bare', '.cr-nav-item', '.cr-drag-handle']) {
-      expect(stylesheet.includes(selector), `${selector} is in the installed crystal.css; the migration is due`).toBe(false);
+  it('is 2.2.0 or later', () => {
+    expect(major > 2 || (major === 2 && minor >= 2), `@crystal-ui/core ${installed.version} is installed; this library plays recipes that exist only from 2.2.0`).toBe(true);
+  });
+
+  /* The version could move without the recipes, so both halves are checked. */
+  it('publishes every recipe this library plays that 2.1 did not', () => {
+    const published = new Set(motionRecipes.recipes.map((recipe) => recipe.id));
+    for (const id of PLAYED_FROM_2_2) {
+      expect(published.has(id), `${id} is played here and not published by the installed core`).toBe(true);
     }
   });
 });

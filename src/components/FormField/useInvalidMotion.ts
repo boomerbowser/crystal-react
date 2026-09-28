@@ -33,7 +33,7 @@ export function useInvalidMotion(isInvalid: boolean): ReturnType<typeof useMotio
 
 /** The same binding, with the play function, for a shell that also marks focus. */
 export function useFieldMotion(isInvalid: boolean): ReturnType<typeof useMotion> {
-  const [scope, play] = useMotion({ once: true });
+  const [scope, play, stop] = useMotion({ once: true });
   const previous = useRef<boolean | undefined>(undefined);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function useFieldMotion(isInvalid: boolean): ReturnType<typeof useMotion>
     previous.current = isInvalid;
   }, [isInvalid, play]);
 
-  return [scope, play];
+  return [scope, play, stop];
 }
 
 /**
