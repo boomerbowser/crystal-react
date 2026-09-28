@@ -14,9 +14,11 @@
  * is actually installed, because the range is what was asked for and the installed
  * version is what is true.
  *
- * What remains of R-24 — wearing `.cr-bare`, `.cr-nav-item`, `.cr-drag-handle`,
- * `.cr-resin.panel` and deleting the local copies — is tracked in
- * `docs/open-issues.md`, not in a failing test.
+ * The proposal's last step (§3.5) was to delete this file once the per-surface
+ * checks existed and had each been seen red. They exist, in `verify:appearance`,
+ * and `VERIFY_PLANT_RED=1` turns every one of them red on demand — but the file
+ * stays, because it stopped being the migration's reminder and became the floor
+ * above. What remains of R-24 is tracked in `docs/open-issues.md`.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';

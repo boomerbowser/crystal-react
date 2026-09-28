@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* AppShell — the material assignment of a whole view, in one place.
  *
@@ -22,7 +21,10 @@
   grid-template-rows: auto minmax(0, 1fr) auto;
   block-size: 100dvh;
   overflow: hidden;
-  background: var(--cr-canvas);
+  /* The foundation is Crystal's `.cr-plastic`, worn by the component: the canvas
+     and the atmosphere over it, the inactive-window treatment, and the forced
+     colours route. This used to paint the canvas alone, flat, which covered the
+     atmosphere the provider's own Plastic had drawn underneath. */
   color: var(--cr-text);
 }
 
@@ -68,8 +70,10 @@
 }
 
 .destinations {
-  /* The destination strip is a dock. */
-  @include material.haze-fill;
+  /* The destination strip is Crystal's dock, worn as `.cr-dock`: the Resin plane,
+     its Haze fill, its fallbacks, and buttons that carry no Resin of their own —
+     until 28 September each destination kept its own Resin coat inside this one.
+     What is here is only where it floats. */
   position: fixed;
   inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
   inset-inline: 0;
@@ -77,32 +81,22 @@
   margin-inline: auto;
   width: max-content;
   max-width: calc(100% - var(--cr-space) * 2);
-  display: flex;
-  align-items: center;
-  gap: $cr-action-gap;
-  padding: $cr-spacing-2xs;
-  border: 1px solid var(--cr-rim);
-  border-radius: $cr-action-radius;
-  background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
 }
 
-:global([data-effects='opaque']) .sidebar,
-:global([data-effects='opaque']) .destinations {
+:global([data-effects='opaque']) .sidebar {
   background: var(--cr-surface);
   backdrop-filter: none;
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .sidebar, .destinations {
+  .sidebar {
     background: var(--cr-surface);
     backdrop-filter: none;
   }
 }
 
 @media (forced-colors: active) {
-  .sidebar, .destinations {
+  .sidebar {
     background: Canvas;
     border-color: CanvasText;
     backdrop-filter: none;

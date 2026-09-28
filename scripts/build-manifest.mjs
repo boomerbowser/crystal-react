@@ -36,6 +36,20 @@ if (!SOURCE) {
 }
 
 const catalogue = JSON.parse(readFileSync(SOURCE, 'utf8'));
+
+/* The closed vocabulary every catalogue entry's \`surface\` is drawn from, beside
+   the catalogue it describes. Crystal's build fails closed on an entry whose
+   surface is not in it, so this fails closed too rather than writing an
+   unexplained name into the manifest. */
+const SURFACES_SOURCE = SOURCE.replace('catalogue.json', 'surfaces.json');
+const surfaces = existsSync(SURFACES_SOURCE) ? JSON.parse(readFileSync(SURFACES_SOURCE, 'utf8')).surfaces : [];
+const surfaceIds = new Set(surfaces.map((surface) => surface.id));
+const unknown = catalogue.categories.flatMap((category) => category.components)
+  .flatMap((component) => (component.surface ?? []).filter((id) => !surfaceIds.has(id)).map((id) => `${component.id}: ${id}`));
+if (unknown.length) {
+  console.error('Catalogue entries name surfaces surfaces.json does not define:\n  ' + unknown.join('\n  '));
+  process.exit(1);
+}
 const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
 
 /* What is actually implemented, read from what the package exports rather than
@@ -186,6 +200,9 @@ const components = catalogue.categories.flatMap((category) =>
     anatomy: component.anatomy,
     states: component.states,
     material: component.material,
+    /* What the component is made of, from Crystal's closed vocabulary, back to
+       front — each id names a class in \`surfaces\` below. */
+    surface: component.surface ?? [],
     geometry: component.geometry,
     semantics: component.semantics,
     /* The split that tells a consumer what they still have to decide. */
@@ -209,6 +226,9 @@ const manifest = {
   generated: new Date().toISOString().slice(0, 10),
   counts,
   categories: catalogue.categories.map(({ id, name, description }) => ({ id, name, description })),
+  surfaces: surfaces.map(({ id, name, materials, class: className, also, use }) => ({
+    id, name, materials, class: className, ...(also ? { also } : {}), use,
+  })),
   components,
 };
 
@@ -270,6 +290,14 @@ Plastic → Frost → Resin, back to front, plus Haze (content fill), Stone (lab
 backing) and Mirage (modal scrim). A dialog is Haze over Mirage, not Resin —
 Resin is the floating control plane.
 
+## Surfaces
+
+Every component names what it is made of from Crystal's closed vocabulary of
+${surfaces.length} surfaces, and each surface is a class in \`@crystal-ui/core\`. The
+manifest's \`surface\` field lists them for each component, back to front.
+
+${surfaces.map((surface) => `- \`${surface.id}\` — ${surface.class ?? 'no class'}: ${surface.name}`).join('\n')}
+
 ## Motion
 
 Recipes come from Crystal and are played through Motion for React, driven by each
@@ -279,7 +307,7 @@ assistive technology get what a pointer user gets.
 ## Machine-readable
 
 \`component-manifest.json\` beside this file carries every component: its anatomy,
-states, material, geometry, semantics, which parts Crystal owns versus the
+states, material, surface, geometry, semantics, which parts Crystal owns versus the
 product, the recipes it plays, and the components it corresponds to in Mantine,
 MUI, Ant Design and PrimeReact.
 `;

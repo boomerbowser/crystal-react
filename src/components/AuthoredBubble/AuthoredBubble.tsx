@@ -70,7 +70,8 @@ export const AuthoredBubble = forwardRef<HTMLElement, AuthoredBubbleProps>(funct
       data-delivery={delivery}
       className={cx(
         styles['bubble'],
-        own ? styles['own'] : undefined,
+        'cr-bubble',
+        own ? cx(styles['own'], 'own') : undefined,
         grouped ? styles['grouped'] : undefined,
         className,
       )}

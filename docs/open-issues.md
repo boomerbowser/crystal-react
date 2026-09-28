@@ -3,11 +3,12 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Two entries.** R-17 has one part left, and it is not in this repository's hands.
-R-24 is the rest of the adoption of Crystal 2.2.0: the release is installed, its
-new motion is played, and what remains is wearing its surface classes and deleting
-the local copies — the migration in
-`docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md`, phase B.
+**Three entries.** R-17 has one part left, and it is not in this repository's
+hands. R-24 is the rest of the adoption of Crystal 2.2.0: the surfaces are worn
+and gated, and what remains is binding the motion the catalogue now assigns —
+§3.4 of `docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md`. R-25 is the
+one surface this library does not draw Crystal's way, `Indicator`, which waits on
+a ruling upstream.
 
 **R-21 and R-22 closed on 28 September 2026**, both by rulings Meridian made on
 Crystal's side. Charts now arrive with `mark-in`, a recipe authored in core —
@@ -47,8 +48,9 @@ Crystal's own tracker is `crystal-design-system/proposals/open-issues.md`. As of
 28 September 2026 it holds D-4, which needs hardware, D-17, a flake that needs
 its next occurrence with the artifact kept, D-21, a hover treatment that is
 Meridian's to rule on, D-25, three findings from this library's surface sweep,
-and D-26, the dock controls and the grouped dock that this library restates
-until Crystal draws them.
+D-26, the dock controls and the grouped dock that this library restates until
+Crystal draws them, and D-27, the two small marks — the count badge and the
+field indicator — that Crystal's recipes do not yet reach.
 
 ---
 
@@ -439,8 +441,24 @@ dock's rim, which was the one property they lacked. Both gaps are filed
 upstream as D-26. `verify:appearance` plants a `.cr-dock` beside every one of
 these; it was red on the previous build in all seven stories.
 
-What remains is the manifest carrying `surface`, one check per surface, and the
-motion bindings.
+**The manifest carries `surface`** (§3.3), with the vocabulary itself beside
+the components and in `llms.txt`, and the build fails closed on a surface the
+vocabulary does not define. **`verify:appearance` has one check per surface**:
+seventeen rows, one component each, planted beside an element wearing the
+surface's class, plus the field, dock and switch blocks above. Two differences
+are named as decisions — the count badge's Haze inset and a bare control that
+kept `border: 0` — and anything else fails. `VERIFY_PLANT_RED=1` sabotages every
+row's fill and all seventeen fail, so none of them is a gate that has only been
+seen green. Writing it found three components wearing nothing: the authored
+bubble now wears `.cr-bubble` (it had restated it "value for value" and differed
+in two values), the app shell wears `.cr-plastic` (it painted the flat canvas
+over the provider's atmosphere) and its destinations wear `.cr-dock`. The third,
+`Indicator`, is R-25. The image comparison's handle wears `.cr-resin`; the
+resizable handle does not, because its 44px target is its `::after`, which
+`.cr-resin` paints. §3.5, deleting `coreVersion.test.ts`, is superseded: the
+file became a floor rather than a reminder, and a floor is still needed.
+
+What remains is the motion bindings (§3.4).
 
 **What changed upstream.** The R-19 sweep stopped where Crystal had no recipe:
 `NavLink` kept a weight of 550 because `.cr-button`'s 750 would destroy it, the
@@ -480,3 +498,40 @@ unmounts the popover as it closes, and holding it for an exit needs
 `AnimatePresence` around React Aria's own overlay lifecycle, which is the one
 piece of this that is not a binding but a structure, and is written up in the
 proposal rather than done in passing.
+
+---
+
+## R-25 · `Indicator` is a colour dot, and Crystal's `.cr-indicator` is a glyph its host decides
+
+*(Opened 28 September 2026, found by the per-surface check.)*
+
+The catalogue names `Indicator` and `Timeline` as the `indicator` surface, and no
+component here wears `.cr-indicator`. Planted beside this library's mark, the two
+differ in ten of twenty-three properties, and not by drift: they are different
+designs.
+
+- **This library's** is a 20px Resin disc, 24px on a field, whose *fill colour*
+  is the state — primary for selection and current, muted for busy, attention
+  for required, danger for invalid — set by a `state` prop.
+- **Crystal's** is a 20px Haze disc with a 1px feathered fill, positioned at its
+  host's top end corner, carrying a *glyph*: ● for current, … for busy, and on a
+  field ○ idle, ● focused, * required, ! invalid. It is shown or hidden by the
+  host's own state — `[aria-current] > .cr-indicator[data-kind=current]`,
+  `[aria-busy=true] > …[data-kind=busy]` — and the selection kind is never shown,
+  because selection is weight.
+
+Crystal's is the better design on this library's own terms: shape rather than
+colour carries the state, and the host's semantics decide the mark rather than a
+prop that can disagree with them. Two things stop adopting it as written:
+
+- Its field glyphs are keyed on `span.cr-field-shell`, and every field shell here
+  is a `div` (a `span` cannot hold the field's block content). Filed as Crystal's
+  D-27.
+- `state="selection"` would render nothing at all, which is correct under
+  Crystal's rule and a breaking change to anyone passing it. The prop should go,
+  not silently draw nothing.
+
+Closing it: wear `.cr-indicator` with `data-kind` from the host's semantics,
+remove the `state` prop's colour vocabulary and `selection`, and take the field
+glyphs once D-27 lets them reach a `div` shell.
+

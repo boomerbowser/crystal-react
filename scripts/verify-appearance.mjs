@@ -1308,6 +1308,98 @@ for (const [id, selector, what] of DISABLED) {
   }
 }
 
+/* ------------------------------------------- one check per Crystal surface
+ *
+ * Crystal 2.2.0 names what every component is made of from a closed vocabulary
+ * (`@crystal-ui/core/surfaces`), and each surface is a class. For one component
+ * of each surface, an element of the same tag wearing the surface's class is
+ * planted beside the component's own, and the two must agree on the recipe's
+ * material — the fill, its image, the diffusion, the rim, the shadow, and both
+ * paint layers. That is the R-19 gate, generalised and kept (R-24 §3.3).
+ *
+ * Covered elsewhere, and not repeated here: `field` (every field in six stories,
+ * above), `dock` (seven strips, above) and `choice` (the switch, above).
+ * Not covered, and said so: `indicator`, whose Crystal recipe this library does
+ * not yet draw — see R-25 — and `none`, which has no material to compare.
+ *
+ * `VERIFY_PLANT_RED=1` sabotages each component's fill before the comparison,
+ * so every row here can be watched failing on demand rather than trusted.
+ */
+{
+  const RED = process.env['VERIFY_PLANT_RED'] === '1';
+  const SURFACES = [
+    // [surface, story, the component's element, the classes Crystal's recipe wears, what to press first]
+    ['plastic', 'application-shell--shell', '[class*="_appShell_"]', 'cr-plastic'],
+    ['frost', 'charts-chart-tooltip--default', '[class*="_tooltip_"]', 'cr-frost'],
+    ['haze', 'data-display-card--default', '[class*="_card_"]', 'cr-haze'],
+    ['resin', 'data-display-image-compare--default', '[class*="_thumb_"]', 'cr-resin'],
+    ['resin-panel', 'overlays-floating-surfaces--window', '[class*="_window_"]', 'cr-resin panel'],
+    ['control', 'actions-button--resin', 'button[class*="_button_"]', 'cr-button'],
+    ['compact', 'data-display-badge--default', '[class*="_badge_"]', 'cr-resin-haze'],
+    ['stone', 'data-display-caption--overlaid', '[class*="_caption_"]', 'cr-stone'],
+    ['mirage', 'overlays-dialog--default', '[class*="cr-mirage"]', 'cr-mirage', 'button'],
+    ['dialog', 'overlays-dialog--default', '[role=dialog]', 'cr-dialog', 'button'],
+    ['status', 'data-display-status-badge--default', '[class*="_statusBadge_"]', 'cr-status'],
+    ['bubble', 'data-display-authored-bubble--default', '[class*="_bubble_"]', 'cr-bubble'],
+    ['table', 'data-display-table--default', '[class*="_shell_"]', 'cr-table-scroll'],
+    ['nav-item', 'navigation-links--destinations', 'a[class*="_navLink_"]:not([aria-current])', 'cr-nav-item'],
+    ['bare', 'data-display-accordion--default', 'button[class*="_trigger_"]', 'cr-bare'],
+    ['drag-handle', 'utilities-draghandle--default', 'button.cr-drag-handle', 'cr-bare cr-drag-handle'],
+    ['native', 'inputs-text-and-choice--choice-family', 'select[class*="_native_"]', ''],
+  ];
+  /* Differences that are decisions, each with where it is recorded. Anything not
+     named here fails. */
+  const ALLOWED = {
+    compact: {
+      '::before inset': 'a 20px count badge fills to its own edge; Crystal\'s 8px inset is a tag\'s (Badge.module.scss, Crystal D-27)',
+    },
+    bare: {
+      borderTopColor: 'a bare control that had `border: 0` keeps it (R-24 §3.2)',
+      borderTopWidth: 'as above',
+    },
+  };
+  const PROPS = ['backgroundColor', 'backgroundImage', 'backdropFilter', 'borderTopColor', 'borderTopWidth', 'boxShadow'];
+  const LAYER = ['content', 'display', 'backgroundColor', 'backgroundImage', 'filter', 'inset', 'boxShadow'];
+  for (const [surface, id, selector, classes, press] of SURFACES) {
+    await open(id, '#storybook-root');
+    if (press) {
+      await page.locator(`#storybook-root ${press}`).first().click();
+      await page.waitForSelector(selector, { timeout: 5000 }).catch(() => {});
+      await page.waitForTimeout(700);
+    }
+    const seen = await page.evaluate(([selector, classes, PROPS, LAYER, RED]) => {
+      const mine = document.querySelector(selector);
+      if (!mine) return null;
+      /* Without the transition, or a button's `transition: background` reports the
+         value it is animating from, and the sabotage reads as no change at all. */
+      if (RED) { mine.style.setProperty('transition', 'none', 'important'); mine.style.setProperty('background-color', 'rgb(255, 0, 0)', 'important'); }
+      const planted = document.createElement(mine.tagName.toLowerCase());
+      if (classes) planted.className = classes;
+      if (mine.tagName === 'BUTTON') planted.type = 'button';
+      mine.parentElement.append(planted);
+      const differs = [];
+      const a = getComputedStyle(mine), b = getComputedStyle(planted);
+      for (const k of PROPS) if (a[k] !== b[k]) differs.push(`${k} ${a[k].slice(0, 70)} (Crystal ${b[k].slice(0, 70)})`);
+      for (const pseudo of ['::before', '::after']) {
+        const x = getComputedStyle(mine, pseudo), y = getComputedStyle(planted, pseudo);
+        const on = (s) => s.content !== 'none' && s.display !== 'none';
+        if (on(x) !== on(y)) { differs.push(`${pseudo} ${on(x) ? 'painted' : 'absent'} (Crystal ${on(y) ? 'painted' : 'absent'})`); continue; }
+        if (!on(x)) continue;
+        for (const k of LAYER) if (x[k] !== y[k]) differs.push(`${pseudo} ${k} ${x[k].slice(0, 50)} (Crystal ${y[k].slice(0, 50)})`);
+      }
+      planted.remove();
+      if (RED) { mine.style.removeProperty('background-color'); mine.style.removeProperty('transition'); }
+      return differs;
+    }, [selector, classes, PROPS, LAYER, RED]);
+    record(`the ${surface} surface: ${id} has the component to compare`, seen !== null, `nothing matched ${selector}`);
+    if (seen) {
+      const allowed = ALLOWED[surface] ?? {};
+      const wrong = seen.filter((one) => !Object.keys(allowed).some((key) => one.startsWith(`${key} `)));
+      record(`the ${surface} surface: the component is Crystal's ${classes || 'element recipe'}`, wrong.length === 0, wrong.join(', '));
+    }
+  }
+}
+
 await browser.close();
 
 console.log(JSON.stringify({

@@ -97,7 +97,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
       {...props}
       ref={ref}
       data-cr-state={isCollapsed ? 'collapsed' : 'expanded'}
-      className={cx(styles['appShell'], isCollapsed ? styles['collapsed'] : undefined, className)}
+      className={cx(styles['appShell'], 'cr-plastic', isCollapsed ? styles['collapsed'] : undefined, className)}
       style={layout}
     >
       {header ? <div className={cx(styles['header'])}>{header}</div> : null}
@@ -121,7 +121,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
       {destinations ? (
         /* Resin, and floating: the one surface in the shell that is above the
            content rather than beside it. */
-        <nav aria-label={destinationsLabel} className={cx(styles['destinations'])}>
+        <nav aria-label={destinationsLabel} className={cx(styles['destinations'], 'cr-dock')}>
           {destinations}
         </nav>
       ) : null}

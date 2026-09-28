@@ -1,48 +1,23 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
-/* AuthoredBubble — Haze, and the content-own pair for the reader's own messages.
+/* AuthoredBubble — Crystal's `.cr-bubble`, worn by the component, with `.own` for
+ * the reader's own messages.
  *
- * Crystal's own `.cr-bubble` is the reference and this follows it value for
- * value: a Haze fill on an isolated paint layer, the content shadow on that
- * layer, and `--cr-haze-own-fill` with `--cr-content-own-text` when the message
- * is the reader's. That own pair is the one place in Crystal where a Haze fill
- * carries a palette colour and stays soft — a conversation is a wall of these,
- * and the solid action colour behind every second message would make the thread
- * unreadable. It is the same reason the *primary button* takes the solid tone and
- * this does not: one emphatic control against many, versus half of everything.
+ * Until 28 September this restated the recipe "value for value" and differed in
+ * two of them — 12/16 padding for Crystal's 14/18, and no 1px edge — which is
+ * what a restatement does. The Haze fill on its own paint layer, the content
+ * shadow, the 6px cut, the content-own pair, and the opaque, reduced-transparency
+ * and forced-colours routes are all the class's now. That own pair is the one
+ * place in Crystal where a Haze fill carries a palette colour and stays soft — a
+ * conversation is a wall of these, and the solid action colour behind every
+ * second message would make the thread unreadable.
  */
 
-$bubble-cut: 6px; /* crystal-allow-literal: core `.cr-bubble`'s tightened corner */
-
-.bubble {
-  @include material.haze-fill(0);
-
-  display: block;
-  padding: $cr-spacing-sm $cr-spacing-md;
-  border-radius: var(--cr-radius);
-  /* The cut, on the side the message came from. Logical, so it mirrors itself. */
-  border-start-start-radius: $bubble-cut;
-  color: var(--cr-text);
-  line-height: var(--cr-text-body-leading);
-}
-
-.bubble::before { box-shadow: var(--cr-shadow-content); }
-
-/* The reader's own message: the other corner, and the content-own pair. */
-.own {
-  border-start-start-radius: var(--cr-radius);
-  border-start-end-radius: $bubble-cut;
-  color: var(--cr-content-own-text);
-}
-
-.own::before { background: var(--cr-haze-own-fill); }
-
-/* In a run, the cut marks where the run starts. */
+/* In a run, the cut marks where the run starts, so the rest of the run is
+   rounded all round. Crystal has no run; this is layout the thread decides. */
 .grouped,
 .grouped.own {
-  border-start-start-radius: var(--cr-radius);
-  border-start-end-radius: var(--cr-radius);
+  border-radius: var(--cr-radius);
 }
 
 .meta {
@@ -74,22 +49,6 @@ $bubble-cut: 6px; /* crystal-allow-literal: core `.cr-bubble`'s tightened corner
 .bubble[data-delivery='failed'] { border: 1px solid var(--cr-danger-ink); }
 .bubble[data-delivery='failed'] .delivery { color: var(--cr-danger-ink); }
 
-:global([data-effects='opaque']) .bubble::before { background: var(--cr-surface); filter: none; }
-:global([data-effects='opaque']) .own::before { background: var(--cr-content-own-base); }
-
-@media (prefers-reduced-transparency: reduce) {
-  .bubble::before { background: var(--cr-surface); filter: none; }
-  .own::before { background: var(--cr-content-own-base); }
-}
-
 @media (forced-colors: active) {
-  .bubble {
-    background: Canvas;
-    color: CanvasText;
-    border: 1px solid CanvasText;
-  }
-
-  .bubble::before { display: none; }
-  .own { color: CanvasText; }
   .time, .delivery { color: CanvasText; }
 }
