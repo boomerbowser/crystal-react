@@ -137,8 +137,15 @@ const PRESET_IDS = new Set(['plastic', 'frost', 'resin', 'haze', 'stone', 'mirag
 /* What a component plays, read from its source. Stated in the manifest because
    "what moves, and when" is the question an assistant most often has to answer
    about a design system, and it is invisible from the type signature. */
+/* catalogue id -> the export that implements it, the inverse of the table above,
+   so \`textarea\` is looked for as \`TextArea\` and not as a \`Textarea\` that does
+   not exist — which reported every text area as playing nothing. */
+const EXPORT_FOR = Object.fromEntries(Object.entries(NAMED_DIFFERENTLY)
+  .flatMap(([name, ids]) => (Array.isArray(ids) ? ids : [ids]).map((id) => [id, name])));
+
 function motionUsed(componentId) {
-  const pascal = componentId.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join('');
+  const pascal = EXPORT_FOR[componentId]
+    ?? componentId.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join('');
   /* A component may live in a neighbour's directory — Group is in Stack's — so
      the source is found by looking for the directory that exports it rather than
      by assuming one is named after it. */
