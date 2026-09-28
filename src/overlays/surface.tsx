@@ -2,10 +2,20 @@
 
 /* Which material an overlay lands on.
  *
- * **Resin never contains Resin.** A menu is Resin because it floats above the
- * page; the same menu opened inside a dialog is floating above Haze, and Resin
- * over Resin — or Resin inside the frame of something already floating — is the
- * one arrangement the contract forbids outright.
+ * **A transient overlay is Frost.** Meridian moved tooltip, popover, menu and
+ * toast to Frost on 17 September 2026 (R15e in Crystal's request log), and the
+ * documentation site has rendered them so since: a surface that opens over
+ * content is an intermediate panel, not a compact control, and its reading
+ * content sits on Haze inside it. This library had them as Resin, from a reading
+ * of the specification that predated the decision — Crystal 2.2.0 corrects the
+ * chapters and the catalogue entries that still said Resin.
+ *
+ * **Independently blurred panes do not nest.** A menu is Frost because it opens
+ * over the page; the same menu opened inside a dialog or a drawer is opening
+ * over a surface that is already a pane, and two panes of diffused glass stacked
+ * read as neither. So once something Frost, Resin or Haze is between the overlay
+ * and the page, the overlay recesses into Haze instead — the content fill inside
+ * the frame, which is what a menu inside a panel is.
  *
  * The DOM cannot answer this, because every overlay is portalled to a container
  * on `body` and loses its nesting on the way. React context is not portalled: it
@@ -13,15 +23,14 @@
  * inside what. So a `Dialog` or a `Drawer` declares the material it presents, and
  * an overlay rendered anywhere inside it — however far away it ends up in the
  * document — reads that and steps down.
- *
- * Stepping *down* rather than up is deliberate. Haze inside Resin reads as a
- * recess, which is what a menu inside a floating panel is; Resin inside Resin
- * reads as two panes of the same glass stacked, which reads as neither.
  */
 import { createContext, useContext, type ReactNode } from 'react';
 
 /** The materials an overlay can be asked to sit on. */
 export type CrystalSurface = 'page' | 'frost' | 'resin' | 'haze';
+
+/** The materials an overlay can be. */
+export type CrystalOverlayMaterial = 'frost' | 'haze';
 
 const SurfaceContext = createContext<CrystalSurface>('page');
 
@@ -36,16 +45,15 @@ export function SurfaceProvider({ surface, children }: {
 /**
  * The material an overlay opening here should use.
  *
- * On the page or on Frost, an overlay is the floating control plane: Resin. Once
- * something Resin or Haze is already between it and the page, it recesses into
- * Haze instead.
+ * On the page an overlay is a transient panel: Frost. Once something Frost,
+ * Resin or Haze is already between it and the page, it recesses into Haze.
  */
-export function useOverlayMaterial(): 'resin' | 'haze' {
+export function useOverlayMaterial(): CrystalOverlayMaterial {
   const beneath = useContext(SurfaceContext);
-  return beneath === 'resin' || beneath === 'haze' ? 'haze' : 'resin';
+  return beneath === 'page' ? 'frost' : 'haze';
 }
 
 /** The attribute an overlay's stylesheet keys on. Spread onto the surface. */
-export function overlayMaterialProps(material: 'resin' | 'haze'): { 'data-cr-overlay': string } {
+export function overlayMaterialProps(material: CrystalOverlayMaterial): { 'data-cr-overlay': string } {
   return { 'data-cr-overlay': material };
 }

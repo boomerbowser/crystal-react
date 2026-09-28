@@ -51,6 +51,7 @@ import {
   type Key,
 } from 'react-aria-components';
 import { useMotion } from '../../motion/useMotion.js';
+import { usePresetMotion } from '../../motion/usePresetMotion.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { cx } from '../../styles/cx.js';
 import styles from './CommandPalette.module.scss';
@@ -130,6 +131,9 @@ export function CommandPalette({
   const groups = useMemo(() => groupCommands(commands), [commands]);
   /* The recipe scales the whole palette, so it plays on the surface. */
   const [scope, play] = useMotion();
+  /* The catalogue puts the palette on a Mirage scrim, and Mirage washes in and
+     withdraws — Crystal's `mirage` and `mirage-out`, from the preset module. */
+  const wash = usePresetMotion('mirage', 'mirage-out', { active: props.isOpen === true });
 
   return (
     <AnimatePresence>
@@ -138,9 +142,7 @@ export function CommandPalette({
           {...props}
           isOpen
           className={cx(styles['scrim'])}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          {...wash}
         >
           <Modal className={cx(styles['holder'])}>
             <AriaDialog

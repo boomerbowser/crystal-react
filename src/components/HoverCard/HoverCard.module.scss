@@ -8,10 +8,11 @@
   max-inline-size: $cr-layout-sidebar-width;
 }
 
-/* Resin from the page; Haze once something Resin or Haze is already between it
-   and the page. The attribute is set in React because the DOM cannot answer
-   the question — the card is portalled and loses its nesting on the way. */
-.card[data-cr-overlay='resin'] { @include material.resin; }
+/* Frost from the page — a transient overlay is Frost (Crystal R15e); Haze once
+   something Frost, Resin or Haze is already between it and the page. The
+   attribute is set in React because the DOM cannot answer the question — the
+   card is portalled and loses its nesting on the way. */
+.card[data-cr-overlay='frost'] { @include material.frost; }
 .card[data-cr-overlay='haze'] {
   position: relative;
   isolation: isolate;
@@ -26,7 +27,7 @@
   color: var(--cr-text);
 }
 
-@include material.opaque-fallback(".card[data-cr-overlay='resin']");
+@include material.opaque-fallback(".card[data-cr-overlay='frost']");
 
 @media (forced-colors: active) {
   .card { background: Canvas; border-color: CanvasText; backdrop-filter: none; }

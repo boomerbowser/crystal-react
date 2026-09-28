@@ -18,7 +18,7 @@
  * least one" belongs to the set, and attaching it to the first checkbox makes it
  * a message about that checkbox.
  */
-import { forwardRef, type ReactNode } from 'react';
+import { forwardRef, useEffect, useRef, type ReactNode } from 'react';
 import {
   Checkbox as AriaCheckbox, CheckboxGroup as AriaCheckboxGroup,
   Radio as AriaRadio, RadioGroup as AriaRadioGroup,
@@ -29,9 +29,34 @@ import {
   type RadioGroupProps as AriaRadioGroupProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
 import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import { FieldShell } from '../FormField/FieldShell.js';
 import styles from './Checkbox.module.scss';
+
+/* Plays `check` when the value becomes true and `check-off` when it returns to
+ * false — Crystal's iris opening and closing toward the same point. Bound to the
+ * value React Aria resolved rather than to a click, so a checkbox changed by the
+ * keyboard, by a form reset or by a server response animates the same way one
+ * changed by hand does; and undefined first, so a box that mounts already
+ * checked does not animate, because that state was never entered.
+ *
+ * The catalogue assigned both recipes to the checkbox and the radio from 2.0,
+ * and R15h in Crystal's request log recorded that the web preview had `check`
+ * "wired to nothing". This library shipped the same way until now. */
+function ChoiceMotion({ isSelected, play }: {
+  isSelected: boolean;
+  play: ReturnType<typeof useMotion>[1];
+}): null {
+  const previous = useRef<boolean | undefined>(undefined);
+  useEffect(() => {
+    if (previous.current !== undefined && previous.current !== isSelected) {
+      void play(isSelected ? 'check' : 'check-off');
+    }
+    previous.current = isSelected;
+  }, [isSelected, play]);
+  return null;
+}
 
 const CheckMark = (
   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" className={cx(styles['mark'])}>
@@ -54,16 +79,19 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(function Che
   { children, className, ...props },
   ref,
 ) {
+  /* The recipe plays on the box, which is the indicator: the label stays still. */
+  const [scope, play] = useMotion();
   return (
     <AriaCheckbox {...props} ref={ref} className={cx(styles['choice'], className)}>
-      {({ isIndeterminate }) => (
+      {({ isIndeterminate, isSelected }) => (
         <>
-          <span className={cx(styles['box'])}>
+          <span ref={scope as never} className={cx(styles['box'])}>
             {/* Driven by React Aria's state rather than by a class, so the drawn
                 mark and the announced one cannot disagree. */}
             {isIndeterminate ? DashMark : CheckMark}
           </span>
           <span>{children}</span>
+          <ChoiceMotion isSelected={isSelected} play={play} />
         </>
       )}
     </AriaCheckbox>
@@ -79,12 +107,18 @@ export const Radio = forwardRef<HTMLLabelElement, RadioProps>(function Radio(
   { children, className, ...props },
   ref,
 ) {
+  const [scope, play] = useMotion();
   return (
     <AriaRadio {...props} ref={ref} className={cx(styles['choice'], className)}>
-      <span className={cx(styles['box'], styles['circle'])}>
-        <span className={cx(styles['dot'])} />
-      </span>
-      <span>{children}</span>
+      {({ isSelected }) => (
+        <>
+          <span ref={scope as never} className={cx(styles['box'], styles['circle'])}>
+            <span className={cx(styles['dot'])} />
+          </span>
+          <span>{children}</span>
+          <ChoiceMotion isSelected={isSelected} play={play} />
+        </>
+      )}
     </AriaRadio>
   );
 });

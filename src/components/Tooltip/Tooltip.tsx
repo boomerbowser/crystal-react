@@ -20,6 +20,8 @@ import {
   type TooltipProps as AriaTooltipProps, type TooltipTriggerComponentProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { Arrival } from '../../motion/Arrival.js';
 import { OverlayArrow } from '../OverlayArrow/OverlayArrow.js';
 import styles from './Tooltip.module.scss';
 
@@ -32,15 +34,21 @@ export interface TooltipProps extends Omit<AriaTooltipProps, 'className' | 'chil
 export function Tooltip({
   hasArrow = true, children, className, ...props
 }: TooltipProps): React.JSX.Element {
+  /* `tooltip-in` on the mount that is the opening; `tooltip-out` is owed and not
+     yet played, for the reason given in Menu. */
+  const [scope, play] = useMotion();
   return (
     <AriaTooltip
       {...props}
-      /* Stone, always — a tooltip is a protected label rather than a surface
-         something happens on, and it does not step down inside a dialog because
-         it is not competing with the dialog for depth. */
-      data-cr-overlay="haze"
+      ref={scope as never}
+      /* Frost, always — a transient overlay is Frost (Crystal R15e), and a
+         tooltip does not step down inside a dialog because it is not competing
+         with the dialog for depth: it is a small panel that lands where the
+         pointer is, above whatever is there. */
+      data-cr-overlay="frost"
       className={cx(styles['tooltip'], className)}
     >
+      <Arrival play={play} recipe="tooltip-in" />
       {hasArrow ? <OverlayArrow /> : null}
       {children}
     </AriaTooltip>

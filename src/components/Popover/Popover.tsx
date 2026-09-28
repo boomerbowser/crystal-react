@@ -6,10 +6,11 @@
  * the flipping when there is no room, the dismissal and the focus behaviour;
  * Crystal owns which material it is made of, and that is the interesting part.
  *
- * **Resin never contains Resin.** A popover opened from the page floats above it
- * and is Resin. The same popover opened inside a dialog is floating above Haze,
- * and a second pane of the same glass reads as neither pane — so it recesses into
- * Haze instead. The decision is made in React because the DOM cannot make it:
+ * **A transient overlay is Frost** (Crystal R15e). A popover opened from the
+ * page is a panel that opens over content, and it is Frost. The same popover
+ * opened inside a dialog or a drawer is opening over a surface that is already a
+ * pane, and two panes of diffused glass stacked read as neither — so it recesses
+ * into Haze instead. The decision is made in React because the DOM cannot make it:
  * every overlay is portalled to a container on `body` and loses its nesting on
  * the way there. See `src/overlays/surface.tsx`.
  */
@@ -19,6 +20,8 @@ import {
   type PopoverProps as AriaPopoverProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { Arrival } from '../../motion/Arrival.js';
 import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps } from '../../overlays/surface.js';
 import { OverlayArrow } from '../OverlayArrow/OverlayArrow.js';
 import styles from './Popover.module.scss';
@@ -36,9 +39,13 @@ export function Popover({
   label, hasArrow = false, children, className, ...props
 }: PopoverProps): React.JSX.Element {
   const material = useOverlayMaterial();
+  /* `popover-in` on the mount that is the opening; `popover-out` is owed and not
+     yet played, for the reason given in Menu. */
+  const [scope, play] = useMotion();
 
   return (
-    <AriaPopover {...props} className={cx(styles['popover'], className)} {...overlayMaterialProps(material)}>
+    <AriaPopover {...props} ref={scope as never} className={cx(styles['popover'], className)} {...overlayMaterialProps(material)}>
+      <Arrival play={play} recipe="popover-in" />
       {hasArrow ? <OverlayArrow /> : null}
       {/* A `Dialog` rather than a bare div, because React Aria puts the focus
           behaviour there: content a person can reach has to be reachable and has

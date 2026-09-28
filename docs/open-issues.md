@@ -3,7 +3,11 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Four entries, and none is ordinary work.**
+**Four entries, and none is ordinary work — plus R-24, which is ordinary work
+waiting on a release.** R-24 is the adoption of Crystal 2.2.0's component recipes:
+the four surfaces this library rebuilt locally are published upstream now, and
+the day they are installed here, `src/styles/coreVersion.test.ts` fails and the
+migration in `docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md` runs.
 
 **R-20 and R-23 closed on 24 September 2026**, when `@crystal-ui/core@2.1.0` was
 published and this library's dependency moved to `^2.1.0`. Both were designed to
@@ -464,3 +468,52 @@ typable numeric field whose bounds are announced — or Crystal states that the
 role is required and accepts what it costs on VoiceOver. The first is very
 likely right, but it is a change to a published specification, and this library
 does not get to make one by shipping something else and saying nothing.
+
+## R-24 · Crystal 2.2.0 publishes the recipes this library restates, and the sweep's second half is due when it lands
+
+*(Opened 28 September 2026, with the proposal in
+`docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md`. Blocked on
+`@crystal-ui/core@2.2.0` being published and installed here.)*
+
+**What changed upstream.** The R-19 sweep stopped where Crystal had no recipe:
+`NavLink` kept a weight of 550 because `.cr-button`'s 750 would destroy it, the
+nav rail item and the drag handle had nothing to wear, eighteen controls took a
+local `bare-control` mixin because `.cr-button.quiet` is not a bare control, and
+`FloatingWindow` and `MediaControls` kept `material.resin` on their shells. Those
+were the recipes "to author in core, not classes to wear here". Crystal 2.2.0
+authors them — `.cr-nav-item` (and `.stacked`), `.cr-bare`, `.cr-drag-handle`,
+`.cr-resin.panel`, the native switch — and, more than that, names every
+component's **surface** from a closed vocabulary (`@crystal-ui/core/surfaces`),
+so what each component is made of is now data this library can be checked
+against rather than prose it interprets.
+
+**What this library does on the day.** Phase B of the proposal: each component
+wears Crystal's class and deletes its local copy, measured the way R-19 was —
+plant Crystal's element beside the library's, diff computed style to zero, then
+plant it red. `bare-control` goes; `field.shell`'s hand-written recipe goes;
+`NavLink` and the rail item wear `cr-nav-item`; `DragHandle` and `Resizable`
+wear `cr-drag-handle`; `FloatingWindow` and `MediaControls` wear `cr-resin panel`;
+`Switch` wears the native switch recipe or proves its own equal to it. The
+component manifest gains each component's `surface`, read from the catalogue,
+and `verify:appearance` gains one check per surface.
+
+**Why it cannot start now.** This library resolves `@crystal-ui/core` from npm,
+not from the local checkout. A recipe authored in core is invisible here until
+Meridian publishes, and wearing a class the installed stylesheet does not define
+leaves a component unpainted — the mistake R-19 warned about. So the guard is the
+R-20 pattern: `src/styles/coreVersion.test.ts` passes on 2.1.x and fails the
+moment 2.2.0 or later is installed, or the moment `.cr-bare` appears in the
+installed stylesheet, whichever comes first.
+
+**What is not blocked, and shipped alongside this entry.** Phase A of the
+proposal — everything the installed 2.1.0 already publishes and this library was
+not using: transient overlays moved to Frost (R15e, which the specification had
+not caught up with either); the dialog, drawer and command palette scrims play
+Crystal's `mirage` and `mirage-out` and the dialog surface plays `dismiss`, none
+of which had ever played; checkbox and radio play `check` and `check-off`; menu,
+popover, tooltip and hover card play their arrivals. The exits those four owe
+(`menu-out`, `popover-out`, `tooltip-out`) are still not played — React Aria
+unmounts the popover as it closes, and holding it for an exit needs
+`AnimatePresence` around React Aria's own overlay lifecycle, which is the one
+piece of this that is not a binding but a structure, and is written up in the
+proposal rather than done in passing.

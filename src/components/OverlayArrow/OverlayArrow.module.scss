@@ -26,14 +26,16 @@
 }
 
 /* The surface's own shadow, on the arrow too. Matching the material exactly is
-   not enough on its own: Resin is a 20% fill with a white rim, and what makes the
+   not enough on its own: Frost is a translucent fill with a rim, and what makes the
    surface legible against the page is the float shadow around it. A 14px square
    with the fill and the rim and no shadow is invisible on a pale page — which is
    what this looked like before, a correctly placed arrow nobody could see. */
-.arrow[data-cr-overlay='resin'] {
-  background: var(--cr-resin-fill);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  box-shadow: var(--cr-shadow-float);
+/* Frost, like the surface it points from — a transient overlay is Frost (Crystal
+   R15e), so the arrow takes the Frost fill, blur and panel shadow. */
+.arrow[data-cr-overlay='frost'] {
+  background: var(--cr-frost-fill);
+  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
+  box-shadow: var(--cr-shadow-panel);
 }
 
 .arrow[data-cr-overlay='haze'] {

@@ -24,6 +24,8 @@ import {
   type MenuProps as AriaMenuProps, type MenuTriggerProps as AriaMenuTriggerProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { Arrival } from '../../motion/Arrival.js';
 import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps } from '../../overlays/surface.js';
 import styles from './Menu.module.scss';
 
@@ -51,13 +53,21 @@ export function Menu<T extends object>({
   label, triggerRef, className, ...props
 }: MenuProps<T>): React.JSX.Element {
   const material = useOverlayMaterial();
+  /* The catalogue's `menu-in`, on the surface, on the mount that is the opening.
+     `menu-out` is owed too and is not yet played: React Aria unmounts the
+     popover as it closes, and holding it for an exit needs `AnimatePresence`
+     around React Aria's own overlay lifecycle — recorded in
+     docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md. */
+  const [scope, play] = useMotion();
 
   return (
     <Popover
       {...(triggerRef ? { triggerRef } : {})}
+      ref={scope as never}
       className={cx(styles['popover'])}
       {...overlayMaterialProps(material)}
     >
+      <Arrival play={play} recipe="menu-in" />
       {/* A submenu opened from here is opening on top of this surface. */}
       <SurfaceProvider surface={material}>
         <AriaMenu

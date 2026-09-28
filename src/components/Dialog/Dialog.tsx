@@ -33,8 +33,9 @@ import {
   Dialog as AriaDialog,
   Heading,
   type ModalOverlayProps,
+  type DialogProps as AriaDialogProps,
 } from 'react-aria-components';
-import { usePreset } from '../../motion/usePreset.js';
+import { usePresetMotion } from '../../motion/usePresetMotion.js';
 import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { cx } from '../../styles/cx.js';
 import { SurfaceProvider } from '../../overlays/surface.js';
@@ -63,13 +64,22 @@ type OverlayProps = Omit<ModalOverlayProps, 'onAnimationStart' | 'onAnimationEnd
 const MotionOverlay = motion.create(
   ModalOverlay as React.ForwardRefExoticComponent<OverlayProps & React.RefAttributes<HTMLDivElement>>,
 );
+type SurfaceProps = Omit<AriaDialogProps, 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'>;
+const MotionDialog = motion.create(
+  AriaDialog as React.ForwardRefExoticComponent<SurfaceProps & React.RefAttributes<HTMLElement>>,
+);
 
 export function Dialog({ title, children, className, ...props }: DialogProps): React.JSX.Element {
   const titleId = useId();
-  /* `anchored` is true because a dialog is fixed to the page rather than floating
-     above it: Crystal's dismissal fades an anchored surface and drops an
-     unanchored one. */
-  const [scope] = usePreset({ anchored: true });
+  /* The catalogue gives a dialog three movements and until now it played none of
+     them: `mirage` and `mirage-out` are the scrim's wash — the chromatic
+     diffusion revealing from an edge and withdrawing toward the opposite one —
+     and `dismiss` is the surface's departure. A dialog is anchored to the page
+     rather than floating above it, so its dismissal fades rather than falls. The
+     Haze surface has no arrival of its own: its signature is paint, not
+     movement, and the scrim's reveal is what brings it in. */
+  const wash = usePresetMotion('mirage', 'mirage-out', { active: props.isOpen === true });
+  const dismissal = usePresetMotion(null, 'dismiss', { anchored: true, active: props.isOpen === true });
 
   return (
     <AnimatePresence>
@@ -78,17 +88,13 @@ export function Dialog({ title, children, className, ...props }: DialogProps): R
           {...props}
           isOpen
           className={cx(styles['scrim'])}
-          /* The scrim's own wash. Opacity only — a backdrop-filtered surface is
-             expensive enough to composite without animating its geometry too. */
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          {...wash}
         >
           <Modal>
-            <AriaDialog
-              ref={scope as never}
+            <MotionDialog
               aria-labelledby={titleId}
               className={cx(styles['dialog'], className)}
+              {...dismissal}
             >
               <Heading slot="title" id={titleId} className={cx(styles['title'])}>
                 {title}
@@ -103,7 +109,7 @@ export function Dialog({ title, children, className, ...props }: DialogProps): R
                     portalled to `body` and loses its nesting on the way. */}
                 <SurfaceProvider surface="haze">{children}</SurfaceProvider>
               </ScrollArea>
-            </AriaDialog>
+            </MotionDialog>
           </Modal>
         </MotionOverlay>
       ) : null}

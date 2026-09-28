@@ -104,12 +104,12 @@ describe('Menu', () => {
     expect(nested?.getAttribute('data-cr-overlay')).toBe('haze');
   });
 
-  it('is Resin on the page', async () => {
+  it('is Frost on the page: a transient overlay is a panel, not a control (R15e)', async () => {
     renderWithCrystal(Simple);
     await userEvent.click(screen.getByRole('button', { name: 'Actions' }));
     expect(
       screen.getByRole('menu').closest('[data-cr-overlay]')?.getAttribute('data-cr-overlay'),
-    ).toBe('resin');
+    ).toBe('frost');
   });
 
   it('has no axe violations when open', async () => {

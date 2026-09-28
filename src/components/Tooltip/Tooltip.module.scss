@@ -1,11 +1,17 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/overlay' as overlay;
 
-/* A tooltip is small and it is read at a glance, so it takes Stone — the
-   protected label backing — rather than an open material. Stone is what Crystal
-   uses when a label has to stay legible over whatever happens to be behind it,
-   and a tooltip is exactly that case: it lands wherever the pointer is.
- */
+/* A tooltip is Frost, like every transient overlay (Crystal R15e; the catalogue's
+   `tooltip` entry as of 2.2.0). It used to take Stone here, on the reasoning
+   that a label over an unknown backdrop wants the protected backing — but a
+   tooltip is not a label *on* something, it is a small panel that opens *over*
+   something, and Meridian moved it to Frost with the menus and popovers. The
+   Stone recipe it carried also used `--cr-stone-feather`, a 1.95px paint feather,
+   as a backdrop blur radius, which is neither Stone nor Frost.
+
+   The text sits directly on the panel: at caption size over a 40px-diffused
+   Frost fill the contrast is the panel's own, and a Haze pad inside a tooltip
+   would be a well inside a well. */
 .tooltip {
   @include overlay.surface;
   max-inline-size: $cr-overlay-tooltip-max-width;
@@ -13,9 +19,6 @@
   font-size: var(--cr-text-caption-size);
   line-height: var(--cr-text-caption-leading);
   font-weight: 650;
-  background: var(--cr-stone-fill);
-  backdrop-filter: blur(var(--cr-stone-feather)) saturate(var(--cr-resin-saturation));
-  border-color: var(--cr-edge);
 }
 
 @include overlay.surface-fallbacks('.tooltip');

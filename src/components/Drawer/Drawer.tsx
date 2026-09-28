@@ -45,6 +45,7 @@ import {
 } from 'react-aria-components';
 import { useLocale } from 'react-aria';
 import { useMotion } from '../../motion/useMotion.js';
+import { usePresetMotion } from '../../motion/usePresetMotion.js';
 import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { CloseButton } from '../IconButton/IconButton.js';
 import { SurfaceProvider } from '../../overlays/surface.js';
@@ -160,6 +161,10 @@ function ModalDrawer({
      recipe with its own fitted spring, not a material's generic arrival, so it
      is `useMotion` rather than `usePreset`. */
   const [scope, play] = useMotion({ reorient });
+  /* The scrim is Mirage, and Mirage has a wash: the catalogue's `mirage` and
+     `mirage-out`, computed by Crystal's preset module rather than a hand-written
+     fade. It was an opacity ramp here until the drawer's own motion was audited. */
+  const wash = usePresetMotion('mirage', 'mirage-out', { active: props.isOpen === true });
 
   return (
     <AnimatePresence>
@@ -168,9 +173,7 @@ function ModalDrawer({
           {...props}
           isOpen
           className={cx(styles['scrim'])}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          {...wash}
         >
           <Modal className={cx(styles['modalHolder'], styles[placement])}>
             <AriaDialog

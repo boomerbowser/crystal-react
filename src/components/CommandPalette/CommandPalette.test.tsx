@@ -3,6 +3,12 @@ import { useState } from 'react';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen, userEvent, waitFor, within } from '../../test/render.js';
 import { CommandPalette, groupCommands, type Command } from './CommandPalette.js';
+
+/* A closing scrim withdraws on Crystal's 650ms departure clock (`mirage-out`),
+   and `AnimatePresence` unmounts only after it. Testing Library waits one second
+   by default, which the hand-written opacity fade used to fit inside and the
+   real departure does not — so the exits wait for the departure, not for luck. */
+const DEPARTURE = 2500;
 import { Button } from '../Button/Button.js';
 
 const commands: Command[] = [
@@ -173,8 +179,8 @@ describe('CommandPalette', () => {
     await user.click(opener);
     await screen.findByRole('dialog');
     await user.keyboard('{Escape}');
-    await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); });
-    await waitFor(() => { expect(opener).toHaveFocus(); });
+    await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); }, { timeout: DEPARTURE });
+    await waitFor(() => { expect(opener).toHaveFocus(); }, { timeout: DEPARTURE });
   });
 });
 

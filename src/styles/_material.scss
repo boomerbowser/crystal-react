@@ -130,6 +130,13 @@
  * that has been quietened. None of them is a Resin control. Each sits on the
  * surface it is already on.
  *
+ * **Crystal 2.2.0 publishes this recipe — `.cr-bare`, the `bare` surface in its
+ * vocabulary — authored from the measurement below.** The day the installed core
+ * is 2.2.0 or later, every caller of this mixin wears `cr-bare` instead and the
+ * mixin goes; `docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md` is the
+ * migration and R-24 in `docs/open-issues.md` carries the test that fails when
+ * that day comes.
+ *
  * The note above is right that Crystal's rule applies to every control it
  * styles, and the part that was never followed through is what that means for a
  * control Crystal does not style: the selector is `:is(button, …)`, so a

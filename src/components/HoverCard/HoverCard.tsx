@@ -25,13 +25,16 @@
  * its own name, and this supplements it. A card is a preview of a destination,
  * not the destination's label.
  *
- * **Resin never contains Resin.** Opened from the page it is Resin; opened
- * inside a dialog it recesses to Haze, decided in React because the DOM cannot
- * decide it — the card is portalled and loses its nesting on the way.
+ * **A transient overlay is Frost** (Crystal R15e). Opened from the page it is
+ * Frost; opened inside a dialog or a drawer it recesses to Haze, decided in React
+ * because the DOM cannot decide it — the card is portalled and loses its nesting
+ * on the way.
  */
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Popover as AriaPopover, Dialog, DialogTrigger } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { Arrival } from '../../motion/Arrival.js';
 import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps } from '../../overlays/surface.js';
 import styles from './HoverCard.module.scss';
 
@@ -52,6 +55,9 @@ export function HoverCard({
   trigger, label, children, openDelay = 500, closeDelay = 300, className,
 }: HoverCardProps): React.JSX.Element {
   const material = useOverlayMaterial();
+  /* A hover card is a popover that opens on intent: `popover-in`, as the
+     catalogue assigns it, on the mount that is the opening. */
+  const [scope, play] = useMotion();
   const [isOpen, setOpen] = useState(false);
   /* How many of {trigger, card} the pointer or focus is currently within.
      A boolean would close the card the instant the pointer crossed the gap
@@ -88,8 +94,10 @@ export function HoverCard({
       <span className={cx(styles['trigger'])} {...intent}>{trigger}</span>
       <AriaPopover
         {...overlayMaterialProps(material)}
+        ref={scope as never}
         className={cx(styles['card'], className)}
       >
+        <Arrival play={play} recipe="popover-in" />
         <SurfaceProvider surface={material}>
           {/* The card is hoverable: the pointer travelling into it must not
               close it, which is what the counter is for. */}

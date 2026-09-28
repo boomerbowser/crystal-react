@@ -3,6 +3,12 @@ import { useState } from 'react';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen, userEvent, waitFor, within } from '../../test/render.js';
 import { Drawer, reorientationFor } from './Drawer.js';
+
+/* A closing scrim withdraws on Crystal's 650ms departure clock (`mirage-out`),
+   and `AnimatePresence` unmounts only after it. Testing Library waits one second
+   by default, which the hand-written opacity fade used to fit inside and the
+   real departure does not — so the exits wait for the departure, not for luck. */
+const DEPARTURE = 2500;
 import { Button } from '../Button/Button.js';
 
 function Harness({ isModal }: { isModal: boolean }): React.JSX.Element {
@@ -86,7 +92,7 @@ describe('Drawer', () => {
     await user.click(screen.getByRole('button', { name: 'Open' }));
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
     await user.keyboard('{Escape}');
-    await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); });
+    await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); }, { timeout: DEPARTURE });
   });
 
   /* The other half of the rule, and the one usually missed. A non-modal drawer
@@ -148,7 +154,7 @@ describe('Drawer', () => {
     await user.click(screen.getByRole('button', { name: 'Open' }));
     const dialog = await screen.findByRole('dialog');
     await user.click(within(dialog).getByRole('button', { name: /Close/ }));
-    await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); });
+    await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); }, { timeout: DEPARTURE });
   });
 
   it('names its close control after what it closes', () => {
@@ -168,7 +174,7 @@ describe('Drawer', () => {
     await user.click(opener);
     await screen.findByRole('dialog');
     await user.keyboard('{Escape}');
-    await waitFor(() => { expect(opener).toHaveFocus(); });
+    await waitFor(() => { expect(opener).toHaveFocus(); }, { timeout: DEPARTURE });
   });
 
   it('calls onOpenChange when it closes', async () => {

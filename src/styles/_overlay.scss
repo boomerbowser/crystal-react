@@ -6,9 +6,12 @@
  * cannot tell: an overlay is portalled to `body` and loses its nesting on the
  * way. `data-cr-overlay` is what the decision writes down.
  *
- * Resin never contains Resin. On the page or on Frost, an overlay is the floating
- * control plane; once something Resin or Haze is already between it and the page,
- * it recesses into Haze instead.
+ * A transient overlay is Frost (Crystal R15e; the `frost` surface in Crystal's
+ * vocabulary). Once something Frost, Resin or Haze is already between it and the
+ * page, it recesses into Haze instead — independently blurred panes do not nest.
+ * Until 2.2.0 of the design system the chapters still said `.cr-resin-haze` for
+ * menus and this library painted them Resin; Meridian had already decided
+ * otherwise, and the documentation site has rendered Frost since 17 September.
  */
 @mixin surface {
   position: relative;
@@ -16,11 +19,11 @@
   border-radius: var(--cr-radius);
   border: 1px solid var(--cr-rim);
   color: var(--cr-text);
-  box-shadow: var(--cr-shadow-float);
+  box-shadow: var(--cr-shadow-panel);
 
-  &[data-cr-overlay='resin'] {
-    background: var(--cr-resin-fill);
-    backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  &[data-cr-overlay='frost'] {
+    background: var(--cr-frost-fill);
+    backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
   }
 
   /* Recessed rather than floating: the feathered content fill, and no lift,

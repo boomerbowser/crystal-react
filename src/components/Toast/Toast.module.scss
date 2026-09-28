@@ -23,9 +23,12 @@
   max-inline-size: min(92vw, 46ch);
 }
 
-/* "Resin with Haze reading fill and the clearest floating shadow." */
+/* "Frost panel with Haze reading fill and the panel shadow (R15e)." A toast
+   opens over content, so it is a transient panel like a menu or a popover, not a
+   Resin control — Meridian moved it to Frost with the others, and the catalogue
+   says so as of Crystal 2.2.0. */
 .toast {
-  @include material.resin;
+  @include material.frost;
   @include material.haze-fill;
 
   display: flex;

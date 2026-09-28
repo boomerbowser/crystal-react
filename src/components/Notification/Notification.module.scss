@@ -2,9 +2,10 @@
 @use '../../styles/material';
 @use '../../styles/status';
 
-/* "Resin surface with Haze reading fill." */
+/* "Frost panel with Haze reading fill (R15e)." Like the toast: a transient panel
+   over content, not a Resin control. */
 .notification {
-  @include material.resin;
+  @include material.frost;
   @include material.haze-fill;
 
   display: flex;
