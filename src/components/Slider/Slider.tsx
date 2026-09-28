@@ -24,6 +24,7 @@ import {
   type SliderProps as AriaSliderProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { SteppedValue } from './SteppedValue.js';
 import styles from './Slider.module.scss';
 
 export interface SliderProps extends Omit<AriaSliderProps<number>, 'className' | 'style' | 'children'> {
@@ -97,7 +98,7 @@ export function Slider({
           /* The same label React Aria puts in `aria-valuetext`, so the two cannot
              disagree. */
           <SliderOutput className={cx(styles['output'])}>
-            {({ state }) => state.getThumbValueLabel(0)}
+            {({ state }) => <SteppedValue value={state.getThumbValueLabel(0)} />}
           </SliderOutput>
         )}
       </div>
@@ -145,7 +146,7 @@ export function RangeSlider({
       <div className={cx(styles['header'])}>
         <Label className={cx(styles['label'])}>{label}</Label>
         <SliderOutput className={cx(styles['output'])}>
-          {({ state }) => `${state.getThumbValueLabel(0)} – ${state.getThumbValueLabel(1)}`}
+          {({ state }) => <SteppedValue value={`${state.getThumbValueLabel(0)} – ${state.getThumbValueLabel(1)}`} />}
         </SliderOutput>
       </div>
       <SliderTrack className={cx(styles['track'])}>

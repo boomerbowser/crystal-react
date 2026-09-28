@@ -10,6 +10,9 @@
  */
 
 .trend {
+  /* Positioned and isolated, for the `highlight` layer under a changed trend. */
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   gap: $cr-spacing-2xs;

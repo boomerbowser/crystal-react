@@ -16,6 +16,7 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { TrendIndicator, type TrendDirection } from '../TrendIndicator/TrendIndicator.js';
 import { cx } from '../../styles/cx.js';
+import { ChangeHighlight } from '../../feedback/ChangeHighlight.js';
 import styles from './Statistic.module.scss';
 
 /** Which way the trend went. Crystal's own three, from `TrendIndicator`. */
@@ -50,6 +51,9 @@ export const Statistic = forwardRef<HTMLElement, StatisticProps>(function Statis
         {/* The figure is replaced, not hidden: a box that empties while it loads
             is a box that changes height, and a row of statistics would reflow. */}
         {loading ? <span aria-hidden="true" className={styles['placeholder']} /> : value}
+        {/* \`highlight\` when the figure is replaced by a new one — not when it
+            first arrives, and not when loading ends, which is arrival. */}
+        {loading ? null : <ChangeHighlight />}
         {unit === undefined ? null : <span className={styles['unit']}>{unit}</span>}
       </span>
       {/* The trend is `TrendIndicator`, not a second copy of it. The rule it

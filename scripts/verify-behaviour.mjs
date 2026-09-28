@@ -1146,6 +1146,47 @@ for (const id of ['inputs-text-and-choice--text-family', 'inputs-composite--toke
   );
 }
 
+/* A value changing is marked where it is read, and only when it changes.
+   `slider-step` on a slider's output and a stepper's quantity when the value is
+   committed from the keyboard or a step button; `highlight` on a figure or a
+   count replaced from outside (its args); `attention` when a count goes up.
+   Nothing at rest. Each row: [story, what to do, where it must have played,
+   the recipe]. */
+{
+  const setArgs = (id, updatedArgs) => page.evaluate(([storyId, args]) => {
+    window.__STORYBOOK_PREVIEW__.channel.emit('updateStoryArgs', { storyId, updatedArgs: args });
+  }, [id, updatedArgs]);
+  const ROWS = [
+    ['inputs-choice-and-range--ranges', async () => {
+      await page.locator('#storybook-root [role=slider], #storybook-root input[type=range]').first().focus();
+      await page.keyboard.press('ArrowRight');
+    }, 'output > span', 'slider-step'],
+    ['commerce-quantity-stepper--default', async () => {
+      await page.locator('#storybook-root [role=group] button').last().click();
+    }, 'input', 'slider-step'],
+    ['data-display-statistic--default', async (id) => setArgs(id, { value: '£51,004' }), '[class*="_value_"] > [class*="_layer_"]', 'highlight'],
+    ['data-display-badge--default', async (id) => setArgs(id, { count: 4, description: '4 unread messages' }), '[class*="_badge_"] > [class*="_layer_"]', 'highlight'],
+    ['data-display-badge--default', async (id) => setArgs(id, { count: 5, description: '5 unread messages' }), '[class*="_badge_"]', 'attention'],
+    ['data-display-delta-badge--default', async (id) => setArgs(id, { value: 7.5 }), '[class*="_delta_"] > [class*="_layer_"]', 'highlight'],
+  ];
+  for (const [id, act, where, recipe] of ROWS) {
+    await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(400);
+    const played = () => page.evaluate(([where, recipe]) =>
+      [...document.querySelectorAll(`#storybook-root ${where}`)].filter((el) => el.dataset.crMotionName === recipe).length,
+    [where, recipe]);
+    const atRest = await played();
+    await act(id);
+    await page.waitForTimeout(300);
+    const after = await played();
+    record(
+      `${recipe} on ${id}: nothing at rest, and the change is marked where it is read`,
+      atRest === 0 && after >= 1,
+      `played at rest on ${atRest}; after the change on ${after} element(s) matching ${where}`,
+    );
+  }
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

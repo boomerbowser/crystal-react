@@ -22,6 +22,10 @@
 }
 
 .value {
+  /* Positioned and isolated, for the `highlight` layer that washes under a
+     replaced figure. */
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: baseline;
   gap: $cr-spacing-2xs;

@@ -17,17 +17,41 @@
  * many matches there are, or which field matched, in text. Colour alone is not an
  * indication, and neither is a background nobody can see.
  */
-import { useMemo, type HTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { Arrival } from '../../motion/Arrival.js';
 import styles from './Highlight.module.scss';
 
 export interface MarkProps extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
+  /**
+   * The mark has just appeared because what is being searched for changed, so
+   * it plays Crystal's \`highlight\` once as it arrives. \`Highlight\` sets it; a
+   * mark rendered by hand with the rest of the page does not need it.
+   */
+  arriving?: boolean;
 }
 
 /** One run of highlighted text. A real `mark`. */
-export function Mark({ className, children, ...props }: MarkProps): React.JSX.Element {
-  return <mark {...props} className={cx(styles['mark'], className)}>{children}</mark>;
+export function Mark({ className, children, arriving = false, ...props }: MarkProps): React.JSX.Element {
+  return (
+    <mark {...props} className={cx(styles['mark'], className)}>
+      {children}
+      {arriving ? <ArrivingCue /> : null}
+    </mark>
+  );
+}
+
+/* The wash \`highlight\` plays on, under the mark's text, once, on the mount that
+   is the mark's arrival. */
+function ArrivingCue(): React.JSX.Element {
+  const [scope, play] = useMotion();
+  return (
+    <span ref={scope as never} aria-hidden="true" className={cx(styles['cue'])}>
+      <Arrival play={play} recipe="highlight" />
+    </span>
+  );
 }
 
 export interface HighlightProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
@@ -59,12 +83,20 @@ export function Highlight({
   const queries = (Array.isArray(query) ? query : [query]).filter(Boolean) as string[];
   const matches = new Set(queries.map((term) => (ignoreCase ? term.toLowerCase() : term)));
 
+  /* The marks on the first render were there when the text arrived; marks after
+     it appeared because the query changed, and those are the ones the catalogue's
+     \`highlight\` is for. Keyed by the query as well as the position, so a new
+     query is new marks rather than old ones with new words in them. */
+  const settled = useRef(false);
+  useEffect(() => { settled.current = true; });
+  const generation = queries.join('\u0000');
+
   return (
     <span {...props} className={className}>
       {parts.map((part, index) => (
         matches.has(ignoreCase ? part.toLowerCase() : part)
           // eslint-disable-next-line react/no-array-index-key
-          ? <Mark key={index}>{part}</Mark>
+          ? <Mark key={`${generation}:${index}`} arriving={settled.current}>{part}</Mark>
           // eslint-disable-next-line react/no-array-index-key
           : <span key={index}>{part}</span>
       ))}

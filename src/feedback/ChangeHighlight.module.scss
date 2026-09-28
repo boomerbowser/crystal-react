@@ -1,0 +1,26 @@
+/* The layer `highlight` plays on: a feathered Haze fill over the content that
+   changed, invisible at rest. The recipe's keyframes are opacity 0 → 1 → 0 and
+   its material is Haze with the feather signature, so it cannot play on the
+   content itself — the figure would vanish for half a second — and it does not
+   need to: the cue is a wash under the new value, which is already there.
+   Its container must be positioned and isolated. */
+.layer {
+  position: absolute;
+  inset: 0;
+  /* Behind the content, so the wash never veils the figure it marks. The
+     container isolates, so "behind" means above the container's own fill and
+     below its text — never behind the page. */
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--cr-haze-fill);
+  filter: blur(var(--cr-haze-feather));
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Forced colours: a wash is not a colour the viewer chose, so it does not
+   paint at all; the change is still in the content and, where it matters, in
+   words. */
+@media (forced-colors: active) {
+  .layer { display: none; }
+}

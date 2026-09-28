@@ -25,6 +25,9 @@
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useChangeMotion } from '../../motion/useChangeMotion.js';
+import { ChangeHighlight } from '../../feedback/ChangeHighlight.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './Badge.module.scss';
 
@@ -75,10 +78,17 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   const content = dot ? null
     : label ?? (hasCount ? formatCount(count, max) : null);
 
+  /* \`attention\` when the count goes up — something new arrived, which is what a
+     count badge is for — and never on the render that shows the first count, nor
+     when it goes down, which is something being dealt with. The \`highlight\`
+     layer inside marks any change to what the badge says. */
+  const scope = useChangeMotion(hasCount ? count : undefined, (was, is) =>
+    (typeof was === 'number' && typeof is === 'number' && is > was ? 'attention' : null));
+
   const badge = hidden ? null : (
     <span
       {...props}
-      ref={ref}
+      ref={mergeRefs(ref, scope as never)}
       /* The visual never speaks. Everything a listener gets comes from
          `description` or from the host's own name. */
       aria-hidden="true"
@@ -92,6 +102,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
       )}
     >
       {content}
+      {dot ? null : <ChangeHighlight />}
     </span>
   );
 

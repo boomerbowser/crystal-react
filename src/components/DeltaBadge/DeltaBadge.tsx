@@ -14,6 +14,7 @@
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { ChangeHighlight } from '../../feedback/ChangeHighlight.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './DeltaBadge.module.scss';
 
@@ -56,6 +57,7 @@ export const DeltaBadge = forwardRef<HTMLSpanElement, DeltaBadgeProps>(function 
       className={cx(styles['delta'], 'cr-haze', className)}
     >
       <span aria-hidden="true">{`${deltaSign(value)}${magnitude}`}</span>
+      <ChangeHighlight />
       {/* Said in words, because a synthesiser may or may not expand "+" and
           "\u2212" — and "minus two point four per cent" is what the badge means
           whether or not it does. */}

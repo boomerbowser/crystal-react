@@ -17,6 +17,7 @@
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { ChangeHighlight } from '../../feedback/ChangeHighlight.js';
 import styles from './TrendIndicator.module.scss';
 
 /** Which way it went. `flat` is a real answer, not a missing one. */
@@ -41,6 +42,7 @@ export const TrendIndicator = forwardRef<HTMLSpanElement, TrendIndicatorProps>(
       >
         <span aria-hidden="true" className={styles['arrow']}>{ARROW[direction]}</span>
         {children}
+        <ChangeHighlight />
       </span>
     );
   },

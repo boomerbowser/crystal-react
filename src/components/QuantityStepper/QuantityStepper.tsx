@@ -43,13 +43,15 @@
  * Integers only, by `formatOptions`: the catalogue calls this "a bounded
  * integer", and two and a half of something is a different component's problem.
  */
-import { forwardRef, useCallback, useState, type ReactNode } from 'react';
+import { forwardRef, useCallback, useContext, useState, type ReactNode } from 'react';
 import {
-  NumberField, Label, Input, Button, Group,
+  NumberField, NumberFieldStateContext, Label, Input, Button, Group,
   type NumberFieldProps,
 } from 'react-aria-components';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './QuantityStepper.module.scss';
 
 export interface QuantityStepperProps
@@ -128,7 +130,7 @@ export const QuantityStepper = forwardRef<HTMLInputElement, QuantityStepperProps
           <Button slot="decrement" aria-label={decrementLabel} className={cx(styles['step'], 'cr-bare')}>
             {Minus}
           </Button>
-          <Input ref={forwardedRef} className={cx(styles['control'])} />
+          <SteppedInput inputRef={forwardedRef} className={cx(styles['control'])} />
           <Button slot="increment" aria-label={incrementLabel} className={cx(styles['step'], 'cr-bare')}>
             {Plus}
           </Button>
@@ -141,3 +143,16 @@ export const QuantityStepper = forwardRef<HTMLInputElement, QuantityStepperProps
     );
   },
 );
+
+/* The quantity, marking a committed change with Crystal's \`slider-step\` — by a
+   step button, an arrow key or a typed value — and not on the render that shows
+   the first quantity. React Aria's number field state is read from its context,
+   so the input moves on the value React Aria committed. */
+function SteppedInput({ inputRef, className }: {
+  inputRef: React.ForwardedRef<HTMLInputElement>;
+  className: string;
+}): React.JSX.Element {
+  const state = useContext(NumberFieldStateContext);
+  const scope = useChangeMotion(state?.numberValue, () => 'slider-step', { once: true });
+  return <Input ref={mergeRefs<HTMLInputElement>(inputRef, scope as never)} className={className} />;
+}

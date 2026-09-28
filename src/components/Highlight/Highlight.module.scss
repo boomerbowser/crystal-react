@@ -14,6 +14,9 @@
  */
 
 .mark {
+  /* Positioned and isolated, for the `highlight` cue under an arriving mark. */
+  position: relative;
+  isolation: isolate;
   padding-inline: 0.15em;
   border-radius: $cr-spacing-2xs;
   background: var(--cr-primary-soft);
@@ -26,4 +29,21 @@
 
 @media (forced-colors: active) {
   .mark { background: Highlight; color: HighlightText; }
+}
+
+/* The cue Crystal's `highlight` plays on: a feathered Haze wash under the text
+   of a mark that has just arrived, invisible at rest. */
+.cue {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--cr-haze-fill);
+  filter: blur(var(--cr-haze-feather));
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (forced-colors: active) {
+  .cue { display: none; }
 }

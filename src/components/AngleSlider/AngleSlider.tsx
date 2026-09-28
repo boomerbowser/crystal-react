@@ -21,6 +21,7 @@
 import { useId, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { mergeProps, useMove } from 'react-aria';
 import { cx } from '../../styles/cx.js';
+import { SteppedValue } from '../Slider/SteppedValue.js';
 import styles from './AngleSlider.module.scss';
 
 interface DialProps {
@@ -132,7 +133,7 @@ function Dial({
           </span>
         </div>
         {/* The value, for everybody. An arc is a picture of a number. */}
-        <span className={cx(styles['value'])}>{text}</span>
+        <SteppedValue value={text} className={cx(styles['value'])} />
       </div>
     </div>
   );
