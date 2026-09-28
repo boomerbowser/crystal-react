@@ -26,6 +26,7 @@
  */
 import type { ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { CurrentLink } from '../NavLink/CurrentLink.js';
 import styles from './Dock.module.scss';
 
 export interface DockItem {
@@ -53,7 +54,8 @@ export function Dock({ items, currentId, className, ...props }: DockProps): Reac
           const isCurrent = item.id === currentId;
           return (
             <li key={item.id}>
-              <a
+              <CurrentLink
+                isCurrent={isCurrent}
                 href={item.href}
                 {...(isCurrent ? { 'aria-current': 'page' as const } : {})}
                 className={cx(styles['item'])}
@@ -62,7 +64,7 @@ export function Dock({ items, currentId, className, ...props }: DockProps): Reac
                   <span className={cx(styles['icon'])} aria-hidden="true">{item.icon}</span>
                 ) : null}
                 <span className={cx(styles['label'])}>{item.label}</span>
-              </a>
+              </CurrentLink>
             </li>
           );
         })}

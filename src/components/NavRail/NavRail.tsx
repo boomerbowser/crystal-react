@@ -26,6 +26,7 @@
  */
 import type { ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { CurrentLink } from '../NavLink/CurrentLink.js';
 import styles from './NavRail.module.scss';
 
 export interface NavRailItem {
@@ -71,7 +72,8 @@ export function NavRail({
           const isCurrent = item.id === currentId;
           return (
             <li key={item.id}>
-              <a
+              <CurrentLink
+                isCurrent={isCurrent}
                 href={item.href}
                 {...(isCurrent ? { 'aria-current': 'page' as const } : {})}
                 className={cx(styles['item'], 'cr-nav-item')}
@@ -85,7 +87,7 @@ export function NavRail({
                 {item.badge !== undefined && !isCollapsed
                   ? <>{' '}<span className={cx(styles['badge'])}>{item.badge}</span></>
                   : null}
-              </a>
+              </CurrentLink>
             </li>
           );
         })}

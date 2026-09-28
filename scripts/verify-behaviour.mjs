@@ -1040,6 +1040,84 @@ for (const { edge, flush, square } of EDGES) {
   );
 }
 
+/* ------------------------------------------- motion marks a state entered
+ *
+ * The catalogue's state recipes — `selection` first — are bound through
+ * `useChangeMotion`, whose three rules are checked here per component rather
+ * than trusted: nothing has played at rest, entering the state plays the recipe
+ * on the item that entered it, and pressing an item already in that state plays
+ * nothing more. `data-cr-motion-name` is left behind by `useMotion` when a
+ * recipe has run, which is what makes the first rule checkable after the fact.
+ *
+ * Each row: [story, the items, how to enter the state on the second item, the
+ * recipe]. The action is a click on the item unless the row says otherwise.
+ */
+{
+  const ROWS = [
+    ['navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', '[role=radiogroup] label', 'selection'],
+    ['data-display-calendar--today-and-selected', '[class*="_cell_"]:not([data-outside-month]):not([data-disabled]):not([data-unavailable])', 'selection'],
+    ['navigation-pagination-and-steps--pages', 'button[class*="_page_"]', 'selection'],
+    ['commerce-variant-selector--default', '[role=radiogroup] label:not([data-disabled])', 'selection'],
+    ['commerce-shipping-selector--default', '[role=radiogroup] label:not([data-disabled])', 'selection'],
+  ];
+  for (const [id, items, recipe] of ROWS) {
+    await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(400);
+    const played = () => page.evaluate(([items, recipe]) =>
+      [...document.querySelectorAll(`#storybook-root ${items}`)]
+        /* The item, or the cell it sits in: React Aria forwards a calendar
+           day's ref to its \`td\`, so that is where the day moves. */
+        .map((el, index) => (el.dataset.crMotionName === recipe
+          || (el.parentElement?.tagName === 'TD' && el.parentElement.dataset.crMotionName === recipe) ? index : -1))
+        .filter((index) => index >= 0),
+    [items, recipe]);
+    const atRest = await played();
+    const all = page.locator(`#storybook-root ${items}`);
+    const count = await all.count();
+    const selectedIndex = await page.evaluate((items) =>
+      [...document.querySelectorAll(`#storybook-root ${items}`)].findIndex((el) =>
+        el.matches('[data-selected], [aria-selected=true], [aria-pressed=true], [aria-current]:not([aria-current=false])')),
+    items);
+    const target = selectedIndex === 0 ? 1 : 0;
+    /* The one already selected, pressed: no state entered, so nothing plays. */
+    if (selectedIndex >= 0) await all.nth(selectedIndex).click();
+    await page.waitForTimeout(150);
+    const afterSame = await played();
+    await all.nth(target).click();
+    await page.waitForTimeout(150);
+    const afterChange = await played();
+    record(
+      `${recipe} on ${id}: nothing at rest, nothing for the item already chosen, and the newly chosen item moves`,
+      count > 1 && atRest.length === 0 && afterSame.length === 0 && afterChange.length === 1 && afterChange[0] === target,
+      `${count} items; played at rest ${JSON.stringify(atRest)}, after pressing the chosen one ${JSON.stringify(afterSame)}, `
+      + `after choosing item ${target} ${JSON.stringify(afterChange)}`,
+    );
+  }
+}
+
+/* A destination becoming current from outside — a client-side route change, which
+   in a story is its args changing. The bar does not remount, so the new current
+   destination plays `selection`, and the page load that rendered the first one
+   current played nothing. */
+for (const id of ['navigation-rails-and-bars--dock-bar', 'navigation-rails-and-bars--bottom-bar', 'navigation-rails-and-bars--rail']) {
+  await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const played = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root a')]
+    .filter((a) => a.dataset.crMotionName === 'selection').map((a) => a.textContent.trim()));
+  const atRest = await played();
+  await page.evaluate((storyId) => {
+    window.__STORYBOOK_PREVIEW__.channel.emit('updateStoryArgs', { storyId, updatedArgs: { currentId: 'shared' } });
+  }, id);
+  await page.waitForTimeout(300);
+  const after = await played();
+  const current = await page.evaluate(() => document.querySelector('#storybook-root a[aria-current]')?.textContent.trim());
+  record(
+    `selection on ${id}: nothing on load, and the destination that becomes current moves`,
+    atRest.length === 0 && after.length === 1 && current !== undefined && after[0] === current,
+    `played on load ${JSON.stringify(atRest)}; after currentId changed ${JSON.stringify(after)}, current is ${JSON.stringify(current)}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

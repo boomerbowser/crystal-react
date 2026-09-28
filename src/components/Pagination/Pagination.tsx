@@ -25,7 +25,8 @@
  * asks for by name, and a window of neighbours around the current page is shown
  * so the row's width does not change as you move through it.
  */
-import { Button } from 'react-aria-components';
+import { Button, type ButtonProps } from 'react-aria-components';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Pagination.module.scss';
 
@@ -99,14 +100,15 @@ export function Pagination({
                  arrows rather than a decoration. */
               <span className={cx(styles['gap'])} aria-hidden="true">…</span>
             ) : (
-              <Button
+              <PageButton
+                isCurrent={entry === page}
                 aria-label={pageLabel(entry)}
                 {...(entry === page ? { 'aria-current': 'page' as const } : {})}
                 onPress={() => onPageChange(entry)}
                 className={cx(styles['page'])}
               >
                 {entry}
-              </Button>
+              </PageButton>
             )}
           </li>
         ))}
@@ -122,4 +124,12 @@ export function Pagination({
       </Button>
     </nav>
   );
+}
+
+/* A page, playing `selection` when it becomes the current one — by its own
+   press, an arrow, or a page set from outside — and not on the render that
+   first shows it current. */
+function PageButton({ isCurrent, ...props }: ButtonProps & { isCurrent: boolean; 'aria-current'?: 'page' }): React.JSX.Element {
+  const scope = useChangeMotion(isCurrent, entered('selection'));
+  return <Button ref={scope as never} {...props} />;
 }

@@ -24,6 +24,7 @@
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { CurrentLink } from '../NavLink/CurrentLink.js';
 import styles from './TableOfContents.module.scss';
 
 export interface TocEntry {
@@ -61,7 +62,8 @@ export function TableOfContents({
       <ol className={cx(styles['list'])}>
         {entries.map((entry) => (
           <li key={entry.id}>
-            <a
+            <CurrentLink
+              isCurrent={entry.id === activeId}
               href={`#${entry.id}`}
               className={cx(styles['entry'])}
               style={{ '--cr-toc-level': entry.level - base } as React.CSSProperties}
@@ -81,7 +83,7 @@ export function TableOfContents({
                 : {})}
             >
               {entry.label}
-            </a>
+            </CurrentLink>
           </li>
         ))}
       </ol>

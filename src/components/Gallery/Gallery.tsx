@@ -30,6 +30,8 @@ import {
 import { IconButton } from '../IconButton/IconButton.js';
 import { Lightbox } from '../Lightbox/Lightbox.js';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
 import styles from './Gallery.module.scss';
 
 export interface GalleryItem {
@@ -148,9 +150,10 @@ export const Gallery = forwardRef<HTMLDivElement, GalleryProps>(function Gallery
         onKeyDown={onStripKeyDown}
       >
         {items.map((item, index) => (
-          <div
+          <Thumb
             key={item.id}
-            ref={(node) => {
+            isSelected={index === active}
+            register={(node) => {
               if (node) thumbs.current.set(index, node);
               else thumbs.current.delete(index);
             }}
@@ -163,7 +166,7 @@ export const Gallery = forwardRef<HTMLDivElement, GalleryProps>(function Gallery
             onClick={() => { setActive(index); setOpen(true); }}
           >
             {item.thumbnail}
-          </div>
+          </Thumb>
         ))}
       </div>
 
@@ -201,3 +204,14 @@ export const Gallery = forwardRef<HTMLDivElement, GalleryProps>(function Gallery
     </div>
   );
 });
+
+/* A thumbnail, playing `selection` when it becomes the active picture — by an
+   arrow key, a press, or the viewer moving on — and not on the render that
+   shows the first picture active. */
+function Thumb({ isSelected, register, ...props }: React.HTMLAttributes<HTMLDivElement> & {
+  isSelected: boolean;
+  register: (node: HTMLDivElement | null) => void;
+}): React.JSX.Element {
+  const scope = useChangeMotion(isSelected, entered('selection'));
+  return <div ref={mergeRefs<HTMLDivElement>(register, scope as never)} {...props} />;
+}

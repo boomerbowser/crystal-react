@@ -31,7 +31,7 @@ import {
   Label, Button, Popover, Dialog, Text, FieldError,
   type DateValue,
 } from 'react-aria-components';
-import { CalendarBody } from '../Calendar/Calendar.js';
+import { CalendarBody } from '../Calendar/CalendarBody.js';
 import { cx } from '../../styles/cx.js';
 import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import { FieldGroupShell } from '../FormField/FieldShell.js';

@@ -33,6 +33,7 @@
  */
 import { Button } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import styles from './Stepper.module.scss';
 
 export type StepState = 'upcoming' | 'current' | 'complete' | 'error';
@@ -108,8 +109,9 @@ export function Stepper({
         );
 
         return (
-          <li
+          <StepItem
             key={step.id}
+            isCurrent={state === 'current'}
             data-state={state}
             {...(state === 'current' ? { 'aria-current': 'step' as const } : {})}
             className={cx(styles['step'])}
@@ -123,9 +125,16 @@ export function Stepper({
                  worse than one that is plainly inert. */
               <span className={cx(styles['control'])} aria-label={name} role="text">{body}</span>
             )}
-          </li>
+          </StepItem>
         );
       })}
     </ol>
   );
+}
+
+/* A step, playing `selection` when it becomes the current one — the flow moved
+   on, or back — and not on the render that first shows it current. */
+function StepItem({ isCurrent, ...props }: React.LiHTMLAttributes<HTMLLIElement> & { isCurrent: boolean; 'data-state'?: string }): React.JSX.Element {
+  const scope = useChangeMotion(isCurrent, entered('selection'));
+  return <li ref={scope as never} {...props} />;
 }

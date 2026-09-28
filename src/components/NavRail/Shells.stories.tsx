@@ -100,13 +100,15 @@ export const WithAFooter: Story = {
 
 export const DockBar: Story = {
   name: 'Dock',
-  render: () => <Dock items={destinations} currentId="library" aria-label="Sections" />,
+  /* Driven by the same \`currentId\` arg as the rail, so moving it in Controls
+     moves the current destination — the client-side navigation a dock is for. */
+  render: (args) => <Dock items={destinations} currentId={args.currentId ?? 'library'} aria-label="Sections" />,
 };
 
 export const BottomBar: Story = {
   name: 'Bottom navigation',
-  render: () => (
-    <BottomNavigation items={destinations} currentId="library" aria-label="Sections" />
+  render: (args) => (
+    <BottomNavigation items={destinations} currentId={args.currentId ?? 'library'} aria-label="Sections" />
   ),
 };
 

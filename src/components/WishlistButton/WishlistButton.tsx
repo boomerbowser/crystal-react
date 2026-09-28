@@ -30,6 +30,8 @@ import { forwardRef, type ReactNode } from 'react';
 import { Button } from '../Button/Button.js';
 import { IconButton } from '../IconButton/IconButton.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import styles from './WishlistButton.module.scss';
 
 export interface WishlistButtonProps {
@@ -63,9 +65,13 @@ export const WishlistButton = forwardRef<HTMLButtonElement, WishlistButtonProps>
     isDisabled, className, ...props
   }, ref) {
     const label = (name ?? ((one) => `Save ${one} to your wishlist`))(item);
+    /* `selection` when the item is saved — by this press or by the list changing
+       elsewhere — and not on the render that shows it already saved. The press
+       itself is the button's own \`press\`. */
+    const scope = useChangeMotion(isSaved, entered('selection'));
     const shared = {
       ...props,
-      ref,
+      ref: mergeRefs(ref, scope as never),
       isSelected: isSaved,
       onPress: () => onChange(!isSaved),
       ...(isDisabled === undefined ? {} : { isDisabled }),

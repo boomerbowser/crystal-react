@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { renderWithCrystal as render, screen } from '../../test/render.js';
 import { BottomNavigation } from './BottomNavigation.js';
 
 const items = [

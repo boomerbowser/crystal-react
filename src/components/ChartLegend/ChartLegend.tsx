@@ -23,6 +23,7 @@ import { useId, useState, type CSSProperties, type HTMLAttributes, type ReactNod
 import { markerPath, seriesColour, seriesDash, seriesMarker } from '../../charts/channel.js';
 import { chartGeometry } from '../../theme/chartGeometry.js';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import styles from './ChartLegend.module.scss';
 
 export type LegendMark = 'swatch' | 'line' | 'point';
@@ -71,8 +72,8 @@ export function ChartLegend({
           return (
             <li key={entry.name} className={styles['item']}>
               {onToggle ? (
-                <button
-                  type="button"
+                <Toggle
+                  isShown={shown}
                   className={cx(styles['toggle'], 'cr-bare')}
                   aria-pressed={shown}
                   data-shown={shown ? '' : undefined}
@@ -82,7 +83,7 @@ export function ChartLegend({
                   }}
                 >
                   {content}
-                </button>
+                </Toggle>
               ) : (
                 <span className={styles['entry']}>{content}</span>
               )}
@@ -129,4 +130,14 @@ function Swatch({ mark, index }: { mark: LegendMark; index: number }): ReactNode
       <rect className={styles['swatchFill']} x={2} y={2} width={12} height={12} rx={3} />
     </svg>
   );
+}
+
+/* A series toggle, playing `selection` when the series is turned on — the one
+   state a legend entry enters — and not on the render that shows it on. */
+function Toggle({ isShown, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  isShown: boolean;
+  'data-shown'?: string | undefined;
+}): React.JSX.Element {
+  const scope = useChangeMotion(isShown, entered('selection'));
+  return <button type="button" ref={scope as never} {...props} />;
 }

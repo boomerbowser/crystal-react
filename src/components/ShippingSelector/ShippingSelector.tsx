@@ -25,8 +25,8 @@
  * rule would.
  */
 import { type ReactNode } from 'react';
-import { Radio as AriaRadio } from 'react-aria-components';
 import { RadioGroup, type RadioGroupProps } from '../Checkbox/Checkbox.js';
+import { SelectedRadio } from '../Checkbox/SelectedRadio.js';
 import { Price } from '../Price/Price.js';
 import { cx } from '../../styles/cx.js';
 import type { Money } from '../../commerce/money.js';
@@ -55,7 +55,7 @@ export function ShippingSelector({
   return (
     <RadioGroup {...props} label={label} className={cx(styles['group'], className)}>
       {options.map((option) => (
-        <AriaRadio
+        <SelectedRadio
           key={option.value}
           value={option.value}
           isDisabled={option.unavailable !== undefined}
@@ -71,7 +71,7 @@ export function ShippingSelector({
             {option.unavailable ?? option.estimate}
           </span>
           <Price value={option.price} as="span" className={cx(styles['price'])} />
-        </AriaRadio>
+        </SelectedRadio>
       ))}
     </RadioGroup>
   );

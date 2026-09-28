@@ -32,6 +32,7 @@ import {
 } from 'react-aria-components';
 import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import styles from './ColorPicker.module.scss';
 
 /* Crystal's own signature, read from the tokens rather than typed in. A picker
@@ -254,7 +255,7 @@ export function ColorSwatchPicker({
             aria-label={colour.name}
             className={cx(styles['swatchOption'])}
           >
-            <AriaColorSwatch />
+            {({ isSelected }) => <PickedSwatch isSelected={isSelected} />}
           </ColorSwatchPickerItem>
         ))}
       </AriaColorSwatchPicker>
@@ -314,4 +315,13 @@ export function ColorPicker({
       </div>
     </AriaColorPicker>
   );
+}
+
+/* The swatch inside a picker option, playing `selection` when its option becomes
+   the chosen colour — and not on the render that opens the picker with one
+   already chosen. React Aria hands the option's state to a render function, so
+   the motion is on the swatch rather than on the option around it. */
+function PickedSwatch({ isSelected }: { isSelected: boolean }): React.JSX.Element {
+  const scope = useChangeMotion(isSelected, entered('selection'));
+  return <AriaColorSwatch ref={scope as never} />;
 }

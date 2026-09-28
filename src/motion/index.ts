@@ -3,6 +3,7 @@ export { usePreset } from './usePreset.js';
 export { usePresetMotion } from './usePresetMotion.js';
 export { Arrival } from './Arrival.js';
 export { useContinuous } from './useContinuous.js';
+export { useChangeMotion, usePlayOnChange, entered } from './useChangeMotion.js';
 export type { ContinuousRecipe } from './useContinuous.js';
 export type { UsePresetOptions, CrystalPresetName } from './usePreset.js';
 export type { UsePresetMotionOptions, PresetMotionProps, PresetTarget } from './usePresetMotion.js';

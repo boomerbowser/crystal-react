@@ -29,54 +29,15 @@ import type { ReactNode } from 'react';
 import {
   Calendar as AriaCalendar,
   RangeCalendar as AriaRangeCalendar,
-  CalendarGrid, CalendarGridHeader, CalendarHeaderCell, CalendarGridBody, CalendarCell,
-  Button, Heading,
   type CalendarProps as AriaCalendarProps,
   type RangeCalendarProps as AriaRangeCalendarProps,
   type DateValue,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { CalendarBody } from './CalendarBody.js';
 import styles from './Calendar.module.scss';
 
-const Chevron = ({ back }: { back: boolean }): ReactNode => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-    <path d={back ? 'm14 8-4 4 4 4' : 'm10 8 4 4-4 4'} strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
-/**
- * The header and the grid, without a surface of its own.
- *
- * Exported for `DatePicker`, which opens it inside a popover that already
- * carries the material — a Frost panel inside a Frost popover would be Frost
- * containing Frost, and two panes of the same glass read as neither.
- */
-export function CalendarBody(): ReactNode {
-  return (
-    <>
-      {/* A `div`, not a `header`. A bare `header` is a `banner` landmark, and a
-          banner inside the calendar's own `application` role is an axe violation
-          — which is exactly what it was, once the grid stood on its own rather
-          than inside a picker's dialog where the element is scoped away. The
-          month heading is a heading; the row around it is layout. */}
-      <div className={cx(styles['header'])}>
-        {/* Named by React Aria from the calendar itself, so a range calendar
-            showing two months does not have two buttons called "Previous". */}
-        <Button slot="previous" className={cx(styles['navButton'], 'cr-bare')}><Chevron back /></Button>
-        <Heading className={cx(styles['heading'])} />
-        <Button slot="next" className={cx(styles['navButton'], 'cr-bare')}><Chevron back={false} /></Button>
-      </div>
-      <CalendarGrid className={cx(styles['grid'])}>
-        <CalendarGridHeader>
-          {(day) => <CalendarHeaderCell className={cx(styles['weekday'])}>{day}</CalendarHeaderCell>}
-        </CalendarGridHeader>
-        <CalendarGridBody>
-          {(date) => <CalendarCell date={date} className={cx(styles['cell'])} />}
-        </CalendarGridBody>
-      </CalendarGrid>
-    </>
-  );
-}
+export { CalendarBody };
 
 export interface CalendarProps<T extends DateValue>
   extends Omit<AriaCalendarProps<T>, 'className' | 'style' | 'children'> {

@@ -28,8 +28,8 @@
  * cannot separate two similar colours has instead.
  */
 import { type ReactNode } from 'react';
-import { Radio as AriaRadio } from 'react-aria-components';
 import { RadioGroup, type RadioGroupProps } from '../Checkbox/Checkbox.js';
+import { SelectedRadio } from '../Checkbox/SelectedRadio.js';
 import { cx } from '../../styles/cx.js';
 import styles from './VariantSelector.module.scss';
 
@@ -66,7 +66,7 @@ export function VariantSelector({
       className={cx(styles['group'], className)}
     >
       {variants.map((variant) => (
-        <AriaRadio
+        <SelectedRadio
           key={variant.value}
           value={variant.value}
           isDisabled={variant.unavailable !== undefined}
@@ -98,7 +98,7 @@ export function VariantSelector({
               )}
             </>
           )}
-        </AriaRadio>
+        </SelectedRadio>
       ))}
     </RadioGroup>
   );

@@ -23,8 +23,9 @@
  * cards, the same rule that selection is label weight rather than a fill.
  */
 import { useContext, type ReactNode } from 'react';
-import { Radio as AriaRadio, RadioGroupStateContext } from 'react-aria-components';
+import { RadioGroupStateContext } from 'react-aria-components';
 import { RadioGroup, type RadioGroupProps } from '../Checkbox/Checkbox.js';
+import { SelectedRadio } from '../Checkbox/SelectedRadio.js';
 import { cx } from '../../styles/cx.js';
 import styles from './PaymentMethod.module.scss';
 
@@ -88,7 +89,7 @@ export function PaymentMethod({
       className={cx(styles['group'], className)}
     >
       {methods.map((method) => (
-        <AriaRadio
+        <SelectedRadio
           key={method.value}
           value={method.value}
           isDisabled={method.unavailable !== undefined}
@@ -101,14 +102,14 @@ export function PaymentMethod({
           {method.unavailable ?? method.detail ? (
             <span className={styles['detail']}>{method.unavailable ?? method.detail}</span>
           ) : null}
-        </AriaRadio>
+        </SelectedRadio>
       ))}
 
       {provider ? (
         <div className={styles['new']}>
-          <AriaRadio value={newMethodValue} className={cx(styles['option'])}>
+          <SelectedRadio value={newMethodValue} className={cx(styles['option'])}>
             <span className={styles['name']}>{newMethodLabel}</span>
-          </AriaRadio>
+          </SelectedRadio>
           {/* Mounted only while it is chosen. A provider's element is an iframe
               that talks to a payment processor; four of them sitting behind
               unchosen options is four sessions opened for nothing, and one of

@@ -14,9 +14,12 @@
  * In forced colours the fill goes and a ring takes its place, because Chromium's
  * text backplate erases a filled label.
  */
-import type { ReactNode } from 'react';
-import { RadioGroup, Radio, Label, Text, FieldError, type RadioGroupProps } from 'react-aria-components';
+import { useContext, type ReactNode } from 'react';
+import {
+  RadioGroup, Radio, Label, Text, FieldError, RadioGroupStateContext, type RadioGroupProps,
+} from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './SegmentedControl.module.scss';
 
@@ -57,21 +60,31 @@ export function SegmentedControl({
         ? (hiddenStringLabel ? null : <VisuallyHidden as="span"><Label>{label}</Label></VisuallyHidden>)
         : <Label className={cx(styles['legend'])}>{label}</Label>}
       <div className={cx(styles['strip'], 'cr-dock')}>
-        {options.map((option) => (
-          <Radio
-            key={option.value}
-            value={option.value}
-            isDisabled={option.isDisabled ?? false}
-            className={cx(styles['segment'])}
-          >
-            {option.label}
-          </Radio>
-        ))}
+        {options.map((option) => <Segment key={option.value} option={option} />)}
       </div>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
     </RadioGroup>
+  );
+}
+
+/* One segment, playing `selection` when it becomes the chosen one — by a click,
+   an arrow key or a value set from outside — and not when the control mounts
+   with it already chosen. The group's state is React Aria's, read from its
+   context, so the segment moves on the value React Aria resolved. */
+function Segment({ option }: { option: SegmentedOption }): React.JSX.Element {
+  const state = useContext(RadioGroupStateContext);
+  const scope = useChangeMotion(state?.selectedValue === option.value, entered('selection'));
+  return (
+    <Radio
+      ref={scope as never}
+      value={option.value}
+      isDisabled={option.isDisabled ?? false}
+      className={cx(styles['segment'])}
+    >
+      {option.label}
+    </Radio>
   );
 }

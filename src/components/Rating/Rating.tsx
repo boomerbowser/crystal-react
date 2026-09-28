@@ -18,8 +18,9 @@
  * partial symbol — the tell of a rating built by stacking.
  */
 import { useState, type CSSProperties, type ReactNode } from 'react';
-import { RadioGroup, Radio, Label } from 'react-aria-components';
+import { RadioGroup, Radio, Label, type RadioProps } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import styles from './Rating.module.scss';
 
 const StarIcon = (
@@ -105,8 +106,9 @@ export function Rating({
           {Array.from({ length: max }, (_, index) => {
             const score = index + 1;
             return (
-              <Radio
+              <Symbol
                 key={score}
+                isChosen={score === current}
                 value={String(score)}
                 /* Each symbol says what it means, so arrowing through them
                    announces "3 out of 5" rather than "radio button, 3". */
@@ -114,7 +116,7 @@ export function Rating({
                 className={cx(styles['symbol'], score <= current ? styles['filled'] : undefined)}
               >
                 {StarIcon}
-              </Radio>
+              </Symbol>
             );
           })}
         </div>
@@ -122,4 +124,13 @@ export function Rating({
       </div>
     </RadioGroup>
   );
+}
+
+/* One symbol, playing `selection` when it becomes the chosen score — by a press,
+   an arrow key or a value set from outside — and not on the render that shows a
+   rating already given. Only the chosen symbol moves; the ones filled beneath it
+   change fill, which is the value, not the choice. */
+function Symbol({ isChosen, ...props }: RadioProps & { isChosen: boolean }): React.JSX.Element {
+  const scope = useChangeMotion(isChosen, entered('selection'));
+  return <Radio ref={scope as never} {...props} />;
 }

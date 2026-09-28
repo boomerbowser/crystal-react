@@ -27,7 +27,10 @@
  */
 import { forwardRef, type ReactNode } from 'react';
 import { ToggleButton, Button, type ToggleButtonProps } from 'react-aria-components';
+import { useToggleState } from 'react-stately';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { usePlayOnChange, entered } from '../../motion/useChangeMotion.js';
 import styles from './Chip.module.scss';
 
 const CrossIcon = (
@@ -83,9 +86,9 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
 
   if (!onRemove) {
     return (
-      <ToggleButton {...props} className={cx(styles['chip'], styles['pressable'], 'cr-bare', className)}>
+      <MovingToggle {...props} className={cx(styles['chip'], styles['pressable'], 'cr-bare', className)}>
         <span>{children}</span>
-      </ToggleButton>
+      </MovingToggle>
     );
   }
 
@@ -98,10 +101,36 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
       className={cx(styles['chip'], styles['removable'], className)}
       {...(props.isSelected ? { 'data-selected': true } : {})}
     >
-      <ToggleButton {...props} className={cx(styles['chipLabel'], styles['pressable'], 'cr-bare')}>
+      <MovingToggle {...props} className={cx(styles['chipLabel'], styles['pressable'], 'cr-bare')}>
         {children}
-      </ToggleButton>
+      </MovingToggle>
       {remove}
     </div>
   );
 });
+
+/* The selectable half of a chip, marking its two moments on one element: `press`
+   as it is pressed, and `selection` when that press — or a value set from
+   outside — makes it selected. The state is React Stately's toggle, held here
+   rather than inside React Aria's button so that the value the chip moves on is
+   the value it has; controlled and uncontrolled both pass through it. */
+function MovingToggle({ children, className, ...props }: Omit<ToggleButtonProps, 'className' | 'children'> & {
+  className?: string | undefined;
+  children?: ReactNode;
+}): React.JSX.Element {
+  const state = useToggleState(props);
+  const [scope, play] = useMotion();
+  usePlayOnChange(state.isSelected, entered('selection'), play);
+  return (
+    <ToggleButton
+      {...props}
+      ref={scope as never}
+      isSelected={state.isSelected}
+      onChange={state.setSelected}
+      onPressStart={(event) => { void play('press'); props.onPressStart?.(event); }}
+      {...(className === undefined ? {} : { className })}
+    >
+      {children}
+    </ToggleButton>
+  );
+}
