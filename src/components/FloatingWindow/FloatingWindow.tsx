@@ -27,6 +27,7 @@
  */
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './FloatingWindow.module.scss';
 
 export interface WindowRect { x: number; y: number; width: number; height: number }
@@ -145,8 +146,14 @@ export function FloatingWindow({
     return () => { window.removeEventListener('resize', onResize); };
   }, [move, rect]);
 
+  /* Shown and hidden by the product, so its arrival and departure are the
+     product's to mark: inside `AnimatePresence` the window plays `drawer-in` as
+     it is shown and `drawer-out` before it goes; rendered plainly, nothing. */
+  const presence = usePresenceMotion('drawer-in', 'drawer-out');
+
   return (
     <section
+      ref={presence as never}
       {...(isModal ? { role: 'dialog', 'aria-modal': true } : {})}
       aria-label={label}
       data-modal={isModal || undefined}

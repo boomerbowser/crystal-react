@@ -54,6 +54,7 @@ import { useMotion } from '../../motion/useMotion.js';
 import { usePresetMotion } from '../../motion/usePresetMotion.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { cx } from '../../styles/cx.js';
+import { PresenceExit } from '../../motion/PresenceExit.js';
 import styles from './CommandPalette.module.scss';
 
 const SearchIcon = (
@@ -151,6 +152,9 @@ export function CommandPalette({
               className={cx(styles['palette'], className)}
             >
               <Sweep play={play} />
+              {/* And `menu-out` as it closes: the palette is inside
+                  `AnimatePresence` for its scrim, which waits for this too. */}
+              <PresenceExit play={play} recipe="menu-out" />
               <Autocomplete filter={contains}>
                 {/* A real `<label>`, hidden, rather than an `aria-label` — and
                     never both. Both is what was written first, and the two

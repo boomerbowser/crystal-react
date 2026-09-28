@@ -204,12 +204,16 @@ function motionUsed(componentId) {
       }
     }
   }
+  const PLAYS = /\buse(?!\w*Reduced)(\w*Motion|Continuous|MarkArrival)\b|<Arrival\b|\brecipe="[a-z]/;
+  const componentPlays = files.some((file) => PLAYS.test(readFileSync(file, 'utf8')));
   for (const file of [...files, ...shared]) {
     const source = readFileSync(file, 'utf8');
     /* Only count a name in a file that actually uses a hook that plays it.
        Without this, Button's `variant="resin"` was reported as a Resin preset:
-       a string that happens to match a preset name is not a call. */
-    const playsRecipes = /\buse(?!\w*Reduced)(\w*Motion|Continuous|MarkArrival)\b|<Arrival\b|\brecipe="[a-z]/.test(source);
+       a string that happens to match a preset name is not a call. A shared file
+       of names — `feedback/status.ts`, which maps a status to the recipe that
+       marks it — counts when the component that imports it plays. */
+    const playsRecipes = PLAYS.test(source) || (componentPlays && shared.has(file));
     const playsPresets = source.includes('usePreset');
     if (!playsRecipes && !playsPresets) continue;
     /* Single-quoted names, and a recipe handed to `<Arrival recipe="menu-in" />`,

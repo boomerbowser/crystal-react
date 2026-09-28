@@ -50,6 +50,7 @@ import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { CloseButton } from '../IconButton/IconButton.js';
 import { SurfaceProvider } from '../../overlays/surface.js';
 import { cx } from '../../styles/cx.js';
+import { PresenceExit } from '../../motion/PresenceExit.js';
 import styles from './Drawer.module.scss';
 
 /** Which edge the panel is anchored to. `start` and `end` follow the reading direction. */
@@ -188,6 +189,7 @@ function ModalDrawer({
               {({ close }) => (
                 <>
                   <Sweep play={play} />
+                  <PresenceExit play={play} recipe="drawer-out" />
                   <PanelBody
                     titleId={titleId}
                     title={title}
@@ -209,7 +211,7 @@ function ModalDrawer({
 }
 
 /** Plays the entrance once, on the mount that is the arrival. */
-function Sweep({ play }: { play: (name: string) => void }): null {
+function Sweep({ play }: { play: (name: string) => Promise<void> | void }): null {
   const played = useRef(false);
   useEffect(() => {
     if (played.current) return;
@@ -226,20 +228,26 @@ function InlineDrawer({
   /* Rendered only while open, so mounting is the arrival — the same discipline
      the tree uses and for the same reason: nothing in Crystal moves at rest, and
      a panel that is already there must not sweep itself in. */
-  if (!isOpen) return null;
+  /* Kept for its exit: `AnimatePresence` holds the panel while it plays
+     `drawer-out`, which `PresenceExit` inside it starts. */
   return (
-    <InlinePanel
-      titleId={titleId}
-      title={title}
-      placement={placement}
-      reorient={reorient}
-      hideCloseButton={hideCloseButton}
-      {...(closes === undefined ? {} : { closes })}
-      {...(className === undefined ? {} : { className })}
-      {...(onOpenChange ? { onClose: () => { onOpenChange(false); } } : {})}
-    >
-      {children}
-    </InlinePanel>
+    <AnimatePresence>
+      {isOpen ? (
+        <InlinePanel
+          key="panel"
+          titleId={titleId}
+          title={title}
+          placement={placement}
+          reorient={reorient}
+          hideCloseButton={hideCloseButton}
+          {...(closes === undefined ? {} : { closes })}
+          {...(className === undefined ? {} : { className })}
+          {...(onOpenChange ? { onClose: () => { onOpenChange(false); } } : {})}
+        >
+          {children}
+        </InlinePanel>
+      ) : null}
+    </AnimatePresence>
   );
 }
 
@@ -257,6 +265,7 @@ function InlinePanel({
       className={cx(styles['panel'], styles['inline'], styles[placement], className)}
     >
       <Sweep play={play} />
+      <PresenceExit play={play} recipe="drawer-out" />
       <PanelBody
         titleId={titleId}
         title={title}

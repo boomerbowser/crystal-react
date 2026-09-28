@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { fireEvent } from '@testing-library/react';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
 import { BarChart } from './BarChart.js';
 
 const series = [
@@ -153,7 +153,8 @@ describe('BarChart', () => {
       /* Fired at the mark rather than typed at the document: hover does not
          move focus, and the handler that dismisses is on the plot. */
       fireEvent.keyDown(bar, { key: 'Escape' });
-      expect(container.querySelector('[data-shown]')).toBeNull();
+      /* After its exit: the tooltip stays shown while `tooltip-out` plays. */
+      await waitFor(() => { expect(container.querySelector('[data-shown]')).toBeNull(); });
       await user.hover(container.querySelector('[aria-label="January, Revenue, 12"]')!);
       expect(container.querySelector('[data-shown]')).not.toBeNull();
     });

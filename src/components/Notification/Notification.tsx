@@ -22,9 +22,11 @@
  * written in the reader's language and updated as it ages, and a component that
  * formatted it would be guessing at both.
  */
-import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, useMemo, type HTMLAttributes, type ReactNode } from 'react';
 import { STATUS_SYMBOL, type FeedbackStatus } from '../../feedback/status.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './Notification.module.scss';
 
 export interface NotificationProps extends Omit<HTMLAttributes<HTMLLIElement>, 'title'> {
@@ -50,10 +52,15 @@ export const Notification = forwardRef<HTMLLIElement, NotificationProps>(functio
 }, ref): ReactNode {
   const id = useId();
 
+  /* In a product's list of notifications, inside `AnimatePresence`, one arrives
+     with `toast-in` and leaves with `toast-out` once dismissed; rendered plainly,
+     nothing. */
+  const presence = usePresenceMotion('toast-in', 'toast-out');
+  const merged = useMemo(() => mergeRefs(ref, presence as never), [ref, presence]);
   return (
     <li
       {...props}
-      ref={ref}
+      ref={merged as never}
       className={cx(styles['notification'], 'cr-frost', className)}
       data-status={status}
       data-unread={unread ? '' : undefined}

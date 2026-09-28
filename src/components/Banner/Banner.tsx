@@ -20,10 +20,14 @@
  * radius floating inside its container is a card, and a card is not pinned.
  */
 import {
-  forwardRef, useId, type HTMLAttributes, type ReactNode, type RefObject,
+  forwardRef, useId, useMemo, type HTMLAttributes, type ReactNode, type RefObject,
 } from 'react';
-import { STATUS_SYMBOL, type FeedbackStatus } from '../../feedback/status.js';
+import { STATUS_RECIPE, STATUS_SYMBOL, type FeedbackStatus } from '../../feedback/status.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { usePlayOnChange } from '../../motion/useChangeMotion.js';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './Banner.module.scss';
 
 export interface BannerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -49,11 +53,20 @@ export const Banner = forwardRef<HTMLDivElement, BannerProps>(function Banner({
   onDismiss, dismissLabel = 'Dismiss this message', returnFocusTo, className, ...props
 }, ref): ReactNode {
   const id = useId();
+  /* Inside `AnimatePresence`, a banner arrives with `toast-in` and leaves with
+     `toast-out` once dismissed; rendered plainly, nothing. And `attention` —
+     Crystal's status recipe — when its status becomes one that has one, never on
+     the render that first shows it. Two scopes, because the two are on the one
+     element and a status change must not cancel an arrival. */
+  const presence = usePresenceMotion('toast-in', 'toast-out');
+  const [cue, play] = useMotion();
+  usePlayOnChange(status, (_, is) => STATUS_RECIPE[is] ?? null, play);
+  const merged = useMemo(() => mergeRefs(ref, presence as never, cue as never), [ref, presence, cue]);
 
   return (
     <div
       {...props}
-      ref={ref}
+      ref={merged as never}
       role={urgent ? 'alert' : 'status'}
       data-status={status}
       className={cx(styles['banner'], className)}

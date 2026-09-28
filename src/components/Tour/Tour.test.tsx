@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
 import { Tour, type TourStep } from './Tour.js';
 
 function Harness({ onClose }: { onClose?: () => void }) {
@@ -64,7 +64,8 @@ describe('Tour', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Start tour' }));
     await userEvent.keyboard('{Escape}');
     expect(onClose).toHaveBeenCalledOnce();
-    expect(screen.queryByRole('dialog')).toBeNull();
+    /* After its exit: the panel plays `popover-out` before it goes. */
+    await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); });
   });
 
   /* Back to whatever had focus when it began — not to the last step's target,

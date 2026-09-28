@@ -476,7 +476,8 @@ for (const { edge, flush, square } of EDGES) {
   );
 
   await page.keyboard.press('Escape');
-  await page.waitForTimeout(60);
+  /* Long enough for `tooltip-out`: the panel stays shown while it leaves. */
+  await page.waitForTimeout(700);
   const afterEscape = await page.locator(panel).count();
   await page.keyboard.press('ArrowLeft');
   await page.waitForTimeout(60);
@@ -1295,6 +1296,34 @@ for (const [label, open, recipe] of [
   await page.waitForTimeout(600);
   const loose = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-cr-motion-name^="list-"]').length);
   record('a card that is not in a collection plays neither list recipe', loose === 0, `${loose} element(s) played a list recipe on load`);
+}
+
+/* Surfaces this library holds in Motion's presence for their exits: a drawer,
+   modal and inline, the command palette, and a tour. Each is opened, closed, and
+   must still be on screen playing its exit a moment later, and gone after it. */
+for (const [id, openWith, exit] of [
+  ['overlays-drawer--modal', /open|filters|show/i, 'drawer-out'],
+  ['overlays-drawer--not-modal', null, 'drawer-out'],
+  ['overlays-command-palette--palette', /open|command|search/i, 'menu-out'],
+]) {
+  await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(500);
+  if (openWith) {
+    const opener = page.locator('#storybook-root button').filter({ hasText: openWith }).first();
+    if (await opener.count()) await opener.click();
+    await page.waitForTimeout(1200);
+  }
+  const closer = page.locator('button[aria-label^="Close" i], button:has-text("Close")').first();
+  if (await closer.count()) await closer.click(); else await page.keyboard.press('Escape');
+  await page.waitForTimeout(80);
+  const leaving = await page.evaluate((exit) => document.querySelectorAll(`[data-cr-motion-name="${exit}"]`).length, exit);
+  await page.waitForTimeout(1600);
+  const left = await page.evaluate((exit) => document.querySelectorAll(`[data-cr-motion-name="${exit}"]`).length, exit);
+  record(
+    `${exit} on ${id}: closed, the surface stays for its exit and then goes`,
+    leaving === 1 && left === 0,
+    `a moment after closing ${leaving} surface(s) playing ${exit}; after it ${left}`,
+  );
 }
 
 await browser.close();

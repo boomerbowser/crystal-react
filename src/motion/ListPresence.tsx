@@ -40,27 +40,39 @@ export interface ListItemMotionOptions {
 
 /** One item of a `ListPresence`: the scope to put on the item's element. */
 export function useListItemMotion({ leaves = true }: ListItemMotionOptions = {}): ReturnType<typeof useMotion>[0] {
+  return usePresenceMotion('list-in', leaves ? 'list-out' : null);
+}
+
+/**
+ * The same rule for any element Motion's presence decides: `enter` when it
+ * genuinely arrives inside an `AnimatePresence` (not on that presence's first
+ * render if it was told `initial={false}`), `exit` before it goes, awaited, with
+ * the element inert meanwhile. Outside an `AnimatePresence`, nothing — so a
+ * floating window a product simply renders does not sweep itself in, and one it
+ * shows and hides inside `AnimatePresence` does.
+ */
+export function usePresenceMotion(enter: string, exit: string | null): ReturnType<typeof useMotion>[0] {
   const [scope, play] = useMotion();
   const presence = useContext(PresenceContext);
   const [isPresent, safeToRemove] = usePresence();
-  /* Decided once, on mount: in a presence list, and not one of its first-render
+  /* Decided once, on mount: in a presence, and not one of its first-render
      children. The ref also keeps StrictMode's second effect from playing twice. */
   const arriving = useRef(presence !== null && presence.initial !== false);
 
   useEffect(() => {
     if (!arriving.current) return;
     arriving.current = false;
-    void play('list-in');
-  }, [play]);
+    void play(enter);
+  }, [play, enter]);
 
   useEffect(() => {
     if (presence === null || isPresent) return;
-    if (!leaves) { safeToRemove?.(); return; }
-    /* Removed as far as anybody reading or tabbing is concerned: the item is
+    if (exit === null) { safeToRemove?.(); return; }
+    /* Removed as far as anybody reading or tabbing is concerned: the element is
        only still here to be seen leaving, so it is inert while it does. */
     (scope.current as HTMLElement | null)?.setAttribute('inert', '');
-    void play('list-out').finally(() => safeToRemove?.());
-  }, [presence, isPresent, play, safeToRemove, scope, leaves]);
+    void play(exit).finally(() => safeToRemove?.());
+  }, [presence, isPresent, play, safeToRemove, scope, exit]);
 
   return scope;
 }

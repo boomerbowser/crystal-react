@@ -20,9 +20,11 @@
  * edge. Escape hides it, which is the contract, and it comes back on the next
  * move.
  */
-import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+import { useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { seriesColour } from '../../charts/channel.js';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { usePlayOnChange } from '../../motion/useChangeMotion.js';
 import styles from './ChartTooltip.module.scss';
 
 export interface ChartTooltipRow {
@@ -60,11 +62,23 @@ export function ChartTooltip({
   const right = x > bounds.width / 2;
   const below = y < bounds.height / 2;
 
+  /* `tooltip-in` as the panel is shown, and `tooltip-out` as it is hidden — kept
+     displayed while it plays, since hiding it at once would leave the exit
+     nothing to move. Neither on the render that first shows the chart. */
+  const [scope, play] = useMotion();
+  const [leaving, setLeaving] = useState(false);
+  usePlayOnChange(shown, (was, is) => (is ? 'tooltip-in' : was ? 'tooltip-out' : null), (recipe) => {
+    if (recipe !== 'tooltip-out') return play(recipe);
+    setLeaving(true);
+    return play(recipe).finally(() => setLeaving(false));
+  });
+
   return (
     <div
       {...props}
+      ref={scope as never}
       aria-hidden="true"
-      data-shown={shown ? '' : undefined}
+      data-shown={shown || leaving ? '' : undefined}
       data-side={right ? 'start' : 'end'}
       className={cx(styles['tooltip'], 'cr-frost', className)}
       style={{

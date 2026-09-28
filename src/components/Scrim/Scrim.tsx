@@ -15,6 +15,8 @@
  * looked modal without being modal would be the worse failure of the two.
  */
 import type { ReactNode } from 'react';
+import { motion } from 'motion/react';
+import { usePresetMotion } from '../../motion/usePresetMotion.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Scrim.module.scss';
 
@@ -26,8 +28,14 @@ export interface ScrimProps {
 }
 
 export function Scrim({ isCentred = true, children, className }: ScrimProps): React.JSX.Element {
+  /* Mirage has a wash: the catalogue's `mirage` as the scrim arrives and
+     `mirage-out` as it goes, computed by Crystal's preset module — the same the
+     dialog and the drawer play. The exit plays when a product shows and hides
+     the scrim inside `AnimatePresence`, which is where Motion can hold it. */
+  const wash = usePresetMotion('mirage', 'mirage-out');
   return (
-    <div
+    <motion.div
+      {...wash}
       /* Deliberately **not** `aria-hidden`. The scrim usually wraps the overlay
          it separates, and hiding the wrapper hides the dialog inside it — which
          would make every modal in the library invisible to a screen reader. It
@@ -36,6 +44,6 @@ export function Scrim({ isCentred = true, children, className }: ScrimProps): Re
       className={cx(styles['scrim'], isCentred ? styles['centred'] : undefined, className)}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

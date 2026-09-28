@@ -63,10 +63,14 @@ export const RingProgress = forwardRef<HTMLDivElement, RingProgressProps>(functi
 
   const previous = useRef<number | undefined>(undefined);
   useEffect(() => {
-    const moved = previous.current !== undefined && previous.current !== at;
+    const before = previous.current;
+    const moved = before !== undefined && before !== at;
     previous.current = determinate ? at : undefined;
-    if (moved) play('progress-change');
-  }, [at, determinate, play]);
+    /* `success` when the work completes — the value reaching the end, from
+       short of it — and `progress-change` for every other move. A ring that
+       renders full was complete before anybody looked, and plays nothing. */
+    if (moved) play(at >= max && (before ?? max) < max ? 'success' : 'progress-change');
+  }, [at, determinate, max, play]);
 
   return (
     <div

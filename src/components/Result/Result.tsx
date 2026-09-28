@@ -16,9 +16,12 @@
  * thing: a page that is not there is information, and a page you may not see is
  * blocked.
  */
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useMemo, type HTMLAttributes, type ReactNode } from 'react';
 import { STATUS_SYMBOL, type FeedbackStatus } from '../../feedback/status.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { Arrival } from '../../motion/Arrival.js';
 import styles from './Result.module.scss';
 
 export type ResultOutcome =
@@ -52,15 +55,21 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result({
 }, ref): ReactNode {
   const Heading = `h${headingLevel}` as 'h2';
   const status = PAIR[outcome];
+  /* `success` for a success outcome, once, as it is shown — a result appears
+     because something finished, and an outcome that becomes a success mounts
+     the cue at that moment. Never for any other outcome. */
+  const [scope, play] = useMotion();
+  const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
 
   return (
     <div
       {...props}
-      ref={ref}
+      ref={merged as never}
       data-outcome={outcome}
       data-status={status}
       className={cx(styles['result'], className)}
     >
+      {outcome === 'success' ? <Arrival play={play} recipe="success" /> : null}
       <span aria-hidden="true" className={styles['well']}>{STATUS_SYMBOL[status]}</span>
       <Heading className={styles['title']}>{title}</Heading>
       {children ? <div className={styles['body']}>{children}</div> : null}

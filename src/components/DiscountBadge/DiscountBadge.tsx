@@ -24,11 +24,13 @@
  * care. There is no perimeter stroke, for the reason `StatusBadge` gives: a
  * coloured ring around a pill is the shape Crystal uses for focus.
  */
-import { forwardRef, type HTMLAttributes } from 'react';
+import { forwardRef, useMemo, type HTMLAttributes } from 'react';
 import { useNumberFormatter } from 'react-aria';
 import { moneyFormat, percentOff, type Money } from '../../commerce/money.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './DiscountBadge.module.scss';
 
 export interface DiscountBadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
@@ -53,6 +55,10 @@ export const DiscountBadge = forwardRef<HTMLSpanElement, DiscountBadgeProps>(
   function DiscountBadge({ from, to, show = 'percentage', statement, className, ...props }, ref) {
     const money = useNumberFormatter(moneyFormat(from));
     const percentage = percentOff(from, to);
+    /* `attention` when the reduction changes while it is shown — a price cut
+       again — and never on the render that first shows it. */
+    const cue = useChangeMotion(percentage, (was, is) => (was !== null && is !== null ? 'attention' : null));
+    const merged = useMemo(() => mergeRefs(ref, cue as never), [ref, cue]);
 
     /* Two currencies are not a reduction, and neither is an increase. Rendering
        either as a discount would be the component asserting something it has
@@ -72,7 +78,7 @@ export const DiscountBadge = forwardRef<HTMLSpanElement, DiscountBadgeProps>(
     )))(formatted);
 
     return (
-      <span {...props} ref={ref} className={cx(styles['discount'], 'cr-haze', className)}>
+      <span {...props} ref={merged as never} className={cx(styles['discount'], 'cr-haze', className)}>
         <span aria-hidden="true">{brief}</span>
         <VisuallyHidden>{whole}</VisuallyHidden>
       </span>

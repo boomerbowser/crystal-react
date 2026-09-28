@@ -39,9 +39,12 @@
  * positioning is verified in a browser and the semantics are verified here.
  */
 import {
-  useCallback, useEffect, useId, useLayoutEffect, useRef, useState,
-  type ReactNode, type RefObject,
+  forwardRef, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState,
+  type HTMLAttributes, type ReactNode, type RefObject,
 } from 'react';
+import { AnimatePresence, useIsPresent } from 'motion/react';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
 import { Portal } from '../Portal/Portal.js';
 import { FocusTrap } from '../FocusTrap/FocusTrap.js';
 import { Button } from '../Button/Button.js';
@@ -163,84 +166,99 @@ export function Tour({
     if (isOpen) panel.current?.focus();
   }, [isOpen, step]);
 
-  if (!isOpen || !current) return null;
-
+  /* Kept for its exit: `AnimatePresence` holds the tour while its panel plays
+     `popover-out`, and the panel plays `popover-in` as the tour opens. */
   return (
-    <Portal>
-      <div
-        className={styles['tour']}
-        onKeyDown={(event) => {
-          if (event.key !== 'Escape') return;
-          event.stopPropagation();
-          close();
-        }}
-      >
-        {/* One element, with the target cut out of it. `evenodd` is what makes
-            the hole: the viewport rectangle and the target's rounded one wind
-            the same way, so the overlap falls outside the fill.
+    <AnimatePresence>
+      {isOpen && current ? (
+        <Portal key="tour">
+          <div
+            className={styles['tour']}
+            onKeyDown={(event) => {
+              if (event.key !== 'Escape') return;
+              event.stopPropagation();
+              close();
+            }}
+          >
+            {/* One element, with the target cut out of it. `evenodd` is what makes
+                the hole: the viewport rectangle and the target's rounded one wind
+                the same way, so the overlap falls outside the fill.
 
-            `path()` rather than `xywh() exclude`, which is not CSS — `clip-path`
-            takes a single shape and has no combinator. The first version of this
-            used one, the declaration was dropped as invalid, and the scrim
-            simply had no hole in it: `getComputedStyle` in a real browser
-            reported `clip-path: none` while every unit test passed, because
-            jsdom measures nothing and had no box to cut. */}
-        <div
-          className={styles['scrim']}
-          /* A stable hook for the gate that checks the hole. Finding it by DOM
-             position broke the moment `FocusTrap` was added between the two —
-             the scrim stopped being the dialog's previous sibling and the check
-             reported the scrim painting nowhere. */
-          data-cr-tour="scrim"
-          data-cut={box ? '' : undefined}
-          style={box ? { clipPath: spotlight(box) } as React.CSSProperties : undefined}
-        />
-        <FocusTrap isActive autoFocus={false} restoreFocus={false}>
-        <div
-          ref={attach}
-          role="dialog"
-          aria-modal="true"
-          tabIndex={-1}
-          aria-labelledby={`${id}-title`}
-          aria-describedby={`${id}-body`}
-          className={styles['panel']}
-          data-anchored={box ? '' : undefined}
-          style={box ? {
-            '--panel-top': `${box.top + box.height}px`,
-            '--panel-left': `${box.left}px`,
-          } as React.CSSProperties : undefined}
-        >
-          <p className={styles['position']} id={`${id}-position`}>
-            {formatPosition(step, steps.length)}
-          </p>
-          <p className={styles['title']} id={`${id}-title`}>
-            {/* The position is part of the name, not only small text beside it:
-                a reader who cannot see the progress has no other way to know
-                whether they are near the end. */}
-            <span className={styles['said']}>{`${formatPosition(step, steps.length)}. `}</span>
-            {current.title}
-          </p>
-          {current.children ? (
-            <div className={styles['body']} id={`${id}-body`}>{current.children}</div>
-          ) : <span id={`${id}-body`} hidden />}
-          <div className={styles['actions']}>
-            {/* The way out, on every step. A tour takes the whole interface away
-                from someone who did not ask for it. */}
-            <Button variant="quiet" onPress={close}>{closeLabel}</Button>
-            <span className={styles['spacer']} />
-            {step > 0 ? (
-              <Button variant="quiet" onPress={() => onStepChange?.(step - 1)}>{backLabel}</Button>
-            ) : null}
-            <Button onPress={() => (last ? close() : onStepChange?.(step + 1))}>
-              {last ? finishLabel : nextLabel}
-            </Button>
+                `path()` rather than `xywh() exclude`, which is not CSS — `clip-path`
+                takes a single shape and has no combinator. The first version of this
+                used one, the declaration was dropped as invalid, and the scrim
+                simply had no hole in it: `getComputedStyle` in a real browser
+                reported `clip-path: none` while every unit test passed, because
+                jsdom measures nothing and had no box to cut. */}
+            <div
+              className={styles['scrim']}
+              /* A stable hook for the gate that checks the hole. Finding it by DOM
+                 position broke the moment `FocusTrap` was added between the two —
+                 the scrim stopped being the dialog's previous sibling and the check
+                 reported the scrim painting nowhere. */
+              data-cr-tour="scrim"
+              data-cut={box ? '' : undefined}
+              style={box ? { clipPath: spotlight(box) } as React.CSSProperties : undefined}
+            />
+            <PresentFocusTrap>
+            <TourPanel
+              ref={attach}
+              role="dialog"
+              aria-modal="true"
+              tabIndex={-1}
+              aria-labelledby={`${id}-title`}
+              aria-describedby={`${id}-body`}
+              className={styles['panel']}
+              data-anchored={box ? '' : undefined}
+              style={box ? {
+                '--panel-top': `${box.top + box.height}px`,
+                '--panel-left': `${box.left}px`,
+              } as React.CSSProperties : undefined}
+            >
+              <p className={styles['position']} id={`${id}-position`}>
+                {formatPosition(step, steps.length)}
+              </p>
+              <p className={styles['title']} id={`${id}-title`}>
+                {/* The position is part of the name, not only small text beside it:
+                    a reader who cannot see the progress has no other way to know
+                    whether they are near the end. */}
+                <span className={styles['said']}>{`${formatPosition(step, steps.length)}. `}</span>
+                {current.title}
+              </p>
+              {current.children ? (
+                <div className={styles['body']} id={`${id}-body`}>{current.children}</div>
+              ) : <span id={`${id}-body`} hidden />}
+              <div className={styles['actions']}>
+                {/* The way out, on every step. A tour takes the whole interface away
+                    from someone who did not ask for it. */}
+                <Button variant="quiet" onPress={close}>{closeLabel}</Button>
+                <span className={styles['spacer']} />
+                {step > 0 ? (
+                  <Button variant="quiet" onPress={() => onStepChange?.(step - 1)}>{backLabel}</Button>
+      ) : null}
+                <Button onPress={() => (last ? close() : onStepChange?.(step + 1))}>
+                  {last ? finishLabel : nextLabel}
+                </Button>
+              </div>
+            </TourPanel>
+            </PresentFocusTrap>
           </div>
-        </div>
-        </FocusTrap>
-      </div>
-    </Portal>
+        </Portal>
+      ) : null}
+    </AnimatePresence>
   );
 }
+
+/* The panel, arriving with `popover-in` as the tour opens and leaving with
+   `popover-out` as it closes — the catalogue's recipes for it — through Motion's
+   presence, which holds the tour until the exit has played. */
+const TourPanel = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & { 'data-anchored'?: string | undefined }>(
+  function TourPanel(props, ref) {
+    const scope = usePresenceMotion('popover-in', 'popover-out');
+    const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
+    return <div ref={merged} {...props} />;
+  },
+);
 
 /* The viewport, with a rounded rectangle taken out of it.
  *
@@ -264,4 +282,13 @@ function spotlight({ top, left, width, height, radius }: Box): string {
       + `H${left + r}A${r},${r} 0 0 1 ${left},${bottom - r}`
       + `V${top + r}A${r},${r} 0 0 1 ${left + r},${top}Z`;
   return `path(evenodd, "M0,0H100000V100000H0Z ${hole}")`;
+}
+
+/* The trap, for as long as the tour is present. `AnimatePresence` renders a
+   leaving tour with the props it last had, so a trap told `isActive` would go on
+   holding focus through the exit — and pull it back from the element the tour
+   has just returned it to. Motion's own presence says when it is leaving. */
+function PresentFocusTrap({ children }: { children: ReactNode }): React.JSX.Element {
+  const isPresent = useIsPresent();
+  return <FocusTrap isActive={isPresent} autoFocus={false} restoreFocus={false}>{children}</FocusTrap>;
 }

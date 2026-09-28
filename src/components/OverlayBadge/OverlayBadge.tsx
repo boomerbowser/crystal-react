@@ -17,8 +17,9 @@
  * Without a `label` the badge is `aria-hidden`, because a decorative mark over a
  * named thing is read as a second unnamed thing otherwise.
  */
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
 import styles from './OverlayBadge.module.scss';
 
 /** Which corner it sits over. */
@@ -49,11 +50,23 @@ export const OverlayBadge = forwardRef<HTMLSpanElement, OverlayBadgeProps>(funct
     ? { 'aria-hidden': true as const }
     : { role: 'img' as const, 'aria-label': label };
 
+  /* `attention` when what the badge says changes — compared as text, since
+     `badge` is usually an element and a new element is not a new value — and
+     never on the render that first shows it. */
+  const [cue, play] = useMotion();
+  const said = useRef<string | null>(null);
+  useEffect(() => {
+    const text = (cue.current as HTMLElement | null)?.textContent ?? '';
+    if (said.current !== null && said.current !== text) void play('attention');
+    said.current = text;
+  });
+
   return (
     <span {...props} ref={ref} className={cx(styles['host'], className)}>
       {children}
       <span
         {...semantics}
+        ref={cue as never}
         className={cx(styles['badge'], 'cr-haze', styles[PLACEMENT_CLASS[placement]])}
       >
         {badge}
