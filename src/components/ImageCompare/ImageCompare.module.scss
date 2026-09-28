@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* ImageCompare — "Resin handle over the images; handle is a pill and reaches
  * 44px."
@@ -68,9 +67,12 @@
   pointer-events: none;
 }
 
+/* The handle is Crystal's Resin plane at the pill, worn as `.cr-resin` — the
+   catalogue's `resin` surface (D-23). What `.cr-resin` has and the local copy did
+   not is its two optical layers, the sheen and the inner highlight; its opaque,
+   reduced-transparency and forced-colours routes are Crystal's too. What is here
+   is where the handle sits and how big it is. */
 .thumb {
-  @include material.resin;
-
   position: absolute;
   inset-block-start: 50%;
   /* The inline-start is React Aria's, written inline from the real value — so
@@ -82,8 +84,6 @@
   cursor: ew-resize;
 }
 
-@include material.opaque-fallback('.thumb');
-
 .thumb[data-focus-visible] {
   outline: $cr-focus-core-width solid var(--cr-focus-core);
   outline-offset: $cr-focus-core-offset;
@@ -91,11 +91,5 @@
 }
 
 @media (forced-colors: active) {
-  .thumb {
-    background: ButtonFace;
-    border: 1px solid ButtonText;
-    box-shadow: none;
-  }
-
   .position { background: CanvasText; }
 }

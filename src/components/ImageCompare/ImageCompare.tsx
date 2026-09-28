@@ -95,7 +95,7 @@ export const ImageCompare = forwardRef<HTMLDivElement, ImageCompareProps>(functi
               meets are different nodes — and a target gate that probed the named
               one would report a 1px handle on a control that is 44px. The same
               trap the segmented control's label hit. */}
-          <SliderThumb className={cx(styles['thumb'])} data-cr-handle="" />
+          <SliderThumb className={cx(styles['thumb'], 'cr-resin')} data-cr-handle="" />
         </SliderTrack>
       </AriaSlider>
     </div>
