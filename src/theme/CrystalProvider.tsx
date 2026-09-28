@@ -28,7 +28,7 @@ import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 import type {
   CrystalTheme, CrystalThemeInput, CrystalThemeValues, CrystalDirection, CrystalMode,
 } from './types.js';
-import { usePreferredMode, usePrefersReducedTransparency, useForcedColors } from './usePreferredScheme.js';
+import { usePreferredMode, usePrefersReducedTransparency, useForcedColors, usePrefersReducedMotion } from './usePreferredScheme.js';
 
 const core = preferences;
 
@@ -49,7 +49,7 @@ const CrystalThemeContext = createContext<CrystalTheme | null>(null);
 function resolveTheme(
   input: CrystalThemeInput,
   inherited: CrystalTheme | null,
-  system: { mode: CrystalMode; reducedTransparency: boolean; forcedColors: boolean },
+  system: { mode: CrystalMode; reducedTransparency: boolean; forcedColors: boolean; reducedMotion: boolean },
 ): CrystalTheme {
   /* `system` is a preference, never a resolved value: a component asking "am I
      dark?" needs an answer, so it is turned into one here and nowhere else.
@@ -87,7 +87,16 @@ function resolveTheme(
       ?? inherited?.effects
       ?? ((normalised as unknown as { reduced?: boolean }).reduced ? 'opaque' : 'full');
 
-  const values: CrystalThemeValues = { ...normalised, direction, effects };
+  /* The same rule for movement. Every recipe this library plays runs in script,
+     and script does not see a media query unless it asks: with the operating
+     system set to reduce motion, a button's press still played in full, while the
+     CSS-driven indicators beside it stood still. Crystal's accessibility chapter
+     says reduced motion is honoured by every recipe, so the system's answer wins
+     here exactly as reduced transparency does — a product preference can ask for
+     less movement than the system, never for more. */
+  const reduceMotion = system.reducedMotion || normalised.reduceMotion;
+
+  const values: CrystalThemeValues = { ...normalised, reduceMotion, direction, effects };
 
   return {
     ...values,
@@ -244,17 +253,18 @@ export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
   const systemMode = usePreferredMode();
   const reducedTransparency = usePrefersReducedTransparency();
   const forcedColors = useForcedColors();
+  const reducedMotion = usePrefersReducedMotion();
 
   const theme = useMemo(
     () => resolveTheme(input, inherited, {
-      mode: systemMode, reducedTransparency, forcedColors,
+      mode: systemMode, reducedTransparency, forcedColors, reducedMotion,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       input.palette, input.mode, input.density, input.direction, input.effects,
       input.atmosphere, input.translucency, input.elevation, input.radius,
       input.motionSpeed, input.reduceMotion, inherited,
-      systemMode, reducedTransparency, forcedColors,
+      systemMode, reducedTransparency, forcedColors, reducedMotion,
     ],
   );
 

@@ -50,6 +50,27 @@ describe('CrystalProvider', () => {
     expect(read().press).toBe(0);
   });
 
+  /* Every recipe here runs in script, and script does not see a media query unless
+     it asks. With the operating system set to reduce motion and no prop, a
+     button's press played in full — measured in a browser — while the CSS-driven
+     indicators beside it stood still. The system's answer wins the way reduced
+     transparency's does. jsdom implements no matchMedia at all, so it is given one. */
+  it('reduces motion when the operating system asks, with no prop at all', () => {
+    const original = window.matchMedia;
+    window.matchMedia = ((query: string) => ({
+      matches: query === '(prefers-reduced-motion: reduce)', media: query, onchange: null,
+      addEventListener: () => {}, removeEventListener: () => {},
+      addListener: () => {}, removeListener: () => {}, dispatchEvent: () => false,
+    })) as typeof window.matchMedia;
+    try {
+      const { container } = render(<CrystalProvider><Probe /></CrystalProvider>);
+      expect(read().press).toBe(0);
+      expect((container.firstElementChild as HTMLElement).style.getPropertyValue('--cr-motion-enabled')).toBe('0');
+    } finally {
+      window.matchMedia = original;
+    }
+  });
+
   it('scopes to its own element, so a nested provider overrides only itself', () => {
     render(
       <CrystalProvider mode="light" data-testid="outer">

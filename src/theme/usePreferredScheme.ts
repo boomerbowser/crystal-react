@@ -24,6 +24,11 @@ export function usePrefersReducedTransparency(): boolean {
   return useMediaQuery('(prefers-reduced-transparency: reduce)', false);
 }
 
+/** True when the operating system asks for less movement. */
+export function usePrefersReducedMotion(): boolean {
+  return useMediaQuery('(prefers-reduced-motion: reduce)', false);
+}
+
 /** True when the operating system is painting the colours rather than Crystal. */
 export function useForcedColors(): boolean {
   return useMediaQuery('(forced-colors: active)', false);
