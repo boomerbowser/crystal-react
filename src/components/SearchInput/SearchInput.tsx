@@ -23,10 +23,11 @@
  */
 import { forwardRef, type ReactNode } from 'react';
 import {
-  SearchField, Label, Input, Button, Group, Text, FieldError,
+  SearchField, Label, Input, Button, Text, FieldError,
   type SearchFieldProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { FieldGroupShell } from '../FormField/FieldShell.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './SearchInput.module.scss';
 
@@ -71,8 +72,13 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
       className={cx(styles['field'], className)}
       {...(style ? { style } : {})}
     >
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group className={cx(styles['shell'], 'cr-field-shell')}>
+      {/* The field shell plays Crystal's field motion: \`field-focus\` as focus
+          arrives, \`field-invalid\` and \`field-valid\` on the validity React Aria
+          resolved. */}
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
         {/* Decoration: hidden from assistive technology, and not pressable. */}
         <span className={cx(styles['leadingIcon'])} aria-hidden="true">{SearchIcon}</span>
         <Input
@@ -83,7 +89,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
         {/* React Aria names this from the field's label and hides it when the
             field is empty, so it is not a permanent control that does nothing. */}
         <Button className={cx(styles['inlineAction'], 'cr-bare')}>{CrossIcon}</Button>
-      </Group>
+      </FieldGroupShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
@@ -91,6 +97,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
       <VisuallyHidden as="div" role="status" aria-live="polite">
         {isLoading ? 'Searching' : ''}
       </VisuallyHidden>
+      </>
+      )}
     </SearchField>
   );
 

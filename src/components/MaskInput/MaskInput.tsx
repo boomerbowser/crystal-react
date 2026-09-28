@@ -23,7 +23,7 @@
 import { forwardRef, useId, useState, type ReactNode } from 'react';
 import { IMaskInput } from 'react-imask';
 import { cx } from '../../styles/cx.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { useFieldMotion } from '../FormField/useInvalidMotion.js';
 import styles from '../TextInput/TextInput.module.scss';
 import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
 
@@ -56,7 +56,7 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(function M
 ) {
   const validation = useDistributedErrors(name, errorMessage, isInvalid);
   const invalid = validation.isInvalid;
-  const shellScope = useInvalidMotion(invalid);
+  const [shellScope, playField] = useFieldMotion(invalid);
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const raw = value ?? uncontrolled;
 
@@ -79,6 +79,9 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(function M
       <label htmlFor={fieldId} className={cx(styles['label'])}>{label}</label>
       <div
         ref={shellScope as never}
+        /* React's onFocus is focusin, so focus arriving at any control inside
+           marks the field once — Crystal's `field-focus`. */
+        onFocus={() => { void playField('field-focus'); }}
         className={cx(styles['shell'], 'cr-field-shell')}
         {...(invalid ? { 'data-invalid': true } : {})}
       >

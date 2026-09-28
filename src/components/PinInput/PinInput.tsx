@@ -21,7 +21,7 @@
  */
 import { useCallback, useId, useRef, useState, type ClipboardEvent, type KeyboardEvent, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { useFieldMotion } from '../FormField/useInvalidMotion.js';
 import styles from './PinInput.module.scss';
 import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
 import { FormValue } from '../FormField/FormValue.js';
@@ -58,7 +58,7 @@ export function PinInput({
   const current = (value ?? uncontrolled).slice(0, length);
   const validation = useDistributedErrors(name, errorMessage, isInvalid);
   const invalid = validation.isInvalid;
-  const shellScope = useInvalidMotion(invalid);
+  const [shellScope, playField] = useFieldMotion(invalid);
 
   const labelId = useId();
   const descriptionId = useId();
@@ -123,6 +123,9 @@ export function PinInput({
           than as N fields each called "digit". */}
       <div
         ref={shellScope as never}
+        /* React's onFocus is focusin, so focus arriving at any control inside
+           marks the field once — Crystal's `field-focus`. */
+        onFocus={() => { void playField('field-focus'); }}
         role="group"
         aria-labelledby={labelId}
         {...(describedBy ? { 'aria-describedby': describedBy } : {})}

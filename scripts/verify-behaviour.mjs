@@ -1118,6 +1118,34 @@ for (const id of ['navigation-rails-and-bars--dock-bar', 'navigation-rails-and-b
   );
 }
 
+/* `field-focus` marks focus arriving at a field: on its shell, once, when a
+   control inside it is focused — never on load. Every field shell in the two
+   stories that hold them all is focused in turn, so a field whose shell was
+   never bound shows up by name. */
+for (const id of ['inputs-text-and-choice--text-family', 'inputs-composite--tokens', 'inputs-temporal-colour-and-files--colour']) {
+  await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const shells = page.locator('#storybook-root .cr-field-shell:has(input:not([type=hidden]), textarea)');
+  const count = await shells.count();
+  const atRest = await page.evaluate(() => [...document.querySelectorAll('#storybook-root .cr-field-shell')]
+    .filter((el) => el.dataset.crMotionName === 'field-focus').length);
+  const missed = [];
+  for (let index = 0; index < count; index += 1) {
+    const shell = shells.nth(index);
+    await shell.locator('input:not([type=hidden]), textarea').first().focus();
+    await page.waitForTimeout(80);
+    /* The shell, or the group of wells a pin input marks as one field. */
+    const moved = await shell.evaluate((el) => el.dataset.crMotionName === 'field-focus'
+      || el.parentElement?.dataset.crMotionName === 'field-focus');
+    if (!moved) missed.push(await shell.evaluate((el) => el.closest('[class*="_field_"]')?.querySelector('label, [class*="_label_"]')?.textContent?.trim() ?? el.className));
+  }
+  record(
+    `field-focus on ${id}: nothing on load, and every field's shell marks focus arriving`,
+    count > 0 && atRest === 0 && missed.length === 0,
+    `${count} field shells; ${atRest} had played on load; focus did not mark: ${JSON.stringify([...new Set(missed)])}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

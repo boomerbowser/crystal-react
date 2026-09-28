@@ -27,7 +27,7 @@ import {
 import { cx } from '../../styles/cx.js';
 import { Chip } from '../Chip/Chip.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
-import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
+import { useFieldMotion } from '../FormField/useInvalidMotion.js';
 import styles from './TagsInput.module.scss';
 import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
 import { FormValue } from '../FormField/FormValue.js';
@@ -114,7 +114,7 @@ function Field({
   /* A refusal is this component saying no to a tag, which is its own business
      and not the form's. */
   const invalid = refusal ? true : validation.isInvalid;
-  const shellScope = useInvalidMotion(invalid);
+  const [shellScope, playField] = useFieldMotion(invalid);
 
   const commit = () => { if (add(draft)) setDraft(''); };
 
@@ -133,6 +133,9 @@ function Field({
       <span id={labelId} className={cx(styles['label'])}>{label}</span>
       <div
         ref={shellScope as never}
+        /* React's onFocus is focusin, so focus arriving at any control inside
+           marks the field once — Crystal's `field-focus`. */
+        onFocus={() => { void playField('field-focus'); }}
         className={cx(styles['shell'], 'cr-field-shell')}
         {...(invalid ? { 'data-invalid': true } : {})}
         onClick={() => entry.current?.focus()}

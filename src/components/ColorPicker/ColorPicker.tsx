@@ -27,11 +27,12 @@ import {
   ColorWheel as AriaColorWheel,
   ColorField, ColorSwatch as AriaColorSwatch,
   ColorSwatchPicker as AriaColorSwatchPicker, ColorSwatchPickerItem,
-  ColorThumb, SliderTrack, ColorWheelTrack, Label, Input, Group, Text,
+  ColorThumb, SliderTrack, ColorWheelTrack, Label, Input, Text,
   parseColor, type Color,
 } from 'react-aria-components';
 import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 import { cx } from '../../styles/cx.js';
+import { FieldGroupShell } from '../FormField/FieldShell.js';
 import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import styles from './ColorPicker.module.scss';
 
@@ -71,15 +72,19 @@ export function ColorInput({
       isDisabled={isDisabled}
       className={cx(styles['field'], className)}
     >
+      {({ isInvalid }) => (
+      <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <Group className={cx(styles['shell'], 'cr-field-shell')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
         <AriaColorSwatch className={cx(styles['swatch'])} />
         <Input className={cx(styles['control'])} />
-      </Group>
+      </FieldGroupShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       {errorMessage ? <span role="alert" className={cx(styles['error'])}>{errorMessage}</span> : null}
+      </>
+      )}
     </ColorField>
   );
 }
@@ -307,10 +312,12 @@ export function ColorPicker({
             label: inside a group that is already announced as "Accent", a field
             called "Accent" says nothing a listener did not just hear. */}
         <ColorField className={cx(styles['field'])} aria-label="Hexadecimal value">
-          <Group className={cx(styles['shell'], 'cr-field-shell')}>
-            <AriaColorSwatch className={cx(styles['swatch'])} />
-            <Input className={cx(styles['control'])} />
-          </Group>
+          {({ isInvalid }) => (
+            <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
+              <AriaColorSwatch className={cx(styles['swatch'])} />
+              <Input className={cx(styles['control'])} />
+            </FieldGroupShell>
+          )}
         </ColorField>
       </div>
     </AriaColorPicker>
