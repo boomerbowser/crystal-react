@@ -191,11 +191,19 @@ function motionUsed(componentId) {
     /* Only count a name in a file that actually uses a hook that plays it.
        Without this, Button's `variant="resin"` was reported as a Resin preset:
        a string that happens to match a preset name is not a call. */
-    const playsRecipes = /\buse(?!\w*Reduced)(\w*Motion|Continuous|MarkArrival)\b/.test(source);
+    const playsRecipes = /\buse(?!\w*Reduced)(\w*Motion|Continuous|MarkArrival)\b|<Arrival\b/.test(source);
     const playsPresets = source.includes('usePreset');
     if (!playsRecipes && !playsPresets) continue;
-    for (const match of source.matchAll(/'([a-z][a-z-]*)'/g)) {
-      const name = match[1];
+    /* Single-quoted names, and a recipe handed to \`<Arrival recipe="menu-in" />\`,
+       which is JSX and double-quoted — the one form the first pattern missed,
+       and the reason every menu, popover and tooltip read as arriving with
+       nothing. Only as a \`recipe=\` attribute: \`slot="selection"\` is not a
+       binding. */
+    const names = [
+      ...[...source.matchAll(/'([a-z][a-z-]*)'/g)].map((match) => match[1]),
+      ...[...source.matchAll(/\brecipe="([a-z][a-z-]*)"/g)].map((match) => match[1]),
+    ];
+    for (const name of names) {
       if (playsRecipes && RECIPE_IDS.has(name)) recipes.add(name);
       else if (playsPresets && PRESET_IDS.has(name)) presets.add(name);
     }
