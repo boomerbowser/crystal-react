@@ -149,7 +149,11 @@ function motionUsed(componentId) {
   /* A component may live in a neighbour's directory — Group is in Stack's — so
      the source is found by looking for the directory that exports it rather than
      by assuming one is named after it. */
-  const dir = existsSync(join(componentsDir, pascal))
+  /* A directory named after it counts only if it is a component — has a barrel.
+     Five empty directories left behind by an old move (ActionBar, CloseButton,
+     Mentions, SpeedDial, SplitButton) were being taken for the components, which
+     live beside their neighbours, and each was reported as playing nothing. */
+  const dir = existsSync(join(componentsDir, pascal, 'index.ts'))
     ? join(componentsDir, pascal)
     : (readdirSync(componentsDir)
       .map((entry) => join(componentsDir, entry))
