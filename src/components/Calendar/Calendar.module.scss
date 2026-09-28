@@ -36,8 +36,6 @@
 .heading { font-weight: 750; font-size: var(--cr-text-subheading-size); }
 
 .navButton {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
 
   display: flex;
   align-items: center;

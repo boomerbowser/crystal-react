@@ -31,8 +31,6 @@
    chips, not their container. Chips carry remove buttons, and a button inside a
    button is not something a browser can render. */
 .opener {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
 
   flex: 1;
   display: flex;

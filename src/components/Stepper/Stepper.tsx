@@ -115,7 +115,7 @@ export function Stepper({
             className={cx(styles['step'])}
           >
             {isNavigable ? (
-              <Button aria-label={name} onPress={() => onNavigate?.(step.id)} className={cx(styles['control'])}>
+              <Button aria-label={name} onPress={() => onNavigate?.(step.id)} className={cx(styles['control'], shape === 'marker' && 'cr-bare')}>
                 {body}
               </Button>
             ) : (

@@ -71,8 +71,6 @@
 .action { flex: none; align-self: center; }
 
 .dismiss {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
 
   flex: none;
   display: inline-grid;

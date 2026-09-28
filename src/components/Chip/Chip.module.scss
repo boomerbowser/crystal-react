@@ -30,13 +30,12 @@
 
 /* The target around the picture. Transparent, centred, and 44px tall. */
 .pressable {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
  position: relative; cursor: pointer; }
 
 .pressable::after {
   /* There is one `::after` per element, and Crystal's sheen is on it too — so
-     switching this back on after `bare-control` means taking back everything
+     switching this back on after Crystal's `.cr-bare` (which sets both pseudo-
+     elements to `content: none`) means taking back everything
      Crystal's rule says about it, not just `display`. The gradient would
      otherwise paint across the chip, and `pointer-events: none` would leave the
      box inert. This box is not decoration: it is the hit target, and Crystal's
@@ -75,9 +74,6 @@
 /* The label half of a chip that is both selectable and removable. It carries the
    press behaviour; the pill around it carries the material. */
 .chipLabel {
-  /* `bare-control` is on `.pressable`, which is on this element in both of
-     Chip's shapes. Repeating it here would re-hide `.pressable::after` from
-     further down the file, and that `::after` is the hit target. */
 
   display: flex;
   align-items: center;
@@ -100,9 +96,14 @@
 }
 
 .remove {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
-
+  /* The visible control is the 24px circle this declares, and the 44px target is
+     the `::after` below. Neither minimum may override that: Crystal's
+     `button { min-height: 48px }` did from 2.1.0, and `cr-bare`'s 44px minimum
+     would now — each made a 32px chip render 50px tall, which is the defect the
+     hit-target box was written to prevent. Measured, not assumed. */
+  min-inline-size: 0;
+  min-block-size: 0;
+  padding: 0;
   position: relative;
   flex: none;
   display: flex;
@@ -123,7 +124,8 @@
    tall. The story is what showed it. */
 .remove::after {
   /* There is one `::after` per element, and Crystal's sheen is on it too — so
-     switching this back on after `bare-control` means taking back everything
+     switching this back on after Crystal's `.cr-bare` (which sets both pseudo-
+     elements to `content: none`) means taking back everything
      Crystal's rule says about it, not just `display`. The gradient would
      otherwise paint across the chip, and `pointer-events: none` would leave the
      box inert. This box is not decoration: it is the hit target, and Crystal's

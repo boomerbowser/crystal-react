@@ -118,8 +118,6 @@
    button. It reaches the target floor by being as tall as the well, not by
    growing the field. */
 @mixin inline-action {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
 
   display: flex;
   align-items: center;

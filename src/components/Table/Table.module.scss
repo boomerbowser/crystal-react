@@ -111,8 +111,6 @@ $table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewpor
    what carries the order. The button reaches the target floor through the
    header cell's own padding, which it fills. */
 .sort {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
 
   display: inline-flex;
   align-items: center;

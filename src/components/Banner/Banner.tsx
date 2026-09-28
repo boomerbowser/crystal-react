@@ -64,7 +64,7 @@ export const Banner = forwardRef<HTMLDivElement, BannerProps>(function Banner({
       {onDismiss ? (
         <button
           type="button"
-          className={styles['dismiss']}
+          className={cx(styles['dismiss'], 'cr-bare')}
           aria-label={dismissLabel}
           onClick={() => {
             onDismiss();

@@ -91,7 +91,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert({
       {onDismiss ? (
         <button
           type="button"
-          className={styles['dismiss']}
+          className={cx(styles['dismiss'], 'cr-bare')}
           /* Named for what it dismisses rather than "Close": a page with three
              alerts otherwise offers a reader three identical buttons. */
           aria-label={dismissLabel ?? (typeof title === 'string' ? `Dismiss: ${title}` : 'Dismiss')}

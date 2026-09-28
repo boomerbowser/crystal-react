@@ -147,7 +147,7 @@ export function DatePicker({
           server's rejection moves the field exactly as a local rule would. */}
       <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'])}>
         {segments}
-        <Button className={cx(styles['trigger'])}>{CalendarIcon}</Button>
+        <Button className={cx(styles['trigger'], 'cr-bare')}>{CalendarIcon}</Button>
       </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
@@ -201,7 +201,7 @@ export function DateRangePicker({
         <AriaDateInput slot="end" className={cx(styles['segments'])}>
           {(segment) => <DateSegment segment={segment} className={cx(styles['segment'])} />}
         </AriaDateInput>
-        <Button className={cx(styles['trigger'])}>{CalendarIcon}</Button>
+        <Button className={cx(styles['trigger'], 'cr-bare')}>{CalendarIcon}</Button>
       </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>

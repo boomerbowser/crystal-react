@@ -188,7 +188,7 @@ function UploadedFiles({ files, onRemove }: {
                   type="button"
                   aria-label={`Remove ${file.name}`}
                   onClick={() => onRemove(file.id)}
-                  className={cx(styles['remove'])}
+                  className={cx(styles['remove'], 'cr-bare')}
                 >
                   {CrossIcon}
                 </button>

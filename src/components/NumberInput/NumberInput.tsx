@@ -80,8 +80,8 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
         <div className={cx(styles['steppers'])}>
           {/* React Aria names these from the field's own label, so they are not
               two buttons called "Increase" on a form with three number fields. */}
-          <Button slot="increment" className={cx(styles['stepper'])}><Chevron up /></Button>
-          <Button slot="decrement" className={cx(styles['stepper'])}><Chevron up={false} /></Button>
+          <Button slot="increment" className={cx(styles['stepper'], 'cr-bare')}><Chevron up /></Button>
+          <Button slot="decrement" className={cx(styles['stepper'], 'cr-bare')}><Chevron up={false} /></Button>
         </div>
       </FieldGroupShell>
       {description ? (

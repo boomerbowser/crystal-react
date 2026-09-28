@@ -62,9 +62,9 @@ export function CalendarBody(): ReactNode {
       <div className={cx(styles['header'])}>
         {/* Named by React Aria from the calendar itself, so a range calendar
             showing two months does not have two buttons called "Previous". */}
-        <Button slot="previous" className={cx(styles['navButton'])}><Chevron back /></Button>
+        <Button slot="previous" className={cx(styles['navButton'], 'cr-bare')}><Chevron back /></Button>
         <Heading className={cx(styles['heading'])} />
-        <Button slot="next" className={cx(styles['navButton'])}><Chevron back={false} /></Button>
+        <Button slot="next" className={cx(styles['navButton'], 'cr-bare')}><Chevron back={false} /></Button>
       </div>
       <CalendarGrid className={cx(styles['grid'])}>
         <CalendarGridHeader>

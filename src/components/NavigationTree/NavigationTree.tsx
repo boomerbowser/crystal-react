@@ -172,7 +172,7 @@ function RowContent(
       style={{ '--cr-tree-level': level - 1 } as CSSProperties}
     >
       {hasChildItems ? (
-        <Button slot="chevron" className={cx(styles['chevron'])}>{ChevronIcon}</Button>
+        <Button slot="chevron" className={cx(styles['chevron'], 'cr-bare')}>{ChevronIcon}</Button>
       ) : (
         /* The chevron's room, held open on a leaf. Without it every leaf label
            sits one chevron to the left of its siblings', and the depth — the one

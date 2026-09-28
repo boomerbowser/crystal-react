@@ -46,8 +46,6 @@
 }
 
 .control {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
 
   position: relative;
   z-index: 1;
@@ -119,6 +117,13 @@ button.control[data-focus-visible] {
  * Resin disc and becomes the leading glyph inside the pill: a pill with a
  * floating disc in it is two materials deep, and Resin never contains Resin.
  */
+/* A pill step is a Haze pill, not a bare control, so it does not wear `cr-bare`
+   — the marker shape's steps do. The difference matters beyond naming: the bare
+   recipe removes both pseudo-elements, and this fill *is* the `::before`. For a
+   while it was hidden by a local bare-control mixin on `.control`, whose
+   `display: none` survived because the fill never sets `display` — so every
+   checkout step lost its fill and nothing noticed. Planting Crystal's bare class
+   on the right elements only is what brought it back. */
 .stepper[data-shape='pill'] .control {
   @include material.haze-fill(0);
 

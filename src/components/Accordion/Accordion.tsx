@@ -95,7 +95,7 @@ function Row({ item }: { item: AccordionItem }): ReactNode {
           <h3 className={styles['heading']}>
             <AriaButton
               slot="trigger"
-              className={cx(styles['trigger'])}
+              className={cx(styles['trigger'], 'cr-bare')}
               onPress={() => { void turn('icon-turn'); }}
             >
               <span className={styles['title']}>{item.title}</span>

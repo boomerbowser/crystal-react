@@ -73,7 +73,7 @@ export function ChartLegend({
               {onToggle ? (
                 <button
                   type="button"
-                  className={styles['toggle']}
+                  className={cx(styles['toggle'], 'cr-bare')}
                   aria-pressed={shown}
                   data-shown={shown ? '' : undefined}
                   onClick={() => {

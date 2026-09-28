@@ -38,8 +38,6 @@
 
 /* A pill, and a real target. The glyph is small; what a fingertip meets is not. */
 .dismiss {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
 
   flex: none;
   display: inline-grid;

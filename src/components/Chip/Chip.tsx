@@ -61,7 +61,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
     <Button
       aria-label={removeLabel ?? (typeof children === 'string' ? `Remove ${children}` : 'Remove')}
       onPress={onRemove}
-      className={cx(styles['remove'])}
+      className={cx(styles['remove'], 'cr-bare')}
     >
       {CrossIcon}
     </Button>
@@ -83,7 +83,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
 
   if (!onRemove) {
     return (
-      <ToggleButton {...props} className={cx(styles['chip'], styles['pressable'], className)}>
+      <ToggleButton {...props} className={cx(styles['chip'], styles['pressable'], 'cr-bare', className)}>
         <span>{children}</span>
       </ToggleButton>
     );
@@ -98,7 +98,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
       className={cx(styles['chip'], styles['removable'], className)}
       {...(props.isSelected ? { 'data-selected': true } : {})}
     >
-      <ToggleButton {...props} className={cx(styles['chipLabel'], styles['pressable'])}>
+      <ToggleButton {...props} className={cx(styles['chipLabel'], styles['pressable'], 'cr-bare')}>
         {children}
       </ToggleButton>
       {remove}

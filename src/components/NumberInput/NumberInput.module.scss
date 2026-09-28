@@ -32,9 +32,13 @@
    field, which is a field that looks like a mistake. They are pointer
    affordances; the arrow keys are the primary route and always reach the value. */
 .stepper {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
-
+  /* Short means short. Crystal's `button { min-height: 48px }` made each stepper
+     48px from 2.1.0, so the pair made the field 110px tall — the "field that looks
+     like a mistake" this comment set out to avoid, measured in every number field.
+     `cr-bare`'s own 44px minimum would do the same, so both are released here and
+     the pair divides the field's height between them. */
+  min-block-size: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;

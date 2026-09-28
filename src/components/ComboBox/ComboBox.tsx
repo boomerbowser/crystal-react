@@ -96,7 +96,7 @@ function Field({
         {/* Focus never leaves this input. The highlighted row is named through
             `aria-activedescendant`, which React Aria maintains. */}
         <Input className={cx(styles['control'])} {...(placeholder ? { placeholder } : {})} />
-        <Button className={cx(styles['trigger'])}>{ChevronIcon}</Button>
+        <Button className={cx(styles['trigger'], 'cr-bare')}>{ChevronIcon}</Button>
       </FieldGroupShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>

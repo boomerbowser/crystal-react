@@ -113,7 +113,7 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(function Table(
                   {column.sortable && onSortChange !== undefined ? (
                     <button
                       type="button"
-                      className={styles['sort']}
+                      className={cx(styles['sort'], 'cr-bare')}
                       onClick={() => { onSortChange(nextSort(column.id, sort)); }}
                     >
                       {column.header}

@@ -179,7 +179,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
             <li key={slide.id}>
               <button
                 type="button"
-                className={styles['indicator']}
+                className={cx(styles['indicator'], 'cr-bare')}
                 aria-label={slide.label}
                 aria-current={position === index ? 'true' : undefined}
                 onClick={() => { goTo(position, position > index ? 'next' : 'previous'); }}

@@ -69,8 +69,6 @@ $chart-connector: 1px;
 .item[data-level='1'] .row::after { display: none; }
 
 .chevron {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
 
   display: inline-grid;
   place-items: center;

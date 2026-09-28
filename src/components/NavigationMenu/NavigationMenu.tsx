@@ -86,7 +86,7 @@ export function NavigationMenu({ sections, className, ...props }: NavigationMenu
                 /* One panel at a time: two overlapping panels beneath a bar is
                    a layout with no reading order. */
                 onClick={() => { setOpen(isOpen ? null : section.id); }}
-                className={cx(styles['trigger'])}
+                className={cx(styles['trigger'], 'cr-bare')}
               >
                 {section.label}
               </button>

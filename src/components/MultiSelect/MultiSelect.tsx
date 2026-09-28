@@ -184,7 +184,7 @@ export function MultiSelect({
             isDisabled={isDisabled}
             aria-labelledby={`${labelId} ${valueId}`}
             {...(messageIds ? { 'aria-describedby': messageIds } : {})}
-            className={cx(styles['opener'])}
+            className={cx(styles['opener'], 'cr-bare')}
           >
             {selected.length === 0
               ? <span className={cx(styles['placeholder'])}>{placeholder}</span>

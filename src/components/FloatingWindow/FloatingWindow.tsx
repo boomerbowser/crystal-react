@@ -172,7 +172,7 @@ export function FloatingWindow({
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onKeyDown={onKeyDown}
-        className={cx(styles['bar'])}
+        className={cx(styles['bar'], 'cr-bare')}
       >
         <span className={cx(styles['title'])}>{label}</span>
       </button>

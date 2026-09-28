@@ -100,7 +100,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
           aria-label={revealed ? `Hide ${reveals}` : `Show ${reveals}`}
           aria-pressed={revealed}
           onPress={() => setRevealed((was) => !was)}
-          className={cx(styles['inlineAction'])}
+          className={cx(styles['inlineAction'], 'cr-bare')}
         >
           <EyeIcon open={revealed} />
         </Button>

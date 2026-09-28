@@ -82,7 +82,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
         />
         {/* React Aria names this from the field's label and hides it when the
             field is empty, so it is not a permanent control that does nothing. */}
-        <Button className={cx(styles['inlineAction'])}>{CrossIcon}</Button>
+        <Button className={cx(styles['inlineAction'], 'cr-bare')}>{CrossIcon}</Button>
       </Group>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>

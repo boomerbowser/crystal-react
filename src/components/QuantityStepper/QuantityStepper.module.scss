@@ -49,8 +49,6 @@
 /* "Both controls reach 44px." Each one, not the pair — this is pressed with a
    thumb beside a Remove control it must not be mistaken for. */
 .step {
-  /* Crystal paints every <button>; a bare control has to take that off. */
-  @include material.bare-control;
 
   display: flex;
   align-items: center;

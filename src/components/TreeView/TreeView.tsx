@@ -152,7 +152,7 @@ function RowContent({
       style={{ '--cr-tree-level': level - 1 } as React.CSSProperties}
     >
       {hasChildItems ? (
-        <Button slot="chevron" className={cx(styles['chevron'])}>
+        <Button slot="chevron" className={cx(styles['chevron'], 'cr-bare')}>
           {ChevronIcon}
         </Button>
       ) : (

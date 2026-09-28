@@ -131,7 +131,7 @@ function NodeBox(
       style={{ '--cr-tree-level': level - 1 } as CSSProperties}
     >
       {hasChildItems ? (
-        <Button slot="chevron" className={cx(styles['chevron'])}>{ChevronIcon}</Button>
+        <Button slot="chevron" className={cx(styles['chevron'], 'cr-bare')}>{ChevronIcon}</Button>
       ) : (
         <span aria-hidden="true" className={cx(styles['chevron'], styles['chevronEmpty'])} />
       )}

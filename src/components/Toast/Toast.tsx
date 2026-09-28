@@ -219,7 +219,7 @@ export function Toast({
       {action ? <div className={styles['action']}>{action}</div> : null}
       <button
         type="button"
-        className={styles['dismiss']}
+        className={cx(styles['dismiss'], 'cr-bare')}
         aria-label={dismissLabel ?? (typeof title === 'string' ? `Dismiss: ${title}` : 'Dismiss')}
         onClick={leave}
       >
