@@ -28,11 +28,12 @@ import {
   TimeField,
   DatePicker as AriaDatePicker, DateRangePicker as AriaDateRangePicker,
   Calendar, RangeCalendar,
-  Label, Button, Popover, Dialog, Text, FieldError,
+  Label, Button,  Dialog, Text, FieldError,
   type DateValue,
 } from 'react-aria-components';
 import { CalendarBody } from '../Calendar/CalendarBody.js';
 import { cx } from '../../styles/cx.js';
+import { ArrivingPopover } from '../../overlays/ArrivingPopover.js';
 import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import { FieldGroupShell } from '../FormField/FieldShell.js';
 import styles from './DatePicker.module.scss';
@@ -151,13 +152,13 @@ export function DatePicker({
       </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
-      <Popover className={cx(styles['popover'], 'cr-frost')}>
+      <ArrivingPopover recipe="menu-in" className={cx(styles['popover'], 'cr-frost')}>
         <Dialog>
           <Calendar {...(isDateUnavailable ? { isDateUnavailable } : {})}>
             <CalendarBody />
           </Calendar>
         </Dialog>
-      </Popover>
+      </ArrivingPopover>
       </>
       )}
     </AriaDatePicker>
@@ -205,13 +206,13 @@ export function DateRangePicker({
       </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
-      <Popover className={cx(styles['popover'], 'cr-frost')}>
+      <ArrivingPopover recipe="menu-in" className={cx(styles['popover'], 'cr-frost')}>
         <Dialog>
           <RangeCalendar {...(isDateUnavailable ? { isDateUnavailable } : {})}>
             <CalendarBody />
           </RangeCalendar>
         </Dialog>
-      </Popover>
+      </ArrivingPopover>
       </>
       )}
     </AriaDateRangePicker>

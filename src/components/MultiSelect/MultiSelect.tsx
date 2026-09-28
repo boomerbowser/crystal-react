@@ -35,10 +35,11 @@
  */
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import {
-  DialogTrigger, Dialog, Button, Popover, ListBox, ListBoxItem,
+  DialogTrigger, Dialog, Button,  ListBox, ListBoxItem,
   SearchField, Input,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { ArrivingPopover } from '../../overlays/ArrivingPopover.js';
 import { Chip } from '../Chip/Chip.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { useInvalidMotion } from '../FormField/useInvalidMotion.js';
@@ -203,7 +204,7 @@ export function MultiSelect({
           {maxSelected !== undefined ? `, at most ${maxSelected}` : ''}
         </VisuallyHidden>
 
-        <Popover triggerRef={shellRef} className={cx(styles['popover'], 'cr-frost')}>
+        <ArrivingPopover recipe="menu-in" triggerRef={shellRef} className={cx(styles['popover'], 'cr-frost')}>
           <Dialog aria-labelledby={labelId} className={cx(styles['dialog'])}>
             {isFilterable ? (
               <SearchField
@@ -251,7 +252,7 @@ export function MultiSelect({
               )}
             </ListBox>
           </Dialog>
-        </Popover>
+        </ArrivingPopover>
       </DialogTrigger>
       {description ? (
         <span id={descriptionId} className={cx(styles['description'])}>{description}</span>

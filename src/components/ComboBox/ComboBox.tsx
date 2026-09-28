@@ -20,11 +20,12 @@
  */
 import type { ReactNode } from 'react';
 import {
-  ComboBox as AriaComboBox, Label, Input, Button, Popover, ListBox, ListBoxItem,
+  ComboBox as AriaComboBox, Label, Input, Button,  ListBox, ListBoxItem,
   Text, FieldError,
   type ComboBoxProps as AriaComboBoxProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { ArrivingPopover } from '../../overlays/ArrivingPopover.js';
 import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import { FieldGroupShell } from '../FormField/FieldShell.js';
 import styles from './ComboBox.module.scss';
@@ -102,7 +103,7 @@ function Field({
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
-      <Popover className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
+      <ArrivingPopover recipe="popover-in" className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
         {isLoading ? (
           /* In words. A spinner alone tells a reader who cannot see it that
              nothing is happening. */
@@ -129,7 +130,7 @@ function Field({
             )}
           </ListBox>
         )}
-      </Popover>
+      </ArrivingPopover>
       </>
       )}
     </AriaComboBox>

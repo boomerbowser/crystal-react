@@ -21,11 +21,12 @@
  */
 import { forwardRef, type ReactNode, type SelectHTMLAttributes } from 'react';
 import {
-  Select as AriaSelect, SelectValue, Label, Popover, ListBox, ListBoxItem,
+  Select as AriaSelect, SelectValue, Label,  ListBox, ListBoxItem,
   Text, FieldError,
   type SelectProps as AriaSelectProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { ArrivingPopover } from '../../overlays/ArrivingPopover.js';
 import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import { FieldButtonShell } from '../FormField/FieldShell.js';
 import styles from './Select.module.scss';
@@ -79,7 +80,7 @@ export function Select({
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
       {/* Frost: a transient overlay is Frost, never Resin. */}
-      <Popover className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
+      <ArrivingPopover recipe="menu-in" className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
         <ListBox items={options} className={cx(styles['list'])}>
           {(option) => (
             <ListBoxItem
@@ -92,7 +93,7 @@ export function Select({
             </ListBoxItem>
           )}
         </ListBox>
-      </Popover>
+      </ArrivingPopover>
       </>
       )}
     </AriaSelect>

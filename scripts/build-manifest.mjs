@@ -198,7 +198,7 @@ function motionUsed(componentId) {
     /* Only count a name in a file that actually uses a hook that plays it.
        Without this, Button's `variant="resin"` was reported as a Resin preset:
        a string that happens to match a preset name is not a call. */
-    const playsRecipes = /\buse(?!\w*Reduced)(\w*Motion|Continuous|MarkArrival)\b|<Arrival\b/.test(source);
+    const playsRecipes = /\buse(?!\w*Reduced)(\w*Motion|Continuous|MarkArrival)\b|<Arrival\b|\brecipe="[a-z]/.test(source);
     const playsPresets = source.includes('usePreset');
     if (!playsRecipes && !playsPresets) continue;
     /* Single-quoted names, and a recipe handed to \`<Arrival recipe="menu-in" />\`,

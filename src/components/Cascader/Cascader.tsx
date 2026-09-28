@@ -19,9 +19,10 @@
  */
 import { useId, useState, type ReactNode } from 'react';
 import {
-  DialogTrigger, Button, Popover, Dialog, ListBox, ListBoxItem, type Selection,
+  DialogTrigger, Button,  Dialog, ListBox, ListBoxItem, type Selection,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { ArrivingPopover } from '../../overlays/ArrivingPopover.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './Cascader.module.scss';
 
@@ -135,7 +136,7 @@ export function Cascader({
           </span>
           <span className={cx(styles['disclosure'])} aria-hidden="true">{DownIcon}</span>
         </Button>
-        <Popover className={cx(styles['popover'], 'cr-frost')}>
+        <ArrivingPopover recipe="menu-in" className={cx(styles['popover'], 'cr-frost')}>
           <Dialog aria-labelledby={labelId}>
             {columns.map((column, depth) => (
               <ListBox
@@ -181,7 +182,7 @@ export function Cascader({
               </ListBox>
             ))}
           </Dialog>
-        </Popover>
+        </ArrivingPopover>
       </DialogTrigger>
       {description ? <span className={cx(styles['description'])}>{description}</span> : null}
       {errorMessage ? <span role="alert" className={cx(styles['error'])}>{errorMessage}</span> : null}

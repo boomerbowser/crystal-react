@@ -1187,6 +1187,33 @@ for (const id of ['inputs-text-and-choice--text-family', 'inputs-composite--toke
   }
 }
 
+/* A popover's mount is its opening, and the catalogue names the recipe that
+   marks it: `menu-in` for a select's list, a cascader's columns and a picker's
+   calendar, `popover-in` for a combobox's suggestions. Nothing has played before
+   the trigger is pressed; after, the popover (which React Aria portals to the
+   body) has played exactly that recipe. */
+for (const [id, trigger, recipe] of [
+  ['inputs-text-and-choice--choice-family', 'button.cr-field-shell', 'menu-in'],
+  ['inputs-temporal-colour-and-files--temporal', '.cr-field-shell button', 'menu-in'],
+  ['inputs-composite--hierarchy', 'button.cr-field-shell', 'menu-in'],
+  ['inputs-composite--filtering', '.cr-field-shell button', 'popover-in'],
+]) {
+  await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const played = () => page.evaluate((recipe) => document.querySelectorAll(`[data-cr-motion-name="${recipe}"]`).length, recipe);
+  const atRest = await played();
+  await page.locator(`#storybook-root ${trigger}`).first().click();
+  await page.waitForTimeout(500);
+  const after = await played();
+  const open = await page.evaluate(() => document.querySelectorAll('[data-rac][data-trigger], .react-aria-Popover, [role=listbox], [role=dialog]').length);
+  record(
+    `${recipe} on ${id}: nothing before the trigger is pressed, and the popover arrives with it`,
+    atRest === 0 && after === 1 && open > 0,
+    `played before ${atRest}, after opening ${after}; open surfaces ${open}`,
+  );
+  await page.keyboard.press('Escape');
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));
