@@ -66,7 +66,7 @@ export function ChartTooltip({
       aria-hidden="true"
       data-shown={shown ? '' : undefined}
       data-side={right ? 'start' : 'end'}
-      className={cx(styles['tooltip'], className)}
+      className={cx(styles['tooltip'], 'cr-frost', className)}
       style={{
         ...style,
         '--tooltip-x': `${x}px`,

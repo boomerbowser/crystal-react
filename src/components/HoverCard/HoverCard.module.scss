@@ -1,24 +1,18 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
+@use '../../styles/overlay' as overlay;
 
 .trigger { display: inline-flex; }
 
+/* "Shared with Popover", in the catalogue's words — so it is the popover's
+   surface, not a third one. On the page that is Crystal's `.cr-frost`, which the
+   card wears; inside a pane it is the overlay mixin's recessed Haze, where this
+   file used to paint its own with the rim and the float shadow — a Haze card that
+   lifted while the menu beside it recessed. The attribute is set in React because
+   the DOM cannot answer the question: the card is portalled and loses its nesting
+   on the way. */
 .card {
-  border-radius: $cr-shape-content-radius;
+  @include overlay.surface;
   max-inline-size: $cr-layout-sidebar-width;
-}
-
-/* Frost from the page — a transient overlay is Frost (Crystal R15e); Haze once
-   something Frost, Resin or Haze is already between it and the page. The
-   attribute is set in React because the DOM cannot answer the question — the
-   card is portalled and loses its nesting on the way. */
-.card[data-cr-overlay='frost'] { @include material.frost; }
-.card[data-cr-overlay='haze'] {
-  position: relative;
-  isolation: isolate;
-  border: 1px solid var(--cr-rim);
-  background: var(--cr-haze-fill);
-  box-shadow: var(--cr-shadow-float);
 }
 
 .body {
@@ -27,8 +21,4 @@
   color: var(--cr-text);
 }
 
-@include material.opaque-fallback(".card[data-cr-overlay='frost']");
-
-@media (forced-colors: active) {
-  .card { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
-}
+@include overlay.surface-fallbacks('.card');

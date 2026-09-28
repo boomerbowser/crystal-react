@@ -35,7 +35,7 @@ import { Popover as AriaPopover, Dialog, DialogTrigger } from 'react-aria-compon
 import { cx } from '../../styles/cx.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { Arrival } from '../../motion/Arrival.js';
-import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps } from '../../overlays/surface.js';
+import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps, overlayMaterialClass } from '../../overlays/surface.js';
 import styles from './HoverCard.module.scss';
 
 export interface HoverCardProps {
@@ -95,7 +95,7 @@ export function HoverCard({
       <AriaPopover
         {...overlayMaterialProps(material)}
         ref={scope as never}
-        className={cx(styles['card'], className)}
+        className={cx(styles['card'], overlayMaterialClass(material), className)}
       >
         <Arrival play={play} recipe="popover-in" />
         <SurfaceProvider surface={material}>

@@ -28,7 +28,9 @@
    Resin control — Meridian moved it to Frost with the others, and the catalogue
    says so as of Crystal 2.2.0. */
 .toast {
-  @include material.frost;
+  /* The Frost panel is Crystal's `.cr-frost`, which the element wears. The Haze
+     reading fill under the text is the catalogue's "Frost panel with Haze
+     reading fill", and it stays: Frost has no pad of its own. */
   @include material.haze-fill;
 
   display: flex;
@@ -39,7 +41,6 @@
   color: var(--cr-text);
 }
 
-@include material.opaque-fallback('.toast');
 @include status.status-pairs('.toast');
 
 .well {
@@ -88,7 +89,6 @@
 .dismiss:hover { color: var(--cr-text); }
 
 @media (forced-colors: active) {
-  .toast { background: Canvas; border: 1px solid CanvasText; box-shadow: none; }
   .description { color: CanvasText; }
   .dismiss { color: ButtonText; }
 }

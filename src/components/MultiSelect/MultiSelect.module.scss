@@ -55,14 +55,14 @@
 .disclosure svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
 .popover {
+  /* The panel is Crystal's `.cr-frost`, which the popover wears: the Frost fill,
+     the rim, the panel shadow and the diffusion. This painted the fill with the
+     float shadow and an edge — Resin's shadow on Frost's fill — and it is gone.
+     The catalogue's popover geometry is the content radius, stated here. */
   min-inline-size: var(--trigger-width);
   max-block-size: 52vh;
   padding: $cr-spacing-2xs;
-  border: 1px solid var(--cr-edge);
   border-radius: var(--cr-radius);
-  background: var(--cr-frost-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
 }
 
 .dialog { outline: none; display: grid; gap: $cr-spacing-2xs; }
@@ -122,13 +122,7 @@
 
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 
-:global([data-effects='opaque']) .popover {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
 @media (forced-colors: active) {
-  .popover { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
   .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
 }
 

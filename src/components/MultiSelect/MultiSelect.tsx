@@ -203,7 +203,7 @@ export function MultiSelect({
           {maxSelected !== undefined ? `, at most ${maxSelected}` : ''}
         </VisuallyHidden>
 
-        <Popover triggerRef={shellRef} className={cx(styles['popover'])}>
+        <Popover triggerRef={shellRef} className={cx(styles['popover'], 'cr-frost')}>
           <Dialog aria-labelledby={labelId} className={cx(styles['dialog'])}>
             {isFilterable ? (
               <SearchField

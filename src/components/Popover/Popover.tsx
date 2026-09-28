@@ -22,7 +22,7 @@ import {
 import { cx } from '../../styles/cx.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { Arrival } from '../../motion/Arrival.js';
-import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps } from '../../overlays/surface.js';
+import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps, overlayMaterialClass } from '../../overlays/surface.js';
 import { OverlayArrow } from '../OverlayArrow/OverlayArrow.js';
 import styles from './Popover.module.scss';
 
@@ -44,7 +44,7 @@ export function Popover({
   const [scope, play] = useMotion();
 
   return (
-    <AriaPopover {...props} ref={scope as never} className={cx(styles['popover'], className)} {...overlayMaterialProps(material)}>
+    <AriaPopover {...props} ref={scope as never} className={cx(styles['popover'], overlayMaterialClass(material), className)} {...overlayMaterialProps(material)}>
       <Arrival play={play} recipe="popover-in" />
       {hasArrow ? <OverlayArrow /> : null}
       {/* A `Dialog` rather than a bare div, because React Aria puts the focus

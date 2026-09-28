@@ -203,7 +203,7 @@ export function Toast({
       /* `AnimationScope` is typed as `Element`; the cast is what every other
          caller of `useMotion` on a non-div does. */
       ref={scope as never}
-      className={cx(styles['toast'])}
+      className={cx(styles['toast'], 'cr-frost')}
       data-status={status}
       /* No live role here. `role="status"` on an `<li>` replaces its `listitem`
          role, and then the stack is a list with nothing in it — axe caught that

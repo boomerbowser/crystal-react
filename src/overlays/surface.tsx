@@ -57,3 +57,18 @@ export function useOverlayMaterial(): CrystalOverlayMaterial {
 export function overlayMaterialProps(material: CrystalOverlayMaterial): { 'data-cr-overlay': string } {
   return { 'data-cr-overlay': material };
 }
+
+/**
+ * Crystal's class for an overlay of this material, beside the attribute above.
+ *
+ * On the page an overlay is Crystal's `.cr-frost` (2.2.0 publishes it as the
+ * surface every transient overlay is), and wearing it makes Crystal the painter
+ * of the panel. Inside a pane an overlay is Haze, and there is deliberately no
+ * class: Crystal's `.cr-haze` is a feathered fill with no edge and no shadow, and
+ * a menu drawn that way over a Haze dialog has no visible boundary at all. The
+ * library keeps its own recessed Haze there — an edge and the content shadow —
+ * until Crystal says what a transient surface inside a pane should be.
+ */
+export function overlayMaterialClass(material: CrystalOverlayMaterial): string | undefined {
+  return material === 'frost' ? 'cr-frost' : undefined;
+}

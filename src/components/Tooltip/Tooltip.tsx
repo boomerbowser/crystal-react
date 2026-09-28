@@ -46,7 +46,7 @@ export function Tooltip({
          with the dialog for depth: it is a small panel that lands where the
          pointer is, above whatever is there. */
       data-cr-overlay="frost"
-      className={cx(styles['tooltip'], className)}
+      className={cx(styles['tooltip'], 'cr-frost', className)}
     >
       <Arrival play={play} recipe="tooltip-in" />
       {hasArrow ? <OverlayArrow /> : null}

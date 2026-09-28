@@ -26,7 +26,7 @@ import {
 import { cx } from '../../styles/cx.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { Arrival } from '../../motion/Arrival.js';
-import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps } from '../../overlays/surface.js';
+import { SurfaceProvider, useOverlayMaterial, overlayMaterialProps, overlayMaterialClass } from '../../overlays/surface.js';
 import styles from './Menu.module.scss';
 
 const CheckIcon = (
@@ -64,7 +64,7 @@ export function Menu<T extends object>({
     <Popover
       {...(triggerRef ? { triggerRef } : {})}
       ref={scope as never}
-      className={cx(styles['popover'])}
+      className={cx(styles['popover'], overlayMaterialClass(material))}
       {...overlayMaterialProps(material)}
     >
       <Arrival play={play} recipe="menu-in" />

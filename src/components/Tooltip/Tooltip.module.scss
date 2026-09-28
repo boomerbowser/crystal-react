@@ -1,6 +1,11 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/overlay' as overlay;
 
+/* The catalogue's tooltip geometry is an 18px radius, not the content radius the
+   other overlays share. Crystal publishes it only as prose, so it enters here once,
+   named, until a token carries it. */
+$tooltip-radius: 18px; /* crystal-allow-literal: the catalogue's tooltip geometry, "18px radius" */
+
 /* A tooltip is Frost, like every transient overlay (Crystal R15e; the catalogue's
    `tooltip` entry as of 2.2.0). It used to take Stone here, on the reasoning
    that a label over an unknown backdrop wants the protected backing — but a
@@ -11,9 +16,11 @@
 
    The text sits directly on the panel: at caption size over a 40px-diffused
    Frost fill the contrast is the panel's own, and a Haze pad inside a tooltip
-   would be a well inside a well. */
+   would be a well inside a well. The panel is Crystal's `.cr-frost`, which the
+   tooltip wears; this says only what makes it a tooltip. */
 .tooltip {
   @include overlay.surface;
+  border-radius: $tooltip-radius;
   max-inline-size: $cr-overlay-tooltip-max-width;
   padding: $cr-spacing-xs $cr-spacing-sm;
   font-size: var(--cr-text-caption-size);

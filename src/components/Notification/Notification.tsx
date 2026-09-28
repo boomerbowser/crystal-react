@@ -54,7 +54,7 @@ export const Notification = forwardRef<HTMLLIElement, NotificationProps>(functio
     <li
       {...props}
       ref={ref}
-      className={cx(styles['notification'], className)}
+      className={cx(styles['notification'], 'cr-frost', className)}
       data-status={status}
       data-unread={unread ? '' : undefined}
       aria-labelledby={`${id}-title`}

@@ -151,7 +151,7 @@ export function DatePicker({
       </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
-      <Popover className={cx(styles['popover'])}>
+      <Popover className={cx(styles['popover'], 'cr-frost')}>
         <Dialog>
           <Calendar {...(isDateUnavailable ? { isDateUnavailable } : {})}>
             <CalendarBody />
@@ -205,7 +205,7 @@ export function DateRangePicker({
       </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
-      <Popover className={cx(styles['popover'])}>
+      <Popover className={cx(styles['popover'], 'cr-frost')}>
         <Dialog>
           <RangeCalendar {...(isDateUnavailable ? { isDateUnavailable } : {})}>
             <CalendarBody />

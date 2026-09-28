@@ -5,7 +5,9 @@
 /* "Frost panel with Haze reading fill (R15e)." Like the toast: a transient panel
    over content, not a Resin control. */
 .notification {
-  @include material.frost;
+  /* The Frost panel is Crystal's `.cr-frost`, which the element wears. The Haze
+     reading fill under the text is the catalogue's "Frost panel with Haze
+     reading fill", and it stays: Frost has no pad of its own. */
   @include material.haze-fill;
 
   display: flex;
@@ -17,7 +19,6 @@
   list-style: none;
 }
 
-@include material.opaque-fallback('.notification');
 @include status.status-pairs('.notification');
 
 .well {

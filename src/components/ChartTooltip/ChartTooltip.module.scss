@@ -22,11 +22,11 @@
   min-inline-size: max-content;
   max-inline-size: $cr-overlay-tooltip-max-width;
   padding: $cr-spacing-xs $cr-spacing-sm;
-  border: 1px solid var(--cr-edge);
+  /* "Frost panel": Crystal's `.cr-frost`, which the tooltip wears. It reached for
+     `--cr-acrylic-fill` — the alias, not the name — with Resin's float shadow and
+     an edge, because nothing said which surface a chart tooltip is. The catalogue
+     does now. Its own `position: absolute` still wins over Frost's `relative`. */
   border-radius: var(--cr-radius);
-  background: var(--cr-acrylic-fill);
-  backdrop-filter: blur(var(--cr-acrylic-blur)) saturate(var(--cr-acrylic-saturation));
-  box-shadow: var(--cr-shadow-float);
   color: var(--cr-text);
   font-size: var(--cr-text-caption-size);
   line-height: var(--cr-text-caption-leading);

@@ -14,23 +14,25 @@
  * otherwise, and the documentation site has rendered Frost since 17 September.
  */
 @mixin surface {
-  position: relative;
-  isolation: isolate;
+  /* The catalogue's geometry for a menu, a popover, a toast and a notification is
+     the content radius — not the Frost panel radius `.cr-frost` brings — so it is
+     stated here, where it wins. */
   border-radius: var(--cr-radius);
-  border: 1px solid var(--cr-rim);
   color: var(--cr-text);
-  box-shadow: var(--cr-shadow-panel);
 
-  &[data-cr-overlay='frost'] {
-    background: var(--cr-frost-fill);
-    backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
-  }
+  /* Frost is Crystal's: the element wears `.cr-frost` (see `overlayMaterialClass`),
+     which paints the fill, the rim, the panel shadow and the diffusion. This used
+     to write all four out beside the attribute. */
 
-  /* Recessed rather than floating: the feathered content fill, and no lift,
-     because it is inside something that is already lifted. */
+  /* Recessed rather than floating: the content fill, an edge, and no lift,
+     because it is inside something that is already lifted. This one stays the
+     library's — Crystal's Haze has no edge, and a menu over a Haze dialog needs
+     one to be seen. */
   &[data-cr-overlay='haze'] {
+    position: relative;
+    isolation: isolate;
+    border: 1px solid var(--cr-edge);
     background: var(--cr-haze-fill);
-    border-color: var(--cr-edge);
     box-shadow: var(--cr-shadow-content);
   }
 }
@@ -38,25 +40,24 @@
 /* Every overlay owes the same three fallbacks: a product that asked for opaque
    effects, a viewer who asked for less transparency, and forced colours. */
 @mixin surface-fallbacks($selector) {
-  :global([data-effects='opaque']) #{$selector},
-  :global([data-crystal-overlays][data-effects='opaque']) #{$selector} {
+  /* Frost's three fallbacks are Crystal's, on `.cr-frost`. What is left is the
+     library's own Haze branch. */
+  $haze: '#{$selector}[data-cr-overlay="haze"]';
+
+  :global([data-effects='opaque']) #{$haze},
+  :global([data-crystal-overlays][data-effects='opaque']) #{$haze} {
     background: var(--cr-surface);
-    backdrop-filter: none;
   }
 
   @media (prefers-reduced-transparency: reduce) {
-    #{$selector} {
-      background: var(--cr-surface);
-      backdrop-filter: none;
-    }
+    #{$haze} { background: var(--cr-surface); }
   }
 
   @media (forced-colors: active) {
-    #{$selector} {
+    #{$haze} {
       background: Canvas;
       color: CanvasText;
       border: 1px solid CanvasText;
-      backdrop-filter: none;
       box-shadow: none;
     }
   }
