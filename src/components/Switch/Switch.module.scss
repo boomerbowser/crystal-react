@@ -17,41 +17,56 @@
   cursor: pointer;
 }
 
+/* The track and thumb are Crystal's native switch, `input[type=checkbox][role=switch]`
+   (2.2.0), drawn here on React Aria's own elements because React Aria keeps its
+   input visually hidden and the recipe is keyed on that input. So this restates
+   Crystal's values rather than wearing a class, and `verify:appearance` holds the
+   restatement to a native switch planted beside it, in both states.
+
+   It used to be its own design. On, the track took the palette's primary with a
+   primary border and a 16px thumb in its ink, no shadow; Crystal's switch takes
+   primary-soft, keeps the rim, and carries a 22px primary thumb with a contact
+   shadow. The catalogue says the same — "primary-soft track when on, opaque
+   thumb". Both still move, so position is never the only signal. */
+$switch-thumb-inset: 2px; /* crystal-allow-literal: core's native switch thumb inset */
+$switch-thumb-gap: 6px;   /* crystal-allow-literal: core's native switch, thumb = track height - 6px */
+
 .track {
   position: relative;
   flex: none;
   inline-size: $cr-switch-track-width;
   block-size: $cr-switch-track-height;
-  border: 1px solid var(--cr-outline);
+  border: 1px solid var(--cr-rim);
   border-radius: $cr-action-radius;
-  background: var(--cr-resin-fill);
-  box-shadow: inset 0 2px 1px var(--cr-rim);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  transition: background var(--cr-state), border-color var(--cr-state);
+  background: linear-gradient(135deg, var(--cr-control-light), var(--cr-control-color)), var(--cr-resin-fill);
+  backdrop-filter: blur(var(--cr-resin-blur));
+  box-shadow: inset 0 2px 2px var(--cr-rim), 0 2px 3px var(--cr-control-edge), 0 5px 10px var(--cr-shadow-contact); /* crystal-allow-literal: core's choice-input shadow, published only as a rule */
 }
 
 .thumb {
   position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: $cr-spacing-2xs;
-  translate: 0 -50%;
-  inline-size: calc(#{$cr-switch-track-height} - #{$cr-spacing-sm});
-  block-size: calc(#{$cr-switch-track-height} - #{$cr-spacing-sm});
+  inset-block-start: $switch-thumb-inset;
+  inset-inline-start: $switch-thumb-inset;
+  inline-size: calc(#{$cr-switch-track-height} - #{$switch-thumb-gap});
+  block-size: calc(#{$cr-switch-track-height} - #{$switch-thumb-gap});
   border-radius: 50%;
-  background: var(--cr-text);
-  transition: translate var(--cr-state), background var(--cr-state);
+  background: var(--cr-surface);
+  box-shadow: 0 2px 4px var(--cr-control-edge), 0 4px 8px var(--cr-shadow-contact); /* crystal-allow-literal: core's native switch thumb shadow, published only as a rule */
+  transition: translate var(--cr-state) var(--cr-ease-settle);
 }
 
-/* Both move: the track takes the palette's primary and the thumb takes its ink.
-   Position is the second signal, not the only one. */
-.switch[data-selected] .track {
-  background: var(--cr-primary);
-  border-color: var(--cr-primary);
-}
+.switch[data-selected] .track { background: var(--cr-primary-soft); }
 
 .switch[data-selected] .thumb {
-  translate: calc(#{$cr-switch-track-width} - 100% - #{$cr-spacing-sm}) -50%;
-  background: var(--cr-on-primary);
+  background: var(--cr-primary);
+  translate: calc(#{$cr-switch-track-width} - #{$cr-switch-track-height}) 0;
+}
+
+/* `translate` is physical, so right to left it is the other way — the thumb starts
+   at the inline start, which is the right-hand end there. The old rule moved it
+   right from the right-hand end, off the track. */
+.switch[data-selected]:dir(rtl) .thumb {
+  translate: calc(#{$cr-switch-track-height} - #{$cr-switch-track-width}) 0;
 }
 
 .switch[data-focus-visible] .track {

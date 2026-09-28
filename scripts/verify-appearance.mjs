@@ -1128,6 +1128,50 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
+/* ------------------------------------------ the switch is Crystal's switch
+ *
+ * Crystal 2.2.0 styles the native switch — `input[type=checkbox][role=switch]` —
+ * by element, and React Aria keeps its input visually hidden, so this library
+ * cannot wear the recipe; it restates it on its own track and thumb. A
+ * restatement is a second copy, and a second copy drifts. So a native switch in
+ * the same state is planted beside the library's, in both states, and the track
+ * and thumb must agree on every material property. Before 2.2.0 they did not:
+ * the library's "on" was a primary track and a 16px thumb in its ink, Crystal's
+ * is primary-soft with a 22px primary thumb.
+ */
+{
+  await open('inputs-choice-and-range--choices', '#storybook-root [class*="track"]');
+  const compare = () => page.evaluate(() => {
+    const track = document.querySelector('#storybook-root [class*="track"]');
+    const on = track.closest('[data-selected]') !== null;
+    const native = document.createElement('input');
+    native.type = 'checkbox'; native.setAttribute('role', 'switch'); native.checked = on;
+    track.parentElement.append(native);
+    const thumb = track.querySelector('[class*="thumb"]');
+    const differs = [];
+    for (const k of ['backgroundColor', 'backgroundImage', 'borderTopColor', 'borderTopWidth', 'boxShadow', 'backdropFilter', 'borderTopLeftRadius']) {
+      if (getComputedStyle(track)[k] !== getComputedStyle(native)[k]) differs.push(`track ${k}`);
+    }
+    for (const k of ['width', 'height', 'backgroundColor', 'boxShadow', 'insetBlockStart', 'insetInlineStart']) {
+      if (getComputedStyle(thumb)[k] !== getComputedStyle(native, '::after')[k]) differs.push(`thumb ${k}`);
+    }
+    native.remove();
+    return { on, differs };
+  });
+  const first = await compare();
+  await page.locator('#storybook-root [class*="track"]').first().click();
+  await page.waitForTimeout(400);
+  const second = await compare();
+  for (const seen of [first, second]) {
+    record(
+      `the switch ${seen.on ? 'on' : 'off'} is Crystal's native switch ${seen.on ? 'on' : 'off'}`,
+      seen.differs.length === 0,
+      `differs on ${seen.differs.join(', ')}. The track and thumb restate Crystal's native switch because React Aria hides its input; a restatement that drifts is a second design`,
+    );
+  }
+  record('both states of the switch were measured', first.on !== second.on, 'the click did not change the switch, so only one state was compared');
+}
+
 await browser.close();
 
 console.log(JSON.stringify({
