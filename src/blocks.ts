@@ -24,3 +24,4 @@ export * from './components/CrudFormBlock/index.js';
 export * from './components/SettingsBlock/index.js';
 export * from './components/AuthBlock/index.js';
 export * from './components/ProfileBlock/index.js';
+export * from './components/PricingBlock/index.js';

@@ -1,0 +1,87 @@
+@use '../../styles/tokens' as *;
+
+/* "Haze content fill on the surrounding material": every plan is the same Haze
+   card, worn as `.cr-haze`. The recommended one differs by its words, its
+   weight and its primary action — Crystal's emphasis — not by its material. */
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));  /* crystal-allow-literal: a plan card's narrowest readable width */
+  gap: $cr-spacing-md;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item { display: grid; min-inline-size: 0; }
+
+.plan {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  align-content: start;
+  gap: $cr-spacing-sm;
+  padding: var(--cr-space);
+  border-radius: var(--cr-radius);
+}
+
+.name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: $cr-spacing-xs;
+  margin: 0;
+}
+
+.recommended {
+  font-size: var(--cr-text-caption-size);
+  font-weight: 800;
+  color: var(--cr-primary-ink);
+}
+
+.price { margin: 0; }
+
+.amount {
+  font-size: var(--cr-text-heading-size);
+  font-weight: 800;
+}
+
+.period, .description { color: var(--cr-muted); }
+
+.description { margin: 0; }
+
+.features {
+  display: grid;
+  gap: $cr-spacing-xs;
+  align-content: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: $cr-spacing-xs;
+}
+
+.feature:not([data-included]) { color: var(--cr-muted); }
+
+.mark {
+  inline-size: $cr-icon-size;
+  block-size: $cr-icon-size;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.feature[data-included] .mark { color: var(--cr-primary-ink); }
+
+.action { justify-self: stretch; }
+
+.current {
+  margin: 0;
+  justify-self: center;
+  font-weight: 800;
+}
