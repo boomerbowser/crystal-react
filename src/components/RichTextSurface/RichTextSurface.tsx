@@ -29,6 +29,8 @@
  */
 import { useId, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { AnimatePresence } from 'motion/react';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
 import { Toolbar } from '../Toolbar/Toolbar.js';
 import { IconButton } from '../IconButton/IconButton.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
@@ -146,34 +148,37 @@ export function Mentions({
   return (
     <div className={cx(className)}>
       {children}
-      {isOpen ? (
-        <div className={cx(styles['popover'], 'cr-scroll-frost')}>
-          {isLoading ? (
-            <div role="status" aria-live="polite" className={cx(styles['state'])}>Searching</div>
-          ) : options.length === 0 ? (
-            <div className={cx(styles['state'])}>{emptyMessage}</div>
-          ) : (
-            /* A listbox the text surface points at rather than one focus moves
-               into: typing must continue while the list is open, which is the
-               same rule the combobox follows. */
-            <ul role="listbox" className={cx(styles['list'])}>
-              {options.map((option) => (
-                <li
-                  key={option.value}
-                  id={`mention-${option.value}`}
-                  role="option"
-                  aria-selected={option.value === highlightedValue}
-                  className={cx(styles['option'])}
-                  {...(option.value === highlightedValue ? { 'data-focused': true } : {})}
-                  onMouseDown={(event) => { event.preventDefault(); onSelect(option); }}
-                >
-                  {option.label}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ) : null}
+      {/* The suggestions arrive with `menu-in` and leave with `menu-out`. */}
+      <AnimatePresence initial={false}>
+        {isOpen ? (
+          <Suggestions key="suggestions">
+            {isLoading ? (
+              <div role="status" aria-live="polite" className={cx(styles['state'])}>Searching</div>
+            ) : options.length === 0 ? (
+              <div className={cx(styles['state'])}>{emptyMessage}</div>
+            ) : (
+              /* A listbox the text surface points at rather than one focus moves
+                 into: typing must continue while the list is open, which is the
+                 same rule the combobox follows. */
+              <ul role="listbox" className={cx(styles['list'])}>
+                {options.map((option) => (
+                  <li
+                    key={option.value}
+                    id={`mention-${option.value}`}
+                    role="option"
+                    aria-selected={option.value === highlightedValue}
+                    className={cx(styles['option'])}
+                    {...(option.value === highlightedValue ? { 'data-focused': true } : {})}
+                    onMouseDown={(event) => { event.preventDefault(); onSelect(option); }}
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Suggestions>
+        ) : null}
+      </AnimatePresence>
       {/* The inserted value is announced, which the catalogue asks for: a token
           appearing in a document is otherwise silent. */}
       <VisuallyHidden as="div" role="status" aria-live="polite">
@@ -181,4 +186,9 @@ export function Mentions({
       </VisuallyHidden>
     </div>
   );
+}
+
+function Suggestions({ children }: { children: ReactNode }): React.JSX.Element {
+  const presence = usePresenceMotion('menu-in', 'menu-out');
+  return <div ref={presence as never} className={cx(styles['popover'], 'cr-scroll-frost')}>{children}</div>;
 }

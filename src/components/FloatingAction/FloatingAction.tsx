@@ -27,6 +27,8 @@ import { forwardRef, useState, type ReactNode } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { useMotion } from '../../motion/useMotion.js';
 import { cx } from '../../styles/cx.js';
+import { AnimatePresence } from 'motion/react';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { Button } from '../Button/Button.js';
 import { Toolbar } from '../Toolbar/Toolbar.js';
@@ -81,22 +83,26 @@ export function SpeedDial({ actions, label, icon, ...props }: SpeedDialProps): R
 
   return (
     <>
-      {open ? (
-        <div className={cx(styles['dial'])} role="group" aria-label={label}>
-          {actions.map((action) => (
-            <Button
-              key={action.id}
-              variant="resin"
-              onPress={() => { action.onPress(); setOpen(false); }}
-            >
-              {action.icon ? <span aria-hidden="true">{action.icon}</span> : null}
-              {/* Always visible. An icon in a set that appeared a moment ago has
-                  no context to be read from. */}
-              {action.label}
-            </Button>
-          ))}
-        </div>
-      ) : null}
+      {/* The actions arrive with `menu-in` as the dial opens and leave with
+          `menu-out` as it closes, held in presence so they can be seen going. */}
+      <AnimatePresence initial={false}>
+        {open ? (
+          <DialGroup key="dial" aria-label={label}>
+            {actions.map((action) => (
+              <Button
+                key={action.id}
+                variant="resin"
+                onPress={() => { action.onPress(); setOpen(false); }}
+              >
+                {action.icon ? <span aria-hidden="true">{action.icon}</span> : null}
+                {/* Always visible. An icon in a set that appeared a moment ago has
+                    no context to be read from. */}
+                {action.label}
+              </Button>
+            ))}
+          </DialGroup>
+        ) : null}
+      </AnimatePresence>
       <FloatingAction
         {...props}
         label={label}
@@ -135,4 +141,9 @@ export function ActionBar({
       </VisuallyHidden>
     </Toolbar>
   );
+}
+
+function DialGroup({ children, ...props }: { children: ReactNode; 'aria-label': string }): React.JSX.Element {
+  const presence = usePresenceMotion('menu-in', 'menu-out');
+  return <div {...props} ref={presence as never} role="group" className={cx(styles['dial'])}>{children}</div>;
 }

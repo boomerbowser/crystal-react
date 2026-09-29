@@ -1529,6 +1529,37 @@ for (const [id, handle, keys, where] of [
   );
 }
 
+/* Menus this library opens itself: a speed dial's actions and a navigation
+   menu's section. Each arrives with `menu-in` and, closed, stays on screen
+   playing `menu-out`, inert, before it goes. Nothing on load. */
+for (const [id, trigger, surface] of [
+  ['actions-icon-group-and-floating--dial', 'button[aria-expanded]', '[role=group][class*="_dial_"]'],
+  ['navigation-menu-bars--sections', 'button[aria-expanded]', '[class*="_panel_"]'],
+]) {
+  await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const find = (name) => page.evaluate(([surface, name]) =>
+    document.querySelectorAll(`#storybook-root ${surface}[data-cr-motion-name="${name}"]`).length, [surface, name]);
+  const atRest = await find('menu-in') + await find('menu-out');
+  const opener = page.locator(`#storybook-root ${trigger}`).first();
+  await opener.click();
+  await page.waitForTimeout(700);
+  const arrived = await find('menu-in');
+  await opener.click();
+  await page.waitForTimeout(60);
+  const leaving = await page.evaluate((surface) =>
+    [...document.querySelectorAll(`#storybook-root ${surface}[data-cr-motion-name="menu-out"]`)]
+      .filter((el) => el.inert || el.hasAttribute('inert')).length, surface);
+  await page.waitForTimeout(900);
+  const shown = await page.evaluate((surface) => [...document.querySelectorAll(`#storybook-root ${surface}`)]
+    .filter((el) => !el.hidden && el.getClientRects().length > 0).length, surface);
+  record(
+    `menu-in and menu-out on ${id}: arrives, then leaves inert with its exit, and goes`,
+    atRest === 0 && arrived === 1 && leaving === 1 && shown === 0,
+    `at rest ${atRest}; opened ${arrived}; leaving ${leaving}; still shown after ${shown}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

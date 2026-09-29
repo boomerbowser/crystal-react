@@ -32,6 +32,8 @@
  */
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { usePlayOnChange } from '../../motion/useChangeMotion.js';
 import styles from './NavigationMenu.module.scss';
 
 export interface NavigationMenuSection {
@@ -90,18 +92,43 @@ export function NavigationMenu({ sections, className, ...props }: NavigationMenu
               >
                 {section.label}
               </button>
-              <div
-                id={panelId}
-                aria-label={section.label}
-                hidden={!isOpen}
-                className={cx(styles['panel'])}
-              >
+              <Panel id={panelId} label={section.label} isOpen={isOpen}>
                 {section.children}
-              </div>
+              </Panel>
             </li>
           );
         })}
       </ul>
     </nav>
+  );
+}
+
+/* A section's panel: `menu-in` as it opens, and `menu-out` as it closes — kept
+   shown, and inert, while it leaves, then hidden. Neither on the render that
+   loads the bar. */
+function Panel({ id, label, isOpen, children }: {
+  id: string;
+  label: string;
+  isOpen: boolean;
+  children: ReactNode;
+}): React.JSX.Element {
+  const [scope, play] = useMotion();
+  const [leaving, setLeaving] = useState(false);
+  usePlayOnChange(isOpen, (was, is) => (is ? 'menu-in' : was ? 'menu-out' : null), (recipe) => {
+    if (recipe !== 'menu-out') return play(recipe);
+    setLeaving(true);
+    return play(recipe).finally(() => { setLeaving(false); });
+  });
+  return (
+    <div
+      ref={scope as never}
+      id={id}
+      aria-label={label}
+      hidden={!isOpen && !leaving}
+      {...(leaving ? { inert: true } : {})}
+      className={cx(styles['panel'])}
+    >
+      {children}
+    </div>
   );
 }
