@@ -16,6 +16,7 @@
  * state change rather than on the click, so a keyboard user sees it too.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import { Button, type ButtonProps } from '../Button/Button.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 
@@ -35,6 +36,9 @@ export function CopyButton({
 }: CopyButtonProps): React.JSX.Element {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /* `copy-confirm` when the copy has happened — the clipboard write resolved,
+     never on the press — and not when the label reverts. */
+  const confirm = useChangeMotion(copied, entered('copy-confirm'));
 
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
 
@@ -53,7 +57,7 @@ export function CopyButton({
 
   return (
     <>
-      <Button {...props} variant={variant} onPress={() => void copy()}>
+      <Button {...props} ref={confirm as never} variant={variant} onPress={() => void copy()}>
         {copied ? copiedLabel : label}
       </Button>
       {/* Announced as well as drawn: a label that changes is a visual event, and

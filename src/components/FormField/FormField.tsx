@@ -27,6 +27,7 @@
  */
 import { cloneElement, useId, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './FormField.module.scss';
 import { useDistributedErrors } from './useDistributedErrors.js';
 
@@ -144,8 +145,13 @@ export interface HelperTextProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 export function HelperText({ isError = false, className, children, ...props }: HelperTextProps): React.JSX.Element {
+  /* Shown and hidden by the product: inside `AnimatePresence` the hint arrives
+     with `hint-in` and, once it is no longer needed, leaves with `hint-out`;
+     rendered plainly, nothing. */
+  const presence = usePresenceMotion('hint-in', 'hint-out');
   return (
     <span
+      ref={presence as never}
       {...props}
       {...(isError ? { role: 'alert' } : {})}
       className={cx(isError ? styles['error'] : styles['description'], className)}

@@ -137,3 +137,6 @@
   .separator { color: CanvasText; opacity: 1; }
   .disclosure { color: CanvasText; }
 }
+
+/* A box for `breadcrumb` to move: inline, but one that takes a transform. */
+.crumbText { display: inline-block; }

@@ -18,6 +18,7 @@
 import { useId, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { Button } from '../Button/Button.js';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import styles from './Spoiler.module.scss';
 
 export interface SpoilerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -40,10 +41,16 @@ export function Spoiler({
 }: SpoilerProps): ReactNode {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const id = useId();
+  /* `accordion-in` as the rest of the content is revealed — never on the render
+     that shows it already expanded. Collapsing does not hide the content, it
+     cuts it back to its preview, so `accordion-out` — which ends with the
+     content gone — has nothing it could honestly end on, and is not played. */
+  const reveal = useChangeMotion(expanded, entered('accordion-in'));
 
   return (
     <div {...props} className={cx(styles['spoiler'], className)}>
       <div
+        ref={reveal as never}
         id={id}
         className={styles['content']}
         data-expanded={expanded ? '' : undefined}

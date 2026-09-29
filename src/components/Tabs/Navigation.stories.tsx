@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { only } from '../../../.storybook/environment.js';
 import { Tabs } from './Tabs.js';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs.js';
+import { Button } from '../Button/Button.js';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl.js';
 import { Stack } from '../Stack/Stack.js';
 import { Text } from '../Text/Text.js';
@@ -168,4 +170,26 @@ export const Trail: Story = {
    tab, the status bar showing where it goes. */
 export const CollapsedTrail: Story = {
   render: () => <Breadcrumbs items={trail} maxItems={3} />,
+};
+
+/* Going a level deeper adds a crumb, and the new crumb arrives with Crystal's
+   `breadcrumb` — the ones the page loaded with do not move. */
+export const GoingDeeper: Story = {
+  render: function GoingDeeperStory() {
+    const [depth, setDepth] = useState(trail.length);
+    /* Every level keeps its id as the reader moves past it; only the level
+       reached is new. The last crumb is the current page, so it has no link. */
+    const levels = [...trail, ...Array.from({ length: 12 }, (_, index) => ({
+      id: `level-${trail.length + index + 1}`, label: `Level ${trail.length + index + 1}`, href: '#',
+    }))];
+    const shown = levels.slice(0, depth).map((level, index, all) => (
+      index === all.length - 1 ? { id: level.id, label: level.label } : { ...level, href: level.href ?? '#' }
+    ));
+    return (
+      <div style={{ display: 'grid', gap: 16, justifyItems: 'start' }}>
+        <Breadcrumbs items={shown} />
+        <Button onPress={() => { setDepth((level) => level + 1); }}>Go a level deeper</Button>
+      </div>
+    );
+  },
 };

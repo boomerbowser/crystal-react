@@ -31,7 +31,7 @@
  * rearranges itself while somebody is reading it is worse than one that does not.
  * Mantine, MUI and Ant Design all take the declarative route for the same reason.
  */
-import { type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import {
   Breadcrumbs as AriaBreadcrumbs,
   Breadcrumb,
@@ -39,6 +39,8 @@ import {
   type BreadcrumbsProps as AriaBreadcrumbsProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { Arrival } from '../../motion/Arrival.js';
 import { Menu, MenuItem, MenuTrigger } from '../Menu/index.js';
 import { IconButton } from '../IconButton/index.js';
 import styles from './Breadcrumbs.module.scss';
@@ -102,6 +104,14 @@ export function Breadcrumbs({
   const collapses = maxItems !== undefined && items.length > maxItems && items.length >= 4;
   const hidden = collapses ? items.slice(1, items.length - 1) : [];
   const visible = collapses ? [items[0]!, items[items.length - 1]!] : items;
+  /* A crumb that was not in the trail before — the reader went a level deeper —
+     arrives with Crystal's `breadcrumb`; the trail the page loads with does not.
+     Decided by the crumbs already seen rather than by mounting: React Aria
+     rebuilds every item when the trail changes, so a crumb that stayed put is
+     mounted afresh too, and would otherwise arrive again. */
+  const seen = useRef<Set<string> | null>(null);
+  const isNew = (id: string): boolean => seen.current !== null && !seen.current.has(id);
+  useEffect(() => { seen.current = new Set(items.map((item) => item.id)); });
 
   return (
     <nav aria-label={label} className={className}>
@@ -113,7 +123,7 @@ export function Breadcrumbs({
             {...(item.href === undefined ? {} : { href: item.href })}
             {...(item.onAction === undefined ? {} : { onPress: item.onAction })}
           >
-            {item.label}
+            <CrumbText arriving={isNew(item.id)}>{item.label}</CrumbText>
           </Link>
           {/* The separator belongs to the crumb before the gap, so the last crumb
               does not trail one. It is decorative: the list structure is what
@@ -154,5 +164,18 @@ export function Breadcrumbs({
       ))}
     </AriaBreadcrumbs>
     </nav>
+  );
+}
+
+/* The crumb's words, arriving once if the crumb is new. On the text inside the
+   link, because React Aria builds the trail as a collection and owns the item
+   element; the link and its target do not move. */
+function CrumbText({ arriving, children }: { arriving: boolean; children: ReactNode }): React.JSX.Element {
+  const [scope, play] = useMotion();
+  return (
+    <span ref={scope as never} className={cx(styles['crumbText'])}>
+      {arriving ? <Arrival play={play} recipe="breadcrumb" /> : null}
+      {children}
+    </span>
   );
 }

@@ -65,7 +65,7 @@ describe('PageHeader', () => {
        landmark alone is also true of a header that rendered no breadcrumbs. */
     expect(screen.getAllByRole('navigation')).toHaveLength(1);
     expect(screen.getByRole('link', { name: 'Reports' })).toBeInTheDocument();
-    expect(screen.getByText('Q3', { selector: '[aria-current="page"]' })).toBeInTheDocument();
+    expect(screen.getByText('Q3').closest('[aria-current="page"]')).toBeInTheDocument();
   });
 
   it('has no axe violations', async () => {

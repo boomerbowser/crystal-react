@@ -33,9 +33,11 @@ describe('Breadcrumbs', () => {
      drops the href on the last child, and the current crumb is text. */
   it('ends in the current page, which is marked and is not a link', () => {
     renderWithCrystal(<Breadcrumbs items={trail} />);
-    const current = screen.getByText('Q3');
+    /* The element that says "Q3" is the crumb's text; the one marked current is
+       the crumb it sits in. */
+    const current = screen.getByText('Q3').closest('[aria-current]');
     expect(current).toHaveAttribute('aria-current', 'page');
-    expect(current.closest('a')).toBeNull();
+    expect(current?.closest('a')).toBeNull();
     expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
   });
 
@@ -56,7 +58,7 @@ describe('Breadcrumbs', () => {
   it('collapses the middle, keeping the root and the current page', () => {
     renderWithCrystal(<Breadcrumbs items={trail} maxItems={3} />);
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
-    expect(screen.getByText('Q3')).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByText('Q3').closest('[aria-current]')).toHaveAttribute('aria-current', 'page');
     expect(screen.queryByText('Library')).toBeNull();
     expect(screen.queryByText('Reports')).toBeNull();
   });

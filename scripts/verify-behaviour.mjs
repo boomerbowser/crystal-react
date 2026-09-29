@@ -1326,6 +1326,39 @@ for (const [id, openWith, exit] of [
   );
 }
 
+/* A disclosure's icon turns as it opens and closes: the collapsed trail's "…"
+   is a menu trigger, which React Aria marks expanded through context. And going
+   a level deeper, the new crumb arrives with `breadcrumb` while the rest stay. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=navigation-tabs-and-breadcrumbs--collapsed-trail&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const turned = () => page.evaluate(() => document.querySelectorAll('#storybook-root [data-cr-motion-name="icon-turn"]').length);
+  const atRest = await turned();
+  await page.locator('#storybook-root button[aria-haspopup]').first().click();
+  await page.waitForTimeout(200);
+  const opened = await turned();
+  await page.keyboard.press('Escape');
+  record(
+    'icon-turn: a disclosure\'s icon turns when what it discloses opens, and not before',
+    atRest === 0 && opened === 1,
+    `turned at rest ${atRest}, after opening ${opened}`,
+  );
+
+  await page.goto(`${ORIGIN}/iframe.html?id=navigation-tabs-and-breadcrumbs--going-deeper&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const arrived = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root nav [data-cr-motion-name="breadcrumb"]')].map((el) => el.textContent.trim()));
+  const onLoad = await arrived();
+  await page.locator('#storybook-root button').filter({ hasText: 'Go a level deeper' }).click();
+  await page.waitForTimeout(200);
+  const after = await arrived();
+  const last = await page.evaluate(() => [...document.querySelectorAll('#storybook-root nav li')].at(-1)?.textContent.trim());
+  record(
+    'breadcrumb: going a level deeper, only the new crumb arrives',
+    onLoad.length === 0 && after.length === 1 && after[0] === last,
+    `arrived on load ${JSON.stringify(onLoad)}; after going deeper ${JSON.stringify(after)}, last crumb ${JSON.stringify(last)}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

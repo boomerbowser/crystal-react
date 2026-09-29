@@ -19,7 +19,7 @@
  * `Dialog` gets it from React Aria — and is stated here because a close button
  * added to something that does not handle Escape is half a dismissal.
  */
-import { forwardRef, type ReactNode } from 'react';
+import { forwardRef, useEffect, type ReactNode } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { useMotion } from '../../motion/useMotion.js';
 import { cx } from '../../styles/cx.js';
@@ -45,6 +45,25 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
   ref,
 ) {
   const [scope, play] = useMotion();
+  /* A disclosure's icon: `icon-turn` when what it discloses opens or closes —
+     the expanded state, which is authoritative — and never on the render that
+     first shows it. Read from the rendered `aria-expanded` rather than a prop,
+     because a menu or a disclosure hands that to its trigger through React Aria's
+     context, which this component never sees as a prop. An icon button that
+     discloses nothing has no `aria-expanded`, and its icon never turns. */
+  const [turn, playTurn] = useMotion();
+  useEffect(() => {
+    const button = scope.current as HTMLElement | null;
+    if (!button || typeof MutationObserver === 'undefined') return undefined;
+    let was = button.getAttribute('aria-expanded');
+    const watcher = new MutationObserver(() => {
+      const is = button.getAttribute('aria-expanded');
+      if (was !== null && is !== null && is !== was) void playTurn('icon-turn');
+      was = is;
+    });
+    watcher.observe(button, { attributes: true, attributeFilter: ['aria-expanded'] });
+    return () => { watcher.disconnect(); };
+  }, [scope, playTurn]);
 
   return (
     <AriaButton
@@ -63,7 +82,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
         className,
       )}
     >
-      <span aria-hidden="true">{icon}</span>
+      <span ref={turn as never} aria-hidden="true" className={styles['icon']}>{icon}</span>
     </AriaButton>
   );
 });

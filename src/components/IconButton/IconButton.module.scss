@@ -86,3 +86,7 @@
   .iconButton { border-color: ButtonText; background: ButtonFace; color: ButtonText; }
   .iconButton[aria-pressed='true'] { outline: 2px solid Highlight; }
 }
+
+/* The icon's own box, so `icon-turn` has something to turn that is not the
+   button: the control stays still while its chevron moves. */
+.icon { display: inline-flex; }
