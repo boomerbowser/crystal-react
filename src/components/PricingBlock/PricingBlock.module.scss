@@ -34,7 +34,6 @@
 .recommended {
   font-size: var(--cr-text-caption-size);
   font-weight: 800;
-  color: var(--cr-primary-ink);
 }
 
 .price { margin: 0; }
@@ -76,7 +75,7 @@
   stroke-linejoin: round;
 }
 
-.feature[data-included] .mark { color: var(--cr-primary-ink); }
+.feature[data-included] .mark { color: var(--cr-primary); }
 
 .action { justify-self: stretch; }
 
