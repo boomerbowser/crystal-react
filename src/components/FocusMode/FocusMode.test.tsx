@@ -6,14 +6,15 @@ import { FocusMode } from './FocusMode.js';
 const chrome = <button type="button">Sidebar</button>;
 
 describe('FocusMode', () => {
-  it('shows the chrome when it is off and removes it when it is on', () => {
+  it('shows the chrome when it is off and removes it when it is on', async () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <FocusMode chrome={chrome}><p>The task</p></FocusMode>,
     );
     expect(screen.getByRole('button', { name: 'Sidebar' })).toBeInTheDocument();
 
     rerenderWithCrystal(<FocusMode chrome={chrome} isOn><p>The task</p></FocusMode>);
-    expect(screen.queryByRole('button', { name: 'Sidebar' })).toBeNull();
+    /* Removed once it has played `page-out`, and inert while it does. */
+    await waitFor(() => { expect(screen.queryByRole('button', { name: 'Sidebar' })).toBeNull(); });
     expect(screen.getByText('The task')).toBeInTheDocument();
   });
 

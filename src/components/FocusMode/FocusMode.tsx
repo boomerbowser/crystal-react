@@ -42,10 +42,13 @@
  * else on screen will tell them.
  */
 import {
-  useEffect, useRef, useState, type HTMLAttributes, type ReactNode,
+  useEffect, useMemo, useRef, useState, type HTMLAttributes, type ReactNode,
 } from 'react';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { cx } from '../../styles/cx.js';
+import { AnimatePresence } from 'motion/react';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './FocusMode.module.scss';
 
 export interface FocusModeProps extends HTMLAttributes<HTMLDivElement> {
@@ -99,9 +102,20 @@ export function FocusMode({
       className={cx(styles['wrap'], className)}
     >
       <VisuallyHidden role="status">{said}</VisuallyHidden>
-      {isOn ? null : <div ref={chromeRegion}>{chrome}</div>}
+      {/* The chrome is the view that leaves as focus mode begins and returns as
+          it ends: `page-out` and `page-in`, held in presence so it can be seen
+          going. Neither on the render that opens the page. */}
+      <AnimatePresence initial={false}>
+        {isOn ? null : <Chrome key="chrome" region={chromeRegion}>{chrome}</Chrome>}
+      </AnimatePresence>
       {/* Focusable only as the target of the move above, never a tab stop. */}
       <div ref={task} tabIndex={-1} className={cx(styles['task'])}>{children}</div>
     </div>
   );
+}
+
+function Chrome({ region, children }: { region: React.Ref<HTMLDivElement>; children: ReactNode }): React.JSX.Element {
+  const presence = usePresenceMotion('page-in', 'page-out');
+  const merged = useMemo(() => mergeRefs(region, presence as never), [region, presence]);
+  return <div ref={merged}>{children}</div>;
 }

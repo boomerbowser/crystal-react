@@ -18,6 +18,7 @@
 import { type HTMLAttributes, type ReactNode } from 'react';
 import { Result } from '../Result/Result.js';
 import { cx } from '../../styles/cx.js';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './NotFoundScreen.module.scss';
 
 export interface NotFoundScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -32,8 +33,12 @@ export interface NotFoundScreenProps extends Omit<HTMLAttributes<HTMLDivElement>
 export function NotFoundScreen({
   title, children, actions, headingLevel = 1, className, ...props
 }: NotFoundScreenProps): React.JSX.Element {
+  /* A screen is a view: inside a router's `AnimatePresence` it arrives with
+     `page-in` and leaves with `page-out`; rendered plainly — and on the page
+     load that first shows it — nothing. */
+  const presence = usePresenceMotion('page-in', 'page-out');
   return (
-    <div {...props} className={cx(styles['screen'], className)}>
+    <div ref={presence as never} {...props} className={cx(styles['screen'], className)}>
       <Result
         outcome="not-found"
         title={title}

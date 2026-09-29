@@ -1359,6 +1359,42 @@ for (const [id, openWith, exit] of [
   );
 }
 
+/* Views: a master–detail's detail when another item is chosen plays `page-in`;
+   focus mode's chrome, leaving as focus mode begins, plays `page-out` and goes.
+   Neither on load. Driven from args, as a product's state would be. */
+{
+  const setArgs = (id, updatedArgs) => page.evaluate(([storyId, args]) => {
+    window.__STORYBOOK_PREVIEW__.channel.emit('updateStoryArgs', { storyId, updatedArgs: args });
+  }, [id, updatedArgs]);
+  const played = (name) => page.evaluate((name) => document.querySelectorAll(`#storybook-root [data-cr-motion-name="${name}"]`).length, name);
+
+  await page.goto(`${ORIGIN}/iframe.html?id=screens-masterdetail--default&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const detailAtRest = await played('page-in');
+  await setArgs('screens-masterdetail--default', { selectedKey: 'b' });
+  await page.waitForTimeout(250);
+  const detailAfter = await page.evaluate(() => document.querySelector('#storybook-root section[aria-label="Message"]')?.dataset.crMotionName ?? null);
+  record(
+    'page-in on a master–detail: choosing another item brings the detail in as a new view, and loading does not',
+    detailAtRest === 0 && detailAfter === 'page-in',
+    `played on load ${detailAtRest}; after choosing, the detail played ${detailAfter}`,
+  );
+
+  await page.goto(`${ORIGIN}/iframe.html?id=screens-focusmode--off&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const chromeAtRest = await played('page-out') + await played('page-in');
+  await setArgs('screens-focusmode--off', { isOn: true });
+  await page.waitForTimeout(100);
+  const leaving = await page.evaluate(() => document.querySelectorAll('#storybook-root [inert][data-cr-motion-name="page-out"]').length);
+  await page.waitForTimeout(1200);
+  const gone = await page.evaluate(() => [...document.querySelectorAll('#storybook-root button')].filter((b) => b.textContent.trim() === 'Sidebar').length);
+  record(
+    'page-out on focus mode: the chrome leaves inert, plays its exit, and goes; nothing on load',
+    chromeAtRest === 0 && leaving === 1 && gone === 0,
+    `played on load ${chromeAtRest}; leaving ${leaving}; chrome controls left afterwards ${gone}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

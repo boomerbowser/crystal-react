@@ -25,6 +25,7 @@ import { type HTMLAttributes, type ReactNode } from 'react';
 import { Result } from '../Result/Result.js';
 import { Button } from '../Button/Button.js';
 import { cx } from '../../styles/cx.js';
+import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './OfflineScreen.module.scss';
 
 export interface OfflineScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -44,8 +45,12 @@ export function OfflineScreen({
   title = 'You are offline', children, isReconnecting = false, onRetry,
   retryLabel = 'Try again', actions, headingLevel = 1, className, ...props
 }: OfflineScreenProps): React.JSX.Element {
+  /* A screen is a view: inside a router's `AnimatePresence` it arrives with
+     `page-in` and leaves with `page-out`; rendered plainly — and on the page
+     load that first shows it — nothing. */
+  const presence = usePresenceMotion('page-in', 'page-out');
   return (
-    <div
+    <div ref={presence as never}
       {...props}
       role="status"
       aria-busy={isReconnecting || undefined}

@@ -29,10 +29,12 @@
  * and not of this element: two master–detail views on one page collapse
  * together, and a product's own CSS at the same breakpoint stays in step.
  */
-import { useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { useMediaQuery } from '../../theme/useMediaQuery.js';
 import { crystalTokens } from '../../theme/tokens.generated.js';
 import { cx } from '../../styles/cx.js';
+import { mergeRefs } from '../../utils/mergeRefs.js';
+import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './MasterDetail.module.scss';
 
 /* Crystal's `md`, taken from the generated token export rather than retyped.
@@ -78,6 +80,12 @@ export function MasterDetail({
   }, [selectedKey, stacked]);
 
   const nothingChosen = selectedKey === null;
+  /* `page-in` on the detail when a different item is chosen — the detail is a
+     new view — and never on the render that opens with one chosen. The detail
+     it replaces is gone in the same render, so there is no departing view to
+     play `page-out` on. */
+  const arrival = useChangeMotion(selectedKey, (_, is) => (is === null ? null : 'page-in'));
+  const detailRef = useMemo(() => mergeRefs(detail, arrival as never), [arrival]);
 
   return (
     <div
@@ -92,7 +100,7 @@ export function MasterDetail({
       )}
       {stacked && nothingChosen ? null : (
         <section
-          ref={detail}
+          ref={detailRef}
           aria-label={detailLabel}
           /* Focusable only as a target for the move above — never a tab stop,
              because a region a keyboard stops on for no reason is a stop that
