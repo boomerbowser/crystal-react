@@ -1,0 +1,26 @@
+@use '../../styles/tokens' as *;
+
+/* "Frost drawer with Haze rows." The Frost is the drawer's own and each line is a
+   `CartItem`, which carries its own Haze; the block adds layout and nothing else,
+   so a line is never two materials deep. */
+.drawer { min-inline-size: 0; }
+
+.body {
+  display: grid;
+  gap: $cr-spacing-md;
+  align-content: start;
+}
+
+.lines {
+  display: grid;
+  gap: $cr-spacing-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.line { min-inline-size: 0; }
+
+/* The one action the drawer exists for, the width of the drawer so it is found
+   without looking for it. A pill, as every action is. */
+.checkout { inline-size: 100%; }

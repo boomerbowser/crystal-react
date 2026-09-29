@@ -253,3 +253,4 @@ export * from './DashboardShell/index.js';
 export * from './MetricsRow/index.js';
 export * from './AnalyticsPanel/index.js';
 export * from './DataTableBlock/index.js';
+export * from './CartDrawer/index.js';

@@ -13,3 +13,4 @@ export * from './components/DashboardShell/index.js';
 export * from './components/MetricsRow/index.js';
 export * from './components/AnalyticsPanel/index.js';
 export * from './components/DataTableBlock/index.js';
+export * from './components/CartDrawer/index.js';
