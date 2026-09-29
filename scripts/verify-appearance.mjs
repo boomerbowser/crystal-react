@@ -47,6 +47,34 @@ const open = async (id, ready) => {
   await page.waitForTimeout(400);
 };
 
+/* ------------------------------------------------- a dialog opens where it can be read */
+
+/* Crystal's `.cr-dialog` is fixed, which centres a native `<dialog>` because the
+   browser gives a modal one `inset: 0` and auto margins. React Aria's surface is
+   not a `<dialog>`, and when it put on the class it kept `position: fixed` with no
+   offsets, so it sat at its static position — top-left corner at the middle of
+   the screen, half of it past the right edge on a phone. Every dialog shipped that
+   way while the material gate passed, because a material can be right on a
+   surface nobody can read. So: the surface is inside the viewport, centred, and
+   at its reading measure where there is room for it. */
+for (const [width, height, what] of [[1280, 900, 'at a desktop width'], [375, 812, 'at a phone width']]) {
+  await page.setViewportSize({ width, height });
+  await open('overlays-dialog--default', '#storybook-root button');
+  await page.getByRole('button', { name: 'Open dialog' }).click();
+  await page.waitForSelector('[role="dialog"]');
+  await page.waitForTimeout(700);
+  const box = await page.evaluate(() => {
+    const r = document.querySelector('[role="dialog"]').getBoundingClientRect();
+    return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width };
+  });
+  const inside = box.left >= 0 && box.top >= 0 && box.right <= width && box.bottom <= height;
+  const centred = Math.abs((box.left + box.right) / 2 - width / 2) <= 2 && Math.abs((box.top + box.bottom) / 2 - height / 2) <= 2;
+  record(`a dialog opens inside the viewport and centred ${what}`, inside && centred,
+    `the surface spans ${Math.round(box.left)}-${Math.round(box.right)} x ${Math.round(box.top)}-${Math.round(box.bottom)} in a ${width}x${height} viewport`);
+  if (width > 600) record(`a dialog reaches its reading measure ${what}`, Math.round(box.width) === 560, `the surface is ${Math.round(box.width)}px wide, not 560`);
+}
+await page.setViewportSize({ width: 1280, height: 900 });
+
 /* ------------------------------------------------- a focus ring exists */
 
 /* Crystal's focus is a crisp 2px primary core at 3px offset inside a four-layer

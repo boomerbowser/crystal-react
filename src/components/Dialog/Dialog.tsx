@@ -53,6 +53,12 @@ export interface DialogProps extends Omit<ModalOverlayProps,
    * cannot discard work.
    */
   isDismissable?: boolean;
+  /**
+   * `alertdialog` for a dialog that interrupts to ask something that cannot wait
+   * — unsaved work, a destructive confirmation — so a screen reader says it as
+   * an alert as well as moving into it.
+   */
+  role?: 'dialog' | 'alertdialog';
 }
 
 /* React's DOM `onAnimationStart` event and Motion's lifecycle callback of the
@@ -69,7 +75,7 @@ const MotionDialog = motion.create(
   AriaDialog as React.ForwardRefExoticComponent<SurfaceProps & React.RefAttributes<HTMLElement>>,
 );
 
-export function Dialog({ title, children, className, ...props }: DialogProps): React.JSX.Element {
+export function Dialog({ title, children, className, role = 'dialog', ...props }: DialogProps): React.JSX.Element {
   const titleId = useId();
   /* The catalogue gives a dialog three movements and until now it played none of
      them: `mirage` and `mirage-out` are the scrim's wash — the chromatic
@@ -90,8 +96,9 @@ export function Dialog({ title, children, className, ...props }: DialogProps): R
           className={cx(styles['scrim'], 'cr-mirage')}
           {...wash}
         >
-          <Modal>
+          <Modal className={cx(styles['modal'])}>
             <MotionDialog
+              role={role}
               aria-labelledby={titleId}
               className={cx(styles['dialog'], 'cr-dialog', className)}
               {...dismissal}

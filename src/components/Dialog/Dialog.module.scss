@@ -19,6 +19,15 @@
   padding: var(--cr-space);
 }
 
+/* React Aria's Modal sits between the scrim and the surface. As a grid item it
+   would shrink to its content, and the surface's `width: 100%` would follow it
+   down; spanning the row lets the surface reach its reading measure and centre. */
+.modal {
+  display: grid;
+  justify-items: center;
+  inline-size: 100%;
+}
+
 /* The surface is Crystal's `.cr-dialog` (2.2.0): the 80% feathered Haze fill on its
    own paint layer, so the feather never touches text, with its rim and shadow and
    both fallbacks. Three things stay here, and each is a disagreement with the class
@@ -34,8 +43,16 @@
    - The padding is the component's: at least the catalogue's 12px from content to
      the feathered edge, at the page's own spacing.
 
+   - The position. `.cr-dialog` is fixed, which is right for a native `<dialog>`
+     — the browser gives a modal one `inset: 0` and auto margins, and the fixed box
+     centres. This surface is React Aria's element inside the scrim's grid, so
+     fixed with no offsets left it at its static position: its top-left corner at
+     the middle of the screen. Relative lets the grid centre it and still gives the
+     feathered paint layer its containing block.
+
    Both disagreements go to Crystal. */
 .dialog {
+  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 560px;  /* crystal-allow-literal: reading measure, not a material value */
