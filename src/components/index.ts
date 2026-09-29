@@ -261,3 +261,4 @@ export * from './ActivityFeed/index.js';
 export * from './NotificationCentre/index.js';
 export * from './PlaylistBlock/index.js';
 export * from './CrudFormBlock/index.js';
+export * from './SettingsBlock/index.js';

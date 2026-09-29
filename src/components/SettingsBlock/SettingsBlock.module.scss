@@ -1,0 +1,52 @@
+@use '../../styles/tokens' as *;
+
+/* "Haze groups." The block sits on whatever surface the page gives it; each
+   group is a Haze fill, worn as `.cr-haze`. */
+.settings {
+  display: grid;
+  gap: $cr-spacing-md;
+  min-inline-size: 0;
+}
+
+.heading { margin: 0; }
+
+.group {
+  display: grid;
+  gap: $cr-spacing-sm;
+  padding: var(--cr-space);
+  border-radius: var(--cr-radius);
+  min-inline-size: 0;
+}
+
+.groupHeading {
+  margin: 0;
+  font-size: var(--cr-text-subheading-size);
+  font-weight: 750;
+}
+
+.description { margin: 0; color: var(--cr-muted); }
+
+.fields { display: grid; gap: $cr-spacing-md; }
+
+/* The save bar stays in view at the foot of a long page while there is
+   something to save. */
+.bar {
+  position: sticky;
+  inset-block-end: $cr-spacing-sm;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $cr-spacing-xs;
+  flex-wrap: wrap;
+}
+
+.barState { margin-inline-end: auto; font-weight: 800; }
+
+.leaving { margin: 0 0 $cr-spacing-md; }
+
+.leavingActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $cr-spacing-xs;
+  flex-wrap: wrap;
+}
