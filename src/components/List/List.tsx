@@ -21,9 +21,10 @@
  * that they can.
  */
 import {
-  createContext, useContext, useEffect, useRef, useState,
+  Children, createContext, useContext, useEffect, useRef, useState,
   type HTMLAttributes, type LiHTMLAttributes, type ReactNode,
 } from 'react';
+import { AnimatePresence, usePresence } from 'motion/react';
 import { useMotion } from '../../motion/useMotion.js';
 import { cx } from '../../styles/cx.js';
 import styles from './List.module.scss';
@@ -59,7 +60,10 @@ export function List({ children, ordered = false, separated = false, empty, clas
         {...props}
         className={cx(styles['list'], separated ? styles['separated'] : undefined, className)}
       >
-        {children}
+        {/* Held in presence so a removed row can be seen leaving. Keyed through
+            `Children.toArray`, which keeps a product's own keys and gives static
+            children stable ones, so two unkeyed rows are never taken for one. */}
+        <AnimatePresence initial={false}>{Children.toArray(children)}</AnimatePresence>
       </Element>
     </Settled.Provider>
   );
@@ -91,6 +95,29 @@ export function ListItem({
        in the first render never plays, however many times the list re-renders. */
     if (arrived.current) void play('list-in');
   }, [play]);
+
+  /* `list-out` before a removed row goes — the list holds it in presence — and
+     inert while it does. */
+  const [isPresent, safeToRemove] = usePresence();
+  useEffect(() => {
+    if (isPresent || !safeToRemove) return;
+    (scope.current as HTMLElement | null)?.setAttribute('inert', '');
+    void play('list-out').finally(safeToRemove);
+  }, [isPresent, safeToRemove, play, scope]);
+
+  /* `reorder` when this row has moved among the others: its position changed
+     while the number of rows did not. An insertion shifts every row after it,
+     and none of those rows was reordered. */
+  const place = useRef<{ index: number; of: number } | null>(null);
+  useEffect(() => {
+    const row = scope.current as HTMLElement | null;
+    const parent = row?.parentElement;
+    if (!row || !parent) return;
+    const now = { index: Array.prototype.indexOf.call(parent.children, row), of: parent.children.length };
+    const before = place.current;
+    place.current = now;
+    if (settled && before !== null && before.of === now.of && before.index !== now.index) void play('reorder');
+  });
 
   const body = (
     <>

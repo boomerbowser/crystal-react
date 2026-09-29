@@ -24,6 +24,8 @@
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
+import { ListPresence, PresenceItem } from '../../motion/ListPresence.js';
+import { ChangeHighlight } from '../../feedback/ChangeHighlight.js';
 import styles from './Table.module.scss';
 
 /** Which way a column is ordered right now. */
@@ -136,8 +138,13 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(function Table(
                 {loading ? <span aria-hidden="true" className={styles['placeholder']} /> : empty}
               </td>
             </tr>
-          ) : rows.map((row) => (
-            <tr key={row.id} data-selected={row.isSelected ? '' : undefined}>
+          ) : (
+            /* A row added after the table first rendered arrives with `list-in`;
+               one removed leaves with `list-out`, inert while it does. A cell
+               whose value changes is washed with `highlight`. */
+            <ListPresence>
+            {rows.map((row) => (
+            <PresenceItem as="tr" key={row.id} data-selected={row.isSelected ? '' : undefined}>
               {columns.map((column, index) => {
                 const content = row.cells[column.id];
                 /* The first cell names its row, which is what lets a reader
@@ -146,13 +153,16 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(function Table(
                   return (
                     <th key={column.id} scope="row" data-align={column.align ?? 'start'}>
                       {row.header ?? content}
+                      <ChangeHighlight />
                     </th>
                   );
                 }
-                return <td key={column.id} data-align={column.align ?? 'start'}>{content}</td>;
+                return <td key={column.id} data-align={column.align ?? 'start'}>{content}<ChangeHighlight /></td>;
               })}
-            </tr>
-          ))}
+            </PresenceItem>
+            ))}
+            </ListPresence>
+          )}
         </tbody>
       </table>
     </div>

@@ -151,3 +151,8 @@ $table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewpor
      backplate over a filled row and erases the words. */
   .table tbody tr[data-selected] :is(th, td) { background: Canvas; color: CanvasText; outline: 2px solid Highlight; }
 }
+
+/* Body cells hold the `highlight` layer that washes under a changed value, so
+   they are positioned and isolated. Only the header row is sticky, and it holds
+   no layer. */
+.table tbody :is(th, td) { position: relative; isolation: isolate; }

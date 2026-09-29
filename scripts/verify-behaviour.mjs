@@ -1560,6 +1560,95 @@ for (const [id, trigger, surface] of [
   );
 }
 
+/* A table's rows, driven from args as a product's data would be: a changed seat
+   count washes its cell with `highlight`; an added row arrives with `list-in`;
+   in the plain table a removed row leaves with `list-out`. Nothing on load.
+   The rows are the stories' own, restated here. */
+{
+  const setArgs = (id, updatedArgs) => page.evaluate(([storyId, args]) => {
+    window.__STORYBOOK_PREVIEW__.channel.emit('updateStoryArgs', { storyId, updatedArgs: args });
+  }, [id, updatedArgs]);
+  const base = [
+    { id: 'gather', name: 'Gather', cells: { workspace: 'Gather', plan: 'Team', seats: '12', renews: '14 March 2027' } },
+    { id: 'atlas', name: 'Atlas', cells: { workspace: 'Atlas', plan: 'Solo', seats: '1', renews: '2 April 2027' } },
+    { id: 'harbour', name: 'Harbour', cells: { workspace: 'Harbour', plan: 'Team', seats: '34', renews: '9 June 2027' } },
+    { id: 'prism', name: 'Prism', cells: { workspace: 'Prism', plan: 'Enterprise', seats: '210', renews: '30 November 2027' } },
+  ];
+  const added = { id: 'north', name: 'North', cells: { workspace: 'North', plan: 'Solo', seats: '2', renews: '1 May 2027' } };
+  const count = (name) => page.evaluate((name) => document.querySelectorAll(`#storybook-root [data-cr-motion-name="${name}"]`).length, name);
+  for (const id of ['data-display-table--default', 'data-display-data-table--default']) {
+    await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(400);
+    const atRest = await count('highlight') + await count('list-in') + await count('list-out');
+    await setArgs(id, { rows: base.map((row, index) => (index === 1 ? { ...row, cells: { ...row.cells, seats: '3' } } : row)) });
+    await page.waitForTimeout(250);
+    const highlighted = await count('highlight');
+    await setArgs(id, { rows: [...base, added] });
+    await page.waitForTimeout(250);
+    const arrivedIn = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [data-cr-motion-name="list-in"]')]
+      .map((el) => el.closest('tr, [role=row]')?.textContent.includes('North')).filter(Boolean).length);
+    record(
+      `highlight and list-in on ${id}: a changed value is washed, an added row arrives, and nothing on load`,
+      atRest === 0 && highlighted >= 1 && arrivedIn >= 1,
+      `on load ${atRest}; after a seat count changed, highlight on ${highlighted}; after a row was added, list-in on ${arrivedIn} element(s) of it`,
+    );
+  }
+  await page.goto(`${ORIGIN}/iframe.html?id=data-display-table--default&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  await setArgs('data-display-table--default', { rows: base.slice(0, 3) });
+  await page.waitForTimeout(80);
+  const leaving = await page.evaluate(() => document.querySelectorAll('#storybook-root tr[inert][data-cr-motion-name="list-out"]').length);
+  await page.waitForTimeout(900);
+  const gone = await page.evaluate(() => [...document.querySelectorAll('#storybook-root tbody tr')].filter((tr) => tr.textContent.includes('Prism')).length);
+  record(
+    'list-out on a table: a removed row leaves inert with its exit, then goes',
+    leaving === 1 && gone === 0,
+    `leaving ${leaving}; Prism rows after ${gone}`,
+  );
+}
+
+/* Moving an item across a transfer: it arrives in the other list with
+   `list-in`, and nothing played when the lists loaded. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=inputs-composite--two-lists&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const arrived = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root [data-cr-motion-name="list-in"]')].map((el) => el.textContent.trim()));
+  const onLoad = await arrived();
+  const option = page.locator('#storybook-root [role=listbox]').first().locator('[role=option]:not([aria-disabled=true])').first();
+  const name = (await option.textContent())?.trim();
+  await option.click();
+  await page.locator('#storybook-root button[aria-label^="Move to"]').first().click();
+  await page.waitForTimeout(250);
+  const after = await arrived();
+  record(
+    'list-in on a transfer: the moved item arrives in the other list, and nothing on load',
+    onLoad.length === 0 && after.length === 1 && after[0] === name,
+    `on load ${JSON.stringify(onLoad)}; moved ${JSON.stringify(name)}; arrived ${JSON.stringify(after)}`,
+  );
+}
+
+/* A list reordered and shortened: the rows that moved among the others play
+   `reorder`, and a removed row leaves inert with `list-out`; nothing on load. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=data-display-list--reordering&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const moved = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root li')].filter((li) => li.dataset.crMotionName === 'reorder').length);
+  const onLoad = await moved();
+  await page.locator('#storybook-root button').filter({ hasText: 'Move last to top' }).click();
+  await page.waitForTimeout(200);
+  const reordered = await moved();
+  await page.locator('#storybook-root button').filter({ hasText: 'Remove first' }).click();
+  await page.waitForTimeout(80);
+  const leaving = await page.evaluate(() => document.querySelectorAll('#storybook-root li[inert][data-cr-motion-name="list-out"]').length);
+  await page.waitForTimeout(900);
+  const rows = await page.evaluate(() => document.querySelectorAll('#storybook-root li').length);
+  record(
+    'reorder and list-out on a list: moved rows play reorder, a removed row leaves inert and goes',
+    onLoad === 0 && reordered >= 1 && leaving === 1 && rows === 3,
+    `on load ${onLoad}; reordered ${reordered}; leaving ${leaving}; rows after ${rows}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

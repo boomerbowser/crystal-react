@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 import { only } from '../../../.storybook/environment.js';
 import { Avatar } from '../Avatar/Avatar.js';
 import { Badge } from '../Badge/Badge.js';
 import { List, ListItem } from './List.js';
+import { Button } from '../Button/Button.js';
 
 const meta = {
   title: 'Data display/List',
@@ -71,4 +73,24 @@ export const Selected: Story = {
 
 export const Empty: Story = {
   args: { children: [], empty: 'Nobody has joined yet.' },
+};
+
+/* The list reordered and shortened. A row moved among the others plays
+   `reorder`; a row removed plays `list-out` and goes once it has; the rest stay
+   still. */
+export const Reordering: Story = {
+  render: function ReorderingStory() {
+    const [items, setItems] = useState(['Quarterly figures', 'Board minutes', 'Hiring plan', 'Office move']);
+    return (
+      <div style={{ display: 'grid', gap: 16, justifyItems: 'start' }}>
+        <List separated>
+          {items.map((item) => <ListItem key={item}>{item}</ListItem>)}
+        </List>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Button onPress={() => { setItems((list) => [list[list.length - 1]!, ...list.slice(0, -1)]); }}>Move last to top</Button>
+          <Button onPress={() => { setItems((list) => list.slice(1)); }}>Remove first</Button>
+        </div>
+      </div>
+    );
+  },
 };

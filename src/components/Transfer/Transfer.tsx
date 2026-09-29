@@ -17,9 +17,11 @@
  * leaving one list and appearing in another is, to a screen reader, nothing
  * happening.
  */
-import { useCallback, useId, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { ListBox, ListBoxItem, type Selection } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
+import { Arrival } from '../../motion/Arrival.js';
 import { Button } from '../Button/Button.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './Transfer.module.scss';
@@ -67,6 +69,19 @@ export function Transfer({
 
   const available = items.filter((item) => !chosen.includes(item.value));
   const selected = items.filter((item) => chosen.includes(item.value));
+  /* An item that has just been moved into a list arrives there with `list-in`;
+     what each list loads with does not. Decided by what each list held after the
+     last render. The item leaving the other list goes from React Aria's
+     collection at once, so there is nothing to play `list-out` on. */
+  const held = useRef<Map<string, Set<string>> | null>(null);
+  const isNew = (list: string, value: string): boolean =>
+    held.current !== null && !(held.current.get(list)?.has(value) ?? false);
+  useEffect(() => {
+    held.current = new Map([
+      [sourceId, new Set(available.map((item) => item.value))],
+      [targetId, new Set(selected.map((item) => item.value))],
+    ]);
+  });
 
   const keysOf = (selection: Selection, pool: readonly TransferItem[]) =>
     (selection === 'all' ? pool.map((item) => item.value) : [...selection].map(String));
@@ -118,7 +133,7 @@ export function Transfer({
       >
         {(item: TransferItem) => (
           <ListBoxItem id={item.value} textValue={item.label} className={cx(styles['item'])}>
-            {item.label}
+            <ItemLabel arriving={isNew(headingId, item.value)}>{item.label}</ItemLabel>
           </ListBoxItem>
         )}
       </ListBox>
@@ -150,5 +165,17 @@ export function Transfer({
       {panel(targetLabel, targetId, selected, targetSelection, setTargetSelection)}
       <VisuallyHidden as="div" role="status" aria-live="polite">{announcement}</VisuallyHidden>
     </div>
+  );
+}
+
+/* An item's words, arriving once when the item has just been moved into this
+   list. On the label, because React Aria owns the option element. */
+function ItemLabel({ arriving, children }: { arriving: boolean; children: ReactNode }): React.JSX.Element {
+  const [scope, play] = useMotion();
+  return (
+    <span ref={scope as never} className={cx(styles['itemLabel'])}>
+      {arriving ? <Arrival play={play} recipe="list-in" /> : null}
+      {children}
+    </span>
   );
 }

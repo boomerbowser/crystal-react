@@ -62,3 +62,6 @@
 @media (forced-colors: active) {
   .item[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }
 }
+
+/* A box for `list-in` to move: the label takes a clip and a fade. */
+.itemLabel { display: inline-block; }

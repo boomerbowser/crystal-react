@@ -39,6 +39,8 @@ import {
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
 import { useMotion } from '../../motion/useMotion.js';
+import { Arrival } from '../../motion/Arrival.js';
+import { ChangeHighlight } from '../../feedback/ChangeHighlight.js';
 import styles from './DataTable.module.scss';
 
 export interface DataTableColumn {
@@ -115,6 +117,14 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
   const selectable = selectionMode !== 'none';
 
   const settlers = useRef(new Map<HTMLElement, (name: string) => Promise<void>>());
+  /* A row not in the table before — added, not scrolled to or re-sorted — arrives
+     with `list-in`; the rows the table loads with do not. Decided by the rows
+     already seen, since React Aria may render any row afresh. A removed row
+     leaves React Aria's collection at once, so there is nothing to play
+     `list-out` on. */
+  const seen = useRef<Set<string> | null>(null);
+  const isNew = (id: string): boolean => seen.current !== null && !seen.current.has(id);
+  useEffect(() => { seen.current = new Set(rows.map((row) => row.id)); });
   const resizing = useRef<HTMLElement | null>(null);
 
   const table = (
@@ -183,9 +193,9 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
             ) : null}
             {columns.map((column) => (
               <Cell key={column.id} className={cx(styles['cell'])}>
-                <span data-align={column.align ?? 'start'} className={styles['cellInner']}>
+                <CellInner align={column.align ?? 'start'} arriving={isNew(row.id)}>
                   {row.cells[column.id]}
-                </span>
+                </CellInner>
               </Cell>
             ))}
           </Row>
@@ -263,6 +273,20 @@ function ColumnLabel({ settlers, align, children }: {
   return (
     <span ref={scope as never} data-column-label="" className={styles['columnLabel']} data-align={align}>
       {children}
+    </span>
+  );
+}
+
+/* A cell's content: `list-in` once if its row has just been added, and the
+   `highlight` layer that washes under the value when it changes. On the content,
+   because React Aria owns the row and the cell elements. */
+function CellInner({ align, arriving, children }: { align: string; arriving: boolean; children: ReactNode }): React.JSX.Element {
+  const [scope, play] = useMotion();
+  return (
+    <span ref={scope as never} data-align={align} className={styles['cellInner']}>
+      {arriving ? <Arrival play={play} recipe="list-in" /> : null}
+      {children}
+      <ChangeHighlight />
     </span>
   );
 }

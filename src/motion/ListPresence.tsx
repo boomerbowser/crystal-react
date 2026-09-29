@@ -77,10 +77,10 @@ export function usePresenceMotion(enter: string, exit: string | null): ReturnTyp
   return scope;
 }
 
-/** An element that is one item of a `ListPresence`: an `li` in a list, or a
- *  `div` where the collection is not one. */
+/** An element that is one item of a `ListPresence`: an `li` in a list, a `tr` in
+ *  a table body, or a `div` where the collection is neither. */
 export const PresenceItem = forwardRef<HTMLElement, HTMLAttributes<HTMLElement> & {
-  as?: 'li' | 'div';
+  as?: 'li' | 'div' | 'tr';
   leaves?: boolean;
 }>(function PresenceItem({ as: Element = 'li', leaves = true, ...props }, ref) {
   const scope = useListItemMotion({ leaves });

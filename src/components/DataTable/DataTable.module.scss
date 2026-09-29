@@ -135,7 +135,12 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
   outline: none;
 }
 
-.cellInner { display: block; }
+.cellInner {
+  display: block;
+  /* Positioned and isolated, for the `highlight` layer under a changed value. */
+  position: relative;
+  isolation: isolate;
+}
 .cellInner[data-align='end'] { text-align: end; font-variant-numeric: tabular-nums; }
 
 .body tr:last-child :is(td, th) { border-block-end: 0; }
