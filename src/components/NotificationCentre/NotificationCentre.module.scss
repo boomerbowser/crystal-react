@@ -1,0 +1,51 @@
+@use '../../styles/tokens' as *;
+
+/* "Frost panel with Haze rows." The centre wears `.cr-frost`; the notifications
+   inside it step down to Haze through the surface context. The undo row is a
+   Haze fill too — reading content inside the panel. */
+.centre {
+  display: grid;
+  gap: $cr-spacing-md;
+  padding: var(--cr-space);
+  min-inline-size: 0;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-sm;
+  flex-wrap: wrap;
+}
+
+.heading { margin: 0; }
+
+/* The count, in words: weight rather than a coloured bubble. */
+.count { font-weight: 800; margin-inline-end: auto; }
+
+.undo {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-xs;
+  flex-wrap: wrap;
+  padding: $cr-spacing-xs $cr-spacing-md;
+  border-radius: var(--cr-radius);
+}
+
+.undo > span { margin-inline-end: auto; font-weight: 700; }
+
+.group { display: grid; gap: $cr-spacing-xs; }
+
+.groupHeading {
+  margin: 0;
+  font-size: var(--cr-text-caption-size);
+  font-weight: 800;
+  color: var(--cr-muted);
+}
+
+.list {
+  display: grid;
+  gap: $cr-spacing-xs;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

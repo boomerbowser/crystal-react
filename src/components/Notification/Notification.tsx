@@ -25,6 +25,7 @@
 import { forwardRef, useId, useMemo, type HTMLAttributes, type ReactNode } from 'react';
 import { STATUS_SYMBOL, type FeedbackStatus } from '../../feedback/status.js';
 import { cx } from '../../styles/cx.js';
+import { useOverlayMaterial } from '../../overlays/surface.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './Notification.module.scss';
@@ -56,12 +57,16 @@ export const Notification = forwardRef<HTMLLIElement, NotificationProps>(functio
      with `toast-in` and leaves with `toast-out` once dismissed; rendered plainly,
      nothing. */
   const presence = usePresenceMotion('toast-in', 'toast-out');
+  /* Frost on the page; inside a pane — a notification centre's Frost panel — a
+     Haze row, because Frost inside Frost is two panes of one glass that read as
+     neither. The surface context says which, as it does for every overlay. */
+  const material = useOverlayMaterial();
   const merged = useMemo(() => mergeRefs(ref, presence as never), [ref, presence]);
   return (
     <li
       {...props}
       ref={merged as never}
-      className={cx(styles['notification'], 'cr-frost', className)}
+      className={cx(styles['notification'], material === 'frost' ? 'cr-frost' : 'cr-haze', className)}
       data-status={status}
       data-unread={unread ? '' : undefined}
       aria-labelledby={`${id}-title`}

@@ -1,0 +1,50 @@
+@use '../../styles/tokens' as *;
+
+/* "Haze rows." Each track is Crystal's `.cr-haze` reading fill; the queue paints
+   nothing of its own. */
+.playlist {
+  display: grid;
+  gap: $cr-spacing-xs;
+  min-inline-size: 0;
+  outline: none;
+}
+
+.row {
+  border-radius: var(--cr-radius);
+  outline: none;
+  cursor: default;
+}
+
+.row[data-focus-visible] {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* Lifted out of the list while it is carried. */
+.row[data-dragging] { opacity: $cr-action-disabled-opacity; }
+
+.track {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: $cr-spacing-sm;
+  min-block-size: $cr-action-min-target;
+  padding-inline-end: $cr-spacing-md;
+}
+
+.handle { display: inline-flex; }
+
+.text { display: grid; min-inline-size: 0; }
+.title { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.artist { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+
+/* Now playing is weight and words, never a mark beside the title. */
+.track[data-current] .title { font-weight: 800; }
+.now { font-size: var(--cr-text-caption-size); font-weight: 800; }
+
+.duration {
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+  font-variant-numeric: tabular-nums;
+}

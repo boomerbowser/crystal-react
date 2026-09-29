@@ -17,3 +17,6 @@ export * from './components/CartDrawer/index.js';
 export * from './components/CheckoutBlock/index.js';
 export * from './components/ProductDetailBlock/index.js';
 export * from './components/StorefrontBlock/index.js';
+export * from './components/ActivityFeed/index.js';
+export * from './components/NotificationCentre/index.js';
+export * from './components/PlaylistBlock/index.js';

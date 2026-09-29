@@ -1649,6 +1649,39 @@ for (const [id, trigger, surface] of [
   );
 }
 
+/* A playlist reordered by keyboard alone: from a track's drag handle, Enter
+   picks it up, arrows move it between drop positions, Enter puts it down. The
+   order changes, the track settles where it landed, and the now-playing row
+   stays aria-current. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=blocks-playlistblock--reordering&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const order = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root [role=row]')].map((row) => row.querySelector('[class*="_title_"]')?.textContent));
+  const before = await order();
+  await page.locator('#storybook-root button[aria-label="Reorder Harbour Lights"]').focus();
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(200);
+  await page.keyboard.press('ArrowDown');
+  await page.waitForTimeout(100);
+  await page.keyboard.press('ArrowDown');
+  await page.waitForTimeout(100);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(400);
+  const after = await order();
+  const settled = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [role=row]')]
+    .filter((row) => row.querySelector('[data-cr-motion-name="drag-settle"]')).map((row) => row.querySelector('[class*="_title_"]')?.textContent));
+  const current = await page.evaluate(() => document.querySelector('#storybook-root [role=row][aria-current="true"] [class*="_title_"]')?.textContent);
+  const displaced = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [role=row]')]
+    .filter((row) => row.querySelector('[data-cr-motion-name="reorder"]')).map((row) => row.querySelector('[class*="_title_"]')?.textContent));
+  record(
+    'a playlist reorders by keyboard, the moved track settles, the rows it passed reorder, and the now-playing row stays current',
+    JSON.stringify(before) !== JSON.stringify(after) && after[0] !== 'Harbour Lights'
+      && settled.length === 1 && settled[0] === 'Harbour Lights' && current === 'North Road'
+      && displaced.length >= 1 && !displaced.includes('Harbour Lights'),
+    `before ${JSON.stringify(before)}; after ${JSON.stringify(after)}; settled ${JSON.stringify(settled)}; reordered ${JSON.stringify(displaced)}; current ${current}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));
