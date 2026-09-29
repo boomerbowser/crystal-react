@@ -23,3 +23,33 @@
 @media (forced-colors: active) {
   .formErrors { border-color: CanvasText; background: Canvas; color: CanvasText; }
 }
+
+/* The summary of a form's field errors: the danger boundary and surface the
+   form-level errors use, a heading that says how many, and a link per error. */
+.errorSummary {
+  display: grid;
+  gap: $cr-spacing-xs;
+  padding: $cr-spacing-sm $cr-spacing-md;
+  border: 1px solid var(--cr-danger-ink);
+  border-radius: var(--cr-radius);
+  background: var(--cr-danger-surface);
+  color: var(--cr-danger-ink);
+}
+
+.errorSummary:focus-visible {
+  outline: $cr-focus-core-width solid var(--cr-focus-core);
+  outline-offset: $cr-focus-core-offset;
+  box-shadow: var(--cr-focus-ring);
+}
+
+/* Weight, not colour alone. */
+.errorSummaryTitle { margin: 0; font-weight: 800; }
+
+.errorSummaryList {
+  display: grid;
+  gap: $cr-spacing-2xs;
+  margin: 0;
+  padding-inline-start: $cr-spacing-md;
+}
+
+.errorSummaryList a { color: inherit; font-weight: 700; text-decoration: underline; }

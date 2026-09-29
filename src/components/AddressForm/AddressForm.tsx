@@ -107,6 +107,9 @@ export const AddressForm = forwardRef<HTMLFormElement, AddressFormProps>(
           /* The product's error wins: it knows something this form does not. */
           const message = errors[field.name] ?? touched[field.name];
           const shared = {
+            /* Named, so the form submits like one and an error summary can find
+               the field its message is about. */
+            name: field.name,
             label: field.label,
             isRequired: field.required ?? false,
             isDisabled: isSubmitting,

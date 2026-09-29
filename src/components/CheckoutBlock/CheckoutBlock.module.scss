@@ -1,0 +1,58 @@
+@use '../../styles/tokens' as *;
+
+/* "Haze sections in a Frost panel." The step is the Frost panel, worn as
+   `.cr-frost`; its fields sit on one Haze section, worn as `.cr-haze`. The
+   summary is `CartSummary`, which carries its own surface. */
+.checkout {
+  /* The container the layout below measures — the block, since a container
+     query cannot style its own container. */
+  container-type: inline-size;
+  display: grid;
+  gap: $cr-spacing-lg;
+  min-inline-size: 0;
+}
+
+/* The step beside its summary where there is room for both, and the summary
+   after the step where there is not. By container width, because a checkout in
+   a narrow column is narrow whatever the window is. */
+.main {
+  display: grid;
+  gap: $cr-spacing-lg;
+  align-items: start;
+}
+
+@container (min-inline-size: 48rem) { /* crystal-allow-literal: the width at which a step and its summary both fit */
+  .main { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+}
+
+.step {
+  display: grid;
+  gap: $cr-spacing-md;
+  padding: var(--cr-space);
+}
+
+.heading { margin: 0; }
+
+.fields {
+  display: grid;
+  gap: $cr-spacing-md;
+  padding: var(--cr-space);
+}
+
+.failure {
+  padding: $cr-spacing-sm $cr-spacing-md;
+  border: 1px solid var(--cr-danger-ink);
+  border-radius: var(--cr-radius);
+  background: var(--cr-danger-surface);
+  color: var(--cr-danger-ink);
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $cr-spacing-xs;
+  flex-wrap: wrap;
+}
+
+.summary { min-inline-size: 0; }
