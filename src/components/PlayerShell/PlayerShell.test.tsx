@@ -77,6 +77,26 @@ describe('PlayerShell', () => {
     expect(container.querySelector('[data-cr-state]')).toHaveAttribute('data-cr-state', 'idle');
   });
 
+  /* The element's own state, read from its own events: jsdom plays nothing, so
+     the element is told what a browser would report and says so. */
+  it('is playing, buffering and paused as the element says it is', () => {
+    const { container } = renderWithCrystal(<PlayerShell {...props} />);
+    const video = container.querySelector('video')!;
+    const shell = container.querySelector('[data-cr-state]');
+    const report = (paused: boolean, readyState: number, currentTime: number, event: string): void => {
+      Object.defineProperty(video, 'paused', { configurable: true, get: () => paused });
+      Object.defineProperty(video, 'readyState', { configurable: true, get: () => readyState });
+      Object.defineProperty(video, 'currentTime', { configurable: true, get: () => currentTime });
+      act(() => { video.dispatchEvent(new Event(event)); });
+    };
+    report(false, 4, 1, 'play');
+    expect(shell).toHaveAttribute('data-cr-state', 'playing');
+    report(false, 1, 2, 'waiting');
+    expect(shell).toHaveAttribute('data-cr-state', 'buffering');
+    report(true, 4, 3, 'pause');
+    expect(shell).toHaveAttribute('data-cr-state', 'paused');
+  });
+
   /* Full screen keeps Crystal's transport, and entering and leaving are said. */
   it('goes full screen on its stage, with the transport, and says so', async () => {
     const { container } = renderWithCrystal(<PlayerShell {...props} />);

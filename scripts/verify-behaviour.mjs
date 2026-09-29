@@ -1729,6 +1729,33 @@ for (const [id, trigger, surface] of [
   }
 }
 
+/* ---------------------------------------------------------- an onboarding step changes page */
+
+/* The catalogue gives the onboarding sequence `page-in` and `page-out`, and the
+   block plays them on the step's page — the leaving one and the arriving one in
+   the same grid cell — while the panel keeps Tour's own arrival. The pages are
+   the same element in the same place for every step, so React keeps it mounted
+   and its presence sees the change; built any other way the old page unmounts
+   and nothing leaves. jsdom plays nothing, so it is counted here. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=blocks-onboardingblock--active&viewMode=story`, { waitUntil: 'networkidle' });
+  if (await waitFor('the onboarding panel opened', page.getByRole('dialog'))) {
+    await page.waitForTimeout(600);
+    await page.getByRole('button', { name: 'Next' }).click();
+    await page.waitForTimeout(250);
+    const played = await page.evaluate(() => [...document.querySelectorAll('[class*="_page_"]')].map((one) => ({
+      name: one.getAttribute('data-cr-motion-name'), text: one.textContent.trim().slice(0, 24),
+    })));
+    const leaving = played.filter((one) => one.name === 'page-out');
+    const arriving = played.filter((one) => one.name === 'page-in');
+    record(
+      'an onboarding step plays page-out on the page that leaves and page-in on the one that arrives',
+      leaving.length === 1 && arriving.length === 1 && leaving[0].text !== arriving[0].text,
+      `pages seen: ${JSON.stringify(played)}`,
+    );
+  }
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));
