@@ -1,0 +1,35 @@
+@use '../../styles/tokens' as *;
+
+/* "Haze sections in a Frost panel." The form is the Frost panel, worn as
+   `.cr-frost`; each section is Crystal's panelled `Fieldset` on a Haze fill,
+   worn as `.cr-haze`. */
+.form {
+  display: grid;
+  gap: $cr-spacing-md;
+  padding: var(--cr-space);
+  min-inline-size: 0;
+}
+
+.heading { margin: 0; }
+
+.failure {
+  padding: $cr-spacing-sm $cr-spacing-md;
+  border: 1px solid var(--cr-danger-ink);
+  border-radius: var(--cr-radius);
+  background: var(--cr-danger-surface);
+  color: var(--cr-danger-ink);
+  font-weight: 700;
+}
+
+.section { min-inline-size: 0; }
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $cr-spacing-xs;
+  flex-wrap: wrap;
+}
+
+/* Saved is said in a word, beside the control that saved it. */
+.saved { margin-inline-end: auto; font-weight: 800; }

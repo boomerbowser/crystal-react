@@ -20,3 +20,4 @@ export * from './components/StorefrontBlock/index.js';
 export * from './components/ActivityFeed/index.js';
 export * from './components/NotificationCentre/index.js';
 export * from './components/PlaylistBlock/index.js';
+export * from './components/CrudFormBlock/index.js';
