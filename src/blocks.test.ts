@@ -8,14 +8,16 @@
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import * as blocks from './blocks.js';
 import * as main from './index.js';
 
-const barrel = readFileSync(fileURLToPath(new URL('./components/index.ts', import.meta.url)), 'utf8');
+/* From the package root, which is where the test runner starts: in the jsdom
+   environment `import.meta.url` is not a file URL. */
+const barrel = readFileSync(join(process.cwd(), 'src/components/index.ts'), 'utf8');
 const section = barrel.slice(barrel.indexOf('/* Blocks'));
 const listed = [...section.matchAll(/export \* from '\.\/(\w+)\/index\.js';/g)].map((match) => match[1]);
-const entry = readFileSync(fileURLToPath(new URL('./blocks.ts', import.meta.url)), 'utf8');
+const entry = readFileSync(join(process.cwd(), 'src/blocks.ts'), 'utf8');
 
 describe('the blocks entry', () => {
   it('exports every block the main barrel lists as one', () => {
