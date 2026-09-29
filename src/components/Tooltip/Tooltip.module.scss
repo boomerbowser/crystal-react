@@ -1,11 +1,6 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/overlay' as overlay;
 
-/* The catalogue's tooltip geometry is an 18px radius, not the content radius the
-   other overlays share. Crystal publishes it only as prose, so it enters here once,
-   named, until a token carries it. */
-$tooltip-radius: 18px; /* crystal-allow-literal: the catalogue's tooltip geometry, "18px radius" */
-
 /* A tooltip is Frost, like every transient overlay (Crystal R15e; the catalogue's
    `tooltip` entry as of 2.2.0). It used to take Stone here, on the reasoning
    that a label over an unknown backdrop wants the protected backing — but a
@@ -20,7 +15,9 @@ $tooltip-radius: 18px; /* crystal-allow-literal: the catalogue's tooltip geometr
    tooltip wears; this says only what makes it a tooltip. */
 .tooltip {
   @include overlay.surface;
-  border-radius: $tooltip-radius;
+  /* The catalogue's tooltip geometry, not the content radius the other overlays
+     share: `component.overlay.tooltipRadius`, published from Crystal 2.3.0. */
+  border-radius: $cr-overlay-tooltip-radius;
   max-inline-size: $cr-overlay-tooltip-max-width;
   padding: $cr-spacing-xs $cr-spacing-sm;
   font-size: var(--cr-text-caption-size);
@@ -28,4 +25,3 @@ $tooltip-radius: 18px; /* crystal-allow-literal: the catalogue's tooltip geometr
   font-weight: 650;
 }
 
-@include overlay.surface-fallbacks('.tooltip');

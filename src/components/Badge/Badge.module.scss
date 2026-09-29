@@ -4,51 +4,21 @@
  *
  * "Pill or circle; never smaller than legible." Both come out of one rule: a
  * circle is a pill whose content is narrower than its own minimum size, so the
- * badge is given a pill radius and a square minimum and the shape follows the
- * content. One digit is a circle, three digits is a pill, and neither needed a
- * variant.
+ * shape follows the content. One digit is a circle, three digits is a pill, and
+ * neither needed a variant.
  *
- * The Haze fill is inset by `0` rather than by `--cr-haze-inset`. That inset is
- * 8px and exists to stop the fill short of an exposed glass perimeter; on a 20px
- * badge it would consume the whole fill, and a badge has no perimeter to protect
- * because it is smaller than the rim treatment it would be protecting.
+ * That rule is Crystal's count size from 2.3.0, `.cr-resin-haze.count`, which the
+ * badge wears: the 20px minimum, the pill radius, no block padding, the Haze pad
+ * filled to the badge's own edge, weight 700 in tabular figures. Until then the
+ * compact display was sized for a tag — an 8px inset that left a pad a few
+ * pixels across, and block padding that made a badge 55px tall — and this file
+ * released both and restated the rest (D-27).
  */
 
 /* Crystal 2.0.0 publishes action geometry as tokens and badge geometry only as
    rules. Until a core release carries them, the values enter here, once, named. */
 $badge-dot-size: 8px; /* crystal-allow-literal: a marker, not a container; wants a core token */
 $badge-ring-width: 2px;
-
-.badge {
-  /* The Resin shell and its Haze fill are Crystal's compact display,
-     `.cr-resin-haze` (2.2.0), which the badge wears. */
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  min-inline-size: $cr-indicator-size;
-  min-block-size: $cr-indicator-size;
-  /* The compact display's own block padding is a tag's; a 20px count badge has
-     none, and taking it made every badge 55px tall. */
-  padding-block: 0;
-  padding-inline: $cr-spacing-2xs;
-  border-radius: $cr-action-radius;
-  color: var(--cr-text);
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
-  /* Selection and emphasis are carried by weight throughout Crystal; a count is
-     emphasis, so it is heavier rather than louder. */
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-/* Crystal insets a compact display's Haze pad by `--cr-haze-inset`, 8px — right
-   for a tag, and on a 20px badge a pad a few pixels across with the digit mostly
-   outside it. The badge fills to its own edge, as it always has; measured against
-   a planted `.cr-resin-haze`, this is the one material difference. */
-.badge::before { inset: 0; }
 
 .dot {
   min-inline-size: $badge-dot-size;

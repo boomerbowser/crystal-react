@@ -16,12 +16,12 @@
  * same thing here for the reader who cannot resolve a 6px dot, which is the
  * non-colour, non-shape signal underneath it.
  *
- * **The dot's room is reserved whether or not it is drawn.** This is the menu's
- * lesson applied: a column that appears only for the current entry shifts every
- * label in the list by its width the moment you navigate, and a navigation
- * surface whose labels move as you use it is one nobody can aim at. It is also
- * the whole reason Meridian withdrew the leading selection mark, so drawing one
- * here that *does* shift the label would reintroduce the defect under a new name.
+ * **Both are Crystal's.** The link wears `.cr-nav-item`, which since 2.3.0 draws
+ * the dot itself (D-22): flat, primary, on `aria-current` only, inside the
+ * entry's own inline-start padding, so the label is at the same pixel whether or
+ * not the entry is current. Until then this component drew its own dot in a slot
+ * it reserved for the same reason; under 2.3.0 that would be two dots, so it is
+ * gone (R-26).
  */
 import type { ReactNode } from 'react';
 import { Link, type LinkProps } from 'react-aria-components';
@@ -51,9 +51,6 @@ export function NavLink({
       {...(isCurrent ? { 'aria-current': 'page' as const } : {})}
       className={cx(styles['navLink'], 'cr-nav-item', className)}
     >
-      {/* Always rendered, drawn only when current. Removing it when it is not
-          current is what would move the label. */}
-      <span className={cx(styles['dot'])} aria-hidden="true" {...(isCurrent ? {} : { 'data-empty': true })} />
       {icon ? <span className={cx(styles['icon'])} aria-hidden="true">{icon}</span> : null}
       <span className={cx(styles['label'])}>{children}</span>
       {/* The space is content, not formatting. Without it the accessible name

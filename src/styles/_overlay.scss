@@ -24,43 +24,9 @@
      which paints the fill, the rim, the panel shadow and the diffusion. This used
      to write all four out beside the attribute. */
 
-  /* Recessed rather than floating: the content fill, an edge, and no lift,
-     because it is inside something that is already lifted. This one stays the
-     library's — Crystal's Haze has no edge, and a menu over a Haze dialog needs
-     one to be seen. */
-  &[data-cr-overlay='haze'] {
-    position: relative;
-    isolation: isolate;
-    border: 1px solid var(--cr-edge);
-    background: var(--cr-haze-fill);
-    box-shadow: var(--cr-shadow-content);
-  }
-}
-
-/* Every overlay owes the same three fallbacks: a product that asked for opaque
-   effects, a viewer who asked for less transparency, and forced colours. */
-@mixin surface-fallbacks($selector) {
-  /* Frost's three fallbacks are Crystal's, on `.cr-frost`. What is left is the
-     library's own Haze branch. */
-  $haze: '#{$selector}[data-cr-overlay="haze"]';
-
-  :global([data-effects='opaque']) #{$haze},
-  :global([data-crystal-overlays][data-effects='opaque']) #{$haze} {
-    background: var(--cr-surface);
-  }
-
-  @media (prefers-reduced-transparency: reduce) {
-    #{$haze} { background: var(--cr-surface); }
-  }
-
-  @media (forced-colors: active) {
-    #{$haze} {
-      background: Canvas;
-      color: CanvasText;
-      border: 1px solid CanvasText;
-      box-shadow: none;
-    }
-  }
+  /* Recessed rather than floating, inside something that is already lifted: the
+     element wears Crystal's `.cr-haze.overlay` (2.3.0), which paints the flat Haze
+     fill, the edge and the content shadow, and its three fallbacks. */
 }
 
 /* A composite widget holds focus on behalf of whichever row is active, so the

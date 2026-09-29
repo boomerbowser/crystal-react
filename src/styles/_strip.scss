@@ -19,14 +19,13 @@
  * carry no material of their own. The caller wears the class; nothing of the
  * material is written here.
  *
- * **The pills restate `.cr-dock button`, because they are not buttons.** Crystal
- * keys the dock's controls on the element — `.cr-dock button` — and React Aria
- * renders a tab as `div[role=tab]` and a segment as a `label` around a hidden
- * radio, so the rule cannot reach them. The values below are that rule's, as the
- * installed 2.2.0 computes them, and `verify:appearance` plants a
- * `.cr-dock button` beside each pill and fails on any difference: the same
- * arrangement as the switch. The day Crystal's dock reaches a tab and a radio
- * label (filed upstream as D-26), this becomes a class and the restatement goes.
+ * **The pills are Crystal's too, from 2.3.0.** Crystal keyed the dock's controls
+ * on `button` until then, and React Aria renders a tab as `div[role=tab]` and a
+ * segment as a `label` around a hidden radio, so this file restated the dock
+ * button's values for them and `verify:appearance` compared each pill with a
+ * planted `.cr-dock button`. D-26 extended `.cr-dock` to tabs, radio labels and
+ * links, and the restatement went; the comparison stays, and now compares
+ * Crystal with Crystal.
  *
  * **Selection is weight and the primary fill.** 800 over 700, and the primary
  * fill with its ink — what the tab and segmented-control entries specify and what
@@ -44,43 +43,4 @@
 @mixin strip {
   display: inline-flex;
   align-self: start;
-}
-
-/* `.cr-dock button`, restated for a tab and a radio label. */
-@mixin pill {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-block-size: 52px; /* crystal-allow-literal: `.cr-dock button` min-height, which a div cannot wear */
-  padding: 13px 18px; /* crystal-allow-literal: `.cr-dock button` padding */
-  border-radius: $cr-action-radius;
-  color: var(--cr-text);
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-/* `.cr-dock button:is([aria-pressed=true], [aria-selected=true])`. */
-@mixin pill-selected {
-  font-weight: 800;
-  color: var(--cr-on-primary);
-  background: var(--cr-primary);
-  box-shadow: 0 3px 7px var(--cr-shadow-contact); /* crystal-allow-literal: `.cr-dock button` selected shadow */
-}
-
-/* `.cr-dock button:focus-visible`: the core outside the pill, and the halo under
-   the rim's highlight. */
-@mixin pill-focus {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: inset 0 2px 1px var(--cr-rim), var(--cr-focus-ring); /* crystal-allow-literal: `.cr-dock button:focus-visible` rim highlight */
-}
-
-/* No fallback mixin: `.cr-dock` publishes its own opaque, reduced-transparency
-   and forced-colours routes. What Crystal's forced-colours rule for the selected
-   control cannot reach — it is keyed on `button` too — is the ring, here. */
-@mixin pill-forced-colors($selected) {
-  @media (forced-colors: active) {
-    #{$selected} { background: Canvas; color: CanvasText; outline: 2px solid Highlight; outline-offset: -3px; } /* crystal-allow-literal: `.cr-dock button` forced-colours ring */
-  }
 }

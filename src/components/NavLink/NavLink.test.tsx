@@ -31,30 +31,23 @@ describe('NavLink', () => {
     expect(screen.getByRole('link').getAttribute('aria-current')).toBeNull();
   });
 
-  /* The lesson from the menu, and the reason Meridian withdrew the leading
-     selection mark: a column that appears only for the current entry shifts
-     every label in the list the moment you navigate. The slot is always there. */
-  it('reserves the dot’s room whether or not the dot is drawn', () => {
+  /* Crystal 2.3.0 draws the location dot on `.cr-nav-item` itself (D-22), in
+     the entry's own padding. A dot of this component's as well would be two, so
+     there is none: the first thing inside the link is its content. Where the dot
+     is drawn, and that the label does not move, is measured in a browser by
+     verify:appearance. */
+  it('draws no dot of its own, and leaves the dot to the class', () => {
     const { container } = renderWithCrystal(
       <nav aria-label="Sections">
         <NavLink href="/inbox">Inbox</NavLink>
         <NavLink href="/drafts" isCurrent>Drafts</NavLink>
       </nav>,
     );
-    const links = [...container.querySelectorAll('a')];
-    const slots = links.map((link) => link.firstElementChild);
-    expect(slots.every((slot) => slot !== null)).toBe(true);
-    /* Same element, same place in the order — one is painted and one is not,
-       which is a background rather than a box. */
-    expect(slots[0]).toHaveAttribute('data-empty');
-    expect(slots[1]?.hasAttribute('data-empty')).toBe(false);
-  });
-
-  it('hides the dot from assistive technology, because aria-current says it', () => {
-    renderWithCrystal(<NavLink href="/drafts" isCurrent>Drafts</NavLink>);
-    const link = screen.getByRole('link');
-    expect(link.firstElementChild).toHaveAttribute('aria-hidden', 'true');
-    expect(link).toHaveAccessibleName('Drafts');
+    for (const link of container.querySelectorAll('a')) {
+      expect(link).toHaveClass('cr-nav-item');
+      expect(link.firstElementChild?.textContent).toBe(link.textContent);
+    }
+    expect(screen.getByRole('link', { name: 'Drafts' })).toHaveAccessibleName('Drafts');
   });
 
   it('treats an icon as decoration and keeps the label as the name', () => {

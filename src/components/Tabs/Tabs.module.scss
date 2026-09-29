@@ -22,9 +22,8 @@
 
 .strip { @include strip.strip; }
 
-.tab { @include strip.pill; }
-.tab[data-selected] { @include strip.pill-selected; }
-.tab[data-focus-visible] { @include strip.pill-focus; }
+/* The tab is Crystal's dock control: `.cr-dock` reaches `[role=tab]` from 2.3.0
+   (D-26) — its fill, its weight, its focus ring and its forced-colours ring. */
 .tab[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 
 /* The panel is the reading surface, not a second material. A tab strip floating
@@ -55,4 +54,3 @@
 
 .tabs[data-orientation='vertical'] .panel { flex: 1; }
 
-@include strip.pill-forced-colors('.tab[data-selected]');

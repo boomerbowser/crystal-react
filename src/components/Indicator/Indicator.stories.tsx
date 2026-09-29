@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { only } from '../../../.storybook/environment.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
-import { Indicator, type IndicatorState } from './Indicator.js';
+import { Indicator } from './Indicator.js';
 
-const STATES: readonly IndicatorState[] = [
-  'selection', 'current', 'busy', 'field-idle', 'field-focused', 'required', 'invalid',
-];
+/* The hosts. An indicator shows what its host says, so each story gives it one:
+   a destination that is current, a control that is busy, a field shell. */
+const host = { position: 'relative', display: 'inline-flex' } as const;
 
 const meta = {
   title: 'Data display/Indicator',
@@ -14,39 +13,46 @@ const meta = {
     docs: {
       description: {
         component:
-          'A small circular mark attached to a control. It is `aria-hidden` and never a click '
-          + 'target: the control beside it already carries `aria-checked`, `aria-invalid`, '
-          + '`aria-current` or `aria-busy`, so a mark that announced anything would say it twice '
-          + 'and a mark that could be pressed would be a second control for the same thing. '
-          + 'There is no check mark in this vocabulary — selection resolves to label weight, '
-          + `not a badge. Its Haze fill is the one in Crystal that is not feathered at `
-          + `${crystalTokens['material.haze.feather']}: at ${crystalTokens['indicator.size']} across, that feather is a fifth of the mark's own radius.`,
+          'Crystal\'s `.cr-indicator`: a small Haze disc attached to a control, carrying a glyph that '
+          + 'its host\'s own state switches — ● on an `aria-current` host, … on an `aria-busy` one, '
+          + 'and on a field shell ○ at rest, ● focused, * required, ! invalid. It is `aria-hidden` '
+          + 'and never a click target: the host already says the state, so a mark that announced '
+          + 'it would say it twice. Shape rather than colour, and there is no selection kind — '
+          + 'selection in Crystal is label weight, with nothing drawn beside the label.',
       },
     },
   },
-  args: { state: 'current', onField: false },
+  args: { kind: 'current' },
+  argTypes: { kind: { control: 'inline-radio', options: ['current', 'busy', 'field'] } },
+  render: (args) => (
+    <a href="#inbox" aria-current="page" className="cr-button" style={host}>
+      Inbox
+      <Indicator {...only(args)} />
+    </a>
+  ),
 } satisfies Meta<typeof Indicator>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** On a destination that is the current page. */
 export const Default: Story = {};
 
-/** The catalogue's seven states, and the two sizes. */
+/** Every kind on its host, and the same marks on hosts that do not carry the state. */
 export const TheVocabulary: Story = {
-  render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'center', flexWrap: 'wrap' }}>
-      {STATES.map((state) => (
-        <span key={state} style={{ display: 'inline-flex', gap: 'var(--cr-spacing-xs)', alignItems: 'center' }}>
-          <Indicator {...only(args)} state={state} />
-          <span style={{ fontSize: 'var(--cr-text-caption-size)', color: 'var(--cr-muted)' }}>{state}</span>
-        </span>
-      ))}
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--cr-space)', justifyItems: 'start' }}>
+      <div style={{ display: 'flex', gap: 'var(--cr-space)', flexWrap: 'wrap' }}>
+        <a href="#inbox" aria-current="page" className="cr-button" style={host}>Current<Indicator kind="current" /></a>
+        <a href="#drafts" className="cr-button" style={host}>Not current<Indicator kind="current" /></a>
+        <button type="button" aria-busy="true" className="cr-button" style={host}>Busy<Indicator kind="busy" /></button>
+        <button type="button" className="cr-button" style={host}>Idle<Indicator kind="busy" /></button>
+      </div>
+      <div style={{ display: 'grid', gap: 'var(--cr-spacing-sm)', inlineSize: 'min(100%, 320px)' /* crystal-allow-literal: story column */ }}>
+        <div className="cr-field-shell"><input className="cr-input" aria-label="At rest" placeholder="At rest" /><Indicator kind="field" /></div>
+        <div className="cr-field-shell"><input className="cr-input" aria-label="Required" placeholder="Required" required /><Indicator kind="field" /></div>
+        <div className="cr-field-shell"><input className="cr-input" aria-label="Invalid" aria-invalid="true" defaultValue="not an email" /><Indicator kind="field" /></div>
+      </div>
     </div>
   ),
-};
-
-/** 24px rather than 20px, for a mark sitting beside a field. */
-export const OnAField: Story = {
-  args: { state: 'field-focused', onField: true },
 };

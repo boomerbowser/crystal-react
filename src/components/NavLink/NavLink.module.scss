@@ -12,17 +12,9 @@
  * Crystal paints it: muted at rest, the text colour and a surface-alt fill on
  * hover, and the current entry at weight 800 on the same fill.
  *
- * **The current-location dot is still this file's.** Crystal's catalogue
- * specifies one — "optional icon, label and current-location dot", with the dot
- * among what Crystal supplies, because current location and selection are
- * different things and the category says so: "current location is a dot;
- * selection within a set is label weight." `.cr-nav-item` in 2.2.0 draws no dot,
- * and neither did the side menu it was lifted from. Filed as D-22; Meridian ruled
- * on 28 September 2026 that the entry draws it, and Crystal 2.3.0 does — flat,
- * primary, on `aria-current` only, inside the entry's own padding. Until this
- * library depends on 2.3 it keeps the dot the catalogue asks for, in a slot
- * reserved whether or not it is drawn, so the label never moves; adopting 2.3
- * means removing it, or the current link shows two (R-26).
+ * **The current-location dot is Crystal's too**, from 2.3.0 (D-22): the class
+ * draws it on `aria-current`, in the entry's own padding, so the label never
+ * moves. This file drew its own until then (R-26).
  *
  * The rest is layout, which is this component's: it fills the row it sits in,
  * and it has slots for an icon and a trailing count.
@@ -35,24 +27,5 @@
 .icon { display: inline-flex; flex: none; }
 .icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
-/* Twice the marker line's thickness, so a dot and a line read as the same weight
-   of mark rather than two unrelated sizes. */
-.dot {
-  flex: none;
-  inline-size: calc(#{$cr-indicator-line-width} * 2);
-  block-size: calc(#{$cr-indicator-line-width} * 2);
-  border-radius: 50%;
-  background: var(--cr-primary);
-}
-
-.dot[data-empty] { background: none; }
-
 .label { min-inline-size: 0; }
 .trailing { margin-inline-start: auto; }
-
-@media (forced-colors: active) {
-  /* Crystal's entry already rings the current one in Highlight. The dot is this
-     file's, so its system colour is too. */
-  .dot { background: Highlight; }
-  .dot[data-empty] { background: none; }
-}

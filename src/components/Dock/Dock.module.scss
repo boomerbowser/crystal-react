@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/strip' as strip;
 
 /* Crystal's dock, worn as `.cr-dock` around `.cr-dock-inner`: one Resin plane
    and one Stone label backing behind the whole row, as the catalogue specifies —
@@ -18,23 +17,14 @@
   list-style: none;
 }
 
-/* A destination is a link, and `.cr-dock button` does not reach a link, so it
-   takes the dock-button recipe the strip pills restate — the catalogue's 52px
-   minimum destination height among it. */
-.item {
-  @include strip.pill;
-  gap: $cr-action-gap;
-  text-decoration: none;
-}
-
-/* The destination itself changes material. Nothing is drawn beside the label. */
-.item[aria-current] { @include strip.pill-selected; }
+/* A destination is a link, and `.cr-dock` reaches a link from 2.3.0 (D-26): the
+   dock control's 52px, its padding, and on `aria-current` the primary fill and
+   weight. The destination itself changes material; nothing is drawn beside the
+   label. What is here is the icon's gap. */
+.item { gap: $cr-action-gap; }
 
 .item[aria-current] .icon { color: var(--cr-on-primary); }
 
 .icon { display: inline-flex; flex: none; color: var(--cr-muted); }
 .icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
-.item:focus-visible { @include strip.pill-focus; }
-
-@include strip.pill-forced-colors('.item[aria-current]');

@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* ButtonGroup and SplitButton — adjacent actions on one plane.
  *
@@ -8,86 +7,19 @@
  * interior corners square off against their neighbours, and a hairline separates
  * them. Rounding every child instead gives a row of separate buttons that happen
  * to touch.
+ *
+ * All of that is Crystal's `group` surface from 2.3.0, worn as `.cr-group` (and
+ * `.vertical`): the Resin plane with its rim, shadow and Haze fill, the children
+ * giving up their own elevation and diffusion but keeping their fill, the
+ * squared interior, the hairline, and the three fallbacks. Until then a group was
+ * named the dock surface, which spaces its controls apart, and this file restated
+ * the dock's material with the grouped geometry on top (D-26). What is left here
+ * is the one thing Crystal does not specify.
  */
-
-.buttonGroup {
-  /* A group is one plane, like Crystal's `.cr-dock`, and the catalogue names it
-     the dock surface. It does not wear the class, because a dock spaces its
-     buttons 4px apart inside 9px of padding and a group's segments touch, square
-     against each other with a hairline between. Crystal has no grouped dock;
-     that is filed upstream (D-26) rather than invented here, and until it exists
-     the dock's material is restated — Resin fill, rim, float shadow, Haze. */
-  @include material.haze-fill;
-  display: inline-flex;
-  align-items: stretch;
-  border-radius: $cr-action-radius;
-  /* The dock's rim, which the group lacked when it was measured against
-     `.cr-dock` — the one property on which they differed. */
-  border: 1px solid var(--cr-rim);
-  /* The plane is the group's, not each button's, so the children sit on it
-     rather than each carrying their own. */
-  background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-}
-
-/* Children lose their own elevation and their own diffusion — one plane, not one
-   per button, and a Resin button on a Resin plane is the composition Crystal
-   forbids. They keep their *fill*: stripping that made a primary action's white
-   ink sit on the group's pale plane, which is invisible. The story is what showed
-   it, on a split button's chevron. */
-.buttonGroup > * {
-  border-radius: 0;
-  box-shadow: none;
-  backdrop-filter: none;
-}
-
-.buttonGroup > :first-child {
-  border-start-start-radius: $cr-action-radius;
-  border-end-start-radius: $cr-action-radius;
-}
-
-.buttonGroup > :last-child {
-  border-start-end-radius: $cr-action-radius;
-  border-end-end-radius: $cr-action-radius;
-}
-
-/* The hairline. On the neighbour's leading edge rather than as a separate
-   element, so the group has no children the product did not put there. */
-.buttonGroup > * + * { border-inline-start: 1px solid var(--cr-edge); }
-
-.vertical { flex-direction: column; }
-.vertical > * + * { border-inline-start: 0; border-block-start: 1px solid var(--cr-edge); }
-
-.vertical > :first-child {
-  border-start-start-radius: $cr-action-radius;
-  border-start-end-radius: $cr-action-radius;
-  border-end-start-radius: 0;
-}
-
-.vertical > :last-child {
-  border-end-start-radius: $cr-action-radius;
-  border-end-end-radius: $cr-action-radius;
-  border-start-end-radius: 0;
-}
 
 /* The disclosure half of a split button is narrower than a full action but still
    meets the target floor on its own, which the catalogue asks for explicitly. */
 .disclosure {
   min-inline-size: $cr-action-min-target;
   padding-inline: $cr-spacing-sm;
-}
-
-:global([data-effects='opaque']) .buttonGroup {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .buttonGroup { background: var(--cr-surface); backdrop-filter: none; }
-}
-
-@media (forced-colors: active) {
-  .buttonGroup { background: ButtonFace; border: 1px solid ButtonText; backdrop-filter: none; }
-  .buttonGroup > * + * { border-inline-start-color: ButtonText; }
 }

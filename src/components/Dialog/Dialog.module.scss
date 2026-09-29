@@ -28,46 +28,27 @@
   inline-size: 100%;
 }
 
-/* The surface is Crystal's `.cr-dialog` (2.2.0): the 80% feathered Haze fill on its
-   own paint layer, so the feather never touches text, with its rim and shadow and
-   both fallbacks. Three things stay here, and each is a disagreement with the class
-   rather than a copy of it:
+/* The surface is Crystal's `.cr-dialog`: the 80% feathered Haze fill on its own
+   paint layer, so the feather never touches text, with its rim, its panel radius,
+   its shadow and both fallbacks. And from 2.3.0 it is Crystal's in the three ways
+   this file used to disagree with the class:
 
-   - The catalogue's dialog geometry is the content radius; `.cr-dialog` draws the
-     Frost panel radius.
-   - The body scrolls, not the surface. `.cr-dialog` scrolls itself, and Crystal's
-     own edge-fade rule says why that is wrong — a mask fades an element's fill and
-     border along with its content, so a surface that scrolls dissolves itself. It
-     is better behaviour anyway: a title that scrolls out of a tall dialog takes its
-     context with it.
-   - The padding is the component's: at least the catalogue's 12px from content to
-     the feathered edge, at the page's own spacing.
+   - The body scrolls, not the surface: the scroll area wears `.cr-dialog-body`,
+     and a dialog with a body is a column whose surface does not scroll (D-25).
+   - The position: `.cr-dialog` is fixed only on a native `<dialog>` now (D-29),
+     so React Aria's surface sits in the scrim's grid, which centres it, without
+     an override.
+   - The radius: the catalogue said the content radius and the class draws the
+     panel radius; the catalogue now says the panel radius (D-23), so this file
+     no longer overrides it.
 
-   - The position. `.cr-dialog` is fixed, which is right for a native `<dialog>`
-     — the browser gives a modal one `inset: 0` and auto margins, and the fixed box
-     centres. This surface is React Aria's element inside the scrim's grid, so
-     fixed with no offsets left it at its static position: its top-left corner at
-     the middle of the screen. Relative lets the grid centre it and still gives the
-     feathered paint layer its containing block.
-
-   Both disagreements go to Crystal. */
+   What stays is the reading measure and the padding — at least the catalogue's
+   12px from content to the feathered edge, at the page's own spacing — which are
+   this component's. */
 .dialog {
-  position: relative;
-  display: flex;
-  flex-direction: column;
   max-width: 560px;  /* crystal-allow-literal: reading measure, not a material value */
   width: 100%;
-  max-height: 85vh;
   padding: var(--cr-space);
-  border-radius: var(--cr-radius);
-  overflow: visible;
-  color: var(--cr-text);
-}
-
-.body {
-  /* A flex child will not shrink below its content without this, and a body that
-     cannot shrink is a dialog that grows past its ceiling instead of scrolling. */
-  min-height: 0;
 }
 
 .dialog:focus { outline: none; }

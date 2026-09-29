@@ -18,10 +18,10 @@
 
 .strip { @include strip.strip; }
 
-.segment { @include strip.pill; }
-.segment[data-selected] { @include strip.pill-selected; }
+/* The segment is Crystal's dock control: `.cr-dock` reaches a label holding a
+   radio from 2.3.0 (D-26), React Aria's wrapped one included — selected by the
+   checked radio, its focus ring drawn on the label. */
 
-.segment[data-focus-visible] { @include strip.pill-focus; }
 
 .segment[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 
@@ -29,4 +29,3 @@
 .description { color: var(--cr-muted); }
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
-@include strip.pill-forced-colors('.segment[data-selected]');

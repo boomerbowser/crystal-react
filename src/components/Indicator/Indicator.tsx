@@ -4,35 +4,41 @@
  *
  * Every word of "the real control supplies the state; the mark only shows it" is
  * load-bearing. The indicator is `aria-hidden` and is never a click target: it
- * sits beside or on a checkbox, a field, a tab — and that control already carries
- * `aria-checked`, `aria-invalid`, `aria-current` or `aria-busy`. A mark that
+ * sits on a navigation entry, a busy control or a field, and that control already
+ * carries `aria-current`, `aria-busy`, `required` or `aria-invalid`. A mark that
  * announced anything would say it twice, and a mark that could be pressed would
  * be a second control for the same thing.
  *
- * The vocabulary is the catalogue's, and one entry is missing on purpose: there
- * is no check mark in it. "Selection resolves to label weight, not a badge." The
- * `selection` state here is the *dot* a strip draws under a selected tab, which
- * is a position rather than a mark beside a label — a leading mark sits inside
- * the control and offsets the very label it points at.
+ * **It is Crystal's `.cr-indicator`, and its host decides what it shows.** A
+ * 20px Haze disc with a feathered fill at the host's top end corner, carrying a
+ * glyph rather than a colour: ● on a host that is `aria-current`, … on one that
+ * is `aria-busy`, and nothing otherwise; on a field shell ○ at rest, ● focused,
+ * * required and ! invalid, read from the field inside it. Shape rather than
+ * colour, so the state never rests on colour alone — and because the host's own
+ * attributes switch it, the mark cannot disagree with the control it describes.
+ * It must be the host's own child for that to work.
+ *
+ * Until Crystal React adopted 2.3.0 (R-25) this was a colour dot whose fill was
+ * the state, set by a `state` prop, and it had a `selection` kind. Selection in
+ * Crystal is label weight and nothing drawn beside the label, so that kind is
+ * gone rather than renamed.
  */
 import { forwardRef, type HTMLAttributes } from 'react';
 import { cx } from '../../styles/cx.js';
-import styles from './Indicator.module.scss';
 
-/** The states the catalogue lists. There is no check mark in this vocabulary. */
-export type IndicatorState =
-  | 'selection' | 'current' | 'busy'
-  | 'field-idle' | 'field-focused' | 'required' | 'invalid';
+/** What the host's state is shown as. There is no selection kind: selection is weight. */
+export type IndicatorKind = 'current' | 'busy' | 'field';
 
 export interface IndicatorProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
-  /** Which state the control beside it is in. */
-  state: IndicatorState;
-  /** Take the field size — 24px rather than 20px. */
-  onField?: boolean;
+  /**
+   * `current` shows on a host that is `aria-current`; `busy` on one that is
+   * `aria-busy`; `field` inside a `.cr-field-shell`, reading its field.
+   */
+  kind: IndicatorKind;
 }
 
 export const Indicator = forwardRef<HTMLSpanElement, IndicatorProps>(function Indicator(
-  { state, onField = false, className, ...props },
+  { kind, className, ...props },
   ref,
 ) {
   return (
@@ -41,8 +47,8 @@ export const Indicator = forwardRef<HTMLSpanElement, IndicatorProps>(function In
       ref={ref}
       /* The control says what this means. The mark only shows it. */
       aria-hidden="true"
-      data-state={state}
-      className={cx(styles['indicator'], onField ? styles['onField'] : undefined, className)}
+      data-kind={kind}
+      className={cx('cr-indicator', className)}
     />
   );
 });

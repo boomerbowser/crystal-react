@@ -109,7 +109,7 @@ export function Dialog({ title, children, className, role = 'dialog', ...props }
               {/* A dialog is a reading surface, so its scrollbar is the Frost one —
                   and it is on the body rather than the surface, because the
                   surface is what carries the material. */}
-              <ScrollArea variant="frost" className={cx(styles['body'])}>
+              <ScrollArea variant="frost" className="cr-dialog-body">
                 {/* A dialog is Haze, so anything opened from inside it is opening
                     on top of Haze and recesses rather than floating. Resin never
                     contains Resin, and the DOM cannot say so — an overlay is

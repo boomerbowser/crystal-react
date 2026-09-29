@@ -75,6 +75,61 @@ for (const [width, height, what] of [[1280, 900, 'at a desktop width'], [375, 81
 }
 await page.setViewportSize({ width: 1280, height: 900 });
 
+/* ------------------------------------------------- one location dot, Crystal's */
+
+/* Crystal 2.3.0 draws the navigation entry's location dot on `.cr-nav-item`
+   itself (D-22): a `::before` on `aria-current`, inside the entry's own padding.
+   NavLink drew its own until then, and under 2.3.0 the two together are two dots
+   — which no other check here would notice, because both are correct in
+   isolation. So: the current link paints exactly one dot, Crystal's; the others
+   paint none; and a label starts at the same inline offset in its link whether
+   or not that link is current. */
+{
+  await open('navigation-links--destinations', '#storybook-root a.cr-nav-item');
+  const links = await page.evaluate(() => [...document.querySelectorAll('#storybook-root a.cr-nav-item')].map((link) => {
+    const before = getComputedStyle(link, '::before');
+    const painted = before.content !== 'none' && before.display !== 'none' && before.backgroundColor !== 'rgba(0, 0, 0, 0)';
+    /* A dot drawn by an element: a small, round, filled child with no text. */
+    const own = [...link.querySelectorAll('*')].filter((el) => {
+      const r = el.getBoundingClientRect(); const c = getComputedStyle(el);
+      return !el.textContent.trim() && el.tagName !== 'svg' && !el.closest('svg') && r.width > 0 && r.width <= 10 && r.height <= 10
+        && c.backgroundColor !== 'rgba(0, 0, 0, 0)' && c.borderRadius.startsWith('50%');
+    }).length;
+    const label = [...link.querySelectorAll('span')].find((el) => el.children.length === 0 && el.textContent.trim());
+    return {
+      current: link.getAttribute('aria-current') !== null,
+      painted, own,
+      labelOffset: label ? Math.round(label.getBoundingClientRect().left - link.getBoundingClientRect().left) : null,
+    };
+  }));
+  const current = links.filter((one) => one.current);
+  const others = links.filter((one) => !one.current);
+  record('a current navigation link paints one dot, Crystal\'s, and no other link paints one',
+    current.length > 0 && current.every((one) => one.painted && one.own === 0) && others.every((one) => !one.painted && one.own === 0),
+    JSON.stringify(links));
+  const offsets = new Set(links.map((one) => one.labelOffset));
+  record('a navigation link\'s label starts at the same offset whether or not it is current', offsets.size === 1, JSON.stringify(links));
+}
+
+/* ------------------------------------------------- an indicator shows what its host says */
+
+/* `Indicator` is Crystal's `.cr-indicator` from 2.3.0 (R-25): a glyph that its
+   host's own state switches, rather than a colour set by a prop. So what is
+   checked is the relationship — each mark shows the glyph its host calls for,
+   and nothing on a host that does not carry the state. The field glyphs reach a
+   `div` shell only from 2.3.0 (D-27), which is what the three field rows are. */
+{
+  await open('data-display-indicator--the-vocabulary', '#storybook-root .cr-indicator');
+  const marks = await page.evaluate(() => [...document.querySelectorAll('#storybook-root .cr-indicator')].map((mark) => {
+    const shown = getComputedStyle(mark).display !== 'none';
+    return { host: (mark.parentElement.textContent || mark.parentElement.querySelector('input')?.getAttribute('aria-label') || '').trim(), shown, glyph: shown ? getComputedStyle(mark, '::after').content : null };
+  }));
+  const want = [['Current', '"●"'], ['Not current', null], ['Busy', '"…"'], ['Idle', null], ['At rest', '"○"'], ['Required', '"*"'], ['Invalid', '"!"']];
+  const got = marks.map((m) => [m.host, m.glyph]);
+  record('an indicator shows the glyph its host\'s state calls for, and nothing on a host without the state',
+    JSON.stringify(got) === JSON.stringify(want), `got ${JSON.stringify(got)}`);
+}
+
 /* ------------------------------------------------- a slider's thumb sits on its track */
 
 /* React Aria places the thumb with an inline `translate(-50%, -50%)` and a
@@ -1284,17 +1339,19 @@ for (const [id, selector, what] of DISABLED) {
 /* ------------------------------------------------ a strip is Crystal's dock
  *
  * Crystal's catalogue names the tab strip, the segmented control, the toolbar,
- * the command bar, the action bar, the button group, the split button, the dock
- * and the bottom navigation as the `dock` surface (D-23, 28 September 2026), and
+ * the command bar, the action bar, the dock and the bottom navigation as the
+ * `dock` surface (D-23, 28 September 2026; the button group and the split button
+ * became the `group` surface in 2.3.0 and are checked with the surfaces), and
  * `.cr-dock` is its recipe. So a `.cr-dock` is planted beside each of them and the
  * two must agree on the material: the Resin plane, its rim and shadow, and the
  * Haze fill it holds.
  *
- * The labels inside are checked too, where the library restates them. Crystal
- * keys a dock's controls on `button`, and a tab is `div[role=tab]`, a segment is
- * a radio `label`, and a destination is a link, so none of them can wear it; they
- * restate `.cr-dock button` instead (the switch's arrangement), and a planted
- * `.cr-dock button`, selected and not, is what they must equal.
+ * The labels inside are checked too. A tab is `div[role=tab]`, a segment is a
+ * radio `label` and a destination is a link; until 2.3.0 Crystal's dock reached
+ * only `button`, and this library restated `.cr-dock button` for the three. From
+ * 2.3.0 `.cr-dock` reaches them itself (D-26) and the restatement is gone — so a
+ * planted `.cr-dock button`, selected and not, is what Crystal must draw them as,
+ * and this now checks Crystal against itself on the elements a consumer writes.
  */
 {
   const DOCKS = [
@@ -1302,7 +1359,6 @@ for (const [id, selector, what] of DISABLED) {
     ['navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', '[role=radiogroup] [class*="_strip_"]', 'label'],
     ['utility-toolbar-and-transition--floating', '[role=toolbar][class*="_resin_"]', 'bare'],
     ['screens-commandbar--default', '[role=toolbar]', 'bare'],
-    ['actions-icon-group-and-floating--groups', '[class*="_buttonGroup_"]', null],
     ['navigation-rails-and-bars--dock-bar', 'nav[class*="_dock_"]', 'a'],
     ['navigation-rails-and-bars--bottom-bar', 'nav[class*="_bar_"]', null],
   ];
@@ -1367,8 +1423,9 @@ for (const [id, selector, what] of DISABLED) {
  *
  * Covered elsewhere, and not repeated here: `field` (every field in six stories,
  * above), `dock` (seven strips, above) and `choice` (the switch, above).
- * Not covered, and said so: `indicator`, whose Crystal recipe this library does
- * not yet draw — see R-25 — and `none`, which has no material to compare.
+ * Not covered, and said so: `none`, which has no material to compare. `indicator`
+ * is Crystal's own class on the component since 2.3.0 (R-25); what it shows is
+ * checked by the relationship above, which is the part that can go wrong.
  *
  * `VERIFY_PLANT_RED=1` sabotages each component's fill before the comparison,
  * so every row here can be watched failing on demand rather than trusted.
@@ -1383,7 +1440,8 @@ for (const [id, selector, what] of DISABLED) {
     ['resin', 'data-display-image-compare--default', '[class*="_grip_"]', 'cr-resin'],
     ['resin-panel', 'overlays-floating-surfaces--window', '[class*="_window_"]', 'cr-resin panel'],
     ['control', 'actions-button--resin', 'button[class*="_button_"]', 'cr-button'],
-    ['compact', 'data-display-badge--default', '[class*="_badge_"]', 'cr-resin-haze'],
+    ['compact', 'data-display-badge--default', '[class*="_badge_"]', 'cr-resin-haze count'],
+    ['group', 'actions-icon-group-and-floating--groups', '.cr-group', 'cr-group'],
     ['stone', 'data-display-caption--overlaid', '[class*="_caption_"]', 'cr-stone'],
     ['mirage', 'overlays-dialog--default', '[class*="cr-mirage"]', 'cr-mirage', 'button'],
     ['dialog', 'overlays-dialog--default', '[role=dialog]', 'cr-dialog', 'button'],
@@ -1398,9 +1456,6 @@ for (const [id, selector, what] of DISABLED) {
   /* Differences that are decisions, each with where it is recorded. Anything not
      named here fails. */
   const ALLOWED = {
-    compact: {
-      '::before inset': 'a 20px count badge fills to its own edge; Crystal\'s 8px inset is a tag\'s (Badge.module.scss, Crystal D-27)',
-    },
     bare: {
       borderTopColor: 'a bare control that had `border: 0` keeps it (R-24 §3.2)',
       borderTopWidth: 'as above',

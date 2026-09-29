@@ -52,7 +52,6 @@
    measure against. */
 .pointAnchor { position: fixed; inline-size: 1px; block-size: 1px; pointer-events: none; }
 
-@include overlay.surface-fallbacks('.popover');
 
 @media (forced-colors: active) {
   .separator { background: CanvasText; }
