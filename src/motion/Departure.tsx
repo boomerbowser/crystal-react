@@ -22,26 +22,36 @@
  * and nothing plays, so the overlay goes at once: the state change without the
  * movement.
  */
-import { useLayoutEffect, type RefObject } from 'react';
+import { useLayoutEffect, useRef, type RefObject } from 'react';
 import { useCrystalTheme } from '../theme/CrystalProvider.js';
 import { getRecipe } from './useMotion.js';
 
-export function Departure({ isExiting, play, recipe, scope }: {
+export function Departure({ isExiting, play, recipe, scope, hold }: {
   isExiting: boolean;
   play: (name: string) => Promise<void>;
   recipe: string;
   scope: RefObject<unknown>;
+  /**
+   * The element React Aria is waiting on, when it is not the one that moves — a
+   * disclosure's panel, whose content plays the exit. Defaults to `scope`.
+   */
+  hold?: () => HTMLElement | null;
 }): null {
   const { resolveDuration, reduceMotion } = useCrystalTheme();
+  /* Only a change into exiting is a departure: a disclosure that renders closed
+     is not leaving. `null` until the first pass has been seen. */
+  const was = useRef<boolean | null>(null);
   useLayoutEffect(() => {
-    if (!isExiting) return;
-    const element = scope.current as HTMLElement | null;
+    const before = was.current;
+    was.current = isExiting;
+    if (!isExiting || before !== false) return;
+    const element = hold ? hold() : scope.current as HTMLElement | null;
     const authored = getRecipe(recipe);
     const duration = reduceMotion || !authored ? 0 : resolveDuration(authored.duration);
     /* Where there is no Web Animations API — jsdom — React Aria does not wait
        either, so there is nothing to hold. */
     if (element && duration > 0 && typeof element.animate === 'function') element.animate([], { duration });
     void play(recipe);
-  }, [isExiting, play, recipe, scope, reduceMotion, resolveDuration]);
+  }, [isExiting, play, recipe, scope, hold, reduceMotion, resolveDuration]);
   return null;
 }

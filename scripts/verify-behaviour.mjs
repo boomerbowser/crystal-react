@@ -1508,6 +1508,27 @@ for (const [id, handle, keys, where] of [
   );
 }
 
+/* An accordion row closing: its content plays `accordion-out` while the panel is
+   still shown, and the panel is hidden once it has — "hide content after
+   completion". A row that loads closed plays nothing. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=data-display-accordion--one-open-to-start&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(500);
+  const state = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root [class*="_content_"]')]
+    .map((c) => ({ name: c.dataset.crMotionName ?? null, hidden: c.parentElement.hasAttribute('hidden') })));
+  const atRest = (await state()).filter((one) => one.name !== null).length;
+  await page.locator('#storybook-root button[aria-expanded="true"]').first().click();
+  await page.waitForTimeout(80);
+  const closing = (await state())[0];
+  await page.waitForTimeout(1000);
+  const closed = (await state())[0];
+  record(
+    'accordion-out: the content of a closing row leaves while its panel is shown, and the panel hides after',
+    atRest === 0 && closing.name === 'accordion-out' && closing.hidden === false && closed.hidden === true,
+    `at rest ${atRest}; closing ${JSON.stringify(closing)}; closed ${JSON.stringify(closed)}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

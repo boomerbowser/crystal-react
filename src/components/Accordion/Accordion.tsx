@@ -32,13 +32,13 @@
  *     scripted height measurement needed" — which is a different mechanism from
  *     React Aria's `--disclosure-panel-height`, and the two do not need to agree.
  *
- * `accordion-out` is not played here, and the reason is worth stating rather than
- * leaving as an omission. React Aria applies `hidden` to the panel as soon as the
- * *panel's own* animations settle, and Crystal's exit recipe animates the content
- * inside it — so the content would be hidden before it had finished leaving.
- * Crystal's own note on the recipe says to "hide content after completion", which
- * needs whoever owns the hiding to wait. `Collapse` owns its own unmount and does
- * exactly that; a row here does not.
+ * `accordion-out` plays on the content as the row closes, and the panel is held
+ * open until it has — Crystal's note on the recipe is "hide content after
+ * completion". React Aria applies `hidden` once the *panel's own* animations
+ * settle, checked from a layout effect in the disclosure, which runs after this
+ * content's; so the content registers a hold on the panel first (`Departure`),
+ * and React Aria waits for it. This was recorded as impossible until the same
+ * mechanism was found under React Aria's overlays.
  */
 import { useEffect, useRef, type ReactNode } from 'react';
 import {
@@ -46,6 +46,7 @@ import {
   type DisclosureGroupProps,
 } from 'react-aria-components';
 import { useMotion } from '../../motion/useMotion.js';
+import { Departure } from '../../motion/Departure.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Accordion.module.scss';
 
@@ -75,7 +76,18 @@ function Content({ isExpanded, children }: { isExpanded: boolean; children: Reac
     if (isExpanded) void play('accordion-in');
   }, [isExpanded, play]);
 
-  return <div ref={scope as never} className={styles['content']}>{children}</div>;
+  return (
+    <div ref={scope as never} className={styles['content']}>
+      <Departure
+        isExiting={!isExpanded}
+        play={play}
+        recipe="accordion-out"
+        scope={scope}
+        hold={() => (scope.current as HTMLElement | null)?.parentElement ?? null}
+      />
+      {children}
+    </div>
+  );
 }
 
 function Row({ item }: { item: AccordionItem }): ReactNode {
