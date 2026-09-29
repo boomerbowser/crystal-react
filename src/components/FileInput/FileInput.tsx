@@ -21,9 +21,10 @@
  * "this boundary is a target, not a surface", which is exactly the distinction a
  * drop zone needs to make.
  */
-import { useId, type CSSProperties, type ReactNode } from 'react';
+import { useId, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { FileTrigger, DropZone as AriaDropZone, Text } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import { ListPresence, PresenceItem } from '../../motion/ListPresence.js';
 import { Button } from '../Button/Button.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
@@ -171,7 +172,8 @@ function UploadedFiles({ files, onRemove }: {
                   <>
                     {/* A real progressbar: the bar is a picture of the number, and
                         the number is what a screen reader reads. */}
-                    <div
+                    <MovingProgress
+                      value={file.progress}
                       role="progressbar"
                       aria-label={`Uploading ${file.name}`}
                       aria-valuenow={Math.round(file.progress * 100)}
@@ -183,7 +185,7 @@ function UploadedFiles({ files, onRemove }: {
                         className={cx(styles['progressFill'])}
                         style={{ '--cr-progress': `${file.progress * 100}%` } as CSSProperties}
                       />
-                    </div>
+                    </MovingProgress>
                     <span className={cx(styles['fileSize'])}>{Math.round(file.progress * 100)}%</span>
                   </>
                 ) : null}
@@ -239,4 +241,12 @@ export function UploadZone({ files, onRemove, children, ...props }: UploadZonePr
       <UploadedFiles files={files} {...(onRemove ? { onRemove } : {})} />
     </div>
   );
+}
+
+/* A file's upload, marking each move of its progress with `progress-change` —
+   after the value is set, never in place of it — and not on the render that
+   first shows the row. */
+function MovingProgress({ value, ...props }: HTMLAttributes<HTMLDivElement> & { value: number }): React.JSX.Element {
+  const scope = useChangeMotion(value, () => 'progress-change');
+  return <div ref={scope as never} {...props} />;
 }

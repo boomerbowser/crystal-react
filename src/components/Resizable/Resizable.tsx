@@ -23,6 +23,7 @@ import {
 } from 'react';
 import { useMove } from 'react-aria';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
 import styles from './Resizable.module.scss';
 
 export interface ResizableProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
@@ -66,8 +67,15 @@ export const Resizable = forwardRef<HTMLDivElement, ResizableProps>(function Res
     onSizeChange?.(bounded);
   };
 
+  /* `resize-settle` on the region once a resize ends — the pointer let go, or a
+     key press done — and only if the size moved: "after measured layout size
+     changes". Never on the handle, which the recipe says not to animate. */
+  const [settle, playSettle] = useMotion();
+  const sizeAtStart = useRef(current);
+
   const { moveProps } = useMove({
-    onMoveStart: () => { startedAt.current = current; },
+    onMoveStart: () => { startedAt.current = current; sizeAtStart.current = current; },
+    onMoveEnd: () => { if (clamp(startedAt.current) !== sizeAtStart.current) void playSettle('resize-settle'); },
     onMove: (event) => {
       /* `deltaX`/`deltaY` are the same numbers for a pointer and for an arrow
          key, which is the whole reason this hook is here rather than a pointer
@@ -88,6 +96,7 @@ export const Resizable = forwardRef<HTMLDivElement, ResizableProps>(function Res
       className={cx(styles['resizable'], styles[orientation], className)}
     >
       <div
+        ref={settle as never}
         className={cx(styles['region'])}
         style={orientation === 'horizontal'
           ? { flex: `0 0 ${current}px` }

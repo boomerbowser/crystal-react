@@ -30,7 +30,7 @@
  *   - **`aria-sort` on sorted headers**, which React Aria supplies from the sort
  *     descriptor — one column at a time, because it describes the table's order.
  */
-import { forwardRef, type Key, type ReactNode } from 'react';
+import { forwardRef, useEffect, useRef, type Key, type ReactNode } from 'react';
 import type { ColumnSize, ColumnStaticSize } from 'react-stately';
 import {
   Table as AriaTable, TableHeader, TableBody, Column, Row, Cell,
@@ -38,6 +38,7 @@ import {
   type SortDescriptor, type Selection,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
 import styles from './DataTable.module.scss';
 
 export interface DataTableColumn {
@@ -113,6 +114,9 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
 ) {
   const selectable = selectionMode !== 'none';
 
+  const settlers = useRef(new Map<HTMLElement, (name: string) => Promise<void>>());
+  const resizing = useRef<HTMLElement | null>(null);
+
   const table = (
     <AriaTable
       aria-label={label}
@@ -145,9 +149,9 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
             {...(column.minWidth === undefined ? {} : { minWidth: column.minWidth })}
             className={cx(styles['column'])}
           >
-            <span className={styles['columnLabel']} data-align={column.align ?? 'start'}>
+            <ColumnLabel settlers={settlers} align={column.align ?? 'start'}>
               {column.header}
-            </span>
+            </ColumnLabel>
             {/* A slider, so arrow keys resize and the new width is announced.
                 It reaches the target floor by being the full height of the
                 header with its own padding, and it does not shift the column it
@@ -196,7 +200,22 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
           container — a resized column makes the table wider than its frame,
           which is the whole reason resizing needs one. */}
       {resizable ? (
-        <ResizableTableContainer className={cx(styles['scroller'], 'cr-table-scroll')}>
+        <ResizableTableContainer
+          className={cx(styles['scroller'], 'cr-table-scroll')}
+          /* `resize-settle` on the column that was resized, once the resize ends
+             — "after measured layout size changes". The resizer being operated
+             holds focus while it resizes, by pointer or by key, so its header is
+             noted then; by the time a keyboard resize ends, focus has moved on. */
+          onResize={() => {
+            resizing.current = (document.activeElement as HTMLElement | null)
+              ?.closest('[role=columnheader]')?.querySelector<HTMLElement>('[data-column-label]') ?? resizing.current;
+          }}
+          onResizeEnd={() => {
+            const label = resizing.current;
+            resizing.current = null;
+            if (label) void settlers.current.get(label)?.('resize-settle');
+          }}
+        >
           {table}
         </ResizableTableContainer>
       ) : (
@@ -225,3 +244,25 @@ function SelectionBox({ slot, label }: { slot: 'selection'; label: string }): Re
 }
 
 export type { Key as DataTableKey, Selection as DataTableSelection, SortDescriptor as DataTableSort };
+
+/* A column's label, the element `resize-settle` plays on — registered by its
+   element, so the table can reach the one whose resizer was used. */
+function ColumnLabel({ settlers, align, children }: {
+  settlers: React.RefObject<Map<HTMLElement, (name: string) => Promise<void>>>;
+  align: string;
+  children: ReactNode;
+}): React.JSX.Element {
+  const [scope, play] = useMotion();
+  useEffect(() => {
+    const map = settlers.current;
+    const element = scope.current as HTMLElement | null;
+    if (!element) return undefined;
+    map.set(element, play);
+    return () => { map.delete(element); };
+  }, [play, settlers, scope]);
+  return (
+    <span ref={scope as never} data-column-label="" className={styles['columnLabel']} data-align={align}>
+      {children}
+    </span>
+  );
+}

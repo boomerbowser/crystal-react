@@ -1418,6 +1418,31 @@ for (const [id, openWith, exit] of [
   await page.keyboard.press('Escape');
 }
 
+/* A resize ends and what was resized settles: a split's region, and a table's
+   column. By keyboard, which is how a resize is done without a pointer; nothing
+   has played before. */
+/* React Aria's keyboard route for a column: Enter on its header starts the
+   resize, arrows change it, Enter ends it. A split's separator resizes on each
+   arrow. */
+for (const [id, handle, keys, where] of [
+  ['application-shell--resizing', '[role=separator]', ['ArrowRight'], '[class*="_region_"]'],
+  ['data-display-resizable-table--default', '[role=columnheader]', ['Enter', 'ArrowRight', 'Enter'], '[data-column-label]'],
+]) {
+  await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const settled = () => page.evaluate((where) => document.querySelectorAll(`#storybook-root ${where}[data-cr-motion-name="resize-settle"]`).length, where);
+  const atRest = await settled();
+  await page.locator(`#storybook-root ${handle}`).first().focus();
+  for (const key of keys) { await page.keyboard.press(key); await page.waitForTimeout(60); }
+  await page.waitForTimeout(250);
+  const after = await settled();
+  record(
+    `resize-settle on ${id}: nothing at rest, and what was resized settles when the resize ends`,
+    atRest === 0 && after === 1,
+    `settled at rest ${atRest}; after one key press ${after}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

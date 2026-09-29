@@ -22,6 +22,7 @@ import {
 } from 'react';
 import { seriesColour } from '../../charts/channel.js';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './MeterGroup.module.scss';
 
 export interface MeterSegment {
@@ -61,8 +62,9 @@ export const MeterGroup = forwardRef<HTMLDivElement, MeterGroupProps>(function M
       <p className={styles['heading']} id={`${id}-label`}>{label}</p>
       <div className={styles['track']}>
         {segments.map((segment, index) => (
-          <div
+          <MovingSegment
             key={segment.name}
+            value={segment.value}
             role="meter"
             aria-label={segment.name}
             aria-valuenow={segment.value}
@@ -106,3 +108,11 @@ export const MeterGroup = forwardRef<HTMLDivElement, MeterGroupProps>(function M
     </div>
   );
 });
+
+/* One segment, marking a change in what it measures with Crystal's
+   `progress-change` — the value is set first, and the recipe does not stand in
+   for it — and never on the render that first shows it. */
+function MovingSegment({ value, ...props }: HTMLAttributes<HTMLDivElement> & { value: number; 'data-status'?: string | undefined }): React.JSX.Element {
+  const scope = useChangeMotion(value, () => 'progress-change');
+  return <div ref={scope as never} {...props} />;
+}
