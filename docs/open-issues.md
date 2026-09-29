@@ -3,12 +3,14 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Three entries.** R-17 has one part left, and it is not in this repository's
-hands. R-24 is the rest of the adoption of Crystal 2.2.0: the surfaces are worn
-and gated, and what remains is binding the motion the catalogue now assigns —
-§3.4 of `docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md`. R-25 is the
-one surface this library does not draw Crystal's way, `Indicator`, which waits on
-a ruling upstream.
+**Two entries.** R-17 has one part left, and it is not in this repository's
+hands. R-25 is the one surface this library does not draw Crystal's way,
+`Indicator`, which waits on a ruling upstream.
+
+**R-24 closed on 28 September 2026**: Crystal 2.2.0 is adopted — every surface
+worn and gated, and the motion the catalogue assigns bound to state and checked
+in a browser, with the assignments no component can honour as written recorded
+by name and the catalogue's own questions sent upstream as D-28.
 
 **R-21 and R-22 closed on 28 September 2026**, both by rulings Meridian made on
 Crystal's side. Charts now arrive with `mark-in`, a recipe authored in core —
@@ -392,112 +394,6 @@ in both directions.
 can refuse a claim, but it cannot *discover*. Nothing tells a story that `Button`
 has `onPress` until somebody writes it and `tsc` agrees. Discovery comes back
 the day either route above opens.
-
----
-
-## R-24 · Crystal 2.2.0 publishes the recipes this library restates, and the sweep's second half is due when it lands
-
-*(Opened 28 September 2026, with the proposal in
-`docs/proposals/2026-09-28-adopting-crystal-2.2-recipes.md`. Unblocked the same
-day: 2.2.0 is published and installed.)*
-
-**Where it stands.** 2.2.0 is installed and the dependency is `^2.2.0`. The version
-guard failed on the bump as it was written to, and is now the opposite check — a
-floor, because this library plays recipes that exist only from 2.2.0 (the three
-continuous indicators and `mark-in`), and on anything older `useMotion` throws for
-an unknown recipe.
-
-Phase B has landed component by component, each measured against Crystal's
-class planted beside it: bare controls wear `.cr-bare` and `bare-control` is
-gone; navigation links and rail destinations wear `.cr-nav-item`; the drag
-handle wears `.cr-drag-handle`; the floating window and media controls are the
-Resin plane; the tables stop restating their frame; the card is Crystal's Haze;
-badges, keys and the overlaid caption wear their surfaces; every transient
-overlay is Frost; the dialog is Crystal's over Mirage; the switch is Crystal's
-native switch. **The field shell** landed last, after Meridian ruled D-24 on 28
-September 2026 that the library adopts `.cr-field-shell` as written, rim
-included: every field shell wears it, `field.shell` keeps only layout, the
-`shell-fallbacks` mixin is gone because Crystal publishes all three routes, and
-the control inside takes Crystal's 44px floor and 12px radius — so a
-single-line field is Crystal's 62px rather than 58, and a pin well is square at
-that height. `verify:appearance` plants a Crystal field beside every field in
-the six input stories and fails on any material difference or a single-line
-height that is not Crystal's; it was seen red on the previous build in all six.
-**The docks** followed, once Crystal's catalogue named them (D-23): the tab
-strip, the segmented control, a floating toolbar (and so the command bar and
-the action bar), the dock and the bottom navigation wear `.cr-dock` (the dock
-with `.cr-dock-inner` for its Stone backing) and their local Resin, Haze and
-fallbacks are gone. A floating toolbar's buttons had each kept their own Resin
-coat — Resin inside Resin — and are bare now. The bottom navigation is the
-catalogue's pill, with one Haze fill rather than one per destination. **Tabs and
-segments now take the primary fill when selected, not primary-soft:** the
-catalogue entries, `.cr-dock`'s selected rule and the documentation site all
-say primary, and the soft fill was this library's. Because Crystal keys a dock's
-controls on `button` and a tab, a radio label and a link are not buttons, the
-pills restate `.cr-dock button` — 52px, 13/18 padding, 700 over 800 — and are
-compared with a planted one. The button group and split button keep their
-touching segments and hairline, which `.cr-dock` does not draw, and gain the
-dock's rim, which was the one property they lacked. Both gaps are filed
-upstream as D-26. `verify:appearance` plants a `.cr-dock` beside every one of
-these; it was red on the previous build in all seven stories.
-
-**The manifest carries `surface`** (§3.3), with the vocabulary itself beside
-the components and in `llms.txt`, and the build fails closed on a surface the
-vocabulary does not define. **`verify:appearance` has one check per surface**:
-seventeen rows, one component each, planted beside an element wearing the
-surface's class, plus the field, dock and switch blocks above. Two differences
-are named as decisions — the count badge's Haze inset and a bare control that
-kept `border: 0` — and anything else fails. `VERIFY_PLANT_RED=1` sabotages every
-row's fill and all seventeen fail, so none of them is a gate that has only been
-seen green. Writing it found three components wearing nothing: the authored
-bubble now wears `.cr-bubble` (it had restated it "value for value" and differed
-in two values), the app shell wears `.cr-plastic` (it painted the flat canvas
-over the provider's atmosphere) and its destinations wear `.cr-dock`. The third,
-`Indicator`, is R-25. The image comparison's handle wears `.cr-resin`; the
-resizable handle does not, because its 44px target is its `::after`, which
-`.cr-resin` paints. §3.5, deleting `coreVersion.test.ts`, is superseded: the
-file became a floor rather than a reminder, and a floor is still needed.
-
-What remains is the motion bindings (§3.4).
-
-**What changed upstream.** The R-19 sweep stopped where Crystal had no recipe:
-`NavLink` kept a weight of 550 because `.cr-button`'s 750 would destroy it, the
-nav rail item and the drag handle had nothing to wear, eighteen controls took a
-local `bare-control` mixin because `.cr-button.quiet` is not a bare control, and
-`FloatingWindow` and `MediaControls` kept `material.resin` on their shells. Those
-were the recipes "to author in core, not classes to wear here". Crystal 2.2.0
-authors them — `.cr-nav-item` (and `.stacked`), `.cr-bare`, `.cr-drag-handle`,
-`.cr-resin.panel`, the native switch — and, more than that, names every
-component's **surface** from a closed vocabulary (`@crystal-ui/core/surfaces`),
-so what each component is made of is now data this library can be checked
-against rather than prose it interprets.
-
-**What this library does on the day.** Phase B of the proposal: each component
-wears Crystal's class and deletes its local copy, measured the way R-19 was —
-plant Crystal's element beside the library's, diff computed style to zero, then
-plant it red. `bare-control` goes; `field.shell`'s hand-written recipe goes;
-`NavLink` and the rail item wear `cr-nav-item`; `DragHandle` and `Resizable`
-wear `cr-drag-handle`; `FloatingWindow` and `MediaControls` wear `cr-resin panel`;
-`Switch` wears the native switch recipe or proves its own equal to it. The
-component manifest gains each component's `surface`, read from the catalogue,
-and `verify:appearance` gains one check per surface.
-
-**Why it waited.** This library resolves `@crystal-ui/core` from npm, not from
-the local checkout, and wearing a class the installed stylesheet does not define
-leaves a component unpainted — the mistake R-19 warned about.
-
-**What is not blocked, and shipped alongside this entry.** Phase A of the
-proposal — everything the installed 2.1.0 already publishes and this library was
-not using: transient overlays moved to Frost (R15e, which the specification had
-not caught up with either); the dialog, drawer and command palette scrims play
-Crystal's `mirage` and `mirage-out` and the dialog surface plays `dismiss`, none
-of which had ever played; checkbox and radio play `check` and `check-off`; menu,
-popover, tooltip and hover card play their arrivals. The exits those four owe
-(`menu-out`, `popover-out`, `tooltip-out`) are still not played — React Aria
-unmounts the popover as it closes, and holding it for an exit needs
-`AnimatePresence` around React Aria's own overlay lifecycle, which is the one
-piece of this that is not a binding but a structure, and is written up in the
-proposal rather than done in passing.
 
 ---
 

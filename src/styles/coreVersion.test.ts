@@ -18,7 +18,8 @@
  * checks existed and had each been seen red. They exist, in `verify:appearance`,
  * and `VERIFY_PLANT_RED=1` turns every one of them red on demand — but the file
  * stays, because it stopped being the migration's reminder and became the floor
- * above. What remains of R-24 is tracked in `docs/open-issues.md`.
+ * above. R-24 closed on 28 September 2026; its record is in
+ * `docs/closed-issues.md`.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
