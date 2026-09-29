@@ -1,0 +1,96 @@
+@use '../../styles/field' as field;
+@use '../../styles/tokens' as *;
+
+/* "Frost overlay with Haze rows." The suggestions are Crystal's `.cr-frost`
+   popover with the combobox's row treatment — the same rows as Select and
+   ComboBox, so a reader who has learned one list has learned this one — and the
+   results are Haze rows, worn as `.cr-haze`. The field is Crystal's field. */
+.search { display: grid; gap: $cr-spacing-md; min-inline-size: 0; }
+
+.form, .field { @include field.field; }
+.label { @include field.label; }
+.shell { @include field.shell; }
+.shell:focus-within { @include field.focus-ring; }
+.control { @include field.control; }
+.control:focus { outline: none; }
+
+.glass {
+  flex: none;
+  inline-size: $cr-icon-size;
+  block-size: $cr-icon-size;
+  margin-inline-start: $cr-spacing-sm;
+  fill: none;
+  stroke: var(--cr-muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.trigger { @include field.inline-action; }
+.trigger svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.popover {
+  min-inline-size: var(--trigger-width);
+  max-block-size: 40vh;
+  padding: $cr-spacing-2xs;
+  border-radius: var(--cr-radius);
+  overflow: auto;
+}
+
+.list { outline: none; }
+
+.header {
+  padding: $cr-spacing-2xs $cr-spacing-sm;
+  font-size: var(--cr-text-caption-size);
+  font-weight: 700;
+  color: var(--cr-muted);
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-block-size: $cr-action-min-target;
+  padding: $cr-spacing-2xs $cr-spacing-sm;
+  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  font-weight: 550;
+  color: var(--cr-text);
+  cursor: pointer;
+}
+
+.option[data-focused] { background: var(--cr-surface-alt); }
+
+.optionDescription { font-weight: 400; font-size: var(--cr-text-caption-size); color: var(--cr-muted); }
+
+.state {
+  display: flex;
+  align-items: center;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-sm;
+  color: var(--cr-muted);
+  font-size: var(--cr-text-caption-size);
+}
+
+.resultsHeading { margin: 0; font-size: var(--cr-text-subheading-size); }
+
+.results {
+  display: grid;
+  gap: $cr-spacing-sm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.result {
+  display: grid;
+  gap: $cr-spacing-2xs;
+  padding: $cr-spacing-sm var(--cr-space);
+  border-radius: var(--cr-radius);
+}
+
+.resultTitle { font-weight: 700; color: var(--cr-text); }
+
+.resultDescription { color: var(--cr-muted); }
+
+@media (forced-colors: active) {
+  .option[data-focused] { outline: 2px solid Highlight; }
+}

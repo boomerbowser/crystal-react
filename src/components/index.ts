@@ -265,3 +265,4 @@ export * from './SettingsBlock/index.js';
 export * from './AuthBlock/index.js';
 export * from './ProfileBlock/index.js';
 export * from './PricingBlock/index.js';
+export * from './SearchBlock/index.js';
