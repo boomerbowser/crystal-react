@@ -1,0 +1,37 @@
+@use '../../styles/tokens' as *;
+
+/* "Resin transport over the media; Haze metadata." The transport is
+   `VideoPlayer`'s Resin pill over the picture; the metadata is Crystal's
+   `.cr-haze`; the queue is `PlaylistBlock`'s Haze rows. */
+.shell {
+  display: grid;
+  gap: $cr-spacing-md;
+  min-inline-size: 0;
+}
+
+.stage { min-inline-size: 0; }
+
+/* Full screen is the stage — picture and transport together — so it fills the
+   screen and centres the picture in it. */
+.stage:fullscreen {
+  display: grid;
+  place-items: center;
+  background: var(--cr-surface-alt);
+}
+
+.stage:fullscreen .player { inline-size: 100%; }
+
+.metadata {
+  display: grid;
+  gap: $cr-spacing-2xs;
+  padding: var(--cr-space);
+  border-radius: var(--cr-radius);
+}
+
+.title { margin: 0; }
+
+.subtitle { margin: 0; font-weight: 700; color: var(--cr-muted); }
+
+.description { margin: 0; }
+
+.queue { min-inline-size: 0; }

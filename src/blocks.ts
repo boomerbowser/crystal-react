@@ -28,3 +28,4 @@ export * from './components/PricingBlock/index.js';
 export * from './components/SearchBlock/index.js';
 export * from './components/EditorBlock/index.js';
 export * from './components/OnboardingBlock/index.js';
+export * from './components/PlayerShell/index.js';

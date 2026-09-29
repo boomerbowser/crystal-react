@@ -51,6 +51,8 @@ export interface VideoPlayerProps
   mediaRef?: RefObject<HTMLVideoElement | null>;
   /** What the caption control is called. */
   captionsLabel?: string;
+  /** More controls at the end of the transport, after captions — full screen, quality. */
+  controls?: ReactNode;
   className?: string;
 }
 
@@ -62,7 +64,7 @@ const CaptionsIcon = (
 );
 
 export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(function VideoPlayer({
-  label, children, skipBy = 10, mediaRef, captionsLabel = 'Captions', className, ...props
+  label, children, skipBy = 10, mediaRef, captionsLabel = 'Captions', controls, className, ...props
 }, ref): ReactNode {
   const own = useRef<HTMLVideoElement>(null);
   const media = useMediaElement(own);
@@ -193,6 +195,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
                 onPress={toggleCaptions}
               />
             ) : null}
+            {controls}
           </MediaControls>
         </div>
       </div>
