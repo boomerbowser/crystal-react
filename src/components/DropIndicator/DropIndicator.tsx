@@ -17,7 +17,10 @@
  *
  * Inside a React Aria collection, use `DropIndicator` from
  * `react-aria-components` with `className={dropIndicatorClassName}` — this
- * component is the standalone form, for a list a product lays out itself.
+ * component is the standalone form, for a list a product lays out itself. It is
+ * an `option`, as React Aria's is, so that list is a `listbox`: an option
+ * anywhere else is a choice with nothing to choose among (axe's
+ * `aria-required-parent`, found by its story).
  */
 import { forwardRef, type HTMLAttributes } from 'react';
 import { cx } from '../../styles/cx.js';

@@ -138,12 +138,15 @@ export interface MentionsProps {
   onSelect: (option: MentionOption) => void;
   isLoading?: boolean;
   emptyMessage?: ReactNode;
+  /** Names the list of suggestions. A listbox with no name is announced as a
+   *  list of nothing in particular. */
+  label?: string;
   className?: string;
 }
 
 export function Mentions({
   children, isOpen, options, highlightedValue, onSelect,
-  isLoading = false, emptyMessage = 'No matches', className,
+  isLoading = false, emptyMessage = 'No matches', label = 'Suggestions', className,
 }: MentionsProps): React.JSX.Element {
   return (
     <div className={cx(className)}>
@@ -160,7 +163,7 @@ export function Mentions({
               /* A listbox the text surface points at rather than one focus moves
                  into: typing must continue while the list is open, which is the
                  same rule the combobox follows. */
-              <ul role="listbox" className={cx(styles['list'])}>
+              <ul role="listbox" aria-label={label} className={cx(styles['list'])}>
                 {options.map((option) => (
                   <li
                     key={option.value}

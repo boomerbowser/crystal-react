@@ -49,9 +49,12 @@ describe('AnalyticsPanel', () => {
     expect(screen.getByRole('region', { name: 'Revenue' })).toHaveAttribute('aria-busy', 'true');
   });
 
-  it('has no axe violations', async () => {
+  /* Every state, not the one that happens to be first — the rule DataTableBlock
+     and MetricsRow learned, where a malformed live region lived in the loading
+     render and an assertion made only at rest passed over it. */
+  it.each(['at-rest', 'loading', 'empty', 'error'] as const)('has no axe violations %s', async (state) => {
     const { container } = renderWithCrystal(
-      <AnalyticsPanel title="Revenue by month" controls={<button type="button">Range</button>}>
+      <AnalyticsPanel title="Revenue by month" state={state} controls={<button type="button">Range</button>}>
         {chart}
       </AnalyticsPanel>,
     );
