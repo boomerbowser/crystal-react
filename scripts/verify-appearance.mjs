@@ -1332,7 +1332,7 @@ for (const [id, selector, what] of DISABLED) {
     ['plastic', 'application-shell--shell', '[class*="_appShell_"]', 'cr-plastic'],
     ['frost', 'charts-chart-tooltip--default', '[class*="_tooltip_"]', 'cr-frost'],
     ['haze', 'data-display-card--default', '[class*="_card_"]', 'cr-haze'],
-    ['resin', 'data-display-image-compare--default', '[class*="_thumb_"]', 'cr-resin'],
+    ['resin', 'data-display-image-compare--default', '[class*="_grip_"]', 'cr-resin'],
     ['resin-panel', 'overlays-floating-surfaces--window', '[class*="_window_"]', 'cr-resin panel'],
     ['control', 'actions-button--resin', 'button[class*="_button_"]', 'cr-button'],
     ['compact', 'data-display-badge--default', '[class*="_badge_"]', 'cr-resin-haze'],

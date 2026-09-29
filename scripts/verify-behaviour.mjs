@@ -1443,6 +1443,71 @@ for (const [id, handle, keys, where] of [
   );
 }
 
+/* Files dropped on a drop zone arrive: the zone lifts as they are carried in,
+   settles as they land, and the file is delivered where a chosen file would be
+   — the story lists it. Until 28 September a drop was accepted and discarded.
+   Dispatched with a real DataTransfer holding a real File, as a browser does. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=inputs-temporal-colour-and-files--dropping-files&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const zone = page.locator('#storybook-root [data-rac][class*="_zone_"]').first();
+  const before = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-cr-motion-name^="drag-"]').length);
+  const box = await zone.boundingBox();
+  const transfer = await page.evaluateHandle(() => {
+    const data = new DataTransfer();
+    data.items.add(new File(['quarterly figures'], 'quarterly.csv', { type: 'text/csv' }));
+    /* Two things a drag from the desktop has and a DataTransfer built by script
+       does not, both of which React Aria rightly checks: an `effectAllowed` that
+       permits copying (Chrome ignores setting it on a constructed one), and a
+       file-system entry for each file, without which React Aria skips the file
+       as not being one. Supplied here so the drop is the desktop's drop. */
+    Object.defineProperty(data, 'effectAllowed', { value: 'all' });
+    const entry = DataTransferItem.prototype.webkitGetAsEntry;
+    DataTransferItem.prototype.webkitGetAsEntry = function webkitGetAsEntry() {
+      return entry.call(this) ?? (this.kind === 'file' ? { isFile: true, isDirectory: false } : null);
+    };
+    return data;
+  });
+  const at = { clientX: box.x + box.width / 2, clientY: box.y + box.height / 2 };
+  await zone.dispatchEvent('dragenter', { dataTransfer: transfer, ...at });
+  await zone.dispatchEvent('dragover', { dataTransfer: transfer, ...at });
+  await page.waitForTimeout(120);
+  const lifted = await zone.evaluate((el) => el.dataset.crMotionName);
+  await zone.dispatchEvent('drop', { dataTransfer: transfer, ...at });
+  await page.waitForTimeout(400);
+  const settled = await zone.evaluate((el) => el.dataset.crMotionName);
+  const listed = await page.evaluate(() => document.querySelector('#storybook-root')?.textContent.includes('quarterly.csv'));
+  record(
+    'a drop zone lifts as files arrive over it, settles as they land, and delivers them',
+    before === 0 && lifted === 'drag-pickup' && settled === 'drag-settle' && listed === true,
+    `before ${before}; over the zone ${lifted}; after the drop ${settled}; the dropped file listed: ${listed}`,
+  );
+}
+
+/* A handle picked up and put down: the image comparison's grip lifts with
+   `drag-pickup` as the pointer takes it and settles with `drag-settle` as it
+   lets go, and the divider it moves stays under the pointer throughout. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=data-display-image-compare--default&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const grip = () => page.evaluate(() => document.querySelector('#storybook-root [class*="_grip_"]')?.dataset.crMotionName ?? null);
+  const atRest = await grip();
+  const box = await page.locator('#storybook-root [data-cr-handle]').boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 60, box.y + box.height / 2, { steps: 4 });
+  await page.waitForTimeout(120);
+  const held = await grip();
+  await page.mouse.up();
+  await page.waitForTimeout(120);
+  const released = await grip();
+  record(
+    'drag-pickup and drag-settle: a handle lifts as it is taken and settles as it is let go',
+    atRest === null && held === 'drag-pickup' && released === 'drag-settle',
+    `at rest ${atRest}; held ${held}; released ${released}`,
+  );
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));

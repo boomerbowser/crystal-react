@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ariaArgTypes } from '../../../.storybook/react-aria.js';
 import type { DatePickerProps } from './DatePicker.js';
 import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date';
 import { DateInput, TimeInput, DatePicker, DateRangePicker, DateTimePicker, DigitalClock } from './DatePicker.js';
 import { ColorInput, ColorPicker, ColorSwatchPicker, ColorWheel } from '../ColorPicker/ColorPicker.js';
-import { FileInput, DropZone, Upload } from '../FileInput/FileInput.js';
+import { FileInput, DropZone, Upload, UploadZone } from '../FileInput/FileInput.js';
 import { Stack, Group } from '../Stack/Stack.js';
 import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 
@@ -122,4 +123,30 @@ export const Files: Story = {
       />
     </Stack>
   ),
+};
+
+/* Files dropped arrive where chosen files do, and the list shows them: the zone
+   lifts with `drag-pickup` as they are carried over it and settles with
+   `drag-settle` once they land, and each file joins the list with `list-in`. */
+export const DroppingFiles: Story = {
+  render: function DroppingFilesStory() {
+    const [files, setFiles] = useState<{ id: string; name: string; size: number }[]>([]);
+    const add = (list: FileList | null): void => {
+      if (!list) return;
+      setFiles((held) => [...held, ...[...list].map((file) => ({ id: `${file.name}-${held.length}`, name: file.name, size: file.size }))]);
+    };
+    return (
+      <div style={{ maxWidth: '460px' /* crystal-allow-literal: story column */ }}>
+        <UploadZone
+          label="Attachments"
+          allowsMultiple
+          files={files}
+          onSelect={add}
+          onRemove={(id) => { setFiles((held) => held.filter((file) => file.id !== id)); }}
+        >
+          Drop files here, or choose them
+        </UploadZone>
+      </div>
+    );
+  },
 };

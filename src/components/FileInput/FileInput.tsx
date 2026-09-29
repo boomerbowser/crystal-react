@@ -22,8 +22,11 @@
  * drop zone needs to make.
  */
 import { useId, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
-import { FileTrigger, DropZone as AriaDropZone, Text } from 'react-aria-components';
+import {
+  FileTrigger, DropZone as AriaDropZone, Text, isFileDropItem, type DropZoneProps as AriaDropZoneProps,
+} from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useMotion } from '../../motion/useMotion.js';
 import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import { ListPresence, PresenceItem } from '../../motion/ListPresence.js';
 import { Button } from '../Button/Button.js';
@@ -113,12 +116,42 @@ export interface DropZoneProps extends FileInputProps {
  */
 export function DropZone({
   label, description, errorMessage, acceptedFileTypes, allowsMultiple = false,
-  onSelect, chooseLabel = 'Choose a file', children, className,
+  onSelect, onDrop, chooseLabel = 'Choose a file', children, className,
 }: DropZoneProps): React.JSX.Element {
+  /* The zone lifts with `drag-pickup` as files are carried over it and settles
+     with `drag-settle` once they are dropped — a valid move completed. Nothing
+     for a drag that passes over and leaves. */
+  const [scope, play] = useMotion();
+
+  /* What was dropped, delivered where choosing delivers it. Until 28 September
+     the drop zone had no drop handler at all: React Aria's zone accepted the
+     gesture and discarded the files, and `onDrop` — documented just above — was
+     never read. Types the picker would not offer are left out, and so is every
+     file after the first when only one is allowed. */
+  const receive = async (event: DropEvent): Promise<void> => {
+    const deliver = onDrop ?? onSelect;
+    const dropped = await Promise.all(event.items
+      .filter(isFileDropItem)
+      .filter((item) => !acceptedFileTypes || acceptedFileTypes.some((type) => accepts(type, item.type)))
+      .map((item) => item.getFile()));
+    const chosen = allowsMultiple ? dropped : dropped.slice(0, 1);
+    if (chosen.length === 0) return;
+    void play('drag-settle');
+    if (!deliver || typeof DataTransfer === 'undefined') return;
+    const list = new DataTransfer();
+    for (const file of chosen) list.items.add(file);
+    deliver(list.files);
+  };
+
   return (
     <div className={cx(styles['field'], className)}>
       <span className={cx(styles['label'])}>{label}</span>
-      <AriaDropZone className={cx(styles['zone'])}>
+      <AriaDropZone
+        ref={scope as never}
+        className={cx(styles['zone'])}
+        onDropEnter={() => { void play('drag-pickup'); }}
+        onDrop={(event) => { void receive(event); }}
+      >
         <span aria-hidden="true">{UploadIcon}</span>
         <Text slot="label">{children ?? 'Drop files here'}</Text>
         {/* The route that does not require a pointer. */}
@@ -249,4 +282,14 @@ export function UploadZone({ files, onRemove, children, ...props }: UploadZonePr
 function MovingProgress({ value, ...props }: HTMLAttributes<HTMLDivElement> & { value: number }): React.JSX.Element {
   const scope = useChangeMotion(value, () => 'progress-change');
   return <div ref={scope as never} {...props} />;
+}
+
+type DropEvent = Parameters<NonNullable<AriaDropZoneProps['onDrop']>>[0];
+
+/* The picker's rule for one accepted type against a dropped file's type:
+   `image/*` accepts any image, an exact type accepts itself. Extensions are the
+   picker's to match, since a drop carries a media type and not a name. */
+function accepts(accepted: string, type: string): boolean {
+  if (accepted.endsWith('/*')) return type.startsWith(accepted.slice(0, -1));
+  return accepted === type || accepted.startsWith('.');
 }

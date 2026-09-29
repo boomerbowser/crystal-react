@@ -22,6 +22,7 @@ import {
   Slider as AriaSlider, SliderTrack, SliderThumb,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './ImageCompare.module.scss';
 
 export interface ImageCompareSide {
@@ -95,9 +96,22 @@ export const ImageCompare = forwardRef<HTMLDivElement, ImageCompareProps>(functi
               meets are different nodes — and a target gate that probed the named
               one would report a 1px handle on a control that is 44px. The same
               trap the segmented control's label hit. */}
-          <SliderThumb className={cx(styles['thumb'], 'cr-resin')} data-cr-handle="" />
+          <SliderThumb className={cx(styles['thumb'])} data-cr-handle="">
+            {({ isDragging }) => <Grip isDragging={isDragging} />}
+          </SliderThumb>
         </SliderTrack>
       </AriaSlider>
     </div>
   );
 });
+
+/* The handle you can see: Crystal's Resin plane at the pill, filling the thumb.
+   An element of its own because React Aria positions the thumb with an inline
+   `transform`, and a recipe that moved the thumb's transform would move it off
+   the divider; the grip is free to. It lifts with `drag-pickup` as a drag begins
+   and settles with `drag-settle` as it ends. The keyboard moves the divider
+   without either, since nothing is picked up. */
+function Grip({ isDragging }: { isDragging: boolean }): React.JSX.Element {
+  const scope = useChangeMotion(isDragging, (was, is) => (is ? 'drag-pickup' : was ? 'drag-settle' : null));
+  return <span ref={scope as never} aria-hidden="true" className={cx(styles['grip'], 'cr-resin')} />;
+}
