@@ -140,6 +140,7 @@ export const MediaControls = forwardRef<HTMLDivElement, MediaControlsProps>(
           className={styles['scrubber'] ?? ''}
           label={`Seek${of}`}
           hideOutput
+          hideLabel
           minValue={0}
           maxValue={known ? duration : 1}
           step={1}
@@ -166,6 +167,7 @@ export const MediaControls = forwardRef<HTMLDivElement, MediaControlsProps>(
             className={styles['volume'] ?? ''}
             label="Volume"
             hideOutput
+            hideLabel
             minValue={0}
             maxValue={1}
             step={0.05}

@@ -62,6 +62,12 @@ export interface SliderProps extends Omit<AriaSliderProps<number>, 'className' |
   ticks?: readonly ReactNode[];
   /** Hide the numeric output. The value is still announced. */
   hideOutput?: boolean;
+  /**
+   * Hide the label visually. It stays the slider's accessible name — for a
+   * slider whose purpose its surroundings already show, as a transport's
+   * scrubber and volume do.
+   */
+  hideLabel?: boolean;
   className?: string;
 }
 
@@ -83,7 +89,7 @@ function ValueText({ input, text }: {
 }
 
 export function Slider({
-  label, formatOptions, valueText, ticks, hideOutput = false, className, ...props
+  label, formatOptions, valueText, ticks, hideOutput = false, hideLabel = false, className, ...props
 }: SliderProps): React.JSX.Element {
   const input = useRef<HTMLInputElement>(null);
   return (
@@ -92,8 +98,11 @@ export function Slider({
       {...(formatOptions ? { formatOptions } : {})}
       className={cx(styles['field'], className)}
     >
-      <div className={cx(styles['header'])}>
-        <Label className={cx(styles['label'])}>{label}</Label>
+      {/* Hidden rather than left out: the label is what names the slider. With
+          nothing visible in it the header takes no room, so the track is the
+          whole of the control's height. */}
+      <div className={cx(styles['header'], hideLabel && hideOutput ? styles['hidden'] : undefined)}>
+        <Label className={cx(styles['label'], hideLabel ? styles['hidden'] : undefined)}>{label}</Label>
         {hideOutput ? null : (
           /* The same label React Aria puts in `aria-valuetext`, so the two cannot
              disagree. */

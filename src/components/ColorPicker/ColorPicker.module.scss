@@ -62,6 +62,12 @@
   box-shadow: 0 0 0 1px #000, inset 0 0 0 1px #000;  /* crystal-allow-literal: the dark half of the same thumb */
 }
 
+/* On a colour slider's track React Aria sets the thumb's `left` and a
+   `translate(-50%, -50%)`, and leaves its top to the stylesheet — as it does for
+   `Slider`, which explains. The area and the wheel set both, so only this one
+   needs it. */
+.track .thumb { inset-block-start: 50%; }
+
 .thumb[data-focus-visible] {
   outline: $cr-focus-core-width solid var(--cr-focus-core);
   outline-offset: $cr-focus-core-offset;

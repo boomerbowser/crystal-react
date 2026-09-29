@@ -75,6 +75,26 @@ for (const [width, height, what] of [[1280, 900, 'at a desktop width'], [375, 81
 }
 await page.setViewportSize({ width: 1280, height: 900 });
 
+/* ------------------------------------------------- a slider's thumb sits on its track */
+
+/* React Aria places the thumb with an inline `translate(-50%, -50%)` and a
+   `left`, and no `top`: it expects the stylesheet to put the thumb's top at the
+   middle of the track for the vertical half of that translate to centre it. The
+   track centred the thumb with flex instead, so the translate lifted every thumb
+   in the library by half its own height — 13px above the rail, on every slider,
+   RangeSlider and media transport — while every test passed, because jsdom has
+   no layout to be off by. Measured on the plain sliders and on the transport. */
+for (const id of ['inputs-choice-and-range--ranges', 'media-video-player--default', 'inputs-temporal-colour-and-files--colour']) {
+  await open(id, '#storybook-root [class*="_track_"] > [class*="_thumb_"]');
+  const off = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [class*="_track_"] > [class*="_thumb_"]')].map((thumb) => {
+    const track = thumb.parentElement.getBoundingClientRect();
+    const box = thumb.getBoundingClientRect();
+    return Math.round((box.top + box.height / 2) - (track.top + track.height / 2));
+  }));
+  record(`a slider's thumb sits on its track: ${id}`, off.length > 0 && off.every((by) => Math.abs(by) <= 1),
+    `thumb centres are ${off.join(', ')}px from their tracks' centres`);
+}
+
 /* ------------------------------------------------- a focus ring exists */
 
 /* Crystal's focus is a crisp 2px primary core at 3px offset inside a four-layer

@@ -16,6 +16,16 @@
 .field { @include field.field; }
 .header { display: flex; align-items: baseline; justify-content: space-between; gap: $cr-spacing-sm; }
 .label { @include field.label; }
+
+/* Visually hidden, still read: the label names the slider. */
+.hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .output { font-size: var(--cr-text-caption-size); font-variant-numeric: tabular-nums; color: var(--cr-muted); }
 
 .track {
@@ -47,8 +57,14 @@
   inline-size: var(--cr-fill-size, 0%);
 }
 
+/* React Aria places the thumb with an inline `left` and `translate(-50%, -50%)`
+   and leaves the top to the stylesheet: the vertical half of the translate
+   centres the thumb only if its top is at the middle of the track. Without this
+   the track's flex centring and the translate both applied, and every thumb sat
+   half its own height above the rail. */
 .thumb {
   position: relative;
+  inset-block-start: 50%;
   inline-size: $cr-slider-thumb-size;
   block-size: $cr-slider-thumb-size;
   border: 1px solid var(--cr-rim);
