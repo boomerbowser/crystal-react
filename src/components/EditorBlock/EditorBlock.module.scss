@@ -1,0 +1,28 @@
+@use '../../styles/tokens' as *;
+
+/* "Haze surface in a Frost frame." The block is Crystal's Frost panel, worn as
+   `.cr-frost`; the writing surface is `RichTextSurface`'s Haze under its Resin
+   toolbar — back to front, as the hierarchy runs. */
+.editor {
+  display: grid;
+  gap: $cr-spacing-sm;
+  padding: var(--cr-space);
+  border-radius: var(--cr-radius);
+  min-inline-size: 0;
+}
+
+.surface { min-inline-size: 0; }
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $cr-spacing-sm;
+  flex-wrap: wrap;
+}
+
+/* The save state, in a word, where the reader's eye goes to save. */
+.state { margin-inline-end: auto; font-weight: 800; }
+
+/* The shortcut, printed: it describes the Save button, so it is read with it. */
+.keys { display: inline-flex; gap: $cr-spacing-2xs; color: var(--cr-muted); }

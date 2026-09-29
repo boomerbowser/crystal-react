@@ -26,3 +26,4 @@ export * from './components/AuthBlock/index.js';
 export * from './components/ProfileBlock/index.js';
 export * from './components/PricingBlock/index.js';
 export * from './components/SearchBlock/index.js';
+export * from './components/EditorBlock/index.js';
