@@ -267,3 +267,4 @@ export * from './ProfileBlock/index.js';
 export * from './PricingBlock/index.js';
 export * from './SearchBlock/index.js';
 export * from './EditorBlock/index.js';
+export * from './OnboardingBlock/index.js';

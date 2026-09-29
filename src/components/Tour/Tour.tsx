@@ -65,8 +65,11 @@ export interface TourProps {
   /** Which step. Controlled, so a product can branch or skip. */
   step?: number;
   onStepChange?: (step: number) => void;
-  /** Ended — by finishing, by Escape, or by the way out on every panel. */
-  onClose?: () => void;
+  /**
+   * Ended — by finishing, by Escape, or by the way out on every panel. The
+   * reason tells a product that records it a completed tour from a skipped one.
+   */
+  onClose?: (reason: 'finished' | 'dismissed') => void;
   /** How the position is said. Given the numbers, in the reader's language. */
   formatPosition?: (step: number, total: number) => string;
   backLabel?: string;
@@ -146,7 +149,7 @@ export function Tour({
     };
   }, [isOpen, measure]);
 
-  const close = useCallback(() => { onClose?.(); }, [onClose]);
+  const close = useCallback((reason: 'finished' | 'dismissed' = 'dismissed') => { onClose?.(reason); }, [onClose]);
 
   /* Focus lands on the panel itself rather than on its first button: the panel
      is what the reader has just been moved to, and its name carries the step,
@@ -177,7 +180,7 @@ export function Tour({
             onKeyDown={(event) => {
               if (event.key !== 'Escape') return;
               event.stopPropagation();
-              close();
+              close('dismissed');
             }}
           >
             {/* One element, with the target cut out of it. `evenodd` is what makes
@@ -231,12 +234,12 @@ export function Tour({
               <div className={styles['actions']}>
                 {/* The way out, on every step. A tour takes the whole interface away
                     from someone who did not ask for it. */}
-                <Button variant="quiet" onPress={close}>{closeLabel}</Button>
+                <Button variant="quiet" onPress={() => { close('dismissed'); }}>{closeLabel}</Button>
                 <span className={styles['spacer']} />
                 {step > 0 ? (
                   <Button variant="quiet" onPress={() => onStepChange?.(step - 1)}>{backLabel}</Button>
       ) : null}
-                <Button onPress={() => (last ? close() : onStepChange?.(step + 1))}>
+                <Button onPress={() => (last ? close('finished') : onStepChange?.(step + 1))}>
                   {last ? finishLabel : nextLabel}
                 </Button>
               </div>

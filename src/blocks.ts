@@ -27,3 +27,4 @@ export * from './components/ProfileBlock/index.js';
 export * from './components/PricingBlock/index.js';
 export * from './components/SearchBlock/index.js';
 export * from './components/EditorBlock/index.js';
+export * from './components/OnboardingBlock/index.js';

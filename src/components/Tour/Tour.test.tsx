@@ -5,7 +5,7 @@ import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
 import { Tour, type TourStep } from './Tour.js';
 
-function Harness({ onClose }: { onClose?: () => void }) {
+function Harness({ onClose }: { onClose?: (reason: 'finished' | 'dismissed') => void }) {
   const target = useRef<HTMLButtonElement>(null);
   const [step, setStep] = useState(0);
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ function Harness({ onClose }: { onClose?: () => void }) {
         isOpen={open}
         step={step}
         onStepChange={setStep}
-        onClose={() => { setOpen(false); onClose?.(); }}
+        onClose={(reason) => { setOpen(false); onClose?.(reason); }}
       />
     </>
   );
@@ -58,12 +58,26 @@ describe('Tour', () => {
     expect(screen.getByRole('button', { name: 'End tour' })).toBeInTheDocument();
   });
 
+  /* A product that records how a tour ended can tell finishing from leaving. */
+  it('says whether it was finished or left', async () => {
+    const onClose = vi.fn();
+    renderWithCrystal(<Harness onClose={onClose} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Start tour' }));
+    await userEvent.click(screen.getByRole('button', { name: 'End tour' }));
+    expect(onClose).toHaveBeenLastCalledWith('dismissed');
+    await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); });
+    await userEvent.click(screen.getByRole('button', { name: 'Start tour' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Done' }));
+    expect(onClose).toHaveBeenLastCalledWith('finished');
+  });
+
   it('ends on Escape', async () => {
     const onClose = vi.fn();
     renderWithCrystal(<Harness onClose={onClose} />);
     await userEvent.click(screen.getByRole('button', { name: 'Start tour' }));
     await userEvent.keyboard('{Escape}');
-    expect(onClose).toHaveBeenCalledOnce();
+    expect(onClose).toHaveBeenCalledExactlyOnceWith('dismissed');
     /* After its exit: the panel plays `popover-out` before it goes. */
     await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); });
   });

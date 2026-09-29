@@ -1,0 +1,13 @@
+@use '../../styles/tokens' as *;
+
+/* The panel and the scrim are `Tour`'s — "Frost panel over a Mirage scrim". What
+   is here is the page area inside the panel. */
+.pages { display: grid; gap: $cr-spacing-sm; }
+
+.progress { margin-block-end: $cr-spacing-2xs; }
+
+/* The leaving page and the arriving one share one cell, so the arrival does not
+   push the departure down or the panel open and shut between them. */
+.stage { display: grid; }
+
+.page { grid-area: 1 / 1; min-inline-size: 0; }
