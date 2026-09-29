@@ -554,7 +554,7 @@ matters and is reachable only by operating a control — a collapsed rail, a mod
 needs a **story of its own**, because a gate can address a story and cannot address a
 state behind a click.
 
-### C — Foundation (in progress)
+### C — Foundation — complete
 
 Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 
@@ -2516,7 +2516,7 @@ are the same defect the slice had just written a component to prevent.
 
 **Slice O is complete: 15 of 15, and the library is at 262 of 285.**
 
-### P — Blocks (20) — in progress
+### P — Blocks (20) — complete
 
 `dashboard-shell`, `metrics-row`, `analytics-panel`, `data-table-block`,
 `crud-form-block`, `settings-block`, `auth-block`, `profile-block`,
@@ -2573,6 +2573,91 @@ whether anything else in it should have been left to the component underneath.
   `ChartSurface` takes `table` as a required prop, so a chart in this library
   cannot exist without the same data as text. A panel that accepted a bare
   `<svg>` as its chart would be a way around that requirement.
+
+**Round two: commerce, activity and the queue.**
+
+- **A block's container query was on its own container.** `CheckoutBlock` set
+  `container-type` on the element its own `@container` rule was meant to size,
+  and an element cannot query itself: the rule never matched and the summary
+  never moved beside the form. The container is now the block, the query its
+  inside.
+- **Heading order is a block's problem, and a component has to let it solve
+  it.** `StorefrontBlock` puts `ProductCard`s under an `h2`, and each card drew
+  its own `h2`; the axe run on the story found the skip. `ProductCard` gained
+  `headingLevel` rather than the block restyling a heading it did not own.
+- **React Aria rebuilds a collection's rows when the order changes**, so a
+  playlist row cannot see its own move from the inside — it is a new row. The
+  block, which knows the old order and the new, plays `drag-settle` on the row
+  that was carried and `reorder` on the rows it pushed along, through a registry
+  of players the rows join as they mount. Measured by keyboard in a browser.
+- **`NotificationCentre`'s rows step down to Haze.** Frost inside Frost is two
+  panes of the same glass; the surface context makes a notification Haze inside
+  the centre and Frost on the page, without a prop.
+- **The undo is a control that stays, not a toast that leaves.** An undo a
+  reader has to catch before it goes is not one a keyboard or screen-reader user
+  can rely on reaching.
+- **The blocks entry was guarded by a test that could not run.** `src/blocks.ts`
+  is checked against the main barrel so a block cannot be exported from one and
+  not the other; the first version read `import.meta.url`, which is not a file
+  URL under jsdom, so the file failed to collect — and "1 failed" was missed in
+  filtered output and committed. It reads from the working directory now, and
+  was watched failing on a block left out.
+
+**Round three: forms, overlays and media.**
+
+- **Every React dialog opened off-centre**, top-left corner at the middle of the
+  screen and half of it past a phone's edge. R-24 put the surface on Crystal's
+  `.cr-dialog`, whose `position: fixed` centres a *native* `<dialog>` because the
+  browser gives a modal one `inset: 0` and auto margins; React Aria's surface is
+  not a `<dialog>`. The material gate passed throughout — a material can be right
+  on a surface nobody can read. `verify:appearance` now measures the open dialog
+  at a desktop and a phone width.
+- **Every slider's thumb sat 13px above its rail**: `Slider`, `RangeSlider`, the
+  media transport and `ColorPicker`'s colour sliders. React Aria translates the
+  thumb by −50% on both axes and leaves its top to the stylesheet; the track
+  centred it with flex as well, so both applied. Found because `PlayerShell`'s
+  screenshot looked wrong, and the same screenshot showed `MediaControls`
+  drawing "Seek …" and "Volume" above the pill while its stylesheet said the
+  labels were hidden. `Slider` gained `hideLabel`; the thumb takes
+  `inset-block-start: 50%`; `verify:appearance` measures each thumb against its
+  track.
+- **A property that does not exist passed every unit test.** `PricingBlock`
+  used `--cr-primary-ink`; `verify:theme` found it resolving to nothing on the
+  themed scope and on the overlay container. The label keeps the text ink —
+  Crystal's emphasis is weight, not colour — and the marks take `--cr-primary`.
+- **Failures that cannot name a factor, by construction.** `AuthBlock` has no
+  way to attach a sign-in failure to a field and takes no field errors for a
+  reset, so a product cannot say "no account uses that address" by accident;
+  registration may still say what is wrong with the shape of a field.
+- **A confirmation cannot say nothing.** `ProfileBlock`'s destructive actions
+  are destructive *because* they are given `removes`, the sentence the dialog
+  shows; focus lands on Cancel, as in `Popconfirm`.
+- **Two announcements the platform already makes were not duplicated.** React
+  Aria's combobox announces its option count through an announcer its own
+  `aria-hidden` sweep leaves reachable; a region of `SearchBlock`'s would have
+  been hidden by that sweep while the list was open. And `EditorBlock` says a
+  format change only when it was made from the text — Ctrl+B — since on the
+  toolbar `aria-pressed` has already said it.
+- **`aria-keyshortcuts` never reached the button.** React Aria passes only
+  labelling and `data-` attributes through, so the attribute was dropped without
+  a warning. The shortcut is printed beside Save instead and describes it — which
+  a sighted keyboard user can also read.
+- **An accessible name is built from trimmed pieces.** "Team, Recommended" was
+  computed as "Team,Recommended" because the space was inside the visually
+  hidden comma; it sits between the two now.
+- **`Tour` could not tell finishing from leaving**, so an onboarding sequence
+  could not either. `onClose` now receives `'finished'` or `'dismissed'`;
+  callers that ignore it are unaffected.
+- **The manifest credited eighteen components with a collection's motion** —
+  a dialog's hint, a banner, a tour, the error screens — because it followed
+  `motion/ListPresence` for anything importing from it, including
+  `usePresenceMotion`, which plays whatever its caller names. And
+  `virtualizer` read as not started because the catalogue lists it twice and the
+  export was mapped to one id; its two promises, set counts across recycling and
+  a focused row kept, are now measured in a browser rather than asserted.
+
+**Slice P is complete: 20 of 20, and the library is at 283 of 285** — the other
+two are `not-applicable` in the catalogue itself.
 
 ### P — Blocks (20)
 
