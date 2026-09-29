@@ -36,6 +36,7 @@ import { MediaControls } from '../MediaControls/MediaControls.js';
 import { useMediaElement } from '../../media/useMediaElement.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
+import { useMediaArrival } from '../../media/useMediaArrival.js';
 import styles from './VideoPlayer.module.scss';
 
 export interface VideoPlayerProps
@@ -65,6 +66,8 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
 }, ref): ReactNode {
   const own = useRef<HTMLVideoElement>(null);
   const media = useMediaElement(own);
+  /* `media-in` on the picture once its first frame is ready. */
+  const arrival = useMediaArrival(own);
   const [captionsOn, setCaptionsOn] = useState(false);
   const [hasCaptions, setHasCaptions] = useState(false);
   const [said, setSaid] = useState('');
@@ -159,7 +162,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
         {/* eslint-disable-next-line jsx-a11y/media-has-caption -- the caption `<track>` is the product's to supply through `children`; the control for it is below */}
         <video
           {...props}
-          ref={mergeRefs(ref, own, mediaRef)}
+          ref={mergeRefs(ref, own, mediaRef, arrival as never)}
           aria-label={label}
           className={styles['video']}
           onClick={media.toggle}

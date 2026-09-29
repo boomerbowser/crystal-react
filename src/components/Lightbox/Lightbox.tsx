@@ -34,6 +34,7 @@ import {
 } from 'react-aria-components';
 import { IconButton, CloseButton } from '../IconButton/IconButton.js';
 import { cx } from '../../styles/cx.js';
+import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './Lightbox.module.scss';
 
 /* Crystal's own step. Doubling is too coarse for reading a photograph and 10%
@@ -99,6 +100,11 @@ export function Lightbox({
    * sitting on that button: naming the new picture is necessary and is not
    * sufficient. */
   const said = position === undefined ? label : `${label}, ${position}`;
+  /* Moving to another picture while open: `media-in` on the picture and
+     `caption-in` on its caption. Not as the lightbox opens, which is the
+     dialog's own arrival. */
+  const itemArrival = useChangeMotion(position, () => 'media-in');
+  const captionArrival = useChangeMotion(position, () => 'caption-in');
   const before = useRef<{ zoom: number; said: string } | null>(null);
   const [announcement, setAnnouncement] = useState('');
 
@@ -199,6 +205,7 @@ export function Lightbox({
               : {})}
           >
             <div
+              ref={itemArrival as never}
               className={styles['item']}
               style={{ '--lightbox-zoom': String(zoom) } as React.CSSProperties}
             >
@@ -206,7 +213,7 @@ export function Lightbox({
             </div>
           </div>
 
-          {caption ? <p className={styles['caption']}>{caption}</p> : null}
+          {caption ? <p ref={captionArrival as never} className={styles['caption']}>{caption}</p> : null}
 
           {/* The zoom and the item, said. Neither changes anything a screen
               reader would otherwise notice: the picture stays the same picture

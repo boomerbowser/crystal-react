@@ -24,6 +24,7 @@ import { MediaControls } from '../MediaControls/MediaControls.js';
 import { useMediaElement } from '../../media/useMediaElement.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
+import { useMediaArrival } from '../../media/useMediaArrival.js';
 import styles from './AudioPlayer.module.scss';
 
 export interface AudioPlayerProps
@@ -50,9 +51,12 @@ export const AudioPlayer = forwardRef<HTMLAudioElement, AudioPlayerProps>(functi
 }, ref): ReactNode {
   const own = useRef<HTMLAudioElement>(null);
   const media = useMediaElement(own);
+  /* `media-in` once the audio is ready. Audio has nothing to see, so it plays on
+     the player — the surface that now has something to play. */
+  const arrival = useMediaArrival(own);
 
   return (
-    <div className={cx(styles['player'], className)}>
+    <div ref={arrival as never} className={cx(styles['player'], className)}>
       {title ? <p className={styles['title']}>{title}</p> : null}
       {/* No `controls`: the transport below is the control surface, and two sets
           of controls for one element is two sets of everything — two tab stops

@@ -1395,6 +1395,29 @@ for (const [id, openWith, exit] of [
   );
 }
 
+/* A gallery's viewer moving to the next picture: `media-in` on the picture and
+   `caption-in` on its caption; opening it plays neither, since that is the
+   dialog's own arrival. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=media-gallery--a-set&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  await page.locator('#storybook-root [role=option]').first().click();
+  await page.waitForTimeout(900);
+  const count = (name) => page.evaluate((name) => document.querySelectorAll(`[role=dialog] [data-cr-motion-name="${name}"]`).length, name);
+  const onOpen = await count('media-in') + await count('caption-in');
+  await page.locator('[role=dialog] button[aria-label="Next"]').click();
+  await page.waitForTimeout(300);
+  const media = await count('media-in');
+  const caption = await count('caption-in');
+  const captioned = await page.evaluate(() => document.querySelectorAll('[role=dialog] p').length);
+  record(
+    'media-in and caption-in: the viewer moving to the next picture brings it and its caption in; opening does not',
+    onOpen === 0 && media === 1 && (captioned === 0 || caption === 1),
+    `on opening ${onOpen}; after moving, media-in ${media}, caption-in ${caption} (${captioned} caption)`,
+  );
+  await page.keyboard.press('Escape');
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));
