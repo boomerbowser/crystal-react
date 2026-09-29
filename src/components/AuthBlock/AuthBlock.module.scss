@@ -1,0 +1,56 @@
+@use '../../styles/tokens' as *;
+
+/* "Haze card on the Plastic foundation." The ground is Crystal's Plastic, worn as
+   `.cr-plastic`; the card on it is Haze, worn as `.cr-haze`. */
+.ground {
+  display: grid;
+  place-items: center;
+  padding: var(--cr-space);
+  min-block-size: 100%;
+}
+
+.card {
+  display: grid;
+  gap: $cr-spacing-md;
+  inline-size: 100%;
+  max-inline-size: 26rem;  /* crystal-allow-literal: a single-column form's measure */
+  padding: var(--cr-space);
+  border-radius: var(--cr-radius);
+}
+
+.brand { justify-self: start; }
+
+.heading { margin: 0; }
+
+.notice { margin: 0; }
+
+.failure {
+  margin: 0;
+  padding: $cr-spacing-sm $cr-spacing-md;
+  border: 1px solid var(--cr-danger-ink);
+  border-radius: var(--cr-radius);
+  background: var(--cr-danger-surface);
+  color: var(--cr-danger-ink);
+  font-weight: 700;
+}
+
+.form { display: grid; gap: $cr-spacing-md; }
+
+/* A fieldset for `disabled`, which holds every field at once; its chrome goes. */
+.fields {
+  display: grid;
+  gap: $cr-spacing-md;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.submit { justify-self: stretch; }
+
+.alternatives {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: $cr-spacing-xs;
+}

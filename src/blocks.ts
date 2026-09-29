@@ -22,3 +22,4 @@ export * from './components/NotificationCentre/index.js';
 export * from './components/PlaylistBlock/index.js';
 export * from './components/CrudFormBlock/index.js';
 export * from './components/SettingsBlock/index.js';
+export * from './components/AuthBlock/index.js';
