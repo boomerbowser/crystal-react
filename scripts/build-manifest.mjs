@@ -92,15 +92,11 @@ const NAMED_DIFFERENTLY = {
   CrystalProvider: 'theme-provider',
   /* The component *is* the element; the transition is what it does to it. */
   SharedElement: 'shared-element-transition',
-  /* React Aria's name, and the better one: the catalogue calls it a
-     `virtual-scroller` after the primereact component it lists for parity, but
-     what the library re-exports is React Aria's `Virtualizer` and calling it
-     anything else would send a reader looking for the wrong export. The
-     catalogue has it twice — `virtual-scroller` among the data displays and
-     `virtualizer` among the utilities, whose parity is React Aria's own — and the
-     one export is both; verify-behaviour checks the second entry's promises,
+  /* React Aria's name, and the catalogue's since 2.3.0, which removed the
+     duplicate `virtual-scroller` entry (D-29) — so the export and the id agree
+     and this line only says so. verify-behaviour checks the entry's promises:
      the set counts and the focused row kept through recycling. */
-  Virtualizer: ['virtual-scroller', 'virtualizer'],
+  Virtualizer: 'virtualizer',
   Abbr: 'abbreviation',
   TextArea: 'textarea',
   /* The catalogue spells these as one word; Crystal spells them the way React

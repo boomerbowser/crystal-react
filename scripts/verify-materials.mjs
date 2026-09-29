@@ -75,9 +75,14 @@ const PAIRS = [
      have — so it can never see the Haze fill, because the fill only exists on
      the controls it excludes. Adding a `::before` comparison there would have
      compared nothing against nothing and passed. */
+  /* The neutral control only. From 2.1.0 a `.primary` action tints its reading
+     pad in the palette's primary, and the preview marks its main actions so; the
+     first painting `button.cr-button` on the playground became a primary one the
+     day the preview installed a Crystal that paints `.primary`, and the pair
+     reported the tint as drift — a mismatched specimen again. */
   {
     material: 'resin-control',
-    crystal: 'button.cr-button',
+    crystal: 'button.cr-button:not(.primary):not(.quiet):not(.danger)',
     react: '[data-material="resin-control"] button',
     pseudo: '::before',
     props: HAZE_LAYER,

@@ -1744,3 +1744,49 @@ The field glyphs reach a `div` shell because D-27 was ruled the same day and is
 in 2.3.0. `verify:appearance` checks the relationship on the vocabulary story —
 each mark shows the glyph its host calls for and nothing on a host without the
 state — and was seen red with a host's `aria-busy` taken away.
+
+## R-26 · Adopt Crystal 2.3.0 when it is published
+
+**Ruled 29 September 2026:** the day's Crystal rulings fold into 2.3.0; it is tagged from here once green and adopted here in one pass. See [`2026-09-29-rulings.md`](https://github.com/boomerbowser/crystal/blob/main/proposals/2026-09-29-rulings.md) in Crystal.
+
+*(Opened 29 September 2026.)*
+
+Crystal 2.3.0 is prepared and not yet tagged. It carries two things this library
+has been standing in for, and one of them would collide with the stand-in:
+
+- **The navigation entry's location dot** (D-22). `.cr-nav-item` draws it from
+  2.3.0 — a flat primary mark on `aria-current`, inside the entry's own padding.
+  `NavLink` draws its own, in a slot of its own, because 2.2.0 did not. Under
+  2.3.0 both would draw and the current link would show two dots.
+- **`component.overlay.tooltipRadius`**, 18px, which `Tooltip.module.scss` holds
+  as a literal (`$tooltip-radius`, allowed with the catalogue's words beside it).
+
+So the dependency range is `~2.2.0` rather than `^2.2.0`: a caret would let a
+fresh install take 2.3.0 the day it is published, under a `NavLink` that has not
+yet let go of its dot. And `src/styles/coreVersion.test.ts` has a ceiling — the
+R-20 pattern — that fails the day 2.3 is installed regardless, and names these
+steps.
+
+**Closing it**, once `@crystal-ui/core@2.3.0` is on the registry:
+
+1. The range to `^2.3.0`; `pnpm install`; `pnpm run build:tokens`, which brings
+   `$cr-overlay-tooltip-radius`.
+2. `NavLink` removes its `.dot` element, its reserved slot and their
+   forced-colours rule, and says in its header that the dot is Crystal's. Its
+   tests assert the dot on `aria-current` through the class — present on the
+   current link, absent on a selected one — rather than through the element.
+3. `Tooltip` reads `$cr-overlay-tooltip-radius` and drops the literal.
+4. The ceiling test goes; the floor moves to 2.3 if anything here then depends
+   on it (the dot does).
+5. Every gate, `verify:appearance` with `VERIFY_PLANT_RED=1`, and a look at the
+   navigation stories in both directions and under forced colours.
+
+**Closed 29 September 2026.** Crystal 2.3.0 carries the rulings of that day as
+well as D-22's dot and the tooltip token, and was verified here twice: first
+packed from core and swapped into `node_modules` before it was tagged — every
+gate green, which is also what cleared the tag — and again on the published
+package, whose tarball is identical to the packed one. The range is `^2.3.0`,
+NavLink draws no dot of its own, Tooltip reads `$cr-overlay-tooltip-radius`,
+and the ceiling in `coreVersion.test.ts` is gone with the floor at 2.3. The
+same adoption put the strips, the group, the dialog body, the recessed overlay,
+the count badge and the indicator on Crystal's classes (R-25).
