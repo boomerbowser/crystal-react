@@ -59,6 +59,8 @@ field indicator — that Crystal's recipes do not yet reach.
 
 ## R-17 · Storybook has almost no Controls, no Actions and no Interactions
 
+**Ruled 29 September 2026:** the compiler-checked `ariaArgTypes` table is the answer, and R-17 closes. See [`2026-09-29-rulings.md`](https://github.com/boomerbowser/crystal/blob/main/proposals/2026-09-29-rulings.md) in Crystal.
+
 **Reported by Meridian, 19 September 2026. Largely closed 19 September 2026; one
 part deliberately left open and named below.**
 **Severity: high — this is the review surface, and three of its four panels are
@@ -400,6 +402,8 @@ the day either route above opens.
 
 ## R-25 · `Indicator` is a colour dot, and Crystal's `.cr-indicator` is a glyph its host decides
 
+**Ruled 29 September 2026:** adopt `.cr-indicator` with `data-kind` and replace the `state` API, once D-27 (b) is published. See [`2026-09-29-rulings.md`](https://github.com/boomerbowser/crystal/blob/main/proposals/2026-09-29-rulings.md) in Crystal.
+
 *(Opened 28 September 2026, found by the per-surface check.)*
 
 The catalogue names `Indicator` and `Timeline` as the `indicator` surface, and no
@@ -433,6 +437,8 @@ remove the `state` prop's colour vocabulary and `selection`, and take the field
 glyphs once D-27 lets them reach a `div` shell.
 
 ## R-26 · Adopt Crystal 2.3.0 when it is published
+
+**Ruled 29 September 2026:** the day's Crystal rulings fold into 2.3.0; it is tagged from here once green and adopted here in one pass. See [`2026-09-29-rulings.md`](https://github.com/boomerbowser/crystal/blob/main/proposals/2026-09-29-rulings.md) in Crystal.
 
 *(Opened 29 September 2026.)*
 
