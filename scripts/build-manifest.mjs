@@ -190,10 +190,15 @@ function motionUsed(componentId) {
        `list-in` and `list-out` for whatever uses it — unlike `useContinuous`,
        which names all three continuous recipes as a type and would credit every
        caller with all three. So that one module is followed, from a component
-       or from a helper it uses. */
+       or from a helper it uses — but only for what in it plays those two. The
+       module also exports `usePresenceMotion`, which plays whatever its caller
+       names, and those names are in the caller, where they are read already;
+       following the module for it credited a dialog, a hint and an onboarding
+       sequence with a collection's arrival they never play. */
     const followListPresence = (from) => {
       const found = resolveFrom(from, from.includes('/components/') ? '../../motion/ListPresence' : '../motion/ListPresence');
-      if (found && /motion\/ListPresence\.js'/.test(readFileSync(from, 'utf8'))) shared.add(found);
+      const imported = /import\s*\{([^}]*)\}\s*from '[./]*\/?motion\/ListPresence\.js'/.exec(readFileSync(from, 'utf8'))?.[1] ?? '';
+      if (found && /\b(ListPresence|PresenceItem|useListItemMotion)\b/.test(imported)) shared.add(found);
     };
     followListPresence(file);
     for (const [, neighbour, name] of source.matchAll(/from '\.\.\/([A-Z]\w*)\/(\w+)\.js'/g)) {
