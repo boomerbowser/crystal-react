@@ -95,8 +95,12 @@ const NAMED_DIFFERENTLY = {
   /* React Aria's name, and the better one: the catalogue calls it a
      `virtual-scroller` after the primereact component it lists for parity, but
      what the library re-exports is React Aria's `Virtualizer` and calling it
-     anything else would send a reader looking for the wrong export. */
-  Virtualizer: 'virtual-scroller',
+     anything else would send a reader looking for the wrong export. The
+     catalogue has it twice — `virtual-scroller` among the data displays and
+     `virtualizer` among the utilities, whose parity is React Aria's own — and the
+     one export is both; verify-behaviour checks the second entry's promises,
+     the set counts and the focused row kept through recycling. */
+  Virtualizer: ['virtual-scroller', 'virtualizer'],
   Abbr: 'abbreviation',
   TextArea: 'textarea',
   /* The catalogue spells these as one word; Crystal spells them the way React

@@ -1682,6 +1682,53 @@ for (const [id, trigger, surface] of [
   );
 }
 
+/* ---------------------------------------------------------- a virtualizer windows, counts and keeps focus */
+
+/* The catalogue's two obligations for the virtualizer, which the library
+   re-exports from React Aria on the strength of both: rows keep their place in
+   the set — `aria-setsize` and `aria-posinset` — while only some of them exist,
+   and a focused row is not dropped when scrolling would recycle it. Neither is
+   visible to jsdom, which lays nothing out and so windows nothing. Measured on
+   the two-thousand-row story: few rows rendered, each counted against the whole,
+   and focus on the first row surviving a scroll to the bottom of the list. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=data-display-virtual-scroller--two-thousand-rows&viewMode=story`, { waitUntil: 'networkidle' });
+  if (await waitFor('the virtual scroller rendered', page.locator('#storybook-root [role="option"]').first())) {
+    const counted = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [role="option"]')].map((row) => ({
+      text: row.textContent.trim(), size: row.getAttribute('aria-setsize'), at: row.getAttribute('aria-posinset'),
+    })));
+    const rightlyCounted = counted.every((row) => row.size === '2000' && row.text.endsWith(` ${row.at}`));
+    record(
+      'a virtualizer renders a window of its rows, each counted against the whole set',
+      counted.length > 0 && counted.length < 100 && rightlyCounted,
+      `${counted.length} rows rendered; first ${JSON.stringify(counted[0])}`,
+    );
+
+    await page.locator('#storybook-root [role="option"]').first().focus();
+    await page.keyboard.press('ArrowDown');
+    const focusedText = await page.evaluate(() => document.activeElement?.textContent?.trim());
+    await page.evaluate(() => {
+      const listbox = document.querySelector('#storybook-root [role="listbox"]');
+      let scroller = listbox;
+      while (scroller && scroller.scrollHeight <= scroller.clientHeight) scroller = scroller.parentElement;
+      scroller?.scrollTo({ top: scroller.scrollHeight });
+    });
+    await page.waitForTimeout(400);
+    const kept = await page.evaluate(() => ({
+      active: document.activeElement?.getAttribute('role'),
+      text: document.activeElement?.textContent?.trim(),
+      bottom: [...document.querySelectorAll('#storybook-root [role="option"]')].some((row) => row.getAttribute('aria-posinset') === '2000'),
+      /* Its neighbour is gone, so the row was kept rather than never dropped. */
+      recycled: ![...document.querySelectorAll('#storybook-root [role="option"]')].some((row) => row.getAttribute('aria-posinset') === '3'),
+    }));
+    record(
+      'a virtualizer keeps the focused row when scrolling would recycle it',
+      kept.bottom && kept.recycled && kept.active === 'option' && kept.text === focusedText,
+      `focused ${JSON.stringify(focusedText)}; after scrolling to the end, focus is on ${kept.active} ${JSON.stringify(kept.text)}; the last row rendered: ${kept.bottom}; its neighbours recycled: ${kept.recycled}`,
+    );
+  }
+}
+
 await browser.close();
 
 console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));
