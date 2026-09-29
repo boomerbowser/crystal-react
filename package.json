@@ -21,6 +21,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./blocks": {
+      "types": "./dist/blocks.d.ts",
+      "import": "./dist/blocks.js",
+      "require": "./dist/blocks.cjs"
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json",
     "./component-manifest.json": "./dist/component-manifest.json",

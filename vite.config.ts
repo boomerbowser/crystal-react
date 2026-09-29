@@ -19,7 +19,12 @@ export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      entry: resolve(here, 'src/index.ts'),
+      /* Two entry points. Blocks ship from their own (`@crystal-ui/react/blocks`),
+         because a block carries a different promise from a component — a
+         starting point products are expected to fork, not a stable API (§4.2) —
+         and a product should be able to see which one it is importing. The main
+         entry exports them too, so adding this broke no import. */
+      entry: { index: resolve(here, 'src/index.ts'), blocks: resolve(here, 'src/blocks.ts') },
       formats: ['es', 'cjs'],
       fileName: (format, name) => `${name}.${format === 'es' ? 'js' : 'cjs'}`,
     },
