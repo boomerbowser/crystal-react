@@ -10,9 +10,15 @@
  * `skeleton-sweep`, and three charts play `mark-in` — recipes that exist only from
  * 2.2.0. On anything older `useMotion` throws for an unknown recipe, so a
  * dependency range that let 2.1 back in would ship components that crash the
- * moment something starts loading. The dependency says `^2.2.0`; this checks what
+ * moment something starts loading. The dependency says `~2.2.0`; this checks what
  * is actually installed, because the range is what was asked for and the installed
  * version is what is true.
+ *
+ * It has a ceiling as well, for now. Crystal 2.3.0 draws the navigation entry's
+ * location dot on `.cr-nav-item` itself (D-22), and `NavLink` still draws its own:
+ * a 2.3 installed under this library would put two dots beside the current link.
+ * So the range stops at 2.2, and the second test fails the day 2.3 is installed
+ * anyway — the R-20 pattern again — naming what the adoption has to do (R-26).
  *
  * The proposal's last step (§3.5) was to delete this file once the per-surface
  * checks existed and had each been seen red. They exist, in `verify:appearance`,
@@ -48,5 +54,15 @@ describe('the installed @crystal-ui/core', () => {
     for (const id of PLAYED_FROM_2_2) {
       expect(published.has(id), `${id} is played here and not published by the installed core`).toBe(true);
     }
+  });
+});
+
+/* R-26: fails the day Crystal 2.3 is installed, which is the day to adopt it. */
+describe('the installed @crystal-ui/core, until R-26', () => {
+  it('is older than 2.3.0, until NavLink gives its dot to Crystal', () => {
+    expect(
+      major === 2 && minor < 3,
+      `@crystal-ui/core ${installed.version} is installed. Adopt it (R-26): NavLink drops its own dot, which .cr-nav-item now draws; Tooltip reads $cr-overlay-tooltip-radius; the range becomes ^2.3.0; and this test goes.`,
+    ).toBe(true);
   });
 });

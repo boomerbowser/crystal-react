@@ -16,11 +16,13 @@
  * specifies one — "optional icon, label and current-location dot", with the dot
  * among what Crystal supplies, because current location and selection are
  * different things and the category says so: "current location is a dot;
- * selection within a set is label weight." `.cr-nav-item` draws no dot, and
- * neither does the side menu it was lifted from, so Crystal disagrees with itself
- * here; that is filed against the design system as D-22. Until it is answered
- * this library keeps the dot the catalogue asks for, in a slot reserved whether
- * or not it is drawn, so the label never moves.
+ * selection within a set is label weight." `.cr-nav-item` in 2.2.0 draws no dot,
+ * and neither did the side menu it was lifted from. Filed as D-22; Meridian ruled
+ * on 28 September 2026 that the entry draws it, and Crystal 2.3.0 does — flat,
+ * primary, on `aria-current` only, inside the entry's own padding. Until this
+ * library depends on 2.3 it keeps the dot the catalogue asks for, in a slot
+ * reserved whether or not it is drawn, so the label never moves; adopting 2.3
+ * means removing it, or the current link shows two (R-26).
  *
  * The rest is layout, which is this component's: it fills the row it sits in,
  * and it has slots for an icon and a trailing count.
