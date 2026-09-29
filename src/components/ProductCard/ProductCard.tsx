@@ -35,6 +35,11 @@ import type { Availability } from '../../commerce/availability.js';
 import styles from './ProductCard.module.scss';
 
 export interface ProductCardProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
+  /**
+   * The name's heading level, so a card fits the outline it is placed in — under
+   * a storefront's `h1` its name is an `h2`. Defaults to 3.
+   */
+  headingLevel?: 2 | 3 | 4 | 5 | 6;
   /** What it is called. The card's one link. */
   name: string;
   /** Where the product is. */
@@ -55,6 +60,7 @@ export interface ProductCardProps extends Omit<HTMLAttributes<HTMLElement>, 'chi
 }
 
 export const ProductCard = forwardRef<HTMLElement, ProductCardProps>(function ProductCard({
+  headingLevel = 3,
   name, href, price, was, media, availability, availabilityLabel, rating,
   action, aside, className, ...props
 }, ref): ReactNode {
@@ -63,6 +69,7 @@ export const ProductCard = forwardRef<HTMLElement, ProductCardProps>(function Pr
      nothing. */
   const scope = useListItemMotion();
   const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
+  const Heading = `h${headingLevel}` as 'h3';
   return (
     <article {...props} ref={merged as never} className={cx(styles['card'], className)}>
       {media ? (
@@ -74,12 +81,12 @@ export const ProductCard = forwardRef<HTMLElement, ProductCardProps>(function Pr
       {aside ? <div className={styles['aside']}>{aside}</div> : null}
 
       <div className={styles['body']}>
-        <h3 className={styles['heading']}>
+        <Heading className={styles['heading']}>
           {/* The one link. Its hit area is stretched over the card by the
               stylesheet, which is a pointer affordance and not a second tab
               stop — the card is still two. */}
           <a href={href} className={styles['name']}>{name}</a>
-        </h3>
+        </Heading>
 
         <p className={styles['prices']}>
           <Price value={price} as="span" />

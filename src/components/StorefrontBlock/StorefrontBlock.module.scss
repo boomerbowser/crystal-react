@@ -1,0 +1,61 @@
+@use '../../styles/tokens' as *;
+
+/* "Inherits from its cards and panels." The cards and the filter panel carry
+   their materials; the block arranges them and paints nothing. */
+.storefront {
+  /* The container the layout measures: a storefront in a narrow column is
+     narrow whatever the window is. */
+  container-type: inline-size;
+  display: grid;
+  gap: $cr-spacing-lg;
+  min-inline-size: 0;
+}
+
+.title { margin: 0; }
+
+.layout {
+  display: grid;
+  gap: $cr-spacing-lg;
+  align-items: start;
+}
+
+@container (min-inline-size: 56rem) { /* crystal-allow-literal: the width at which filters sit beside the grid */
+  .layout { grid-template-columns: minmax(14rem, 1fr) minmax(0, 3fr); } /* crystal-allow-literal: the filter column's floor */
+}
+
+.filters { min-inline-size: 0; }
+
+.results {
+  display: grid;
+  gap: $cr-spacing-md;
+  min-inline-size: 0;
+}
+
+.bar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: $cr-spacing-md;
+  flex-wrap: wrap;
+}
+
+.count { margin: 0; font-weight: 800; }
+
+/* "Grid gap from the scale; reflows by container width." Cards take whatever
+   column count fits at their own minimum. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); /* crystal-allow-literal: a product card's narrowest */
+  gap: $cr-spacing-md;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cell { min-inline-size: 0; display: grid; }
+
+/* Filtering keeps the results in place, dimmed, so the page does not reflow
+   under a reader still looking at it. */
+.storefront[data-cr-state='filtering'] .grid { opacity: $cr-action-disabled-opacity; }
+
+.pages { justify-self: center; }
