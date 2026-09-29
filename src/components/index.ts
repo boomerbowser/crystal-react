@@ -255,3 +255,4 @@ export * from './AnalyticsPanel/index.js';
 export * from './DataTableBlock/index.js';
 export * from './CartDrawer/index.js';
 export * from './CheckoutBlock/index.js';
+export * from './ProductDetailBlock/index.js';

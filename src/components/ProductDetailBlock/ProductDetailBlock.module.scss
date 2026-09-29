@@ -1,0 +1,38 @@
+@use '../../styles/tokens' as *;
+
+/* "Inherits from its parts." The gallery, the selector, the stock label and the
+   action bring their own materials; the block arranges them and paints nothing,
+   so no part sits two materials deep. */
+.product {
+  /* The container the layout measures: a product page in a narrow column is
+     narrow whatever the window is. */
+  container-type: inline-size;
+  min-inline-size: 0;
+}
+
+.layout {
+  display: grid;
+  gap: $cr-spacing-lg;
+  align-items: start;
+}
+
+@container (min-inline-size: 48rem) { /* crystal-allow-literal: the width at which the gallery and the details both fit */
+  .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+
+.gallery { min-inline-size: 0; }
+
+.details {
+  display: grid;
+  gap: $cr-spacing-md;
+  align-content: start;
+  justify-items: start;
+}
+
+.name { margin: 0; }
+.price { margin: 0; }
+.description { color: var(--cr-muted); }
+
+/* The action the page exists for, as wide as the column so it is found without
+   looking for it. */
+.add { inline-size: 100%; }
