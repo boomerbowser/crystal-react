@@ -56,7 +56,7 @@ See `docs/proposals/2026-10-02-media-text-and-recipe-parity.md`.
 
 ## How it consumes Crystal
 
-`@crystal-ui/core` is a dependency, installed from npm at `^2.3.0`.
+`@crystal-ui/core` is a dependency, installed from npm at `^2.3.1`.
 
 Design values enter the library in one place. `scripts/build-tokens.mjs` reads
 Crystal's generated export and writes `src/styles/_tokens.scss` and
