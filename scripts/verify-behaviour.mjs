@@ -1837,7 +1837,16 @@ for (const [id, trigger, surface] of [
       while (scroller && scroller.scrollHeight <= scroller.clientHeight) scroller = scroller.parentElement;
       scroller?.scrollTo({ top: scroller.scrollHeight });
     });
-    await page.waitForTimeout(400);
+    /* Wait for the window to reach the end rather than for a fixed time. A fixed
+       400ms failed two runs in five against storybook-static and once against
+       the dev server (R-29): the scroll and the re-render that follows are not
+       done in a set time. Five seconds is the limit, and a list that has not
+       reached its last row by then fails below as before. */
+    await page.waitForFunction(
+      () => [...document.querySelectorAll('#storybook-root [role="option"]')].some((row) => row.getAttribute('aria-posinset') === '2000'),
+      undefined,
+      { timeout: 5000 },
+    ).catch(() => {});
     const kept = await page.evaluate(() => ({
       active: document.activeElement?.getAttribute('role'),
       text: document.activeElement?.textContent?.trim(),

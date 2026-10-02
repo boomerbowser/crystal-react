@@ -178,7 +178,7 @@ jobs:
 
       - name: Measure and drive the built stories
         run: |
-          python3 -m http.server 6006 --directory storybook-static --bind 127.0.0.1 &
+          node scripts/serve-static.mjs storybook-static 6006 &
           for _ in $(seq 1 40); do
             curl -sf http://127.0.0.1:6006/index.json >/dev/null && break
             sleep 0.5
