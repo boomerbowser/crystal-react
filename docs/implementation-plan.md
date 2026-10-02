@@ -2709,7 +2709,7 @@ surface and `Prose` the anatomy the catalogue now specifies, makes every motion
 recipe visible, credits motion a child plays, and measures the library against
 the catalogue so the remaining material work can be counted.
 
-Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-02; D-33 (a), 2026-10-02; D-34 (a), 2026-10-02; D-35 (a), 2026-10-02. The record is `crystal-design-system/proposals/2026-10-02-rulings.md`.
+Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-02; D-33 (a), 2026-10-02; D-34 (a), 2026-10-02; D-35 (a), 2026-10-02; D-37 (a), 2026-10-02. The record is `crystal-design-system/proposals/2026-10-02-rulings.md`.
 
 **Media**
 
@@ -2744,11 +2744,17 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 - [ ] **R-A3** (P2) Cascader plays the field recipes. field-focus, field-invalid and field-valid on the cascader's shell.
 - [ ] **R-A4** (P2) Product gallery and playlist block play their assigned motion. media-in on the product gallery; list-in and list-out on the playlist block.
 - [ ] **R-A5** (P3) Credit view-push-out to the view stack. The view stack names the recipe whose movement it makes.
+- [ ] **R-A8** (P2) The travelling selection pill on strips (D-37). Tabs, the segmented control, the dock, bottom navigation and toggle button groups render one selection pill from styles/_strip.scss, measured against the selected segment and moved by the new recipe when a person changes the selection; instant under reduced motion; label weight unchanged. Waits on C-M3, C-R1. Blocked. By the ruling on D-37.
 
 **Materials**
 
 - [ ] **R-A1** (P1) Sort the hand-written material (re-evaluation rec. 6). Each of the 29 directories with hand-written backdrop-filter and the 49 using material mixins either wears a surface or is filed upstream as a composition the vocabulary lacks.
 - [ ] **R-A2** (P2) Confirm the 105 entries whose surface is not worn in their own markup. Each is either worn through a child (recorded) or fixed.
+
+**Audit**
+
+- [ ] **R-A9** (P2) The Haze reading fill in the popover, the pop-confirm and the menu. Popover and Popconfirm content, and Menu rows, sit on the Haze reading fill their catalogue entries specify inside the Frost panel, measured against the .cr-haze recipe; core then assigns the haze surface and removes the three from UNMEASURED in build-catalogue.cjs.
+- [ ] **R-A10** (P2) The Resin thumb on the colour area, slider and wheel. The colour controls draw the Resin thumb their catalogue entries specify (today the thumb is the picked colour), measured against the .cr-resin recipe; core then assigns the resin surface and removes the three from UNMEASURED.
 
 **Docs**
 
