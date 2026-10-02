@@ -9,17 +9,17 @@ describe('Marquee', () => {
     expect(screen.getByRole('region', { name: 'Latest releases' })).toBeInTheDocument();
   });
 
-  /* "Pausable on hover and focus" means nothing to a keyboard user unless there
-     is something to focus — and the strip is a scroll container, so the tab stop
-     is also what makes its content reachable. */
+  /* "Pausable on hover and focus" needs something a keyboard user can focus.
+     The strip is also a scroll container, so the tab stop is what makes its
+     content reachable. */
   it('takes a tab stop, so it can be paused without a pointer', () => {
     renderWithCrystal(<Marquee label="Latest releases"><span>One</span></Marquee>);
     expect(screen.getByRole('region')).toHaveAttribute('tabindex', '0');
   });
 
-  /* "Removed entirely under reduced motion" — and the duplicate copy goes with
-     it, because it exists only to make the loop seamless and would otherwise
-     read the same content twice. */
+  /* "Removed entirely under reduced motion". The duplicate copy goes too: it
+     exists only to make the loop seamless, and would otherwise read the same
+     content twice. */
   it('renders one copy under reduced motion, not two', () => {
     renderWithCrystal(
       <Marquee label="Latest releases"><span>Crystal 2.1</span></Marquee>,

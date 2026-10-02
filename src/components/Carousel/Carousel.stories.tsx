@@ -28,18 +28,17 @@ const meta = {
     docs: {
       description: {
         component:
-          '**There is no autoplay, and that is a decision rather than an omission.** Crystal\'s '
-          + 'rule is that nothing moves at rest; the catalogue says "never autoplay without a '
-          + 'pause control"; and the recipes say, in Crystal\'s own words, "explicit next/previous '
-          + 'navigation; never autoplay". Autoplay *policy* belongs to the product, so a product '
-          + 'that must have it owns both the timer and the pause control — this component will '
-          + 'not hand it half of one.\n\n'
+          'There is no autoplay, and that is a decision. Crystal\'s rule is that nothing moves '
+          + 'at rest, the catalogue says "never autoplay without a pause control", and the '
+          + 'recipes say, in Crystal\'s own words, "explicit next/previous navigation; never '
+          + 'autoplay". Autoplay policy belongs to the product, so a product that must have it '
+          + 'owns both the timer and the pause control.\n\n'
           + 'The track is a real scroll container with snapping, so a swipe, a flick and the '
-          + 'platform\'s own momentum all work, and it is a tab stop because a scroll container '
+          + 'platform\'s own momentum all work. It is a tab stop, because a scroll container '
           + 'with nothing focusable inside cannot be reached without a pointer. The movement '
-          + 'between slides is on the **arriving slide** rather than the track: `carousel-next` '
-          + 'and `carousel-previous` are a 3D swing-in, so animating the track as well would move '
-          + 'the same thing twice — which is why the scroll itself is instant.',
+          + 'between slides is on the arriving slide, not the track: `carousel-next` and '
+          + '`carousel-previous` are a 3D swing-in, so animating the track as well would move '
+          + 'the same thing twice. That is why the scroll itself is instant.',
       },
     },
   },
@@ -52,15 +51,14 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Two slides, so the step controls reach both ends quickly. A disabled control
- *  stays where it is rather than disappearing: a control that vanishes changes
- *  the layout under the reader's hand. */
+ *  stays where it is instead of disappearing, because a control that vanishes
+ *  changes the layout under the reader's hand. */
 export const AtTheEnds: Story = {
   args: { slides: slides.slice(0, 2) },
 };
 
-/** One slide — the catalogue's `single-slide` state. The controls are both
- *  disabled and the indicator row has one entry, which is honest about there
- *  being nowhere to go. */
+/** One slide, the catalogue's `single-slide` state. Both controls are disabled
+ *  and the indicator row has one entry, which shows there is nowhere to go. */
 export const SingleSlide: Story = {
   render: (args) => <Carousel {...only(args)} slides={slides.slice(0, 1)} />,
 };

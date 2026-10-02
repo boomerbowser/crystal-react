@@ -17,15 +17,13 @@ const meta = {
         component:
           'The material assignment of a whole view, in one place: Plastic underneath, Frost for '
           + 'the supporting panels, Resin for the floating destination group. That ordering is '
-          + 'Crystal\'s hierarchy at the largest scale — a Resin sidebar with a Frost dock is the '
-          + 'same system rendered upside down.\n\n'
-          + 'The landmarks are the other half, with one main per view, which is why the regions '
-          + 'are props rather than children a caller arranges. Collapsing the sidebar removes it '
-          + 'from the accessibility tree too: a sidebar that is visually gone but still focusable '
-          + 'sends a keyboard user into links they cannot see.\n\n'
-          + 'The app bar earns its elevation on scroll rather than wearing it at rest, and it '
-          + 'watches an IntersectionObserver on a sentinel rather than listening to every frame '
-          + 'of every scroll.',
+          + 'Crystal\'s hierarchy at the largest scale. A Resin sidebar with a Frost dock inverts it.\n\n'
+          + 'The shell also owns the landmarks, with one main per view, so the regions are props '
+          + 'and not children a caller arranges. Collapsing the sidebar removes it from the '
+          + 'accessibility tree too. A sidebar that is visually gone but still focusable sends a '
+          + 'keyboard user into links they cannot see.\n\n'
+          + 'The app bar takes its elevation on scroll, not at rest. It reads one boolean from a '
+          + 'passive scroll listener on the shell\'s content region, which scrolls beneath it.',
       },
     },
   },
@@ -66,7 +64,7 @@ export const Shell: Story = {
       >
         <Stack gap="lg">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => (
-            <Card key={n} aria-label={`Section ${n}`}>Section {n} — scroll to see the bar earn its elevation.</Card>
+            <Card key={n} aria-label={`Section ${n}`}>Section {n}. Scroll to see the bar take its elevation.</Card>
           ))}
         </Stack>
       </AppShell>
@@ -74,8 +72,8 @@ export const Shell: Story = {
   },
 };
 
-/** The handle is a separator with a value, so the size is announced as it changes
- *  — and the arrow keys move it, because pointer dragging is never the only route. */
+/** The handle is a separator with a value, so the size is announced as it changes.
+ *  The arrow keys move it, because pointer dragging is never the only route. */
 export const Resizing: Story = {
   render: () => (
     <div style={{ height: '320px' /* crystal-allow-literal: story box, so the split has somewhere to be */ }}>

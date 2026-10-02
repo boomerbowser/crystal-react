@@ -18,8 +18,8 @@ describe('SegmentedControl', () => {
   });
 
   /* Radio group semantics, never a tablist. A control that borrows tab semantics
-     announces its options as tabs, and a reader then expects a panel to change —
-     a promise the control did not make. */
+     announces its options as tabs, and a reader then expects a panel to change,
+     which this control does not do. */
   it('is a radio group and never uses aria-selected', () => {
     renderWithCrystal(<SegmentedControl label="Appearance" options={options} defaultValue="light" />);
     expect(screen.getByRole('radiogroup', { name: /Appearance/ })).toBeInTheDocument();

@@ -6,24 +6,19 @@
  * close, Escape handling, scroll locking and `aria-modal`. Crystal owns the
  * materials and the movement.
  *
- * The material assignment is the part worth stating, because it is easy to get
- * backwards: the surface is **Haze**, not Resin. Resin is the floating control
- * plane; a dialog is content to be read, so it is an 80% feathered content fill,
- * and what separates it from the page is the Mirage scrim beneath rather than
- * elevation above.
+ * The surface is Haze, not Resin. Resin is the floating control plane. A dialog
+ * is content to be read, so it is an 80% feathered content fill, and the Mirage
+ * scrim beneath it separates it from the page. It has no elevation above.
  *
- * The body scrolls, not the surface. A dialog that overflows on a phone was the
- * defect Meridian reported from the deployed preview, and a surface that both
- * carries a material and scrolls cannot take the edge fade — a mask dissolves the
- * element's own fill and border along with its content. Keeping the title out of
- * the scroller is the better behaviour regardless: context that scrolls away is
- * context lost.
+ * The body scrolls and the surface does not, so a dialog that overflows on a
+ * phone still works. A surface that both carries a material and scrolls cannot
+ * take the edge fade, because the mask dissolves the element's own fill and
+ * border along with its content. The title stays out of the scroller so it
+ * remains visible.
  *
- * Exit motion is why this uses `AnimatePresence`. Without it a closing dialog
- * unmounts immediately and its dismissal never plays — the animation and the
- * element race, and the element wins. `AnimatePresence` holds the subtree mounted
- * until the exit settles, which is the whole reason the React binding is better
- * here than a hand-rolled one.
+ * `AnimatePresence` is there for the exit motion. Without it a closing dialog
+ * unmounts immediately and its dismissal never plays. `AnimatePresence` keeps the
+ * subtree mounted until the exit settles.
  */
 import { useId, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -54,18 +49,17 @@ export interface DialogProps extends Omit<ModalOverlayProps,
    */
   isDismissable?: boolean;
   /**
-   * `alertdialog` for a dialog that interrupts to ask something that cannot wait
-   * — unsaved work, a destructive confirmation — so a screen reader says it as
-   * an alert as well as moving into it.
+   * `alertdialog` for a dialog that interrupts to ask something that cannot
+   * wait, such as unsaved work or a destructive confirmation. A screen reader
+   * then announces it as an alert as well as moving into it.
    */
   role?: 'dialog' | 'alertdialog';
 }
 
 /* React's DOM `onAnimationStart` event and Motion's lifecycle callback of the
-   same name collide, and under `exactOptionalPropertyTypes` that is a hard error
-   rather than a merge. Dropping the DOM event from the wrapped surface is the
-   narrow fix: an overlay has no use for CSS animation events, and Motion's
-   callback is the one a caller would actually reach for. */
+   same name collide, and under `exactOptionalPropertyTypes` the collision is a
+   type error. The DOM events are dropped from the wrapped surface. An overlay has
+   no use for CSS animation events, and a caller wants Motion's callback. */
 type OverlayProps = Omit<ModalOverlayProps, 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'>;
 const MotionOverlay = motion.create(
   ModalOverlay as React.ForwardRefExoticComponent<OverlayProps & React.RefAttributes<HTMLDivElement>>,
@@ -77,13 +71,12 @@ const MotionDialog = motion.create(
 
 export function Dialog({ title, children, className, role = 'dialog', ...props }: DialogProps): React.JSX.Element {
   const titleId = useId();
-  /* The catalogue gives a dialog three movements and until now it played none of
-     them: `mirage` and `mirage-out` are the scrim's wash — the chromatic
-     diffusion revealing from an edge and withdrawing toward the opposite one —
-     and `dismiss` is the surface's departure. A dialog is anchored to the page
-     rather than floating above it, so its dismissal fades rather than falls. The
-     Haze surface has no arrival of its own: its signature is paint, not
-     movement, and the scrim's reveal is what brings it in. */
+  /* The catalogue gives a dialog three movements. `mirage` and `mirage-out` are
+     the scrim's wash, the chromatic diffusion revealing from an edge and
+     withdrawing toward the opposite one. `dismiss` is the surface's departure. A
+     dialog is anchored to the page, so its dismissal fades and does not fall.
+     The Haze surface has no arrival of its own. It is defined by its paint, and
+     the scrim's reveal brings it in. */
   const wash = usePresetMotion('mirage', 'mirage-out', { active: props.isOpen === true });
   const dismissal = usePresetMotion(null, 'dismiss', { anchored: true, active: props.isOpen === true });
 
@@ -106,14 +99,14 @@ export function Dialog({ title, children, className, role = 'dialog', ...props }
               <Heading slot="title" id={titleId} className={cx(styles['title'])}>
                 {title}
               </Heading>
-              {/* A dialog is a reading surface, so its scrollbar is the Frost one —
-                  and it is on the body rather than the surface, because the
-                  surface is what carries the material. */}
+              {/* A dialog is a reading surface, so its scrollbar is the Frost one.
+                  It is on the body and not the surface, because the surface
+                  carries the material. */}
               <ScrollArea variant="frost" className="cr-dialog-body">
-                {/* A dialog is Haze, so anything opened from inside it is opening
-                    on top of Haze and recesses rather than floating. Resin never
-                    contains Resin, and the DOM cannot say so — an overlay is
-                    portalled to `body` and loses its nesting on the way. */}
+                {/* A dialog is Haze, so anything opened from inside it opens on
+                    top of Haze and recesses instead of floating. Resin never
+                    contains Resin. The DOM cannot express this, because an
+                    overlay is portalled to `body` and loses its nesting. */}
                 <SurfaceProvider surface="haze">{children}</SurfaceProvider>
               </ScrollArea>
             </MotionDialog>

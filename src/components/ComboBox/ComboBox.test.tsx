@@ -15,9 +15,8 @@ describe('ComboBox', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The requirement that makes this hard to build and easy to take: focus stays
-     in the text field and the highlighted row is named by aria-activedescendant.
-     Every implementation that moves focus into the list breaks typing. */
+  /* Focus stays in the text field, and the highlighted row is named by
+     aria-activedescendant. Moving focus into the list breaks typing. */
   it('never moves focus into the list', async () => {
     renderWithCrystal(<ComboBox label="Palette" options={options} />);
     const input = screen.getByRole('combobox', { name: 'Palette' });
@@ -29,18 +28,17 @@ describe('ComboBox', () => {
     expect(input.getAttribute('aria-expanded')).toBe('true');
   });
 
-  /* A list that shows nothing is indistinguishable from one still thinking, and
-     both from a broken field. Each says which it is, in text. */
+  /* A list that shows nothing cannot be told apart from one still loading, or
+     from a broken field. Each state says which it is, in text. */
   it('says when nothing matches', async () => {
     renderWithCrystal(<ComboBox label="Palette" options={options} emptyMessage="No palettes" />);
     await userEvent.type(screen.getByRole('combobox', { name: 'Palette' }), 'zzz');
     expect(screen.getByText('No palettes')).toBeInTheDocument();
   });
 
-  /* The whole subject of the component. The first version passed `items`
-     unconditionally, which means React Aria treats the collection as the
-     product's and filters nothing — a combobox that showed every option however
-     much you typed. */
+  /* Filtering is the component's main job. Passing `items` makes React Aria
+     treat the collection as the product's and filter nothing, so every option
+     would show however much was typed. */
   it('filters as it is typed', async () => {
     renderWithCrystal(<ComboBox label="Palette" options={options} />);
     await userEvent.type(screen.getByRole('combobox', { name: 'Palette' }), 'Har');
@@ -58,8 +56,7 @@ describe('ComboBox', () => {
 });
 
 describe('Autocomplete', () => {
-  /* The difference from a combobox is what the product is promising: here the
-     text is the value and the list is a shortcut. */
+  /* Unlike a combobox, here the text is the value and the list is a shortcut. */
   it('keeps whatever was typed', async () => {
     renderWithCrystal(<Autocomplete label="City" options={options} />);
     const input = screen.getByRole('combobox', { name: 'City' }) as HTMLInputElement;

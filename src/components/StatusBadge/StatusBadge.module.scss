@@ -1,41 +1,35 @@
 @use '../../styles/tokens' as *;
 
-/* StatusBadge — a Resin pill with a tinted well.
+/* StatusBadge. A Resin pill with a tinted well.
  *
- * The colour distribution is the whole design, and it is easy to get backwards.
- * Crystal's `.cr-status` puts the semantic pair on the **well** and leaves the
- * pill itself Resin with ordinary text. That is what "never a coloured perimeter
- * stroke" and "the word carries the meaning" look like when you render them — a
- * status-coloured pill would make the word decoration on a coloured ground.
+ * Crystal's `.cr-status` puts the semantic pair on the well and leaves the pill
+ * itself Resin with ordinary text. That is how "never a coloured perimeter
+ * stroke" and "the word carries the meaning" render. A status-coloured pill
+ * would make the word decoration on a coloured ground.
  *
- * R-19, swept, and this was the clearest case in the library. Everything above
- * was written here as a second copy of `span.cr-status`: the 18px radius, the
- * 18px inline padding, the 36px floor and the 7px gap, all four as literals with
- * a `crystal-allow-literal` exemption apiece because "Crystal publishes these as
- * rules rather than as tokens". They did not need to be tokens. The rules were
- * always reachable — by wearing the class. The four exemptions go with them, and
- * so does `status-pairs`, which was identical to Crystal's own
- * `[data-status]` rules declaration for declaration.
+ * The 18px radius, the 18px inline padding, the 36px floor and the 7px gap come
+ * from wearing `span.cr-status`, as do the status pairs from Crystal's own
+ * `[data-status]` rules (R-19). "Crystal publishes these as rules rather than as
+ * tokens", and the class reaches them, so none is restated here as a literal.
  *
  * Measured against a planted `.cr-status`, the pill agrees on radius, padding,
  * floor, gap, background, ink, weight, size and display.
  *
- * The word is bare text now rather than a span, and that is required rather than
- * tidying: Crystal's well is `span.cr-status > span`, so a span around the word
- * is painted as a second 24px circle in the status colour. Planting Crystal's
- * own markup with two spans is what showed it.
+ * The word is bare text rather than a span. Crystal's well is
+ * `span.cr-status > span`, so a span around the word is painted as a second 24px
+ * circle in the status colour.
  */
 
 .statusBadge {
-  /* A status pill is one line. It was the word's span that held this, and the
-     word no longer has one. */
+  /* A status pill is one line. The word has no span of its own to hold this, so
+     the pill holds it. */
   white-space: nowrap;
 }
 
 /* Neutral is the absence of a status rather than a fifth one, so it takes the
    ordinary surface pair. Crystal publishes four, and this is the one that is not
-   among them. It also renders no symbol — a glyph would imply a meaning the
-   state does not have. */
+   among them. It also renders no symbol, because a glyph would imply a meaning
+   the state does not have. */
 .statusBadge[data-status='neutral'] {
   --status-surface: var(--cr-surface-alt);
   --status-ink: var(--cr-text);

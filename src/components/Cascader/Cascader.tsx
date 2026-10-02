@@ -2,20 +2,21 @@
 
 /* Cascader.
  *
- * Progressive columns narrowing a hierarchical choice — country, then region,
- * then city. Each column is a real listbox, which is what makes the arrow keys
- * work within a level and the whole thing reachable without a pointer.
+ * Progressive columns narrow a hierarchical choice, such as country, then
+ * region, then city. Each column is a real listbox, so the arrow keys work within a level and
+ * the whole control is reachable without a pointer.
  *
- * **The composed value is announced as a path.** That is the catalogue's
- * requirement and the reason this is not simply three selects: the answer is
+ * The composed value is announced as a path. The catalogue requires it, and it
+ * is why this is not three separate selects. The answer is
  * "United Kingdom / Scotland / Edinburgh", and a reader who hears only
  * "Edinburgh" has lost the part that disambiguates it. The trigger shows the
  * path and announces the path.
  *
- * A branch says it is one. An option that opens another column and an option that
- * is the answer look identical without a marker, and a reader then cannot tell
- * whether choosing it finishes or continues — so a branch carries a chevron and
- * `aria-haspopup`.
+ * A branch is marked as one. Without a marker, an option that opens another
+ * column looks the same as an option that is the answer, and a reader cannot
+ * tell whether choosing it finishes or continues. So a branch carries a chevron,
+ * hidden from assistive technology, and visually hidden text saying it opens a
+ * further list.
  */
 import { useId, useState, type ReactNode } from 'react';
 import {
@@ -48,7 +49,7 @@ export interface CascaderNode {
 
 export interface CascaderProps {
   label: ReactNode;
-  /** The hierarchy. Lazy loading is the product's — pass a deeper tree when it arrives. */
+  /** The hierarchy. Lazy loading is the product's job. Pass a deeper tree when it arrives. */
   options: readonly CascaderNode[];
   /** The chosen path, outermost first. */
   value?: readonly string[];
@@ -60,9 +61,9 @@ export interface CascaderProps {
   /** What separates the levels when the path is shown and announced. */
   separator?: string;
   /**
-   * What each column is a list *of* — `['Country', 'Region', 'City']`. Only the
-   * product knows this; without it a column is named after the option it hangs
-   * from, which is better than its depth but less precise.
+   * What each column is a list of, such as `['Country', 'Region', 'City']`. Only
+   * the product knows this. Without it, a column is named after the option it
+   * hangs from, which is less precise.
    */
   columnLabels?: readonly string[];
   isDisabled?: boolean;
@@ -110,13 +111,13 @@ export function Cascader({
 
   const columns = childrenAt(options, path);
   const chosen = labelsFor(options, path);
-  /* The path, not the leaf. "Edinburgh" alone has lost what disambiguates it. */
+  /* Show the whole path. "Edinburgh" alone loses what disambiguates it. */
   const shown = chosen.join(separator);
 
-  /* Columns were named "Top level", "Level 2", "Level 3" — a reader arriving in
-     the third column learned its position and not its subject. Failing a name
-     from the caller, a column is named after the option it hangs from, so moving
-     into the children of "Scotland" announces "Scotland" and not "Level 2". */
+  /* A column's name gives its subject. Without a name from the caller, a column
+     is named after the option it hangs from, so moving into the children of
+     "Scotland" announces "Scotland". A depth name such as "Level 2" is the last
+     fallback. */
   const columnName = (depth: number): string => columnLabels?.[depth]
     ?? (depth === 0
       ? (typeof label === 'string' ? label : 'Options')
@@ -164,12 +165,11 @@ export function Cascader({
                       className={cx(styles['option'])}
                     >
                       <span>{node.label}</span>
-                      {/* A branch says it opens something, in the name rather
-                          than as an attribute: without it a reader cannot tell
-                          whether choosing finishes or continues. It is text
-                          because React Aria's collection items do not forward
-                          arbitrary ARIA attributes, and a silent chevron is a
-                          picture of a promise. */}
+                      {/* A branch says in its name that it opens something, so
+                          a reader can tell whether choosing finishes or
+                          continues. It is text because React Aria's collection
+                          items do not forward arbitrary ARIA attributes, and
+                          the chevron is hidden from assistive technology. */}
                       {isBranch ? (
                         <>
                           <VisuallyHidden as="span">, opens a further list</VisuallyHidden>

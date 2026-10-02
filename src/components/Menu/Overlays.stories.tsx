@@ -11,25 +11,24 @@ import { Text } from '../Text/Text.js';
 
 const meta = {
   title: 'Overlays/Anchored surfaces',
-  /* Without this docgen has nothing to read and Storybook generates no
-     controls at all — the message Meridian screenshotted. This file shows
-     several components together; the one named here is its subject, and the
-     others are the context it is normally seen in. */
+  /* Without this, docgen has nothing to read and Storybook generates no
+     controls. This file shows several components together. The one named here
+     is its subject, and the others are the context it is normally seen in. */
   component: Menu,
   parameters: {
     docs: {
       description: {
         component:
           '**Resin never contains Resin.** A menu opened from the page floats above it and is Resin. '
-          + 'The same menu opened inside a dialog is floating above Haze, and a second pane of the same '
-          + 'glass reads as neither pane — so it recesses into Haze instead.\n\n'
+          + 'The same menu opened inside a dialog floats above Haze, and a second pane of the same glass '
+          + 'reads as neither pane, so it recesses into Haze instead.\n\n'
           + 'The decision is made in React, not in CSS, because the DOM cannot make it: every overlay is '
           + 'portalled to a container on `body` and loses its nesting on the way there. A `Dialog` declares '
           + 'the material it presents and an overlay anywhere inside it reads that through context, which '
-          + 'follows the element tree rather than the document.\n\n'
+          + 'follows the element tree instead of the document.\n\n'
           + 'The arrow is a rotated square carrying the overlay\'s own material, not an SVG filled with its '
-          + 'colour: a diffusing surface and a flat triangle of the same nominal fill do not match, and the '
-          + 'mismatch lands exactly where the eye is looking.',
+          + 'colour. A diffusing surface and a flat triangle of the same nominal fill do not match, and the '
+          + 'arrow sits where the eye is looking.',
       },
     },
   },
@@ -114,7 +113,7 @@ export const InsideADialog: Story = {
   },
 };
 
-/** Right-click, or Shift+F10 — the keyboard route is not optional. */
+/** Right-click, or Shift+F10. The keyboard route is required. */
 export const OnRightClick: Story = {
   render: () => (
     <ContextMenu menu={(anchor) => (

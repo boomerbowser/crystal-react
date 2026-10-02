@@ -1,18 +1,16 @@
 'use client';
 
-/* CalendarHeatmap — daily values across weeks and months.
+/* CalendarHeatmap: daily values across weeks and months.
  *
  * "Every cell states its date and value." The date matters more here than the
- * value: a grid of squares with no axis is unreadable by position alone — a
- * reader cannot count "third column, fifth row" back to a Tuesday in March — so
- * the date is written into every cell's label rather than inferred from where it
- * sits. That is also why a day with no measurement says so in words instead of
- * being a lighter square.
+ * value. A grid of squares with no axis cannot be read by position alone (a
+ * reader cannot count "third column, fifth row" back to a Tuesday in March), so
+ * the date is written into every cell's label. For the same reason, a day with
+ * no measurement says so in words instead of being a lighter square.
  *
- * Weeks run down the columns and months label them along the top, which is the
- * arrangement every calendar heatmap uses and is worth stating as a decision: a
- * year is 53 columns of 7, and the alternative — 7 columns of 53 — is a tall
- * strip nobody can compare across.
+ * Weeks run down the columns and months label them along the top, as in every
+ * calendar heatmap. A year is 53 columns of 7. The alternative, 7 columns of 53,
+ * is a tall strip that cannot be compared across.
  *
  * The scale, the buckets and the contrast floor are Crystal's, the same ones the
  * heatmap uses. There is one ramp in the system, not one per chart.
@@ -45,9 +43,9 @@ export interface CalendarHeatmapProps extends Omit<ChartSurfaceProps, 'children'
 }
 
 /* The largest a day is drawn. A year is 53 columns, and a cell that grew to fill
-   a wide container would make a calendar of squares into a calendar of tiles —
-   the shape a reader recognises is the small one. Cells shrink below this to fit;
-   they never grow past it. */
+   a wide container would turn a calendar of small squares into a calendar of
+   tiles, which a reader does not recognise. Cells shrink below this to fit and
+   never grow past it. */
 const CELL = 14;
 
 export function CalendarHeatmap({
@@ -122,10 +120,10 @@ export function CalendarHeatmap({
                       y={inner.y + day.row * (side + gap)}
                       width={side}
                       height={side}
-                      /* Just off square. A day is a mark rather than a control,
-                         so it takes none of Crystal's action geometry; this is
-                         the smallest radius that stops a 14px square reading as
-                         a pixel. */
+                      /* Just off square. A day is a mark, not a control, so it
+                         takes none of Crystal's action geometry. This is the
+                         smallest radius that stops a 14px square reading as a
+                         pixel. */
                       rx={2}
                     />
                   </g>
@@ -151,7 +149,7 @@ export function place(days: readonly CalendarDay[], weekStart: number): PlacedDa
   if (!first) return [];
   const start = new Date(`${first.date}T00:00:00Z`);
   /* Back to the start of that day's week, so the first column is a whole week
-     with the days before the range simply absent rather than shifted. */
+     and the days before the range are absent, not shifted. */
   const offset = (start.getUTCDay() - weekStart + 7) % 7;
   return days.map((day) => {
     const at = new Date(`${day.date}T00:00:00Z`);

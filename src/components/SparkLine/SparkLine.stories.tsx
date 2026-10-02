@@ -8,18 +8,17 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Needs a text summary beside it; it is never the only carrier of the value." That is '
-          + 'the API here rather than advice: `summary` is required and it is rendered. A spark '
-          + 'line has no axes, no labels and no scale — it shows a *shape*, and a shape means '
-          + 'nothing without a number beside it. Implementations that make the summary optional '
-          + 'end up shipping the chart without it.\n\n'
+          '"Needs a text summary beside it; it is never the only carrier of the value." The API '
+          + 'enforces this: `summary` is required and it is rendered. A spark line has no axes, '
+          + 'no labels and no scale. It shows only a shape, and a shape means nothing without a '
+          + 'number beside it. Implementations that make the summary optional end up shipping '
+          + 'the chart without it.\n\n'
           + 'It is the one chart in the slice that is not a `ChartSurface`: no caption, no '
           + 'legend, no plot fill, no disclosure. A spark line is a word in somebody else\'s '
           + 'sentence, and giving it a figure and a table would turn a table row holding six of '
-          + 'them into six figures and six tables. The summary *is* the text equivalent.\n\n'
-          + '"Stroke weight at small size" is Crystal\'s chart stroke, unchanged. Thinning it is '
-          + 'the obvious adjustment and the wrong one: the line is already twenty pixels tall, '
-          + 'and a thinner one disappears on a low-contrast surface.',
+          + 'them into six figures and six tables. The summary is the text equivalent.\n\n'
+          + '"Stroke weight at small size" is Crystal\'s chart stroke, unchanged. The line is '
+          + 'already twenty pixels tall, and a thinner one disappears on a low-contrast surface.',
       },
     },
   },
@@ -73,8 +72,7 @@ export const Comparable: Story = {
   ),
 };
 
-/** Flat. There is no range to scale into, so it draws down the middle — which is
- *  what flat looks like. */
+/** Flat. There is no range to scale into, so it draws down the middle. */
 export const Flat: Story = {
   args: { values: [5, 5, 5, 5, 5], summary: 'No change' },
 };

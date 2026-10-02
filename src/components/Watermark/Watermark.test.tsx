@@ -9,14 +9,13 @@ describe('Watermark', () => {
       <Watermark text="Confidential"><p>Body text</p></Watermark>,
     );
     /* The mark is a pseudo-element, so it is not in the accessibility tree at
-       all — there is nothing to hide and nothing to read. */
+       all. There is nothing to hide and nothing to read. */
     expect(screen.queryByText('Confidential')).toBeNull();
     await expectNoAxeViolations(container);
   });
 
-  /* Past a few percent the mark competes with body text, and text read through a
-     pattern is text whose contrast ratio no longer means what it says. It is a
-     ceiling rather than a suggestion. */
+  /* Past a few percent the mark competes with body text, and the contrast ratio
+     of text read through a pattern is no longer accurate. The limit is enforced. */
   it('clamps the opacity rather than trusting the caller', () => {
     renderWithCrystal(<Watermark text="Draft" opacity={0.9} data-testid="w">x</Watermark>);
     const value = Number(screen.getByTestId('w').style.getPropertyValue('--cr-watermark-opacity'));

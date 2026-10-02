@@ -33,7 +33,7 @@ describe('NotificationCentre', () => {
     expect(screen.getByText('2 unread')).toBeInTheDocument();
   });
 
-  /* The opinion, half one: the count is said when it changes, not on load. */
+  /* First half of the rule: the count is said when it changes, and not on load. */
   it('says the unread count when it changes, and not on load', async () => {
     renderWithCrystal(<Harness />);
     expect(screen.getByRole('status')).toHaveTextContent('');
@@ -41,7 +41,7 @@ describe('NotificationCentre', () => {
     await waitFor(() => { expect(screen.getByText('1 unread')).toBeInTheDocument(); });
   });
 
-  /* Half two: the undo is a control that stays, not a toast that leaves. */
+  /* Second half: the undo is a control that stays on screen. */
   it('keeps an undo on screen after marking, and undoing restores what was marked', async () => {
     const onMarkUnread = vi.fn();
     renderWithCrystal(<Harness onMarkUnread={onMarkUnread} />);

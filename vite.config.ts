@@ -20,27 +20,23 @@ export default defineConfig({
   build: {
     lib: {
       /* Two entry points. Blocks ship from their own (`@crystal-ui/react/blocks`),
-         because a block carries a different promise from a component — a
-         starting point products are expected to fork, not a stable API (§4.2) —
-         and a product should be able to see which one it is importing. The main
-         entry exports them too, so adding this broke no import. */
+         because a block is a starting point products are expected to fork, not
+         a stable API (§4.2), and a product should be able to see which kind it
+         is importing. The main entry exports blocks too. */
       entry: { index: resolve(here, 'src/index.ts'), blocks: resolve(here, 'src/blocks.ts') },
       formats: ['es', 'cjs'],
       fileName: (format, name) => `${name}.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
       /* Everything the consumer resolves themselves. `@crystal-ui/core` is
-         external on principle, not only for size: CONTRACT §1 says a library
-         consumes Crystal's generated values rather than carrying a copy, and
-         bundling it would inline a second copy of the token set that could then
-         drift from the installed one.
+         external because CONTRACT §1 says a library consumes Crystal's generated
+         values rather than carrying a copy; bundling it would inline a second
+         copy of the token set that could drift from the installed one.
 
-         The `d3-*` modules and their own dependencies are here for the ordinary
-         reason: they are dependencies, a consumer installs them once, and a copy
-         inlined here would be a second one beside whatever else in the
-         application already uses them. `check-bundle.mjs` caught them the first
-         time the charts were built, which is the third dependency that list has
-         been missing and the reason the check exists. */
+         The `d3-*` modules and their own dependencies are dependencies that a
+         consumer installs once, and a copy inlined here would sit beside
+         whatever else in the application already uses them. `check-bundle.mjs`
+         fails when a dependency is missing from this list. */
       external: (id) => /^(react|react-dom|react\/|react-dom\/|react-aria|react-aria-components|react-stately|@react-|@internationalized\/|@crystal-ui\/core|motion|motion-dom|motion-utils|qrcode\.react|react-imask|imask|d3-[a-z]+|internmap|delaunator|robust-predicates)/.test(id),
       output: {
         preserveModules: true,

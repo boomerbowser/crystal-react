@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
-/* Truncate — clamped to a line count, with a way back.
+/* Truncate clamps text to a line count, with a control to expand it.
  *
- * `-webkit-line-clamp` is the only mechanism that clamps by lines rather than by
- * height, and it is supported everywhere despite the prefix. There is no fade:
- * a gradient over the last line makes the final words harder to read at the
- * moment a reader most wants them, and the ellipsis already says there is more.
+ * `-webkit-line-clamp` is the only mechanism that clamps by lines instead of by
+ * height, and it is supported everywhere despite the prefix. There is no fade. A
+ * gradient over the last line makes the final words harder to read, and the
+ * ellipsis already says there is more.
  */
 
 .clamp {

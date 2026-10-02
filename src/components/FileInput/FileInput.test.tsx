@@ -7,7 +7,7 @@ describe('FileInput', () => {
   it('has no accessibility violations and opens the platform picker', async () => {
     const { container } = renderWithCrystal(<FileInput label="Attachment" />);
     expect(screen.getByRole('button', { name: 'Choose a file' })).toBeInTheDocument();
-    /* A real input underneath, so the picker is the system's — with its recent
+    /* A real input underneath, so the picker is the system's, with its recent
        files, its search and its own accessibility. */
     expect(container.querySelector('input[type="file"]')).not.toBeNull();
     await expectNoAxeViolations(container);
@@ -24,8 +24,8 @@ describe('DropZone', () => {
 });
 
 describe('Upload', () => {
-  /* A bar alone says "something is happening"; the number says how much, and it
-     is the only half a screen reader can read. */
+  /* A bar alone says "something is happening". The number says how much, and a
+     screen reader can read only the number. */
   it('reports progress as a number, not only a bar', () => {
     renderWithCrystal(
       <Upload
@@ -52,10 +52,9 @@ describe('Upload', () => {
     expect(screen.getByRole('alert').textContent).toContain('Too large');
   });
 
-  /* The drop surface and the list used to be assembled by rendering a whole
-     second chooser with its label blanked, which duplicated the button, the
-     description and the error — the last of those announced twice, because both
-     copies carried `role="alert"`. */
+  /* Rendering a whole second chooser with its label blanked would duplicate the
+     button, the description and the error. The error would be announced twice,
+     because both copies carry `role="alert"`. */
   it('gives a drop zone exactly one chooser, one description and one error', () => {
     renderWithCrystal(
       <UploadZone
@@ -68,7 +67,7 @@ describe('Upload', () => {
     expect(screen.getAllByRole('button', { name: 'Choose a file' })).toHaveLength(1);
     expect(screen.getAllByText('PDF or PNG, up to 10 MB')).toHaveLength(1);
     expect(screen.getAllByRole('alert')).toHaveLength(1);
-    /* And no empty label left behind by the old composition. */
+    /* And no empty label is left in the tree. */
     const labels = Array.from(document.querySelectorAll('span'))
       .filter((node) => node.className.includes('label'));
     expect(labels.every((node) => node.textContent !== '')).toBe(true);

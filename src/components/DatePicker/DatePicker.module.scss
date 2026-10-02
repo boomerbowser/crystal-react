@@ -3,10 +3,10 @@
 
 /* The date and time family.
  *
- * A date field is not a text field with a pattern: it is a row of segments — day,
- * month, year — each of which is its own spin button. That is what makes a date
- * enterable by keyboard in any locale without the person knowing the order, and
- * it is the reason the anatomy here is a group of segments rather than an input.
+ * A date field is a row of segments (day, month, year), each its own spin
+ * button, and not a text field with a pattern. Segments let a person enter a
+ * date by keyboard in any locale without knowing the order, so the anatomy here
+ * is a group of segments and not an input.
  */
 
 .field { @include field.field; }
@@ -28,18 +28,17 @@
   padding-inline: 1px;
   border-radius: $cr-spacing-2xs;
   outline: none;
-  /* A placeholder segment is visibly unset rather than showing a plausible
-     value: "dd" is a question, "01" is an answer nobody gave. */
+  /* A placeholder segment is visibly unset and shows no plausible value. "dd"
+     is a question, and "01" is an answer nobody gave. */
   &[data-placeholder] { color: var(--cr-muted); }
 }
 
 .segment[data-focused] { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
 .shell:focus-within { @include field.focus-ring; }
 /* Two selectors for one state. The shell carries `data-invalid` when this
-   component set it; the field wrapper carries it when React Aria worked it out —
-   a native constraint, or an error a `Form` distributed from a server. Styling
-   only the first meant a field could be announced as invalid and drawn as if it
-   were fine. */
+   component set it. The field wrapper carries it when React Aria worked it out,
+   from a native constraint or an error a `Form` distributed from a server.
+   Both are styled, so a field announced as invalid is also drawn as invalid. */
 .shell[data-invalid],
 .field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
 
@@ -48,17 +47,17 @@
 
 .popover {
   /* The panel is Crystal's `.cr-frost`, which the popover wears: the Frost fill,
-     the rim, the panel shadow and the diffusion. This painted the fill with the
-     float shadow and an edge — Resin's shadow on Frost's fill — and it is gone.
-     The catalogue's popover geometry is the content radius, stated here. */
+     the rim, the panel shadow and the diffusion. Do not add the float shadow
+     here, which is Resin's. The catalogue's popover geometry is the content
+     radius, stated here. */
   padding: var(--cr-space);
   border-radius: var(--cr-radius);
 }
 
-/* The month grid moved to `Calendar`, which is where the catalogue says it
-   belongs — "usable on its own rather than only inside a picker". A picker
-   opens `CalendarBody` inside its popover, which already carries the material,
-   so nothing about the grid is duplicated here. */
+/* The month grid lives in `Calendar`, where the catalogue says it belongs:
+   "usable on its own rather than only inside a picker". A picker opens
+   `CalendarBody` inside its popover, which already carries the material, so
+   nothing about the grid is duplicated here. */
 
 .description, .error { @include field.message; }
 .description { color: var(--cr-muted); }

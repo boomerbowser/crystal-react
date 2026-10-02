@@ -1,4 +1,4 @@
-/* @crystal-ui/react/blocks — composed arrangements that solve a recognisable
+/* @crystal-ui/react/blocks: composed arrangements that solve a recognisable
  * product problem: a dashboard, a checkout, a player, a storefront.
  *
  * A separate entry point because a block carries a different promise from a

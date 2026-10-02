@@ -11,8 +11,8 @@
   color: var(--cr-text);
 }
 
-/* The sentence, at reading size. The average is not a display figure with the
-   count hidden underneath it in grey — both halves are the claim. */
+/* The sentence, at reading size. The average and the count are stated together
+   at the same weight, because both halves are the claim. */
 .headline { margin: 0; font-weight: 750; font-size: var(--cr-text-subheading-size); }
 
 .stars { display: flex; }

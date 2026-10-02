@@ -8,17 +8,16 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Navigable as a tree, with each node stating its share." Navigable as a tree is the '
-          + 'demanding half: the map shows one level at a time, `Enter` descends into a node '
-          + 'with children, `Escape` comes back up, and a breadcrumb says where you are. '
-          + 'Drawing every depth at once is the usual implementation and it is not navigation — '
-          + 'it is a picture of a tree, and a reader who cannot see it is given a flat list of '
-          + 'leaves with no idea which branch they are on.\n\n'
-          + '"Each node states its share" of its parent *and* of the whole, because in a nested '
+          '"Navigable as a tree, with each node stating its share." The map shows one level at '
+          + 'a time, `Enter` descends into a node with children, `Escape` comes back up, and a '
+          + 'breadcrumb says where you are. Drawing every depth at once is the usual '
+          + 'implementation, but it only pictures the tree: a reader who cannot see it is given '
+          + 'a flat list of leaves with no idea which branch they are on.\n\n'
+          + '"Each node states its share" of its parent and of the whole, because in a nested '
           + 'structure those are different numbers: a node deep in a branch can be most of its '
           + 'parent and almost none of the total.\n\n'
-          + '"Labels drop out rather than overflow" — a label that does not fit is not drawn, '
-          + 'never truncated to an ellipsis and never allowed to spill over the rectangle '
+          + '"Labels drop out rather than overflow." A label that does not fit is not drawn. It '
+          + 'is never truncated to an ellipsis and never allowed to spill over the rectangle '
           + 'beside it. The name is on the mark and in the table either way.',
       },
     },
@@ -67,7 +66,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** One level deep, where every node is a leaf and there is nothing to descend
- *  into — the breadcrumb is then the only way the level is stated. */
+ *  into. The breadcrumb is then the only place the level is stated. */
 export const Flat: Story = {
   args: {
     label: 'Spend by category',

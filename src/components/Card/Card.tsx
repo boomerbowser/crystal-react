@@ -2,9 +2,9 @@
 
 /* Card.
  *
- * A surface, not a control. It has no press behaviour and no motion of its own —
- * Crystal's catalogue assigns Card no recipe, and inventing one here would be a
- * library adding motion the design system did not specify.
+ * A surface, not a control. It has no press behaviour and no motion of its own.
+ * Crystal's catalogue assigns Card no recipe, and the library must not add
+ * motion the design system did not specify.
  *
  * It renders a `section` when given an accessible name and a `div` otherwise,
  * because a landmark without a name is noise in a screen reader's landmark list.
@@ -19,11 +19,10 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
   /** Renders the card as a named region. Without a name it stays a plain div.
    *
-   * Typed `| undefined` rather than merely optional: under
-   * `exactOptionalPropertyTypes` a narrower re-declaration of a prop
-   * `HTMLAttributes` already types as `string | undefined` makes the whole
-   * interface unassignable from one, which is what a wrapper like `StatCard`
-   * does when it spreads its own props through. */
+   * Typed `| undefined` as well as optional. Under `exactOptionalPropertyTypes`,
+   * a narrower re-declaration of a prop that `HTMLAttributes` already types as
+   * `string | undefined` makes the whole interface unassignable from one, which
+   * breaks a wrapper like `StatCard` that spreads its own props through. */
   'aria-label'?: string | undefined;
   'aria-labelledby'?: string | undefined;
 }
@@ -37,8 +36,8 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
   const classes = cx(styles['card'], 'cr-haze', className);
 
   /* In a product's `ListPresence`, this arrives with `list-in` when it is
-     added and leaves with `list-out` when it is removed; anywhere else,
-     nothing. */
+     added and leaves with `list-out` when it is removed. Anywhere else it
+     does not move. */
   const scope = useListItemMotion();
   const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
   return (

@@ -1,9 +1,10 @@
 @use '../../styles/tokens' as *;
 
-/* "Resin panel." Crystal's `.cr-resin.panel` (2.2.0): the Resin plane — fill,
-   rim, float shadow, backdrop blur and its two optical layers — at the Frost
-   panel's radius. The shell used the local Resin mixin, which carried the plane
-   and neither optical layer. What is left here is what makes it a window. */
+/* "Resin panel." Crystal's `.cr-resin.panel` (2.2.0) paints the Resin plane
+   (fill, rim, float shadow, backdrop blur and its two optical layers) at the
+   Frost panel's radius. Do not use the local Resin mixin here: it carries the
+   plane without either optical layer. The rules below are what make it a
+   window. */
 .window {
   position: fixed;
   z-index: 3;
@@ -12,14 +13,14 @@
   overflow: hidden;
 }
 
-/* The handle reaches the minimum target: a title bar smaller than 44px is a
-   drag target most pointers miss and most fingers cannot hit at all. */
+/* The handle meets the minimum target. Most pointers miss a title bar smaller
+   than 44px, and most fingers cannot hit it at all. */
 .bar {
 
   display: flex;
   align-items: center;
-  /* It is a `<button>`, so the user-agent's own button styling has to go before
-     Crystal's can show: the rim below is the bar's only border. */
+  /* It is a `<button>`, so the user agent's button styling is removed for
+     Crystal's to show. The rim below is the bar's only border. */
   appearance: none;
   inline-size: 100%;
   border: 0;

@@ -3,16 +3,16 @@
 /* Popover.
  *
  * An anchored surface holding arbitrary content. React Aria owns the positioning,
- * the flipping when there is no room, the dismissal and the focus behaviour;
- * Crystal owns which material it is made of, and that is the interesting part.
+ * the flipping when there is no room, the dismissal and the focus behaviour.
+ * Crystal owns which material it is made of.
  *
- * **A transient overlay is Frost** (Crystal R15e). A popover opened from the
- * page is a panel that opens over content, and it is Frost. The same popover
- * opened inside a dialog or a drawer is opening over a surface that is already a
- * pane, and two panes of diffused glass stacked read as neither — so it recesses
- * into Haze instead. The decision is made in React because the DOM cannot make it:
- * every overlay is portalled to a container on `body` and loses its nesting on
- * the way there. See `src/overlays/surface.tsx`.
+ * A transient overlay is Frost (Crystal R15e). A popover opened from the page
+ * is a panel that opens over content, and it is Frost. The same popover opened
+ * inside a dialog or a drawer opens over a surface that is already a pane, and
+ * two stacked panes of diffused glass read as neither, so it recesses into Haze
+ * instead. The decision is made in React because the DOM cannot make it: every
+ * overlay is portalled to a container on `body` and loses its nesting on the
+ * way there. See `src/overlays/surface.tsx`.
  */
 import type { ReactNode } from 'react';
 import {
@@ -30,7 +30,8 @@ import styles from './Popover.module.scss';
 export interface PopoverProps extends Omit<AriaPopoverProps, 'className' | 'children'> {
   /** The popover's accessible name. Required: a surface focus moves into needs one. */
   label: string;
-  /** Point at the trigger. Off by default — an arrow is a claim about position. */
+  /** Point at the trigger. Off by default, because an arrow is a claim about
+   *  position. */
   hasArrow?: boolean;
   children: ReactNode;
   className?: string;

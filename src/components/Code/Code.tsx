@@ -1,19 +1,18 @@
 'use client';
 
-/* Code — inline or block monospace content.
+/* Code renders inline or block monospace content.
  *
- * "Never feathered, as code must stay exact." That single clause is why Code is
- * the one surface in this slice that is not a Crystal material: Haze feathers its
- * own paint layer, and even with crisp text above it the softened edge around a
- * fragment of syntax reads as imprecision in the thing being quoted. So Code
- * takes a canvas fill and an edge rim, which is the flattest thing Crystal has.
+ * "Never feathered, as code must stay exact." Because of that clause, Code is
+ * the one surface in this slice that is not a Crystal material. Haze feathers
+ * its own paint layer, and even with crisp text above it the softened edge
+ * around a fragment of syntax reads as imprecision in the thing being quoted. So
+ * Code takes a canvas fill and an edge rim, the flattest surface Crystal has.
  *
- * Where this stops, and `CodeBlock` starts: a block here is the typographic
- * primitive — a scrollable, keyboard-reachable `pre` and nothing else. `CodeBlock`
- * is the documented sample, with a filename, a named region and a copy control in
- * a header. `copyable` covers the catalogue's `with-copy` state for a bare block
- * without growing that chrome; if the sample deserves a title, it deserves
- * `CodeBlock`.
+ * A block here is the typographic primitive: a scrollable, keyboard-reachable
+ * `pre` and nothing else. `CodeBlock` is the documented sample, with a filename,
+ * a named region and a copy control in a header. `copyable` covers the
+ * catalogue's `with-copy` state for a bare block without adding that header. A
+ * sample that needs a title should use `CodeBlock`.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -25,7 +24,7 @@ export interface CodeProps extends Omit<HTMLAttributes<HTMLElement>, 'children'>
   children: ReactNode;
   /** Render as a block rather than inside a line of prose. */
   block?: boolean;
-  /** Offer a copy control. Blocks only — an inline fragment has nowhere to put it. */
+  /** Offer a copy control. Blocks only, because an inline fragment has nowhere to put it. */
   copyable?: boolean;
   /** What the copy control says, naming what it copies. */
   copyLabel?: string;
@@ -45,7 +44,8 @@ export const Code = forwardRef<HTMLElement, CodeProps>(function Code(
 
   /* A tab stop, because a block wider than its column scrolls and a scroll
      container with nothing focusable in it cannot be reached without a pointer.
-     The scrollbar is Resin: a compact horizontal scroller is a control plane. */
+     The scrollbar is Resin, because a compact horizontal scroller is a control
+     plane. */
   const pre = (
     <pre
       {...props}

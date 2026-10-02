@@ -16,9 +16,8 @@ describe('Grid', () => {
     expect(cell.style.getPropertyValue('--cr-cell-span-sm')).toBe('12');
   });
 
-  /* A cell with no span must be full width, not narrow. A grid that defaults to
-     a sliver produces a page of slivers the first time somebody forgets a prop;
-     one that defaults to full width produces a readable stack. */
+  /* A cell with no span must be full width, so a forgotten prop produces a
+     readable stack and not a page of slivers. */
   it('declares no span when none is given, so the stylesheet default applies', () => {
     renderWithCrystal(<Grid><Grid.Cell data-testid="c">x</Grid.Cell></Grid>);
     expect(screen.getByTestId('c').style.getPropertyValue('--cr-cell-span')).toBe('');

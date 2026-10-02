@@ -17,8 +17,9 @@ const meta = {
         component:
           '"Variant changes update price and stock together, and say so."\n\n'
           + 'A variant carries its own price and availability, so choosing one changes both in the '
-          + 'same render, and the change is said as one sentence — "Rust: £26.00, low stock". Not on '
-          + 'load: the first variant was shown, not chosen. A variant that is out of stock makes the '
+          + 'same render, and the change is said as one sentence, such as "Rust: £26.00, low stock". '
+          + 'Nothing is said on load, because the first variant was shown, not chosen. A variant that '
+          + 'is out of stock makes the '
           + 'purchase control say so and refuse, from the variant itself.',
       },
     },

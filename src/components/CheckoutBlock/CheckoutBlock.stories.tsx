@@ -45,7 +45,7 @@ const meta = {
           + 'this component."\n\nOne step at a time, as a region named for itself, with the order '
           + 'summary beside it. Errors are summarised at the top of the step and each links to its '
           + 'field. The payment step is `PaymentMethod`, whose only way to take a new card is the '
-          + 'provider’s own element — there is no card field in this block, and no prop that would '
+          + 'provider’s own element. There is no card field in this block, and no prop that would '
           + 'hold one.',
       },
     },

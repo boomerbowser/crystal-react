@@ -1,47 +1,37 @@
 'use client';
 
-/* QuantityStepper — a bounded integer, with both controls reachable.
+/* QuantityStepper: a bounded integer, with both controls reachable.
  *
- * **Why this is not `NumberInput` with a different stylesheet.** The two
- * disagree about one number, and the number is the point. `NumberInput` says of
- * its own chevrons that "each is short so the pair reaches the field's height
- * together; making each 44px would make the field 88px tall", and that is right
- * for a field in a form where the arrow keys are the primary route. The
- * catalogue says of *this* one: "Pill; **both controls reach 44px**." A stepper
- * beside a price in a cart is pressed with a thumb, on a phone, next to a Remove
- * control it must not be mistaken for — so the controls sit side by side and each
- * is a full target. Same primitive underneath, opposite geometry decision, and
- * neither is a stylesheet variant of the other.
+ * It differs from `NumberInput` in the size of its controls. `NumberInput` says
+ * of its own chevrons that "each is short so the pair reaches the field's height
+ * together; making each 44px would make the field 88px tall", which suits a
+ * field in a form where the arrow keys are the primary route. The catalogue says
+ * of this one: "Pill; both controls reach 44px." A stepper beside a price in a
+ * cart is pressed with a thumb, on a phone, next to a Remove control it must not
+ * be mistaken for. The controls sit side by side and each is a full target. The
+ * primitive underneath is the same; the geometry is not a stylesheet variant.
  *
- * **"A typable numeric field … not role=spinbutton."** Crystal 2.2.0's wording,
- * since Meridian ruled on R-22 on 28 September 2026. It used to read "A spin
- * button: the value is typable", and the first half of that was not available to
- * deliver. React Aria's
- * `NumberField` computes the spin-button props and then strips them — `role:
- * null`, `aria-valuenow: null`, `aria-valuemin: null`, `aria-valuemax: null` —
+ * "A typable numeric field … not role=spinbutton." This is Crystal 2.2.0's
+ * wording, after Meridian ruled on R-22 on 28 September 2026. React Aria's
+ * `NumberField` computes the spin-button props and then strips them (`role:
+ * null`, `aria-valuenow: null`, `aria-valuemin: null`, `aria-valuemax: null`),
  * with the reason in its own source comment: "we can't focus a spin button with
  * VO". What ships is a text input with `inputmode="numeric"` and
  * `aria-roledescription="Number field"`, whose value is read as its text.
+ * Meridian ruled for the reachable control, because a role VoiceOver cannot
+ * focus is a regression of the accessible surface. The value is typable and the
+ * arrow keys step.
  *
- * That was a deviation from the catalogue's wording, and it was filed as R-22
- * rather than decided here, because which of the two was wrong was not a call
- * this component got to make quietly. Meridian ruled for the reachable control:
- * a role VoiceOver cannot focus is a regression of the accessible surface, and
- * the catalogue now describes what ships. What was never negotiable is the part
- * the role was there for — the value is typable, and the arrow keys step.
+ * "The bounds are announced when reached." With `aria-valuemin` and
+ * `aria-valuemax` stripped, the live region here is the only thing that conveys
+ * the bounds. Disabling a control shows a bound but does not say it; a reader
+ * who cannot see it grey out would press it again and be told nothing.
  *
- * **"The bounds are announced when reached."** With `aria-valuemin` and
- * `aria-valuemax` stripped, the bounds are on nothing: the live region here is
- * not a nicety over the top of the primitive, it is the only thing that conveys
- * them. Disabling a control shows a bound and does not say it — a reader who
- * cannot see it grey out presses it again and is told nothing at all.
+ * The bound is announced on a change, never on mount. A stepper that opens at
+ * its minimum has not reached anything.
  *
- * Announced on a *change*, never on mount: a stepper that opens at its minimum
- * has not reached anything. Nothing moves at rest, and nothing speaks at rest
- * either.
- *
- * Integers only, by `formatOptions`: the catalogue calls this "a bounded
- * integer", and two and a half of something is a different component's problem.
+ * Integers only, through `formatOptions`: the catalogue calls this "a bounded
+ * integer".
  */
 import { forwardRef, useCallback, useContext, useState, type ReactNode } from 'react';
 import {
@@ -59,9 +49,9 @@ export interface QuantityStepperProps
   /** What is being counted. Required: "2" on its own is not a quantity. */
   label: ReactNode;
   /**
-   * Show the label. Off in a cart row, where the product name beside it is what
-   * the quantity is *of* and a second "Quantity" on every line is noise — the
-   * label is still there, and still the control's accessible name.
+   * Show the label. Off in a cart row, where the product name beside it says
+   * what the quantity is of. The hidden label is still the control's accessible
+   * name.
    */
   showLabel?: boolean;
   /** Said when the smallest value is reached. */
@@ -95,8 +85,7 @@ export const QuantityStepper = forwardRef<HTMLInputElement, QuantityStepperProps
     const [reached, setReached] = useState('');
 
     /* On a change, so a stepper rendered at its minimum has not "reached" it.
-       The catalogue's word is *reached*, and arriving somewhere is not the same
-       as starting there. */
+       The catalogue's word is reached. */
     const change = useCallback((next: number) => {
       onChange?.(next);
       if (maxValue !== undefined && next >= maxValue) {
@@ -122,8 +111,8 @@ export const QuantityStepper = forwardRef<HTMLInputElement, QuantityStepperProps
         <Label className={cx(styles['label'], showLabel ? undefined : styles['hidden'])}>
           {label}
         </Label>
-        {/* A `Group`, which is what carries React Aria's field context to the
-            three controls inside it. */}
+        {/* A `Group` carries React Aria's field context to the three controls
+            inside it. */}
         <Group className={cx(styles['shell'], 'cr-field-shell')}>
           {/* React Aria names these from the field's own label, so a page with
               four steppers does not have four buttons called "One more". */}
@@ -135,19 +124,19 @@ export const QuantityStepper = forwardRef<HTMLInputElement, QuantityStepperProps
             {Plus}
           </Button>
         </Group>
-        {/* Polite: a bound is a fact about what just happened, not an
-            interruption. Rendered always and filled on a change, because a live
-            region that arrives with its text already in it announces nothing. */}
+        {/* Polite, because a bound reports what just happened. Always rendered
+            and filled on a change, because a live region that arrives with its
+            text already in it announces nothing. */}
         <VisuallyHidden role="status">{reached}</VisuallyHidden>
       </NumberField>
     );
   },
 );
 
-/* The quantity, marking a committed change with Crystal's \`slider-step\` — by a
-   step button, an arrow key or a typed value — and not on the render that shows
-   the first quantity. React Aria's number field state is read from its context,
-   so the input moves on the value React Aria committed. */
+/* The quantity. It marks a committed change (from a step button, an arrow key or
+   a typed value) with Crystal's \`slider-step\`, and does not mark the render
+   that shows the first quantity. React Aria's number field state is read from
+   its context, so the input moves on the value React Aria committed. */
 function SteppedInput({ inputRef, className }: {
   inputRef: React.ForwardedRef<HTMLInputElement>;
   className: string;

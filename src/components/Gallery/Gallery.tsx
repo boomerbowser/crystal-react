@@ -1,27 +1,26 @@
 'use client';
 
-/* Gallery — a set of media with a full-screen viewer.
+/* Gallery is a set of media with a full-screen viewer.
  *
  * "The viewer is a dialog: focus is contained, Escape closes, and **arrows move
  * between items with position announced**." The viewer is `Lightbox`, so the
- * first three are React Aria's and are not rebuilt here. What this adds is the
- * set: the thumbnails, moving through it, and saying where in it you are.
+ * first three are React Aria's and are not rebuilt here. This component adds
+ * the set: the thumbnails, moving through them, and saying where in the set
+ * the reader is.
  *
- * **The thumbnails are one tab stop, not one per item.** Twelve photographs are
- * twelve stops between the control before the gallery and the control after it,
- * which is the same argument the charts make about marks — so this is a
- * `listbox` with a roving `tabindex`, arrows move along it and Enter opens what
- * is focused.
+ * The thumbnails are one tab stop, not one per item. Otherwise twelve
+ * photographs would be twelve stops between the control before the gallery
+ * and the control after it, which is the argument the charts make about marks.
+ * This is a `listbox` with a roving `tabindex`. Arrows move along it and Enter
+ * opens what is focused.
  *
- * **Arrows in the viewer move between items; arrows inside a zoomed item pan
- * it.** Those are two different focus positions rather than two meanings for one
- * key — `Lightbox` puts the pan on a scroll container the reader tabs to, which
- * is what leaves the arrows free here.
+ * Arrows in the viewer move between items, and arrows inside a zoomed item pan
+ * it. These are two different focus positions. `Lightbox` puts the pan on a
+ * scroll container the reader tabs to, which leaves the arrows free here.
  *
- * **Closing returns focus to the thumbnail the reader opened** — and, if they
- * moved through the set while it was open, to the one they ended on. Returning
- * to where they started would be returning them to a picture they have since
- * left.
+ * Closing returns focus to the thumbnail the reader opened or, if they moved
+ * through the set while it was open, to the one they ended on, and not to a
+ * picture they have since left.
  */
 import {
   forwardRef, useCallback, useEffect, useRef, useState,
@@ -76,8 +75,8 @@ export const Gallery = forwardRef<HTMLDivElement, GalleryProps>(function Gallery
   const [open, setOpen] = useState(false);
   const thumbs = useRef(new Map<number, HTMLElement>());
 
-  /* Focus follows the roving cursor, but only while the viewer is closed —
-     moving through the set inside the dialog must not pull focus out of it. */
+  /* Focus follows the roving cursor only while the viewer is closed. Moving
+     through the set inside the dialog must not pull focus out of it. */
   useEffect(() => {
     if (open) return;
     const node = thumbs.current.get(active);
@@ -89,18 +88,18 @@ export const Gallery = forwardRef<HTMLDivElement, GalleryProps>(function Gallery
 
   /* Closing returns focus to the thumbnail the reader ended on.
    *
-   * React Aria restores focus to the thumbnail they *opened*, which is the
-   * right default and the wrong answer here: after moving through the set, that
-   * thumbnail is no longer the selected one, so focus would sit on one picture
-   * while the strip's roving cursor sat on another — and the next arrow key
-   * would jump from somewhere the reader is not.
+   * React Aria restores focus to the thumbnail they opened, which is the right
+   * default but wrong here. After moving through the set, that thumbnail is no
+   * longer the selected one, so focus would sit on one picture while the
+   * strip's roving cursor sat on another, and the next arrow key would jump
+   * from somewhere the reader is not.
    *
-   * Claiming it synchronously is not a race with the restoration. React Aria
-   * defers on purpose: it restores inside a `requestAnimationFrame` and only if
-   * focus is still on the body by then, on the reasoning that anything else
-   * means focus "has been purposefully moved elsewhere". This is that move. The
-   * guarantee that focus never lands on the body is still the dependency's;
-   * only the destination is ours. */
+   * Moving focus synchronously does not race the restoration. React Aria
+   * restores inside a `requestAnimationFrame` and only if focus is still on
+   * the body by then, because anything else means focus "has been purposefully
+   * moved elsewhere". This effect is that move. React Aria still guarantees
+   * that focus never lands on the body; this component only chooses the
+   * destination. */
   const wasOpen = useRef(false);
   useEffect(() => {
     const closing = wasOpen.current && !open;
@@ -205,9 +204,9 @@ export const Gallery = forwardRef<HTMLDivElement, GalleryProps>(function Gallery
   );
 });
 
-/* A thumbnail, playing `selection` when it becomes the active picture — by an
-   arrow key, a press, or the viewer moving on — and not on the render that
-   shows the first picture active. */
+/* A thumbnail. It plays `selection` when it becomes the active picture, by an
+   arrow key, a press or the viewer moving on, and not on the render that shows
+   the first picture active. */
 function Thumb({ isSelected, register, ...props }: React.HTMLAttributes<HTMLDivElement> & {
   isSelected: boolean;
   register: (node: HTMLDivElement | null) => void;

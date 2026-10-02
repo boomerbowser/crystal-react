@@ -25,8 +25,8 @@ const meta = {
       description: {
         component:
           '"The recommended plan is stated in words, not only styled."\n\n"Recommended" is a word in the plan\'s '
-          + 'heading, so a reader moving by headings hears "Team, Recommended". Emphasis is Crystal\'s — the one '
-          + 'primary action, label weight and placement — and every plan is the same Haze card. Actions name '
+          + 'heading, so a reader moving by headings hears "Team, Recommended". Emphasis is Crystal\'s (the one '
+          + 'primary action, label weight and placement), and every plan is the same Haze card. Actions name '
           + 'their plan; a missing feature says "Not included".',
       },
     },

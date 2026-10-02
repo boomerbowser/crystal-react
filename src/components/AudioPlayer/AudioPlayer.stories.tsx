@@ -8,14 +8,14 @@ const meta = {
     docs: {
       description: {
         component:
-          '**A real `<audio>` element**, and not as an implementation detail: it is what plays, '
-          + "what the operating system's media keys reach, what a headset's pause button "
-          + 'pauses. Everything drawn here reads its state from that element rather than '
-          + 'keeping a copy — a player that tracked its own `isPlaying` is wrong the first time '
-          + 'anything else touches the media, and plenty does.\n\n'
+          'A real `<audio>` element. It is what plays, '
+          + "what the operating system's media keys reach, and what a headset's pause button "
+          + 'pauses. Everything drawn here reads its state from that element instead of '
+          + 'keeping a copy. A player that tracks its own `isPlaying` goes wrong as soon as '
+          + 'anything else touches the media.\n\n'
           + 'It is handed to the caller through `mediaRef`, because sources, playlists and '
           + "streaming are the product's half and all of them are done on the element.\n\n"
-          + 'The browser\'s own `controls` are off: two sets of controls for one element is two '
+          + 'The browser\'s own `controls` are off. Two sets of controls for one element means two '
           + 'tab stops per action and two places a state can be shown differently.',
       },
     },

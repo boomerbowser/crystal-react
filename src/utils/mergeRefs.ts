@@ -1,7 +1,7 @@
 /* Merge several refs onto one element.
  *
- * Needed wherever a component has both its own ref — a Motion scope, a
- * measurement — and a consumer's forwarded one. Motion's `AnimationScope` types
+ * Needed wherever a component has both its own ref (a Motion scope, a
+ * measurement) and a consumer's forwarded one. Motion's `AnimationScope` types
  * `current` as read-only because it owns the value, so assigning through it needs
  * one narrow cast, kept here rather than repeated at every call site.
  */

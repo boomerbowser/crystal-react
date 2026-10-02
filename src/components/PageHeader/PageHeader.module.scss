@@ -2,8 +2,9 @@
 @use '../../styles/material';
 
 /* "Frost band or inherits." Frost is the default because a page header is chrome
-   above a reading surface, and `inherits` is what `isPlain` asks for: a header
-   inside a panel that is already a material would be a band of Frost on Frost. */
+   above a reading surface. `isPlain` selects `inherits`, for a header inside a
+   panel that is already a material, which would otherwise be a band of Frost on
+   Frost. */
 .header {
   display: grid;
   gap: $cr-spacing-xs;
@@ -26,9 +27,9 @@
 .title { margin: 0; }
 .description { margin: 0; color: var(--cr-muted); }
 
-/* "Actions are pills" — which is Crystal's action geometry, so the actions
-   carry it by being actions rather than by being told to here. What this owns is
-   that they sit together and do not wrap under the title one at a time. */
+/* "Actions are pills". That is Crystal's action geometry, so the actions get it
+   by being actions and this rule does not set it. This rule keeps them together
+   so they do not wrap under the title one at a time. */
 .actions {
   display: flex;
   align-items: center;
@@ -37,8 +38,8 @@
 }
 
 /* Condensed: the band tightens and the description goes. The title, the
-   breadcrumbs and the actions all stay — condensing is the header taking less
-   room, never the header taking things away from the reader. */
+   breadcrumbs and the actions all stay. Condensing saves room and does not take
+   controls away from the reader. */
 .condensed { padding-block: $cr-spacing-xs; }
 .condensed .description { display: none; }
 

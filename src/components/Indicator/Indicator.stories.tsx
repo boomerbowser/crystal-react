@@ -14,11 +14,11 @@ const meta = {
       description: {
         component:
           'Crystal\'s `.cr-indicator`: a small Haze disc attached to a control, carrying a glyph that '
-          + 'its host\'s own state switches — ● on an `aria-current` host, … on an `aria-busy` one, '
+          + 'its host\'s own state switches. It shows ● on an `aria-current` host, … on an `aria-busy` one, '
           + 'and on a field shell ○ at rest, ● focused, * required, ! invalid. It is `aria-hidden` '
           + 'and never a click target: the host already says the state, so a mark that announced '
-          + 'it would say it twice. Shape rather than colour, and there is no selection kind — '
-          + 'selection in Crystal is label weight, with nothing drawn beside the label.',
+          + 'it would say it twice. The state is a shape, not a colour. There is no selection kind, '
+          + 'because selection in Crystal is label weight, with nothing drawn beside the label.',
       },
     },
   },

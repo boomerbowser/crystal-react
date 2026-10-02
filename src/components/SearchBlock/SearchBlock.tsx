@@ -1,28 +1,30 @@
 'use client';
 
-/* SearchBlock — search with suggestions, recent queries and results.
+/* SearchBlock.
+ *
+ * Search with suggestions, recent queries and results.
  *
  * "**A combobox: results are announced by count, and arrow keys move without
  * losing the typed value.**" States: `at-rest`, `open`, `loading`, `empty`,
  * `focus-visible`.
  *
  * The backend and the ranking are the product's. The block owns the field, the
- * list and what is said:
+ * list and the announcements:
  *
- *   - **A combobox that never takes the typed value away.** Focus stays in the
- *     field; the arrow keys move a highlight named by `aria-activedescendant`,
- *     and the text the reader typed stays exactly as typed until they choose a
- *     row. React Aria's combobox does this; the block keeps it by owning the
- *     input's value and never writing a highlighted row into it.
- *   - **Recent queries when there is nothing typed**, as their own labelled
- *     group, so the list is useful before the first keystroke.
- *   - **Counts are said.** React Aria's combobox announces how many
- *     suggestions there are as the list opens and as the number changes; the
- *     block's polite region says "Searching" while the product fetches and how
- *     many results a search found — "12 results for harbour", or that there
- *     were none. The results heading says the same in text.
- *   - **Enter searches for what was typed.** A row is a shortcut to a query,
- *     not the only way to make one; the field sits in a `role="search"` form.
+ *   - The typed value is never taken away. Focus stays in the field. The arrow
+ *     keys move a highlight named by `aria-activedescendant`, and the text the
+ *     reader typed stays exactly as typed until they choose a row. React Aria's
+ *     combobox does this, and the block keeps it by owning the input's value and
+ *     never writing a highlighted row into it.
+ *   - Recent queries appear when nothing is typed, as their own labelled group,
+ *     so the list is useful before the first keystroke.
+ *   - Counts are announced. React Aria's combobox announces how many
+ *     suggestions there are as the list opens and as the number changes. The
+ *     block's polite region says "Searching" while the product fetches, then how
+ *     many results a search found ("12 results for harbour") or that there were
+ *     none. The results heading says the same in text.
+ *   - Enter searches for what was typed. A row is a shortcut to a query, and the
+ *     field sits in a `role="search"` form.
  *
  * Motion is the catalogue's: the suggestions arrive with `menu-in` and leave
  * with `menu-out`; results arrive with `list-in` and leave with `list-out`.
@@ -94,18 +96,18 @@ export function SearchBlock({
   const typed = query.trim() !== '';
   const offering = typed ? suggestions.length : recent.length;
 
-  /* What the block's polite region says: "Searching", and a search's count
-     once it lands. The suggestions' count is React Aria's to say — its
-     combobox announces how many options there are as the list opens and as the
-     number changes, through an announcer its own `aria-hidden` sweep leaves
-     alone. A region of the block's would be hidden by that sweep while the
-     list is open, and would say the same thing twice when it was not. */
+  /* The block's polite region says "Searching", and a search's count once it
+     lands. React Aria announces the suggestions' count: its combobox says how
+     many options there are as the list opens and as the number changes,
+     through an announcer that its own `aria-hidden` sweep leaves alone. A
+     region of the block's would be hidden by that sweep while the list is open,
+     and would repeat the announcement when it was not. */
   const [said, setSaid] = useState('');
   useEffect(() => {
     if (state === 'loading') setSaid('Searching');
   }, [state]);
-  /* The count is said when a search lands, not whenever the formatter is a new
-     function — a default argument is one on every render. */
+  /* The count is announced when a search lands. The formatter is read through a
+     ref, because a default argument is a new function on every render. */
   const count = useRef(resultCount);
   count.current = resultCount;
   useEffect(() => {
@@ -188,7 +190,7 @@ export function SearchBlock({
         <Heading id={resultsHeadingId} className={cx(styles['resultsHeading'])}>{resultCount(results.length, searchedFor)}</Heading>
       ) : null}
       {/* Mounted from the first frame, so the first results arrive with `list-in`
-          rather than being taken as the list's starting contents. */}
+          instead of being treated as the list's starting contents. */}
       <ul
         className={cx(styles['results'])}
         {...(results ? { 'aria-labelledby': resultsHeadingId } : { hidden: true })}

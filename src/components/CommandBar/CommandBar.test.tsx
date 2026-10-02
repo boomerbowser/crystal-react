@@ -22,10 +22,10 @@ describe('CommandBar', () => {
     expect(screen.getByRole('toolbar', { name: 'Report commands' })).toBeInTheDocument();
   });
 
-  /* Nothing is dropped during the measuring pass — everything is laid out
-     invisibly so the widths exist to be read. This environment has no widths at
-     all, which is exactly why the overflow *behaviour* is asked in
-     `verify:appearance` and only the reachability is asked here. */
+  /* Nothing is dropped during the measuring pass. Everything is laid out
+     invisibly so the widths exist to be read. This environment has no widths,
+     so the overflow behaviour is tested in `verify:appearance` and only
+     reachability is tested here. */
   it('keeps every command reachable', () => {
     renderWithCrystal(
       <CommandBar aria-label="Report commands" renderOverflow={overflow}>
@@ -39,18 +39,16 @@ describe('CommandBar', () => {
     expect(screen.getByRole('button', { name: 'Duplicate' })).toBeInTheDocument();
   });
 
-  /* The overflow affordance is rendered inside the row rather than beside it,
-     because an item that leaves the toolbar leaves its roving tab index with
-     it — the trigger that reaches the hidden ones has to be in the toolbar.
+  /* The overflow affordance is rendered inside the row, because an item that
+     leaves the toolbar leaves its roving tab index with it. The trigger that
+     reaches the hidden items has to be in the toolbar.
    *
-   * Nothing overflows here: this environment gives every element a width of
+   * Nothing overflows here. This environment gives every element a width of
    * zero, so the measuring row concludes that everything fits and the
-   * affordance is never rendered. Asserting "it is inside the toolbar if it
-   * exists" would therefore be an assertion about nothing. What is determinate
-   * is that the row the affordance is rendered into is itself inside the
-   * toolbar, so whatever appears in it appears there too. Whether the
-   * affordance actually appears when the bar is too narrow is asked in
-   * `verify:appearance`, at a width. */
+   * affordance is never rendered. The test therefore checks that the row the
+   * affordance is rendered into is inside the toolbar, so whatever appears in
+   * it appears there too. Whether the affordance appears when the bar is too
+   * narrow is tested in `verify:appearance`, at a width. */
   it('renders its row inside the toolbar, so the overflow trigger lands there', () => {
     const { container } = renderWithCrystal(
       <CommandBar aria-label="Report commands" renderOverflow={overflow}>

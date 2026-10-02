@@ -8,13 +8,13 @@ const meta = {
     docs: {
       description: {
         component:
-          '"**Words carry the state**; status colour reinforces it" — which is `StatusBadge`\'s '
-          + 'contract exactly, so this is a `StatusBadge` with the availability vocabulary in '
+          '"Words carry the state; status colour reinforces it". That is `StatusBadge`\'s '
+          + 'contract, so this is a `StatusBadge` with the availability vocabulary in '
           + 'front of it rather than a second badge drawing the same well slightly differently. '
-          + 'Backorder is `info` rather than `attention`: the item can be bought, it simply '
-          + 'arrives later, and the attention colour would report a problem where there is an '
-          + 'ordinary outcome. The wording is the product\'s — "Only 2 left" is a merchandising '
-          + 'decision, not a design-system one.',
+          + 'Backorder is `info` rather than `attention`, because the item can be bought and '
+          + 'arrives later. The attention colour would report a problem where there is an '
+          + 'ordinary outcome. The wording belongs to the product, because "Only 2 left" is a '
+          + 'merchandising decision rather than a design-system one.',
       },
     },
   },
@@ -26,8 +26,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** All four states. The word is what a reader is told; the ink is the second
- *  signal, and it is never the only one. */
+/** All four states. The word is what a reader is told. The ink is a second
+ *  signal and never the only one. */
 export const EveryState: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>

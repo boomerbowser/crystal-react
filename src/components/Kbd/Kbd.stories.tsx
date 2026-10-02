@@ -9,11 +9,11 @@ const meta = {
     docs: {
       description: {
         component:
-          'A Resin cap with a defined lower rim — Resin already carries two optical rims, and the '
-          + 'extra inset highlight underneath is what makes it a key you could press rather than a '
-          + 'piece of glass. A real `kbd` element, because the semantics are the point. Key names '
-          + 'are spelled, not drawn as symbols alone: a cap reading "⌘" tells a screen-reader user '
-          + 'nothing and a Windows user the wrong thing, so `name` is announced in its place.',
+          'A Resin cap with a defined lower rim. Resin already carries two optical rims, and the '
+          + 'extra inset highlight underneath makes the cap read as a key you could press. A real '
+          + '`kbd` element, for its semantics. Key names are spelled, not drawn as symbols alone: '
+          + 'a cap reading "⌘" tells a screen-reader user nothing and a Windows user the wrong '
+          + 'thing, so `name` is announced in its place.',
       },
     },
   },

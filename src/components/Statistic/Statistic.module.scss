@@ -1,11 +1,10 @@
 @use '../../styles/tokens' as *;
 
-/* Statistic — tabular figures, and colour that is never the only signal.
+/* Statistic. Tabular figures, and colour that is never the only signal.
  *
- * The trend's own ink lives in `TrendIndicator`, which is the component that
- * carries the rule — direction in a word and a symbol, never in colour alone.
- * Restating it here would be two implementations of one rule, which is how one
- * of them stops following it.
+ * The trend's own ink lives in `TrendIndicator`, which carries the rule that
+ * direction is given in a word and a symbol, never in colour alone. Do not
+ * restate it here. A second implementation of the rule would drift from it.
  */
 
 .statistic {
@@ -33,8 +32,8 @@
   line-height: var(--cr-text-title-leading);
   letter-spacing: var(--cr-text-title-tracking);
   font-weight: 800;
-  /* A column of statistics whose digits do not line up cannot be read down its
-     own length, which is the only reason to put them in a column. */
+  /* Tabular figures, so a column of statistics can be read down its own
+     length. */
   font-variant-numeric: tabular-nums;
 }
 

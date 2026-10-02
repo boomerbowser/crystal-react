@@ -6,7 +6,8 @@ import { OverlayBadge } from './OverlayBadge.js';
 
 describe('OverlayBadge', () => {
   /* "Labels its host rather than standing alone", so a decorative mark over a
-     named thing is hidden rather than read as a second unnamed thing. */
+     named thing is hidden, where it would otherwise be read as a second unnamed
+     thing. */
   it('is hidden until it is given something to say', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <OverlayBadge badge="✓"><Avatar name="Ada Lovelace" /></OverlayBadge>,
@@ -33,7 +34,7 @@ describe('OverlayBadge', () => {
   });
 
   /* "Never clipped by its host": the badge overhangs, so the wrapper must not
-     be the thing that cuts it off. */
+     cut it off. */
   it('does not clip its own wrapper', () => {
     renderWithCrystal(
       <OverlayBadge badge="✓" data-testid="wrap"><Avatar name="Ada" /></OverlayBadge>,

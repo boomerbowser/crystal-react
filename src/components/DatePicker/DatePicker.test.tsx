@@ -18,7 +18,7 @@ describe('DateInput', () => {
     const spinners = screen.getAllByRole('spinbutton');
     expect(spinners.length).toBeGreaterThanOrEqual(3);
     /* React Aria names both the field and the segment container, so there are
-       two; what matters is that the row is a named group rather than an input. */
+       two. The test checks that the row is a named group and not an input. */
     expect(screen.getAllByRole('group', { name: 'Due date' }).length).toBeGreaterThanOrEqual(1);
   });
 
@@ -70,8 +70,8 @@ describe('DateRangePicker', () => {
     /* Six segments: day, month and year at each end, each its own spin button. */
     expect(screen.getAllByRole('spinbutton').length).toBeGreaterThanOrEqual(6);
     const names = screen.getAllByRole('spinbutton').map((s) => s.getAttribute('aria-label') ?? '');
-    /* Start and end are distinguishable, which is the point: a reader editing
-       the start must not be told they are editing the end. */
+    /* Start and end are distinguishable, so a reader editing the start is not
+       told they are editing the end. */
     expect(new Set(names).size).toBeGreaterThanOrEqual(6);
   });
 });

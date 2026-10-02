@@ -16,8 +16,8 @@ const rows = [
 ];
 
 describe('Table', () => {
-  /* There is no ARIA pattern that recovers header association once the elements
-     are divs, which is the whole reason this is a real table. */
+  /* No ARIA pattern recovers header association once the elements are divs, so
+     this is a real table. */
   it('is a real table with a scope on every header', () => {
     const { container } = renderWithCrystal(<Table columns={columns} rows={rows} label="Workspaces" />);
     expect(container.querySelector('table')).not.toBeNull();
@@ -30,8 +30,8 @@ describe('Table', () => {
     expect(rowHeaders.every((th) => th.getAttribute('scope') === 'row')).toBe(true);
   });
 
-  /* `aria-sort` describes the table's current order, not each column's
-     capability — so exactly one header carries it, and a sortable column that is
+  /* `aria-sort` describes the table's current order rather than each column's
+     capability, so exactly one header carries it, and a sortable column that is
      not sorted carries nothing. */
   it('puts aria-sort on one header only, and on the header rather than the button', () => {
     const sort: TableSort = { column: 'name', direction: 'ascending' };

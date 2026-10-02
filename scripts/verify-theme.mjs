@@ -2,24 +2,21 @@
  * element that reads it.
  *
  * `src/theme/published-properties.test.tsx` already mounts a provider and checks
- * that each `var(--cr-…)` in the stylesheets is one the provider writes. That is
- * a real check and it catches the defect it was written for — the focus ring that
- * painted on nothing for a whole slice. It cannot catch three things:
+ * that each `var(--cr-…)` in the stylesheets is one the provider writes. It
+ * cannot catch three things:
  *
- *   1. **The overlay container.** React Aria portals a popover, a menu, a
- *      tooltip, a dialog, a drawer and the command palette to `document.body`,
- *      outside the scope element, so the provider stamps a second element for
- *      them. A property written to the scope and not to that container resolves
- *      to nothing on every overlay in the library while resolving correctly
+ *   1. The overlay container. React Aria portals a popover, a menu, a tooltip, a
+ *      dialog, a drawer and the command palette to `document.body`, outside the
+ *      scope element, so the provider stamps a second element for them. A
+ *      property written to the scope and not to that container resolves to
+ *      nothing on every overlay in the library while resolving correctly
  *      everywhere a unit test looks.
- *   2. **A value that is present but not usable.** jsdom records the property
- *      name; only a browser computes `blur(var(--cr-frost-blur))` and decides
- *      whether it is a filter or a syntax error.
- *   3. **A stale bundle.** A dev server serving an hour-old copy of
- *      `@crystal-ui/core` reports missing properties that are present in the source.
- *      That has now happened three times in this project, once far enough to
- *      start a wrong diagnosis, and it is indistinguishable from a real defect
- *      without something that checks the served page.
+ *   2. A value that is present but not usable. jsdom records the property name;
+ *      only a browser computes `blur(var(--cr-frost-blur))` and decides whether
+ *      it is a filter or a syntax error.
+ *   3. A stale bundle. A dev server serving an old copy of `@crystal-ui/core`
+ *      reports missing properties that are present in the source, which looks
+ *      the same as a real defect unless the served page is checked.
  *
  *   node scripts/verify-theme.mjs
  *   STORYBOOK_ORIGIN=http://127.0.0.1:6006 node scripts/verify-theme.mjs
@@ -30,10 +27,10 @@ import { chromium } from 'playwright';
 
 const ORIGIN = process.env['STORYBOOK_ORIGIN'] ?? 'http://127.0.0.1:6006';
 
-/* Properties a component sets on itself in the same breath as reading them — a
-   grid's column count, a tree row's depth. Kept in step with the same list in
-   `published-properties.test.tsx`; a property that appears in one and not the
-   other is a property somebody should look at twice. */
+/* Properties a component sets on itself where it reads them, such as a grid's
+   column count or a tree row's depth. Keep this in step with the same list in
+   `published-properties.test.tsx`; a property in one list and not the other
+   needs checking. */
 const LOCAL = /^--cr-(angle|arc|arc-from|aspect|progress|fraction|strength|strength-colour|clamp-lines|fill-start|fill-size|cell-min|cell-span|cell-span-sm|cell-span-md|grid-columns|grid-gap|masonry-columns|masonry-columns-md|masonry-gap|container-max|shell-sidebar|stack-gap|toolbar-gap|overflow-gap|text-size|text-leading|text-tracking|title-size|title-leading|title-tracking|watermark-image|watermark-opacity|watermark-size|scroll-fade-start|scroll-fade-end|tree-level|toc-level)$/;
 
 function stylesheetsUnder(directory) {
@@ -65,15 +62,10 @@ await page.goto(
   `${ORIGIN}/iframe.html?id=overlays-command-palette--palette&viewMode=story`,
   { waitUntil: 'networkidle' },
 );
-/* The requirement is an overlay on screen, not a particular route to one.
- *
- * Kept conditional after a lesson worth recording. A `play` function was added
- * to this story, it opened the palette on load, and this gate's click then
- * landed on the scrim and timed out. The first fix was this condition — which
- * accommodated the problem instead of removing it. The real fix was moving the
- * play to a story of its own, and `verify-stories` now fails any story that a
- * measurement gate probes and that carries a play. The condition stays because
- * it costs nothing and describes the actual requirement. */
+/* The requirement is an overlay on screen, by whatever route, so the click is
+ * conditional. This story must not carry a `play` function: one that opened the
+ * palette on load would put the scrim under this click. `verify-stories` fails
+ * any story that a measurement gate probes and that carries a play. */
 const dialog = page.locator('[role="dialog"]');
 if (await dialog.count() === 0) {
   await page.getByRole('button', { name: 'Open the palette' }).click();
@@ -114,11 +106,10 @@ if (result.error) {
 }
 
 /* The materials, computed rather than declared. A `backdrop-filter` built from a
-   property that does not resolve is not a weaker blur — it is a syntax error, and
-   the surface renders as a flat translucent fill with no diffusion at all. That
-   is exactly what happened when `-webkit-backdrop-filter` was written beside the
-   standard property and the minifier kept the wrong one, and it was invisible in
-   every test. */
+   property that does not resolve is a syntax error, and the surface renders as a
+   flat translucent fill with no diffusion at all. Writing
+   `-webkit-backdrop-filter` beside the standard property lets the minifier keep
+   the wrong one, which only a computed value shows. */
 const materials = await page.evaluate(() => {
   const palette = document.querySelector('[role="dialog"]');
   const field = palette?.querySelector('[class*="field"]');

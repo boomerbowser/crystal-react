@@ -1,7 +1,7 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* TagsInput and TokenField — a field whose value is a set of chips. */
+/* TagsInput and TokenField. A field whose value is a set of chips. */
 
 .field { @include field.field; }
 .label { @include field.label; }
@@ -32,8 +32,8 @@
 .entry:focus { outline: none; }
 
 /* A duplicate is refused rather than silently ignored, and the refusal is drawn
-   on the chip that already holds the value — which is the answer to "why did
-   nothing happen". */
+   on the chip that already holds the value, which shows the reader why nothing
+   was added. */
 .duplicate { animation: none; outline: 2px solid var(--cr-danger-ink); outline-offset: 2px; }
 
 .description, .error { @include field.message; }

@@ -2,18 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { chartGeometry, CHART_SERIES_COUNT } from './chartGeometry.js';
 import { crystalTokens } from './tokens.generated.js';
 
-/* What this replaces is worth remembering. Until `@crystal-ui/core@2.1.0` was
- * published these values were transcribed here as literals, and the test in
- * this file's place had exactly one job: to fail the day the installed core
- * started publishing them, so nobody had to remember that the shim existed.
- * It did fail, on the bump, which is the only reassuring way for a
- * transcription to end.
+/* Until `@crystal-ui/core@2.1.0` was published these values were transcribed
+ * here as literals, and the test in this file's place had exactly one job: to
+ * fail the day the installed core started publishing them, so nobody had to
+ * remember that the shim existed. It did fail on the bump.
  *
- * What is left to check is different. These numbers are Crystal's, read at
- * build time — so the question is no longer "are they right" but "is each one
- * still reading the token it claims to". A geometry that silently fell back to
- * a stale number would draw charts that look almost correct, which is the
- * hardest kind of wrong to see.
+ * These numbers are now Crystal's, read at build time, which settles
+ * "are they right". What this test asks is "is each one still reading the
+ * token it claims to". A geometry that silently fell back to a stale number
+ * would draw charts that look almost correct.
  */
 describe('chart geometry', () => {
   it('reads every value from a token Crystal publishes', () => {

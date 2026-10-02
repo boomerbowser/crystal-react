@@ -1,12 +1,11 @@
 @use '../../styles/tokens' as *;
 
-/* Resizable — a region whose size the person controls.
+/* Resizable: a region whose size the person controls.
  *
- * The handle is a Resin grip on the region's own surface, and the hit area is the
- * part that matters: the visible grip is a few pixels wide because a wide one
- * looks like a gutter, and the target around it is 44px because a few pixels is
- * not something a fingertip can find. A transparent pseudo-element does that
- * without changing what anything looks like.
+ * The handle is a Resin grip on the region's own surface. The visible grip is a
+ * few pixels wide, because a wide one looks like a gutter. The target around it
+ * is 44px, because a fingertip cannot find a few pixels. A transparent
+ * pseudo-element provides the target without changing the appearance.
  */
 
 .resizable {
@@ -32,8 +31,8 @@
 .horizontal > .handle { inline-size: $cr-spacing-2xs; cursor: col-resize; }
 .vertical > .handle { block-size: $cr-spacing-2xs; cursor: row-resize; }
 
-/* The target, not the grip. Transparent, centred on the visible handle, and 44px
-   across — a 4px grip is a 4px picture of a control and a 44px place to press. */
+/* The target. Transparent, centred on the visible handle, and 44px across, so
+   a 4px grip has a 44px place to press. */
 .handle::after {
   content: '';
   position: absolute;

@@ -1,15 +1,16 @@
 'use client';
 
-/* Space — an explicit gap from the scale.
+/* Space.
+ *
+ * An explicit gap from the scale.
  *
  * It exists for the cases a parent's `gap` cannot express: one larger break in an
  * otherwise even rhythm, or space between two things that are not siblings in the
  * same flex container.
  *
- * `aria-hidden` is not decoration here. The catalogue says a Space is "never used
- * to convey grouping to assistive technology", and an empty div is announced by
- * some screen readers as a blank item in a list — so it is removed from the
- * accessibility tree rather than left to be read as nothing.
+ * The catalogue says a Space is "never used to convey grouping to assistive
+ * technology", and some screen readers announce an empty div as a blank item in
+ * a list. So it carries `aria-hidden` and is removed from the accessibility tree.
  */
 import { forwardRef, type CSSProperties, type HTMLAttributes } from 'react';
 import { spacingValue, type CrystalSpacing } from '../../styles/spacing.js';

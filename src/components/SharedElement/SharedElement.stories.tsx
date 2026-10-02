@@ -10,11 +10,11 @@ const meta = {
     docs: {
       description: {
         component:
-          'One element carried between two views, so it reads as the same object rather than one '
-          + 'thing vanishing and another appearing — a thumbnail and the hero it opens. Motion\'s '
-          + '`layoutId` moves it; under reduced motion it is removed entirely rather than slowed, '
+          'One element carried between two views, such as a thumbnail and the hero it opens, so it '
+          + 'reads as the same object instead of one thing vanishing and another appearing. Motion\'s '
+          + '`layoutId` moves it. Under reduced motion the transition is removed entirely, not slowed, '
           + 'because a slower moving object is still a moving object. It is never the only sign '
-          + 'that the view changed: the destination here has its own heading.',
+          + 'that the view changed, so the destination here has its own heading.',
       },
     },
   },

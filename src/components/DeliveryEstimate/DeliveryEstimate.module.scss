@@ -1,11 +1,12 @@
 @use '../../styles/tokens' as *;
 
-/* "Inherits" its material and sits inline, so there is no surface here at all —
-   only the typography that separates a date from the sentence around it. */
+/* "Inherits" its material and sits inline, so there is no surface here. This
+   file holds only the typography that separates a date from the sentence
+   around it. */
 .estimate { color: var(--cr-text); }
 
-/* No estimate is a quieter fact than a date, so it takes the muted ink rather
-   than a status colour: there is nothing wrong, the answer is simply not known. */
+/* No estimate takes the muted ink and no status colour, because nothing is
+   wrong: the answer is not known. */
 .estimate[data-unavailable] { color: var(--cr-muted); }
 
 /* The relative phrase is the secondary reading of the same fact. */

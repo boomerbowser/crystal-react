@@ -81,10 +81,10 @@ describe('Menu', () => {
     });
   });
 
-  /* Resin never contains Resin. A menu on the page floats above it; the same menu
-     inside a dialog is floating above Haze, so it recesses rather than stacking a
-     second pane of the same glass. The DOM cannot tell — every overlay is
-     portalled to `body` — so the decision travels by React context. */
+  /* Resin never contains Resin. A menu on the page floats above it. The same
+     menu inside a dialog floats above Haze, so it recesses instead of stacking a
+     second pane of the same glass. Every overlay is portalled to `body`, so the
+     DOM cannot tell, and the decision travels by React context. */
   it('steps down to Haze inside a dialog', async () => {
     renderWithCrystal(
       <>
@@ -137,12 +137,11 @@ describe('ContextMenu', () => {
     await waitFor(() => expect(screen.getByRole('menu', { name: 'File' })).toBeInTheDocument());
   });
 
-  /* The half that is usually missing. Shift+F10 and the Menu key are how a
-     context menu is opened without a mouse, on every operating system; one that
-     answers only the right button is a feature a keyboard user does not have.
-     The keystroke reaches the region by bubbling, so something inside has to be
-     focusable — which is the documented requirement, not an accident of this
-     test. */
+  /* The keyboard route. Every operating system opens a context menu without a
+     mouse through Shift+F10 and the Menu key, and one that answers only the
+     right button is unavailable to a keyboard user. The keystroke reaches the
+     region by bubbling, so something inside has to be focusable. That is the
+     documented requirement. */
   it('opens with Shift+F10', async () => {
     renderWithCrystal(subject);
     screen.getByRole('button', { name: 'Right-click me' }).focus();

@@ -1,31 +1,29 @@
 'use client';
 
-/* VideoPlayer — a video surface with Crystal transport controls.
+/* VideoPlayer is a video surface with Crystal transport controls.
  *
  * "Native video element underneath. Controls are real buttons, **captions are
  * supported and their state is announced**, and **keyboard shortcuts do not trap
- * focus**." Three claims, and the last two are the ones that are usually got
- * wrong.
+ * focus**."
  *
- * **Captions.** A `<track>` is not enough on its own: the element knows about
- * the track, and a reader has no way to turn it on and no way to know whether it
- * is on. So the caption control is a toggle over `textTracks`, its pressed state
- * is the track's real `mode`, and the change is announced in words — a reader
- * who cannot see subtitles appear has nothing else to go on.
+ * Captions. A `<track>` is not enough on its own, because a reader has no way to
+ * turn it on and no way to know whether it is on. The caption control is a
+ * toggle over `textTracks`, its pressed state is the track's real `mode`, and
+ * the change is announced in words for a reader who cannot see subtitles
+ * appear.
  *
- * **Keyboard shortcuts do not trap focus.** The player answers Space, the arrow
- * keys and `M` while focus is inside it, and it does exactly nothing when focus
- * is not — no document-level listener, which is the shape that steals the space
- * bar from the page's own scrolling and the arrow keys from every control
- * elsewhere. And the shortcuts never `preventDefault` on a control that has its
- * own use for the key: the handler ignores the event when it started on a
- * button, a slider or anything else that is focusable, so Space on the play
- * toggle is the button's Space and not the player's.
+ * Keyboard shortcuts do not trap focus. The player answers Space, the arrow keys
+ * and `M` while focus is inside it, and does nothing when focus is not. There is
+ * no document-level listener, which would steal the space bar from the page's
+ * own scrolling and the arrow keys from every control elsewhere. The shortcuts
+ * never `preventDefault` on a control that has its own use for the key: the
+ * handler ignores an event that started on a button, a slider or anything else
+ * focusable, so Space on the play toggle is the button's Space.
  *
- * **Showing and hiding the controls is Crystal's**, and Crystal's rule is that
- * nothing moves at rest — so the bar does not fade in and out on a timer. It is
+ * Showing and hiding the controls is Crystal's, and Crystal's rule is that
+ * nothing moves at rest, so the bar does not fade in and out on a timer. It is
  * shown whenever a pointer is over the video or focus is inside the player, and
- * hidden otherwise, which is movement a person started every time.
+ * hidden otherwise, so a person always started the change.
  */
 import {
   forwardRef, useCallback, useEffect, useRef, useState,
@@ -51,7 +49,7 @@ export interface VideoPlayerProps
   mediaRef?: RefObject<HTMLVideoElement | null>;
   /** What the caption control is called. */
   captionsLabel?: string;
-  /** More controls at the end of the transport, after captions — full screen, quality. */
+  /** More controls at the end of the transport, after captions, such as full screen or quality. */
   controls?: ReactNode;
   className?: string;
 }
@@ -74,9 +72,9 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
   const [hasCaptions, setHasCaptions] = useState(false);
   const [said, setSaid] = useState('');
 
-  /* The track's real mode, read from the element. A flag of our own would be
-     wrong the moment anything else changed it — and something does: some engines
-     turn a track on from the user's own system caption preference. */
+  /* The track's real mode, read from the element. A separate flag would go
+     stale when anything else changed the mode, and some engines turn a track on
+     from the user's system caption preference. */
   const readTracks = useCallback(() => {
     const element = own.current;
     if (!element) return;
@@ -91,12 +89,11 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
     const element = own.current;
     if (!element) return undefined;
     readTracks();
-    /* `TextTrackList` is an `EventTarget` in current engines and was not always
-       one — jsdom still is not, and neither were several shipped Safaris. The
-       listener is what catches a track turned on by the *system's* own caption
-       preference; without it the component is still correct, it simply learns
-       about that later. Guarded rather than assumed, because the alternative is
-       a player that throws on load in an engine that is otherwise fine. */
+    /* `TextTrackList` is an `EventTarget` in current engines. It is not one in
+       jsdom, and was not in several shipped Safaris. The listener catches a
+       track turned on by the system's caption preference. Without it the
+       component is still correct and learns about the change later. The check
+       is guarded so the player does not throw on load in those engines. */
     const tracks: EventTarget | null = typeof element.textTracks.addEventListener === 'function'
       ? element.textTracks
       : null;
@@ -123,10 +120,10 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
   }, [captionsLabel, readTracks]);
 
   const onKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
-    /* The shortcut never takes a key from the control the reader is actually on.
-       Space on the play toggle is the button's Space; the arrow keys inside the
-       scrubber are the slider's. Only a press that started on the player itself
-       or on the video is the player's to answer. */
+    /* The shortcut never takes a key from the control the reader is on. Space
+       on the play toggle is the button's Space, and the arrow keys inside the
+       scrubber are the slider's. The player answers only a press that started
+       on the player itself or on the video. */
     const from = event.target as HTMLElement;
     if (from.closest('button, input, [role="slider"], a, select, textarea')) return;
 
@@ -154,10 +151,10 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
   }, [media, skipBy]);
 
   return (
-    /* No `tabIndex` on the region and no document listener: the shortcuts work
-       when focus is already inside the player, which is what "do not trap focus"
-       means in practice. A player that grabbed the space bar from the page would
-       be the trap. */
+    /* No `tabIndex` on the region and no document listener. The shortcuts work
+       only when focus is already inside the player, which is what "do not trap
+       focus" requires. A player that took the space bar from the page would be
+       a trap. */
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-static-element-interactions -- the handler is a shortcut for controls that are focusable in their own right, not a control itself
     <div className={cx(styles['player'], className)} onKeyDown={onKeyDown}>
       <div className={styles['surface']}>

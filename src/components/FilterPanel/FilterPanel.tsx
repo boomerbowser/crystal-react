@@ -1,34 +1,30 @@
 'use client';
 
-/* FilterPanel — faceted filters, with what is applied said out loud.
+/* FilterPanel renders faceted filters and announces what is applied.
  *
  * "**Applied filters are announced and individually removable**; counts update
  * politely."
  *
- * Both halves are about the same gap. Filtering is the one interaction on a
- * storefront where the reader's action happens *here* and its whole effect
- * happens somewhere else — a list they are not looking at gets shorter. A
- * checkbox going on says "checked" and nothing about the four hundred products
- * that just became eleven.
+ * The reader acts in the panel and the effect happens elsewhere on the page. A
+ * list they are not looking at gets shorter. A checkbox says "checked" and
+ * nothing about the four hundred products that just became eleven.
  *
- * So two things are announced, and they are different statements: **what is
- * applied**, as a set, and **how many results there are**. The first is this
- * panel's own state; the second is the product's, and it arrives as a prop
- * because this component cannot know it.
+ * Two things are announced: what is applied, as a set, and how many results
+ * there are. The first is this panel's own state. The second belongs to the
+ * product and arrives as a prop, because this component cannot know it.
  *
- * **Individually removable, which means a control per applied filter and not
- * just Clear all.** A reader who has applied six filters and wants five of them
- * is otherwise made to start again. The removal controls carry the filter's own
- * name — "Remove Blue" rather than six identical "Remove" buttons — for the same
- * reason the wishlist button names its product.
+ * Individually removable means a control per applied filter as well as Clear
+ * all, so a reader who has applied six filters and wants to keep five does not
+ * have to start again. Each removal control carries the filter's name ("Remove
+ * Blue", not six identical "Remove" buttons), as the wishlist button names its
+ * product.
  *
- * **Clear all only when there is something to clear.** A disabled Clear all on a
- * panel with nothing applied is a control that exists to be greyed out.
+ * Clear all appears only when there is something to clear. A disabled Clear all
+ * would be a control with nothing to do.
  *
- * **Counts update politely** and the panel does not move while they do: a facet
- * whose count changes from 12 to 3 is the same facet in the same place, and a
- * list that reorders itself by count under a reader's cursor is a list that
- * cannot be used.
+ * Counts update politely and the panel does not move while they do. A facet
+ * whose count changes from 12 to 3 stays in the same place, and the list never
+ * reorders itself by count under the reader's cursor.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { Button } from '../Button/Button.js';
@@ -46,7 +42,7 @@ export interface AppliedFilter {
 export interface FilterPanelProps extends Omit<HTMLAttributes<HTMLElement>, 'onChange'> {
   /** What the panel filters. Its accessible name. */
   label?: string;
-  /** The facet groups — checkbox groups, sliders, whatever the facets are. */
+  /** The facet groups, whether checkbox groups, sliders or something else. */
   children: ReactNode;
   /** What is currently applied. Announced as a set, and each one removable. */
   applied?: readonly AppliedFilter[];
@@ -97,8 +93,7 @@ export const FilterPanel = forwardRef<HTMLElement, FilterPanelProps>(function Fi
               </li>
             ))}
           </ul>
-          {/* Only when there is something to clear: a disabled Clear all is a
-              control that exists to be greyed out. */}
+          {/* Rendered only when there is something to clear, never disabled. */}
           {onClearAll ? (
             <Button variant="quiet" onPress={onClearAll}>{clearAllLabel}</Button>
           ) : null}
@@ -107,9 +102,9 @@ export const FilterPanel = forwardRef<HTMLElement, FilterPanelProps>(function Fi
 
       <div className={styles['facets']}>{children}</div>
 
-      {/* Polite, and one region: what is applied and how many results it leaves
-          are one fact from the reader's side — "blue, large, 11 results". Two
-          regions would race to describe the same change. */}
+      {/* One polite region. What is applied and how many results it leaves are
+          one fact to the reader ("blue, large, 11 results"), and two regions
+          would race to describe the same change. */}
       <span role="status" className={styles['announcement']}>{said}</span>
     </section>
   );

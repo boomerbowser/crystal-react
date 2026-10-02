@@ -1,19 +1,18 @@
 @use '../../styles/tokens' as *;
 
-/* AppShell — the material assignment of a whole view, in one place.
+/* AppShell: the material assignment of a whole view, in one place.
  *
- * Plastic is the foundation and is what the page sits on. Frost is the supporting
- * panels — the sidebar and the header band. Resin is the floating destination
- * group, which is the one surface here that is above the content rather than
- * beside it. That ordering is the hierarchy, and it is the whole reason this
- * component exists rather than being a grid the product writes itself.
+ * Plastic is the foundation the page sits on. Frost is the supporting panels: the
+ * sidebar and the header band. Resin is the floating destination group, the one
+ * surface here that is above the content instead of beside it. This component
+ * exists so that the ordering is fixed, instead of each product writing its own
+ * grid.
  */
 
-/* The shell fills the viewport and the main region scrolls, rather than the page
-   scrolling under a sticky header. Sticky would not hold here anyway: a sticky
-   element sticks within its containing block, and the header's grid row is
-   exactly as tall as the header — there is no room to stick in. Making the
-   content the scroller is both the fix and the usual shape of an application. */
+/* The shell fills the viewport and the main region scrolls, instead of the page
+   scrolling under a sticky header. Sticky does not hold here. A sticky element
+   sticks within its containing block, and the header's grid row is exactly as
+   tall as the header, so there is no room to stick in. */
 .appShell {
   display: grid;
   grid-template-areas: 'header header' 'sidebar main' 'footer footer';
@@ -23,8 +22,8 @@
   overflow: hidden;
   /* The foundation is Crystal's `.cr-plastic`, worn by the component: the canvas
      and the atmosphere over it, the inactive-window treatment, and the forced
-     colours route. This used to paint the canvas alone, flat, which covered the
-     atmosphere the provider's own Plastic had drawn underneath. */
+     colours route. Painting a flat canvas here would cover the atmosphere the
+     provider's own Plastic draws underneath. */
   color: var(--cr-text);
 }
 
@@ -32,8 +31,8 @@
 
 .header { grid-area: header; min-width: 0; }
 
-/* The `contentinfo` band. It sits below both columns rather than beside the
-   content, because it is about the view rather than part of it. */
+/* The `contentinfo` band. It sits below both columns, not beside the content,
+   because it is about the view and not part of it. */
 .footer { grid-area: footer; min-width: 0; }
 
 .sidebar {
@@ -44,8 +43,8 @@
   background: var(--cr-frost-fill);
   border-inline-end: 1px solid var(--cr-edge);
   backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
-  /* The safe area is the reason a shell is a component: a sidebar pinned to the
-     left of a phone in landscape sits under the notch without it. */
+  /* A sidebar pinned to the left of a phone in landscape sits under the notch
+     without the safe-area inset. */
   padding-inline-start: env(safe-area-inset-left);
 }
 
@@ -58,9 +57,8 @@
   padding-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
 }
 
-/* Below the sidebar's breakpoint the shell is one column and the sidebar becomes
-   the product's problem — a drawer, a sheet, a menu. A shell that decides that
-   for a product decides too much. */
+/* Below the sidebar's breakpoint the shell is one column, and the product decides
+   what the sidebar becomes: a drawer, a sheet or a menu. */
 @media (max-width: $cr-breakpoint-md) {
   .appShell {
     grid-template-areas: 'header' 'main' 'footer';
@@ -71,9 +69,8 @@
 
 .destinations {
   /* The destination strip is Crystal's dock, worn as `.cr-dock`: the Resin plane,
-     its Haze fill, its fallbacks, and buttons that carry no Resin of their own —
-     until 28 September each destination kept its own Resin coat inside this one.
-     What is here is only where it floats. */
+     its Haze fill, its fallbacks, and buttons that carry no Resin of their own.
+     The rules here only position it. */
   position: fixed;
   inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
   inset-inline: 0;

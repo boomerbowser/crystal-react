@@ -9,8 +9,8 @@
 
 .plot { position: relative; display: grid; place-items: center; }
 
-/* The ring is `ActivityArc` and brings its own rules; what is left here is the
-   box it sits in. */
+/* The ring is `ActivityArc` and brings its own rules. This styles the box it
+   sits in. */
 .canvas { position: absolute; inset: 0; }
 
 .centre {

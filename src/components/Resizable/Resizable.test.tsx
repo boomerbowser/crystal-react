@@ -11,9 +11,9 @@ describe('Resizable', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* "Pointer dragging is never the only route" is the catalogue's rule, and the
-     separator with a value is what lets a screen reader announce the size as it
-     changes rather than announcing that something was grabbed. */
+  /* "Pointer dragging is never the only route" is the catalogue's rule. A
+     separator with a value lets a screen reader announce the size as it changes
+     rather than announcing that something was grabbed. */
   it('is a separator with a value, not a div with a pointer handler', () => {
     renderWithCrystal(
       <Resizable aria-label="Resize" defaultSize={300} minSize={100} maxSize={600} secondary={<p>Rest</p>}>
@@ -40,7 +40,7 @@ describe('Resizable', () => {
     expect(onSizeChange.mock.calls[0]?.[0]).toBeGreaterThan(300);
   });
 
-  /* Reaching a bound is a state the handle shows, not a silent refusal to move. */
+  /* Reaching a bound is a state the handle shows. */
   it('says when it is at a bound', () => {
     renderWithCrystal(
       <Resizable aria-label="Resize" defaultSize={100} minSize={100} maxSize={600} secondary={<p>Rest</p>}>

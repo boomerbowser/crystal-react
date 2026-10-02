@@ -1,17 +1,16 @@
 'use client';
 
-/* ThemeIcon — an icon in a filled container, used as a visual anchor.
+/* ThemeIcon: an icon in a filled container, used as a visual anchor.
  *
- * It is not a control, and the distinction is the whole component: an icon in a
- * filled circle looks exactly like an icon button, so the difference has to be
- * carried by what it *does* rather than by what it looks like. It takes no press
+ * It is not a control. An icon in a filled circle looks exactly like an icon
+ * button, so the difference has to be in its behaviour. It takes no press
  * handler, has no hit area, and is not focusable.
  *
- * "Decorative and aria-hidden unless it is the only carrier of meaning." Two
- * states, and the caller has to choose: without a `label` the container is hidden
- * from assistive technology, because an anchor beside a heading that already says
- * the same thing is read twice otherwise. With one it becomes `role="img"` and
- * the label is its accessible name.
+ * "Decorative and aria-hidden unless it is the only carrier of meaning." The
+ * caller chooses between two states. Without a `label` the container is hidden
+ * from assistive technology, so an anchor beside a heading that already says the
+ * same thing is not read twice. With a `label` it becomes `role="img"` and the
+ * label is its accessible name.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -36,8 +35,8 @@ export const ThemeIcon = forwardRef<HTMLSpanElement, ThemeIconProps>(function Th
   { children, variant = 'primary', shape = 'content', label, className, ...props },
   ref,
 ) {
-  /* `role="img"` with a name, or hidden. There is no third option: an unnamed
-     `role="img"` is announced as "image" and says nothing. */
+  /* `role="img"` with a name, or hidden. An unnamed `role="img"` is announced as
+     "image" and conveys nothing. */
   const semantics = label === undefined
     ? { 'aria-hidden': true as const }
     : { role: 'img' as const, 'aria-label': label };

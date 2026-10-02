@@ -2,29 +2,27 @@
 
 /* Scroll area.
  *
- * Almost nothing lives here on purpose. The scrollbar's colour and geometry, the
- * scroll contract — no chaining, a stable gutter, native gesture handling — and
- * the edge fade are all `@crystal-ui/core`'s stylesheet, reached through the
- * `.cr-scroll-frost` / `.cr-scroll-resin` classes the component applies. Writing
- * them again here would be a second description of one specification, and the two
- * would drift the first time either changed.
+ * The scrollbar's colour and geometry, the scroll contract (no chaining, a
+ * stable gutter, native gesture handling) and the edge fade all come from
+ * `@crystal-ui/core`'s stylesheet, through the `.cr-scroll-frost` /
+ * `.cr-scroll-resin` classes the component applies. Do not restate them here, or
+ * the two copies will drift.
  *
- * What is left is which way the box scrolls, which is the product's decision and
- * is the only thing this file decides.
+ * This file decides only which way the box scrolls, which is the product's
+ * decision.
  */
 
 .area {
   position: relative;
   /* No focus rule here. Crystal's focus is a crisp core at a 3px offset inside a
-     four-layer feathered halo, and its own stylesheet now reaches `[tabindex]` as
-     well as the native controls — which it did not until this component made a
-     `div` focusable. Restating it here, or pulling the ring inward to keep it off
-     the container's edge, would be a second focus recipe and a worse one. */
+     four-layer feathered halo, and Crystal's stylesheet applies it to
+     `[tabindex]` as well as to native controls. Do not restate it here or pull
+     the ring inward to keep it off the container's edge. */
 }
 
 .axisY { overflow-y: auto; overflow-x: hidden; }
-/* `overflow-y: hidden` is deliberate on a horizontal scroller: with it `auto`,
-   the browser reserves an inline gutter for a vertical scrollbar that can never
-   appear, which is 12px lost from every one of them. */
+/* A horizontal scroller sets `overflow-y: hidden`. With `auto`, the browser
+   reserves an inline gutter for a vertical scrollbar that can never appear,
+   which takes 12px from every horizontal scroller. */
 .axisX { overflow-x: auto; overflow-y: hidden; }
 .axisBoth { overflow: auto; }

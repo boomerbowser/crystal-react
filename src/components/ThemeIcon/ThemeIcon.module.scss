@@ -1,13 +1,13 @@
 @use '../../styles/tokens' as *;
 
-/* ThemeIcon — a filled container around a 24px icon.
+/* ThemeIcon: a filled container around a 24px icon.
  *
- * "Primary-soft or surface-alt fill": both are flat fills rather than materials,
- * and deliberately so. An anchor is a piece of punctuation in a layout, and a
- * Resin cap beside a heading would out-rank the heading.
+ * "Primary-soft or surface-alt fill": both are flat fills, not materials. An
+ * anchor is a small accent in a layout, and a Resin cap beside a heading would
+ * out-rank the heading.
  *
  * The box is the icon plus one spacing step either side, so the container scales
- * with the icon rather than with a size table nobody can keep in step.
+ * with the icon instead of following a separate size table.
  */
 
 .themeIcon {
@@ -17,7 +17,7 @@
   inline-size: $cr-icon-action + $cr-spacing-sm;
   block-size: $cr-icon-action + $cr-spacing-sm;
   border-radius: var(--cr-radius);
-  /* Not a control: no hit area, no cursor change, nothing to press. */
+  /* Not a control: no hit area and no cursor change. */
   pointer-events: none;
 }
 

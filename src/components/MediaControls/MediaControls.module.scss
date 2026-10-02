@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
 /* "Resin plane. Pill; 44px targets throughout." The plane is Crystal's
-   `.cr-resin` (2.2.0), whose own radius is the pill; the targets belong to
+   `.cr-resin` (2.2.0), whose own radius is the pill. The targets belong to
    `IconButton`, which already carries the floor. The catalogue gives this the
-   `resin-panel` surface while its geometry says "Pill" — the two differ only in
-   radius, and the geometry is what a reader sees, so this wears the pill. The
-   disagreement is reported upstream. */
+   `resin-panel` surface while its geometry says "Pill". The two differ only in
+   radius, and the geometry is what a reader sees, so this uses the pill. The
+   mismatch is reported upstream. */
 .controls {
   display: flex;
   align-items: center;
@@ -21,13 +21,13 @@
   color: var(--cr-muted);
 }
 
-/* The scrubber takes the room. Its own label and output are hidden, so what is
-   left is the track — the times either side of it are this component's. */
+/* The scrubber takes the free space. Its own label and output are hidden, so
+   only the track shows. The times on either side belong to this component. */
 .scrubber { flex: 1; min-inline-size: 0; }
 
-/* Wide enough to be operable with a pointer and narrow enough not to compete
-   with the scrubber — two of Crystal's largest spacing steps rather than a
-   number chosen by eye, so it moves with the scale. */
+/* Wide enough to operate with a pointer and narrow enough not to compete with
+   the scrubber. It is two of Crystal's largest spacing steps, so it moves with
+   the scale. */
 .volume { flex: none; inline-size: calc(#{$cr-spacing-2xl} * 2); }
 
 .announcement {

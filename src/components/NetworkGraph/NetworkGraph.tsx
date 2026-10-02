@@ -1,19 +1,17 @@
 'use client';
 
-/* NetworkGraph — nodes and the edges between them.
+/* NetworkGraph: nodes and the edges between them.
  *
- * "Nodes are reachable by keyboard; each states its degree and neighbours." The
- * neighbours are the demanding half and the reason this component computes them
- * rather than taking them: the whole content of a network graph is who is
+ * "Nodes are reachable by keyboard; each states its degree and neighbours." This
+ * component computes the neighbours itself. A network graph's content is who is
  * connected to whom, and a node that announced only its name would leave a
- * reader with a list of names and no graph at all.
+ * reader with a list of names and no graph.
  *
- * **Positions are the caller's.** The catalogue puts "layout algorithm" on the
- * product's side, and there is a second reason to keep it there: a force
- * simulation is motion, and Crystal's rule is that nothing moves at rest. A graph
- * that settles for four seconds after it appears is a page animating itself, and
- * a reader who tabbed into it during those seconds is chasing a moving target.
- * So the layout is computed by the product, once, and handed here as coordinates.
+ * Positions are the caller's. The catalogue puts "layout algorithm" on the
+ * product's side. A force simulation is also motion, and Crystal's rule is that
+ * nothing moves at rest: a graph that settles for four seconds after it appears
+ * gives a reader who tabs into it a moving target. The product computes the
+ * layout once and passes it here as coordinates.
  *
  * "Node size is a scale; edges are hairlines." The size is Crystal's point scale
  * by area, as the scatter's is and for the same reason.
@@ -95,9 +93,9 @@ export function NetworkGraph({
 
         return (
           <>
-            {/* The edges are `aria-hidden`: every edge is already named twice
-                over, once in each of the nodes it joins, and announcing them
-                separately would read the graph twice. */}
+            {/* The edges are `aria-hidden`. Each edge is already named in both
+                of the nodes it joins, and announcing them separately would read
+                the graph twice. */}
             <g aria-hidden="true">
               {edges.map((edge) => {
                 const from = at(edge.source);
@@ -161,9 +159,9 @@ function span(values: readonly number[]): [number, number] {
   return low === high ? [low - 1, high + 1] : [low, high];
 }
 
-/** Who each node is joined to. Both directions, because an edge is a connection
- *  rather than a direction unless the caller says otherwise, and a node that
- *  listed only its outgoing edges would under-report its own degree. */
+/** Who each node is joined to, in both directions. An edge has no direction
+ *  unless the caller gives it one, and a node that listed only its outgoing
+ *  edges would under-report its own degree. */
 export function adjacency(
   nodes: readonly GraphNode[], edges: readonly GraphEdge[],
 ): Map<string, string[]> {

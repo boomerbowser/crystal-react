@@ -1,19 +1,17 @@
 @use '../../styles/tokens' as *;
 
-/* Cells, their ink, and the one place in the slice where the ink is decided per
- * mark rather than once.
+/* Cells and their ink. This is the one place in the slice where the ink is
+ * decided per mark and not once.
  *
  * Crystal's intensity ramp ships five grounds and five inks, each pair measured
- * at 4.5:1. The cell writes both onto itself as custom properties, so the number
- * on a pale cell and the number on a strong one are each the ink that was
- * measured against *that* step — which is the whole content of "intensity is
- * paired with a value".
+ * at 4.5:1. The cell writes both onto itself as custom properties, so the
+ * number on each cell is in the ink measured against that cell's step. That is
+ * what "intensity is paired with a value" requires.
  *
- * A cell of nought is not the bottom of the ramp: it is the plot showing
- * through, with a hairline so the position is still a cell. A cell nobody
- * measured is a third thing again and is drawn as a dashed one — "nothing
- * happened" and "nobody counted" are as different from each other as either is
- * from a busy cell, and a chart that drew them alike would be inventing a zero.
+ * A cell of nought is the plot showing through, with a hairline so the
+ * position is still a cell, and not the bottom of the ramp. A cell nobody
+ * measured is drawn dashed. "Nothing happened" and "nobody counted" are
+ * different facts, and drawing them alike would invent a zero.
  */
 
 .fill {
@@ -50,15 +48,13 @@
   stroke-width: var(--cr-chart-stroke);
 }
 
-/* Forced colours takes the ramp away and leaves one colour, which would leave a
-   heatmap carrying nothing at all: every cell the same, and the only thing the
-   chart is for gone. The number in the cell is the first answer and it is not
-   enough — a matrix with small cells has no room for it.
+/* Forced colours replaces the ramp with one colour, which would make every
+   cell the same. The number in the cell is not enough on its own, because a
+   matrix with small cells has no room for it.
    
-   So the intensity becomes the *size* of the mark. Each cell is filled and
-   scaled to its own step about its own centre, so a strong cell fills its square
-   and a weak one is a small one inside it. That is a second channel in the mode
-   that most needs one, and it is the same information the paint was carrying. */
+   So the intensity becomes the size of the mark. Each cell is filled and
+   scaled to its own step about its own centre, so a strong cell fills its
+   square and a weak one is a small square inside it. */
 @media (forced-colors: active) {
   .fill {
     fill: CanvasText;

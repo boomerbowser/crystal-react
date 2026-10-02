@@ -9,15 +9,13 @@ const meta = {
     docs: {
       description: {
         component:
-          'A toast that does not leave. What separates it from `Toast` is its lifetime rather '
-          + 'than its appearance: a notification is a record, it survives the session, and it '
-          + 'has a read state.\n\n'
-          + '**Unread is label weight and nothing beside the label.** Crystal\'s selection rule, '
-          + 'doing the same job one component along: a dot beside the title offsets the very '
-          + 'title it points at, so the unread item stops lining up with the others. Weight is '
-          + 'typographic rather than chromatic, so the distinction never rests on colour — and '
-          + 'because weight is not something a screen reader reads out, "unread" is said in the '
-          + "item's accessible name too.\n\n"
+          'A toast that does not leave. It differs from `Toast` in its lifetime: a '
+          + 'notification is a record, it survives the session, and it has a read state.\n\n'
+          + '**Unread is label weight and nothing beside the label.** This is Crystal\'s '
+          + 'selection rule, applied here: a dot beside the title offsets the title it points '
+          + 'at, so the unread item stops lining up with the others. Weight is typographic, '
+          + 'so the distinction never rests on colour. A screen reader does not read out '
+          + 'weight, so "unread" is said in the item\'s accessible name too.\n\n'
           + 'The timestamp is a `<time>` with a machine-readable stamp; the words beside it are '
           + 'the caller\'s, because "3 minutes ago" has to be in the reader\'s language and has '
           + 'to age.',

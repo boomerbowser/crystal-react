@@ -3,13 +3,12 @@
 
 .trigger { display: inline-flex; }
 
-/* "Shared with Popover", in the catalogue's words — so it is the popover's
-   surface, not a third one. On the page that is Crystal's `.cr-frost`, which the
-   card wears; inside a pane it is the overlay mixin's recessed Haze, where this
-   file used to paint its own with the rim and the float shadow — a Haze card that
-   lifted while the menu beside it recessed. The attribute is set in React because
-   the DOM cannot answer the question: the card is portalled and loses its nesting
-   on the way. */
+/* "Shared with Popover", in the catalogue's words, so the card uses the
+   popover's surface. On the page that is Crystal's `.cr-frost`, which the card
+   wears. Inside a pane it is the overlay mixin's recessed Haze, so the card
+   recesses like the menu beside it. React sets the attribute because the card is
+   portalled and loses its nesting on the way, so the DOM cannot tell where it
+   was opened. */
 .card {
   @include overlay.surface;
   max-inline-size: $cr-layout-sidebar-width;

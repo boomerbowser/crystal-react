@@ -11,15 +11,15 @@ const meta = {
     docs: {
       description: {
         component:
-          'Twelve columns, which is what makes halves, thirds, quarters and sixths all '
-          + 'expressible without a second grid. A cell declares a span per breakpoint, and the '
-          + 'defaults are the ones that fail safely: a cell with no span is full width, so a '
-          + 'forgotten prop produces a readable stack rather than a page of slivers.\n\n'
-          + 'Reading order must match visual order. That is a rule about not reordering cells in '
-          + 'CSS — a grid that visually reorders its children leaves a keyboard and a screen '
-          + 'reader walking the original order, and the two no longer agree.\n\n'
-          + 'SimpleGrid is the other half of the pair: equal cells that flow into as many columns '
-          + 'as fit, with no breakpoint props at all, which is what a gallery or a card list wants.',
+          'Twelve columns, which express halves, thirds, quarters and sixths without a second '
+          + 'grid. A cell declares a span per breakpoint, and the defaults fail safely. A cell '
+          + 'with no span is full width, so a forgotten prop produces a readable stack and not a '
+          + 'page of slivers.\n\n'
+          + 'Reading order must match visual order, so cells are never reordered in CSS. A grid '
+          + 'that visually reorders its children leaves a keyboard and a screen reader walking '
+          + 'the original order, which no longer matches what is seen.\n\n'
+          + 'SimpleGrid is the other half of the pair. Its equal cells flow into as many columns '
+          + 'as fit, with no breakpoint props at all, which suits a gallery or a card list.',
       },
     },
   },

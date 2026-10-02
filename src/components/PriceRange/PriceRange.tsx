@@ -1,23 +1,23 @@
-/* PriceRange — a from-to price, or a from price.
+/* PriceRange: a from-to price, or a from price.
  *
- * "**Reads as a sentence** rather than two numbers with a dash."
+ * "Reads as a sentence rather than two numbers with a dash."
  *
- * A dash between two prices is a glyph that means nothing out loud. A screen
- * reader says "forty dash sixty" or, depending on the dash, nothing at all, and
- * a reader who cannot see the layout has to guess whether the second number is
- * an upper bound, an instalment or a saving. So the two amounts are joined by
- * words, and the words are a prop, because the sentence is different in every
- * language and this component has no business assuming English word order.
+ * A dash between two prices means nothing out loud. A screen reader says
+ * "forty dash sixty" or, depending on the dash, nothing at all, and a reader who
+ * cannot see the layout has to guess whether the second number is an upper
+ * bound, an instalment or a saving. So the two amounts are joined by words, and
+ * the words are a prop, because the sentence is different in every language and
+ * this component must not assume English word order.
  *
- * **One amount is not a range.** With only a `from`, the sentence is "From £40"
- * rather than "£40 – £40": a range whose ends are equal is a price, and saying
- * it twice tells a reader there is a spread when there is not. The same is true
- * when both ends *are* equal, which is why that case collapses too.
+ * One amount is not a range. With only a `from`, the sentence is "From £40"
+ * rather than "£40 – £40". A range whose ends are equal is a price, and saying
+ * it twice tells a reader there is a spread when there is not. So a range whose
+ * two ends are equal collapses too.
  *
- * Two currencies are not a range either. `null` from `percentOff`'s sibling
- * check is the same reasoning: the interval from a euro to a yen is not an
- * interval, so the component renders the `from` end alone rather than a sentence
- * that reads as though it were.
+ * Two currencies are not a range either. `percentOff`'s sibling check returns
+ * `null` for the same reason: the interval from a euro to a yen is not an
+ * interval, so the component renders the `from` end alone instead of a
+ * sentence that reads as a range.
  */
 import { Text, type TextProps } from '../Text/Text.js';
 import { Price } from '../Price/Price.js';
@@ -29,8 +29,8 @@ export interface PriceRangeProps extends Omit<TextProps, 'children'> {
   /** The upper bound. Left out when the range is open or there is one price. */
   to?: Money;
   /**
-   * The sentence, given both formatted ends. Default English; a product with
-   * another language passes its own rather than having one imposed.
+   * The sentence, given both formatted ends. The default is English; a product
+   * in another language passes its own.
    */
   sentence?: (from: React.ReactNode, to: React.ReactNode) => React.ReactNode;
   /** The sentence for a single price. */

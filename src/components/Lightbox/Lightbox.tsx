@@ -1,29 +1,29 @@
 'use client';
 
-/* Lightbox — a single media item enlarged over a scrim.
+/* Lightbox. A single media item enlarged over a scrim.
  *
  * "**A dialog.** Zoom and pan are keyboard reachable, and closing returns focus
  * to the thumbnail." The dialog part is React Aria's, which is where focus
  * containment, Escape and focus restoration already live and where they should
- * stay — rebuilding any of the three is how a reader ends up inside a viewer
+ * stay. Rebuilding any of the three is how a reader ends up inside a viewer
  * with no way out.
  *
- * **Pan is the platform's, not a keyboard handler of ours.** The enlarged item
- * lives in a scroll container, so once it is bigger than the viewport a reader
- * tabs to it and pans with the arrow keys the way they pan anything else — with
- * the engine's own smooth scrolling, its own scrollbars, its own behaviour under
- * a screen reader. A component that read arrow keys itself would have to answer
- * "what do arrows do here" differently depending on the zoom, which is a mode
- * nobody was told about; this way the answer is always "whatever arrows do in
- * the thing you are focused on".
+ * Pan is the platform's. The enlarged item lives in a scroll container, so once
+ * it is bigger than the viewport a reader tabs to it and pans with the arrow
+ * keys the way they pan anything else, with the engine's own smooth scrolling,
+ * its own scrollbars and its own behaviour under a screen reader. A component
+ * that read arrow keys itself would have to answer "what do arrows do here"
+ * differently depending on the zoom, which is a mode nobody was told about.
+ * Here the answer is always "whatever arrows do in the thing you are focused
+ * on".
  *
- * That is also what lets a gallery put *its* arrows on the dialog: moving
- * between items and panning inside one are two different focus positions, not
- * two meanings for one key.
+ * This also lets a gallery put its arrows on the dialog: moving between items
+ * and panning inside one are two different focus positions, each with its own
+ * meaning for the key.
  *
- * **Zoom is buttons first.** `+` and `-` work while focus is in the viewer, and
- * the two controls exist so that the feature is discoverable at all — a shortcut
- * nobody can see is a feature for people who already know it is there.
+ * Zoom is buttons first. `+` and `-` work while focus is in the viewer, and the
+ * two controls make the feature discoverable. A shortcut nobody can see only
+ * serves people who already know it is there.
  */
 import {
   useCallback, useEffect, useId, useRef, useState,
@@ -57,7 +57,8 @@ export interface LightboxProps
   children: ReactNode;
   /** Shown under the item. */
   caption?: ReactNode;
-  /** Where in a set this is, in words — a gallery's "3 of 12". Announced. */
+  /** Where in a set this is, in words, such as a gallery's "3 of 12".
+   *  Announced. */
   position?: string;
   /** A gallery's controls. Rendered in the header beside the close button. */
   actions?: ReactNode;
@@ -90,19 +91,17 @@ export function Lightbox({
 
   /* What changed, said out loud.
    *
-   * The item and the zoom share one live region rather than having one each,
-   * because they are one fact — what the reader is looking at — and two regions
-   * would race to describe it.
+   * The item and the zoom share one live region, because they are one fact
+   * (what the reader is looking at) and two regions would race to describe it.
    *
-   * The item is in here at all because a dialog's accessible name is read when
-   * the reader arrives in the dialog and is *not* read again when it changes
+   * The item is announced because a dialog's accessible name is read when the
+   * reader arrives in the dialog and is not read again when it changes
    * underneath them. A gallery changes it on every press of Next, with focus
-   * sitting on that button: naming the new picture is necessary and is not
-   * sufficient. */
+   * sitting on that button, so naming the new picture alone is not enough. */
   const said = position === undefined ? label : `${label}, ${position}`;
   /* Moving to another picture while open: `media-in` on the picture and
-     `caption-in` on its caption. Not as the lightbox opens, which is the
-     dialog's own arrival. */
+     `caption-in` on its caption. Neither plays as the lightbox opens, which is
+     the dialog's own arrival. */
   const itemArrival = useChangeMotion(position, () => 'media-in');
   const captionArrival = useChangeMotion(position, () => 'caption-in');
   const before = useRef<{ zoom: number; said: string } | null>(null);
@@ -113,13 +112,13 @@ export function Lightbox({
     before.current = { zoom, said };
     /* Nothing is said to a reader who is not in the viewer. The component is
        mounted while it is closed, so a gallery pointing it at a different item
-       moves `said` before anybody has arrived — and arriving to find an
-       announcement already waiting is being told what changed while you were
-       not there. Recording it anyway is what makes the arrival silent: by the
-       time the viewer opens, the new item is already what it was last told. */
+       moves `said` before anybody has arrived. An announcement waiting on
+       arrival would report a change the reader was not there for. The value is
+       recorded anyway, which keeps the arrival silent: by the time the viewer
+       opens, the new item is already what it was last told. */
     if (!isOpen) return;
-    /* Nothing on arrival either — the name has just been read, and repeating it
-       is noise at the one moment the reader does not need it. */
+    /* Nothing on arrival either. The name has just been read, and repeating it
+       is noise. */
     if (was === null) return;
     if (was.said !== said) { setAnnouncement(said); return; }
     if (was.zoom !== zoom) {
@@ -129,10 +128,9 @@ export function Lightbox({
     }
   }, [isOpen, zoom, said]);
 
-  /* Closed is a resting state, and a resting state has no zoom in it. A zoom is
-     something the reader did to one picture in one sitting; coming back to the
-     set later and finding it still at 400 per cent is the viewer remembering
-     something on their behalf that they never asked it to. */
+  /* Closing resets the zoom. A zoom is something the reader did to one picture
+     in one sitting, and coming back to the set later to find it still at 400
+     per cent means the viewer kept a setting nobody asked it to keep. */
   useEffect(() => {
     if (isOpen) return;
     setZoom(MIN_ZOOM);
@@ -144,8 +142,8 @@ export function Lightbox({
   }, []);
 
   const onKeyDown = useCallback((event: KeyboardEvent<HTMLElement>) => {
-    /* Never a key the control under the reader has its own use for — the same
-       rule the video player's shortcuts follow, and for the same reason. */
+    /* Never a key the control under the reader has its own use for. The video
+       player's shortcuts follow the same rule, for the same reason. */
     const from = event.target as HTMLElement;
     if (from.closest('button, input, [role="slider"], a, select, textarea')) return;
     if (onKeyShortcut?.(event.key)) { event.preventDefault(); return; }
@@ -168,9 +166,8 @@ export function Lightbox({
           <div className={styles['header']}>
             <p className={styles['label']} id={`${id}-label`}>
               {label}
-              {/* The position is part of the name rather than beside it: a reader
-                  who cannot see the strip has no other way to know where in the
-                  set they are. */}
+              {/* The position is part of the name. A reader who cannot see the
+                  strip has no other way to know where in the set they are. */}
               {position ? <span className={styles['position']}>{position}</span> : null}
             </p>
             <div className={styles['actions']}>
@@ -193,7 +190,7 @@ export function Lightbox({
             </div>
           </div>
 
-          {/* The scroll container *is* the pan. Focusable only once there is
+          {/* The scroll container is the pan. Focusable only once there is
               something to pan to, because a scroll region that never scrolls is
               a tab stop that does nothing. */}
           <div

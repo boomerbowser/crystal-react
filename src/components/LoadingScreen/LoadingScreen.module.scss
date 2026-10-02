@@ -3,8 +3,9 @@
 
 /* Not `state-screen`: the others centre one card, and this one stands in for the
    view that is coming. Skeletons that match the shape of what is arriving have
-   to sit where that content will sit, which is the top of the region, at its
-   width — centring them would move everything the moment the real thing landed. */
+   to sit where that content will sit, at the top of the region and at its
+   width. Centring them would move everything the moment the real content
+   landed. */
 .screen {
   box-sizing: border-box;
   min-block-size: 100%;

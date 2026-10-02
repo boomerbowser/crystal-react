@@ -11,16 +11,16 @@ const meta = {
       description: {
         component:
           '"Focus moves to each step; **the sequence is escapable** and its position is '
-          + 'announced." Escapable is the word that shapes this: a tour is the one pattern in '
-          + 'the library that takes the whole interface away from someone who did not ask for '
-          + 'it, so every step carries a visible way out, Escape ends it from anywhere, and '
-          + 'ending returns focus to whatever had it when the tour began — not to the last '
-          + "step's target, which by then may be the thing the tour was explaining.\n\n"
-          + '**The highlight is a hole in the scrim, not a ring around the target.** A ring has '
-          + 'to out-stack everything between it and the viewport; a hole has nothing to fight. '
+          + 'announced." A tour is the one pattern in the library that takes the whole interface '
+          + 'away from someone who did not ask for it. So every step carries a visible way out, '
+          + 'Escape ends it from anywhere, and ending returns focus to whatever had it when the '
+          + "tour began. Focus does not go to the last step's target, which by then may be the "
+          + 'thing the tour was explaining.\n\n'
+          + 'The highlight is a hole in the scrim instead of a ring around the target. A ring has '
+          + 'to out-stack everything between it and the viewport, and a hole does not. '
           + "It takes the target's own radius, so a pill is cut as a pill.\n\n"
-          + 'The position is in the panel\'s accessible name, not only in small text beside it: '
-          + 'a reader who cannot see the progress has no other way to know whether they are '
+          + 'The position is in the panel\'s accessible name as well as in small text beside it. '
+          + 'A reader who cannot see the progress has no other way to know whether they are '
           + 'near the end.',
       },
     },
@@ -71,8 +71,8 @@ function Guided(): React.JSX.Element {
   );
 }
 
-/* A tour is only itself when something is being pointed at, so the story is the
-   page it runs over rather than the panel on its own. */
+/* A tour needs something to point at, so the story renders the page it runs
+   over instead of the panel on its own. */
 export const AGuidedSequence: Story = {
   args: { steps: [], isOpen: false },
   render: () => <Guided />,

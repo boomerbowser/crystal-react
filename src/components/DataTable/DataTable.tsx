@@ -1,34 +1,32 @@
 'use client';
 
-/* DataTable — table anatomy with sorting, selection, column sizing and paging.
+/* DataTable: table anatomy with sorting, selection, column sizing and paging.
  *
- * This is React Aria's `Table`, and `Table` in this library is not. The split is
- * the catalogue's — three entries, `table`, `data-table` and `resizable-table` —
- * and it is the right one for a reason worth stating, because "we already have a
- * table" is the obvious objection.
+ * This is React Aria's `Table`. `Table` in this library is a plain table. The
+ * split follows the catalogue, which has three entries: `table`, `data-table`
+ * and `resizable-table`.
  *
- * A static table is a *document*: a reader moves through it with their screen
- * reader's own table commands and a plain `<table>` is exactly what those
- * commands are for. An interactive one is a *grid widget*: it has a roving
- * focus, arrow keys that move a cursor between cells, selection, and controls
- * inside cells — and `role="grid"` is what tells assistive technology to switch
- * from reading mode to interaction mode. Rendering the interactive one as a
- * plain table would leave every one of those keys doing nothing.
+ * A static table is a document. A reader moves through it with their screen
+ * reader's own table commands, and a plain `<table>` is what those commands are
+ * for. An interactive table is a grid widget, with a roving focus, arrow keys
+ * that move a cursor between cells, selection, and controls inside cells.
+ * `role="grid"` tells assistive technology to switch from reading mode to
+ * interaction mode. Rendered as a plain table, none of those keys would work.
  *
  * What Crystal owns, and what is easy to get wrong:
  *
- *   - **Selection is label weight, not a check badge on the row.** The checkbox
- *     is the control that *makes* the selection; the row shows that it is
- *     selected by being heavier, exactly as every other selected thing in
- *     Crystal does. A row whose only mark is a ticked box has put the state in
- *     the control rather than in the row.
- *   - **Real checkboxes with names.** Not a clickable cell, not a row press:
- *     each checkbox says which row it selects. React Aria composes that name
- *     itself — `aria-labelledby` is the checkbox's own label *plus* the row's
- *     text value — so the label here is the verb alone. Passing "Select Gather"
- *     produces "Select Gather Gather", which is how this was found.
- *   - **`aria-sort` on sorted headers**, which React Aria supplies from the sort
- *     descriptor — one column at a time, because it describes the table's order.
+ *   - Selection is shown by label weight, with no check badge on the row. The
+ *     checkbox is the control that makes the selection. The row shows that it
+ *     is selected by being heavier, as every other selected thing in Crystal
+ *     does. The state belongs in the row, not only in the ticked box.
+ *   - Real checkboxes with names, not a clickable cell or a row press. Each
+ *     checkbox says which row it selects. React Aria composes that name itself:
+ *     `aria-labelledby` is the checkbox's own label plus the row's text value,
+ *     so the label here is the verb alone. Passing "Select Gather" produces
+ *     "Select Gather Gather".
+ *   - `aria-sort` on sorted headers, which React Aria supplies from the sort
+ *     descriptor. It is on one column at a time, because it describes the
+ *     table's order.
  */
 import { forwardRef, useEffect, useRef, type Key, type ReactNode } from 'react';
 import type { ColumnSize, ColumnStaticSize } from 'react-stately';
@@ -49,7 +47,7 @@ export interface DataTableColumn {
   header: ReactNode;
   /** Offer a sort control in this column's header. */
   isSortable?: boolean;
-  /** Numbers read right-aligned; everything else reads from the start. */
+  /** Numbers read right-aligned. Everything else reads from the start. */
   align?: 'start' | 'end';
   /** Let this column be resized by pointer and keyboard. */
   isResizable?: boolean;
@@ -88,7 +86,7 @@ export interface DataTableProps {
   resizerLabel?: string;
   /** Shown instead of the rows when there are none. */
   empty?: ReactNode;
-  /** Sorting summaries, filters, paging — whatever belongs under the table. */
+  /** Whatever belongs under the table: sorting summaries, filters, paging. */
   footer?: ReactNode;
   className?: string;
 }
@@ -99,9 +97,8 @@ const CheckIcon = (
   </svg>
 );
 
-/* Some, not all. A dash rather than a check, because a select-all box drawn with
-   a check mark while one row of four is selected says "all of them" to anybody
-   who glances at it — which is what it did until a browser was pointed at it. */
+/* Some, not all. A select-all box drawn with a check mark while one row of four
+   is selected reads as "all of them", so the indeterminate state draws a dash. */
 const DashIcon = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
     <path d="M6 12h12" strokeLinecap="round" />
@@ -117,11 +114,11 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
   const selectable = selectionMode !== 'none';
 
   const settlers = useRef(new Map<HTMLElement, (name: string) => Promise<void>>());
-  /* A row not in the table before — added, not scrolled to or re-sorted — arrives
-     with `list-in`; the rows the table loads with do not. Decided by the rows
-     already seen, since React Aria may render any row afresh. A removed row
-     leaves React Aria's collection at once, so there is nothing to play
-     `list-out` on. */
+  /* A row that was not in the table before (added, not scrolled to or
+     re-sorted) arrives with `list-in`. The rows the table loads with do not.
+     This is decided by the rows already seen, since React Aria may render any
+     row afresh. A removed row leaves React Aria's collection at once, so there
+     is nothing to play `list-out` on. */
   const seen = useRef<Set<string> | null>(null);
   const isNew = (id: string): boolean => seen.current !== null && !seen.current.has(id);
   useEffect(() => { seen.current = new Set(rows.map((row) => row.id)); });
@@ -141,9 +138,9 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
       <TableHeader className={cx(styles['header'])}>
         {selectable ? (
           <Column className={cx(styles['selectColumn'])}>
-            {/* Multiple selection gets a "select all"; single selection has
-                nothing to select all of, so the cell is the column's name and
-                nothing else. */}
+            {/* Multiple selection gets a "select all". Single selection has
+                nothing to select all of, so the cell holds only the column's
+                name. */}
             {selectionMode === 'multiple'
               ? <SelectionBox slot="selection" label="Select all rows" />
               : <span className={styles['selectHeading']}>Selected</span>}
@@ -164,8 +161,8 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
             </ColumnLabel>
             {/* A slider, so arrow keys resize and the new width is announced.
                 It reaches the target floor by being the full height of the
-                header with its own padding, and it does not shift the column it
-                borders — it sits inside the header's own box. */}
+                header with its own padding. It sits inside the header's own
+                box, so it does not shift the column it borders. */}
             {resizable && (column.isResizable ?? false) ? (
               <ColumnResizer aria-label={resizerLabel ?? 'Resize'} className={cx(styles['resizer'])} />
             ) : null}
@@ -180,14 +177,14 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
       >
         {/* `textValue` is what React Aria appends to the selection checkbox's
             name, so a row whose first cell is an avatar still announces as
-            "Select Gather" rather than "Select". */}
+            "Select Gather" and not just "Select". */}
         {(row: DataTableRow) => (
           <Row id={row.id} textValue={row.name} className={cx(styles['row'])}>
             {selectable ? (
               <Cell className={cx(styles['selectCell'])}>
                 {/* The verb alone. React Aria appends the row, so this reads
-                    "Select Gather" — and passing the row name here would make
-                    it "Select Gather Gather". */}
+                    "Select Gather". Passing the row name here would make it
+                    "Select Gather Gather". */}
                 <SelectionBox slot="selection" label="Select" />
               </Cell>
             ) : null}
@@ -207,15 +204,15 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
   return (
     <div ref={ref} className={cx(styles['shell'], className)}>
       {/* The resizing container has to wrap the table, and it is also the scroll
-          container — a resized column makes the table wider than its frame,
-          which is the whole reason resizing needs one. */}
+          container, because a resized column can make the table wider than its
+          frame. */}
       {resizable ? (
         <ResizableTableContainer
           className={cx(styles['scroller'], 'cr-table-scroll')}
-          /* `resize-settle` on the column that was resized, once the resize ends
-             — "after measured layout size changes". The resizer being operated
-             holds focus while it resizes, by pointer or by key, so its header is
-             noted then; by the time a keyboard resize ends, focus has moved on. */
+          /* `resize-settle` plays on the column that was resized, once the
+             resize ends: "after measured layout size changes". The resizer holds
+             focus while it resizes, by pointer or by key, so its header is noted
+             then. By the time a keyboard resize ends, focus has moved on. */
           onResize={() => {
             resizing.current = (document.activeElement as HTMLElement | null)
               ?.closest('[role=columnheader]')?.querySelector<HTMLElement>('[data-column-label]') ?? resizing.current;
@@ -239,8 +236,8 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
 });
 
 /** Crystal's checkbox glyph on React Aria's checkbox. A check mark here is
- *  information — "this row is in the selection" — which is the legitimate use of
- *  the glyph; it is the *row* that shows selection by weight. */
+ *  information ("this row is in the selection"), which is a permitted use of
+ *  the glyph. The row itself shows selection by weight. */
 function SelectionBox({ slot, label }: { slot: 'selection'; label: string }): ReactNode {
   return (
     <Checkbox slot={slot} aria-label={label} className={cx(styles['checkbox'])}>
@@ -255,8 +252,8 @@ function SelectionBox({ slot, label }: { slot: 'selection'; label: string }): Re
 
 export type { Key as DataTableKey, Selection as DataTableSelection, SortDescriptor as DataTableSort };
 
-/* A column's label, the element `resize-settle` plays on — registered by its
-   element, so the table can reach the one whose resizer was used. */
+/* A column's label, the element `resize-settle` plays on. It is registered by
+   its element, so the table can reach the one whose resizer was used. */
 function ColumnLabel({ settlers, align, children }: {
   settlers: React.RefObject<Map<HTMLElement, (name: string) => Promise<void>>>;
   align: string;

@@ -1,9 +1,8 @@
 @use '../../styles/tokens' as *;
 
 /* Crystal's dock, worn as `.cr-dock`: the catalogue's "Pill" and its Resin
-   plane, with the one Haze fill under every label that `.cr-dock` carries. Until
-   28 September this was a Resin band with square lower corners, and each
-   destination painted a Haze fill of its own. */
+   plane, with the one Haze fill under every label that `.cr-dock` carries. The
+   destinations paint no Haze fill of their own. */
 .bar {
   position: sticky;
   inset-block-end: 0;
@@ -14,8 +13,8 @@
   margin-block-end: env(safe-area-inset-bottom, 0px);
 }
 
-/* The list fills the dock; `.cr-dock` is a flex row, and a list that does not
-   grow in it measures its own content and the equal slots collapse. */
+/* The list fills the dock. `.cr-dock` is a flex row, and a list that does not
+   grow in it measures its own content, which collapses the equal slots. */
 .list {
   display: flex;
   flex: 1;
@@ -24,8 +23,8 @@
   list-style: none;
 }
 
-/* Equal slots, so the destinations do not shift as labels change length —
-   a bar whose targets move between pages is one nobody can aim at. */
+/* Equal slots, so the destinations do not shift as labels change length. A bar
+   whose targets move between pages is hard to aim at. */
 .slot { flex: 1 1 0; min-inline-size: 0; }
 
 .item {

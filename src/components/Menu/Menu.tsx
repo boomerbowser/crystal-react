@@ -3,18 +3,18 @@
 /* Menu.
  *
  * React Aria owns `role="menu"`, arrow-key movement, type-ahead, Escape, the
- * return of focus to the trigger and the whole of submenu behaviour. Crystal owns
- * the surface, the rows and the one semantic decision worth stating.
+ * return of focus to the trigger and all submenu behaviour. Crystal owns the
+ * surface, the rows and one semantic decision.
  *
- * **A check mark in a menu means checked**, and this is the only place in Crystal
- * where a check mark means anything at all. Everywhere else it means validated or
- * informational, and selection is carried by label weight — never a mark set
- * beside the label, which offsets it. A checkable menu item is a checkbox that happens to
- * live in a menu: it reports `aria-checked`, and a check is what a checkbox
- * draws. The highlighted row still uses weight.
+ * A check mark in a menu means checked, and this is the only place in Crystal
+ * where a check mark means that. Everywhere else it means validated or
+ * informational, and selection is carried by label weight, never by a mark
+ * beside the label, which offsets it. A checkable menu item is a checkbox in a
+ * menu: it reports `aria-checked`, and a checkbox draws a check. The highlighted
+ * row still uses weight.
  *
- * The space for the mark is reserved whether or not an item is checked, because a
- * menu whose rows shift sideways as they are ticked is a menu nobody can aim at.
+ * The space for the mark is reserved whether or not an item is checked, so the
+ * rows do not shift sideways as they are ticked.
  */
 import { useRef, useState, type ReactElement, type ReactNode, type RefObject } from 'react';
 import {
@@ -54,11 +54,10 @@ export function Menu<T extends object>({
   label, triggerRef, className, ...props
 }: MenuProps<T>): React.JSX.Element {
   const material = useOverlayMaterial();
-  /* The catalogue's `menu-in`, on the surface, on the mount that is the opening,
-     and `menu-out` as it closes. React Aria unmounts the popover when it closes,
-     which is why the exit was once recorded as needing a new structure; it
-     needed none — React Aria holds an exiting overlay for its running
-     animations, and `Departure` starts the recipe where it will find it. */
+  /* The catalogue's `menu-in` plays on the surface when it mounts to open, and
+     `menu-out` as it closes. React Aria unmounts the popover when it closes,
+     but holds an exiting overlay for its running animations, and `Departure`
+     starts the recipe where React Aria will find it. */
   const [scope, play] = useMotion();
 
   return (
@@ -99,10 +98,10 @@ export interface MenuItemProps {
   isDestructive?: boolean;
   onAction?: () => void;
   /**
-   * Makes the item a link. React Aria then renders a real `<a>`, so the browser's
-   * own affordances come with it — middle-click, open in a new tab, the status
-   * bar showing where it goes. An item that navigates and is not a link takes all
-   * of that away from somebody who expected it.
+   * Makes the item a link. React Aria then renders a real `<a>`, so the
+   * browser's own affordances come with it: middle-click, open in a new tab, and
+   * the status bar showing where it goes. An item that navigates without being a
+   * link loses all of these.
    */
   href?: string;
   /** Where a link item opens. Only meaningful with `href`. */
@@ -141,8 +140,8 @@ export function MenuItem({
         </span>
       ) : null}
       <span className={cx(styles['label'])}>{children}</span>
-      {/* `Keyboard` is announced as the shortcut rather than read as loose text
-         beside the label — "Save, Control S" rather than "Save Control S". */}
+      {/* `Keyboard` is announced as the shortcut instead of read as loose text
+         beside the label: "Save, Control S", not "Save Control S". */}
       {shortcut ? <Keyboard className={cx(styles['shortcut'])}>{shortcut}</Keyboard> : null}
     </AriaMenuItem>
   );
@@ -179,9 +178,9 @@ export interface SubmenuProps {
 }
 
 /**
- * A menu inside a menu. React Aria owns the whole of it — the delay before it
- * opens, the diagonal the pointer may travel without closing it, right-arrow to
- * enter and left-arrow to leave.
+ * A menu inside a menu. React Aria owns all of it: the delay before it opens,
+ * the diagonal the pointer may travel without closing it, right-arrow to enter
+ * and left-arrow to leave.
  */
 export function Submenu({ label, children, isDisabled = false, textValue }: SubmenuProps): React.JSX.Element {
   return (
@@ -206,7 +205,7 @@ export function MenuTrigger(props: MenuTriggerProps): React.JSX.Element {
 }
 
 export interface ContextMenuProps {
-  /** The menu itself — a `Menu` with its items. */
+  /** The menu itself: a `Menu` with its items. */
   menu: (anchor: RefObject<HTMLElement | null>) => ReactElement;
   /** What right-clicking opens the menu on. */
   children: ReactNode;
@@ -216,23 +215,21 @@ export interface ContextMenuProps {
 /**
  * A menu opened by right-click, and by the keyboard.
  *
- * React Aria has no primitive for this, and the usual substitute — a long-press
- * trigger — is a different gesture and answers the keyboard not at all. So the
- * pointer's position becomes a one-pixel anchor and the menu is told to measure
+ * React Aria has no primitive for this. The usual substitute, a long-press
+ * trigger, is a different gesture and does not respond to the keyboard. The
+ * pointer's position therefore becomes a one-pixel anchor, and the menu measures
  * against that instead of against a trigger.
  *
- * **The keyboard route is not optional.** Shift+F10 and the Menu key are how a
- * context menu is opened without a mouse — every operating system uses them — and
- * a context menu that answers only the right mouse button is a feature a keyboard
- * user simply does not have. Opened that way it appears at the element, because
- * there is no pointer for it to appear at.
+ * The keyboard route is required. Every operating system opens a context menu
+ * without a mouse through Shift+F10 and the Menu key, and a context menu that
+ * answers only the right mouse button is unavailable to a keyboard user. Opened
+ * that way it appears at the element, because there is no pointer position.
  *
- * The keystroke is heard on the region, which means it has to reach the region:
- * **something inside must be focusable.** A row, a link, a button — whatever the
- * menu is about. The region is deliberately not made a tab stop itself, because
- * that would add one to every list item in an application; if there is genuinely
- * nothing focusable inside, the keyboard route does not exist and neither, for
- * most people, does the menu.
+ * The keystroke is heard on the region, so it has to reach the region, and
+ * something inside must be focusable: a row, a link, a button, whatever the menu
+ * is about. The region is not made a tab stop itself, because that would add one
+ * to every list item in an application. If nothing inside is focusable, there is
+ * no keyboard route, and for most people no menu.
  */
 export function ContextMenu({ menu, children, className }: ContextMenuProps): React.JSX.Element {
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
@@ -272,7 +269,7 @@ export function ContextMenu({ menu, children, className }: ContextMenuProps): Re
         onOpenChange={(open) => { if (!open) setPoint(null); }}
       >
         {/* React Aria requires a trigger element. This one is never seen, never
-            focusable and never pressed — the gesture happens on the region above
+            focusable and never pressed. The gesture happens on the region above
             and the position comes from the anchor. */}
         <span hidden />
         {menu(anchor)}

@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { PlayerShell } from './PlayerShell.js';
 import type { PlaylistTrack } from '../PlaylistBlock/PlaylistBlock.js';
 
-/* A tiny inline file, as VideoPlayer's stories use: the shell is about the
-   transport, the full screen, the queue and the metadata, not the picture. */
+/* A tiny inline file, as VideoPlayer's stories use. These stories show the
+   transport, the full screen, the queue and the metadata, so the picture does
+   not matter. */
 const SAMPLE = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAAhtZGF0';
 
 const tracks: PlaylistTrack[] = [
@@ -21,10 +22,10 @@ const meta = {
       description: {
         component:
           '"Real media elements; captions and their state announced; transport reachable by keyboard."\n\n'
-          + '`VideoPlayer` or `AudioPlayer` — a native element under Crystal\'s Resin transport, with the '
-          + 'caption toggle and keyboard shortcuts that answer only while focus is inside — with full screen '
-          + 'on the shell\'s stage so the transport comes too, metadata on Haze, and `PlaylistBlock` as the '
-          + 'queue.',
+          + 'The shell is `VideoPlayer` or `AudioPlayer`, a native element under Crystal\'s Resin transport '
+          + 'with the caption toggle and keyboard shortcuts that answer only while focus is inside. It adds '
+          + 'full screen on the shell\'s stage so the transport comes too, metadata on Haze, and '
+          + '`PlaylistBlock` as the queue.',
       },
     },
   },

@@ -24,12 +24,10 @@ describe('DataView', () => {
   });
 
   /* "The layout switch is a control with a pressed state, not a hidden toggle."
-     It is a named radio group rather than `aria-pressed`, and the divergence is
-     deliberate: picking one of two arrangements is a choice rather than a
-     pressed state, and Crystal's segmented control and React Aria's
-     single-selection toggle group both reach `role="radiogroup"` independently.
-     What the clause rules out — two unlabelled icons whose state is a colour —
-     is ruled out at least as firmly. */
+     It is a named radio group, not `aria-pressed`, because picking one of two
+     arrangements is a choice. Crystal's segmented control and React Aria's
+     single-selection toggle group both use `role="radiogroup"`. The clause rules out two unlabelled icons whose state
+     is a colour, and a named radio group rules that out at least as firmly. */
   it('offers the layout switch as a named group of real options', async () => {
     const onLayoutChange = vi.fn();
     renderWithCrystal(

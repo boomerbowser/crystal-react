@@ -6,23 +6,22 @@
  * label, the description and error association and the invalid state; Crystal
  * owns the material and the motion.
  *
- * Autosize uses `field-sizing: content` rather than measuring the text in a
- * hidden element and setting a height. The reason is the catalogue's: "autosize
- * must not trap the caret". Every JavaScript autosize sets `height` from a
- * measurement, and every one of them has a frame where the caret is outside the
- * visible box and the browser scrolls to find it — which at the end of a long
- * paragraph reads as the field jumping. The CSS one has no such frame.
+ * Autosize uses `field-sizing: content` instead of measuring the text in a
+ * hidden element and setting a height, because the catalogue says "autosize
+ * must not trap the caret". A JavaScript autosize sets `height` from a
+ * measurement and has a frame where the caret is outside the visible box and
+ * the browser scrolls to find it. At the end of a long paragraph that looks
+ * like the field jumping. The CSS autosize has no such frame.
  *
- * The character count is announced rather than only drawn, and only when it
- * matters: a live region that speaks on every keystroke is unusable, so it
- * announces as the limit approaches and not before.
+ * The character count is announced as well as drawn, but only as the limit
+ * approaches. A live region that speaks on every keystroke is unusable.
  *
- * It does that with two elements rather than by switching one element's role.
- * The visible figure is `aria-hidden`; a separate, permanently mounted live
- * region carries the announcement and holds an empty string until the limit is
- * near. A live region that is *inserted* at the same moment as its content is
- * not reliably announced — the assistive technology has to have been watching
- * the node before the text arrives — which is what the first version did.
+ * The count uses two elements instead of switching one element's role. The
+ * visible figure is `aria-hidden`. A separate, permanently mounted live region
+ * carries the announcement and holds an empty string until the limit is near.
+ * A live region inserted at the same moment as its content is not reliably
+ * announced, because assistive technology has to be watching the node before
+ * the text arrives.
  */
 import { forwardRef, useState, type ReactNode } from 'react';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
@@ -48,7 +47,7 @@ export interface TextAreaProps extends Omit<AriaTextFieldProps, 'className' | 's
   maxLength?: number;
   /**
    * Blur of the control itself. React Aria's TextField does not forward this to
-   * the element inside it, so it is passed through explicitly — a field that
+   * the element inside it, so it is passed through explicitly. A field that
    * validates on blur has nowhere else to listen.
    */
   onBlur?: React.FocusEventHandler<HTMLTextAreaElement>;
@@ -68,9 +67,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   return (
     <AriaTextField
       {...props}
-      /* Over the limit is a decision this component has made, so it is said; short
-         of that nothing is said, and React Aria keeps validity — which is how a
-         native constraint or a server's error still reaches the field. */
+      /* Over the limit is this component's decision, so it is declared. Short of
+         the limit nothing is declared and React Aria keeps validity, so a native
+         constraint or a server's error still reaches the field. */
       {...declaredInvalid(over ? true : props.isInvalid, errorMessage)}
       onChange={(value) => { setLength(value.length); props.onChange?.(value); }}
       className={cx(styles['field'], className)}
@@ -79,9 +78,10 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
       {({ isInvalid }) => (
       <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      {/* The validity React Aria resolved, not the one the caller declared, so a
-          server's rejection moves the field exactly as a local rule would. Over
-          the limit is this component's own judgement and is added to it. */}
+      {/* Uses the validity React Aria resolved instead of the one the caller
+          declared, so a server's rejection moves the field exactly as a local
+          rule would. Over the limit is this component's own judgement and is
+          added to it. */}
       <FieldShell isInvalid={isInvalid || over} className={cx(styles['shell'], 'cr-field-shell')}>
         <AriaTextArea
           ref={forwardedRef}
@@ -100,8 +100,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
             </span>
             {/* Present from mount and empty until the limit is near, so the
                 announcement is a text change inside a region that was already
-                being watched. Spoken as words rather than as "180 / 200",
-                which a reader renders as a date. */}
+                being watched. Spoken as words, because a screen reader
+                renders "180 / 200" as a date. */}
             <VisuallyHidden role="status" aria-live="polite">
               {remaining === undefined || remaining > 20
                 ? ''

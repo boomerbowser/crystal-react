@@ -2,29 +2,28 @@
 
 /* Crystal's motion, on Motion for React.
  *
- * Crystal owns the physics; this file owns the binding. CONTRACT §6 is explicit
- * that a library honours the *physics* rather than copying keyframes, and that is
- * what makes Motion for React the right engine rather than merely a React-shaped
- * one: every Crystal recipe carries a real spring — `{ stiffness, damping, mass }`
- * fitted so its settling time equals the authored duration — and Motion's spring
- * transition takes exactly those three numbers. The recipe's own physics drive
- * the animation, instead of a duration and a bezier approximating them.
+ * Crystal owns the physics and this file owns the binding. CONTRACT §6 requires
+ * a library to honour the physics instead of copying keyframes. Every Crystal
+ * recipe carries a real spring, `{ stiffness, damping, mass }`, fitted so its
+ * settling time equals the authored duration, and Motion's spring transition
+ * takes exactly those three numbers. The recipe's own physics drive the
+ * animation, instead of a duration and a bezier approximating them.
  *
  * `useAnimate` gives a scope whose animations are cancelled when the component
- * unmounts, which is the lifecycle guarantee a plain WAAPI call cannot make and
- * the reason an animation here can never outlive the element it plays on.
+ * unmounts. A plain WAAPI call cannot guarantee that, and it means an animation
+ * here never outlives the element it plays on.
  *
- * Three things this deliberately does NOT do:
+ * This file does not:
  *
- *   - It never drives an animation through React state. A 60fps animation that
- *     re-renders is a 60fps render; the imperative path costs nothing.
- *   - It never animates a property the compositor cannot handle. The web preview
- *     animates `box-shadow`, `border-radius` and `background-position` across 46
+ *   - Drive an animation through React state. A 60fps animation that re-renders
+ *     is a 60fps render, and the imperative path costs nothing.
+ *   - Animate a property the compositor cannot handle. The web preview animates
+ *     `box-shadow`, `border-radius` and `background-position` across 46
  *     keyframes, each forcing a repaint every frame. Crystal React restricts
  *     itself to `transform` and `opacity`, and expresses a shadow change as an
  *     opacity cross-fade between pre-rendered layers.
- *   - It never starts anything at rest. Ambient motion is deferred upstream (R22)
- *     and must not be reinvented here.
+ *   - Start anything at rest. Ambient motion is deferred upstream (R22) and must
+ *     not be reinvented here.
  */
 import { useCallback, useRef } from 'react';
 import { useAnimate } from 'motion/react';
@@ -47,29 +46,29 @@ export const recipeNames: readonly string[] = [...RECIPES.keys()];
 
 export interface UseMotionOptions {
   /**
-   * Coalesce a repeat of the SAME recipe while it is still running.
+   * Coalesce a repeat of the same recipe while it is still running.
    *
-   * A continuous control fires its event many times a second, and restarting a
-   * 320ms animation on every one of them stops it partway and begins again —
-   * which is what makes a slider feel choppy. A *different* recipe still
-   * interrupts, because that is a different thing being expressed.
+   * A continuous control fires its event many times a second. Restarting a 320ms
+   * animation on every event stops it partway and begins again, which makes a
+   * slider feel choppy. A different recipe still interrupts, because it
+   * expresses a different change.
    */
   readonly once?: boolean;
   /**
-   * Reorient a directional recipe. The physics are untouched; what changes is
-   * which way the movement points.
+   * Reorient a directional recipe. The physics are untouched. Only the direction
+   * of the movement changes.
    *
    * Crystal authors its directional recipes once, for one direction, with
    * physical transforms: `drawer-in` reads `translateX(105%) rotateY(-12deg)`,
-   * which is a panel arriving from the **right**. That is correct for a drawer on
-   * the inline-end edge of a left-to-right page and wrong for every other case —
-   * and CSS cannot mirror a transform for you the way it mirrors
-   * `padding-inline-start`. Right-to-left is a verified axis in Crystal, so a
-   * recipe that cannot follow it is a gap rather than a preference.
+   * which is a panel arriving from the right. That is correct for a drawer on
+   * the inline-end edge of a left-to-right page and wrong for every other case,
+   * and CSS cannot mirror a transform the way it mirrors `padding-inline-start`.
+   * Right-to-left is a verified axis in Crystal, so every recipe has to follow
+   * it.
    *
-   * Reorienting rather than authoring three more recipes is deliberate: a
-   * recipe carries a fitted spring, and a second copy of the same movement is a
-   * second thing to keep in step with it. See `reorientRecipe`.
+   * Reorienting is chosen over authoring three more recipes because a recipe
+   * carries a fitted spring, and every copy of a movement would have to be kept
+   * in step with it. See `reorientRecipe`.
    */
   readonly reorient?: Reorientation;
 }
@@ -90,27 +89,27 @@ export interface Reorientation {
 /**
  * Rewrite a recipe's transforms so the same movement points somewhere else.
  *
- * Only two things are touched, and both are geometry rather than physics:
+ * Only two things change, and both are geometry:
  *
  *   - `mirrorInline` negates `translateX` and `rotateY`. A panel arriving from
  *     the right arrives from the left instead, tilted the other way, over the
  *     same distance in the same time.
  *   - `toBlockAxis` swaps the axes: `translateX` becomes `translateY` and
  *     `rotateY` becomes `rotateX` with its sign flipped, because a positive
- *     rotation about Y and a positive rotation about X tip a panel *toward*
+ *     rotation about Y and a positive rotation about X tip a panel toward
  *     opposite corners. The result is the authored movement about the other edge.
  *
- * Durations, offsets, easing and the fitted spring are all carried through
- * untouched. Nothing here invents a movement; it points an authored one.
+ * Durations, offsets, easing and the fitted spring are carried through
+ * untouched. The function changes only the direction of an authored movement.
  */
 export function reorientRecipe(recipe: CrystalRecipe, how: Reorientation): CrystalRecipe {
   const { mirrorInline = false, toBlockAxis = false } = how;
   if (!mirrorInline && !toBlockAxis) return recipe;
 
-  /* Captures the function name and its single argument. Crystal's recipes write
-     one argument per transform function, which is what makes this tractable: a
-     general transform parser would be a CSS parser. A function this does not
-     know is left exactly as it is. */
+  /* Captures the function name and its single argument. This works because
+     Crystal's recipes write one argument per transform function. A general
+     transform parser would be a CSS parser. A function not listed here is left
+     exactly as it is. */
   const negate = (value: string): string => (value.startsWith('-') ? value.slice(1) : `-${value}`);
 
   const rewrite = (transform: string): string => transform.replace(
@@ -119,8 +118,8 @@ export function reorientRecipe(recipe: CrystalRecipe, how: Reorientation): Cryst
       const value = argument.trim();
       if (toBlockAxis) {
         if (fn === 'translateX') return `translateY(${mirrorInline ? negate(value) : value})`;
-        /* The sign flip is the axis change, not the mirroring: the two rotations
-           are opposite-handed. Mirroring on top of it cancels back out. */
+        /* The sign flip belongs to the axis change, because the two rotations
+           are opposite-handed. Mirroring as well cancels it out. */
         if (fn === 'rotateY') return `rotateX(${mirrorInline ? value : negate(value)})`;
         return whole;
       }
@@ -129,10 +128,10 @@ export function reorientRecipe(recipe: CrystalRecipe, how: Reorientation): Cryst
     },
   );
 
-  /* A background position is geometry too: the skeleton's sweep moves its
+  /* A background position is geometry too. The skeleton's sweep moves its
      highlight from `200% 0` to `-200% 0`, left to right. Mirroring negates the
-     horizontal component so the highlight travels in reading direction; the block
-     axis has no horizontal sweep to turn. */
+     horizontal component so the highlight travels in reading direction. The
+     block axis has no horizontal sweep to turn. */
   const mirrorPosition = (position: string): string => {
     if (!mirrorInline || toBlockAxis) return position;
     const [x, ...rest] = position.trim().split(/\s+/);
@@ -173,8 +172,8 @@ export function toMotionKeyframes(recipe: CrystalRecipe): {
   for (const property of properties) {
     values[property] = recipe.keyframes.map((frame) => {
       const value = (frame as Record<string, unknown>)[property];
-      /* A frame that omits a property holds the previous value rather than
-         jumping to a default — which is what the frame list means. */
+      /* A frame that omits a property holds the previous value instead of
+         jumping to a default, as the frame list intends. */
       return value ?? null;
     });
   }
@@ -188,20 +187,21 @@ export function toMotionKeyframes(recipe: CrystalRecipe): {
 }
 
 /**
- * The Motion transition for one play of a recipe — shared by every hook that plays
- * Crystal's recipes, so a spring, a loop and a stagger are decided in one place.
+ * The Motion transition for one play of a recipe. Every hook that plays
+ * Crystal's recipes shares it, so a spring, a loop and a stagger are decided in
+ * one place.
  *
  * A spring is a continuous solution from one value to another, so it can only
- * describe a two-keyframe animation — Motion refuses more, and it is right to:
- * "settle from A to B" has no meaning across four waypoints. Crystal authors most
- * recipes as three or four frames and fits each spring so its settling time EQUALS
- * the authored duration, so the two forms agree by construction: where Motion can
- * take the spring it gets the real physics, and where it cannot, the duration it
- * falls back to is the one that spring was fitted to produce.
+ * describe a two-keyframe animation, and Motion refuses more. "Settle from A to
+ * B" has no meaning across four waypoints. Crystal authors most recipes as three
+ * or four frames and fits each spring so its settling time equals the authored
+ * duration, so the two forms agree. Where Motion can take the spring it gets the
+ * real physics, and where it cannot, it falls back to the duration that spring
+ * was fitted to produce.
  *
  * A continuous recipe travels at constant speed and repeats until stopped. It
- * carries no spring — a loop has no rest position to settle to — so it never takes
- * the spring branch.
+ * carries no spring, because a loop has no rest position to settle to, so it
+ * never takes the spring branch.
  */
 export function transitionFor(
   recipe: CrystalRecipe,
@@ -225,18 +225,16 @@ export function transitionFor(
  * Returns `[scope, play]`.
  *
  * Attach `scope` to the element the recipe plays on. `play(name)` is imperative
- * on purpose: it triggers no render, and is safe from an event handler, an effect
- * or a state-change observer.
+ * so that it triggers no render, and it is safe to call from an event handler,
+ * an effect or a state-change observer.
  *
- * It returns a promise that settles when the movement finishes, which is what
- * makes an *exit* recipe possible at all: `accordion-out` and `list-out` mark a
- * region closing, and a region that unmounted the moment the state changed would
- * play them into a detached node. `usePreset` already worked this way for the
- * material presets; recipes had no equivalent, so the catalogue's exit recipes
- * could not be honoured. Nothing has to await it — every existing caller marks an
- * arrival and ignores the result — and the promise settles on every path,
- * including reduced motion and a missing element, so an awaiting caller is never
- * left hanging.
+ * It returns a promise that settles when the movement finishes, which exit
+ * recipes need. `accordion-out` and `list-out` mark a region closing, and a
+ * region that unmounted as soon as the state changed would play them into a
+ * detached node. `usePreset` works the same way for the material presets.
+ * Callers that mark an arrival can ignore the result. The promise settles on
+ * every path, including reduced motion and a missing element, so an awaiting
+ * caller is never left waiting.
  */
 export function useMotion(
   options: UseMotionOptions = {},
@@ -246,9 +244,8 @@ export function useMotion(
   () => void,
 ] {
   const [scope, animate] = useAnimate();
-  /* The one thing a continuous recipe needs that a transition does not: a way to
-     end it. It repeats until stopped, and the moment to stop is the caller's —
-     the work it reports has resolved. */
+  /* A continuous recipe also needs a way to end it. It repeats until stopped,
+     and the caller stops it when the work it reports has resolved. */
   const current = useRef<{ stop: () => void } | null>(null);
   const { resolveDuration, reduceMotion } = useCrystalTheme();
   const running = useRef<string | null>(null);
@@ -284,8 +281,9 @@ export function useMotion(
     const { values, times, frameCount } = toMotionKeyframes(recipe);
 
     /* A staggered mark waits its turn, scaled by the same speed as the movement.
-       Past the recipe's ceiling every mark arrives together, and a mark that does
-       not know how many there are does not stagger — it cannot know it is last. */
+       Past the recipe's ceiling every mark arrives together. A mark that does
+       not know how many there are does not stagger, because it cannot know
+       whether it is last. */
     const delay = recipe.stagger && position && position.count <= recipe.stagger.maxMarks
       ? resolveDuration(position.index * recipe.stagger.step)
       : 0;
@@ -296,8 +294,8 @@ export function useMotion(
       .then(() => {
         if (running.current === name) element.dataset['crMotionState'] = 'finished';
       })
-      /* A cancelled animation is the normal path, not an error: it happens
-         whenever a component unmounts mid-motion. */
+      /* A cancelled animation is not an error. It happens whenever a component
+         unmounts mid-motion. */
       .catch(() => { /* cancelled */ })
       .finally(() => { if (running.current === name) running.current = null; });
   }, [scope, animate, resolveDuration, reduceMotion, once, mirrorInline, toBlockAxis]);

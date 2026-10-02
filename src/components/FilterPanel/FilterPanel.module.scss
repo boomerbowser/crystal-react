@@ -1,8 +1,8 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* "Frost panel with Haze groups." Frost is the panel material — this is a
-   reading surface holding controls, not a control plane itself. */
+/* "Frost panel with Haze groups." The panel is Frost because it is a reading
+   surface that holds controls. It is not itself a control plane. */
 .panel {
   @include material.frost;
 
@@ -24,13 +24,12 @@
   list-style: none;
 }
 
-/* The facet groups. Haze, per the catalogue, and separated by space rather than
-   by rules: a rule between every facet is a panel of boxes. */
+/* The facet groups. Haze, per the catalogue, separated by space and not by
+   rules between facets. */
 .facets { display: grid; gap: $cr-spacing-md; }
 
-/* Loading: the panel goes quiet and keeps its controls where they are. A facet
-   list that empties while its counts are recomputed is a list the reader loses
-   their place in. */
+/* Loading: the panel dims and keeps its controls where they are, so the reader
+   does not lose their place while the counts are recomputed. */
 .panel[data-loading] .facets { opacity: 0.72; }
 
 .announcement {

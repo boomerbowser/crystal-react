@@ -13,7 +13,7 @@ describe('AnalyticsPanel', () => {
   });
 
   /* A chart that is loading, empty or failed is usually drawn as an empty plot
-     with axes — which says "zero" to anyone reading it, and zero is a number the
+     with axes. It says "zero" to anyone reading it, and zero is a number the
      data did not say. So each state replaces the chart rather than decorating
      it, and the panel's controls stay, because they are how the reader changes
      the range that might fix it. */
@@ -33,7 +33,7 @@ describe('AnalyticsPanel', () => {
   });
 
   /* A failure is announced; nothing to draw is not. One is a failure, the other
-     is a fact about the range — the same division as `ErrorScreen` against
+     is a fact about the range, the same division as `ErrorScreen` against
      `EmptyScreen`. */
   it('announces a failure and does not announce an empty range', () => {
     const { unmount } = renderWithCrystal(<AnalyticsPanel title="Revenue" state="error" />);
@@ -49,9 +49,8 @@ describe('AnalyticsPanel', () => {
     expect(screen.getByRole('region', { name: 'Revenue' })).toHaveAttribute('aria-busy', 'true');
   });
 
-  /* Every state, not the one that happens to be first — the rule DataTableBlock
-     and MetricsRow learned, where a malformed live region lived in the loading
-     render and an assertion made only at rest passed over it. */
+  /* Every state, not just the one that renders first. An axe violation can
+     live in a state most assertions do not check. */
   it.each(['at-rest', 'loading', 'empty', 'error'] as const)('has no axe violations %s', async (state) => {
     const { container } = renderWithCrystal(
       <AnalyticsPanel title="Revenue by month" state={state} controls={<button type="button">Range</button>}>

@@ -10,12 +10,12 @@ const meta = {
       description: {
         component:
           '"The chart carries a table equivalent; controls are real controls."\n\n'
-          + 'The table equivalent is not this component\'s to add, and that is the point: '
-          + '`ChartSurface` takes `table` as a **required** prop, so a chart in this library '
+          + 'The table equivalent is not this component\'s to add. '
+          + '`ChartSurface` takes `table` as a required prop, so a chart in this library '
           + 'cannot exist without the same data as text. A panel that accepted a bare `<svg>` '
           + 'would be a way around that requirement.\n\n'
           + 'Three of its four states are where panels go wrong. A chart that is loading, '
-          + 'empty or failed is usually drawn as an empty plot with axes — which says "zero" '
+          + 'empty or failed is usually drawn as an empty plot with axes. It says "zero" '
           + 'to anyone reading it, and zero is a number the data did not say. Each state '
           + 'replaces the chart and says which it is in words, while the heading and controls '
           + 'stay, because they are how the reader changes the range that might fix it.',

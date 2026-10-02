@@ -37,9 +37,9 @@ describe('LineChart', () => {
     expect(dashed.length).toBe(series.length - 1);
   });
 
-  /* The opposite of the bar chart's rule, for the opposite reason: a line's
-     marks are positions, and forcing zero into the domain of a series that
-     lives between 412 and 418 flattens it to nothing. */
+  /* The reverse of the bar chart's rule. A line's marks are positions, and
+     forcing zero into the domain of a series that lives between 412 and 418
+     flattens it to nothing. */
   it('fits the domain to the data rather than forcing zero into it', () => {
     const { container } = renderWithCrystal(
       <LineChart label="Traffic" series={[series[0]!]} categories={categories} ticks={4} />,

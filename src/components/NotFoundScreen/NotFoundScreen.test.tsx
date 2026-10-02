@@ -13,10 +13,10 @@ describe('NotFoundScreen', () => {
       .toBeInTheDocument();
   });
 
-  /* "Offers a route onward", which is the half products skip. `actions` is
-     required: a 404 that says "not found" and stops has told the reader what
-     they already knew and left them nowhere. The browser's back button is not a
-     route the product offered — it is the one the reader had anyway. */
+  /* "Offers a route onward", the half products tend to skip. `actions` is
+     required: a 404 that says "not found" and stops leaves the reader with
+     nowhere to go. The browser's back button is not a route the product
+     offered. */
   it('requires the route onward and renders it', () => {
     renderWithCrystal(
       <NotFoundScreen title="That report does not exist" actions={<Button>All reports</Button>} />,
@@ -24,9 +24,8 @@ describe('NotFoundScreen', () => {
     expect(screen.getByRole('button', { name: 'All reports' })).toBeInTheDocument();
   });
 
-  /* Nothing failed. A missing thing is a fact about the address, not an error
-     in the system, and interrupting a screen reader to say so is the component
-     being more urgent than the news. */
+  /* Nothing failed. A missing thing is a fact about the address, and the news
+     is not urgent enough to interrupt a screen reader. */
   it('is not announced as an alert', () => {
     renderWithCrystal(
       <NotFoundScreen title="That report does not exist" actions={<Button>All reports</Button>} />,

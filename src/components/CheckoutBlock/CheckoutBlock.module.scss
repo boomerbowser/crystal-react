@@ -4,7 +4,7 @@
    `.cr-frost`; its fields sit on one Haze section, worn as `.cr-haze`. The
    summary is `CartSummary`, which carries its own surface. */
 .checkout {
-  /* The container the layout below measures — the block, since a container
+  /* The block is the container the layout below measures, since a container
      query cannot style its own container. */
   container-type: inline-size;
   display: grid;
@@ -12,9 +12,9 @@
   min-inline-size: 0;
 }
 
-/* The step beside its summary where there is room for both, and the summary
-   after the step where there is not. By container width, because a checkout in
-   a narrow column is narrow whatever the window is. */
+/* The step sits beside its summary where there is room for both, and the
+   summary follows the step where there is not. This goes by container width,
+   because a checkout in a narrow column is narrow whatever the window is. */
 .main {
   display: grid;
   gap: $cr-spacing-lg;

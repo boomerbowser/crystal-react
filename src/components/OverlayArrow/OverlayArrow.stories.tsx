@@ -12,9 +12,8 @@ const meta = {
       description: {
         component:
           'The point an anchored surface makes at the thing it belongs to. It is part of the '
-          + 'surface — the same material, the same edge — rather than a separate shape laid against '
-          + 'it, so a Frost popover points with Frost. Popovers and tooltips draw it with '
-          + '`hasArrow`; this story opens one that does.',
+          + 'surface, with the same material and the same edge, so a Frost popover points with '
+          + 'Frost. Popovers and tooltips draw it with `hasArrow`, and this story opens one that does.',
       },
     },
   },

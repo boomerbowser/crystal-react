@@ -9,12 +9,11 @@ const meta = {
   title: 'Overlays/Dialog',
   component: Dialog,
   /* The callbacks as actions, so the Actions panel shows what fired and with
-     what. They are declared by hand because this Storybook uses `react-docgen`
-     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
-     react-docgen reads a component's own interface without resolving what it
-     extends. Every callback here is inherited from a React Aria interface, so
-     docgen cannot see one of them. Each was checked against the compiler
-     before being written down. */
+     what. They are declared by hand because this Storybook uses `react-docgen`,
+     not `react-docgen-typescript` (see `.storybook/main.ts`), and react-docgen
+     reads a component's own interface without resolving what it extends. Every
+     callback here is inherited from a React Aria interface, so docgen cannot
+     see any of them. Each was checked against the compiler. */
   argTypes: {
     ...ariaArgTypes<DialogProps>({
       isOpen: true,
@@ -25,10 +24,10 @@ const meta = {
     docs: {
       description: {
         component:
-          'A Mirage scrim with an 80% feathered Haze surface above it — **not** Resin, which is '
-          + 'the floating control plane. What separates a dialog from the page is the scrim '
-          + 'beneath it rather than elevation above it. React Aria owns focus containment, its '
-          + 'return on close, Escape and scroll locking.',
+          'A Mirage scrim with an 80% feathered Haze surface above it. The surface is not Resin, '
+          + 'which is the floating control plane. The scrim beneath a dialog separates it from '
+          + 'the page, with no elevation above. React Aria owns focus containment, its return on '
+          + 'close, Escape and scroll locking.',
       },
     },
   },
@@ -38,7 +37,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Opened from a trigger, which is how focus return is actually observable. */
+/** Opened from a trigger, which is how focus return can be observed. */
 export const Default: Story = {
   render: (args) => {
     const [open, setOpen] = useState(false);

@@ -1,18 +1,16 @@
 'use client';
 
-/* TrendIndicator — the direction and magnitude of a change.
+/* TrendIndicator shows the direction and magnitude of a change.
  *
- * "Direction is carried by a word and a symbol, never by colour alone." Three
- * things follow from that one sentence, and all three are the component rather
- * than a guideline it hopes callers remember:
+ * "Direction is carried by a word and a symbol, never by colour alone." The
+ * component enforces three consequences of that rule:
  *
- *   - `children` is the sentence, and it is required. A `TrendIndicator` with a
- *     direction and no words is a coloured arrow, which is exactly what the rule
- *     forbids.
+ *   - `children` is the sentence, and it is required. A direction with no words
+ *     is a coloured arrow, which the rule forbids.
  *   - The arrow is `aria-hidden`. A reader who hears "up arrow, 4.2% up on last
- *     month" has heard it twice; the glyph is reinforcement for the eye.
- *   - `flat` takes the muted ink rather than a third status colour. "No change"
- *     is not a status, and giving it one would make every unremarkable figure
+ *     month" hears the direction twice. The glyph is for the eye.
+ *   - `flat` takes the muted ink instead of a third status colour. "No change"
+ *     is not a status, and a status colour would make every unremarkable figure
  *     look like a report.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
@@ -20,12 +18,12 @@ import { cx } from '../../styles/cx.js';
 import { ChangeHighlight } from '../../feedback/ChangeHighlight.js';
 import styles from './TrendIndicator.module.scss';
 
-/** Which way it went. `flat` is a real answer, not a missing one. */
+/** Which way it went. `flat` means no change; it does not mean a missing value. */
 export type TrendDirection = 'up' | 'down' | 'flat';
 
 export interface TrendIndicatorProps extends HTMLAttributes<HTMLSpanElement> {
   direction: TrendDirection;
-  /** The words. "4.2% up on last month" — the direction, said. */
+  /** The direction in words, such as "4.2% up on last month". */
   children: ReactNode;
 }
 

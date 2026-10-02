@@ -3,12 +3,10 @@ import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen, userEvent, within } from '../../test/render.js';
 import { TreeView, type TreeNode } from './TreeView.js';
 
-/* The motion hook is replaced rather than observed. `useMotion` drives the
+/* The motion hook is replaced instead of observed. `useMotion` drives the
    animation imperatively through Motion's `useAnimate`, which does nothing in
-   jsdom, so watching for a visual effect would be watching for nothing — and a
-   test that cannot fail is the thing this project keeps finding. What matters
-   here is *when* Crystal asks for an animation, and that is exactly what this
-   records. */
+   jsdom, so a test watching for a visual effect could never fail. These tests
+   check when Crystal asks for an animation, and this mock records that. */
 const play = vi.fn();
 vi.mock('../../motion/useMotion.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../motion/useMotion.js')>()),
@@ -39,11 +37,11 @@ describe('TreeView', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* A `treegrid`, not a `tree`, and deliberately: a `treeitem` in the plain tree
-     pattern must not contain independently focusable widgets, and Crystal's row
-     contains the disclosure button the catalogue also asks for. Everything the
-     catalogue specifies by behaviour — level, expansion, arrow-key navigation —
-     is here. See the note in TreeView.tsx and M-3 in the design system tracker. */
+  /* A `treegrid` instead of a `tree`. A `treeitem` in the plain tree pattern must
+     not contain independently focusable widgets, and Crystal's row contains the
+     disclosure button the catalogue also asks for. Everything the catalogue
+     specifies by behaviour (level, expansion, arrow-key navigation) is here. See
+     the note in TreeView.tsx and M-3 in the design system tracker. */
   it('is a named treegrid of rows', () => {
     renderWithCrystal(<TreeView label="Files" items={items} />);
     expect(screen.getByRole('treegrid', { name: 'Files' })).toBeInTheDocument();
@@ -51,7 +49,7 @@ describe('TreeView', () => {
     expect(screen.queryByRole('tree')).toBeNull();
   });
 
-  /* Depth is announced, not just drawn. A reader who cannot see the indentation
+  /* Depth is announced as well as drawn. A reader who cannot see the indentation
      gets the level from ARIA, and a reader who can gets both. */
   it('reports the level of every row', () => {
     renderWithCrystal(<TreeView label="Files" items={items} defaultExpandedKeys={expanded} />);
@@ -61,8 +59,8 @@ describe('TreeView', () => {
   });
 
   /* The indentation is drawn from the same number ARIA reports, so the two
-     cannot disagree — which is the failure mode of indenting with nested
-     wrappers while announcing a level computed somewhere else. */
+     cannot disagree, as they can when nested wrappers indent while the level is
+     computed somewhere else. */
   it('indents from the level it announces', () => {
     renderWithCrystal(<TreeView label="Files" items={items} defaultExpandedKeys={expanded} />);
     const depthOf = (name: RegExp) => {
@@ -102,7 +100,7 @@ describe('TreeView', () => {
   });
 
   /* A row that both expands and selects on one press makes one of the two
-     unreachable, and nothing can tell the reader which they are about to get. */
+     unreachable, and the reader cannot tell which they are about to get. */
   it('expands from the chevron without selecting the row', async () => {
     const user = userEvent.setup();
     renderWithCrystal(
@@ -135,9 +133,9 @@ describe('TreeView', () => {
 
   /* Nothing in Crystal moves at rest, so a row that was there when the tree
      appeared plays nothing, and a row revealed by expanding plays `accordion-in`.
-     The whole design rests on React running effects bottom-up — a row mounting
-     with the tree runs its effect before the tree's, a row mounting later runs
-     after — so the claim is checked directly rather than described. */
+     React Aria renders the rows a commit after the tree mounts, so effect order
+     cannot tell the two apart. The tree turns live on the first expand or
+     collapse, and this checks that claim directly. */
   it('animates a revealed row and not the rows it rendered with', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<TreeView label="Files" items={items} />);

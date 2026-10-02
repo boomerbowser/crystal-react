@@ -11,10 +11,10 @@ const meta = {
       description: {
         component:
           'Mirage: the wash that separates a modal surface from the page beneath it. It is not '
-          + '`aria-hidden` — it usually wraps the surface it separates, and hiding the wrapper would '
-          + 'hide the dialog — and it needs no hiding: a div with no role and nothing focusable is '
-          + 'already nothing to announce. It arrives with Crystal\'s `mirage` and, shown and hidden '
-          + 'inside `AnimatePresence`, leaves with `mirage-out`.',
+          + '`aria-hidden`, because it usually wraps the surface it separates, and hiding the '
+          + 'wrapper would hide the dialog. It needs no hiding: a div with no role and nothing '
+          + 'focusable has nothing to announce. It arrives with Crystal\'s `mirage` and, shown and '
+          + 'hidden inside `AnimatePresence`, leaves with `mirage-out`.',
       },
     },
   },

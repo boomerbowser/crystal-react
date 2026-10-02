@@ -1,27 +1,22 @@
 /* What a state looks like, read from resolved computed style in a real browser.
  *
  * R-11: jsdom tests semantics and the parts of CSS that are not colours, axe
- * tests the tree, `verify-targets` measures geometry, `verify-behaviour` drives
- * the page — and what a state *looks like* was checked by nobody. Every Crystal
- * state is expressed through a custom property, and jsdom hands those back
+ * tests the tree, `verify-targets` measures geometry and `verify-behaviour`
+ * drives the page. This script checks what a state looks like. Every Crystal
+ * state is expressed through a custom property, and jsdom returns those
  * unresolved: `color` on a themed element reads as the literal text
- * `var(--cr-primary)`. So this is not a gap anyone could have closed where the
- * unit tests live.
+ * `var(--cr-primary)`. So this check cannot live with the unit tests.
  *
- * It is not hypothetical. `--cr-focus-core` and `--cr-focus-ring` were read by
- * every field in this library and defined by nothing, so Crystal's focus ring
- * painted on no control anywhere for an entire slice, with every test green.
- * `published-properties.test.tsx` now catches an *undefined* property. Nothing
- * caught a control that simply has no rule.
+ * `published-properties.test.tsx` catches an undefined property, such as a
+ * `--cr-focus-core` or `--cr-focus-ring` read by a field and defined by nothing.
+ * It does not catch a control that has no rule at all; this script does.
  *
- * **Every assertion here is a relationship, never a value.** R-11 names the trap
- * in one line — "a gate that asserts a colour is a gate that fails on a palette
- * change" — and it is the difference between a check that survives Crystal and
- * one that has to be edited every time a palette moves. So: the focused control
- * differs from the same control unfocused; the selected row is *heavier than*
- * its neighbour; the disabled control differs from its enabled sibling in
- * something besides opacity. None of those name a colour, and all of them are
- * false the moment the rule disappears.
+ * Every assertion here is a relationship, never a value. R-11: "a gate that
+ * asserts a colour is a gate that fails on a palette change". So: the focused
+ * control differs from the same control unfocused; the selected row is heavier
+ * than its neighbour; the disabled control differs from its enabled state in
+ * something besides opacity. None of those name a colour, and each is false as
+ * soon as its rule disappears.
  *
  *   node scripts/verify-appearance.mjs
  */
@@ -51,12 +46,11 @@ const open = async (id, ready) => {
 
 /* Crystal's `.cr-dialog` is fixed, which centres a native `<dialog>` because the
    browser gives a modal one `inset: 0` and auto margins. React Aria's surface is
-   not a `<dialog>`, and when it put on the class it kept `position: fixed` with no
-   offsets, so it sat at its static position — top-left corner at the middle of
-   the screen, half of it past the right edge on a phone. Every dialog shipped that
-   way while the material gate passed, because a material can be right on a
-   surface nobody can read. So: the surface is inside the viewport, centred, and
-   at its reading measure where there is room for it. */
+   not a `<dialog>`, so with the class alone it keeps `position: fixed` with no
+   offsets and sits at its static position: top-left corner at the middle of the
+   screen, half of it past the right edge on a phone. The material gate cannot
+   see this. So: the surface is inside the viewport, centred, and at its reading
+   measure where there is room for it. */
 for (const [width, height, what] of [[1280, 900, 'at a desktop width'], [375, 812, 'at a phone width']]) {
   await page.setViewportSize({ width, height });
   await open('overlays-dialog--default', '#storybook-root button');
@@ -79,11 +73,10 @@ await page.setViewportSize({ width: 1280, height: 900 });
 
 /* Crystal 2.3.0 draws the navigation entry's location dot on `.cr-nav-item`
    itself (D-22): a `::before` on `aria-current`, inside the entry's own padding.
-   NavLink drew its own until then, and under 2.3.0 the two together are two dots
-   — which no other check here would notice, because both are correct in
-   isolation. So: the current link paints exactly one dot, Crystal's; the others
-   paint none; and a label starts at the same inline offset in its link whether
-   or not that link is current. */
+   A dot drawn by NavLink as well would make two, and no other check here would
+   notice, because each is correct in isolation. So: the current link paints
+   exactly one dot, Crystal's; the others paint none; and a label starts at the
+   same inline offset in its link whether or not that link is current. */
 {
   await open('navigation-links--destinations', '#storybook-root a.cr-nav-item');
   const links = await page.evaluate(() => [...document.querySelectorAll('#storybook-root a.cr-nav-item')].map((link) => {
@@ -114,9 +107,9 @@ await page.setViewportSize({ width: 1280, height: 900 });
 /* ------------------------------------------------- an indicator shows what its host says */
 
 /* `Indicator` is Crystal's `.cr-indicator` from 2.3.0 (R-25): a glyph that its
-   host's own state switches, rather than a colour set by a prop. So what is
-   checked is the relationship — each mark shows the glyph its host calls for,
-   and nothing on a host that does not carry the state. The field glyphs reach a
+   host's own state switches, rather than a colour set by a prop. So the check is
+   the relationship: each mark shows the glyph its host calls for, and nothing
+   on a host that does not carry the state. The field glyphs reach a
    `div` shell only from 2.3.0 (D-27), which is what the three field rows are. */
 {
   await open('data-display-indicator--the-vocabulary', '#storybook-root .cr-indicator');
@@ -134,11 +127,10 @@ await page.setViewportSize({ width: 1280, height: 900 });
 
 /* React Aria places the thumb with an inline `translate(-50%, -50%)` and a
    `left`, and no `top`: it expects the stylesheet to put the thumb's top at the
-   middle of the track for the vertical half of that translate to centre it. The
-   track centred the thumb with flex instead, so the translate lifted every thumb
-   in the library by half its own height — 13px above the rail, on every slider,
-   RangeSlider and media transport — while every test passed, because jsdom has
-   no layout to be off by. Measured on the plain sliders and on the transport. */
+   middle of the track for the vertical half of that translate to centre it. If
+   the track centres the thumb with flex instead, the translate lifts the thumb by
+   half its own height (13px above the rail), and jsdom has no layout to show it.
+   Measured on the plain sliders and on the transport. */
 for (const id of ['inputs-choice-and-range--ranges', 'media-video-player--default', 'inputs-temporal-colour-and-files--colour']) {
   await open(id, '#storybook-root [class*="_track_"] > [class*="_thumb_"]');
   const off = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [class*="_track_"] > [class*="_thumb_"]')].map((thumb) => {
@@ -154,7 +146,7 @@ for (const id of ['inputs-choice-and-range--ranges', 'media-video-player--defaul
 
 /* Crystal's focus is a crisp 2px primary core at 3px offset inside a four-layer
    feathered halo. Checked as "focusing this changes how it looks, and the change
-   includes a real outline", because the core's *colour* is the palette's and the
+   includes a real outline", because the core's colour is the palette's and the
    halo's four layers are built from it. */
 const FOCUSABLE = [
   ['actions-button--all-variants', 'button:not(:disabled)', 'a button'],
@@ -163,8 +155,8 @@ const FOCUSABLE = [
   ['navigation-links--destinations', 'a', 'a navigation link'],
   /* An icon button rather than a checkbox. React Aria's Checkbox wraps a
      visually hidden `<input>` in a `<label>`, so the focusable node has no box
-     and the ring is drawn on the label around it — a real arrangement, and one
-     that needs a case of its own rather than being wedged into this list. */
+     and the ring is drawn on the label around it. That arrangement needs a case
+     of its own. */
   ['actions-icon-group-and-floating--icons', 'button', 'an icon button'],
 ];
 
@@ -200,15 +192,13 @@ for (const [id, selector, what] of FOCUSABLE) {
   const focused = await page.evaluate((css) => {
     const element = document.querySelector(`#storybook-root ${css}`);
     element.focus();
-    /* The ring is not always on the focused node, and that is correct rather
-       than a workaround. A Crystal text field puts `outline: 0` on the bare
-       `<input>` and draws the ring on the field shell around it, because the
-       shell is the control a person sees — the input is the part of it that
-       takes text. So the question this gate asks is "does focusing this show a
-       ring", not "is the ring on this exact element", and it walks up a short
-       way to answer it. Three levels: the control, its shell, and the shell's
-       own wrapper. Further than that and it would start finding somebody
-       else's ring. */
+    /* The ring is not always on the focused node, and that is correct. A
+       Crystal text field puts `outline: 0` on the bare `<input>` and draws the
+       ring on the field shell around it, because the shell is the control a
+       person sees and the input is the part of it that takes text. So this
+       gate asks whether focusing the element shows a ring, and walks up three
+       levels to answer: the control, its shell, and the shell's own wrapper.
+       Any further and it could find another control's ring. */
     let node = document.activeElement;
     for (let depth = 0; node && depth < 3; depth += 1, node = node.parentElement) {
       const s = getComputedStyle(node);
@@ -255,10 +245,10 @@ for (const [id, selector, what] of FOCUSABLE) {
 
 /* ------------------------------------------- selection is carried by weight */
 
-/* Crystal's rule, and one Meridian has restated: selection is label weight
-   alone, never a rail and never a check mark. Weight is typographic rather than
-   chromatic, so selection never rests on colour — which is the accessibility
-   reason for it and the reason this is checkable without naming a colour. */
+/* Crystal's rule, restated by Meridian: selection is label weight alone, never a
+   rail and never a check mark. Weight is typographic rather than chromatic, so
+   selection never rests on colour, and this can be checked without naming a
+   colour. */
 const SELECTABLE = [
   ['navigation-tabs-and-breadcrumbs--tab-strip', '[role="tab"]', 'aria-selected', 'a tab'],
   ['navigation-links--destinations', 'a', 'aria-current', 'a navigation link'],
@@ -299,8 +289,8 @@ for (const [id, selector, marker, what] of SELECTABLE) {
 /* ------------------------------- disabled is not distinguished by opacity alone */
 
 /* Opacity lowers contrast against whatever is behind, and on Resin that is a
-   coloured atmosphere gradient — so "faded" is the one signal whose legibility
-   depends on the artwork. Something else has to carry it too. */
+   coloured atmosphere gradient, so the legibility of a faded control depends on
+   the artwork. Something else has to carry the disabled state too. */
 const DISABLED = [
   ['actions-button--all-variants', 'button', 'a button'],
   ['navigation-tabs-and-breadcrumbs--with-a-disabled-tab', '[role="tab"]', 'a tab'],
@@ -322,13 +312,11 @@ for (const [id, selector, what] of DISABLED) {
       };
     };
 
-    /* Compared against *itself* with the state removed, not against a
-       neighbouring control. The first version of this compared the disabled
-       button to the first enabled button in the story, which is a different
-       variant — a quiet button beside a Resin one — so `color` and
-       `backgroundColor` always differed and the check passed on anything. It
-       could not fail, which is the failure mode this whole suite exists for.
-       Toggling the attributes on one element isolates the single variable. */
+    /* Compared against itself with the state removed, not against a
+       neighbouring control. A neighbour can be a different variant (a quiet
+       button beside a Resin one), so `color` and `backgroundColor` would always
+       differ and the check could never fail. Toggling the attributes on one
+       element isolates the single variable. */
     const marks = ['disabled', 'aria-disabled', 'data-disabled']
       .filter((name) => off.hasAttribute(name))
       .map((name) => [name, off.getAttribute(name)]);
@@ -361,18 +349,16 @@ for (const [id, selector, what] of DISABLED) {
  * color, not the rim. The text color will need to be adjusted depending on the
  * primary color."
  *
- * The failure this replaces is invisible in a stylesheet and obvious on a screen.
- * The variant set `background` on the button, which sits *behind* the Haze layer
- * — an inset fill — so the colour never reached the label's ground: it showed as
- * the 8px ring of element background left exposed around a white fill. The rule
- * was there, the colour was there, and the primary button still looked like every
- * other button.
+ * A `background` on the button sits behind the Haze layer, which is an inset
+ * fill, so the colour never reaches the label's ground: it shows only as the 8px
+ * ring of element background exposed around a white fill, and the primary button
+ * looks like every other button.
  *
  * So the assertion is where the paint lands, not what colour it is: the primary
- * button's *reading fill* differs from a plain Resin button's, and its ink differs
- * too. Both are false the moment the fill goes back to the element — and the
- * first is also false when the fill is painted in a tone so close to the shell
- * around it that nobody can see it, which is the second thing that happened.
+ * button's reading fill differs from a plain Resin button's, and its ink differs
+ * too. Both are false if the fill moves back to the element, and the first is
+ * also false when the fill is a tone so close to the shell around it that nobody
+ * can see it.
  */
 {
   await open('actions-button--all-variants', '#storybook-root button');
@@ -426,18 +412,15 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------- a table's header band is actually painted */
 
-/* An unclosed block comment in `DataTable.module.scss` deleted every rule from
- * the header down — column, cell, row, checkbox, resizer, footer — and *nothing
- * here noticed*. The compiler is happy: an unterminated comment is valid CSS.
- * `lint:tokens` strips comments before it looks for values. The types are
- * unaffected, no unit test reads a stylesheet, and the other browser gates
- * probed other components. It was found by opening the page and seeing a header
- * 28px tall with 1px of padding — the user agent's defaults, showing through.
+/* An unclosed block comment in `DataTable.module.scss` can delete every rule
+ * from the header down (column, cell, row, checkbox, resizer, footer), and the
+ * compiler accepts it because an unterminated comment is valid CSS. The header
+ * then shows the user agent's defaults: 28px tall with 1px of padding.
  *
- * `lint:tokens` now counts comment delimiters, which catches the cause. This
- * catches the *symptom*, and catches it for any cause: a table whose header is
- * not painted differently from its body is a table with no header band, however
- * that happened. A relationship, not a colour, so it survives a palette change.
+ * `lint:tokens` counts comment delimiters, which catches that cause. This
+ * checks the symptom, for any cause: a table whose header is not painted
+ * differently from its body has no header band. It is a relationship, not a
+ * colour, so it survives a palette change.
  */
 {
   await open('data-display-data-table--default', '#storybook-root [role="grid"]');
@@ -478,28 +461,27 @@ for (const [id, selector, what] of DISABLED) {
 
 /* `crystal.css` styles the element: `svg { width: 20px; height: 20px; fill:
  * none; stroke: currentColor; stroke-width: 1.8 }`. That is right for the icons
- * Crystal ships and wrong for every drawing that is not one, and a consumer
- * loading the stylesheet gets it either way — the D-1 hazard, in a new place.
+ * Crystal ships and wrong for every other drawing, and a consumer loading the
+ * stylesheet gets it either way (the D-1 hazard).
  *
- * All five declarations reach a chart and each breaks something different. The
- * two that are invisible in a unit test and obvious on a screen: a spark line
- * comes out twenty pixels square, because a CSS `width` outranks the `width`
- * attribute; and every wedge, bar and cell takes a one-and-a-bit pixel outline in
- * the body ink, inherited from an ancestor rather than set on the mark, so
- * reading the mark's own rules never explains it.
+ * All five declarations reach a chart and each breaks something different. Two
+ * of the effects cannot be seen in a unit test: a spark line comes out twenty
+ * pixels square, because a CSS `width` outranks the `width` attribute; and every
+ * wedge, bar and cell takes a one-and-a-bit pixel outline in the body ink,
+ * inherited from an ancestor rather than set on the mark, so the mark's own
+ * rules do not explain it.
  *
- * Both are checked against the element, because `charts/_svg.scss` is only a
- * claim until something reads back what the browser did with it. */
+ * Both are checked against the element, to confirm what the browser did with
+ * `charts/_svg.scss`. */
 {
   await open('charts-pie-chart--default', '#storybook-root svg');
   const wedge = await page.evaluate(() => {
     const path = document.querySelector(
       '#storybook-root svg[role="group"] [role="graphics-symbol"] path',
     );
-    /* The *canvas*, not the first svg on the page. A legend's swatches are svgs
-       too, and they are deliberately icon-sized — a check that took the first
-       one would report the swatch's 20px as the plot's width and fail a chart
-       that is drawn perfectly. */
+    /* The canvas, not the first svg on the page. A legend's swatches are svgs
+       too, and they are icon-sized, so taking the first one would
+       report the swatch's 20px as the plot's width and fail a correct chart. */
     const svg = document.querySelector('#storybook-root svg[role="group"]');
     return {
       stroke: path ? getComputedStyle(path).stroke : null,
@@ -560,9 +542,9 @@ for (const [id, selector, what] of DISABLED) {
  * mark owes. A label written on that mark owes 4.5:1 against the mark, and
  * nothing gives it that: the series colours are all drawn at one lightness, and
  * neither of a palette's inks reaches 4.5 on it. Crystal's answer is Stone, and
- * this is the check that Stone is actually behind the label — the halo is a
- * `paint-order` away from being drawn on top of the glyphs instead, which looks
- * like a bolder label and reads like nothing. */
+ * this checks that Stone is behind the label. With the wrong `paint-order` the
+ * halo is drawn on top of the glyphs instead, which looks like a bolder label
+ * and cannot be read. */
 {
   await open('charts-pie-chart--default', '#storybook-root text');
   const label = await page.evaluate(() => {
@@ -594,16 +576,15 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------- the second channel survives forced colours */
 
-/* The one condition under which colour is not available at all, and therefore
- * the only condition in which "distinguishable without colour alone" is being
- * tested rather than asserted. Two charts, because they answer it two different
- * ways: a line has a categorical second channel — the dash — and a heatmap has
- * an ordered one, where a dash would say nothing about *how much*.
+/* Forced colours is the one condition under which colour is not available at
+ * all, so it is the only condition in which "distinguishable without colour
+ * alone" is tested. Two charts, because they answer it in two ways: a line has
+ * a categorical second channel (the dash), and a heatmap has an ordered one,
+ * where a dash would say nothing about how much.
  *
- * This was checked by hand while the charts were built, and by hand it found
- * two real defects: a measured zero and a missing measurement drew identically,
- * and an axis of counts ran to −100. Neither would have been found by a gate
- * that did not emulate this mode, and nothing was guarding it afterwards. */
+ * Only a gate that emulates this mode finds defects such as a measured zero and
+ * a missing measurement drawing identically, or an axis of counts running to
+ * −100. */
 {
   await page.emulateMedia({ forcedColors: 'active' });
 
@@ -626,10 +607,10 @@ for (const [id, selector, what] of DISABLED) {
     for (const cell of document.querySelectorAll(
       '#storybook-root svg[role="group"] [role="graphics-symbol"]',
     )) {
-      /* Cells with no measurement are excluded deliberately. They are drawn at
-         a fixed size by a rule of their own, so counting them would let this
-         check pass on "some cells are empty and some are not" — which is true
-         of a heatmap whose intensities have all collapsed to one size. */
+      /* Cells with no measurement are excluded. They are drawn at a fixed size
+         by a rule of their own, so counting them would let this check pass on
+         "some cells are empty and some are not", which is also true of a heatmap
+         whose intensities have all collapsed to one size. */
       if (cell.hasAttribute('data-empty') || cell.hasAttribute('data-missing')) continue;
       const fill = cell.querySelector('rect, path');
       if (!fill) continue;
@@ -653,25 +634,24 @@ for (const [id, selector, what] of DISABLED) {
 /* Two claims about the feedback slice that no unit test can reach, because both
  * are facts about resolved CSS in a running engine.
  *
- * The first found a real defect. An SVG arc rotated with `rotate` and
- * `transform-origin` does **not** turn about the circle it was drawn on:
- * `transform-box: view-box` resolves the origin against the SVG viewport rather
- * than against the user space `arcPath` draws in, and every combination of the
- * two was measured sending the arc into orbit around its own ring — by 15px at
- * best and 103px at worst, entirely outside the box the ring occupies. The fix
- * is to turn the canvas, which is an ordinary CSS box where `50% 50%` means what
- * it says. The check is containment rather than a stationary centre: a sixth of
- * a circle sweeping round its middle moves its own bounding box, and an
- * orbiting one leaves the ring.
+ * First, an SVG arc rotated with `rotate` and `transform-origin` does not turn
+ * about the circle it was drawn on: `transform-box: view-box` resolves the
+ * origin against the SVG viewport rather than against the user space `arcPath`
+ * draws in, and every combination of the two was measured sending the arc into
+ * orbit around its own ring, by 15px at best and 103px at worst, entirely
+ * outside the box the ring occupies. So the canvas is turned instead, because it
+ * is an ordinary CSS box where `50% 50%` means what it says. The check is
+ * containment rather than a stationary centre: a sixth of a circle sweeping
+ * round its middle moves its own bounding box, and an orbiting one leaves the
+ * ring.
  *
- * The second is the reduced-motion fallback the catalogue asks the indeterminate
- * components for, and it is deliberately **not** "the animation is gone":
- * `crystal.css` carries a global `animation: none !important` under reduced
- * motion, so that would be green with this component's own rules deleted —
- * measured, not assumed. What the component owns is what is left standing when
- * the movement stops. A travelling segment frozen at two fifths of the track
- * reads as forty per cent, which is a measurement nobody took; the rule here
- * fills the track instead, and that is the thing a stylesheet can lose. */
+ * Second, the reduced-motion fallback the catalogue asks the indeterminate
+ * components for. The check is not "the animation is gone": `crystal.css`
+ * carries a global `animation: none !important` under reduced motion, so that
+ * check passes with this component's own rules deleted (measured). What the
+ * component owns is what is left when the movement stops. A travelling segment
+ * frozen at two fifths of the track reads as forty per cent, a measurement
+ * nobody took, so the rule fills the track instead, and this checks that rule. */
 {
   await open('feedback-ring-progress--indeterminate', '#storybook-root svg path');
   const escapes = [];
@@ -719,21 +699,18 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------------- the tour actually cuts its hole */
 
-/* The one check in this file that exists because a unit test cannot fail. The
- * tour's spotlight is `clip-path` arithmetic on a measured rectangle, and jsdom
- * measures nothing: every element is 0×0 there, so the component takes the
- * branch where there is no box to cut and eight passing tests say nothing at all
- * about the highlight.
+/* The tour's spotlight is `clip-path` arithmetic on a measured rectangle, and
+ * jsdom measures nothing: every element is 0×0 there, so the component takes
+ * the branch where there is no box to cut and the unit tests say nothing about
+ * the highlight.
  *
- * It found the defect it was written for. The first version used
- * `clip-path: xywh(…) exclude xywh(…)`, which is not CSS — `clip-path` takes a
- * single shape and has no combinator — so the declaration was dropped and the
- * scrim had no hole in it. `getComputedStyle` reported `clip-path: none` in a
- * real browser while the whole unit suite was green.
+ * `clip-path` takes a single shape and has no combinator, so a value such as
+ * `clip-path: xywh(…) exclude xywh(…)` is dropped by the browser, leaving the
+ * scrim with no hole, while the unit suite still passes.
  *
  * Asserted as "the scrim is not painted over the target, and is painted away
- * from it", which is the thing a reader sees, rather than as the text of a
- * clip-path, which is a spelling. */
+ * from it", which is what a reader sees, rather than as the text of a
+ * clip-path. */
 {
   await open('feedback-tour--a-guided-sequence', '#storybook-root button');
   await page.getByRole('button', { name: 'Start the tour' }).click();
@@ -764,18 +741,16 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------ a selected swatch still shows its own colour
  *
- * A swatch has no label to weight, so its selection is its pad — and the pad is
- * painted in `--cr-primary`. Which means a product whose brand colour is also
- * one of its variant colours gets a swatch that disappears into its own selected
- * state, losing the one thing a swatch exists to show. Measured before the fix:
- * pad and colour both `rgb(115, 56, 239)`.
+ * A swatch has no label to weight, so its selection is its pad, and the pad is
+ * painted in `--cr-primary`. A product whose brand colour is also one of its
+ * variant colours would get a swatch that disappears into its own selected
+ * state: pad and colour both `rgb(115, 56, 239)`.
  *
  * The check is on painted pixels rather than on declarations, because the
- * separation is a ring of the surface's own colour and "the rule is present" is
- * not the same claim as "you can see where the colour ends". It samples across
- * the swatch's radius: the colour at the centre, and the ring a few pixels
- * outside it. If those two are the same, there is no boundary, whatever the
- * stylesheet says. */
+ * separation is a ring of the surface's own colour, and a rule being present
+ * does not mean you can see where the colour ends. It samples across the
+ * swatch's radius: the colour at the centre, and the ring a few pixels outside
+ * it. If those two are the same, there is no boundary. */
 {
   await open('commerce-variant-selector--swatches-that-fight-their-pad', '#storybook-root label');
   const worst = await page.evaluate(() => {
@@ -792,9 +767,9 @@ for (const [id, selector, what] of DISABLED) {
       sameAsPad: getComputedStyle(colour).backgroundColor
         === getComputedStyle(card, '::before').backgroundColor,
       size: Math.round(box.width),
-      /* Still a circle. Choosing a swatch used to change its shape: the card's
-         selected rule thickened a rim and took padding back to compensate, which
-         is right for a card and crushed a 34px circle into a 10 by 18 ellipse. */
+      /* Still a circle. The card's selected rule thickens a rim and takes
+         padding back to compensate, which is right for a card and, applied to a
+         swatch, crushes a 34px circle into a 10 by 18 ellipse. */
       round: Math.abs(box.width - box.height) < 1.5,
     };
   });
@@ -810,18 +785,15 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------------- a pressed toggle looks pressed
  *
- * Crystal specifies this and the library was not rendering it. `crystal.css`
- * carries `:is(button[aria-pressed=true], …)` with its reading pad in
- * `--cr-primary`, `--cr-on-primary` ink and the label at weight 800 — in
- * `@layer crystal.component`, which an unlayered module class in this package
- * outranks without a specificity contest. That is what cascade layers are for,
- * and it meant a consumer saw none of it: measured, the pad stayed at the
- * neutral Haze fill and the weight stayed at 700 while `aria-pressed` said
- * true.
+ * `crystal.css` carries `:is(button[aria-pressed=true], …)` with its reading pad
+ * in `--cr-primary`, `--cr-on-primary` ink and the label at weight 800, in
+ * `@layer crystal.component`. An unlayered module class in this package
+ * outranks that layer without a specificity contest, so a module rule can hide
+ * it completely: the pad stays at the neutral Haze fill and the weight at 700
+ * while `aria-pressed` is true.
  *
  * So this compares the two states rather than checking that a token is spelled
- * somewhere. A toggle whose on state is indistinguishable from its off state is
- * a toggle with no state. */
+ * somewhere. */
 {
   const toggle = async (id) => {
     await open(id, '#storybook-root button');
@@ -850,12 +822,11 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------------------------- a discount is a pill
  *
- * "Pill" is the catalogue's geometry for it, and a pill is not a radius token —
- * it is a radius at least half the element's height, which is the only
- * definition that survives the element changing size. `--cr-action-radius` is
- * large enough for every size the badge comes in, but asserting that the token
- * is *applied* is asserting a spelling; what a reader sees is whether the ends
- * are round. */
+ * "Pill" is the catalogue's geometry for it. A pill is a radius at least half
+ * the element's height, which is the only definition that survives the element
+ * changing size. `--cr-action-radius` is large enough for every size the badge
+ * comes in, but checking that the token is applied only checks a spelling; what
+ * a reader sees is whether the ends are round. */
 {
   await open('commerce-discount-badge--default', '#storybook-root span');
   const pill = await page.evaluate(() => {
@@ -882,10 +853,10 @@ for (const [id, selector, what] of DISABLED) {
  * A gallery thumbnail has no label to weight, so Crystal's other half of the
  * selection rule applies: the reading pad is tinted in `--cr-primary` with the
  * feather off, exactly as core paints a selected control. The check is that the
- * selected thumbnail differs from an unselected one *and* that the difference
- * is not an outline — a 2px primary outline is how Crystal paints focus, so a
- * selection drawn that way is a thumbnail that looks focused, and goes on
- * looking focused after focus has left the strip. */
+ * selected thumbnail differs from an unselected one and that the difference is
+ * not an outline. A 2px primary outline is how Crystal paints focus, so a
+ * selection drawn that way looks focused, and keeps looking focused after focus
+ * has left the strip. */
 {
   await open('media-gallery--a-set', '[role="option"]');
   const marks = await page.evaluate(() => {
@@ -912,22 +883,20 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ---------------------------------------------- a lightbox has a picture in it
  *
- * Two claims in one place, because they failed as one. The item is laid out at
- * a real size, and a zoomed item is reachable from a scroll position of zero.
+ * Two claims, checked together: the item is laid out at a real size, and a
+ * zoomed item is reachable from a scroll position of zero.
  *
- * The first is here because it shipped false. `max-inline-size: 100%` on the
- * picture resolved against an item that was itself sized by the picture, and a
- * cyclic percentage resolves against zero: the item measured 0x0 and the viewer
- * showed nothing, in every browser, while every unit test passed — jsdom
- * measures nothing, so it had no size to disagree with. A component whose whole
- * job is to show one picture larger needs a gate that has seen the picture.
+ * The first: `max-inline-size: 100%` on the picture, resolved against an item
+ * that is itself sized by the picture, is a cyclic percentage and resolves
+ * against zero. The item measures 0x0 and the viewer shows nothing in every
+ * browser. jsdom measures nothing, so no unit test can see it.
  *
- * The second is the claim about panning. A scroll container scrolls forward
- * from its content origin and a scroll position cannot go negative, so an
- * enlargement that grows in both directions from the centre puts half of itself
- * where nothing can reach it — a transform does exactly that, and so does a
- * centring rule. Both halves are measured at scrollLeft/scrollTop zero, which
- * is where a reader starts. */
+ * The second is about panning. A scroll container scrolls forward from its
+ * content origin and a scroll position cannot go negative, so an enlargement
+ * that grows in both directions from the centre puts half of itself where
+ * nothing can reach it. A transform does that, and so does a centring rule.
+ * Both halves are measured at scrollLeft/scrollTop zero, which is where a reader
+ * starts. */
 {
   await open('media-lightbox--from-a-thumbnail', '#storybook-root button');
   await page.locator('#storybook-root button').first().click();
@@ -977,20 +946,17 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------------ what only a browser can be asked
  *
- * Four claims the commerce slice makes in its own headers, every one of them a
- * geometry or a cascade question that jsdom answers `0` to and therefore cannot
- * be asked in a unit test. They were all true the first time they were
- * measured. That is exactly when a claim is worth a gate: it is not being fixed
- * here, it is being stopped from rotting quietly.
+ * Four claims the commerce slice makes in its own headers. Each is a geometry
+ * or cascade question that jsdom answers `0` to, so none can be asked in a unit
+ * test. All four held when first measured; the gate keeps them holding.
  */
 {
   await open('commerce-compare-table--default', '#storybook-root table');
-  /* Sticky positions against the nearest *scrolling* ancestor, so this is a
-     question about the whole chain — a stray `overflow` on the table, or a
-     scroll wrapper that stops being the scroller, silently unpins both heads
-     and nothing else notices. The story is wider than it is tall by design, so
-     the gate clamps the scroller rather than hoping the runner's window is
-     narrow. */
+  /* Sticky positions against the nearest scrolling ancestor, so this is a
+     question about the whole chain. A stray `overflow` on the table, or a
+     scroll wrapper that stops being the scroller, unpins both heads with no
+     other sign. The story is wider than it is tall by design, so the gate
+     clamps the scroller instead of relying on the runner's window size. */
   const pinned = await page.evaluate(() => {
     const table = document.querySelector('#storybook-root table');
     const scroller = table.parentElement;
@@ -1007,8 +973,8 @@ for (const [id, selector, what] of DISABLED) {
       travelled: scroller.scrollTop > 0 && scroller.scrollLeft > 0,
       headHeld: Math.abs(before.top - after.top) < 2,
       rowHeld: Math.abs(before.left - after.left) < 2,
-      /* A sticky head that is transparent is a head with the rows sliding
-         through it, which is worse than no head at all. */
+      /* A transparent sticky head lets the rows slide through it, which is
+         worse than no head at all. */
       headOpaque: !getComputedStyle(head).backgroundColor.startsWith('rgba(0, 0, 0, 0'),
       stacked: Number(getComputedStyle(head).zIndex) > Number(getComputedStyle(rowHead).zIndex),
     };
@@ -1023,9 +989,8 @@ for (const [id, selector, what] of DISABLED) {
   );
 
   /* `:has(.differs)` names a CSS-module class from inside a selector. If the
-     transformer does not hash it there, the rule is syntactically perfect,
-     matches nothing, and the row that differs looks exactly like the row that
-     does not — a tint that fails by being absent. */
+     transformer does not hash it there, the rule is valid, matches nothing,
+     and the row that differs looks exactly like the row that does not. */
   const tint = await page.evaluate(() => {
     const rows = [...document.querySelectorAll('#storybook-root tbody tr')];
     const grounds = rows.map((r) => getComputedStyle(r).backgroundColor);
@@ -1041,9 +1006,9 @@ for (const [id, selector, what] of DISABLED) {
 
 {
   await open('commerce-recently-viewed--default', '#storybook-root ul');
-  /* The sentence this component's header leads with. A horizontal strip that
-     has not been given an axis does not stop scrolling — it hands its overflow
-     to the document, and the whole page starts sliding sideways. */
+  /* The claim this component's header leads with. A horizontal strip that has
+     not been given an axis hands its overflow to the document, and the whole
+     page scrolls sideways. */
   const strip = await page.evaluate(() => {
     const FOCUSABLE = 'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex="-1"])';
     const el = document.querySelector('#storybook-root [data-cr-scroll-axis="x"]');
@@ -1053,8 +1018,8 @@ for (const [id, selector, what] of DISABLED) {
       pageHeld: doc.scrollWidth <= doc.clientWidth + 1,
       stripScrolls: el.scrollWidth > el.clientWidth + 1,
       /* The tab stop is conditional by design: five links are already five
-         stops, and a sixth that announces nothing in front of them is noise.
-         So the reachability question is "focusable one way or the other". */
+         stops, and a sixth in front of them that announces nothing adds
+         nothing. So the strip only has to be focusable one way or the other. */
       reachable: el.querySelector(FOCUSABLE) !== null || el.getAttribute('tabindex') === '0',
     };
   });
@@ -1072,8 +1037,8 @@ for (const [id, selector, what] of DISABLED) {
   /* Resin never contains Resin. In the pill shape the marker stops being a
      floating disc and becomes the leading glyph, so the pill is the only
      material in the step. The override has to reach every layer the material
-     mixin set — and a mixin that painted a pseudo-element instead of the
-     element would walk straight through `background: none`. */
+     mixin set, and a mixin that painted a pseudo-element instead of the element
+     would not be affected by `background: none`. */
   const pill = await page.evaluate(() => {
     const ol = document.querySelector('#storybook-root ol');
     const byClass = (re) => [...ol.querySelectorAll('*')].find((e) => re.test(String(e.className)));
@@ -1107,18 +1072,16 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------------------------ screens: the chrome
  *
- * Two claims from slice O that jsdom is structurally unable to answer. The unit
- * tests for both were written to assert what *is* answerable there — a declared
- * state, a region's role — precisely so that neither of them quietly became a
- * test that cannot fail.
+ * Two claims from slice O that jsdom cannot answer. The unit tests for both
+ * assert only what jsdom can answer (a declared state, a region's role), so
+ * that neither becomes a test that cannot fail.
  */
 {
   await open('screens-pageheader--condensed', '#storybook-root header');
   /* "Condensing is the header taking less room, never taking things away." In
-     jsdom the description is in the document whether the rule that hides it
-     reaches or not, because there is no stylesheet to disagree with — so
-     `toBeInTheDocument` on it would pass in the world where condensing is
-     broken. Here there is one. */
+     jsdom the description is in the document whether or not the rule that
+     hides it applies, because there is no stylesheet, so `toBeInTheDocument`
+     on it would pass with condensing broken. Here the stylesheet applies. */
   const condensed = await page.evaluate(() => {
     const header = document.querySelector('#storybook-root header');
     const description = [...header.querySelectorAll('p')]
@@ -1131,7 +1094,7 @@ for (const [id, selector, what] of DISABLED) {
       state: header.dataset.crState,
       descriptionHidden: getComputedStyle(description).display === 'none'
         || box(description).height === 0,
-      /* The half that matters more: the things that stay, stayed. */
+      /* The more important half: what should stay is still shown. */
       headingShown: box(heading).height > 0,
       actionShown: box(action).height > 0,
     };
@@ -1149,11 +1112,11 @@ for (const [id, selector, what] of DISABLED) {
 
 {
   await open('screens-statusbar--error', '#storybook-root [role="alert"]');
-  /* "Full-bleed; text stays crisp." Stone is a feathered backing, and the whole
-     reason core paints it on an isolated `::before` at `z-index: -1` is that a
-     feather applied to the element would feather the label with it. This is the
-     check that the backing is soft and the text on it is not — which no
-     assertion about class names can make. */
+  /* "Full-bleed; text stays crisp." Stone is a feathered backing, and core
+     paints it on an isolated `::before` at `z-index: -1` because a feather
+     applied to the element would feather the label with it. This checks that
+     the backing is soft and the text on it is not, which no assertion about
+     class names can do. */
   const stone = await page.evaluate(() => {
     const bar = document.querySelector('#storybook-root .cr-stone');
     if (!bar) return null;
@@ -1184,12 +1147,12 @@ for (const [id, selector, what] of DISABLED) {
  *
  * "Overflow to a menu." In a unit test every element is zero wide, so the
  * measuring row concludes that everything fits and the affordance is never
- * rendered at all — the overflow behaviour has no observable there, which is
- * why the unit test asserts reachability and this one asserts the overflow.
+ * rendered. The overflow cannot be observed there, so the unit test asserts
+ * reachability and this one asserts the overflow.
  *
- * What must hold is both halves at once: something has to fall out of the row,
- * and nothing may fall off the page. A row that simply clipped would satisfy
- * the first and silently delete functionality at narrow widths.
+ * Both halves must hold at once: something has to fall out of the row, and
+ * nothing may fall off the page. A row that clipped would satisfy the first and
+ * delete functionality at narrow widths.
  */
 {
   await open('screens-commandbar--overflowing', '#storybook-root [role="toolbar"]');
@@ -1212,10 +1175,10 @@ for (const [id, selector, what] of DISABLED) {
       /* An item that overflows leaves the toolbar's roving tab index with it,
          so the trigger that reaches it has to be inside the toolbar. */
       inToolbar: affordance !== undefined && toolbar.contains(affordance),
-      /* And the row must actually be as wide as the bar. A measuring row that is
-         a non-growing flex item measures its own content and concludes nothing
-         fits — which reads as an over-eager overflow rule rather than as a row
-         102px wide inside a 558px bar. */
+      /* The row must also be as wide as the bar. A measuring row that is a
+         non-growing flex item measures its own content and concludes nothing
+         fits (a row 102px wide inside a 558px bar), which looks like an
+         over-eager overflow rule. */
       rowFillsBar: toolbar.firstElementChild.clientWidth > bar.width * 0.9,
     };
   });
@@ -1233,14 +1196,13 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------------ the switch is Crystal's switch
  *
- * Crystal 2.2.0 styles the native switch — `input[type=checkbox][role=switch]` —
+ * Crystal 2.2.0 styles the native switch (`input[type=checkbox][role=switch]`)
  * by element, and React Aria keeps its input visually hidden, so this library
- * cannot wear the recipe; it restates it on its own track and thumb. A
- * restatement is a second copy, and a second copy drifts. So a native switch in
- * the same state is planted beside the library's, in both states, and the track
- * and thumb must agree on every material property. Before 2.2.0 they did not:
- * the library's "on" was a primary track and a 16px thumb in its ink, Crystal's
- * is primary-soft with a 22px primary thumb.
+ * cannot wear the recipe and restates it on its own track and thumb. A
+ * restatement is a second copy that can drift. So a native switch in the same
+ * state is planted beside the library's, in both states, and the track and
+ * thumb must agree on every material property. Crystal's "on" is primary-soft
+ * with a 22px primary thumb.
  */
 {
   await open('inputs-choice-and-range--choices', '#storybook-root [class*="track"]');
@@ -1279,13 +1241,12 @@ for (const [id, selector, what] of DISABLED) {
  *
  * Meridian ruled on 28 September 2026 (D-24) that this library adopts Crystal's
  * `.cr-field-shell` as written: the rim, the 20px radius, the 8px inset, the
- * sheen, and the 44px floor for the control inside — which makes a single-line
- * field 62px tall. Until then every field painted its own shell with the outline
- * colour for an edge, the content radius, no inset, and a 48px control, and was
- * 58px. So a Crystal field shell around a native input is planted beside every
- * field shell in the input stories, and the two must agree on the material and,
- * for a field of one line, on the height. A shell that forgets the class, or a
- * local rule that restates a different value, shows up here as a difference.
+ * sheen, and the 44px floor for the control inside, which makes a single-line
+ * field 62px tall. So a Crystal field shell around a native input is planted
+ * beside every field shell in the input stories, and the two must agree on the
+ * material and, for a field of one line, on the height. A shell that forgets
+ * the class, or a local rule that restates a different value, shows up here as
+ * a difference.
  */
 {
   const FIELD_STORIES = [
@@ -1347,11 +1308,10 @@ for (const [id, selector, what] of DISABLED) {
  * Haze fill it holds.
  *
  * The labels inside are checked too. A tab is `div[role=tab]`, a segment is a
- * radio `label` and a destination is a link; until 2.3.0 Crystal's dock reached
- * only `button`, and this library restated `.cr-dock button` for the three. From
- * 2.3.0 `.cr-dock` reaches them itself (D-26) and the restatement is gone — so a
- * planted `.cr-dock button`, selected and not, is what Crystal must draw them as,
- * and this now checks Crystal against itself on the elements a consumer writes.
+ * radio `label` and a destination is a link. Since 2.3.0 `.cr-dock` reaches all
+ * three itself (D-26), so a planted `.cr-dock button`, selected and not, is what
+ * Crystal must draw them as, and this checks Crystal against itself on the
+ * elements a consumer writes.
  */
 {
   const DOCKS = [
@@ -1381,8 +1341,8 @@ for (const [id, selector, what] of DISABLED) {
           const x = getComputedStyle(strip, '::before')[k], y = getComputedStyle(planted, '::before')[k];
           if (x !== y) differs.push(`haze ${k} ${x} (Crystal ${y})`);
         }
-        /* A dock's buttons carry no material of their own: Resin never contains
-           Resin, and until 28 September every button in a floating toolbar did. */
+        /* A dock's buttons carry no material of their own, because Resin never
+           contains Resin. */
         if (labels === 'bare') {
           for (const button of strip.querySelectorAll('button')) {
             const m = getComputedStyle(button);
@@ -1418,17 +1378,17 @@ for (const [id, selector, what] of DISABLED) {
  * (`@crystal-ui/core/surfaces`), and each surface is a class. For one component
  * of each surface, an element of the same tag wearing the surface's class is
  * planted beside the component's own, and the two must agree on the recipe's
- * material — the fill, its image, the diffusion, the rim, the shadow, and both
- * paint layers. That is the R-19 gate, generalised and kept (R-24 §3.3).
+ * material: the fill, its image, the diffusion, the rim, the shadow, and both
+ * paint layers. This is the R-19 gate, generalised (R-24 §3.3).
  *
  * Covered elsewhere, and not repeated here: `field` (every field in six stories,
  * above), `dock` (seven strips, above) and `choice` (the switch, above).
- * Not covered, and said so: `none`, which has no material to compare. `indicator`
- * is Crystal's own class on the component since 2.3.0 (R-25); what it shows is
+ * Not covered: `none`, which has no material to compare. `indicator` is
+ * Crystal's own class on the component since 2.3.0 (R-25); what it shows is
  * checked by the relationship above, which is the part that can go wrong.
  *
  * `VERIFY_PLANT_RED=1` sabotages each component's fill before the comparison,
- * so every row here can be watched failing on demand rather than trusted.
+ * so every row here can be seen to fail on demand.
  */
 {
   const RED = process.env['VERIFY_PLANT_RED'] === '1';
@@ -1473,8 +1433,9 @@ for (const [id, selector, what] of DISABLED) {
     const seen = await page.evaluate(([selector, classes, PROPS, LAYER, RED]) => {
       const mine = document.querySelector(selector);
       if (!mine) return null;
-      /* Without the transition, or a button's `transition: background` reports the
-         value it is animating from, and the sabotage reads as no change at all. */
+      /* The transition is removed, because a button's `transition: background`
+         reports the value it is animating from and the sabotage would read as no
+         change. */
       if (RED) { mine.style.setProperty('transition', 'none', 'important'); mine.style.setProperty('background-color', 'rgb(255, 0, 0)', 'important'); }
       const planted = document.createElement(mine.tagName.toLowerCase());
       if (classes) planted.className = classes;

@@ -14,9 +14,9 @@
   list-style: none;
 }
 
-/* Each cell holds its width rather than shrinking to fit: a strip whose cards
-   get narrower as more are added is a strip that reflows every time somebody
-   looks at another product. */
+/* Each cell holds its width rather than shrinking to fit. Cards that narrowed
+   as more were added would reflow the strip every time somebody looked at
+   another product. */
 .cell { flex: 0 0 $cr-layout-min-cell-width; }
 
 .empty { margin: 0; color: var(--cr-muted); }

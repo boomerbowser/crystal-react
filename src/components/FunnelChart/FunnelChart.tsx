@@ -1,23 +1,21 @@
 'use client';
 
-/* FunnelChart — sequential stages narrowing toward an outcome.
+/* FunnelChart shows sequential stages narrowing toward an outcome.
  *
- * "Each stage states its absolute and relative value." Relative to *what* is the
- * question a funnel exists to answer, and there are two answers: the share of
- * the first stage, and the share of the one before. They are different numbers
- * and people mean different things by "conversion", so both are stated — "412,
- * 34% of the first stage, 68% of the one before" — rather than one being picked
- * silently.
+ * "Each stage states its absolute and relative value." A stage can be relative
+ * to the first stage or to the one before. They are different numbers and
+ * people mean different things by "conversion", so both are stated: "412, 34%
+ * of the first stage, 68% of the one before".
  *
  * "Stages meet without gaps; labels sit outside when they do not fit." A funnel
- * is a single shape narrowing through its stages, so the stages share edges; a
+ * is a single shape narrowing through its stages, so the stages share edges. A
  * gap between two would suggest something left the funnel other than by not
  * converting.
  *
- * Drawn as horizontal bands rather than as a tapering trapezoid. A trapezoid
- * encodes each stage's value in an *area*, and areas are the shape people read
- * worst; a band encodes it in a width, which is a length, which is the shape
- * people read best. The outline still narrows, so it still looks like a funnel.
+ * Drawn as horizontal bands and not as a tapering trapezoid. A trapezoid
+ * encodes each stage's value in an area, which people read least accurately. A
+ * band encodes it in a width, which is a length, and people read lengths most
+ * accurately. The outline still narrows, so it still looks like a funnel.
  */
 import { type CSSProperties, type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
@@ -94,10 +92,9 @@ export function FunnelChart({
                   {/* Stages meet: each band is the full height of its row, so
                       there is no gap between one stage and the next. */}
                   <rect className={styles['fill']} x={x} y={y} width={width} height={band} />
-                  {/* Inside when it fits, outside when it does not — which is
-                      the catalogue's own rule, and the reason the label is
-                      positioned from the band's width rather than from a
-                      measurement of the text. */}
+                  {/* Inside when it fits and outside when it does not, as the
+                      catalogue requires. The label is positioned from the
+                      band's width, without measuring the text. */}
                   <text
                     className={styles['label']}
                     data-outside={width < inner.width * 0.34 ? '' : undefined}

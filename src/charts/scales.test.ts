@@ -22,8 +22,8 @@ describe('valueDomain', () => {
      an axis offering −100 on a chart of counts is offering a reading no count
      can have. */
   it('does not pad a domain of counts below zero', () => {
-    /* Padding that would cross zero stops at it. It does not snap *to* zero:
-       a fitted domain is still fitted, and 0.6 is where the padding ran out. */
+    /* Padding that would cross zero stops at it. It does not snap to zero.
+       A fitted domain is still fitted, and 0.6 is where the padding ran out. */
     expect(valueDomain(one([1, 12, 30]), { fromZero: false })[0]).toBe(0);
     expect(valueDomain(one([2, 12, 30]), { fromZero: false })[0]).toBeGreaterThan(0);
     expect(valueDomain(one([-30, -12, -1]), { fromZero: false })[1]).toBe(0);

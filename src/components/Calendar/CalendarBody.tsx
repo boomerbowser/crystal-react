@@ -3,16 +3,16 @@
 /* The header and the grid of a calendar, shared by \`Calendar\`, \`RangeCalendar\`,
  * \`DatePicker\` and \`DateRangePicker\`, and the motion the catalogue gives them:
  *
- *   - **\`selection\` on the day that becomes selected** — by a press, an arrow
- *     and Enter, or a value set from outside — and never on the render that
- *     opens the grid with a day already chosen. A range selects two days; each
+ *   - \`selection\` on the day that becomes selected (by a press, an arrow and
+ *     Enter, or a value set from outside), and never on the render that opens
+ *     the grid with a day already chosen. A range selects two days, and each
  *     plays as it becomes one of them.
- *   - **\`page-in\` on the grid when the month shown changes** — the previous and
- *     next buttons, or an arrow key walking off the edge of a month — and never
+ *   - \`page-in\` on the grid when the month shown changes (the previous and
+ *     next buttons, or an arrow key walking off the edge of a month), and never
  *     on the month it opens on.
  *
  * Both read React Aria's own calendar state, so they move on the value React
- * Aria resolved rather than on a click.
+ * Aria resolved and not on a click.
  */
 import { useContext, type ReactNode } from 'react';
 import {
@@ -34,17 +34,17 @@ const Chevron = ({ back }: { back: boolean }): ReactNode => (
  * The header and the grid, without a surface of its own.
  *
  * Exported for `DatePicker`, which opens it inside a popover that already
- * carries the material — a Frost panel inside a Frost popover would be Frost
- * containing Frost, and two panes of the same glass read as neither.
+ * carries the material. A Frost panel inside a Frost popover would be two panes
+ * of the same glass, and neither would read as the panel.
  */
 export function CalendarBody(): ReactNode {
   return (
     <>
       {/* A `div`, not a `header`. A bare `header` is a `banner` landmark, and a
-          banner inside the calendar's own `application` role is an axe violation
-          — which is exactly what it was, once the grid stood on its own rather
-          than inside a picker's dialog where the element is scoped away. The
-          month heading is a heading; the row around it is layout. */}
+          banner inside the calendar's own `application` role is an axe
+          violation when the grid stands on its own. Inside a picker's dialog
+          the element is scoped away. The month heading is a heading, and the
+          row around it is layout. */}
       <div className={cx(styles['header'])}>
         {/* Named by React Aria from the calendar itself, so a range calendar
             showing two months does not have two buttons called "Previous". */}

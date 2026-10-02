@@ -41,8 +41,8 @@ describe('CheckoutBlock', () => {
     expect(screen.getByRole('region', { name: 'Order summary' })).toBeInTheDocument();
   });
 
-  /* Errors summarise at the top of the step, take focus, and link to their
-     fields — the link moves focus into the field it names. */
+  /* Errors are summarised at the top of the step, take focus, and link to their
+     fields. Each link moves focus into the field it names. */
   it('summarises errors, moves focus to the summary, and links each to its field', async () => {
     renderWithCrystal(<CheckoutBlock {...props} errors={{ line1: 'Enter the first line of the address', postcode: 'Enter a postcode' }} />);
     const summary = screen.getByRole('region', { name: 'There are 2 problems' });
@@ -51,8 +51,8 @@ describe('CheckoutBlock', () => {
     expect(screen.getByRole('textbox', { name: /Postcode/ })).toHaveFocus();
   });
 
-  /* The boundary: the payment step has no field for card data anywhere, only
-     the stored methods and the provider's own element. */
+  /* The payment step has no field for card data anywhere, only the stored
+     methods and the provider's own element. */
   it('never renders a field for card data', () => {
     const { container } = renderWithCrystal(<CheckoutBlock {...props} step="payment" />);
     expect(screen.getByRole('region', { name: 'Payment' })).toBeInTheDocument();

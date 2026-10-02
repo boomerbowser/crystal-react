@@ -19,10 +19,10 @@ const meta = {
         component:
           'Overlapping avatars with an overflow count. The group is one named list, so a screen '
           + 'reader reaches it as "Project members, list, 6 items" and can then walk the people in '
-          + 'it — the catalogue asks the group to have a name, not for the people in it to lose '
-          + 'theirs. The overflow chip shows "+3" and announces "3 more": read literally, "+3" is a '
+          + 'it. The catalogue asks the group to have a name, and the people in it keep theirs. '
+          + 'The overflow chip shows "+3" and announces "3 more", because read literally, "+3" is a '
           + 'plus sign and a number. The stacking order counts down, so the first avatar is in '
-          + 'front and each ring cuts the neighbour it covers rather than the other way round.',
+          + 'front and each ring cuts the neighbour it covers.',
       },
     },
   },
@@ -39,8 +39,8 @@ export const Overflowing: Story = {
   args: { max: 3 },
 };
 
-/** One row, one size — an overlap only reads as a row when the circles are the
- *  same circle, so the group's size wins over any a child was given. */
+/** One row, one size. An overlap reads as a row only when the circles are the
+ *  same size, so the group's size wins over any a child was given. */
 export const Sizes: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: 'var(--cr-space)', flexDirection: 'column' }}>

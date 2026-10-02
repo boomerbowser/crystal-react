@@ -19,13 +19,12 @@ const meta = {
       description: {
         component:
           '"A labelled list; the strip is keyboard scrollable" and it "scrolls within its own '
-          + 'container; **never the page**". The second is the one that gets broken: a '
-          + 'horizontal strip built as an overflowing row inside a container with no `overflow` '
-          + 'does not scroll — it makes the *page* wide, and a reader on a phone finds a '
-          + 'horizontal scrollbar under the whole document.\n\n'
-          + 'So the scrolling belongs to a `ScrollArea`, with **Resin** rather than Frost: '
+          + 'container; never the page". A horizontal strip built as an overflowing row inside '
+          + 'a container with no `overflow` does not scroll. It makes the page wide, and a '
+          + 'reader on a phone finds a horizontal scrollbar under the whole document.\n\n'
+          + 'The scrolling belongs to a `ScrollArea` with the Resin scrollbar, because '
           + 'Crystal\'s scroll contract puts Frost on panels and reading surfaces and Resin on '
-          + 'compact or horizontal scrollers. A rule read off the contract, not a preference.',
+          + 'compact or horizontal scrollers.',
       },
     },
   },
@@ -61,9 +60,9 @@ export const Default: Story = {
   ),
 };
 
-/** Nothing viewed yet, which renders nothing at all: a "recently viewed" strip
- *  with an empty list is a heading over a void, and a first-time reader is told
- *  about a feature they have not used instead of being shown the shop. */
+/** Nothing viewed yet, which renders nothing at all. An empty strip would be a
+ *  heading over nothing, telling a first-time reader about a feature they have
+ *  not used. */
 export const NothingViewedYet: Story = {
   render: (args) => <RecentlyViewed {...only(args)} count={0}>{[]}</RecentlyViewed>,
 };

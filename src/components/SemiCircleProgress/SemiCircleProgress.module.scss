@@ -12,12 +12,12 @@
   inset: 0;
 }
 
-/* The catalogue calls the track Haze. Haze is a feathered paint *layer* — a
-   backdrop filter behind a fill — and an SVG path has no layer to put behind
-   it, so what carries across is the reading ground rather than the recipe: the
-   same `--cr-surface-alt` the linear track uses, which is what Haze composites
-   to over Crystal's own foundation. Inventing a `--cr-haze-fill` here would be
-   a property nobody publishes. */
+/* The catalogue calls the track Haze. Haze is a feathered paint layer (a
+   backdrop filter behind a fill), and an SVG path has no layer to put behind
+   it. The track takes Haze's reading ground instead of its recipe: the same
+   `--cr-surface-alt` the linear track uses, which is what Haze composites to
+   over Crystal's own foundation. Do not add a `--cr-haze-fill`. Crystal
+   publishes no such property. */
 .track { fill: var(--cr-surface-alt); }
 .arc { fill: var(--cr-primary); }
 
@@ -41,10 +41,9 @@
   white-space: nowrap;
 }
 
-/* Indeterminate is the whole arc at reduced strength, which is true rather than
-   decorative: the work is in flight and the position is unknown. Nothing
-   travels — a segment sliding along a half circle and jumping back reads as a
-   value that reset. */
+/* Indeterminate is the whole arc at reduced strength: the work is in flight and
+   the position is unknown. Nothing travels, because a segment sliding along a
+   half circle and jumping back reads as a value that reset. */
 .semi:not([data-determinate]) .arc { opacity: 0.45; }
 
 @media (forced-colors: active) {

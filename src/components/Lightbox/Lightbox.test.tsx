@@ -13,9 +13,9 @@ describe('Lightbox', () => {
     expect(screen.getByRole('dialog', { name: /Harbour at dusk/ })).toBeInTheDocument();
   });
 
-  /* "Zoom and pan are keyboard reachable." The zoom is buttons first — a
-     shortcut nobody can see is a feature for people who already know it is
-     there — and the shortcut works as well. */
+  /* "Zoom and pan are keyboard reachable." The zoom is buttons first, because a
+     shortcut nobody can see only serves people who already know it is there.
+     The shortcut works as well. */
   it('zooms from a control and from the keyboard', async () => {
     const user = userEvent.setup();
     renderWithCrystal(
@@ -30,9 +30,8 @@ describe('Lightbox', () => {
     await user.click(screen.getByRole('button', { name: 'Zoom out' }));
     expect(status).toHaveTextContent('Fit to the frame');
 
-    /* The keyboard half, which the first version of this test never pressed a
-       key for. The shortcut is deliberately ignored over a control — `+` on the
-       zoom button would fire twice — so the key goes to the picture. */
+    /* The keyboard half. The shortcut is ignored over a control, because `+`
+       on the zoom button would fire twice, so the key goes to the picture. */
     const picture = screen.getByRole('dialog').querySelector('img');
     fireEvent.keyDown(picture!, { key: '+' });
     expect(status).toHaveTextContent('Zoomed to 150 per cent');
@@ -49,10 +48,9 @@ describe('Lightbox', () => {
     renderWithCrystal(
       <Lightbox isOpen label="Harbour at dusk"><img alt="" src="/1.jpg" /></Lightbox>,
     );
-    /* `screen`, not the render container: the overlay is portalled to `body`, so
-       a query scoped to the container finds nothing whatever the component does
-       — which is how the first version of this test passed with the pan region
-       always present. */
+    /* `screen`, not the render container. The overlay is portalled to `body`,
+       so a query scoped to the container finds nothing whatever the component
+       does, and the test would pass with the pan region always present. */
     expect(screen.queryByRole('group')).toBeNull();
     await user.click(screen.getByRole('button', { name: 'Zoom in' }));
     expect(screen.getByRole('group', { name: /pan with the arrow keys/ })).toBeInTheDocument();
@@ -80,8 +78,7 @@ describe('Lightbox', () => {
   });
 
   /* "Closing returns focus to the thumbnail." React Aria's restoration does
-     this, and nothing asserted it — a claim held by a dependency is still a
-     claim this component makes. */
+     this. The component still makes the claim, so the test asserts it. */
   it('returns focus to whatever opened it', async () => {
     const user = userEvent.setup();
     function Harness() {

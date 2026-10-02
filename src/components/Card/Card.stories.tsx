@@ -10,12 +10,12 @@ const meta = {
     docs: {
       description: {
         component:
-          /* The figures come from the live tokens rather than being typed into the
+          /* The figures come from the live tokens instead of being typed into the
              prose, so the documentation cannot drift from the material it describes. */
           `A Haze content fill: ${Number(crystalTokens['material.haze.fill']) * 100}% opaque with a `
           + `${crystalTokens['material.haze.feather']} feathered perimeter. The feather lives on an `
           + 'isolated paint layer, so the edge softens while text, icons and focus rings stay crisp. '
-          + 'Card plays no motion — Crystal\'s catalogue assigns it none, and a library must not '
+          + 'Card plays no motion. Crystal\'s catalogue assigns it none, and a library must not '
           + 'invent motion the design system did not specify.',
       },
     },
@@ -44,8 +44,8 @@ export const AsRegion: Story = {
   args: { 'aria-label': 'Account summary', children: 'A named region.' },
 };
 
-/** Haze inside a Resin frame is a content well, not a floating card: it recesses
- *  into the frame rather than sitting on it. */
+/** Haze inside a Resin frame is a content well, not a floating card. It recesses
+ *  into the frame instead of sitting on it. */
 export const InsideResin: Story = {
   render: (args) => (
     <div

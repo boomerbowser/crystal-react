@@ -16,23 +16,23 @@ const meta = {
     docs: {
       description: {
         component:
-          'Watermark is a mask rather than a background image, so the mark takes the surface\'s '
-          + 'own ink — a data URI is its own document, and `currentColor` inside one resolves to '
-          + 'black regardless of the page around it. Switch to dark mode in the toolbar: the mark '
-          + 'follows. Its opacity is clamped, because past a few percent it competes with body '
-          + 'text.\n\n'
+          'Watermark is a mask instead of a background image, so the mark takes the surface\'s '
+          + 'own ink. A data URI is its own document, and `currentColor` inside one resolves to '
+          + 'black regardless of the page around it. Switch to dark mode in the toolbar and the '
+          + 'mark follows. Its opacity is clamped, because past a few percent it competes with '
+          + 'body text.\n\n'
           + 'QRCode is the one place in this library where a colour is deliberately not a token. '
-          + 'A scanner reads luminance, so a palette-tinted code is a decoration that scans in '
-          + 'good light and fails in bad. The encoded value is always available as text.\n\n'
+          + 'A scanner reads luminance, so a palette-tinted code scans in good light and fails '
+          + 'in bad. The encoded value is always available as text.\n\n'
           + 'OverflowList measures itself and moves what does not fit into an affordance that '
-          + 'names its count. Narrow the window and widen it again — it grows back, which needs '
-          + 'the widths to have been recorded while everything was laid out rather than read from '
-          + 'a DOM that no longer holds the hidden items.',
+          + 'names its count. Narrow the window and widen it again, and it grows back. That '
+          + 'needs the widths recorded while everything was laid out, because the DOM no longer '
+          + 'holds the hidden items.',
       },
     },
   },
-  /* Watermark needs a mark; the stories that are about the other components
-     simply never render one. */
+  /* Watermark needs a mark. The stories about the other components never render
+     one. */
   args: { text: 'Confidential' },
 } satisfies Meta<typeof Watermark>;
 

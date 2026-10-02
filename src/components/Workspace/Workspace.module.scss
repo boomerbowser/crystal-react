@@ -1,9 +1,9 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material';
 
-/* "Plastic foundation with Frost panels." The foundation is the page's — a
-   workspace inside a shell painting Plastic would be a second foundation over
-   the first — so what is here is the panels and how they are laid out. */
+/* "Plastic foundation with Frost panels." The foundation belongs to the page. A
+   workspace inside a shell that paints Plastic would add a second foundation
+   over the first, so this file styles only the panels and their layout. */
 .workspace {
   display: grid;
   gap: $cr-spacing-md;
@@ -21,9 +21,8 @@
   border-radius: $cr-shape-content-radius;
 }
 
-/* Focus mode: the other panes are removed rather than shrunk. A pane squeezed
-   to nothing is still in the tab order, which is the failure this state exists
-   to avoid. */
+/* Focus mode: the other panes are removed instead of shrunk. A pane squeezed
+   to nothing is still in the tab order. */
 .focused { grid-auto-flow: row; }
 
 @include material.opaque-fallback('.pane');

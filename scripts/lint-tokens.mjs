@@ -1,19 +1,15 @@
 /* Fail the build on a hard-coded Crystal value.
  *
  * CONTRACT §1 makes a literal `#7338EF`, `40px` or `1.95px` in library source a
- * defect — not a style preference, a defect, because it is a value that can no
- * longer be changed centrally. A rule nobody checks is a rule that decays, and
- * the design system already learned this the expensive way: its own drift guard
- * exists because prose and tokens had silently diverged.
+ * defect, because it is a value that can no longer be changed centrally.
  *
  * What is allowed, and why:
  *
- *   - the generated files, which are where values legitimately enter;
- *   - 0, 1px and 100% — hairlines, full extents and identity, which are not
- *     design decisions anybody would want to re-theme centrally;
+ *   - the generated files, which are where values enter;
+ *   - 0, 1px and 100%: hairlines, full extents and identity, which nobody would
+ *     want to re-theme centrally;
  *   - `transparent`, `currentColor`, `inherit`;
- *   - percentages and unitless numbers, which are usually layout rather than
- *     design values.
+ *   - percentages and unitless numbers, which are usually layout values.
  *
  * Everything else with a unit, and every colour literal, has to come from a
  * token or a custom property.
@@ -34,11 +30,11 @@ const GENERATED = new Set(['src/styles/_tokens.scss', 'src/theme/tokens.generate
 /* Values transcribed from a Crystal release the installed package is older than.
  *
  * A file lands here only when Crystal has published a specification this library
- * needs and npm has not caught up — the R-19 situation, where the alternative to
- * carrying the values is shipping components that do not look like Crystal. It is
- * a list rather than a per-line exemption because the point is to make the set
- * *countable*: each entry is a copy that can go stale, each is owed an open issue,
- * and this set is supposed to be empty again after the next dependency bump.
+ * needs and npm has not caught up, and the alternative to carrying the values is
+ * shipping components that do not look like Crystal (R-19). It is a list
+ * rather than a per-line exemption so that the set can be counted: each entry is
+ * a copy that can go stale and is owed an open issue, and the set should be
+ * empty again after the next dependency bump.
  *
  * A file here still owes a header saying which release it was copied from and a
  * test that fails when the installed core starts publishing the values itself. */
@@ -65,8 +61,8 @@ for (const file of walk(SRC)) {
   if (GENERATED.has(rel) || TRANSCRIBED.has(rel)) continue;
   const source = readFileSync(file, 'utf8');
   /* Block comments are stripped across the whole file before splitting, because a
-     multi-line comment's middle lines carry no delimiter of their own — the first
-     version flagged a value mentioned in prose. Newlines are preserved so the
+     multi-line comment's middle lines carry no delimiter of their own and a value
+     mentioned in prose would otherwise be flagged. Newlines are preserved so the
      reported line numbers still point at the real line. */
   const stripped = source.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' '));
   const lines = stripped.split('\n');
@@ -91,23 +87,18 @@ for (const file of walk(SRC)) {
 
 /* A block comment that never closes, which eats the rules after it.
  *
- * `/*` does not nest, so a comment missing its `*` and `/` runs to the *next*
- * closing delimiter in the file and silently deletes every rule in between. It
- * happened twice in one sitting, both times while rewriting a comment above a
- * rule: `DataTable.module.scss` lost its entire header, cell, row, checkbox and
- * resizer styling, and `Button.module.scss` lost only comment text because the
- * next `*` and `/` happened to fall before the next rule.
+ * `/*` does not nest, so a comment missing its `*` and `/` runs to the next
+ * closing delimiter in the file and deletes every rule in between without any
+ * error.
  *
- * Every existing gate passed. Comments are stripped before the value check
- * below; the compiler is happy, because an unclosed comment is valid CSS; the
- * types are unaffected; no unit test reads a stylesheet; and the browser gates
- * probed other components. What found it was opening the page in a browser and
- * measuring a header that was 28px tall with 1px of padding — the user agent's
- * defaults, showing through where the rule should have been.
+ * No other gate catches it. Comments are stripped before the value check; an
+ * unclosed comment is valid CSS, so the compiler accepts it; the types are
+ * unaffected; no unit test reads a stylesheet; and the browser gates see only
+ * the components they probe.
  *
- * Counting delimiters is a complete check for this: the count can only differ
- * if a comment is unterminated, and an unterminated comment is the only way a
- * rule disappears without anything else noticing.
+ * Counting delimiters is a complete check for this: the counts differ only if a
+ * comment is unterminated, and an unterminated comment is the only way a rule
+ * disappears without anything else noticing.
  */
 for (const file of walk(SRC)) {
   if (!/\.(scss|css)$/.test(file)) continue;

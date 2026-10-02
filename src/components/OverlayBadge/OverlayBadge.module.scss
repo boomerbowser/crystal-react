@@ -1,32 +1,31 @@
 @use '../../styles/tokens' as *;
 
-/* OverlayBadge — "Haze fill with a crisp glyph".
+/* OverlayBadge: "Haze fill with a crisp glyph".
  *
- * Crisp is the operative word and it is why the fill lives on a pseudo-element.
- * Haze feathers its own paint; feathering an element that contains a glyph blurs
- * the glyph, and a blurred tick over a photograph is indistinguishable from a
- * rendering fault. Text, icons, hit areas and focus rings stay crisp throughout
- * Crystal, and this is one of the places it would be easiest to forget.
+ * The glyph must stay crisp, so the fill lives on a pseudo-element. Haze
+ * feathers its own paint, and feathering an element that contains a glyph blurs
+ * the glyph. A blurred tick over a photograph looks like a rendering fault.
+ * Text, icons, hit areas and focus rings stay crisp throughout Crystal.
  *
- * `overflow: visible` is stated rather than assumed. The badge overhangs the
- * corner by half its own size, and a wrapper that clips is the failure the
- * catalogue names — "never clipped by its host".
+ * `overflow: visible` is stated explicitly. The badge overhangs the corner by
+ * 35% of its own size, and a wrapper that clips is the failure the catalogue
+ * names: "never clipped by its host".
  */
 
 .host {
   position: relative;
   display: inline-flex;
   vertical-align: middle;
-  /* Said out loud: the badge overhangs, and the host is the thing most likely to
-     have been given a clip by whoever is wrapping it. */
+  /* Stated explicitly: the badge overhangs, and the host is the element most
+     likely to have been given a clip by whoever is wrapping it. */
   overflow: visible;
 }
 
 .badge {
-  /* The Haze fill is Crystal's `.cr-haze` (2.2.0), which this wears; its pad
-     already fills to the edge, which is what this painted by hand. */
-  /* Crystal's surface carries a transparent 1px border; this badge has none, and
-     taking it grew every badge by two pixels in each direction. */
+  /* The Haze fill is Crystal's `.cr-haze` (2.2.0), which this wears. Its pad
+     already fills to the edge. */
+  /* Crystal's surface carries a transparent 1px border. This badge has none,
+     because the border would grow every badge by two pixels in each direction. */
   border: 0;
 
   position: absolute;
@@ -43,7 +42,7 @@
   line-height: 1;
   font-weight: 800;
   /* The ring of page surface that keeps the mark legible where it overlaps its
-     host, which is the same job Avatar's ring does for the same reason. */
+     host, as Avatar's ring does. */
   outline: 2px solid var(--cr-surface);
   pointer-events: none;
 }

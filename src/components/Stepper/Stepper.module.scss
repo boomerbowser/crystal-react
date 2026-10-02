@@ -1,9 +1,9 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* Resin step markers on a Haze track — the catalogue's material line. The track
-   is the connector between the steps, and it is Haze because it sits under the
-   markers rather than floating beside them. */
+/* Resin step markers on a Haze track, as the catalogue's material line says. The
+   track is the connector between the steps, and it is Haze because it sits
+   under the markers rather than floating beside them. */
 .stepper {
   display: flex;
   gap: $cr-spacing-md;
@@ -22,8 +22,8 @@
   min-inline-size: 0;
 }
 
-/* The connector. Drawn from each step to the next, never after the last — a
-   line leading out of the final step says there is more. */
+/* The connector. It is drawn from each step to the next, never after the last,
+   because a line leading out of the final step says there is more. */
 .step:not(:last-child)::after {
   content: '';
   position: absolute;
@@ -110,20 +110,18 @@ button.control[data-focus-visible] {
  *
  * The catalogue's `checkout-steps`: "Haze step fills", "steps are pills;
  * connectors are hairlines". Everything semantic is shared with the marker
- * shape above — the ordered list, `aria-current`, the state said in words — and
+ * shape above (the ordered list, `aria-current`, the state said in words), and
  * only the drawing differs.
  *
  * The marker stays, holding the number or the check mark, but it stops being a
- * Resin disc and becomes the leading glyph inside the pill: a pill with a
+ * Resin disc and becomes the leading glyph inside the pill. A pill with a
  * floating disc in it is two materials deep, and Resin never contains Resin.
  */
-/* A pill step is a Haze pill, not a bare control, so it does not wear `cr-bare`
-   — the marker shape's steps do. The difference matters beyond naming: the bare
-   recipe removes both pseudo-elements, and this fill *is* the `::before`. For a
-   while it was hidden by a local bare-control mixin on `.control`, whose
-   `display: none` survived because the fill never sets `display` — so every
-   checkout step lost its fill and nothing noticed. Planting Crystal's bare class
-   on the right elements only is what brought it back. */
+/* A pill step is a Haze pill, so it does not wear `cr-bare`. The marker shape's
+   steps do. The bare recipe removes both pseudo-elements, and this fill is the
+   `::before`. A bare-control rule on `.control` would also hide the fill through
+   its `display: none`, because the fill never sets `display`. So the bare class
+   goes on the marker shape's controls only. */
 .stepper[data-shape='pill'] .control {
   @include material.haze-fill(0);
 

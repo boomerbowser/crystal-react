@@ -1,21 +1,21 @@
 'use client';
 
-/* WaterfallChart — the cumulative effect of sequential changes.
+/* WaterfallChart shows the cumulative effect of sequential changes.
  *
- * "Each step states its delta and the running total." Both, because they are two
- * different facts and a waterfall is the chart where people read one and mean the
- * other: a bar drawn from 82 to 71 is a step of −11 and a position of 71, and the
- * picture shows the step while the question is usually the total. So the label is
+ * "Each step states its delta and the running total." These are two different
+ * facts, and on a waterfall people often read one and mean the other. A bar
+ * drawn from 82 to 71 is a step of −11 and a position of 71. The picture shows
+ * the step, while the question is usually the total. So the label is
  * "Refunds, −11, running total 71" and the table has a column for each.
  *
- * "Increase, decrease and total colour from the status tokens" — and never colour
+ * "Increase, decrease and total colour from the status tokens", and never colour
  * alone. The sign is in the label, the delta is written with its sign, and the
- * total steps carry a different *shape* as well: they are full-height bars from
- * the axis rather than floating ones, which is what a total is.
+ * total steps also have a different shape. They are full-height bars from the
+ * axis instead of floating ones.
  *
  * "Connectors align with bar edges." The connector leaves the top of one bar and
  * arrives at the top of the next, so the eye follows the running total across
- * the gap rather than guessing where the next bar starts.
+ * the gap instead of guessing where the next bar starts.
  */
 import { type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
@@ -30,7 +30,7 @@ export interface WaterfallStep {
   name: string;
   /** The change. Ignored for a total, which is read from the running sum. */
   value: number;
-  /** A subtotal or the final total: drawn from the axis rather than floating. */
+  /** A subtotal or the final total, drawn from the axis instead of floating. */
   total?: boolean;
 }
 
@@ -152,9 +152,8 @@ export function layout(steps: readonly WaterfallStep[]): LaidStep[] {
   let running = 0;
   return steps.map((step) => {
     if (step.total) {
-      /* A total is drawn from the axis: it is not a change, it is where the
-         running total has got to, and floating it would make the picture claim a
-         step of its own size. */
+      /* A total is drawn from the axis. It is where the running total has got to,
+         and floating it would make the picture show a step of its own size. */
       return { ...step, from: 0, to: running, delta: 0 };
     }
     const from = running;

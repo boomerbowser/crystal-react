@@ -6,9 +6,9 @@ import { StatusBar } from '../StatusBar/StatusBar.js';
 
 describe('DashboardShell', () => {
   /* The catalogue asks for banner, navigation, main and contentinfo, with one
-     main. All four are `AppShell`'s, and a block that drew its own would be the
-     second set on the page. What is asserted here is that composing does not
-     lose them — and that there is still exactly one main. */
+     main. All four are `AppShell`'s, and a block that drew its own would put a
+     second set on the page. This asserts that composing does not lose them, and
+     that there is still exactly one main. */
   it('keeps the shell landmarks, and exactly one main', () => {
     renderWithCrystal(
       <DashboardShell

@@ -3,9 +3,8 @@
 
 .burger {
   /* A burger is a `<button>`, and Crystal paints every `<button>` as a Resin
-     control by element selector. These two lines were that recipe, restated. The
-     shape is square rather than a pill, so it keeps its own geometry — but not
-     its own material. */
+     control by element selector, so the material is not restated here. The
+     shape is square instead of a pill, so it keeps its own geometry. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -41,10 +40,10 @@
 .bars::before { inset-block-start: calc(#{$cr-icon-size} / -3); }
 .bars::after { inset-block-start: calc(#{$cr-icon-size} / 3); }
 
-/* The cross. Crystal's `icon-turn` plays the movement; these are the end
-   states, so the control is correct at rest whether or not it animated —
-   including under reduced motion, where the recipe says to apply the semantic
-   state immediately and omit the movement. */
+/* The cross. Crystal's `icon-turn` plays the movement. These are the end
+   states, so the control is correct at rest whether or not it animated. That
+   includes reduced motion, where the recipe applies the semantic state
+   immediately and omits the movement. */
 .burger[data-open] .bars { background: transparent; }
 .burger[data-open] .bars::before { inset-block-start: 0; transform: rotate(45deg); }
 .burger[data-open] .bars::after { inset-block-start: 0; transform: rotate(-45deg); }

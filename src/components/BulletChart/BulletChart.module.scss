@@ -2,10 +2,9 @@
 
 /* A row: the bands behind, the measure through them, the target across them.
  *
- * Built from elements rather than from SVG, because every part of it is a
- * rectangle positioned along one axis — which is what a stylesheet is for — and
- * because the meter role and its text then sit on a real element rather than on
- * a group.
+ * Built from elements instead of SVG, because every part is a rectangle
+ * positioned along one axis, and because the meter role and its text then sit
+ * on a real element instead of a group.
  */
 
 .bullet {
@@ -32,8 +31,8 @@
   background: var(--range-fill);
 }
 
-/* Through the middle, at a third of the row's height: a measure as tall as its
-   bands would hide them, and the bands are the context the measure is read in. */
+/* Through the middle, at a third of the row's height. A measure as tall as its
+   bands would hide them, and the measure is read against the bands. */
 .measure {
   position: absolute;
   inset-block: 33%;
@@ -45,8 +44,8 @@
 }
 
 /* "The target is a crisp marker, not a bar": full height, no material, no
-   radius. It is a line across the reading, and it is the only thing here that
-   does not soften. */
+   radius. It is a line across the reading, and the only part with no
+   softening. */
 .target {
   position: absolute;
   inset-block: 0;

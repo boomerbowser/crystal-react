@@ -74,7 +74,7 @@ describe('Menubar', () => {
     await user.tab();
     expect(document.activeElement?.textContent).toBe('after');
     await user.tab({ shift: true });
-    /* Not 'File'. Every return journey starting over is the thing this avoids. */
+    /* Not 'File': returning to the bar does not start over at the beginning. */
     expect(document.activeElement?.textContent).toBe('Edit');
   });
 
@@ -86,19 +86,18 @@ describe('Menubar', () => {
   });
 
   /* `role="menubar"` must contain `menuitem`s, and React Aria's trigger is a
-     `button` with `aria-haspopup` — correct standing alone, invalid here. The
-     bar sets the role itself rather than asking callers to remember it, and
-     this is what stops that quietly coming undone. It was found by axe running
-     over a story, not by a test: every query by role passed, because both
-     elements did report the role they were asked for. */
+     `button` with `aria-haspopup`, which is correct standing alone and invalid
+     here. The bar sets the role itself instead of asking callers to remember
+     it, and this test keeps it in place. A query by role cannot catch the
+     fault, because both elements report the role asked for; axe does. */
   it('presents its triggers as menuitems, which is what a menubar may contain', () => {
     renderWithCrystal(<Bar />);
     const bar = screen.getByRole('menubar', { name: 'Document' });
     const items = screen.getAllByRole('menuitem');
     expect(items.map((item) => item.textContent)).toEqual(['File', 'Edit', 'View']);
     for (const item of items) expect(item.closest('[role="menubar"]')).toBe(bar);
-    /* And nothing generic in between: a plain element between the bar and its
-       items breaks the same rule the roles were set to satisfy. */
+    /* Nothing generic in between: a plain element between the bar and its items
+       breaks the same rule the roles were set to satisfy. */
     for (const item of items) {
       let node = item.parentElement;
       while (node && node !== bar) {

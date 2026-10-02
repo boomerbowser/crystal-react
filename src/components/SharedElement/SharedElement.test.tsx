@@ -8,9 +8,8 @@ describe('SharedElement', () => {
     expect(screen.getByTestId('s').dataset['crShared']).toBe('photo-9');
   });
 
-  /* The catalogue says removed entirely, not damped — and that distinction is the
-     point. A shared-element transition is an object crossing the viewport, and
-     slowing it down still moves it. */
+  /* The catalogue says removed entirely, not damped. A shared-element transition
+     is an object crossing the viewport, and slowing it down still moves it. */
   it('is removed entirely under reduced motion, not slowed', () => {
     renderWithCrystal(<SharedElement id="photo-9" data-testid="s">x</SharedElement>, {
       theme: { reduceMotion: true },

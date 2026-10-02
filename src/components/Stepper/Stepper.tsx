@@ -1,35 +1,35 @@
 'use client';
 
-/* Stepper — an ordered sequence with a position and per-step state.
+/* Stepper. An ordered sequence with a position and per-step state.
  *
- * **Every state is announced, not only drawn.** A tick, a number and a warning
- * glyph are three shapes; to a reader who does not see them they are nothing at
- * all. Each step carries its state as text in its accessible name — "Step 2 of
- * 4: Details, current" — because the alternative is a list of headings whose
- * only difference is colour and a symbol, which fails the same way Crystal's
- * status colours would if they were not paired with a label and a shape.
+ * Every state is announced as well as drawn. A tick, a number and a warning
+ * glyph mean nothing to a reader who does not see them. Each step carries its
+ * state as text in its accessible name, such as "Step 2 of 4: Details, current".
+ * Without it the list would differ from step to step only in colour and a
+ * symbol, which fails the same way Crystal's status colours would if they were
+ * not paired with a label and a shape.
  *
- * **`aria-current="step"`, which is the value that exists for exactly this.**
- * Not `page`, which is where you are in a site, and not `aria-selected`, which
- * belongs to a widget with a selection model.
+ * The current step takes `aria-current="step"`, the value defined for this.
+ * `page` is where you are in a site, and `aria-selected` belongs to a widget
+ * with a selection model.
  *
- * **An ordered list, because the order is the meaning.** A stepper whose steps
- * are `div`s tells a screen reader nothing about how many there are or which
- * one this is; `<ol>` says both for free, and the "of 4" in the name says it
- * again in the place a reader actually hears it.
+ * It is an ordered list, because the order is the meaning. A stepper whose
+ * steps are `div`s tells a screen reader nothing about how many there are or
+ * which one this is. `<ol>` says both, and the "of 4" in the name says it again
+ * where a reader hears it.
  *
- * **Two geometries, because the catalogue names two.** `stepper` is "circular
- * markers; connector 2px" on a Haze track; `checkout-steps` is "steps are pills;
- * connectors are hairlines". They are not the same drawing and they are not two
- * components either — everything above this line is identical between them, and
- * a second implementation would be a second place for `aria-current` and the
- * state wording to drift. So the shape is a prop, and `CheckoutSteps` is this
- * with that prop set and a commerce default for its name.
+ * There are two geometries because the catalogue names two. `stepper` is
+ * "circular markers; connector 2px" on a Haze track; `checkout-steps` is "steps
+ * are pills; connectors are hairlines". Everything above this paragraph is
+ * identical between them, and a second component would be a second place for
+ * `aria-current` and the state wording to drift. So the shape is a prop, and
+ * `CheckoutSteps` is this with that prop set and a commerce default for its
+ * name.
  *
- * **Navigable only where navigation is real.** A step with an `onNavigate` is a
- * button; one without is not focusable at all. A disabled-looking control that
- * takes focus and does nothing is worse than one that is plainly inert, and a
- * sequence where three of five steps are unreachable is mostly a list.
+ * A step is navigable only where navigation is real. A step with an
+ * `onNavigate` is a button; one without is not focusable at all. A
+ * disabled-looking control that takes focus and does nothing is worse than one
+ * that is plainly inert.
  */
 import { Button } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
@@ -55,8 +55,8 @@ export interface StepperProps {
   /** Laid out down the block axis rather than across. */
   orientation?: 'horizontal' | 'vertical';
   /**
-   * `marker` is the catalogue's `stepper` — circular markers on a Haze track.
-   * `pill` is its `checkout-steps` — pills with hairline connectors.
+   * `marker` is the catalogue's `stepper`, with circular markers on a Haze track.
+   * `pill` is its `checkout-steps`, with pills and hairline connectors.
    */
   shape?: 'marker' | 'pill';
   /** Names the list, so two steppers are distinguishable. */
@@ -132,8 +132,8 @@ export function Stepper({
   );
 }
 
-/* A step, playing `selection` when it becomes the current one — the flow moved
-   on, or back — and not on the render that first shows it current. */
+/* A step. It plays `selection` when it becomes the current one because the flow
+   moved on or back, and not on the render that first shows it current. */
 function StepItem({ isCurrent, ...props }: React.LiHTMLAttributes<HTMLLIElement> & { isCurrent: boolean; 'data-state'?: string }): React.JSX.Element {
   const scope = useChangeMotion(isCurrent, entered('selection'));
   return <li ref={scope as never} {...props} />;

@@ -4,18 +4,18 @@ import { join, resolve } from 'node:path';
 import { render } from '@testing-library/react';
 import { CrystalProvider } from './CrystalProvider.js';
 
-/* Every custom property this library *reads* must be one Crystal *writes*.
+/* Every custom property this library reads must be one Crystal writes.
  *
- * The library invented `--cr-focus-core` and `--cr-focus-ring` and nothing
- * defined them, so `outline: 2px solid var(--cr-focus-core)` was invalid at
- * computed-value time and fell back to `outline-style: none`. Crystal's focus —
- * a crisp 2px primary core inside a four-layer feathered halo, and one of the
- * system's stated invariants — did not paint on a single field in the library,
- * and 300-odd passing tests had nothing to say about it, because a custom
- * property that resolves to nothing throws no error and logs no warning.
+ * A custom property that resolves to nothing throws no error and logs no
+ * warning, so no other test notices one. When the library read
+ * `--cr-focus-core` and `--cr-focus-ring` and nothing defined them,
+ * `outline: 2px solid var(--cr-focus-core)` was invalid at computed-value time
+ * and fell back to `outline-style: none`. Crystal's focus is a crisp 2px primary
+ * core inside a four-layer feathered halo and one of the system's stated
+ * invariants, and it did not paint on a single field in the library.
  *
  * So the stylesheets are read, every `var(--cr-…)` in them collected, and each
- * checked against what a mounted provider actually publishes. */
+ * checked against what a mounted provider publishes. */
 
 const PUBLISHED = (() => {
   const { container } = render(<CrystalProvider><span /></CrystalProvider>);
@@ -31,12 +31,11 @@ const PUBLISHED = (() => {
   return declared;
 })();
 
-/* Properties a component sets on itself, inline, in the same breath as reading
-   them — a grid's column count, a rating's fill fraction, a title's step of the
-   scale. These are the component's own plumbing and not Crystal's to publish, so
-   they are named rather than pattern-matched: a list somebody has to add to is a
-   list somebody thinks about, and the whole point of this gate is that a property
-   nobody defined should not slip past unnoticed. */
+/* Properties a component sets on itself, inline, where it also reads them: a
+   grid's column count, a rating's fill fraction, a title's step of the scale.
+   These are the component's own plumbing and not Crystal's to publish. They are
+   named here and not pattern-matched, so that adding one takes an edit to this
+   list and a property nobody defined cannot pass this gate unnoticed. */
 const LOCAL = new Set([
   '--cr-angle', '--cr-arc', '--cr-arc-from', '--cr-aspect', '--cr-progress', '--cr-fraction', '--cr-strength',
   '--cr-strength-colour', '--cr-clamp-lines', '--cr-fill-start', '--cr-fill-size',
@@ -49,8 +48,8 @@ const LOCAL = new Set([
   '--cr-watermark-image', '--cr-watermark-opacity', '--cr-watermark-size',
   '--cr-scroll-fade-start', '--cr-scroll-fade-end',
   /* Depth, written per row as a number so one CSS rule indents every level and
-     one gradient draws every guide. It cannot be a Crystal token: it is not a
-     value, it is which row this is. */
+     one gradient draws every guide. It cannot be a Crystal token, because it
+     records which row this is. */
   '--cr-tree-level', '--cr-toc-level',
 ]);
 
@@ -84,8 +83,8 @@ describe('the properties this library reads', () => {
     expect(Object.fromEntries(missing)).toEqual({});
   });
 
-  /* Named on its own, because it is the one that was wrong and because Crystal
-     states it as an invariant rather than as a convenience. */
+  /* Named on its own, because these two properties have been undefined before
+     and because Crystal states the focus recipe as an invariant. */
   it('includes the whole focus recipe', () => {
     expect(PUBLISHED.has('--cr-focus-core')).toBe(true);
     expect(PUBLISHED.has('--cr-focus-ring')).toBe(true);

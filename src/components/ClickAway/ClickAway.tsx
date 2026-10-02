@@ -2,18 +2,17 @@
 
 /* ClickAway.
  *
- * React Aria's `useInteractOutside` does the hard part, and the hard part is not
- * "did the click land outside". It is that a pointer press starting inside and
- * ending outside is not a click-away — dragging to select text out of a popover
- * should not close it — and that touch, pen and mouse all report that sequence
- * differently. A `document.addEventListener('click')` implementation closes on
- * the text selection every time.
+ * React Aria's `useInteractOutside` handles the difficult cases. A pointer
+ * press that starts inside and ends outside is not a click-away (dragging to
+ * select text out of a popover should not close it), and touch, pen and mouse
+ * all report that sequence differently. A `document.addEventListener('click')`
+ * implementation closes on the text selection every time.
  *
- * Crystal's rule, which no library can supply: **dismissal is never only a
- * click-away.** Escape must work too, and something visible must close it. A
+ * Crystal's rule, which no library supplies: dismissal is never only a
+ * click-away. Escape must work too, and something visible must close it. A
  * keyboard user has no way to click outside, and a screen reader user may not
- * know there is an outside. This component therefore also listens for Escape and
- * calls the same callback, so taking it gets both halves rather than one.
+ * know there is an outside. This component therefore also listens for Escape
+ * and calls the same callback, so using it provides both.
  */
 import { useRef, type ReactNode } from 'react';
 import { useInteractOutside, useKeyboard } from 'react-aria';

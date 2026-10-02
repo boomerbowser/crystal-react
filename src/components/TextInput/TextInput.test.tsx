@@ -23,9 +23,9 @@ describe('TextInput', () => {
       .toHaveAccessibleDescription('As it appears on the invoice.');
   });
 
-  /* An error message IS the invalid state. Two ways to say the same thing would
-     eventually disagree, and a field that looks wrong but is not marked invalid
-     is invisible to assistive technology. */
+  /* An error message is the invalid state. Two separate ways to say it could
+     disagree, and a field that looks wrong but is not marked invalid is
+     invisible to assistive technology. */
   it('treats an error message as the invalid state', () => {
     renderWithCrystal(<TextInput label="Email" errorMessage="Enter an email address." />);
     const field = screen.getByRole('textbox', { name: 'Email' });
@@ -54,7 +54,7 @@ describe('TextInput', () => {
   });
 
   /* Motion marks the moment a state is entered. A field that mounts already
-     invalid did not just change, so animating it would be marking nothing. */
+     invalid has not changed state, so it does not animate. */
   it('does not animate a field that mounts already invalid', () => {
     const { container } = renderWithCrystal(
       <TextInput label="Email" errorMessage="Bad address." />,

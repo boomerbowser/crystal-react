@@ -8,11 +8,10 @@ const meta = {
   component: TextInput,
   /* The callbacks as actions, so the Actions panel shows what fired and with
      what. They are declared by hand because this Storybook uses `react-docgen`
-     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
+     instead of `react-docgen-typescript` (see `.storybook/main.ts`), and
      react-docgen reads a component's own interface without resolving what it
      extends. Every callback here is inherited from a React Aria interface, so
-     docgen cannot see one of them. Each was checked against the compiler
-     before being written down. */
+     docgen sees none of them. Each was checked against the compiler. */
   argTypes: {
     ...ariaArgTypes<TextInputProps>({
       autoFocus: false,
@@ -32,9 +31,9 @@ const meta = {
     docs: {
       description: {
         component:
-          'A Haze well inside a Resin shell. Validation motion binds to state rather than to a '
+          'A Haze well inside a Resin shell. Validation motion binds to state instead of a '
           + 'blur handler, so a field that failed on the server animates exactly like one that '
-          + 'failed locally — and a field that mounts already invalid does not animate at all, '
+          + 'failed locally. A field that mounts already invalid does not animate at all, '
           + 'because motion marks the moment a state is entered.',
       },
     },
@@ -51,8 +50,8 @@ export const WithDescription: Story = {
   args: { description: 'As it appears on the invoice.' },
 };
 
-/** Supplying a message IS the invalid state: two ways to say the same thing
- *  would eventually disagree. */
+/** Supplying a message is the invalid state. Two separate ways to say it could
+ *  disagree. */
 export const Invalid: Story = {
   args: { errorMessage: 'Enter a product name.' },
 };

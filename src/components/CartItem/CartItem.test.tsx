@@ -23,8 +23,8 @@ function Harness({ onRemove }: { onRemove?: () => void } = {}) {
 
 describe('CartItem', () => {
   /* "Quantity changes announce the new subtotal." The stepper already says the
-     quantity — it is the value of the control being operated. What the reader
-     does not have is what it did to the money, which is why they touched it. */
+     quantity, because it is the value of the control being operated. What the
+     reader does not have is what the change did to the money. */
   it('announces the new subtotal when the quantity changes', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Harness />);
@@ -71,7 +71,8 @@ describe('CartItem', () => {
     expect(document.body).not.toHaveFocus();
   });
 
-  /* Thirty lines in a basket, and thirty controls called "Remove". */
+  /* Without the name, a basket of thirty lines has thirty controls called
+     "Remove". */
   it('names its remove control after what it removes', () => {
     renderWithCrystal(<Harness onRemove={vi.fn()} />);
     expect(screen.getByRole('button', { name: 'Remove Harbour print' })).toBeInTheDocument();
@@ -93,11 +94,11 @@ describe('CartItem', () => {
     expect(screen.getByText('£108.00')).toBeInTheDocument();
   });
 
-  /* Two live regions updating in one tick. Both are owed: the stepper's
-     catalogue line asks for the bound, this one's asks for the subtotal. The
-     assertion is that neither replaced the other and that the constraint is
-     ahead of its consequence in the DOM, which is what decides the order a
-     screen reader reads them in. */
+  /* Two live regions updating in one tick. Both are required: the stepper's
+     catalogue line asks for the bound, and this one's asks for the subtotal.
+     The test asserts that neither replaced the other and that the constraint
+     is ahead of its consequence in the DOM, which decides the order a screen
+     reader reads them in. */
   it('announces the bound and the subtotal, constraint first', async () => {
     function AtTheBound(): React.JSX.Element {
       const [quantity, setQuantity] = useState(2);

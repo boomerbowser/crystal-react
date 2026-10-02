@@ -8,15 +8,14 @@ const meta = {
     docs: {
       description: {
         component:
-          '"A radio group; each option states price and estimate **together**." The word doing '
-          + 'the work is *together*. A delivery option is a trade between two things, and a '
-          + 'reader choosing one is comparing them against each other: two pounds and three '
-          + 'days against eight pounds and one day. Split across a table\'s columns, or with '
-          + 'the price in the option and the estimate in a footnote, the comparison needs four '
-          + 'numbers held in the head. So each option carries both, in its own name — which is '
-          + 'what a screen reader reads on arriving at the option, not when the reader goes '
-          + 'looking for the rest of it.\n\n'
-          + 'The whole card is the target, and there is no radio dot: selection here is label '
+          '"A radio group; each option states price and estimate together." A delivery '
+          + 'option is a trade between two things, and a reader choosing one is comparing them '
+          + 'against each other: two pounds and three days against eight pounds and one day. '
+          + 'Split across a table\'s columns, or with the price in the option and the estimate '
+          + 'in a footnote, the comparison needs four numbers held in the head. So each option '
+          + 'carries both in its own name, which a screen reader reads on arriving at the '
+          + 'option.\n\n'
+          + 'The whole card is the target, and there is no radio dot. Selection here is label '
           + 'weight, which is what Crystal specifies for a choice among peers as distinct from '
           + 'an action in an on state.',
       },
@@ -37,10 +36,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** With the group in an invalid state, which is the reason this is built on
- *  `RadioGroup` rather than on React Aria directly: the field shell carries the
- *  validity React Aria *resolved*, so a server saying "choose a delivery
- *  method" moves this group exactly as a local rule would. */
+/** With the group in an invalid state. This is why it is built on `RadioGroup`
+ *  and not on React Aria directly: the field shell carries the validity React
+ *  Aria resolved, so a server saying "choose a delivery method" moves this group
+ *  exactly as a local rule would. */
 export const NotChosenYet: Story = {
   args: {
     options: [

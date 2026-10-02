@@ -11,18 +11,16 @@ import { TextInput } from '../TextInput/TextInput.js';
 
 const meta = {
   title: 'Overlays/Drawer',
-  /* Without this docgen has nothing to read and Storybook generates no
-     controls at all — the message Meridian screenshotted. This file shows
-     several components together; the one named here is its subject, and the
-     others are the context it is normally seen in. */
+  /* Without this, docgen has nothing to read and Storybook generates no
+     controls. This file shows several components together. The one named here
+     is its subject, and the others are the context it is normally seen in. */
   component: Drawer,
   /* The callbacks as actions, so the Actions panel shows what fired and with
-     what. They are declared by hand because this Storybook uses `react-docgen`
-     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
-     react-docgen reads a component's own interface without resolving what it
-     extends. Every callback here is inherited from a React Aria interface, so
-     docgen cannot see one of them. Each was checked against the compiler
-     before being written down. */
+     what. They are declared by hand because this Storybook uses `react-docgen`,
+     not `react-docgen-typescript` (see `.storybook/main.ts`), and react-docgen
+     reads a component's own interface without resolving what it extends. Every
+     callback here is inherited from a React Aria interface, so docgen cannot
+     see any of them. Each was checked against the compiler. */
   argTypes: {
     ...ariaArgTypes<DrawerProps>({
       isOpen: true,
@@ -34,22 +32,22 @@ const meta = {
     docs: {
       description: {
         component:
-          '**Modality must be real, not implied.** The usual drawer draws a dark wash over the '
-          + 'page and stops there: the wash looks like the page is unavailable, and a keyboard '
-          + 'user tabs straight past the drawer into it. `isModal` chooses between two genuinely '
-          + 'different constructions rather than two appearances — a dialog with focus contained, '
-          + 'the page inert and a Mirage scrim, or a `complementary` landmark with no scrim, no '
-          + 'focus trap and no scroll lock. There is no way to ask for one\'s look with the '
+          'Modality must be real, not implied. A common drawer draws a dark wash over the '
+          + 'page and does nothing else. The wash makes the page look unavailable, but a keyboard '
+          + 'user tabs past the drawer into the page. `isModal` chooses between two different '
+          + 'constructions, not two appearances. One is a dialog with focus contained, the page '
+          + 'inert and a Mirage scrim. The other is a `complementary` landmark with no scrim, no '
+          + 'focus trap and no scroll lock. You cannot ask for one\'s appearance with the '
           + 'other\'s behaviour.\n\n'
-          + '**The panel is Frost, not Haze.** That is what separates a drawer from a dialog: a '
-          + 'dialog is content to be read in the middle of the page and takes an 80% content '
-          + 'fill; a drawer is a surface the page grew, attached to an edge.\n\n'
-          + '**The radius is on the inner edges only.** The outer edge is flush against the '
-          + 'viewport, and rounding it would show a sliver of page through a corner that is '
-          + 'supposed to be the screen\'s own.\n\n'
-          + '**Crystal authors one drawer recipe, arriving from the right.** Every other edge and '
-          + 'every right-to-left page is that same authored movement pointed somewhere else, '
-          + 'spring and all — not three more recipes, which would be three more specifications.',
+          + 'The panel is Frost, not Haze. That separates a drawer from a dialog. A dialog is '
+          + 'content to be read in the middle of the page and takes an 80% content fill. A drawer '
+          + 'is a surface the page grew, attached to an edge.\n\n'
+          + 'The radius is on the inner edges only. The outer edge is flush against the '
+          + 'viewport, and rounding it would show a sliver of page through a corner that belongs '
+          + 'to the screen.\n\n'
+          + 'Crystal authors one drawer recipe, arriving from the right. Every other edge and '
+          + 'every right-to-left page uses that same authored movement, spring included, pointed '
+          + 'somewhere else. Three more recipes would be three more specifications.',
       },
     },
   },
@@ -88,10 +86,10 @@ export const Modal: Story = {
 };
 
 /* Modality gets its own story, for the same reason the tree's keyboard model
-   does: `verify-behaviour` probes `overlays-drawer--modal`, and a `play`
-   function runs whenever a story loads — so the gate would arrive while this one
-   was still pressing Escape. It passed, and it passed by luck. A story a
-   measurement gate probes carries no play function. */
+   does. `verify-behaviour` probes `overlays-drawer--modal`, and a `play`
+   function runs whenever a story loads, so the gate could arrive while the play
+   function was still pressing Escape. A story that a measurement gate probes
+   carries no play function. */
 export const ModalFocus: Story = {
   name: 'Modality, asserted',
   render: () => (
@@ -104,10 +102,9 @@ export const ModalFocus: Story = {
       <Openable placement="end" isModal />
     </Stack>
   ),
-  /* Modality, in both directions, which is the assertion that matters and the
-     one a unit test keeps getting wrong. React Aria marks a modal open by making
-     everything behind it `inert` — not by `aria-modal` — so the check is whether
-     the page behind actually went inert, and whether it came back. A test that
+  /* Modality in both directions. React Aria marks a modal open by making
+     everything behind it `inert`, not by setting `aria-modal`, so the check is
+     whether the page behind went inert and whether it came back. A test that
      only checks the first half passes on a drawer that never releases the page. */
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -140,8 +137,8 @@ export const EveryEdge: Story = {
   ),
 };
 
-/* No scrim, no focus trap, no scroll lock — and it says `complementary` rather
-   than `dialog`, because that is what it is. */
+/* No scrim, no focus trap and no scroll lock. Its role is `complementary`, not
+   `dialog`. */
 export const NotModal: Story = {
   render: function NotModalStory() {
     const [isOpen, setOpen] = useState(true);

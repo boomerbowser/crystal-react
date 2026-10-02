@@ -6,8 +6,8 @@ import { crystalTokens } from './tokens.generated.js';
 import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 
 /* Read from Crystal's own token file rather than typed in. A test asserting a
-   literal hex passes forever after the palette changes underneath it — which is
-   the drift these assertions exist to catch. */
+   literal hex passes forever after the palette changes underneath it, and that
+   drift is what these assertions exist to catch. */
 const harbourDark = (crystalFlat as {
   palettes: Record<string, { modes: Record<string, Record<string, string>> }>;
 }).palettes['harbor']!.modes['dark']!;
@@ -34,8 +34,8 @@ describe('CrystalProvider', () => {
   });
 
   it('clamps an out-of-range value rather than passing it through', () => {
-    // Crystal's radius range is 14-28. 999 is not a Crystal radius, and a
-    // library that lets it reach CSS is no longer rendering Crystal.
+    // Crystal's radius range is 14 to 28. 999 is outside it, and a library
+    // that lets it reach CSS is no longer rendering Crystal.
     render(<CrystalProvider radius={999}><Probe /></CrystalProvider>);
     expect(read().radius).toBeLessThanOrEqual(parseFloat(crystalTokens['shape.contentRadius']));
   });
@@ -52,9 +52,10 @@ describe('CrystalProvider', () => {
 
   /* Every recipe here runs in script, and script does not see a media query unless
      it asks. With the operating system set to reduce motion and no prop, a
-     button's press played in full — measured in a browser — while the CSS-driven
-     indicators beside it stood still. The system's answer wins the way reduced
-     transparency's does. jsdom implements no matchMedia at all, so it is given one. */
+     button's press would otherwise play in full, as measured in a browser, while
+     the CSS-driven indicators beside it stand still. The system's answer wins the
+     way reduced transparency's does. jsdom implements no matchMedia at all, so it
+     is given one. */
   it('reduces motion when the operating system asks, with no prop at all', () => {
     const original = window.matchMedia;
     window.matchMedia = ((query: string) => ({
@@ -98,7 +99,7 @@ describe('CrystalProvider', () => {
 
   /* Native form controls and the browser's own scrollbars read `color-scheme`,
      not Crystal's tokens. Without it a dark scope still gets a light select and a
-     light default scrollbar, which is the seam that gives a dark theme away. */
+     light default scrollbar. */
   it('declares color-scheme so native controls and scrollbars follow the mode', () => {
     const { container, rerender } = render(
       <CrystalProvider mode="dark"><span>x</span></CrystalProvider>,
@@ -110,8 +111,8 @@ describe('CrystalProvider', () => {
   });
 
   /* `system` is a preference, never a resolved value. A component asking "am I
-     dark?" needs an answer, so it is turned into one in the provider. */
-  /* Opt-in, deliberately: an unset provider follows Crystal's own default token
+     dark?" needs an answer, so `system` is resolved to a mode in the provider. */
+  /* Opt-in by decision: an unset provider follows Crystal's own default token
      rather than the operating system, because making it follow the OS would
      change the default appearance of every existing consumer. */
   it('follows Crystal\'s default mode until asked for the system one', () => {
@@ -137,12 +138,12 @@ describe('CrystalProvider', () => {
     expect((container.firstElementChild as HTMLElement).getAttribute('dir')).toBe('rtl');
   });
 
-  /* The defect this test exists for: the provider published only the numeric
-     preferences and assumed colours arrived from `crystal-theme.css` keyed off
-     `data-crystal-palette` and `data-crystal-mode`. That stylesheet defines
-     neither selector — it is one palette at `:root` — so a scope asking for
-     Harbor in dark mode rendered Prism in light, and every palette and mode
-     control in Storybook changed an attribute and nothing else. */
+  /* `crystal-theme.css` is one palette at `:root` and defines no selector for
+     `data-crystal-palette` or `data-crystal-mode`. A provider that published
+     only the numeric preferences and left colours to that stylesheet would
+     render Prism in light for a scope asking for Harbor in dark mode, and a
+     palette or mode control in Storybook would change an attribute and nothing
+     else. */
   it('publishes the resolved palette, not only the numbers', () => {
     const { container } = render(
       <CrystalProvider palette="harbor" mode="dark"><span>x</span></CrystalProvider>,
@@ -154,8 +155,7 @@ describe('CrystalProvider', () => {
     expect(scope.style.getPropertyValue('--cr-text')).toBe(harbourDark['text']);
   });
 
-  /* Two scopes, two palettes, at the same time — which is the claim the provider
-     has made since it was written and could not keep. */
+  /* Two scopes hold two palettes at the same time, as the provider claims. */
   it('lets a scope differ from the one around it', () => {
     const { container } = render(
       <CrystalProvider palette="prism" mode="light">
@@ -170,12 +170,13 @@ describe('CrystalProvider', () => {
   });
 
   /* React Aria portals a popover to `document.body`, which is outside the scope
-     element — so none of its custom properties reach the overlay. Every menu,
-     listbox and dialog resolved `:root` instead: a Harbor dark page opened a
-     Prism light menu, and `backdrop-filter: blur(var(--cr-frost-blur))` was
-     invalid at computed-value time because the variable did not exist there, so
-     Frost lost its diffusion entirely. The story is what showed it — the page
-     was legible straight through an open calendar. */
+     element, so none of its custom properties reach the overlay. Without a
+     themed container every menu, listbox and dialog resolves `:root`: a Harbor
+     dark page opens a Prism light menu, and
+     `backdrop-filter: blur(var(--cr-frost-blur))` is invalid at computed-value
+     time because the variable does not exist there, so Frost loses its
+     diffusion entirely and the page is legible straight through an open
+     calendar. */
   it('gives overlays a themed container rather than a bare body', async () => {
     render(
       <CrystalProvider palette="harbor" mode="dark"><span>x</span></CrystalProvider>,
@@ -187,21 +188,21 @@ describe('CrystalProvider', () => {
       return found!;
     });
 
-    /* A sibling of the scope, not a child: a child would inherit correctly and
-       be clipped by any ancestor with `overflow: hidden`, which is the thing
-       portalling exists to avoid. */
+    /* A sibling of the scope. A child would inherit correctly but be clipped by
+       any ancestor with `overflow: hidden`, which is what portalling exists to
+       avoid. */
     expect(container.parentElement).toBe(document.body);
     expect(container.dataset['crystalPalette']).toBe('harbor');
     expect(container.dataset['crystalMode']).toBe('dark');
     expect(container.style.getPropertyValue('--cr-canvas')).toBe(harbourDark['canvas']);
-    /* The one that broke the material: without it the blur is invalid at
-       computed-value time and Frost renders with no diffusion at all. */
+    /* Without this property the blur is invalid at computed-value time and
+       Frost renders with no diffusion at all. */
     expect(container.style.getPropertyValue('--cr-frost-blur')).toBeTruthy();
   });
 
   /* One container per live scope, and none left over. Nested providers each get
-     their own because each carries a different palette; the count is the thing
-     to watch, because a container that outlives its provider accumulates. */
+     their own because each carries a different palette. The count is checked
+     because a container that outlives its provider accumulates. */
   it('keeps one overlay container per live provider', () => {
     const count = () => document.querySelectorAll('[data-crystal-overlays]').length;
 
@@ -233,7 +234,7 @@ describe('CrystalProvider', () => {
       <CrystalProvider palette="prism" mode="light"><span>x</span></CrystalProvider>,
     );
     expect(inner.style.getPropertyValue('--cr-content-own-surface')).toBe('');
-    /* The same element, not a replacement — an overlay open inside it survives. */
+    /* The same element, so an overlay open inside it survives. */
     expect(overlay()[overlay().length - 1]).toBe(inner);
   });
 });

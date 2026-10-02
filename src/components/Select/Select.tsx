@@ -2,22 +2,20 @@
 
 /* Select and NativeSelect.
  *
- * Two components because the catalogue asks for two, and the reason is worth
- * stating: **a native select is the right answer more often than a built one.**
- * On a phone it opens the platform picker — a wheel, a full-screen list — which
- * is faster, familiar, and works with every assistive technology the platform
- * ships. A built listbox is right when the options need more than text: an icon,
- * a description, a swatch. `NativeSelect` exists so choosing the native one is a
- * deliberate decision rather than a fallback.
+ * Two components, because the catalogue asks for two. A native select is the
+ * right answer more often than a built one. On a phone it opens the platform
+ * picker (a wheel, a full-screen list), which is faster, familiar, and works with
+ * every assistive technology the platform ships. A built listbox is right when
+ * the options need more than text: an icon, a description, a swatch.
+ * `NativeSelect` exists so the native one can be chosen as a first choice.
  *
- * `NativeSelect` never restyles its options. The catalogue says so and browsers
- * enforce it anyway on most platforms; what Crystal owns is the shell around it
- * and leaving the platform's disclosure arrow uncovered.
+ * `NativeSelect` never restyles its options. The catalogue says so, and browsers
+ * enforce it on most platforms. Crystal owns the shell around it and keeps the
+ * platform's disclosure arrow uncovered.
  *
- * `Select` is React Aria's listbox, where selection is **label weight** and never
- * a check mark — in Crystal a check mark means validated or informational, and a
- * list that uses one for selection has said something else. The popover is Frost,
- * because a transient overlay is Frost and never Resin.
+ * `Select` is React Aria's listbox, where selection is label weight and never a
+ * check mark. In Crystal a check mark means validated or informational. The
+ * popover is Frost, because a transient overlay is Frost and never Resin.
  */
 import { forwardRef, type ReactNode, type SelectHTMLAttributes } from 'react';
 import {
@@ -109,7 +107,7 @@ export interface NativeSelectProps extends Omit<SelectHTMLAttributes<HTMLSelectE
 }
 
 /**
- * A real `select`. Right whenever the options are plain text — on a phone it
+ * A real `select`. Use it whenever the options are plain text. On a phone it
  * opens the platform picker, which is faster and works with everything.
  */
 export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(function NativeSelect(
@@ -123,7 +121,7 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(fun
       <label htmlFor={id} className={cx(styles['label'])}>{label}</label>
       <div className={cx(styles['shell'], 'cr-field-shell')} {...(invalid ? { 'data-invalid': true } : {})}>
         {/* `appearance: auto` keeps the platform's own disclosure, and the
-            trailing padding leaves room for it rather than drawing over it. */}
+            trailing padding leaves room for it so nothing is drawn over it. */}
         <select
           {...props}
           id={id}

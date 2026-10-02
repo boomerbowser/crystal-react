@@ -33,8 +33,9 @@ const meta = {
     'aria-label': { control: 'text', table: { category: 'Pagination' } },
     previousLabel: { control: 'text', table: { category: 'Pagination' } },
     nextLabel: { control: 'text', table: { category: 'Pagination' } },
-    /* User-facing text built from a number. A control over a function is not a
-       control; the prop is here so a product in another language can reach it. */
+    /* User-facing text built from a number. Storybook cannot offer a usable
+       control for a function. The prop is listed so a product in another
+       language can find it. */
     pageLabel: { control: false, table: { category: 'Pagination' } },
     onPageChange: { table: { category: 'Pagination' } },
   },
@@ -43,14 +44,14 @@ const meta = {
       description: {
         component:
           '**Every control is named, and never by its glyph.** The arrows carry `previousLabel` and '
-          + '`nextLabel`, and each page control is named by `pageLabel` — "Page 4", not "4". A row of '
-          + 'bare numerals announces as a row of bare numerals.\n\n'
+          + '`nextLabel`, and each page control is named by `pageLabel`, as "Page 4" and not "4". A row '
+          + 'of bare numerals announces as a row of bare numerals.\n\n'
           + 'The current page is `aria-current="page"`, and it is heavier. Selection is label weight '
-          + 'here exactly as it is in a tab strip; the ellipsis is not a control and is not focusable.\n\n'
-          + 'A stepper is the other half of the same idea and a different promise: pagination says '
-          + '*where in a list*, a stepper says *how far through a task*. A step that cannot be returned '
-          + 'to is disabled rather than absent, because a task whose shape changes as you move through '
-          + 'it cannot be planned for.',
+          + 'here exactly as it is in a tab strip. The ellipsis is not a control and is not focusable.\n\n'
+          + 'A stepper is the other half of the same idea, with a different promise: pagination says '
+          + '*where in a list*, and a stepper says *how far through a task*. A step that cannot be '
+          + 'returned to is disabled and stays visible, because a task whose shape changes as you move '
+          + 'through it cannot be planned for.',
       },
     },
   },
@@ -73,8 +74,8 @@ export const Pages: Story = {
 };
 
 /* Both ellipses, which only appear once the current page is far enough from
-   both ends. Its own story because the elision rule is the part worth being
-   able to look at, and it is unreachable at the default `total`. */
+   both ends. It has its own story so the elision rule can be inspected, since
+   the default `total` never reaches it. */
 export const BothEnds: Story = {
   name: 'Elided at both ends',
   args: { total: 50, page: 25 },
@@ -87,9 +88,9 @@ export const EveryPageShown: Story = {
   render: (args) => <Pagination {...only(args)} />,
 };
 
-/* The names, asserted in a real browser. jsdom agrees with this, but the
-   Interactions panel is where a reviewer can *see* that the arrow announces as
-   "Next page" rather than as a chevron. */
+/* The names, asserted in a real browser. jsdom agrees, but the Interactions
+   panel is where a reviewer can see that the arrow announces as "Next page"
+   and not as a chevron. */
 export const NamedControls: Story = {
   name: 'Every control has a name',
   render: (args) => <Pagination {...only(args)} />,
@@ -123,8 +124,8 @@ export const StepsVertical: Story = {
   ),
 };
 
-/* No handler, so no step is a control. The states still read — which is the
-   distinction: a stepper is a status display that *may* also be navigation. */
+/* No handler, so no step is a control, and the states still read. A stepper
+   is a status display that may also be navigation. */
 export const StepsAsStatusOnly: Story = {
   name: 'Stepper with nowhere to go',
   render: () => <Stepper steps={steps} aria-label="Progress" />,

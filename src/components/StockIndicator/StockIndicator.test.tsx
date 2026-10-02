@@ -10,8 +10,8 @@ describe('StockIndicator', () => {
     expect(screen.getByTestId('s')).toHaveTextContent('Low stock');
   });
 
-  /* Backorder can be bought — it simply arrives later — so it is `info` rather
-     than a warning about an ordinary outcome. */
+  /* Backorder can be bought and arrives later, so it is `info` rather than a
+     warning about an ordinary outcome. */
   it('reports backorder as information, not as a warning', () => {
     renderWithCrystal(<StockIndicator availability="backorder" data-testid="s" />);
     expect(screen.getByTestId('s')).toHaveAttribute('data-status', 'info');

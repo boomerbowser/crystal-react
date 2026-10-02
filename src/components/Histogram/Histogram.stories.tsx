@@ -13,12 +13,11 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Bins meet without gaps." A histogram is not a bar chart of categories: its x axis '
-          + 'is continuous, the bins partition it, and a gap between two of them draws a range '
-          + 'where nothing was counted. The bins are computed here from the values rather than '
-          + 'taken as categories, because a caller who binned the data themselves would have to '
-          + 'keep the bin edges and the axis in step, and one of the two would eventually move.'
-          + '\n\n"Bin bounds and counts are text" — both, in the mark\'s label and in the table.',
+          '"Bins meet without gaps." The x axis of a histogram is continuous and the bins '
+          + 'partition it, so a gap between two bins draws a range where nothing was counted. '
+          + 'The component computes the bins from the values. A caller who bins the data '
+          + 'has to keep the bin edges and the axis in step by hand.'
+          + '\n\n"Bin bounds and counts are text". Both appear in the mark\'s label and in the table.',
       },
     },
   },

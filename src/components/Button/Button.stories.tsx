@@ -11,11 +11,10 @@ const meta = {
   component: Button,
   /* The callbacks as actions, so the Actions panel shows what fired and with
      what. They are declared by hand because this Storybook uses `react-docgen`
-     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
+     instead of `react-docgen-typescript` (see `.storybook/main.ts`), and
      react-docgen reads a component's own interface without resolving what it
      extends. Every callback here is inherited from a React Aria interface, so
-     docgen cannot see one of them. Each was checked against the compiler
-     before being written down. */
+     docgen sees none of them. Each was checked against the compiler. */
   argTypes: {
     ...ariaArgTypes<ButtonProps>({
       autoFocus: false,
@@ -29,21 +28,20 @@ const meta = {
     docs: {
       description: {
         component:
-          'An action control. Pills in every variant — `shape="card"` is Crystal\'s one '
+          'An action control, a pill in every variant. `shape="card"` is Crystal\'s one '
           + 'documented exception and keeps the content radius. Press and hover motion bind to '
-          + 'press *state* rather than to click, so a keyboard user gets the same feedback a '
-          + 'pointer user does.\n\n'
-          + 'One variant is tinted and the rest are not, which is what makes the tinted one read '
-          + 'as primary: `primary` paints its **Haze reading fill** in `--cr-primary` with '
-          + '`--cr-on-primary` as the ink, inside the same glass rim every other control has. '
-          + 'The colour is in the fill rather than the perimeter — a fill painted on the button '
-          + 'itself sits *behind* the inset Haze layer and shows only as a ring. '
+          + 'press state instead of click, so a keyboard user gets the same feedback a pointer '
+          + 'user does.\n\n'
+          + 'Only `primary` is tinted, which is what makes it read as primary. It paints its '
+          + 'Haze reading fill in `--cr-primary` with `--cr-on-primary` as the ink, inside the '
+          + 'same glass rim every other control has. The colour is in the fill and not the '
+          + 'perimeter, because a fill painted on the button itself sits behind the inset Haze '
+          + 'layer and shows only as a ring. '
           + '`resin` is the default: the base surface with the neutral reading pad. `quiet` is '
-          + 'the same shell with no pad at all, so the label sits directly on the material. '
-          + 'Primary is tinted, the default is the neutral pad, quiet is neither.\n\n'
-          + 'There is no `secondary`. It named a second action colour and Crystal defines one — '
-          + 'the palettes publish a single action pair, and the companion and glow hues are '
-          + 'expressive paint that is never assumed to be text-safe. What it used to mean is the '
+          + 'the same shell with no pad at all, so the label sits directly on the material.\n\n'
+          + 'There is no `secondary`. It named a second action colour, and Crystal defines only '
+          + 'one: the palettes publish a single action pair, and the companion and glow hues are '
+          + 'expressive paint that is never assumed to be text-safe. Its old meaning is the '
           + 'default.',
       },
     },
@@ -66,10 +64,10 @@ export const Primary: Story = {
 };
 
 
-/** The whole Resin shell — rim, float shadow, sheen — and no reading pad, which
+/** The whole Resin shell (rim, float shadow, sheen) and no reading pad, which
  *  makes it the only variant that is glass all the way through. The label reads
- *  against the material rather than against a protected ground, which is a wide
- *  margin on Crystal's own foundation and not one over artwork. */
+ *  against the material instead of a protected ground. The contrast margin is
+ *  wide on Crystal's own foundation, but not over artwork. */
 export const Quiet: Story = {
   args: { variant: 'quiet' },
 };
@@ -83,7 +81,7 @@ export const Disabled: Story = {
   args: { isDisabled: true },
 };
 
-/** Every variant together, which is how a geometry regression shows itself. */
+/** Every variant together, so a geometry regression is visible. */
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--cr-space)', flexWrap: 'wrap', alignItems: 'center' }}>

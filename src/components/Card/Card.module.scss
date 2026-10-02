@@ -1,22 +1,20 @@
 @use '../../styles/tokens' as *;
 
-/* Card — Crystal's Haze reading surface, `.cr-haze` (2.2.0).
+/* Card: Crystal's Haze reading surface, `.cr-haze` (2.2.0).
  *
  * The fill is an 80% Haze layer on an isolated `::before`, feathered, over the
- * content shadow, with crisp text above it; inside a Resin frame it recesses
- * instead of rising. This file wrote every part of that out by hand — the
- * isolated layer, the fill, the feather, the shadow, both fallbacks, and the
- * recess keyed on `.cr-resin`, a class nothing in this library emitted — and it
- * is all Crystal's now. The card wears the class and Crystal paints it.
+ * content shadow, with crisp text above it. Inside a Resin frame it recesses
+ * instead of rising. Crystal supplies all of it: the isolated layer, the fill,
+ * the feather, the shadow, both fallbacks, and the recess keyed on `.cr-resin`.
+ * The card wears the class and Crystal paints it.
  *
- * Measured against a planted `.cr-haze` before the change, the card differed in
- * one thing that was not its own padding: a border in `--cr-edge`, which Crystal's
- * Haze surface does not draw. A card is not a control, so no boundary contrast
- * rests on it, and the library adopts where it diverges — so it goes.
+ * The card draws no border in `--cr-edge`, because Crystal's Haze surface does
+ * not draw one. A card is not a control, so no boundary contrast rests on it,
+ * and the library adopts where it diverges.
  *
- * Motion is not this file's. Crystal 2.2.0 gives a card `list-in` and `list-out`,
- * which belong to the collection a card arrives in and leaves, not to
- * a card standing alone — bound where the collection is, not here.
+ * Motion is not set here. Crystal 2.2.0 gives a card `list-in` and `list-out`,
+ * which belong to the collection a card arrives in and leaves, not to a card
+ * standing alone, so they are bound where the collection is.
  */
 
 .card {

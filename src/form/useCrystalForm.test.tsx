@@ -9,9 +9,9 @@ import { useCrystalForm, type UseCrystalFormOptions } from './useCrystalForm.js'
 import { valuesFromForm } from './standard-schema.js';
 import type { StandardSchemaV1 } from './standard-schema.js';
 
-/* Tested against Valibot rather than a hand-rolled `~standard` object. A fake
-   proves the hook can read a shape it was written against; a real validator
-   proves the integration, which is the only thing Standard Schema is for.
+/* Tested against Valibot instead of a hand-rolled `~standard` object. A fake
+   only shows the hook can read the shape it was written against. A real
+   validator tests the integration, which is what Standard Schema is for.
    Valibot is a devDependency here and not a dependency of the library. */
 
 const Signup = v.object({
@@ -141,8 +141,8 @@ describe('useCrystalForm', () => {
     await waitFor(() => expect(screen.queryByText('Already registered')).toBeNull());
   });
 
-  /* A failure nobody claimed is still a failure. A submit that does nothing and
-     says nothing is a button that appears broken. */
+  /* A failure no field claimed is still reported. A submit that does nothing
+     and says nothing looks like a broken button. */
   it('says something when a failure names no field', async () => {
     renderWithCrystal(
       <Subject options={{
@@ -178,10 +178,10 @@ describe('useCrystalForm', () => {
   });
 });
 
-/* The rule, pinned rather than assumed: FormData gives strings and Files, a
-   repeated name becomes an array, and an unchecked checkbox is absent rather
-   than false. Coercion is the schema's job, and a hook that guessed at it would
-   be guessing at a type the schema already states. */
+/* The rule, tested and not assumed: FormData gives strings and Files, a
+   repeated name becomes an array, and an unchecked checkbox is absent instead
+   of false. Coercion is the schema's job, and a hook that coerced would be
+   guessing at a type the schema already states. */
 describe('valuesFromForm', () => {
   it('reports what the browser reports, and nothing more', () => {
     const form = document.createElement('form');

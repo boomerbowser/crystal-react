@@ -9,12 +9,12 @@ const meta = {
     docs: {
       description: {
         component:
-          'A circular image, initials or icon. The interesting part is the fallback chain: identity '
-          + 'images fail routinely, and a broken image icon where a person\'s face should be is '
-          + 'worse than never having tried — so the image is watched and replaced in place. `name` '
-          + 'does two jobs on purpose: it is what the initials come from, and it is the accessible '
-          + 'name. An avatar showing somebody\'s initials is identifying them, so it must say who; '
-          + 'one with no name is decoration beside a label that already does.',
+          'A circular image, initials or icon, with a fallback chain. Identity images fail '
+          + 'routinely, and a broken image icon where a person\'s face should be is worse than '
+          + 'never having tried, so the image is watched and replaced in place. `name` does two '
+          + 'jobs: it is what the initials come from, and it is the accessible name. An avatar '
+          + 'showing somebody\'s initials is identifying them, so it must say who. One with no '
+          + 'name is decoration beside a label that already does.',
       },
     },
   },
@@ -40,7 +40,7 @@ export const Sizes: Story = {
 
 /** First and last, not every part: "María del Carmen Rodríguez" is MR. It is a
  *  heuristic over a name, which no heuristic gets right everywhere, so `initials`
- *  overrides it outright rather than being coaxed. */
+ *  replaces it outright. */
 export const Initials: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'center' }}>
@@ -52,14 +52,14 @@ export const Initials: Story = {
   ),
 };
 
-/** A source that will not resolve, so the fallback is what you see. This is the
- *  state that matters: it is the one users actually hit. */
+/** A source that will not resolve, so the fallback is what you see. Users hit
+ *  this state often. */
 export const WhenTheImageFails: Story = {
   args: { src: '/this-image-does-not-exist.png' },
 };
 
-/** No name, so it is hidden from assistive technology — decoration beside a
- *  label that already names the person. */
+/** No name, so it is hidden from assistive technology. It is decoration beside
+ *  a label that already names the person. */
 export const Decorative: Story = {
   render: ({ name: _named, ...args }) => (
     <span style={{ display: 'inline-flex', gap: 'var(--cr-spacing-xs)', alignItems: 'center' }}>

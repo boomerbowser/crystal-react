@@ -1,16 +1,16 @@
 'use client';
 
-/* BarChart — categorical values as bars, grouped or stacked.
+/* BarChart: categorical values as bars, grouped or stacked.
  *
  * "Bars keep a small radius on the value end only." The base end stays square
  * because it sits on the axis, and rounding it would lift the bar off the line it
- * is measured from — which is the one thing a bar chart is for.
+ * is measured from.
  *
- * The value axis always includes zero. A bar is a *length*, and a length read
- * from a baseline that is not zero exaggerates every difference in the data;
- * that is the oldest way to mislead with a chart, and `valueDomain` does not
- * make it available here. Charts whose marks are positions rather than lengths
- * — the line, the scatter — fit their domain to the data instead.
+ * The value axis always includes zero. A bar is a length, and a length read from
+ * a baseline that is not zero exaggerates every difference in the data.
+ * `valueDomain` does not make that available here. Charts whose marks are
+ * positions and not lengths, such as the line and the scatter, fit their domain
+ * to the data instead.
  *
  * Every bar is a reachable mark with its own label: "February, Revenue, 18". One
  * tab stop for the chart and arrow keys between the bars, which is
@@ -39,7 +39,7 @@ export interface BarChartProps extends Omit<ChartSurfaceProps, 'children' | 'tab
   stacked?: boolean;
   /** How many ticks the value axis asks for. The scale decides the round ones. */
   ticks?: number;
-  /** Formats a value wherever it is read — the axis, the labels, the table. */
+  /** Formats a value wherever it is read: the axis, the labels, the table. */
   format?: (value: number) => string;
   /** Overrides the table the chart builds from its own data. */
   table?: ChartSurfaceProps['table'];
@@ -55,8 +55,8 @@ export function BarChart({
   const arrival = useMarkArrival();
   const tip = useMarkTooltip(marks);
   /* Where each mark ended up, handed from the drawing to the panel that points
-     at it. A ref rather than state because it is not a fact about the chart, it
-     is this render's own arithmetic; see `ChartSurface`'s `tooltip`. */
+     at it. A ref and not state, because it is this render's own arithmetic and
+     not a fact about the chart. See `ChartSurface`'s `tooltip`. */
   const tips = useRef<MarkTip[]>([]);
 
   return (
@@ -107,7 +107,7 @@ export function BarChart({
 
         /* Running totals per category, so a stacked bar knows where the one
            below it ended. Positive and negative stack away from zero in their own
-           directions rather than cancelling. */
+           directions instead of cancelling. */
         const up = categories.map(() => 0);
         const down = categories.map(() => 0);
         /* Handed over by reference before it is filled: the entries are written
@@ -154,15 +154,15 @@ export function BarChart({
                         aria-label={`${category}, ${one.name}, ${format(datum)}`}
                         className={styles['bar']}
                         data-active={marks.active === index ? '' : undefined}
-                        /* The colour arrives as a custom property rather than as
+                        /* The colour arrives as a custom property and not as
                            `fill`, so that the forced-colours rules in the
                            stylesheet can win. An inline `fill` outranks every
-                           rule in every sheet, including the one that has to
-                           replace it when the operating system takes the palette
+                           rule in every sheet, including the one that replaces
+                           it when the operating system takes the palette
                            away. */
-                        /* Crystal's `mark-in` grows each bar from the zero line —
-                           above it upward, below it downward — so the origin is the
-                           baseline, in the plot's own coordinates. */
+                        /* Crystal's `mark-in` grows each bar from the zero line,
+                           upward above it and downward below it, so the origin is
+                           the baseline, in the plot's own coordinates. */
                         data-mark-in=""
                         style={{
                           '--series-colour': seriesColour(channel),
@@ -187,9 +187,9 @@ export function BarChart({
   );
 }
 
-/* The radius is on the value end alone, so the path is written rather than being
-   a `rect` with a `rx` — a `rx` rounds all four. Below zero the value end is the
-   bottom, which is why the direction is a parameter and not an assumption. */
+/* The radius is on the value end alone, so the path is written out instead of
+   using a `rect` with a `rx`, which rounds all four corners. Below zero the value
+   end is the bottom, so the direction is a parameter. */
 function barPath(x: number, y: number, width: number, height: number, positive: boolean): string {
   const radius = Math.min(chartGeometry.barRadius, width / 2, height);
   if (height <= 0) return '';

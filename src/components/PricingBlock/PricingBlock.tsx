@@ -1,28 +1,28 @@
 'use client';
 
-/* PricingBlock — plans side by side, with their features and a way to choose.
+/* PricingBlock: plans side by side, with their features and a way to choose.
  *
- * "**The recommended plan is stated in words, not only styled.**" States:
+ * "The recommended plan is stated in words, not only styled." States:
  * `at-rest`, `recommended`, `focus-visible`.
  *
  * Plans and their features are the product's. The block owns how they are said:
  *
- *   - **Recommended is a word in the plan's heading.** "Team, Recommended" is
- *     what a reader moving by headings hears, and what a sighted reader sees as
- *     the label beside the name. A ring or a lift says it to nobody who cannot
- *     see it.
- *   - **Emphasis is Crystal's, and Crystal's is not a colour.** The colour
- *     specification is explicit that emphasis is carried by `.primary` being
- *     opt-in, by label weight and by placement. So the recommended plan's
- *     call to action is the one primary button on the block, its label is
- *     weighted, and it stays where the product placed it; the card material is
- *     the same Haze as its neighbours.
- *   - **Every call to action names its plan.** Three buttons that all say "Get
+ *   - Recommended is a word in the plan's heading. "Team, Recommended" is what
+ *     a reader moving by headings hears, and what a sighted reader sees as the
+ *     label beside the name. A ring or a lift says nothing to a reader who
+ *     cannot see it.
+ *   - Emphasis is Crystal's, and Crystal does not carry emphasis in colour. The
+ *     colour specification says emphasis is carried by `.primary` being opt-in,
+ *     by label weight and by placement. So the recommended plan's call to
+ *     action is the one primary button on the block, its label is weighted, and
+ *     it stays where the product placed it; the card material is the same Haze
+ *     as its neighbours.
+ *   - Every call to action names its plan. Three buttons that all say "Get
  *     started" are three identical entries in a list of controls; "Choose Team"
  *     is one.
- *   - **A missing feature is said, not just left unticked.** Included features
- *     carry a check — informational, which is the one thing a check means in
- *     Crystal — and an excluded one says "Not included" in words.
+ *   - A missing feature is said, not just left unticked. Included features
+ *     carry a check, which in Crystal only ever means informational, and an
+ *     excluded one says "Not included" in words.
  */
 import { useId, type ReactNode } from 'react';
 import { Button } from '../Button/Button.js';

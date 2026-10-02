@@ -13,9 +13,9 @@
  * still has focus, and away if it does not.
  *
  * Escape dismisses, which is the tooltip contract, and "dismissed" lasts until
- * the reader does something else — moves onto another mark, or moves the
- * cursor. A dismissal that outlived the thing dismissed would be a chart whose
- * tooltip never came back.
+ * the reader does something else: moves onto another mark, or moves the
+ * cursor. If the dismissal outlived the thing dismissed, the tooltip would
+ * never come back.
  */
 import { useState, type FocusEvent, type KeyboardEvent } from 'react';
 import type { MarkProps } from './useMarkNavigation.js';

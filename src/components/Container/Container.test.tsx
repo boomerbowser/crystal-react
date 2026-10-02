@@ -3,8 +3,7 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { Container } from './Container.js';
 
 describe('Container', () => {
-  /* The catalogue says it "must not introduce a landmark", which is the whole
-     accessibility contract of a width decision. */
+  /* The catalogue says it "must not introduce a landmark". */
   it('introduces no landmark', () => {
     renderWithCrystal(<Container data-testid="c">x</Container>);
     expect(screen.getByTestId('c').tagName).toBe('DIV');

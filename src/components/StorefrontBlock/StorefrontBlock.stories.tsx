@@ -30,8 +30,8 @@ const meta = {
       description: {
         component:
           '"Result count is announced on filter change; the grid is a labelled list."\n\n'
-          + 'The announcement is `FilterPanel`’s — what is applied and how many results there are — '
-          + 'and the block does not repeat it. Its opinion is the list: a `ul` named "Products", so a '
+          + 'The announcement of what is applied and how many results there are is `FilterPanel`’s, '
+          + 'and the block does not repeat it. The block provides the list: a `ul` named "Products", so a '
           + 'reader hears how many before the first card, with the count shown in words beside the '
           + 'sort. Loading replaces the list; filtering keeps it in place, marked busy; empty says '
           + 'the filters found nothing and offers a way out.',

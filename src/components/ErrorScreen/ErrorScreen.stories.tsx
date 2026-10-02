@@ -9,14 +9,12 @@ const meta = {
     docs: {
       description: {
         component:
-          '"`role="alert"`; states what failed and what to try, **never only a code**." That '
-          + 'last clause is enforced rather than described: `title` is required and `code` is '
-          + 'an extra, so the arrangement showing `0x80070005` and nothing else does not '
-          + 'typecheck.\n\n'
-          + 'The alert is on the screen rather than on the card. `Result` sets no role — it is '
-          + 'used for successes too, and a success announced as an alert is a component '
-          + 'shouting about good news. A view that has replaced what the reader asked for is '
-          + 'the case that earns it.',
+          '"`role="alert"`; states what failed and what to try, never only a code." The '
+          + 'types enforce the last clause: `title` is required and `code` is an extra, so a '
+          + 'screen showing `0x80070005` and nothing else does not typecheck.\n\n'
+          + 'The alert role is on the screen, not on the card. `Result` sets no role, because it '
+          + 'is used for successes too, and a success should not be announced as an alert. A '
+          + 'view that has replaced what the reader asked for does warrant an alert.',
       },
     },
   },

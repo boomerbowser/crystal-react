@@ -1,19 +1,20 @@
 'use client';
 
-/* SparkLine — a small trend line with no axes, sized to sit inside text or a cell.
+/* SparkLine.
+ *
+ * A small trend line with no axes, sized to sit inside text or a cell.
  *
  * "Needs a text summary beside it; it is never the only carrier of the value."
- * That is not advice here, it is the API: `summary` is required and it is
- * rendered. A spark line with no axes, no labels and no scale cannot be read —
- * it shows a *shape*, and the shape means nothing without a number beside it.
- * Every implementation that makes the summary optional ends up shipping the
- * chart without it.
+ * The API enforces this: `summary` is required and it is rendered. A spark line
+ * with no axes, no labels and no scale shows only a shape, and the shape means
+ * nothing without a number beside it. Implementations that make the summary
+ * optional end up shipping the chart without it.
  *
- * So this is the one chart in the slice that is not a `ChartSurface`. It has no
- * caption, no legend, no plot fill and no disclosure, because it is a *word* in
- * somebody else's sentence: giving it a figure and a table would make a table row
- * containing six of them into six figures and six tables. The text equivalent is
- * the summary, which is why the summary is mandatory.
+ * This is the one chart in the slice that is not a `ChartSurface`. It has no
+ * caption, no legend, no plot fill and no disclosure, because it is a word in
+ * somebody else's sentence. Giving it a figure and a table would turn a table
+ * row containing six of them into six figures and six tables. The summary is the
+ * text equivalent, which is why it is mandatory.
  */
 import { type HTMLAttributes, type ReactNode } from 'react';
 import { seriesPath, type ChartCurve, type PlotPoint } from '../../charts/Cartesian.js';
@@ -23,7 +24,8 @@ import styles from './SparkLine.module.scss';
 
 export interface SparkLineProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
   values: readonly (number | null)[];
-  /** The value in words, shown beside the line. Required, and not by accident. */
+  /** The value in words, shown beside the line. Required, because the line
+   *  alone cannot be read. */
   summary: ReactNode;
   /** The summary before the line rather than after it. */
   summaryFirst?: boolean;

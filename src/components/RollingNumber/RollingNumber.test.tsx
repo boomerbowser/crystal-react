@@ -18,13 +18,14 @@ describe('RollingNumber', () => {
     expect(screen.getByRole('status')).toHaveTextContent('42');
 
     rerenderWithCrystal(<RollingNumber value={57} />);
-    /* Still the old value on the tick after the change: the announcement waits
-       for the roll, which is the half a `waitFor` alone would not catch. */
+    /* Still the old value on the tick after the change, because the
+       announcement waits for the roll. A `waitFor` alone would not catch
+       this. */
     expect(screen.getByRole('status')).toHaveTextContent('42');
     await waitFor(() => { expect(screen.getByRole('status')).toHaveTextContent('57'); });
   });
 
-  /* Reduced motion removes the movement, never the state change — so there is
+  /* Reduced motion removes the movement, never the state change, so there is
      nothing to wait for and the value is current immediately. */
   it('announces immediately under reduced motion', () => {
     const { rerenderWithCrystal } = renderWithCrystal(

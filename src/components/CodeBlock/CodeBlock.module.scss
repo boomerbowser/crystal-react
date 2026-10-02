@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
-/* CodeBlock — a sample that can be read, scrolled and copied.
+/* CodeBlock is a sample that can be read, scrolled and copied.
  *
- * A Haze fill rather than a flat grey: a code block is content, and Crystal's
- * content fill is what content sits on. The monospace pairing is a system stack
- * rather than a bundled face — a design system that ships a monospace font makes
- * every product carry it for the rare page that shows code.
+ * It takes a Haze fill instead of a flat grey, because a code block is content
+ * and Crystal's content fill is what content sits on. The monospace face is a
+ * system stack, not a bundled font. A design system that ships a monospace font
+ * makes every product carry it for the rare page that shows code.
  */
 
 .codeBlock {
@@ -46,9 +46,9 @@
   tab-size: 2;
 }
 
-/* Focusable, so a keyboard user can scroll it — which is the whole reason a code
-   block needs a tab stop. The focus ring is Crystal's, reaching it now that the
-   stylesheet covers `[tabindex]`. */
+/* Focusable, so a keyboard user can scroll it, which is why a code block needs a
+   tab stop. The focus ring comes from Crystal's stylesheet, which covers
+   `[tabindex]`. */
 .pre:focus-visible { outline-offset: calc(-1 * $cr-focus-core-offset); }
 
 :global([data-effects='opaque']) .codeBlock::before { background: var(--cr-surface-alt); }

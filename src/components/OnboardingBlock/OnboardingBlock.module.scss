@@ -1,7 +1,7 @@
 @use '../../styles/tokens' as *;
 
-/* The panel and the scrim are `Tour`'s — "Frost panel over a Mirage scrim". What
-   is here is the page area inside the panel. */
+/* The panel and the scrim are `Tour`'s: "Frost panel over a Mirage scrim". This
+   file styles the page area inside the panel. */
 .pages { display: grid; gap: $cr-spacing-sm; }
 
 .progress { margin-block-end: $cr-spacing-2xs; }

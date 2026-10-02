@@ -5,28 +5,24 @@
  * A Frost band over the Plastic foundation, full-bleed, with actions as pills.
  *
  * The `scrolled` state is read from a passive scroll listener on whichever
- * element actually scrolls: the content region when there is a surrounding
- * `AppShell`, the window when the bar stands alone. Inside a shell the bar never
- * moves — the content scrolls beneath it — so it cannot tell on its own, and the
- * shell publishes its scrolling region for exactly this.
+ * element scrolls: the content region inside an `AppShell`, the window when the
+ * bar stands alone. Inside a shell the bar never moves, because the content
+ * scrolls beneath it, so the shell publishes its scrolling region for the bar
+ * to listen to.
  *
- * An IntersectionObserver on a sentinel is the more elegant answer and was the
- * first implementation. It is not used because the result could not be verified:
- * in the preview browser this is developed against, IntersectionObserver
- * delivered no callbacks at all — not even the initial one — so the bar sat flat
- * forever and no test could tell that from working. A passive listener reading
- * one boolean is cheap enough that the elegance is not worth an unverifiable
- * mechanism in the one place the whole state depends on it.
+ * An IntersectionObserver on a sentinel is not used. In the preview browser this
+ * is developed against, IntersectionObserver delivers no callbacks, not even the
+ * initial one, so a bar driven by it stays flat and no test can tell that from
+ * working. A passive listener reading one boolean is cheap and verifiable.
  *
- * Whether it is the banner is conditional, because a page has one. A bar at the
- * top of the document is the banner; a bar inside a panel, a dialog or a split
- * view is not, and claiming the role there gives a screen reader two to choose
- * between. Declining it means rendering a `div` rather than setting a role: a
- * `header` outside sectioning content *is* a banner implicitly, so `role` alone
- * would not have taken it away — which the test caught.
+ * The banner role is conditional, because a page has one. A bar at the top of
+ * the document is the banner. A bar inside a panel, a dialog or a split view is
+ * not, and claiming the role there gives a screen reader two to choose between.
+ * Declining it means rendering a `div`. A `header` outside sectioning content is
+ * a banner implicitly, so setting `role` alone does not remove it.
  *
- * The title is the page heading or labels one. Given `as="h1"` it *is* the
- * heading; otherwise it is text, and the product's own heading lives below.
+ * The title is the page heading or labels one. Given `as="h1"` it is the
+ * heading. Otherwise it is text, and the product's own heading lives below.
  */
 import {
   forwardRef,
@@ -37,9 +33,9 @@ import { useScrolledPast } from '../AppShell/useScrolledPast.js';
 import styles from './AppBar.module.scss';
 
 /* `title` on an HTML element is the tooltip attribute, and it is a string. The
-   bar's title is content, so the DOM one is dropped rather than shadowed — a
-   component that accepts both under one name is a component whose title
-   sometimes becomes a tooltip. */
+   bar's title is content, so the DOM attribute is omitted from the props. If
+   both were accepted under one name, the title would sometimes become a
+   tooltip. */
 export interface AppBarProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   title?: ReactNode;
   /** Element for the title. `h1` makes it the page heading rather than a label. */
@@ -49,7 +45,7 @@ export interface AppBarProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> 
   /** A shorter bar. For a secondary bar, or a primary one once scrolled. */
   isCondensed?: boolean;
   /**
-   * Whether this is the page's banner. One per view — a bar inside a panel or a
+   * Whether this is the page's banner. One per view. A bar inside a panel or a
    * dialog must pass false, or a screen reader has two banners to choose between.
    */
   isBanner?: boolean;

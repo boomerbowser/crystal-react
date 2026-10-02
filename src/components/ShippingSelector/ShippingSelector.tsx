@@ -1,28 +1,27 @@
 'use client';
 
-/* ShippingSelector — delivery options, each stating its price and its estimate.
+/* ShippingSelector.
  *
- * "A radio group; **each option states price and estimate together**."
+ * Delivery options, each stating its price and its estimate.
  *
- * The word doing the work is *together*. A delivery option is a trade between
- * two things, and a reader choosing one is comparing them against each other:
- * two pounds and three days against eight pounds and one day. Split across a
- * table's columns, or with the price in the option and the estimate in a
- * footnote, and the comparison stops being possible without holding four numbers
- * in your head. So each option carries both, in its own accessible name, which
- * is what a screen reader reads when it arrives on the option — not when the
- * reader goes looking for the rest of it.
+ * "A radio group; each option states price and estimate together."
  *
- * **The whole card is the target.** A radio dot with a label beside it gives a
- * thumb something small to find; these options are large enough to press and the
- * dot is gone, because selection here is label weight — the catalogue's rule and
- * Crystal's own for anything that is a choice among peers rather than an action
- * in an on state. See `_option.scss` for why those two differ.
+ * A delivery option is a trade between two things, and a reader choosing one is
+ * comparing them against each other: two pounds and three days against eight
+ * pounds and one day. Split across a table's columns, or with the price in the
+ * option and the estimate in a footnote, the comparison needs four numbers held
+ * in your head. So each option carries both in its own accessible name, which is
+ * what a screen reader reads when it arrives on the option.
  *
- * It is built on `RadioGroup` rather than on React Aria directly, so it keeps
- * the field shell that carries the validity React Aria *resolved*: a server
- * saying "choose a delivery method" has to move this group exactly as a local
- * rule would.
+ * The whole card is the target. A radio dot with a label beside it gives a thumb
+ * something small to find. These options are large enough to press and have no
+ * dot, because selection here is label weight. That is the catalogue's rule and
+ * Crystal's own for a choice among peers, as distinct from an action in an on
+ * state. See `_option.scss` for why those two differ.
+ *
+ * It is built on `RadioGroup`, not on React Aria directly, so it keeps the field
+ * shell that carries the validity React Aria resolved. A server saying "choose a
+ * delivery method" has to move this group exactly as a local rule would.
  */
 import { type ReactNode } from 'react';
 import { RadioGroup, type RadioGroupProps } from '../Checkbox/Checkbox.js';
@@ -61,11 +60,11 @@ export function ShippingSelector({
           isDisabled={option.unavailable !== undefined}
           className={cx(styles['option'])}
         >
-          {/* No `aria-label`. The card's own text is its name, and the card's
-              own text is already all three facts in one place — which is what
-              "states price and estimate together" asks for. An `aria-label`
-              here would be a second version of the same sentence, and the one a
-              screen reader reads is the one nobody checks. */}
+          {/* No `aria-label`. The card's own text is its name, and it already
+              holds all three facts in one place, as "states price and estimate
+              together" asks. An `aria-label` would be a second copy of the same
+              sentence, and the one a screen reader reads is the one nobody sees
+              to check. */}
           <span className={styles['service']}>{option.label}</span>
           <span className={styles['estimate']}>
             {option.unavailable ?? option.estimate}

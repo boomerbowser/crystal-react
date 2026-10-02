@@ -1,9 +1,9 @@
 @use '../styles/tokens' as *;
 @use '../charts/svg' as chart;
 
-/* `crystal.css` styles the element — `svg { width: 20px; height: 20px; fill:
-   none; stroke: currentColor }` — which is right for Crystal's icons and wrong
-   for every drawing that is not one. Same hazard as the charts, same undo. */
+/* `crystal.css` styles the element with `svg { width: 20px; height: 20px; fill:
+   none; stroke: currentColor }`, which suits Crystal's icons and breaks every
+   drawing that is not one. The charts have the same problem and the same fix. */
 .canvas {
   @include chart.chart-canvas;
 
@@ -17,23 +17,22 @@
 .track { fill: var(--cr-primary-soft); }
 .arc { fill: var(--activity-colour); }
 
-/* The canvas turns, not the arc — see the component. The turn is Crystal's
-   `activity-turn` (D-19, 2.2.0), played while the work is pending; this only puts
-   its origin at the centre. It used to be a keyframe of this library's own, on
-   Crystal's period and nobody's shape. */
+/* The canvas turns, not the arc (see the component). The turn is Crystal's
+   `activity-turn` (D-19, 2.2.0), played while the work is pending. This rule only
+   puts its origin at the centre. */
 .canvas:not([data-determinate]) {
   transform-box: border-box;
   transform-origin: 50% 50%;
 }
 
-/* "Reduced motion replaces spin with a static, still-legible state." Not the arc
-   stopped somewhere: a sixth of a circle held at whatever angle the animation
-   was cancelled at reads as a *position*, and the whole point of this shape is
-   that there is no position. The ring becomes one uniform dimmed circle
-   instead — plainly busy, plainly not a measurement. */
-/* Keyed on the motion hook's answer as well as the media query: the provider
+/* "Reduced motion replaces spin with a static, still-legible state." The arc is
+   not stopped at some angle, because a sixth of a circle held where the
+   animation was cancelled reads as a position, and this shape has no position.
+   The ring becomes one uniform dimmed circle instead, which reads as busy and
+   not as a measurement. */
+/* Keyed on the motion hook's answer as well as the media query. The provider
    folds the operating system's setting and a product's `reduceMotion` into one,
-   and the query alone saw only the first. The query stays for the moment before
+   and the query alone sees only the first. The query stays for the moment before
    hydration, when no script has answered yet. */
 .canvas[data-cr-motion-state='instant']:not([data-determinate]) .track {
   fill: var(--activity-colour);

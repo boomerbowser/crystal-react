@@ -1,32 +1,30 @@
 'use client';
 
-/* CouponInput — a code, an action, and an answer that is said out loud.
+/* CouponInput: a code, an action, and an answer that is announced.
  *
- * "Field and action share **one pill row**", and "**success and failure are
- * announced**; an applied code is removable."
+ * "Field and action share one pill row", and "success and failure are
+ * announced; an applied code is removable."
  *
- * **The answer is the whole component.** A coupon field is one of the few places
- * in a checkout where the reader has done something and genuinely cannot tell
- * whether it worked: the total may or may not have moved, it may have moved for
- * another reason, and the code may have been rejected for a reason nobody
- * printed. So `applied` and `invalid` are not decorations on a text field — they
- * are the states this component exists to carry, and both are announced.
+ * A coupon field is one of the few places in a checkout where the reader has
+ * done something and cannot tell whether it worked. The total may or may not
+ * have moved, it may have moved for another reason, and the code may have been
+ * rejected for a reason nobody printed. `applied` and `invalid` are the states
+ * this component exists to carry, and both are announced.
  *
  * Failure is `alert`, success is `status`. A code that did not apply is
- * something the reader must act on before they can continue, and it is the
- * narrow case where interrupting is correct; a code that did apply is a fact
- * they can hear when they get there. The same split the feedback slice made
- * between `Alert` and `Banner`.
+ * something the reader must act on before they can continue, which is the
+ * narrow case where interrupting is correct. A code that did apply is a fact
+ * they can hear when they get there. This is the same split the feedback slice
+ * made between `Alert` and `Banner`.
  *
- * **An applied code is removable**, and removing it is a control rather than
- * clearing the field: a reader who has applied a code and changed their mind
- * needs an action with a name, not an empty box and a hope. Focus goes back to
- * the field afterwards, because the field is what is there once the code is
- * gone — the same reasoning `Banner`'s `returnFocusTo` is about, except that
- * here the component knows the answer and does not have to ask.
+ * An applied code is removable through a named control. Clearing the field is
+ * not enough for a reader who has applied a code and changed their mind. Focus
+ * goes back to the field afterwards, because the field is what is there once
+ * the code is gone. `Banner`'s `returnFocusTo` follows the same reasoning, but
+ * here the component knows the target and does not have to ask.
  *
- * `applying` disables the action rather than swapping it for a spinner. A
- * control that disappears under the reader's cursor mid-press is the defect
+ * `applying` disables the action and does not swap it for a spinner. A control
+ * that disappears under the reader's cursor mid-press is the defect
  * `MediaControls` avoids with its single play toggle.
  */
 import {
@@ -70,16 +68,15 @@ export const CouponInput = forwardRef<HTMLInputElement, CouponInputProps>(
     const id = useId();
     const field = useRef<HTMLInputElement>(null);
 
-    /* Focus goes back to the field once the code is gone — in an effect, and
-       keyed on the code going away, because the applied state and the form are
-       two entirely different trees. At the moment Remove is pressed the input
-       this ref names does not exist yet: focusing it there focuses nothing, and
-       the reader is left on a control that has just removed itself. Bringing
-       the field back and then putting them in it are two separate renders, and
-       this is the second one.
+    /* Focus goes back to the field once the code is gone. This runs in an
+       effect keyed on the code going away, because the applied state and the
+       form are two different trees. When Remove is pressed, the input this ref
+       names does not exist yet. Focusing it then focuses nothing, and the
+       reader is left on a control that has just removed itself. The field
+       comes back in one render and receives focus in the next, here.
 
-       `wasApplied` rather than `applied === undefined`, so this does not fire
-       on a component that simply mounts without a code. */
+       `wasApplied` is used instead of `applied === undefined`, so this does not
+       fire on a component that mounts without a code. */
     const wasApplied = useRef(applied !== undefined);
     useEffect(() => {
       const removed = wasApplied.current && applied === undefined;
@@ -90,9 +87,9 @@ export const CouponInput = forwardRef<HTMLInputElement, CouponInputProps>(
     const apply = (event: FormEvent) => {
       event.preventDefault();
       const code = value.trim();
-      /* An empty apply is a press that cannot succeed. Refusing it here is
-         better than sending it and reporting a failure the reader caused by
-         pressing a control that should not have been pressable. */
+      /* An empty apply cannot succeed, so it is refused here and never sent.
+         Sending it would report a failure caused by a control that should not
+         have been pressable. */
       if (code === '' || isApplying) return;
       onApply(code);
     };
@@ -109,8 +106,8 @@ export const CouponInput = forwardRef<HTMLInputElement, CouponInputProps>(
               {removeLabel(applied)}
             </Button>
           ) : null}
-          {/* Polite: the code worked, which is a fact the reader can hear when
-              they reach it rather than one that has to interrupt them. */}
+          {/* Polite. The code worked, which the reader can hear when they reach
+              it, with no need to interrupt them. */}
           <span role="status" className={styles['announcement']}>
             {appliedMessage(applied)}
           </span>
@@ -119,9 +116,8 @@ export const CouponInput = forwardRef<HTMLInputElement, CouponInputProps>(
     }
 
     return (
-      /* A form, so Enter in the field applies the code. A field beside a button
-         that only answers to the button is a field that swallows the key every
-         reader will try first. */
+      /* A form, so Enter in the field applies the code. Enter is the key every
+         reader tries first. */
       <form className={cx(styles['coupon'], className)} onSubmit={apply} noValidate>
         <div className={styles['row']}>
           <TextInput
@@ -133,16 +129,14 @@ export const CouponInput = forwardRef<HTMLInputElement, CouponInputProps>(
             {...(error === undefined ? {} : { errorMessage: error })}
             className={cx(styles['field'])}
           />
-          {/* Disabled while applying rather than replaced by a spinner: a
-              control that vanishes under the cursor mid-press is a control the
-              reader has to find again. */}
+          {/* Disabled while applying, and not replaced by a spinner. A control
+              that vanishes under the cursor mid-press has to be found again. */}
           <Button type="submit" isDisabled={isApplying || value.trim() === ''}>
             {applyLabel}
           </Button>
         </div>
-        {/* Assertive: a refused code is something the reader has to act on
-            before they can finish, which is the narrow case where interrupting
-            is right. */}
+        {/* Assertive. The reader has to act on a refused code before they can
+            finish, which is the narrow case where interrupting is right. */}
         <span role="alert" className={styles['announcement']}>{error}</span>
       </form>
     );

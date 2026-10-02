@@ -8,12 +8,12 @@ const meta = {
     docs: {
       description: {
         component:
-          'A half-ring, on the ring progress stroke contract. `role="progressbar"` **with a text '
-          + 'value beside it** — the catalogue asks for the value on the screen, not only in the '
-          + 'accessible tree.\n\n'
-          + 'Its indeterminate state is the whole arc at reduced strength rather than something '
-          + 'travelling: a segment sliding from one end of a half circle to the other and '
-          + 'jumping back reads as a value that reset.',
+          'A half-ring, on the ring progress stroke contract. The catalogue asks for '
+          + '`role="progressbar"` with a text value beside it, so the value is on the screen as '
+          + 'well as in the accessible tree.\n\n'
+          + 'Its indeterminate state is the whole arc at reduced strength, and nothing travels. '
+          + 'A segment sliding from one end of a half circle to the other and jumping back reads '
+          + 'as a value that reset.',
       },
     },
   },

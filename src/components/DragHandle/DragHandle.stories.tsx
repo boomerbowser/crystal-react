@@ -11,7 +11,7 @@ const meta = {
       description: {
         component:
           'The grip is Crystal\'s `.cr-drag-handle` (2.2.0): a bare control with a grip in its own ink, '
-          + 'the grab cursor and a lift while held. What is carried is this component\'s — the item '
+          + 'the grab cursor and a lift while held. This component styles what is carried: the item '
           + 'rises, not the handle.\n\n'
           + 'A button, not a decorated div: React Aria\'s drag button carries the keyboard state machine, '
           + 'and a screen reader needs something it can activate to start one.',

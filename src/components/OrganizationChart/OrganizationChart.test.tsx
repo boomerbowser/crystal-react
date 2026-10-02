@@ -22,8 +22,8 @@ const items = [
 ];
 
 describe('OrganizationChart', () => {
-  /* M-3 again: a node carries a disclosure *and* is selectable, which the ARIA
-     tree pattern has no key left to reach. */
+  /* M-3: a node carries a disclosure and is also selectable, and the ARIA tree
+     pattern has no key left to reach the disclosure. */
   it('is a treegrid, as M-3 decided a tree with controls in it must be', () => {
     renderWithCrystal(<OrganizationChart items={items} label="Team" />);
     expect(screen.getByRole('treegrid', { name: 'Team' })).toBeInTheDocument();
@@ -40,8 +40,8 @@ describe('OrganizationChart', () => {
     expect(rows[1]).toHaveAttribute('aria-setsize', '2');
   });
 
-  /* "Collapse state is announced" — by `aria-expanded` on the row rather than by
-     which way the chevron points. */
+  /* "Collapse state is announced", by `aria-expanded` on the row. Which way the
+     chevron points announces nothing. */
   it('announces the collapse state', async () => {
     const { container } = renderWithCrystal(<OrganizationChart items={items} label="Team" />);
     const root = container.querySelector('[role="row"]');

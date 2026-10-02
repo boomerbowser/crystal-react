@@ -12,7 +12,7 @@
  * one-and-a-bit pixel outline in the body ink, inherited from an ancestor rather
  * than set on the mark, so no amount of reading the mark's own rules explains it.
  *
- * It is not a defect in `crystal.css` — a consumer loading it is asking for
+ * It is not a defect in `crystal.css`. A consumer loading it is asking for
  * Crystal's element styles, and this library has to survive that, which is the
  * same lesson as D-1. So every `<svg>` in a chart takes this mixin, and every
  * mark states the paint it wants rather than inheriting any.

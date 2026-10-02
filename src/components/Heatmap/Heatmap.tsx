@@ -1,20 +1,19 @@
 'use client';
 
-/* Heatmap — a matrix of values shown as cell intensity.
+/* Heatmap shows a matrix of values as cell intensity.
  *
- * "Intensity is paired with a value; colour alone never carries meaning." Both
- * clauses, and they are the same requirement stated twice: every cell is
- * labelled with its number, and every cell's label reads on its own paint,
- * because Crystal's intensity ramp ships the ink for each step. That is what
- * makes the pairing real rather than a promise — a number written in one colour
- * across a five-step ramp is unreadable at one end of it.
+ * "Intensity is paired with a value; colour alone never carries meaning."
+ * Every cell is labelled with its number, and every cell's label reads on its
+ * own paint, because Crystal's intensity ramp ships the ink for each step. A
+ * number written in one colour across a five-step ramp is unreadable at one
+ * end of it.
  *
  * "Cells are square with a hairline gap." Square, so a row and a column weigh
- * the same; the gap is Crystal's `--cr-chart-cell-gap`, which is a gap rather
- * than a border for the same reason the pie's separation is.
+ * the same. The gap is Crystal's `--cr-chart-cell-gap`, a gap and not a border
+ * for the same reason the pie's separation is.
  *
- * The scale is equal-width buckets, never quantiles — see `charts/intensity.ts`
- * for why that is a correctness decision and not a preference.
+ * The scale is equal-width buckets, never quantiles. `charts/intensity.ts`
+ * explains why this is a correctness requirement.
  */
 import { type CSSProperties, type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
@@ -125,9 +124,8 @@ export function Heatmap({
                       '--cell-fill': intensityFill(step),
                       '--cell-ink': intensityInk(step),
                       /* How strong this cell is, as a fraction. Read only under
-                         forced colours, where the ramp has been replaced by one
-                         colour and the intensity has to be carried by the size of
-                         the mark instead of by its paint. */
+                         forced colours, where the ramp is replaced by one colour
+                         and the size of the mark carries the intensity. */
                       '--cell-strength': String(step / INTENSITY_STEPS),
                     } as CSSProperties}
                   >

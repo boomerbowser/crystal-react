@@ -4,8 +4,8 @@ import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
 import { Chip } from './Chip.js';
 
 describe('Chip', () => {
-  /* A chip that merely displays a value must not be a tab stop: it is a label,
-     and making it focusable puts a stop on a thing that does nothing. */
+  /* A chip that only displays a value must not be a tab stop. It is a label,
+     and making it focusable puts a stop on something that does nothing. */
   it('is a label, not a control, until it is selectable', async () => {
     const { container } = renderWithCrystal(<Chip>London</Chip>);
     expect(screen.queryByRole('button')).toBeNull();
@@ -13,15 +13,16 @@ describe('Chip', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* aria-pressed, not aria-selected: the latter belongs inside a listbox or a
-     tablist, and outside one it says the chip is part of a collection it is not. */
+  /* aria-pressed, not aria-selected. aria-selected belongs inside a listbox or
+     a tablist, and outside one it says the chip is part of a collection it is
+     not in. */
   it('announces selection with aria-pressed', () => {
     renderWithCrystal(<Chip isSelectable isSelected>London</Chip>);
     expect(screen.getByRole('button', { name: 'London' }).getAttribute('aria-pressed')).toBe('true');
   });
 
   /* "Remove" and "select" are two actions on one object, so the remove control
-     is a separate named button — and a decorated span is reachable by neither
+     is a separate named button. A decorated span is reachable by neither
      keyboard nor screen reader. */
   it('removes through its own named button', async () => {
     const onRemove = vi.fn();

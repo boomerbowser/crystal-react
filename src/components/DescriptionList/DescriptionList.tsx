@@ -1,17 +1,16 @@
 'use client';
 
-/* DescriptionList — term and value pairs.
+/* DescriptionList: term and value pairs.
  *
- * A real `dl`, and the reason is the one thing a grid of divs cannot do: keep the
- * term and the value associated. Read out of order — which is how a screen reader
- * moves through a two-column layout — "Status" and "Active" in separate cells are
- * two unrelated words. In a definition list they are a pair, and a reader can
- * move term to term and ask for each one's value.
+ * This is a real `dl`, because a grid of divs cannot keep the term and the value
+ * associated. A screen reader moves through a two-column layout out of order, so
+ * "Status" and "Active" in separate cells are two unrelated words. In a
+ * definition list they are a pair, and a reader can move from term to term and
+ * ask for each one's value.
  *
- * That is also why the pairs are wrapped in `div`s: HTML allows it inside `dl`
- * precisely so a term and its values can be styled as a unit, and it is the only
- * way to lay this out as rows without breaking the association the element
- * exists for.
+ * Each pair is wrapped in a `div`. HTML allows this inside `dl` so a term and its
+ * values can be styled as a unit, and it is the only way to lay the list out as
+ * rows without breaking the association.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';

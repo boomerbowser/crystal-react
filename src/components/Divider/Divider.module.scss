@@ -1,10 +1,10 @@
 @use '../../styles/tokens' as *;
 
-/* Divider — a hairline, never a heavy rule.
+/* Divider: a hairline, never a heavy rule.
  *
- * The catalogue is specific: the edge colour token and 1px. A divider that
- * competes with the content it separates is doing the opposite of its job, and
- * Crystal already owns a colour for "the contour of a surface".
+ * The catalogue specifies the edge colour token and 1px. A divider must not
+ * compete with the content it separates, and Crystal already has a colour for
+ * "the contour of a surface".
  */
 
 .divider {
@@ -27,8 +27,8 @@
   background: var(--cr-edge);
 }
 
-/* A labelled divider is a rule either side of a label, which is one element with
-   two pseudo-rules rather than three elements: the label stays a single text node
+/* A labelled divider is a rule either side of a label, drawn as one element with
+   two pseudo-rules instead of three elements. The label stays a single text node
    for a screen reader that reads the separator's name. */
 .labelled {
   display: flex;

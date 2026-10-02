@@ -8,16 +8,14 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Fill never obscures gridlines beneath it." That is the design of this component: '
-          + 'the fill is Crystal\'s `--cr-chart-fill-opacity` rather than a solid, so two '
-          + 'overlapping series are still two and the gridlines a reader measures against are '
-          + 'still legible through both. A solid area chart with three series is a picture of '
-          + 'the topmost series and two rumours.\n\n'
-          + 'Stacked changes what the chart *means* rather than only how it looks: unstacked '
-          + 'areas each measure from zero and overlap, stacked ones measure from the one below '
-          + 'and the top edge is the total. So a stacked chart\'s table carries the total '
-          + 'column — the total is what the picture is asserting, and a reader should not have '
-          + 'to add six numbers to check it.',
+          '"Fill never obscures gridlines beneath it." The fill is Crystal\'s '
+          + '`--cr-chart-fill-opacity` and not a solid, so two overlapping series stay distinct '
+          + 'and the gridlines a reader measures against stay legible through both. A solid area '
+          + 'chart with three series hides everything below the topmost one.\n\n'
+          + 'Stacking changes what the chart means. Unstacked areas each measure from zero and '
+          + 'overlap. Stacked ones measure from the one below, and the top edge is the total. A '
+          + 'stacked chart\'s table carries a total column, so a reader does not have to add six '
+          + 'numbers to check it.',
       },
     },
   },
@@ -44,7 +42,7 @@ export const Overlapping: Story = {};
 export const Stacked: Story = { args: { stacked: true } };
 
 /** Smoothed and stacked, which is the case a reversed-path implementation gets
- *  quietly wrong. */
+ *  wrong. */
 export const SmoothStacked: Story = { args: { stacked: true, curve: 'smooth' } };
 
 export const OneSeries: Story = {

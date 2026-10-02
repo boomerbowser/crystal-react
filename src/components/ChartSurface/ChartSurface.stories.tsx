@@ -18,15 +18,15 @@ const meta = {
     docs: {
       description: {
         component:
-          'The frame every chart draws into: the Haze plot fill, the measured box, the axis '
-          + 'gutters, the legend and tooltip slots, and the empty and loading states.\n\n'
-          + '`table` is a required prop. Crystal\'s catalogue says a chart "owes a text '
-          + 'equivalent of its data — a chart is a second representation, never the only one", '
-          + 'and a chart that could be drawn without one eventually would be. No chart in this '
+          'The frame every chart draws into. It provides the Haze plot fill, the measured box, '
+          + 'the axis gutters, the legend and tooltip slots, and the empty and loading states.\n\n'
+          + '`table` is a required prop. Crystal\'s catalogue says "every chart owes a text '
+          + 'equivalent of its data, so the chart is never the only representation". '
+          + 'If a chart could be drawn without one, eventually one would be. No chart in this '
           + 'library renders a table of its own; they all pass their data through here.\n\n'
-          + 'The plot is drawn in CSS pixels at the measured width rather than in a scaled '
-          + '`viewBox`, so the stroke and point scales stay the sizes Crystal published rather '
-          + 'than stretching with the window.',
+          + 'The plot is drawn in CSS pixels at the measured width, not in a scaled `viewBox`, '
+          + 'so the stroke and point scales stay at the sizes Crystal published and do not '
+          + 'stretch with the window.',
       },
     },
   },
@@ -59,13 +59,13 @@ export const Default: Story = {
 };
 
 /** Nothing to draw, and nothing coming. The caption, the frame and the table
- *  control all stay: an empty chart is still a chart of something. */
+ *  control all stay, because an empty chart still has a subject. */
 export const Empty: Story = {
   render: (args) => <ChartSurface {...only(args)} empty table={{ columns: table.columns, rows: [] }} />,
 };
 
-/** Waiting. Nothing moves — Crystal's rule is that nothing moves at rest, and a
- *  chart waiting for data is at rest — and the plot holds its size so the page
+/** Waiting. Nothing moves, because Crystal's rule is that nothing moves at rest
+ *  and a chart waiting for data is at rest. The plot holds its size so the page
  *  does not jump when the numbers arrive. */
 export const Loading: Story = {
   render: (args) => <ChartSurface {...only(args)} loading />,

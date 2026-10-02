@@ -1,14 +1,13 @@
 @use '../../styles/tokens' as *;
 
-/* Image — a Haze placeholder under a reserved box.
+/* Image. A Haze placeholder under a reserved box.
  *
  * "Never distorts aspect": the box holds the ratio and the picture is covered
- * into it, so a photograph that is not the ratio the layout reserved is cropped
- * rather than stretched. Stretching a face is a worse answer than cropping one.
+ * into it, so a photograph in a different ratio from the one the layout
+ * reserved is cropped. Stretching a face is worse than cropping one.
  *
- * The placeholder is Haze rather than a grey rectangle because it is a piece of
- * the composition rather than a loading widget — and because a grey rectangle on
- * Crystal's coloured atmosphere reads as a hole in the page.
+ * The placeholder is Haze because it is part of the composition. A grey
+ * rectangle on Crystal's coloured atmosphere reads as a hole in the page.
  */
 
 .image {

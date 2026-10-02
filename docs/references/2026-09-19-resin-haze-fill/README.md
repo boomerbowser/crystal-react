@@ -1,8 +1,7 @@
-# Resin without its Haze fill — the defect and the standard
+# Resin without its Haze fill: the defect and the standard
 
 Captured 19 September 2026, Prism light, Crystal's own defaults. Reported by
-Meridian; recorded here so the comparison lives in the repository rather than in
-a conversation.
+Meridian, and recorded here so that the comparison is kept in the repository.
 
 | File | Shows |
 |---|---|
@@ -11,9 +10,9 @@ a conversation.
 | `defect-react-tab-strip.png` | Crystal React's tab strip. The same material, the labels directly on tinted Resin. |
 | `defect-react-button.png` | Crystal React's Resin button, for the same comparison. |
 
-Put the two strips side by side and the difference is not subtle: "Conversation"
+With the two strips side by side the difference is plain: "Conversation"
 and "Library" sit on near-white in Crystal, and "Usage" and "API" sit on a pale
-lavender wash in Crystal React. That is a contrast difference before it is an
-aesthetic one.
+lavender wash in Crystal React. The difference lowers the contrast of the labels
+as well as changing how the strip looks.
 
 See R-15 in `../../closed-issues.md`.

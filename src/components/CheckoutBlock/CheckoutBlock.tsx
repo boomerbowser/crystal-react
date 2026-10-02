@@ -1,31 +1,33 @@
 'use client';
 
-/* CheckoutBlock — steps, address, shipping, payment, and the order summary.
+/* CheckoutBlock holds the steps, address, shipping, payment and the order
+ * summary.
  *
  * "Each step is a labelled region; errors summarise and link; **raw card data
  * never touches this component**." States: `at-rest`, `validating`,
  * `submitting`, `error`.
  *
- * Three opinions, each one of the clause's:
+ * Each part of that clause sets one behaviour:
  *
- *   - **One step at a time, each a region named for itself.** The current step
- *     is the only one rendered, as a region whose heading is the step's name —
- *     "Delivery address", "Delivery", "Payment" — and `CheckoutSteps` above says
- *     where the reader is in the three. A completed step can be returned to from
- *     the steps; an upcoming one cannot be jumped to, because it depends on the
+ *   - One step at a time, each a region named for itself. Only the current step
+ *     is rendered, as a region whose heading is the step's name ("Delivery
+ *     address", "Delivery", "Payment"), and `CheckoutSteps` above says where the
+ *     reader is in the three. A completed step can be returned to from the
+ *     steps. An upcoming one cannot be jumped to, because it depends on the
  *     answers before it.
- *   - **Errors are summarised at the top of the step and link to their fields.**
+ *   - Errors are summarised at the top of the step and link to their fields.
  *     `ErrorSummary` takes focus when the product reports errors, says how many,
  *     and each entry moves focus into its field. A failure that belongs to no
- *     field — a declined payment — is said once, as an alert, above the step.
- *   - **Payment is a boundary, not a form.** The payment step renders
- *     `PaymentMethod`, whose only way to take a new card is the host provider's
- *     own element in its `provider` slot. There is no card number, expiry or
- *     security code field anywhere in this block, by construction: the prop that
- *     would hold one does not exist. It keeps PCI scope out of the library.
+ *     field, such as a declined payment, is said once, as an alert, above the
+ *     step.
+ *   - Payment is a boundary. The payment step renders `PaymentMethod`, whose
+ *     only way to take a new card is the host provider's own element in its
+ *     `provider` slot. There is no card number, expiry or security code field
+ *     anywhere in this block, because no prop exists that would hold one. This
+ *     keeps PCI scope out of the library.
  *
  * Moving between steps is the product's decision, because only the product can
- * validate an address or a delivery option: "Continue" asks it (`onContinue`),
+ * validate an address or a delivery option. "Continue" asks it (`onContinue`),
  * and it answers with `onStepChange` or with errors.
  */
 import type { ReactNode } from 'react';
@@ -60,7 +62,7 @@ export interface CheckoutBlockProps {
   /** The current step's field errors, keyed by field name. */
   errors?: Readonly<Record<string, string>>;
   state?: CheckoutState;
-  /** A failure that belongs to no field — a declined payment. Shown in `error`. */
+  /** A failure that belongs to no field, such as a declined payment. Shown in `error`. */
   errorMessage?: ReactNode;
   stepLabels?: Readonly<Record<CheckoutStep, string>>;
   continueLabel?: string;
@@ -135,8 +137,8 @@ export function CheckoutBlock({
         />
       </div>
 
-      {/* Submission is announced: a checkout that goes quiet while an order is
-          placed is one a reader presses twice. Rendered from the first frame. */}
+      {/* Submission is announced, because a reader given no feedback while an
+          order is placed may press twice. Rendered from the first frame. */}
       <VisuallyHidden role="status">
         {state === 'submitting' ? 'Placing your order' : state === 'validating' ? `Checking ${stepLabels[step].toLowerCase()}` : ''}
       </VisuallyHidden>

@@ -18,7 +18,7 @@ describe('PricingBlock', () => {
     expect(screen.getByRole('article', { name: 'Organisation' })).toBeInTheDocument();
   });
 
-  /* The opinion: the recommended plan is stated in words, not only styled. */
+  /* The recommended plan is stated in words, not only styled. */
   it('says recommended in the plan\'s heading, in words', () => {
     renderWithCrystal(<PricingBlock plans={plans} onChoose={() => {}} />);
     expect(screen.getByRole('heading', { name: 'Team, Recommended' })).toBeInTheDocument();

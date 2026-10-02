@@ -11,16 +11,16 @@ const meta = {
     docs: {
       description: {
         component:
-          '"**Status is a word**; the status colour reinforces it" — so the status is a '
-          + '`StatusBadge`, the same badge every other part of this library uses rather than a '
+          '"Status is a word; the status colour reinforces it." So the status is a '
+          + '`StatusBadge`, the same badge every other part of this library uses, and no '
           + 'fifth drawing of a coloured well.\n\n'
-          + 'The mapping is the one judgement here. `pending` is **info**, because waiting is '
+          + 'The mapping is the one judgement here. `pending` is info, because waiting is '
           + 'the ordinary outcome of placing an order and not a warning about it. `shipped` '
-          + 'and `delivered` are both **success**, because a fifth colour for "even better" '
-          + 'would be a distinction with no meaning. `cancelled` is **danger**, which deserves '
-          + 'a second look — an order the reader cancelled themselves is not a problem — but '
-          + 'the *word* is what is read, and the alternative, a neutral cancelled order '
-          + 'sitting in a list of live ones, is the state that actually misleads.',
+          + 'and `delivered` are both success, because a fifth colour for "even better" '
+          + 'would be a distinction with no meaning. `cancelled` is danger, which needs '
+          + 'a second look, because an order the reader cancelled themselves is not a problem. '
+          + 'The word is what is read, and a neutral cancelled order in a list of live ones '
+          + 'would mislead more.',
       },
     },
   },
@@ -37,7 +37,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** All four, so the mapping can be read off rather than taken on trust. */
+/** All four, so the mapping can be checked by eye. */
 export const EveryState: Story = {
   render: (args) => (
     <div style={{ display: 'grid', gap: 12 }}>
@@ -54,9 +54,9 @@ export const EveryState: Story = {
   ),
 };
 
-/** "With items and totals" — which is `CartSummary` under a different heading,
- *  because a second description list would be a second place for the total's
- *  markup to stop being a total. */
+/** "With items and totals" is `CartSummary` under a different heading. A second
+ *  description list would be a second copy of the total's markup to keep
+ *  correct. */
 export const WithItsTotals: Story = {
   render: (args) => (
     <OrderSummary

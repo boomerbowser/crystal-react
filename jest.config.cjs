@@ -1,10 +1,10 @@
 /* Jest configuration, for the compatibility suite only.
  *
- * Vitest is the library's test runner. This exists so the claim "works with
- * Jest" is checkable rather than assumed: it runs the same component tests
- * through Jest's resolver, transform and environment, which is where the
- * differences actually bite — ESM-style `.js` specifiers in TypeScript imports,
- * SCSS module resolution, and `import.meta`.
+ * Vitest is the library's test runner. This configuration checks the claim
+ * "works with Jest" by running the same component tests through Jest's
+ * resolver, transform and environment. Those are where the two runners differ:
+ * ESM-style `.js` specifiers in TypeScript imports, SCSS module resolution, and
+ * `import.meta`.
  */
 module.exports = {
   displayName: 'jest-compat',
@@ -14,21 +14,20 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/src/test/setup.jest.ts'],
   transform: {
     /* Presets are passed inline rather than left to Babel's config discovery.
-       With "type": "module" in package.json, babel.config.cjs was not being
-       picked up, and Babel silently transformed without the TypeScript preset —
-       which fails at the first generic rather than at the first type
-       annotation, so the error pointed at a context creation and not at the
+       With "type": "module" in package.json, babel.config.cjs is not picked up,
+       and Babel transforms without the TypeScript preset. That fails at the
+       first generic, so the error points at a context creation instead of the
        missing preset. */
     '^.+\\.(t|j)sx?$': ['babel-jest', {
       presets: [
         ['@babel/preset-env', { targets: { node: 'current' } }],
         ['@babel/preset-react', { runtime: 'automatic' }],
         /* Babel is pinned to 7.x to match the core babel-jest resolves. With
-           preset-typescript 8 against core 7 the preset did not engage at all:
-           the file was parsed as plain JavaScript, so
-           `createContext<T | null>(null)` became a chain of comparisons and
-           failed at runtime with "CrystalTheme is not defined" — an error
-           pointing at the context creation rather than at the version skew. */
+           preset-typescript 8 against core 7 the preset does not engage: the
+           file is parsed as plain JavaScript, `createContext<T | null>(null)`
+           becomes a chain of comparisons, and it fails at runtime with
+           "CrystalTheme is not defined", pointing at the context creation
+           instead of the version skew. */
         '@babel/preset-typescript',
       ],
     }],

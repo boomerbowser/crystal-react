@@ -1,25 +1,21 @@
 'use client';
 
-/* RatingSummary — an average, a count, and how the votes fell.
+/* RatingSummary: an average, a count, and how the votes fell.
  *
- * "**The average and the count are both stated**; bars are labelled."
+ * "The average and the count are both stated; bars are labelled."
  *
- * Both, because either alone is a different claim. "4.8 out of 5" from three
- * people and from three thousand are not the same fact, and a distribution
- * without a count cannot be read at all — a bar at 60% could be six votes or six
- * hundred. So the count is not a footnote here; it is half of what is being
- * said, and it is in the summary's accessible name where a reader hears it
- * before the bars rather than after them.
+ * Either alone is a different claim. "4.8 out of 5" from three people and from
+ * three thousand are not the same fact, and a distribution without a count
+ * cannot be read: a bar at 60% could be six votes or six hundred. The count is
+ * half of what is said, so it is in the headline sentence, which a reader hears
+ * before the bars.
  *
- * **The bars are a `MeterGroup`**, which already solves the part that is easy to
- * get wrong: each segment is its own `meter` with its own name and value, rather
- * than a row of coloured `div`s whose proportions exist only as pixels. A
- * distribution drawn as widths is invisible to anything that does not measure
- * pixels, which is everything except an eye.
+ * The bars are a `MeterGroup`. Each segment is its own `meter` with its own name
+ * and value, so the proportions do not exist only as pixel widths that nothing
+ * but an eye can read.
  *
- * **The empty state is not zero.** No reviews is not an average of nought — it
- * is the absence of an average, and rendering "0 out of 5" tells a reader the
- * product was rated badly.
+ * The empty state is not zero. No reviews is the absence of an average, and
+ * rendering "0 out of 5" would tell a reader the product was rated badly.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { MeterGroup } from '../MeterGroup/MeterGroup.js';
@@ -55,7 +51,7 @@ export const RatingSummary = forwardRef<HTMLElement, RatingSummaryProps>(
     empty = 'No ratings yet', summarise, describeBar,
     label = 'Ratings', className, ...props
   }, ref) {
-    /* No reviews is the absence of an average, not an average of nought. */
+    /* No reviews is the absence of an average, not an average of zero. */
     if (average === undefined || count === 0) {
       return (
         <section {...props} ref={ref} aria-label={label} className={cx(styles['summary'], className)}>
@@ -73,8 +69,7 @@ export const RatingSummary = forwardRef<HTMLElement, RatingSummaryProps>(
 
     return (
       <section {...props} ref={ref} aria-label={label} className={cx(styles['summary'], className)}>
-        {/* The average and the count, in one sentence, as text. Not a number
-            beside a smaller number in a lighter colour. */}
+        {/* The average and the count, in one sentence, as text. */}
         <p className={styles['headline']}>{said}</p>
         {stars ? <div aria-hidden="true" className={styles['stars']}>{stars}</div> : null}
 

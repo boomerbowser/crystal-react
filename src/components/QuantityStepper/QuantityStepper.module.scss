@@ -2,26 +2,25 @@
 @use '../../styles/field' as field;
 @use '../../styles/material' as material;
 
-/* "Resin shell with a Haze well" and "Pill" — the field shell already is the
-   first, so what this adds is the pill and the horizontal arrangement. */
+/* "Resin shell with a Haze well" and "Pill". The field shell is already the
+   first, so this adds the pill and the horizontal arrangement. */
 .field { @include field.field; }
 .label { @include field.label; }
 
 .shell {
   @include field.shell;
 
-  /* A pill, not the content radius: this is an action control, and the
-     catalogue says so. Half the target height is what makes it a pill at every
-     size rather than at this one. */
+  /* A pill, because the catalogue makes this an action control. Half the
+     target height keeps it a pill at every size. */
   border-radius: $cr-action-radius;
   inline-size: fit-content;
 }
 
 .shell:focus-within { @include field.focus-ring; }
 
-/* The label is still the control's accessible name when it is not shown —
-   `VisuallyHidden`'s own recipe rather than `display: none`, which would take
-   the name away with the text. */
+/* The label is still the control's accessible name when it is not shown. This
+   is `VisuallyHidden`'s own recipe; `display: none` would remove the name with
+   the text. */
 .hidden {
   position: absolute;
   inline-size: 1px;
@@ -32,7 +31,7 @@
 }
 
 /* The value between the two controls. Narrow, because a quantity is one or two
-   digits and a field wide enough for a postcode invites one. */
+   digits. */
 .control {
   @include field.control;
 
@@ -46,8 +45,8 @@
 
 .control:focus { outline: none; }
 
-/* "Both controls reach 44px." Each one, not the pair — this is pressed with a
-   thumb beside a Remove control it must not be mistaken for. */
+/* "Both controls reach 44px." Each control does, because this is pressed with
+   a thumb beside a Remove control it must not be mistaken for. */
 .step {
 
   display: flex;
@@ -55,8 +54,8 @@
   justify-content: center;
   flex: 0 0 auto;
   inline-size: $cr-action-min-target;
-  /* "Both controls reach 44px" — the floor Crystal gives the value beside them,
-     so the pill is a field's height rather than taller. */
+  /* "Both controls reach 44px". This is the floor Crystal gives the value
+     beside them, so the pill is a field's height and no taller. */
   min-block-size: field.$field-control-floor;
   border: 0;
   border-radius: inherit;
@@ -67,8 +66,8 @@
 
 .step:hover:not(:disabled) { color: var(--cr-text); }
 
-/* A bound is shown here and said in the live region. Shown alone is a control
-   that looks broken to anyone who can see it and silent to anyone who cannot. */
+/* A bound is shown here and said in the live region. Shown alone, it looks
+   broken to anyone who can see it and is silent to anyone who cannot. */
 .step:disabled { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 
 .step svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }

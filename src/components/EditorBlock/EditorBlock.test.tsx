@@ -41,7 +41,7 @@ function Harness({ state = 'at-rest', onSave = () => {} }: { state?: EditorState
 }
 
 describe('EditorBlock', () => {
-  /* The opinion, half one: a real toolbar with one tab stop. */
+  /* First half of the requirement: a real toolbar with one tab stop. */
   it('gives the toolbar one tab stop, with the arrow keys moving along it', async () => {
     renderWithCrystal(<Harness />);
     screen.getByRole('button', { name: 'Before' }).focus();
@@ -54,7 +54,7 @@ describe('EditorBlock', () => {
     expect(screen.getByRole('toolbar')).toHaveAccessibleName('Formatting for Notes');
   });
 
-  /* Half two: formatting state is announced — pressed on the toolbar… */
+  /* Second half: formatting state is announced, as pressed on the toolbar… */
   it('says a format\'s state on its control', async () => {
     renderWithCrystal(<Harness />);
     const bold = screen.getByRole('button', { name: 'Bold' });

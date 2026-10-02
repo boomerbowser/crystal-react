@@ -1,12 +1,12 @@
 @use '../../styles/tokens' as *;
 
-/* RollingNumber — "Material: inherits. Geometry: tabular figures so the width
+/* RollingNumber: "Material: inherits. Geometry: tabular figures so the width
  * does not jump."
  *
- * Tabular figures do two jobs here and the second is the one that matters: every
- * digit is the same width, so a column of ten glyphs is a rectangle and the strip
- * can be translated by whole steps. With proportional figures a `1` is narrower
- * than a `0` and the roll would wobble sideways as it went.
+ * Tabular figures also make every digit the same width, so a column of ten
+ * glyphs is a rectangle and the strip can be translated by whole steps. With
+ * proportional figures a `1` is narrower than a `0` and the roll would wobble
+ * sideways.
  *
  * The timing is Crystal's: `motion.duration.state` is what the system uses for a
  * value changing, and `motion.easing.settle` is how a value comes to rest. This
@@ -34,10 +34,9 @@
 
 /* The duration is Crystal's `motion.duration.state`, divided by the reader's
    motion-speed preference and multiplied by `--cr-motion-enabled`, which the
-   provider publishes as 0 under reduced motion. That is the same arithmetic
-   `resolveDuration` does for the JS recipes — `duration / speed`, and zero when
-   motion is off — expressed in CSS so the roll follows the same slider without a
-   second copy of the rule. */
+   provider publishes as 0 under reduced motion. This is the arithmetic
+   `resolveDuration` does for the JS recipes (`duration / speed`, and zero when
+   motion is off), expressed in CSS so the roll follows the same slider. */
 .strip {
   display: flex;
   flex-direction: column;
@@ -48,8 +47,8 @@
 
 .glyph { display: block; block-size: 1em; /* crystal-allow-literal: matches the window */ line-height: 1; }
 
-/* And the platform's own preference, which is the truth whether or not anybody
-   set Crystal's. The state change still happens; the movement does not. */
+/* The platform's own preference applies whether or not Crystal's was set. The
+   state change still happens, without the movement. */
 @media (prefers-reduced-motion: reduce) {
   .strip { transition: none; }
 }

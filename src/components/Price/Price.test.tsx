@@ -6,8 +6,8 @@ import { Price } from './Price.js';
 const forty = { amount: 40, currency: 'GBP' };
 
 describe('Price', () => {
-  /* "The formatted value is the text content." One string, which is both what
-     is seen and what is read — the component adds no second, divergent form. */
+  /* "The formatted value is the text content." One string is both what is seen
+     and what is read; the component adds no second form. */
   it('formats the amount in its currency', () => {
     renderWithCrystal(<Price value={forty} data-testid="p" />);
     expect(screen.getByTestId('p')).toHaveTextContent('£40.00');
@@ -15,14 +15,14 @@ describe('Price', () => {
 
   it('takes the currency from the value, not from a symbol in a string', () => {
     renderWithCrystal(<Price value={{ amount: 40, currency: 'JPY' }} data-testid="p" />);
-    /* And the currency's own precision: the yen has no minor unit, which is a
-       fact in the platform's currency data and not one this library keeps. */
+    /* The currency's own precision: the yen has no minor unit. That fact comes
+       from the platform's currency data; this library does not keep it. */
     expect(screen.getByTestId('p')).toHaveTextContent('¥40');
   });
 
-  /* "Currency is stated, not implied by a symbol alone" — spelled out for
-     everybody when a product asks for it, rather than announced to some readers
-     and shown to others. */
+  /* "Currency is stated, not implied by a symbol alone." When a product asks,
+     the currency is spelled out for everybody, so what is announced and what is
+     shown are the same. */
   it('can state the currency in words', () => {
     renderWithCrystal(<Price value={forty} currencyDisplay="name" data-testid="p" />);
     expect(screen.getByTestId('p')).toHaveTextContent(/40.00 British pounds/);

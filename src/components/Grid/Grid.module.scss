@@ -1,9 +1,9 @@
 @use '../../styles/tokens' as *;
 
-/* Grid — a twelve-column reference grid with a shared gutter.
+/* Grid is a twelve-column reference grid with a shared gutter.
  *
- * Twelve because the catalogue says twelve, which is what makes halves, thirds,
- * quarters and sixths all expressible without a second grid.
+ * Twelve because the catalogue says twelve. Twelve columns express halves,
+ * thirds, quarters and sixths without a second grid.
  */
 
 .grid {
@@ -18,9 +18,9 @@
   grid-column: span var(--cr-cell-span, 12);
 }
 
-/* Spans narrow as the viewport does. A cell that is a third of the page at
-   desktop is usually the whole width on a phone, and stating that here rather
-   than in every product is the point of a grid. */
+/* Spans change as the viewport narrows. A cell that is a third of the page at
+   desktop is usually the whole width on a phone, and the grid states that so
+   each product does not have to. */
 @media (max-width: $cr-breakpoint-md) {
   .cell { grid-column: span var(--cr-cell-span-md, var(--cr-cell-span, 12)); }
 }

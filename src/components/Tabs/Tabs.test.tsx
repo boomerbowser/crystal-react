@@ -64,9 +64,9 @@ describe('Tabs', () => {
 
   /* The panel plays `tab-in` on arrival, and the effect that plays it runs once
      per mount. That is only "once per arrival" if React Aria unmounts the panel
-     that is not shown — so the assumption is checked rather than commented. A
-     panel that stayed mounted would make every arrival animation fire at once on
-     first render and none of them afterwards. */
+     that is not shown, so this test checks the assumption. A panel that stayed
+     mounted would make every arrival animation fire at once on first render and
+     none of them afterwards. */
   it('unmounts the panel that is not shown, which is what makes arrival motion arrive', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Tabs label="Documentation" items={items} />);
@@ -100,9 +100,8 @@ describe('Tabs', () => {
   });
 
   /* `isDisabled` is only forwarded when the caller declared it. Passing a
-     coerced `false` is the defect class that cost this library ten field
-     components: a prop whose defined-ness is the mode switch, flattened to a
-     value. */
+     coerced `false` flattens a prop whose defined-ness is the mode switch into a
+     value, a defect that has affected ten field components in this library. */
   it('leaves a tab enabled when the item says nothing about it', () => {
     renderWithCrystal(<Tabs label="Documentation" items={items} />);
     for (const tab of screen.getAllByRole('tab')) {
@@ -115,9 +114,9 @@ describe('Tabs', () => {
     expect(screen.getByRole('tablist')).toHaveAttribute('aria-orientation', 'vertical');
   });
 
-  /* Selection is weight, and weight is not an ARIA state — so the check that it
-     is never a check mark is that no tab contains one, in any of the forms the
-     rest of the library uses for one. */
+  /* Selection is weight, and weight is not an ARIA state. So this checks that no
+     tab contains a check mark in any of the forms the rest of the library uses
+     for one. */
   it('never marks selection with a check', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Tabs label="Documentation" items={items} />);

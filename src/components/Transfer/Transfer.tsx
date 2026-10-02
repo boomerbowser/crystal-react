@@ -2,20 +2,20 @@
 
 /* Transfer.
  *
- * Two lists and the controls between them. The catalogue's requirement is the one
- * that decides the whole design: **keyboard must move items without drag.**
+ * Two lists and the controls between them. The catalogue requires that the
+ * keyboard can move items without drag.
  *
- * That is why this is two listboxes and a pair of buttons rather than a
- * drag-and-drop surface. Dragging between two lists is the obvious gesture and it
- * is unavailable to a keyboard user, unreliable for anyone whose pointer is not
- * steady, and invisible to a screen reader — so it is not the mechanism. Items are
- * selected in a list and moved with a named control, which every route can reach.
+ * So this is two listboxes and a pair of buttons instead of a drag-and-drop
+ * surface. Dragging between two lists is unavailable to a keyboard user,
+ * unreliable for anyone whose pointer is not steady, and invisible to a screen
+ * reader. Items are selected in a list and moved with a named control, which
+ * every input method can reach.
  *
- * Each list is separately named, because "available" and "chosen" are the whole
- * meaning of the component and a reader who cannot see the layout has only the
- * names to go on. Moves are announced for the same reason: an item silently
- * leaving one list and appearing in another is, to a screen reader, nothing
- * happening.
+ * Each list is separately named, because "available" and "chosen" carry the
+ * component's meaning and a reader who cannot see the layout has only the names
+ * to go on. Moves are announced for the same reason. Without an announcement, a
+ * screen reader user hears nothing when an item leaves one list and appears in
+ * another.
  */
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { ListBox, ListBoxItem, type Selection } from 'react-aria-components';
@@ -69,10 +69,10 @@ export function Transfer({
 
   const available = items.filter((item) => !chosen.includes(item.value));
   const selected = items.filter((item) => chosen.includes(item.value));
-  /* An item that has just been moved into a list arrives there with `list-in`;
-     what each list loads with does not. Decided by what each list held after the
-     last render. The item leaving the other list goes from React Aria's
-     collection at once, so there is nothing to play `list-out` on. */
+  /* An item that has just been moved into a list arrives there with `list-in`.
+     The items each list loads with do not. This is decided by what each list
+     held after the last render. The item leaving the other list goes from React
+     Aria's collection at once, so there is nothing to play `list-out` on. */
   const held = useRef<Map<string, Set<string>> | null>(null);
   const isNew = (list: string, value: string): boolean =>
     held.current !== null && !(held.current.get(list)?.has(value) ?? false);
@@ -96,8 +96,8 @@ export function Transfer({
       ? [...chosen, ...moving]
       : chosen.filter((each) => !moving.includes(each)));
 
-    /* Announced, because an item silently leaving one list and appearing in
-       another is nothing happening to a screen reader. */
+    /* Announced, because otherwise a screen reader user hears nothing when an
+       item leaves one list and appears in another. */
     setAnnouncement(
       `${moving.length} ${moving.length === 1 ? 'item' : 'items'} moved to ${direction === 'in' ? targetLabel : sourceLabel}`,
     );
@@ -116,8 +116,7 @@ export function Transfer({
       <div className={cx(styles['panelHead'])}>
         {/* The name is the heading alone. Pointing at the whole row would make
             the list's name "Available 3", which changes every time an item
-            moves — a name that is partly a running total is a name nobody can
-            refer to. */}
+            moves and so cannot be referred to. */}
         <span id={headingId}>{heading}</span>
         <span className={cx(styles['panelCount'])}>{pool.length}</span>
       </div>
@@ -143,7 +142,7 @@ export function Transfer({
   return (
     <div className={cx(styles['transfer'], className)}>
       {panel(sourceLabel, sourceId, available, sourceSelection, setSourceSelection)}
-      {/* Named controls rather than a drag: every route reaches these. */}
+      {/* Named controls instead of a drag, so every input method reaches them. */}
       <div className={cx(styles['controls'])}>
         <Button
           variant="quiet"

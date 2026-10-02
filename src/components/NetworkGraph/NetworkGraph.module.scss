@@ -3,9 +3,9 @@
 
 /* "Haze node fills; edges are hairlines; focus ring on a node."
  *
- * The edges sit behind the nodes in document order rather than by z-index, which
- * is how SVG paints: an edge crossing a node would otherwise cut it in half, and
- * a node in a dense graph is the thing a reader is aiming at.
+ * The edges sit behind the nodes by document order, which is how SVG paints.
+ * Otherwise an edge crossing a node would cut it in half, and in a dense graph
+ * the node is what a reader is aiming at.
  */
 
 .edge {

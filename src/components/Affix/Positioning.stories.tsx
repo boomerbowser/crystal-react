@@ -27,7 +27,7 @@ const meta = {
   },
   argTypes: {
     offset: {
-      description: 'How far from the top of the viewport it settles — and the threshold at which it pins.',
+      description: 'How far from the top of the viewport it settles, and the threshold at which it pins.',
       control: { type: 'range', min: 0, max: 96, step: 4 }, table: { category: 'Affix' },
     },
     children: { control: false, table: { category: 'Affix' } },
@@ -37,15 +37,15 @@ const meta = {
     docs: {
       description: {
         component:
-          '**Nothing moves at rest.** An affix is not ambient motion: it changes position because the '
+          'Nothing moves at rest. An affix is not ambient motion. It changes position because the '
           + 'reader scrolled, which is motion a person started. It reports pinning through `onChange` '
           + 'so a product can shade a header without reading the scroll position a second time.\n\n'
-          + '**The pin is measured on a scroll listener, not an `IntersectionObserver`.** The observer '
-          + 'is the textbook answer and it delivers nothing at all in some embedded browsers — '
-          + 'including the one this project previews in — which produces a component that is correct '
+          + 'The pin is measured on a scroll listener, not an `IntersectionObserver`. The observer '
+          + 'is the textbook answer and it delivers nothing at all in some embedded browsers '
+          + '(including the one this project previews in), which produces a component that is correct '
           + 'in every test and inert where it is looked at. The listener is passive and coalesced to '
           + 'one read per frame.\n\n'
-          + '**A portal exists to escape `overflow` and `transform`, so it defaults to `body`.** The '
+          + 'A portal exists to escape `overflow` and `transform`, so it defaults to `body`. The '
           + '`container` prop can name somewhere else, and the warning in its own documentation is '
           + 'the point: a container inside the page can itself sit inside the very `transform` the '
           + 'content is escaping, which is the defect this component exists to avoid, reintroduced '

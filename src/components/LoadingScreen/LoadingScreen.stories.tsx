@@ -13,10 +13,10 @@ const meta = {
           + 'The second sentence is why this composes `Skeleton` rather than `Loader`: a '
           + 'spinner says something is happening, a skeleton says what is about to be there, '
           + 'so the layout does not jump when it arrives.\n\n'
-          + '"Announced once" is a count of live regions, not a wording choice. One '
-          + '`Skeleton` holds every shape — twelve skeletons would be twelve regions, and a '
+          + '"Announced once" is a count of live regions. One `Skeleton` holds every shape. '
+          + 'Twelve skeletons would be twelve regions, and a '
           + 'screen reader would say the same sentence twelve times. Where the shape is '
-          + 'genuinely unknown the screen falls back to a spinner, because a skeleton of the '
+          + 'unknown the screen falls back to a spinner, because a skeleton of the '
           + 'wrong shape is a promise the arriving content breaks.',
       },
     },

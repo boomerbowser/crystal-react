@@ -16,8 +16,8 @@ const attributes = [
 
 describe('CompareTable', () => {
   /* "A real table with row and column headers." In a comparison the row header
-     is the attribute and the column header is the product; without both, a cell
-     reads as a bare value with nothing saying what it is of. */
+     is the attribute and the column header is the product. Without both, a cell
+     reads as a bare value with no indication of what it belongs to. */
   it('has both row headers and column headers', () => {
     const { container } = renderWithCrystal(
       <CompareTable label="Compare prints" products={products} attributes={attributes} />,
@@ -26,10 +26,9 @@ describe('CompareTable', () => {
     expect(container.querySelectorAll('tbody th[scope="row"]')).toHaveLength(3);
   });
 
-  /* "Differences are stated in text", which is the whole point: a reader
-     comparing four products across twelve attributes is looking for the rows
-     where they differ, and a table that marks those by tinting them has
-     answered the question for people who can see the tint and nobody else. */
+  /* "Differences are stated in text". A reader comparing four products across
+     twelve attributes is looking for the rows where they differ, and a tint
+     alone tells only people who can see it. */
   it('says in words which rows differ', () => {
     renderWithCrystal(
       <CompareTable label="Compare prints" products={products} attributes={attributes} />,
@@ -39,7 +38,7 @@ describe('CompareTable', () => {
   });
 
   /* Two cells that read the same are the same, whatever elements they are made
-     of — a reader compares what is written. */
+     of, because a reader compares what is written. */
   it('compares what is written, not how it is written', () => {
     expect(differs(['1.2 kg', <span key="a">1.2 kg</span>])).toBe(false);
     expect(differs(['1.2 kg', '1.4 kg'])).toBe(true);
@@ -47,8 +46,8 @@ describe('CompareTable', () => {
     expect(differs(['1.2 kg'])).toBe(false);
   });
 
-  /* Computed, not declared: a flag passed in from outside is a claim nobody can
-     check and goes stale the moment a product joins the comparison. */
+  /* Computed from the values. A flag passed in from outside cannot be checked
+     and goes stale as soon as a product joins the comparison. */
   it('works the difference out rather than being told', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <CompareTable label="Compare" products={products} attributes={[attributes[0]!]} />,

@@ -8,15 +8,14 @@ const meta = {
     docs: {
       description: {
         component:
-          'The circular form of `Progress`, with the same semantics — including the rule that '
+          'The circular form of `Progress`, with the same semantics, including the rule that '
           + 'an indeterminate ring carries no value.\n\n'
-          + '**The centre label is not the only representation.** The number in the middle is a '
-          + 'convenience; the value lives in `aria-valuetext`, so a ring rendered without one '
-          + 'loses nothing an assistive technology needed.\n\n'
+          + 'The centre label is not the only representation. The number in the middle is a '
+          + 'convenience. The value lives in `aria-valuetext`, so a ring rendered without a '
+          + 'centre label loses nothing an assistive technology needs.\n\n'
           + 'The stroke is `--cr-progress-ring-stroke`, which Crystal publishes as one value for '
-          + 'this and for the gauge arc the catalogue says matches it — a gauge is a progress '
-          + 'ring that has been told what it is measuring, and the two cannot drift into two '
-          + 'objects.',
+          + 'this and for the gauge arc the catalogue says matches it. A gauge is a progress '
+          + 'ring that has been told what it is measuring, and one token keeps the two the same.',
       },
     },
   },

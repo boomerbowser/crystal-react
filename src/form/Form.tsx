@@ -8,8 +8,8 @@
  *
  * A form-level error has nowhere else to go. "One of email or phone is required"
  * is true of the form and of neither field, and putting it under one of them
- * says something false. It is announced rather than only drawn, because a submit
- * that fails silently is a button that appears not to work.
+ * says something false. It is announced as well as drawn, because a submit that
+ * fails silently looks like a button that does not work.
  */
 import { type ReactNode, type Ref } from 'react';
 import { Form as AriaForm, type FormProps as AriaFormProps } from 'react-aria-components';
@@ -21,7 +21,7 @@ export interface FormProps
   extends Omit<AriaFormProps, 'children' | 'className' | 'onSubmit' | 'onChange' | 'onReset' | 'validationErrors'> {
   /** `formProps` from `useCrystalForm`. */
   form: CrystalFormProps;
-  /** Errors belonging to the form rather than to any field. */
+  /** Errors belonging to the form, not to any field. */
   formErrors?: readonly string[];
   children: ReactNode;
   className?: string;

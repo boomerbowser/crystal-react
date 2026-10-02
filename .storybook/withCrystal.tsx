@@ -10,14 +10,12 @@ import type {
  * Every adjustable value in Crystal's own "Make it yours" panel, in the same
  * order and with the same defaults: palette, appearance, colour atmosphere,
  * Frost base tint, elevation, corner radius, density, direction, animation speed,
- * reduced motion and reduced effects — plus the ground the story stands on.
+ * reduced motion and reduced effects, plus the ground the story stands on.
  *
- * They are environment rather than per-story args on purpose: a reviewer should
- * be able to take any story through dark mode, compact density, right-to-left,
- * reduced effects or a flat foundation without the story's author having thought
- * to offer it. Most regressions in this system have been found on an axis nobody
- * was looking at — and the flat foundation hid the material hierarchy in every
- * story in the library until Meridian said so.
+ * They are environment rather than per-story args so that a reviewer can take
+ * any story through dark mode, compact density, right-to-left, reduced effects
+ * or a flat foundation without the story's author having offered it. Most
+ * regressions in this system have been found on an axis nobody was looking at.
  */
 export const crystalGlobalTypes = {
   palette: {
@@ -29,9 +27,8 @@ export const crystalGlobalTypes = {
     },
   },
   mode: {
-    /* `system` is Crystal's Auto. `CrystalModePreference` has allowed it since
-       the provider was written and the toolbar never offered it, so the one
-       appearance setting most readers actually use could not be reviewed. */
+    /* `system` is Crystal's Auto, the appearance setting most readers use, so
+       the toolbar offers it for review. */
     description: 'Light, dark or auto',
     toolbar: { icon: 'mirror', items: ['light', 'dark', 'system'], dynamicTitle: true },
   },
@@ -54,18 +51,15 @@ export const crystalGlobalTypes = {
   /* The adjustable scheme values, and the reason they belong in the toolbar
      rather than in a story's args.
      
-     Crystal's materials are defined by what is *behind* them. Frost diffuses the
-     foundation; Resin transmits its colour; Haze fills over it. Shown against a
+     Crystal's materials are defined by what is behind them. Frost diffuses the
+     foundation, Resin transmits its colour and Haze fills over it. Against a
      flat canvas they all render as white, the hierarchy disappears, and every
-     control looks like a plain rounded rectangle — which is exactly what
-     Meridian saw when they opened this Storybook and reported that none of the
-     components looked like Crystal.
+     control looks like a plain rounded rectangle.
      
-     Colour atmosphere is the control that fixes it, and it was a provider input
-     with no way to reach it. 90% is Crystal's own default and what the approved
-     baseline was captured at; 15% is the floor, and taking a story down to it is
-     the quickest way to see how much of a material's appearance is the
-     foundation's doing. */
+     Colour atmosphere sets how much colour that foundation carries. 90% is
+     Crystal's own default and the value the approved baseline was captured at.
+     15% is the floor; taking a story down to it shows how much of a material's
+     appearance comes from the foundation. */
   atmosphere: {
     description: 'Colour atmosphere',
     toolbar: {
@@ -151,21 +145,19 @@ const NUMBER = (value: string | number | undefined, fallback: number): number =>
 /**
  * A story's own environment, overriding the toolbar.
  *
- * The toolbar takes *any* story through *any* axis, which is what a reviewer
- * wants. This is the other half: a story that needs to be seen, and tested,
- * against a particular environment can pin one.
+ * The toolbar takes any story through any axis. A story that needs to be seen,
+ * and tested, against a particular environment can pin one here.
  *
  *     export const OnAFlatGround: Story = {
  *       parameters: { crystal: { ground: 'canvas', atmosphere: 15 } },
  *       render: () => <Button>Nothing to diffuse</Button>,
  *     };
  *
- * Pinning is the point for two kinds of story. One is a component whose whole
- * subject is an environment — a Frost panel at 85% tint, a control at the
- * elevation floor. The other is a browser gate: `verify-materials.mjs` opens a
- * story and measures it, and a measurement is only worth anything if the
- * environment it was taken in is fixed rather than whatever the last reviewer
- * left in the toolbar.
+ * Two kinds of story pin. One is a component whose subject is an environment,
+ * such as a Frost panel at 85% tint or a control at the elevation floor. The
+ * other is a browser gate: `verify-materials.mjs` opens a story and measures
+ * it, and the measurement needs a fixed environment, not whatever the last
+ * reviewer left in the toolbar.
  *
  * Anything a story does not pin still follows the toolbar, so pinning the ground
  * does not also freeze the palette.
@@ -195,22 +187,21 @@ export const withCrystal: Decorator = (Story, context) => {
   const args = context.args as Record<string, unknown>;
   const initial = context.initialArgs as Record<string, unknown>;
 
-  /* Four sources, in this order, and the middle one is the interesting part.
+  /* Four sources, in this order:
    *
-   *   1. What the story pinned, which a reviewer must not be able to undo — a
-   *      browser gate measures some of these stories, and a measurement taken in
-   *      whatever environment the last person left behind is worth nothing.
-   *   2. An environment **arg the reviewer has actually moved**.
+   *   1. What the story pinned. A reviewer must not be able to undo it, because
+   *      a browser gate measures some of these stories and needs a fixed
+   *      environment.
+   *   2. An environment arg the reviewer has moved.
    *   3. The toolbar.
    *   4. Crystal's default.
    *
-   * Step two compares against `initialArgs` rather than just reading `args`,
-   * and it has to. Every story carries the full environment as args so the
-   * Controls panel has sliders to show, which means `args.atmosphere` is always
-   * set — so reading it directly would make the args win permanently and the
-   * toolbar would stop working the moment this shipped. Comparing with the
-   * story's initial value is what distinguishes "the reviewer dragged this" from
-   * "this is just the default sitting there". */
+   * Step two compares against `initialArgs` instead of reading `args`. Every
+   * story carries the full environment as args so the Controls panel has
+   * sliders to show, so `args.atmosphere` is always set. Reading it directly
+   * would make the args always win and the toolbar would stop working.
+   * Comparing with the story's initial value distinguishes "the reviewer
+   * dragged this" from "this is just the default sitting there". */
   const moved = (key: string): unknown =>
     (key in args && args[key] !== initial[key] ? args[key] : undefined);
 
@@ -237,13 +228,13 @@ export const withCrystal: Decorator = (Story, context) => {
   const reduceTransparency = pick('reduceTransparency');
   const wantsOpaque = reduceTransparency === true || reduceTransparency === 'true';
 
-  /* `.cr-plastic` is Crystal's own foundation class, out of the stylesheet this
-     Storybook already loads — the three radial atmosphere washes over the canvas
-     colour. Painting `background: var(--cr-canvas)` instead, which is what this
-     did, throws all three away and leaves every material with nothing to diffuse.
+  /* `.cr-plastic` is Crystal's own foundation class, from the stylesheet this
+     Storybook already loads: the three radial atmosphere washes over the canvas
+     colour. Painting `background: var(--cr-canvas)` instead throws all three
+     away and leaves every material with nothing to diffuse.
      
-     Crystal's playground marks its scene `class="stage cr-plastic"` for exactly
-     this reason. There is no second recipe here; the class is the recipe. */
+     Crystal's playground marks its scene `class="stage cr-plastic"` for the same
+     reason. The class is the recipe, and nothing here restates it. */
   const onPlastic = (ground ?? 'plastic') !== 'canvas';
 
   return (

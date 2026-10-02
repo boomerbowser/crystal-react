@@ -1,7 +1,7 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* FormField, Fieldset and HelperText — the scaffolding around a control. */
+/* FormField, Fieldset and HelperText, the scaffolding around a control. */
 
 .field { @include field.field; }
 .label { @include field.label; }
@@ -18,7 +18,7 @@
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
 /* The error carries an icon as well as a colour, because colour alone is not an
-   indication — and a form is where that rule has the most consequences. */
+   indication. */
 .error::before { content: '⚠ '; }
 
 .field[data-disabled] {
@@ -43,9 +43,9 @@
   color: var(--cr-text);
 }
 
-/* A panel is optional: a group inside a form usually needs rhythm rather than a
-   surface, and putting every group on its own card makes a form read as a stack
-   of unrelated things. */
+/* A panel is optional. A group inside a form usually needs spacing and not a
+   surface, and a form with every group on its own card reads as a stack of
+   unrelated things. */
 .panelled {
   padding: var(--cr-space);
   border: 1px solid var(--cr-edge);

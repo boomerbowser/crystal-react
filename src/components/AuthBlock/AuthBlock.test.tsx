@@ -11,7 +11,7 @@ const field = (name: string): HTMLInputElement => {
 };
 
 describe('AuthBlock', () => {
-  /* The opinion, half one: real form semantics with autocomplete tokens. */
+  /* First half of the catalogue rule: real form semantics with autocomplete tokens. */
   it.each([
     ['sign-in', { email: 'username', password: 'current-password' }],
     ['register', { name: 'name', email: 'username', password: 'new-password' }],
@@ -39,7 +39,7 @@ describe('AuthBlock', () => {
     expect(values.get('password')).toBe('correct horse');
   });
 
-  /* Half two: a failure never reveals which factor was wrong. */
+  /* Second half: a failure never reveals which factor was wrong. */
   it('says one failure for signing in, attached to no field, whatever the product passes', () => {
     renderWithCrystal(
       <AuthBlock mode="sign-in" onSubmit={noop} state="error" errors={{ email: 'No account uses that address' }} />,

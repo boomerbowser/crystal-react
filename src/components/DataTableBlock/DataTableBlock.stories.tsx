@@ -24,11 +24,11 @@ const meta = {
         component:
           '"Selection count is announced; bulk actions describe what they will affect."\n\n'
           + 'A bulk action is a verb and a function from the count to the sentence its '
-          + 'button says, so a button cannot read "Archive" while three rows are selected — '
-          + 'it reads "Archive 3 orders". `selecting` is not a prop: it is what the block '
-          + 'is in whenever anything is selected, so the two cannot disagree. Loading and '
-          + 'failure replace the rows, because headers over no rows say "there are none"; '
-          + 'empty keeps them, because there really are none.',
+          + 'button says, so a button cannot read "Archive" while three rows are selected. '
+          + 'It reads "Archive 3 orders". `selecting` is not a prop: the block is in that '
+          + 'state whenever anything is selected, so the two cannot disagree. Loading and '
+          + 'failure replace the rows, because headers over no rows say "there are none". '
+          + 'Empty keeps them, because there really are none.',
       },
     },
   },

@@ -20,14 +20,12 @@ const commands: Command[] = [
 
 const meta = {
   title: 'Overlays/Command palette',
-  /* Without this docgen has nothing to read and Storybook generates no
-     controls at all — the message Meridian screenshotted. This file shows
-     several components together; the one named here is its subject, and the
-     others are the context it is normally seen in. */
+  /* Without this, docgen has nothing to read and Storybook generates no
+     controls. This file shows several components together. The one named here
+     is its subject, and the others are the context it is normally seen in. */
   component: CommandPalette,
   /* Every callback as an action, so the Actions panel shows what fired
-     and with what. For a library whose whole subject is behaviour, the
-     panel that shows behaviour happening was blank. */
+     and with what. */
   argTypes: {
     ...ariaArgTypes<CommandPaletteProps>({
       isOpen: true,
@@ -42,17 +40,17 @@ const meta = {
     docs: {
       description: {
         component:
-          '**Three materials, and the catalogue names each: Mirage scrim, Haze decision surface, '
-          + 'Resin field shell.** The palette is a surface you read and decide from rather than a '
-          + 'control plane floating over the page, so it is Haze; what lifts it off the page is the '
-          + 'Mirage beneath rather than elevation above. The field inside it is a control, so it '
-          + 'is Resin — the ordinary field stack, not Resin inside Resin.\n\n'
+          'Three materials, and the catalogue names each: Mirage scrim, Haze decision surface, '
+          + 'Resin field shell. The palette is a surface you read and decide from, so it is Haze, '
+          + 'and the Mirage beneath lifts it off the page with no added elevation. The field '
+          + 'inside it is a control, so it is Resin. That is the ordinary field stack, and is not '
+          + 'Resin inside Resin.\n\n'
           + '**Focus never leaves the search field.** Arrow through the list and the caret stays '
-          + 'where you are typing; the highlighted row is named by `aria-activedescendant`. Every '
-          + 'palette that moves real focus into the list breaks typing, and most of them do.\n\n'
-          + '**Searching, empty and loading are three different things.** A list showing nothing '
-          + 'is indistinguishable from one still thinking, and both are indistinguishable from a '
-          + 'broken palette. Each says which it is, in text.',
+          + 'where you are typing. The highlighted row is named by `aria-activedescendant`. A '
+          + 'palette that moves real focus into the list breaks typing.\n\n'
+          + 'Searching, empty and loading are three different states. A list showing nothing '
+          + 'looks the same as one still loading, and both look like a broken palette. Each '
+          + 'state says which it is, in text.',
       },
     },
   },
@@ -87,19 +85,16 @@ export const Palette_: Story = {
 
 /* Type-ahead and focus containment, in a story of its own. `verify-theme` opens
    `--palette` to ask an overlay which custom properties resolve on it, and a
-   `play` that opens and then closes the palette leaves that gate racing a
-   dialog. The first response to this was to make the gate tolerate a palette
-   that was already open, which is accommodating the problem rather than fixing
-   it. */
+   `play` there that opens and then closes the palette would leave that gate
+   racing a dialog. */
 export const PaletteKeyboard: Story = {
   name: 'Keyboard navigation',
   render: () => <Palette />,
-  /* The requirement every hand-built palette breaks, watched in a browser:
-     focus stays in the search field while the arrow keys move the list, and the
-     highlighted row is named by `aria-activedescendant`. Move real focus into
-     the list and typing stops working — the user has to arrow back up to keep
-     searching — and a jsdom test can assert the attribute without ever proving
-     the caret stayed put. */
+  /* Checked in a browser: focus stays in the search field while the arrow keys
+     move the list, and the highlighted row is named by
+     `aria-activedescendant`. If real focus moves into the list, typing stops
+     working and the user has to arrow back up to keep searching. A jsdom test
+     can assert the attribute without proving the caret stayed put. */
   play: async ({ step }) => {
     const screen = within(document.body);
     await userEvent.click(screen.getByRole('button', { name: /open the palette/i }));

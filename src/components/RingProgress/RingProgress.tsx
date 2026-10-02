@@ -1,24 +1,22 @@
 'use client';
 
-/* RingProgress — a circular track with a filled arc and an optional centre label.
+/* RingProgress: a circular track with a filled arc and an optional centre label.
  *
- * "Semantics shared with Progress; **the centre label is not the only
- * representation**." Both halves are load-bearing. The first means this is a
- * `progressbar` and not a decorative dial: an indeterminate ring omits the
- * value exactly as the linear one does, for the same reason. The second means
- * the number in the middle is a convenience and never the record — so the ring
- * carries a real label, the value is in `aria-valuetext`, and a ring rendered
- * with no centre label loses nothing an assistive technology needed.
+ * "Semantics shared with Progress; the centre label is not the only
+ * representation." The first half makes this a `progressbar` and not a
+ * decorative dial: an indeterminate ring omits the value exactly as the linear
+ * one does, for the same reason. The second half makes the number in the middle
+ * a convenience. The ring carries a real label, the value is in
+ * `aria-valuetext`, and a ring rendered with no centre label loses nothing an
+ * assistive technology needs.
  *
- * "Stroke matches the icon stroke weight family" is what the catalogue says and
- * `--cr-progress-ring-stroke` is what Crystal published for it, alongside the
- * note that a gauge is a progress ring that has been told what it is measuring.
- * One token, so the two cannot become two objects.
+ * The catalogue says "Stroke matches the icon stroke weight family", and Crystal
+ * published `--cr-progress-ring-stroke` for it, with the note that a gauge is a
+ * progress ring that has been told what it is measuring. One token keeps the two
+ * the same.
  *
- * The ring itself is `ActivityArc`, which `Loader` also is. A loader and a ring
- * progress built separately end up two sizes of the same idea, and then the
- * difference has to be explained rather than just being absent — the argument
- * `--cr-progress-ring-stroke` was published for, one level up.
+ * The ring itself is `ActivityArc`, which `Loader` also uses. Built separately,
+ * a loader and a ring progress would become two sizes of the same idea.
  */
 import {
   forwardRef, useEffect, useId, useRef, type HTMLAttributes, type ReactNode,
@@ -66,9 +64,9 @@ export const RingProgress = forwardRef<HTMLDivElement, RingProgressProps>(functi
     const before = previous.current;
     const moved = before !== undefined && before !== at;
     previous.current = determinate ? at : undefined;
-    /* `success` when the work completes — the value reaching the end, from
-       short of it — and `progress-change` for every other move. A ring that
-       renders full was complete before anybody looked, and plays nothing. */
+    /* `success` when the work completes (the value reaches the end from short
+       of it), and `progress-change` for every other move. A ring that renders
+       full plays nothing. */
     if (moved) play(at >= max && (before ?? max) < max ? 'success' : 'progress-change');
   }, [at, determinate, max, play]);
 

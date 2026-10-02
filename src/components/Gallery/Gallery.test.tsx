@@ -13,7 +13,7 @@ const items = [
 
 describe('Gallery', () => {
   /* Twelve photographs are not twelve tab stops between the control before the
-     gallery and the control after it — the same argument the charts make about
+     gallery and the control after it. The charts make the same argument about
      marks. */
   it('is one tab stop, not one per thumbnail', () => {
     const { container } = renderWithCrystal(<Gallery items={items} label="Photographs" />);
@@ -41,8 +41,9 @@ describe('Gallery', () => {
   });
 
   /* "Arrows move between items with position announced." The position is part
-     of the viewer's accessible name, not small text beside it: a reader who
-     cannot see the strip has no other way to know where in the set they are. */
+     of the viewer's accessible name and not small text beside it, because a
+     reader who cannot see the strip has no other way to know where in the set
+     they are. */
   it('says where in the set the viewer is', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Gallery items={items} label="Photographs" />);
@@ -53,10 +54,9 @@ describe('Gallery', () => {
     expect(screen.getByRole('dialog', { name: /The long bridge\s*2 of 3/ })).toBeInTheDocument();
   });
 
-  /* The name is read on arrival; it is not read again when it changes under a
-     reader whose focus is sitting on the Next button. So the position has to be
-     announced as well as named — the first version of this suite asserted only
-     the name, and passed with nothing announced at all. */
+  /* The name is read on arrival and not again when it changes under a reader
+     whose focus is on the Next button, so the position has to be announced as
+     well as named. Asserting the name alone passes with nothing announced. */
   it('announces the item it moved to', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Gallery items={items} label="Photographs" />);
@@ -69,8 +69,7 @@ describe('Gallery', () => {
 
   /* "Closing returns focus to the thumbnail the reader opened — and, if they
      moved through the set while it was open, to the one they ended on."
-     Returning them to a picture they have since left would be returning them to
-     the wrong place. */
+     A picture they have since left is the wrong place to return them to. */
   it('returns focus to the item the reader ended on', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Gallery items={items} label="Photographs" />);
@@ -84,9 +83,8 @@ describe('Gallery', () => {
   });
 
   /* The viewer is mounted while it is closed, so moving along the strip changes
-     the item it is pointed at before the reader has arrived in it. Arriving to
-     find an announcement already waiting is being told what changed while you
-     were not there. */
+     its item before the reader arrives in it. The reader must not arrive to an
+     announcement of changes made while they were not there. */
   it('arrives silent, however the reader got to the item', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Gallery items={items} label="Photographs" />);
@@ -97,9 +95,9 @@ describe('Gallery', () => {
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
-  /* A zoom is something the reader did to one picture, in one sitting. Coming
-     back to the set later and finding it still at 400 per cent is the viewer
-     remembering something on their behalf that they did not ask it to. */
+  /* A zoom applies to one picture in one sitting. Reopening the viewer must not
+     find it still at 400 per cent, because the reader did not ask the viewer to
+     remember it. */
   it('opens fit to the frame however it was left', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Gallery items={items} label="Photographs" />);

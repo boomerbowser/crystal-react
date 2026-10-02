@@ -1,11 +1,11 @@
 /* The semantic ink pairs, in one place.
  *
- * Every feedback surface distributes them the same way and it is easy to get
- * backwards: the **well** takes the pair, the panel stays its own material with
- * ordinary text. A status-coloured panel makes the message decoration on a
- * coloured ground, and a status-coloured perimeter is the shape Crystal uses for
- * focus — a danger-coloured one reads as a control in an error state rather than
- * a fact being reported.
+ * Every feedback surface distributes them the same way, and it is easy to get
+ * backwards: the well takes the pair, and the panel stays its own material with
+ * ordinary text. A status-coloured panel turns the message into decoration on a
+ * coloured ground. A status-coloured perimeter is the shape Crystal uses for
+ * focus, so a danger-coloured one reads as a control in an error state instead
+ * of a fact being reported.
  */
 
 @mixin status-pairs($selector: '&') {
@@ -31,8 +31,8 @@
 }
 
 /* The symbol well: a circle of the status surface carrying the status ink.
-   The tint is gone under forced colours, so the well would be an invisible ring
-   around a glyph — the system pair keeps both legible without claiming a colour
+   The tint is gone under forced colours, which would leave an invisible ring
+   around a glyph. The system pair keeps both legible without claiming a colour
    the user did not ask for. */
 @mixin status-well($size) {
   display: inline-grid;

@@ -6,8 +6,8 @@ import { Drawer, reorientationFor } from './Drawer.js';
 
 /* A closing scrim withdraws on Crystal's 650ms departure clock (`mirage-out`),
    and `AnimatePresence` unmounts only after it. Testing Library waits one second
-   by default, which the hand-written opacity fade used to fit inside and the
-   real departure does not — so the exits wait for the departure, not for luck. */
+   by default, which the departure does not fit inside, so the exit assertions
+   wait this long. */
 const DEPARTURE = 2500;
 import { Button } from '../Button/Button.js';
 
@@ -52,15 +52,14 @@ describe('Drawer', () => {
 
   /* ------------------------------------------------ modality must be real */
 
-  /* The defect this component exists to make impossible: a wash over the page
-     that *looks* like the page is unavailable, with nothing behind the look.
-     
-     Not `aria-modal`, which React Aria deliberately does not set — it marks the
-     rest of the page `inert` instead, which removes it from the accessibility
-     tree *and* from the tab order rather than only claiming to. That attribute
-     is not applied in jsdom, so the half of modality it carries is asserted in a
-     browser by `scripts/verify-behaviour.mjs`; what is checked here is the half
-     jsdom can see. */
+  /* A wash that makes the page look unavailable must come with modal
+     behaviour.
+
+     React Aria does not set `aria-modal`. It marks the rest of the page `inert`,
+     which removes it from the accessibility tree and from the tab order. jsdom
+     does not apply that attribute, so `scripts/verify-behaviour.mjs` asserts
+     that half of modality in a browser. These tests check the half jsdom can
+     see. */
   it('is a real dialog when modal, named by its heading', () => {
     renderWithCrystal(<Drawer title="Filters" isOpen><p>Body</p></Drawer>);
     expect(screen.getByRole('dialog', { name: 'Filters' })).toBeInTheDocument();
@@ -72,9 +71,8 @@ describe('Drawer', () => {
     await user.click(screen.getByRole('button', { name: 'Open' }));
     const dialog = await screen.findByRole('dialog');
 
-    /* Tab all the way round. Every stop has to be inside the drawer: the page
-       behind is supposed to be unavailable, and "unavailable" has to mean the
-       keyboard too. */
+    /* Tab all the way round. Every stop has to be inside the drawer, because
+       the page behind must be unavailable to the keyboard too. */
     for (let step = 0; step < 6; step += 1) {
       // eslint-disable-next-line no-await-in-loop
       await user.tab();
@@ -82,10 +80,10 @@ describe('Drawer', () => {
     }
   });
 
-  /* Waited for, not asserted straight away. `AnimatePresence` holds the panel
-     mounted until its dismissal finishes — that is the whole reason it is there,
-     and an assertion that the drawer is gone the instant it is asked to close is
-     an assertion that the exit animation does not happen. */
+  /* Waited for, not asserted straight away. `AnimatePresence` keeps the panel
+     mounted until its dismissal finishes, so asserting that the drawer is gone
+     the instant it is asked to close would assert that the exit animation does
+     not happen. */
   it('closes a modal drawer on Escape', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Harness isModal />);
@@ -95,9 +93,8 @@ describe('Drawer', () => {
     await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); }, { timeout: DEPARTURE });
   });
 
-  /* The other half of the rule, and the one usually missed. A non-modal drawer
-     must not merely *look* open-and-non-blocking; the page beside it has to
-     actually still work. */
+  /* The other half of the rule. The page beside a non-modal drawer must still
+     work. */
   it('is a complementary landmark when not modal, and no dialog at all', () => {
     renderWithCrystal(
       <main>
@@ -122,8 +119,8 @@ describe('Drawer', () => {
     expect(behind).toHaveFocus();
   });
 
-  /* A scrim is the *appearance* of modality. It appears with the behaviour or
-     not at all, which is the whole of "must be real, not implied". */
+  /* A scrim is the appearance of modality. It appears with the behaviour or
+     not at all. */
   it('draws a scrim only when the page behind is genuinely blocked', () => {
     const { container: modal } = renderWithCrystal(
       <Drawer title="Filters" isOpen><p>Body</p></Drawer>,
@@ -142,7 +139,7 @@ describe('Drawer', () => {
     renderWithCrystal(<Harness isModal={false} />);
     const opener = screen.getByRole('button', { name: 'Open' });
     await user.click(opener);
-    /* A non-modal region is somewhere you can go, not somewhere you are sent. */
+    /* A non-modal region does not move focus into itself. */
     expect(opener).toHaveFocus();
   });
 
@@ -189,9 +186,9 @@ describe('Drawer', () => {
 });
 
 /* The authored recipe arrives from the right. Every other edge, and every
-   right-to-left page, is that movement pointed somewhere else — so the mapping
-   is the whole of "Crystal supplies the entrance direction" and is worth
-   checking directly rather than through four rendered drawers. */
+   right-to-left page, uses that movement pointed somewhere else. This mapping is
+   how Crystal supplies the entrance direction, so it is checked directly
+   instead of through four rendered drawers. */
 describe('reorientationFor', () => {
   it('plays the authored movement unchanged for the inline end of a left-to-right page', () => {
     expect(reorientationFor('end', false)).toEqual({ mirrorInline: false, toBlockAxis: false });
@@ -201,8 +198,8 @@ describe('reorientationFor', () => {
     expect(reorientationFor('start', false)).toEqual({ mirrorInline: true, toBlockAxis: false });
   });
 
-  /* The two conditions cancel: the inline end is the left in a right-to-left
-     page, which is the same movement the start needs in a left-to-right one. */
+  /* The two conditions cancel. The inline end is the left in a right-to-left
+     page, which needs the same movement as the start in a left-to-right one. */
   it('mirrors for the inline end of a right-to-left page', () => {
     expect(reorientationFor('end', true)).toEqual({ mirrorInline: true, toBlockAxis: false });
   });

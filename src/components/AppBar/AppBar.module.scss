@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
-/* AppBar — a Frost band across the top of a view.
+/* AppBar: a Frost band across the top of a view.
  *
- * Full-bleed, so no radius on the outer edges: a bar with rounded corners at the
- * top of a viewport reads as a floating card that failed to reach the edge. The
- * elevation arrives on scroll rather than at rest, which is how the bar says
- * "there is content beneath me now" — at rest it is part of the page.
+ * Full-bleed, so the outer edges have no radius. A bar with rounded corners at
+ * the top of a viewport reads as a floating card that failed to reach the edge.
+ * The elevation arrives on scroll, to show that content is now beneath the bar.
+ * At rest the bar is part of the page.
  */
 
 .appBar {
@@ -17,8 +17,8 @@
   gap: var(--cr-space);
   min-block-size: $cr-action-min-target;
   padding: $cr-spacing-sm var(--cr-space);
-  /* The safe area matters here and almost nowhere else: a bar pinned to the top
-     of a phone viewport sits under the notch without it. */
+  /* A bar pinned to the top of a phone viewport sits under the notch without
+     the safe-area inset. */
   padding-inline-start: max(var(--cr-space), env(safe-area-inset-left));
   padding-inline-end: max(var(--cr-space), env(safe-area-inset-right));
   background: var(--cr-frost-fill);

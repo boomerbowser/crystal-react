@@ -1,15 +1,14 @@
 @use '../../styles/tokens' as *;
 
 /* The pill needs nothing here. `Button` carries the pressed state in Crystal's
-   own vocabulary — the reading pad in `--cr-primary`, `--cr-on-primary` ink and
-   the label at weight 800 — and a filled heart on top of that would be a second
-   treatment for one state. Two signals for one fact is how a reader ends up
-   looking for a difference between them.
+   own vocabulary, with the reading pad in `--cr-primary`, `--cr-on-primary` ink
+   and the label at weight 800. A filled heart on top would be a second treatment
+   for one state, and a reader would look for a difference between the two.
  *
- * The icon shape is the case that needs one. A circle has a tinted pad but no
- * label to weight, so the mark filling in *is* the weight half of the rule —
- * the same argument the gallery thumbnail settles, and the same conclusion:
- * never an outline, because an outline is what focus is drawn with. */
+ * The icon shape does need one. A circle has a tinted pad but no label to
+ * weight, so the mark filling in stands in for the weight. The gallery
+ * thumbnail follows the same rule. Never an outline, because focus is drawn
+ * with an outline. */
 .wish[aria-pressed='true'] svg { fill: currentColor; }
 
 .pill { display: inline-flex; align-items: center; gap: $cr-spacing-2xs; }

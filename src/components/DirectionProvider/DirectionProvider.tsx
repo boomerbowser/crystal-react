@@ -2,20 +2,20 @@
 
 /* DirectionProvider.
  *
- * A scope that declares text direction, and it is a `CrystalProvider` underneath
- * rather than a second mechanism — two providers that both claim to own direction
- * would disagree the first time one of them was nested inside the other.
+ * A scope that declares text direction. It is a `CrystalProvider` underneath and
+ * not a second mechanism, because two providers that both own direction would
+ * disagree as soon as one was nested inside the other.
  *
- * What it adds over a bare `dir` attribute is the half that CSS cannot do.
- * Crystal's own geometry mirrors through logical properties, which need nothing;
- * React Aria's components calculate placement in JavaScript, and a calculation
- * does not read a `dir` attribute. So the direction reaches both, which is why
- * this exists as a component instead of a documentation note telling products to
- * set `dir` themselves.
+ * It adds what CSS cannot do with a bare `dir` attribute. Crystal's own geometry
+ * mirrors through logical properties, which need nothing. React Aria's
+ * components calculate placement in JavaScript, and that calculation does not
+ * read a `dir` attribute. This component passes the direction to both, so
+ * products do not have to set `dir` themselves.
  *
- * What mirrors, from the catalogue: bubble corners, selection treatment, range
- * tracks, drawer edges — everything with a leading or trailing side. What does
- * not: anything physical by nature, such as a clock face or a musical score.
+ * The catalogue lists what mirrors: bubble corners, selection treatment, range
+ * tracks, drawer edges, and everything else with a leading or trailing side.
+ * Anything physical by nature, such as a clock face or a musical score, does not
+ * mirror.
  */
 import type { ReactNode } from 'react';
 import { CrystalProvider } from '../../theme/CrystalProvider.js';
@@ -24,8 +24,8 @@ import type { CrystalDirection } from '../../theme/types.js';
 export interface DirectionProviderProps {
   direction: CrystalDirection;
   /**
-   * BCP-47 locale. Given one it also drives formatting and collation; without
-   * one, the direction alone is enough to lay out correctly.
+   * BCP-47 locale. When given, it also drives formatting and collation. Without
+   * it, the direction alone is enough to lay out correctly.
    */
   locale?: string;
   children?: ReactNode;

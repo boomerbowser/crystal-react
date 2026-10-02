@@ -17,8 +17,8 @@ describe('ChartLegend', () => {
     expect(screen.getByRole('button', { name: 'Costs', pressed: false })).toBeInTheDocument();
   });
 
-  /* A legend that cannot toggle is a key, and a key is not a control: pressing
-     it would do nothing, and a button that does nothing is worse than a label. */
+  /* A legend that cannot toggle is a key and renders as text. Pressing it would
+     do nothing, and a button that does nothing is worse than a label. */
   it('is text, not buttons, when it does not toggle', () => {
     renderWithCrystal(<ChartLegend entries={entries} />);
     expect(screen.queryByRole('button')).toBeNull();
@@ -26,7 +26,7 @@ describe('ChartLegend', () => {
   });
 
   /* "Hidden series are announced." Turning a series off changes the picture, and
-     a reader who cannot see the picture is told nothing unless somebody says it. */
+     a reader who cannot see the picture is told nothing unless it is announced. */
   it('announces what the reader just changed', async () => {
     const user = userEvent.setup();
     const onToggle = vi.fn();
@@ -38,14 +38,14 @@ describe('ChartLegend', () => {
   });
 
   /* Selection is weight. Nothing is drawn beside the label to mark it, and the
-     swatch is which series this is rather than whether it is showing. */
+     swatch says which series this is, not whether it is showing. */
   it('carries the shown state as weight, not as a mark or a colour', () => {
     renderWithCrystal(<ChartLegend entries={entries} onToggle={() => {}} />);
     const shown = screen.getByRole('button', { name: 'Revenue' });
     const hidden = screen.getByRole('button', { name: 'Costs' });
     expect(shown.hasAttribute('data-shown')).toBe(true);
     expect(hidden.hasAttribute('data-shown')).toBe(false);
-    /* The same swatch on both: it says which series, not whether. */
+    /* Both entries keep the same swatch, which identifies the series only. */
     expect(shown.querySelector('svg')).not.toBeNull();
     expect(hidden.querySelector('svg')).not.toBeNull();
   });

@@ -1,41 +1,41 @@
 'use client';
 
-/* DataTableBlock — a table with its toolbar, bulk actions and pagination.
+/* DataTableBlock: a table with its toolbar, bulk actions and pagination.
  *
- * "Selection count is **announced**; bulk actions **describe what they will
- * affect**." States: `at-rest`, `loading`, `empty`, `selecting`, `error`.
+ * "Selection count is announced; bulk actions describe what they will
+ * affect." States: `at-rest`, `loading`, `empty`, `selecting`, `error`.
  *
- * The opinion is in the second half of that sentence, and it is enforced by the
- * shape of the prop rather than asked of the caller. A bulk action here is not a
- * button a product passes in; it is a verb and a function from the count to the
- * sentence the button says. So a button cannot read "Archive" while three rows
- * are selected — it reads "Archive 3 orders", because the only way to name one
- * is to be handed the number. A bare verb over a selection is the most common
- * way a bulk action deletes more than somebody meant.
+ * The shape of the prop enforces the second half of that sentence. A bulk
+ * action is a verb and a function from the count to the sentence the button
+ * says, and not a button the product passes in. So a button cannot read
+ * "Archive" while three rows are selected. It reads "Archive 3 orders",
+ * because the only way to name one is to be handed the number. A bare verb
+ * over a selection is the most common way a bulk action deletes more than
+ * somebody meant.
  *
- * **`selecting` is not a prop.** It is what the block is in whenever anything is
- * selected, derived from the selection rather than declared beside it, so the
- * two cannot disagree. Entering it swaps the toolbar's filters for the count,
- * the actions and a way out; leaving it puts them back.
+ * `selecting` is not a prop. The block is in that state whenever anything is
+ * selected. It is derived from the selection, so the two cannot disagree.
+ * Entering it swaps the toolbar's filters for the count, the actions and a way
+ * out, and leaving it puts them back.
  *
- * **The count is announced, once per change.** `DataTable` makes the selection
- * and says nothing about its size — a table cannot know whether "3" is news.
- * The block can, so it owns a polite status region that says the count as it
- * changes and is silent at rest.
+ * The count is announced once per change. `DataTable` makes the selection and
+ * says nothing about its size, because a table cannot know whether "3" is
+ * news. The block can, so it owns a polite status region that says the count
+ * as it changes and is silent at rest.
  *
- * **The block is not a landmark, and the table is.** `DataTable` renders its
- * scroll container as a focusable region named by `label`, because a region
- * that scrolls has to be reachable and has to say what it is. Wrapping that in a
- * second region, named by a heading that is usually the same word, gave a
- * landmark list reading "Orders, Orders" — axe calls it `landmark-unique`, and a
- * screen-reader user calls it two stops for one table. The heading gives the
- * block its structure; the table keeps the one region.
+ * The table is a landmark and the block is not. `DataTable` renders its scroll
+ * container as a focusable region named by `label`, because a region that
+ * scrolls has to be reachable and has to say what it is. A second region around
+ * it, named by a heading that is usually the same word, would give a landmark
+ * list reading "Orders, Orders": axe's `landmark-unique`, and two stops for one
+ * table for a screen reader user. The heading gives the block its structure,
+ * and the table keeps the one region.
  *
- * **Loading and failure replace the rows; empty does not.** A table that is
+ * Loading and failure replace the rows, and empty does not. A table that is
  * loading or failed and still draws its headers over no rows says "there are
- * none", which is a fact the data did not state — the `AnalyticsPanel`
- * reasoning. An empty table is the opposite case: there really are none, and the
- * headers are what tell the reader what there would be.
+ * none", which the data did not state. `AnalyticsPanel` follows the same
+ * reasoning. An empty table really has none, and the headers tell the reader
+ * what there would be.
  */
 import { useState, type ReactNode } from 'react';
 import type { Selection, SortDescriptor } from 'react-aria-components';
@@ -83,7 +83,7 @@ export interface DataTableBlockProps {
   totalPages?: number;
   onPageChange?: (page: number) => void;
   state?: DataTableBlockState;
-  /** The announced count. Plain words, so "3 orders selected" rather than a number. */
+  /** The announced count, in plain words: "3 orders selected", not a bare number. */
   selectedLabel?: (count: number) => string;
   clearSelectionLabel?: string;
   emptyLabel?: ReactNode;
@@ -143,10 +143,10 @@ export function DataTableBlock({
         ) : null}
       </div>
 
-      {/* Said as it changes and silent at rest. Outside the toolbar, because a live
-          region has to exist before its text changes for the change to be
-          announced, and the toolbar only exists once something is selected — the
-          first selection would otherwise be the one that goes unsaid. */}
+      {/* Said as it changes and silent at rest. It sits outside the toolbar,
+          because a live region has to exist before its text changes for the
+          change to be announced, and the toolbar only exists once something is
+          selected. Inside it, the first selection would go unannounced. */}
       <VisuallyHidden role="status">{selecting ? selectedLabel(count) : ''}</VisuallyHidden>
 
       {state === 'loading' ? <Loader label="Loading the table" /> : null}

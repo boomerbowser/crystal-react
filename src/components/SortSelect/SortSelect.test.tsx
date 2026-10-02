@@ -27,10 +27,9 @@ describe('SortSelect', () => {
     });
   });
 
-  /* Said after the list has moved, not when moving it was asked for. Most
-     orderings are a round trip; a reader told "sorted by newest" who then
-     arrives at the old list has been told something false by the one thing
-     whose job was to tell them the truth. */
+  /* Announced after the list has moved, not when moving it was asked for. Most
+     orderings are a round trip, and a reader told "sorted by newest" could
+     otherwise arrive at the old list. */
   it('waits for the list to actually be reordered', async () => {
     const user = userEvent.setup();
     let finish = () => {};
@@ -50,8 +49,8 @@ describe('SortSelect', () => {
     });
   });
 
-  /* A sort that failed is the product's to report, and this component saying it
-     succeeded would be worse than silence. */
+  /* A sort that failed is the product's to report. This component must not say
+     it succeeded. */
   it('says nothing when the reorder fails', async () => {
     const user = userEvent.setup();
     renderWithCrystal(

@@ -8,19 +8,18 @@ const meta = {
     docs: {
       description: {
         component:
-          '**Play and pause are one toggle with a pressed state**, not two buttons swapped by '
-          + 'state: two buttons means the one a reader has focused disappears under them the '
-          + 'moment they press it, and focus falls to the document. The name stays "Play" and '
-          + 'the pressed state is what changes — "Play, pressed" is how a screen reader '
-          + 'announces "playing".\n\n'
+          '**Play and pause are one toggle with a pressed state.** With two buttons swapped by '
+          + 'state, the one a reader has focused disappears when they press it, and focus falls '
+          + 'to the document. The name stays "Play" and the pressed state changes: a screen '
+          + 'reader announces "playing" as "Play, pressed".\n\n'
           + '**The scrubber is a slider announcing time, not a progress bar.** A progress bar '
-          + 'reports; a slider is operated, which is the whole point of a scrubber. And it says '
-          + 'a *time*: `1:23` is right on the screen and wrong in an announcement, where a '
-          + 'screen reader reads it as "one colon twenty-three". The thumb says "1 minute 23 '
-          + 'seconds of 4 minutes 56 seconds"; `src/media/time.ts` owns both notations so the '
-          + 'two players cannot format a second differently.\n\n'
-          + 'Buffering is announced rather than only drawn — a spinner on the bar is '
-          + 'information a sighted reader gets for free and nobody else gets at all.',
+          + 'only reports, and a scrubber is something a person moves. It also speaks a time: '
+          + '`1:23` is right on the screen and wrong in an announcement, where a screen reader '
+          + 'reads it as "one colon twenty-three". The thumb says "1 minute 23 seconds of 4 '
+          + 'minutes 56 seconds". `src/media/time.ts` owns both notations so the two players '
+          + 'cannot format a second differently.\n\n'
+          + 'Buffering is announced as well as drawn, because a spinner on the bar reaches only '
+          + 'sighted readers.',
       },
     },
   },

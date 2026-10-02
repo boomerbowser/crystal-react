@@ -5,7 +5,7 @@ import { TrendIndicator } from './TrendIndicator.js';
 
 describe('TrendIndicator', () => {
   /* "Direction is carried by a word and a symbol, never by colour alone." A
-     reader who hears both hears it twice; the glyph is for the eye. */
+     reader who hears both hears it twice. The glyph is for the eye. */
   it('announces the words and hides the arrow', () => {
     renderWithCrystal(<TrendIndicator direction="up">4.2% up on last month</TrendIndicator>);
     expect(screen.getByText('↑')).toHaveAttribute('aria-hidden', 'true');

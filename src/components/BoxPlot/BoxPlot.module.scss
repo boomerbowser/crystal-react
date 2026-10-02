@@ -2,10 +2,10 @@
 
 /* A box, two whiskers, two caps, a median rule and the outliers.
  *
- * The box is the series colour at the fill opacity — it is an extent, and an
- * extent that hides the gridlines behind it is an extent a reader cannot place.
- * The median is a full-strength rule, because it is the one number in the figure
- * that is a value rather than a range.
+ * The box is the series colour at the fill opacity. It is an extent, and a
+ * reader cannot place an extent that hides the gridlines behind it. The median
+ * is a full-strength rule, because it is the one number in the figure that is a
+ * value and not a range.
  */
 
 .quartiles {

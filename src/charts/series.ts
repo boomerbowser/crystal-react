@@ -3,11 +3,11 @@
  * Two numbers, deliberately distinct, because conflating them is the bug this
  * file exists to make impossible:
  *
- * - **channel** is the series' place in the palette's scale — its colour, its
+ * - channel is the series' place in the palette's scale: its colour, its
  *   dash, its marker. It is the position in the array the caller passed, so it
  *   does not move when a neighbour is hidden.
- * - **slot** is its place among the series actually drawn, which is what mark
- *   numbering is built from. It *does* close up, because a roving tabindex over
+ * - slot is its place among the series actually drawn, which is what mark
+ *   numbering is built from. It does close up, because a roving tabindex over
  *   marks that are not there would step into holes.
  */
 import type { ChartSeries } from './types.js';
@@ -29,8 +29,8 @@ export function drawnSeries(series: readonly ChartSeries[]): DrawnSeries[] {
   return out;
 }
 
-/** Entries for a `ChartLegend`, in the caller's order, hidden ones included —
- *  a legend that dropped the series you just turned off would leave you no way
+/** Entries for a `ChartLegend`, in the caller's order, hidden ones included.
+ *  A legend that dropped the series you just turned off would leave you no way
  *  to turn it back on. Structurally a `ChartLegendEntry`; not imported from the
  *  component, because the component imports this kit and not the other way. */
 export function seriesLegend(

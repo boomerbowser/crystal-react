@@ -16,11 +16,10 @@ const meta = {
   component: Checkbox,
   /* The callbacks as actions, so the Actions panel shows what fired and with
      what. They are declared by hand because this Storybook uses `react-docgen`
-     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
+     instead of `react-docgen-typescript` (see `.storybook/main.ts`), and
      react-docgen reads a component's own interface without resolving what it
      extends. Every callback here is inherited from a React Aria interface, so
-     docgen cannot see one of them. Each was checked against the compiler
-     before being written down. */
+     docgen sees none of them. Each was checked against the compiler. */
   argTypes: {
     ...ariaArgTypes<CheckboxProps>({
       autoFocus: false,
@@ -39,18 +38,19 @@ const meta = {
     docs: {
       description: {
         component:
-          '**Selection is label weight.** Crystal\'s rule, and the segmented control and the '
-          + 'select are where it is most often broken — a coloured pill is the obvious thing to '
-          + 'draw, and a reader who cannot distinguish the colour then has nothing. Weight is '
-          + 'typographic rather than chromatic, so it survives greyscale, forced colours and a '
-          + 'poor screen; the soft fill beneath it is a second signal, never the only one.\n\n'
-          + 'A check mark is allowed on a checkbox and nowhere else: there it is the value of a '
+          '**Selection is label weight.** This is Crystal\'s rule, and the segmented control '
+          + 'and the select are where it is most often broken. A coloured pill is the obvious '
+          + 'thing to draw, and it leaves a reader who cannot distinguish the colour with '
+          + 'nothing. Weight is typographic, not chromatic, so it survives greyscale, forced '
+          + 'colours and a poor screen. The soft fill beneath it is a second signal, never the '
+          + 'only one.\n\n'
+          + 'A check mark is allowed on a checkbox and nowhere else. There it is the value of a '
           + 'boolean, contained inside the box so the pair reads as one control. In a list or a '
           + 'menu a check mark means validated or informational.\n\n'
-          + 'The switch does not rely on position alone — the track changes colour and the thumb '
-          + 'changes with it — and the sliders announce their value with its unit, because a '
-          + 'number without its unit is a guess. Try the toolbar\'s reduced-motion setting: the '
-          + 'switch\'s travel goes and its state change stays.',
+          + 'The switch does not rely on position alone. The track changes colour and the thumb '
+          + 'changes with it. The sliders announce their value with its unit, because a number '
+          + 'without its unit is ambiguous. With the toolbar\'s reduced-motion setting, the '
+          + 'switch\'s travel is removed and its state change stays.',
       },
     },
   },

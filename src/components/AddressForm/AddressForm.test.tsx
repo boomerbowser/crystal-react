@@ -6,9 +6,9 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { AddressForm } from './AddressForm.js';
 import type { AddressDescriptor, AddressValue } from '../../commerce/address.js';
 
-/* Two countries that genuinely disagree about order, labels and required-ness —
-   which is the point of the descriptor, and what a single hard-coded form gets
-   wrong for everybody but one country. */
+/* Two countries that genuinely disagree about order, labels and required-ness.
+   That is what the descriptor exists for, and what a single hard-coded form
+   gets wrong for everybody but one country. */
 const countries: AddressDescriptor[] = [
   {
     country: 'GB',
@@ -62,13 +62,13 @@ describe('AddressForm', () => {
   it('renders the fields the chosen country actually has, in its order', async () => {
     const user = userEvent.setup();
     const { container } = renderWithCrystal(<Harness />);
-    /* Document order, because the claim is about *order* and a set of fields
-       says nothing about it — the United States writes a state between its city
+    /* Document order, because the claim is about order and a set of fields
+       says nothing about it. The United States writes a state between its city
        and its postcode, and the United Kingdom writes neither.
      *
        Read as autofill tokens rather than as labels, which is both the sturdier
        signal and the more meaningful one: the tokens are a fixed vocabulary, so
-       this asserts what each position *is* rather than what this test's fixture
+       this asserts what each position is rather than what this test's fixture
        happened to call it. */
     const written = () => [...container.querySelectorAll('[autocomplete]')]
       .map((one) => one.getAttribute('autocomplete'));
@@ -101,7 +101,7 @@ describe('AddressForm', () => {
     expect(container.querySelector('[autocomplete="address-level1"]')).not.toBeNull();
   });
 
-  /* "Postcode validation is per-locale, not one regular expression" — and the
+  /* "Postcode validation is per-locale, not one regular expression", and the
      message goes on the field it is about, because "there are errors" is a
      message about the form and the reader needs to know which box. */
   it('validates per-locale and puts the message on the field', async () => {

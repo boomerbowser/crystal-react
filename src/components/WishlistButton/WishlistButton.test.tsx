@@ -41,8 +41,8 @@ describe('WishlistButton', () => {
     expect(onChange).toHaveBeenCalledWith(false);
   });
 
-  /* "Resin pill or icon button" — the same name either way, because an icon has
-     no other one. */
+  /* "Resin pill or icon button". The same name either way, because an icon has
+     no other. */
   it('is the same control in either shape', () => {
     renderWithCrystal(<WishlistButton item="Harbour print" isSaved={false} onChange={() => {}} iconOnly />);
     expect(screen.getByRole('button', { name: 'Save Harbour print to your wishlist' }))

@@ -1,17 +1,15 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* DataView — "Haze item fills on the surrounding material; item radius is the
+/* DataView: "Haze item fills on the surrounding material; item radius is the
  * content radius; layout switches at a declared breakpoint."
  *
- * The breakpoint is a **container** query, not a media query, and that is the
- * one design decision in this file. A media query asks how wide the *window* is,
- * which is the wrong question: the same collection is a grid in a full-width
- * page and a list in a 320px sidebar of the same window. A container query asks
- * how wide the collection's own box is, which is the question the layout
- * actually depends on.
+ * The breakpoint is a container query. A media query measures the window, but
+ * the same collection is a grid in a full-width page and a list in a 320px
+ * sidebar of the same window. A container query measures the collection's own
+ * box, which is what the layout depends on.
  *
- * The switch disappears below that width rather than going inert, because a
+ * The switch disappears below that width and is not left inert, because a
  * control that cannot change anything is worse than no control.
  */
 
@@ -34,9 +32,9 @@
 
 .switch { display: inline-flex; align-items: center; gap: $cr-spacing-2xs; }
 
-/* The switch is `SegmentedControl`, which brings its own strip material — the
-   one shared with the tab strip, in `styles/_strip.scss`. Nothing about it is
-   restated here. */
+/* The switch is `SegmentedControl`, which brings its own strip material, shared
+   with the tab strip in `styles/_strip.scss`. Nothing about it is restated
+   here. */
 
 .items {
   display: grid;
@@ -73,10 +71,9 @@
 
 /* Below Crystal's small breakpoint the grid is a list and the switch is gone.
  *
- * The width is Crystal's rather than the caller's, and that is a limit rather
- * than a choice: a container query's condition cannot read a custom property, so
- * there is no way to pass one in. `$cr-breakpoint-sm` is the right constant to be
- * stuck with — it is where Crystal's own shell steps down. */
+ * The width is Crystal's, not the caller's, because a container query's
+ * condition cannot read a custom property, so there is no way to pass one in.
+ * `$cr-breakpoint-sm` is where Crystal's own shell steps down. */
 @container (max-width: #{$cr-breakpoint-sm}) {
   .view[data-layout='grid'] .items { grid-template-columns: minmax(0, 1fr); }
   .switch { display: none; }

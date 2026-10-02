@@ -1,23 +1,22 @@
 'use client';
 
-/* ProductDetailBlock — gallery, variants, price, stock and the purchase action.
+/* ProductDetailBlock: gallery, variants, price, stock and the purchase action.
  *
- * "**Variant changes update price and stock together, and say so.**" States:
+ * "Variant changes update price and stock together, and say so." States:
  * `at-rest`, `unavailable`, `adding`.
  *
- * The opinion is in the shape of a variant. Here a variant *carries* its price
- * and its availability, so choosing one changes both in the same render — there
- * is no moment where the colour is new and the price is the old colour's, which
- * is what happens when a product wires price and stock to a selection
- * separately and one of them lags. And the change is said, once, as one
- * sentence — "Slate: £24.00, low stock" — because a reader who cannot see the
- * figure beside the swatch has otherwise chosen a colour and learned nothing
- * about what it costs or whether it can be had. Not on load: the first variant
- * was not chosen, it was shown.
+ * A variant carries its price and its availability, so choosing one changes
+ * both in the same render. The colour is never new while the price is still the
+ * old colour's, which happens when a product wires price and stock to a
+ * selection separately and one of them lags. The change is said once, as one
+ * sentence such as "Slate: £24.00, low stock", because a reader who cannot see
+ * the figure beside the swatch otherwise learns nothing about what the chosen
+ * colour costs or whether it can be had. Nothing is said on load, because the
+ * first variant was shown, not chosen.
  *
- * **Unavailable is derived, not declared.** A variant that is out of stock makes
- * the purchase control say so and refuse, from the variant's own availability,
- * so the button cannot offer what the stock label says is gone.
+ * Unavailable is derived from the variant's own availability. A variant that is
+ * out of stock makes the purchase control say so and refuse, so the button
+ * cannot offer what the stock label says is gone.
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useNumberFormatter } from 'react-aria';
@@ -58,7 +57,7 @@ export interface ProductDetailBlockProps {
   unavailableLabel?: string;
   /** What is said when the variant changes. */
   announceVariant?: (label: string, price: string, availability: string) => string;
-  /** Anything more under the purchase action — delivery, returns, reviews. */
+  /** Anything more under the purchase action: delivery, returns, reviews. */
   children?: ReactNode;
   className?: string;
 }
@@ -122,7 +121,8 @@ export function ProductDetailBlock({
   );
 }
 
-/* The chosen variant, said once when it changes — never for the one shown on load. */
+/* The chosen variant, said once when it changes. Never said for the one shown
+   on load. */
 function useVariantAnnouncement(
   chosen: ProductVariant | undefined,
   say: (variant: ProductVariant) => string,

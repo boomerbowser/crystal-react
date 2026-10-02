@@ -1,30 +1,30 @@
 'use client';
 
-/* ErrorSummary — the problems with a form, at its top, each linked to its field.
+/* ErrorSummary lists the problems with a form at its top, each linked to its field.
  *
  * "Errors summarise at the top and link to their fields" is the catalogue's
- * wording for the CRUD form and the checkout, and it is two promises:
+ * wording for the CRUD form and the checkout. It makes two promises:
  *
- *   - **The reader learns there are errors without hunting for them.** After a
- *     submission that failed, focus moves to the summary, whose heading says how
- *     many there are; a screen reader reads the heading and the list. Focus, not
- *     `role="alert"` as well — both would say it twice.
- *   - **Each error takes them to the field.** An entry is a link, and following
- *     it moves focus into the field it names, found by the field's `name` inside
- *     the form — the name a form already needs to submit, rather than an id the
- *     summary would have to be told. A select's named element is React Aria's
- *     hidden native one, which cannot take focus, so the link goes to the
+ *   - The reader learns there are errors without hunting for them. After a
+ *     failed submission, focus moves to the summary, whose heading says how
+ *     many there are, and a screen reader reads the heading and the list. Focus
+ *     only, without `role="alert"`, because both would say it twice.
+ *   - Each error takes the reader to the field. An entry is a link, and
+ *     following it moves focus into the field it names. The field is found by
+ *     its `name` inside the form, which the form already needs to submit, so the
+ *     summary does not have to be told an id. A select's named element is React
+ *     Aria's hidden native one, which cannot take focus, so the link goes to the
  *     select's own button beside it.
  *
  * The messages are the fields' own, so they should say what to do ("Enter a
- * postcode") rather than what went wrong in the abstract ("Invalid").
+ * postcode") instead of what went wrong in the abstract ("Invalid").
  */
 import { useEffect, useId, useRef } from 'react';
 import { cx } from '../styles/cx.js';
 import styles from './Form.module.scss';
 
 export interface ErrorSummaryProps {
-  /** Field name → message, in the order the fields appear. Empty renders nothing. */
+  /** Message by field name, in the order the fields appear. Empty renders nothing. */
   errors: Readonly<Record<string, string>>;
   /** The heading, given the count. */
   title?: (count: number) => string;
@@ -39,8 +39,8 @@ export function ErrorSummary({
   const entries = Object.entries(errors);
   const count = entries.length;
 
-  /* Focus arrives when the errors do — a submission found them — and again if
-     the set changes, since that is a new submission's answer. Not while there
+  /* Focus arrives when the errors do, after a submission found them, and again
+     if the set changes, since that is a new submission's answer. Not while there
      are none. */
   const key = entries.map(([name]) => name).join('\u0000');
   useEffect(() => {

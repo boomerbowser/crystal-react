@@ -3,16 +3,15 @@
 /* What a hand-built field puts in the form.
  *
  * React Aria's own components render a hidden input so their value reaches
- * `FormData`; a control built here has to do the same, and four of them did not.
- * Giving them a `name` made them addressable by a `Form` distributing errors and
- * submitted exactly nothing, which is the worse of the two failures: a required
- * field that never submits fails validation, gets fixed, and fails again.
+ * `FormData`, and a control built here has to do the same. Without it, a
+ * `name` makes the control addressable by a `Form` distributing errors while
+ * submitting nothing, so a required field fails validation, gets fixed, and
+ * fails again.
  *
- * Several values become several inputs of the same name, which is how HTML has
- * always carried a multiple selection and what `valuesFromForm` turns back into
- * an array. Nothing at all becomes no input, so the key is absent rather than
- * empty — again HTML's own behaviour, and again what the schema is told to
- * expect rather than something invented here.
+ * Several values become several inputs of the same name. That is how HTML
+ * carries a multiple selection, and `valuesFromForm` turns them back into an
+ * array. No value becomes no input, so the key is absent and not empty. That is
+ * also HTML's own behaviour, and it is what the schema expects.
  */
 import type { ReactNode } from 'react';
 

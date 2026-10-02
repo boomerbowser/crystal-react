@@ -10,15 +10,13 @@ const meta = {
     docs: {
       description: {
         component:
-          '"**The rating is text as well as stars**" — which `Rating` already does in read-only '
-          + 'mode, so the rating here is a `Rating` and not a second row of glyphs. The '
-          + 'sentence is in the catalogue because a row of five stars is, to anything that does '
-          + 'not see it, either nothing or "star star star star star", and neither is four out '
-          + 'of five.\n\n'
-          + 'The author and the date are not decoration: a review with no attribution is an '
+          '"The rating is text as well as stars". `Rating` already does this in read-only '
+          + 'mode, so the rating here is a `Rating` and not a second row of glyphs. To anything '
+          + 'that does not see it, a row of five stars is either nothing or "star star star star '
+          + 'star", and neither is four out of five.\n\n'
+          + 'The author and the date are always shown. A review with no attribution is an '
           + 'assertion from nobody, and one with no date is from any time. Both change how much '
-          + 'weight it should carry, which is the reader\'s judgement to make rather than ours '
-          + 'to remove.',
+          + 'weight it should carry, and that judgement is the reader\'s.',
       },
     },
   },
@@ -44,8 +42,7 @@ export const Default: Story = {
 };
 
 /** Collapsed. The hidden text is still in the document, so a screen reader and
- *  a page search both find it — which is the difference between a review that
- *  is folded and one the reader is told exists and cannot read. */
+ *  a page search both find it. */
 export const Collapsible: Story = {
   render: (args) => (
     <Review

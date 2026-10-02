@@ -8,17 +8,17 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Each step states its delta and the running total." Two different facts, and this is '
-          + 'the chart where people read one and mean the other: a bar drawn from 82 to 71 is a '
-          + 'step of −11 and a position of 71, and the picture shows the step while the question '
-          + 'is usually the total.\n\n'
-          + '"Increase, decrease and total colour from the status tokens" — and never colour '
+          '"Each step states its delta and the running total." These are two different facts, '
+          + 'and on this chart people often read one and mean the other. A bar drawn from 82 to '
+          + '71 is a step of −11 and a position of 71. The picture shows the step, while the '
+          + 'question is usually the total.\n\n'
+          + '"Increase, decrease and total colour from the status tokens", and never colour '
           + 'alone. The sign is written into every label and into the table\'s change column, '
-          + 'and a total is a different *shape* as well as a different colour: it runs from the '
+          + 'and a total is a different shape as well as a different colour. It runs from the '
           + 'axis where the others float, because a total is where the running total has got to '
-          + 'rather than a change of its own size.\n\n'
+          + 'and not a change of its own size.\n\n'
           + '"Connectors align with bar edges", so the eye follows the running total across the '
-          + 'gap rather than guessing where the next bar starts.',
+          + 'gap instead of guessing where the next bar starts.',
       },
     },
   },

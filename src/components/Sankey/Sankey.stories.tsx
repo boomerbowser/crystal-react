@@ -8,14 +8,12 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Each link states its endpoints and volume as text." A sankey is the chart whose '
-          + 'picture is least recoverable in words — a reader who cannot see it cannot be told '
-          + '"the shape of the flow" — so every link is a mark that names both ends and its '
-          + 'size, and the table lists every one. Naming only the nodes would leave the entire '
-          + 'content of the chart undescribed: the nodes are the labels, the links are the '
-          + 'data.\n\n'
-          + '"Link opacity keeps crossings readable" — Crystal\'s link opacity, higher than a '
-          + 'fill\'s because a link *is* the mark rather than its backing, and low enough that '
+          '"Each link states its endpoints and volume as text." A reader who cannot see a '
+          + 'sankey cannot be told "the shape of the flow", so every link is a mark that names '
+          + 'both ends and its size, and the table lists every one. The nodes are the labels '
+          + 'and the links are the data, so naming only the nodes would describe nothing.\n\n'
+          + '"Link opacity keeps crossings readable". Crystal\'s link opacity is higher than a '
+          + 'fill\'s because a link is the mark rather than its backing, and low enough that '
           + 'a crossing reads as two links rather than as a third shape.',
       },
     },
@@ -48,7 +46,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** Two stages, where the chart is simply a split. */
+/** Two stages, where the chart is a single split. */
 export const OneSplit: Story = {
   args: {
     label: 'Signups by source',

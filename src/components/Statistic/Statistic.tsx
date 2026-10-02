@@ -1,17 +1,16 @@
 'use client';
 
-/* Statistic — a large value with a label and an optional trend.
+/* Statistic. A large value with a label and an optional trend.
  *
  * "Trend direction is stated in text, not by colour or arrow alone." So `trend`
- * is not a direction enum that this component renders as a red or green arrow:
- * it is a `direction` *and* the words that say it. The arrow is drawn beside the
- * words and hidden from assistive technology, in that order, because a reader who
- * hears "down arrow, 4.2% down on last month" has heard it twice and a reader who
- * hears only "4.2%" has not heard it at all.
+ * is a `direction` and the words that say it, rather than a direction enum
+ * rendered as a red or green arrow. The arrow is drawn beside the words and
+ * hidden from assistive technology. A screen reader that read both would say
+ * "down arrow, 4.2% down on last month", and one given only "4.2%" would get no
+ * direction at all.
  *
- * Figures are tabular. A column of statistics whose digits do not line up is a
- * column that cannot be compared down its own length, which is the only reason
- * anybody puts statistics in a column.
+ * Figures are tabular, so a column of statistics can be compared down its own
+ * length.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { TrendIndicator, type TrendDirection } from '../TrendIndicator/TrendIndicator.js';
@@ -24,7 +23,7 @@ export type StatisticDirection = TrendDirection;
 
 export interface StatisticTrend {
   direction: StatisticDirection;
-  /** The words. "4.2% up on last month" — the direction, said. */
+  /** The words that state the direction, such as "4.2% up on last month". */
   label: ReactNode;
 }
 
@@ -48,18 +47,19 @@ export const Statistic = forwardRef<HTMLElement, StatisticProps>(function Statis
     <div {...props} ref={ref as never} className={cx(styles['statistic'], className)}>
       <span className={styles['label']}>{label}</span>
       <span className={styles['value']} data-loading={loading ? '' : undefined}>
-        {/* The figure is replaced, not hidden: a box that empties while it loads
-            is a box that changes height, and a row of statistics would reflow. */}
+        {/* The figure is replaced by a placeholder rather than removed. A box
+            that empties while it loads changes height, and a row of statistics
+            would reflow. */}
         {loading ? <span aria-hidden="true" className={styles['placeholder']} /> : value}
-        {/* \`highlight\` when the figure is replaced by a new one — not when it
-            first arrives, and not when loading ends, which is arrival. */}
+        {/* \`highlight\` plays when the figure is replaced by a new one. It does
+            not play when the figure first arrives or when loading ends, which is
+            also arrival. */}
         {loading ? null : <ChangeHighlight />}
         {unit === undefined ? null : <span className={styles['unit']}>{unit}</span>}
       </span>
-      {/* The trend is `TrendIndicator`, not a second copy of it. The rule it
-          carries — direction in a word and a symbol, never in colour alone — is
-          one rule, and two implementations of one rule is how one of them stops
-          following it. */}
+      {/* The trend is `TrendIndicator` itself. It carries the rule that direction
+          is given in a word and a symbol, never in colour alone, and a second
+          implementation of that rule would drift from it. */}
       {trend === undefined ? null : (
         <TrendIndicator direction={trend.direction}>{trend.label}</TrendIndicator>
       )}

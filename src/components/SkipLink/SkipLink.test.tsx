@@ -11,10 +11,9 @@ describe('SkipLink', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The defect this exists to prevent. A hash link moves the viewport but not
-     always focus, so the next Tab continues from where it was and the link
-     appears to do nothing. Making the target programmatically focusable — and no
-     more than that — is the fix. */
+  /* A hash link moves the viewport but not always focus, so the next Tab
+     continues from where it was and the link appears to do nothing. The target
+     is made programmatically focusable, and no more than that. */
   it('moves focus to the target, not only the viewport', async () => {
     renderWithCrystal(
       <div><SkipLink targetId="main" /><main id="main">Content</main></div>,

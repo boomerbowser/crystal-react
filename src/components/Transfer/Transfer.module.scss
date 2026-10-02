@@ -1,7 +1,7 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* Transfer — two lists and the controls between them. */
+/* Transfer: two lists and the controls between them. */
 
 .transfer {
   display: grid;
@@ -53,7 +53,7 @@
 .controls { display: flex; flex-direction: column; justify-content: center; gap: $cr-spacing-xs; }
 
 /* Below the md breakpoint the two panels stack and the controls turn, because
-   three columns in a phone's width is three unusable columns. */
+   three columns are unusable at a phone's width. */
 @media (max-width: $cr-breakpoint-md) {
   .transfer { grid-template-columns: minmax(0, 1fr); }
   .controls { flex-direction: row; justify-content: center; }

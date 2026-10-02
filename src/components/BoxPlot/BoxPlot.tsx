@@ -1,17 +1,16 @@
 'use client';
 
-/* BoxPlot — a distribution summary: quartiles, median and outliers.
+/* BoxPlot: a distribution summary of quartiles, median and outliers.
  *
  * "Each summary statistic is reachable as text; outliers are counted, not only
- * drawn." The second half is the one that matters and the one nobody does: a
- * cluster of twelve outliers at the top of a box is twelve dots a sighted reader
- * counts by eye and a reader who cannot see it is told nothing about. So the
- * label says "3 outliers" and the table has a column for it, beside the five
- * numbers.
+ * drawn." A cluster of twelve outliers at the top of a box is twelve dots a
+ * sighted reader counts by eye, and a reader who cannot see it is told nothing
+ * about them. So the label says "3 outliers" and the table has a column for it,
+ * beside the five numbers.
  *
- * "Whisker caps align with the box width." The caps are the box's width, not a
- * fraction of it — a narrower cap makes the whisker look like an arrow, which
- * says direction where the data says extent.
+ * "Whisker caps align with the box width." The caps are the box's full width. A
+ * narrower cap makes the whisker look like an arrow, which says direction where
+ * the data says extent.
  *
  * The five numbers are the caller's. This component does not compute quartiles,
  * because there are several definitions of them and a chart that picked one
@@ -33,7 +32,7 @@ export interface BoxSummary {
   median: number;
   q3: number;
   high: number;
-  /** Values outside the whiskers. Drawn *and* counted. */
+  /** Values outside the whiskers. Drawn and counted. */
   outliers?: readonly number[];
 }
 

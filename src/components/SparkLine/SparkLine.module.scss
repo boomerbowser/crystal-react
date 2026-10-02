@@ -5,10 +5,9 @@
  * a table cell, and anything it added around itself would be spacing the sentence
  * did not ask for.
  *
- * "Stroke weight at small size" is Crystal's chart stroke, unchanged. A thinner
- * line at a small size is the obvious adjustment and the wrong one: the line is
- * already only twenty pixels tall, and thinning it is what makes a spark line
- * disappear on a low-contrast surface.
+ * "Stroke weight at small size" is Crystal's chart stroke, unchanged. Do not thin
+ * the line at a small size. It is already only twenty pixels tall, and a thinner
+ * line disappears on a low-contrast surface.
  */
 
 .spark {

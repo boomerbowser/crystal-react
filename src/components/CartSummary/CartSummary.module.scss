@@ -18,12 +18,12 @@
 
 .note { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
 
-/* A column of amounts has to line up down its own length, which is what `Price`
-   already does — this only has to stop the flex row from squashing it. */
+/* `Price` already lines the amounts up down the column. This only stops the flex
+   row from squashing it. */
 .amount { margin: 0; flex: none; }
 
-/* The total is separated by a rule rather than by a gap: a gap is a pause and a
-   rule is a statement that what follows is a different kind of line. */
+/* A rule separates the total, which marks it as a different kind of line from
+   the ones above. A gap would only read as a pause. */
 .line[data-total] {
   margin-block-start: $cr-spacing-2xs;
   padding-block-start: $cr-spacing-sm;
@@ -33,8 +33,8 @@
 
 .empty { margin: 0; color: var(--cr-muted); }
 
-/* Updating: the figures stay and go quiet. Replacing a total with a spinner
-   takes away the only thing the reader had. */
+/* While updating, the figures stay visible and fade. They are not replaced by a
+   spinner. */
 .summary[data-updating] .lines { opacity: 0.72; }
 
 .announcement {

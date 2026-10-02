@@ -1,10 +1,9 @@
 /* The Jest compatibility suite.
  *
- * Deliberately small and deliberately real: it renders a themed component, reads
- * the theme through Crystal's resolver, and drives a keyboard interaction. That
- * exercises the three things that actually differ under Jest — module resolution
- * for ESM-style specifiers, SCSS module handling, and the jsdom environment —
- * rather than asserting something trivial and calling the runner supported.
+ * Small and real. It renders a themed component, reads the theme through
+ * Crystal's resolver, and drives a keyboard interaction. That exercises what
+ * differs under Jest: module resolution for ESM-style specifiers, SCSS module
+ * handling, and the jsdom environment.
  */
 import { render, screen } from '@testing-library/react';
 import { CrystalProvider } from '../../theme/CrystalProvider.js';
@@ -31,8 +30,8 @@ describe('Jest compatibility', () => {
   it('clamps an out-of-range value to Crystal\'s own maximum, proving the resolver ran', () => {
     render(<CrystalProvider radius={999}><Button>Save</Button></CrystalProvider>);
     const scope = document.querySelector('[data-crystal-scope]') as HTMLElement;
-    /* Asserting the clamped result against the token, not merely that it is not
-       999: the first form passes even if the resolver clamped to the wrong value. */
+    /* Compared with the token, because a check that the value is not 999 would
+       pass even if the resolver clamped to the wrong value. */
     expect(scope.style.getPropertyValue('--cr-radius')).toBe(crystalTokens['shape.contentRadius']);
   });
 });

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { NetworkGraph } from './NetworkGraph.js';
 
-/* Positions computed once, here, and passed in — which is the point. A force
-   simulation running in the component would be motion at rest, and a reader who
-   tabbed into the graph while it settled would be chasing a moving target. */
+/* Positions are computed once, here, and passed in. A force simulation running
+   in the component would be motion at rest, and a reader who tabbed into the
+   graph while it settled would be chasing a moving target. */
 const ring = (count: number, radius: number, offset = 0) => Array.from(
   { length: count },
   (_, i) => {
@@ -39,17 +39,15 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Nodes are reachable by keyboard; each states its degree and neighbours." The '
-          + 'neighbours are the demanding half and the reason this component computes them '
-          + 'rather than taking them: the whole content of a network graph is who is connected '
-          + 'to whom, and a node that announced only its name would leave a reader with a list '
-          + 'of names and no graph at all.\n\n'
+          '"Nodes are reachable by keyboard; each states its degree and neighbours." This '
+          + 'component computes the neighbours itself. A network graph\'s content is who is '
+          + 'connected to whom, and a node that announced only its name would leave a reader '
+          + 'with a list of names and no graph.\n\n'
           + '**Positions are the caller\'s.** The catalogue puts "layout algorithm" on the '
-          + "product's side, and there is a second reason to keep it there: a force simulation "
-          + 'is motion, and Crystal\'s rule is that nothing moves at rest. A graph that settles '
-          + 'for four seconds after it appears is a page animating itself, and a reader who '
-          + 'tabbed into it during those seconds is chasing a moving target.\n\n'
-          + '"Node size is a scale" — Crystal\'s point scale, by area, as the scatter\'s is.',
+          + "product's side. A force simulation is also motion, and Crystal's rule is that "
+          + 'nothing moves at rest: a graph that settles for four seconds after it appears '
+          + 'gives a reader who tabs into it a moving target.\n\n'
+          + '"Node size is a scale": Crystal\'s point scale, by area, as the scatter\'s is.',
       },
     },
   },

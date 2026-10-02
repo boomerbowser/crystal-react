@@ -2,13 +2,13 @@
 
 /* The shell of a React Aria field.
  *
- * It exists to carry the validity React Aria *resolved* rather than the one the
- * caller declared. Those differ whenever the field is wrong for a reason the
- * caller does not know about — a server's rejection distributed by `Form`, a
- * native constraint the browser checked — and those are precisely the cases
- * Crystal's validation motion is for: a field that failed on the server must
- * look exactly like one that failed locally, because to the person filling in
- * the form they are the same thing.
+ * It carries the validity React Aria resolved, which can differ from the one
+ * the caller declared. They differ when the field is wrong for a reason the
+ * caller does not know about, such as a server's rejection distributed by
+ * `Form` or a native constraint the browser checked. Crystal's validation
+ * motion has to play in those cases too: a field that failed on the server
+ * must look exactly like one that failed locally, because to the person
+ * filling in the form they are the same thing.
  *
  * React Aria hands that resolved value to a render function, which is why the
  * shell is a component and not a `<div>` written inline.
@@ -47,10 +47,10 @@ export function FieldShell({
 }
 
 /**
- * The same, as React Aria's `Group` — what a field made of several controls
- * needs: a date field's segments, a number field's stepper, a combobox's input
- * and its button. `Group` gives the collection one focus ring and one name;
- * this gives it the validity React Aria resolved.
+ * The same, as React Aria's `Group`, for a field made of several controls: a
+ * date field's segments, a number field's stepper, a combobox's input and its
+ * button. `Group` gives the collection one focus ring and one name, and this
+ * gives it the validity React Aria resolved.
  */
 export interface FieldGroupShellProps extends FieldShellProps {}
 
@@ -71,10 +71,10 @@ export function FieldGroupShell({
 }
 
 /**
- * The same again, as React Aria's `Button` — a select's trigger, where the shell
- * and the control are one pressable element rather than a box with a control in
- * it. It takes no `playsFocus`: a button marks its own focus, and the field
- * motion here is validation only.
+ * The same again, as React Aria's `Button`, for a select's trigger, where the
+ * shell and the control are one pressable element. It takes no `playsFocus`,
+ * because a button marks its own focus and the field motion here is validation
+ * only.
  */
 export interface FieldButtonShellProps {
   isInvalid: boolean;

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { GeoMap } from './GeoMap.js';
 
-/* A deliberately fictional set of regions rather than a real country's borders.
-   A design system that shipped a world outline would ship one political opinion
-   about borders and names, permanently, to every product that used it — which is
-   why `features` is the caller's GeoJSON and this is only a demonstration. */
+/* Fictional regions, chosen instead of a real country's borders. A design
+   system that shipped a world outline would ship one political opinion about
+   borders and names to every product that used it. `features` is the caller's
+   GeoJSON, and this is only a demonstration. */
 const square = (id: string, name: string, x: number, y: number) => ({
   type: 'Feature',
   id,
@@ -29,17 +29,17 @@ const meta = {
       description: {
         component:
           '"Regions are reachable by keyboard and state their name and value; a table '
-          + 'equivalent is required." A map is the chart where the picture carries the '
-          + '*identity* of each mark as well as its value — a reader who cannot see it has no '
-          + 'idea which shape is which — so every region is a mark that names itself, and the '
-          + 'table lists every region whether or not the join found a value.\n\n'
-          + 'The topology and the join are the caller\'s. That is what the catalogue says, and '
-          + 'it is also the only workable boundary: a component that shipped a world outline '
-          + 'would ship one political opinion about borders and names, permanently, to every '
-          + 'product that used it. The regions here are fictional squares for that reason.\n\n'
-          + 'The intensity is Crystal\'s ramp — a choropleth is a heatmap with an irregular '
-          + 'grid — and a region the join missed is drawn as the plot showing through, with its '
-          + 'border intact.',
+          + 'equivalent is required." On a map the picture carries the *identity* of each mark '
+          + 'as well as its value, and a reader who cannot see it cannot tell which shape is '
+          + 'which. So every region is a mark that names itself, and the table lists every '
+          + 'region whether or not the join found a value.\n\n'
+          + 'The topology and the join are the caller\'s, as the catalogue says. A component that '
+          + 'shipped a world outline would ship one political opinion about borders and names to '
+          + 'every product that used it. The regions here are fictional squares for that '
+          + 'reason.\n\n'
+          + 'The intensity is Crystal\'s ramp, because a choropleth is a heatmap with an '
+          + 'irregular grid. A region the join missed is drawn as the plot showing through, with '
+          + 'its border intact.',
       },
     },
   },

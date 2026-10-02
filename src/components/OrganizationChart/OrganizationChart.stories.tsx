@@ -39,21 +39,20 @@ const meta = {
     docs: {
       description: {
         component:
-          'A hierarchy drawn as connected nodes — **vertically**, rather than as the top-down '
-          + 'boxes a diagram tool would produce, and that is a decision about who it is for. The '
+          'A hierarchy drawn as connected nodes, vertically, in place of the top-down boxes a '
+          + 'diagram tool would produce, as a decision about who the chart is for. The '
           + 'catalogue asks for "a tree; collapse state is announced, and the chart is navigable '
-          + 'by keyboard", and the top-down layout is the one that makes both hard: the DOM order '
-          + 'that reads correctly is depth-first, the visual order is breadth-first, and every '
-          + 'implementation that reconciles them does it by positioning absolutely and leaving '
-          + 'the keyboard behind. A vertical hierarchy has the same connectors, the same '
-          + 'collapse, the same reading order — and React Aria\'s tree keyboard behaviour for '
-          + 'nothing.\n\n'
-          + 'It is a `treegrid` rather than a `tree`, which is M-3\'s decision and applies here '
-          + 'for its reason: a node carries a disclosure control *and* is selectable, and the '
+          + 'by keyboard", and a top-down layout makes both hard: the DOM order that reads '
+          + 'correctly is depth-first, the visual order is breadth-first, and implementations '
+          + 'that reconcile them position absolutely and leave the keyboard behind. A vertical '
+          + 'hierarchy has the same connectors, the same collapse and the same reading order, '
+          + 'and gets React Aria\'s tree keyboard behaviour for free.\n\n'
+          + 'It is a `treegrid` and not a `tree`, by M-3\'s decision, which applies here for '
+          + 'the same reason: a node carries a disclosure control and is also selectable, and the '
           + 'ARIA tree pattern has no key left to reach a control inside an item.\n\n'
-          + 'What makes it a chart rather than `TreeView` is the material: Haze node boxes on '
-          + 'whatever surrounds them, joined by connectors in the rim colour, which are the '
-          + 'catalogue\'s own words for both.',
+          + 'The material is what separates it from `TreeView`: Haze node boxes on whatever '
+          + 'surrounds them, joined by connectors in the rim colour, which are the catalogue\'s '
+          + 'own words for both.',
       },
     },
   },
@@ -66,12 +65,12 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Collapsed to the root. The chevron's direction is a CSS end state, correct at
- *  rest, and `aria-expanded` is what actually says so. */
+ *  rest, and `aria-expanded` is what announces the state. */
 export const Collapsed: Story = {
   args: { defaultExpandedKeys: [] },
 };
 
-/** Selectable nodes. Selection is label weight first; the soft fill is the
+/** Selectable nodes. Selection is label weight first. The soft fill is the
  *  second signal, and in forced colours it becomes a Highlight ring. */
 export const Selectable: Story = {
   args: { selectionMode: 'single', defaultSelectedKeys: ['katherine'] },

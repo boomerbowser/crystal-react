@@ -1,19 +1,17 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* ImageList — "Haze caption bars over the image; caption bars keep the content
+/* ImageList. "Haze caption bars over the image; caption bars keep the content
  * radius at the bottom corners."
  *
- * The bottom-corner rule is the whole of why the caption is not simply a bar: a
- * caption that squared off the tile's corners would make the grid look like it
- * had lost its radius in one place, which reads as a rendering fault rather than
- * a design. The logical properties do it, so a right-to-left grid needs no
- * second rule.
+ * A caption that squared off the tile's corners would make the grid look as if
+ * it had lost its radius in one place, which reads as a rendering fault. The
+ * logical properties set the corners, so a right-to-left grid needs no second
+ * rule.
  *
- * The bar is Haze on a pseudo-element, not a background on the bar itself: the
- * caption is text, and Haze feathers its own paint. This is the same split
- * `OverlayBadge` makes, and the same one that keeps every label in Crystal crisp
- * over a softened ground.
+ * The bar is Haze on a pseudo-element, because the caption is text and Haze
+ * feathers its own paint. `OverlayBadge` makes the same split, and it is what
+ * keeps every label in Crystal crisp over a softened ground.
  */
 
 .list {

@@ -12,7 +12,7 @@ describe('NavigationMenu', () => {
     renderWithCrystal(<NavigationMenu sections={sections} aria-label="Site" />);
     expect(screen.getByRole('navigation', { name: 'Site' })).toBeTruthy();
     /* role="menuitem" would tell a reader that following a link runs a command,
-       and would import the menu keyboard model — no Tab between items — into a
+       and would bring the menu keyboard model (no Tab between items) into a
        panel full of links a reader expects to Tab through. */
     expect(screen.queryByRole('menu')).toBeNull();
     expect(screen.queryAllByRole('menuitem')).toHaveLength(0);
@@ -32,8 +32,8 @@ describe('NavigationMenu', () => {
 
   it('keeps the panel out of the accessibility tree while closed', () => {
     renderWithCrystal(<NavigationMenu sections={sections} />);
-    /* `hidden`, not merely off-screen: a closed panel whose links are still
-       reachable puts every destination in the tab order twice over. */
+    /* `hidden`, not only off-screen: a closed panel whose links are still
+       reachable puts every destination in the tab order twice. */
     expect(screen.queryByRole('link', { name: 'Analytics' })).toBeNull();
   });
 

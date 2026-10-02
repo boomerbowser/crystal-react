@@ -10,11 +10,11 @@ const meta = {
     docs: {
       description: {
         component:
-          'A count or label attached to a host. The visual is always `aria-hidden`: a loose "3" '
-          + 'announced beside a button leaves a listener to guess what the 3 belongs to. The meaning '
-          + 'travels through `description`, which is a whole sentence in a polite live region, or '
-          + 'through a host that already carries it. That is why `description` is not defaulted to '
-          + 'the count — a bare number in a live region is the failure the rule exists to prevent.',
+          'A count or label attached to a host. The visual is always `aria-hidden`, because a loose '
+          + '"3" announced beside a button leaves a listener to guess what the 3 belongs to. The '
+          + 'meaning travels through `description`, which is a whole sentence in a polite live '
+          + 'region, or through a host that already carries it. `description` is not defaulted to '
+          + 'the count, because a bare number in a live region is what the rule prevents.',
       },
     },
   },
@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** Attached to a host, straddling its corner. The ring is the page's own surface,
- *  which is what keeps the badge readable where it overlaps the button's edge. */
+ *  which keeps the badge readable where it overlaps the button's edge. */
 export const OnAHost: Story = {
   args: { count: 12, children: <Button>Inbox</Button> },
 };
@@ -37,14 +37,14 @@ export const Overflowing: Story = {
   args: { count: 240, max: 99, description: '240 unread messages' },
 };
 
-/** Presence is the whole message, so there is nothing to read — the host has to
- *  say what changed. */
+/** The dot only signals presence and has nothing to read, so the host has to say
+ *  what changed. */
 export const ADot: Story = {
   args: { dot: true, description: 'Unsaved changes', children: <Button>Draft</Button> },
 };
 
-/** Zero is not "no badge". It is hidden by default and shown on request, because
- *  "0 open issues" is sometimes the point. */
+/** A zero count is hidden by default and shown on request, because "0 open
+ *  issues" is sometimes what the reader needs to see. */
 export const Zero: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'center' }}>

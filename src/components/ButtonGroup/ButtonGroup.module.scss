@@ -1,20 +1,18 @@
 @use '../../styles/tokens' as *;
 
-/* ButtonGroup and SplitButton — adjacent actions on one plane.
+/* ButtonGroup and SplitButton: adjacent actions on one plane.
  *
- * The geometry rule from the catalogue: pill outside, square inside. A group
- * reads as one control because its outer silhouette is a single pill; the
+ * The geometry rule from the catalogue is pill outside, square inside. A group
+ * reads as one control because its outer silhouette is a single pill. The
  * interior corners square off against their neighbours, and a hairline separates
- * them. Rounding every child instead gives a row of separate buttons that happen
- * to touch.
+ * them. Rounding every child would give a row of separate buttons that touch.
  *
  * All of that is Crystal's `group` surface from 2.3.0, worn as `.cr-group` (and
  * `.vertical`): the Resin plane with its rim, shadow and Haze fill, the children
  * giving up their own elevation and diffusion but keeping their fill, the
- * squared interior, the hairline, and the three fallbacks. Until then a group was
- * named the dock surface, which spaces its controls apart, and this file restated
- * the dock's material with the grouped geometry on top (D-26). What is left here
- * is the one thing Crystal does not specify.
+ * squared interior, the hairline, and the three fallbacks (D-26). The dock
+ * surface is different: it spaces its controls apart. This file holds only what
+ * Crystal does not specify.
  */
 
 /* The disclosure half of a split button is narrower than a full action but still

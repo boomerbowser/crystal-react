@@ -26,8 +26,8 @@ describe('FloatingWindow', () => {
     const user = userEvent.setup();
     renderWithCrystal(<FloatingWindow label="Notes" defaultRect={start}><p>body</p></FloatingWindow>);
     await user.tab();
-    /* A window that can only be moved with a pointer is a window half the
-       users cannot move, and it looks complete to anyone testing with a mouse. */
+    /* Keyboard users must be able to move the window. Testing with a mouse
+       alone would not show that they cannot. */
     expect(document.activeElement).toBe(handle());
   });
 
@@ -69,8 +69,8 @@ describe('FloatingWindow', () => {
     );
     await user.tab();
     await user.keyboard('{Alt>}{ArrowRight}{/Alt}');
-    /* Without the resize half a keyboard user can place the window but never
-       fit it to what is inside. */
+    /* Resizing lets a keyboard user fit the window to its content as well as
+       place it. */
     expect(onRectChange).toHaveBeenLastCalledWith(expect.objectContaining({ width: 376, x: 100 }));
   });
 

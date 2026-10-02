@@ -1,12 +1,12 @@
 @use '../../styles/tokens' as *;
 
-/* Title — headings at a step of Crystal's scale.
+/* Title: headings at a step of Crystal's scale.
  *
- * `text-wrap: balance` is the catalogue's `text-balance` component, applied here
- * rather than shipped separately: a heading that wraps to a one-word second line
- * is the defect, and balancing is the fix, so it belongs on the thing that has
- * the problem. Browsers without it simply wrap as before, which is the fallback
- * the catalogue asks for — nothing to detect and nothing to polyfill.
+ * `text-wrap: balance` is the catalogue's `text-balance` component, applied
+ * here instead of shipped separately. Balancing stops a heading from wrapping to
+ * a one-word second line, so it belongs on the heading. Browsers without it wrap
+ * as before, which is the fallback the catalogue asks for, so there is nothing to
+ * detect and nothing to polyfill.
  */
 
 .title {
@@ -32,9 +32,9 @@
 
 .unbalanced { text-wrap: initial; }
 
-/* A gradient fill clips the paint to the glyphs. The solid colour underneath is
-   not a fallback bolted on: it is what paints wherever the clip is unsupported,
-   and it is a real palette colour so the contrast floor holds either way. */
+/* A gradient fill clips the paint to the glyphs. The solid colour underneath
+   paints wherever the clip is unsupported, and it is a palette colour, so the
+   contrast floor holds either way. */
 .gradient {
   color: var(--cr-primary);
   background-image: linear-gradient(100deg, var(--cr-primary), var(--cr-decorative) 55%, var(--cr-companion));
@@ -46,9 +46,9 @@
   .gradient { color: transparent; }
 }
 
-/* Forced colours is the operating system deciding what is legible, and a gradient
-   is the first thing to go: transparent text over a clipped image is invisible
-   the moment the image is suppressed. */
+/* Under forced colours the operating system suppresses background images, and
+   transparent text over a suppressed clipped image is invisible. The gradient is
+   replaced with solid text. */
 @media (forced-colors: active) {
   .gradient {
     color: CanvasText;

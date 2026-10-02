@@ -19,19 +19,19 @@ const meta = {
     docs: {
       description: {
         component:
-          'The scale is Crystal\'s, derived from the reading size rather than written down: each '
-          + 'step is a ratio, so moving `typography.readingSize` moves all six. It is deliberately '
-          + 'modest, because Crystal\'s hierarchy is carried by weight and material as much as by '
-          + 'size and a dramatic scale fights that.\n\n'
-          + '**The level and the size are chosen separately.** That is the rule the catalogue '
-          + 'states twice, and the reason Title takes both: a component where `level={2}` also '
-          + 'means "medium" forces a choice between a correct outline and a correct appearance, '
-          + 'and products reliably choose appearance. Switch density in the toolbar — leading '
-          + 'tightens and the size never does, because shrinking text at higher density trades '
-          + 'legibility for space.\n\n'
-          + 'Prose is the rhythm applied to content the product did not lay out — rendered '
-          + 'Markdown, a CMS body. It is the one place in this library a stylesheet reaches its '
-          + 'descendants, because the alternative is asking a content author to know Crystal.',
+          'The scale is Crystal\'s, derived from the reading size: each step is a ratio, so '
+          + 'moving `typography.readingSize` moves all six. The scale is modest, because '
+          + 'Crystal\'s hierarchy is carried by weight and material as much as by size, and a '
+          + 'dramatic scale would compete with that.\n\n'
+          + '**The level and the size are chosen separately.** The catalogue states this rule '
+          + 'twice, and it is why Title takes both. If `level={2}` also meant "medium", products '
+          + 'would have to choose between a correct outline and a correct appearance, and they '
+          + 'reliably choose appearance. Switch density in the toolbar: leading tightens and the '
+          + 'size never does, because shrinking text at higher density trades legibility for '
+          + 'space.\n\n'
+          + 'Prose is the rhythm applied to content the product did not lay out, such as rendered '
+          + 'Markdown or a CMS body. It is the one place in this library where a stylesheet reaches '
+          + 'its descendants, so a content author does not need to know Crystal.',
       },
     },
   },
@@ -43,27 +43,26 @@ type Story = StoryObj<typeof meta>;
 export const TheScale: Story = {
   render: () => (
     <Stack gap="lg">
-      <Display>Display — one per view</Display>
-      <Title level={2}>Title — a section</Title>
-      <Title level={3}>Heading — a subsection</Title>
-      <Title level={4}>Subheading — a group</Title>
-      <Text>Body — Crystal&rsquo;s reading size exactly, at the 16/24 rhythm.</Text>
-      <Text step="caption" tone="muted">Caption — supporting detail beside something else.</Text>
+      <Display>Display: one per view</Display>
+      <Title level={2}>Title: a section</Title>
+      <Title level={3}>Heading: a subsection</Title>
+      <Title level={4}>Subheading: a group</Title>
+      <Text>Body: Crystal&rsquo;s reading size exactly, at the 16/24 rhythm.</Text>
+      <Text step="caption" tone="muted">Caption: supporting detail beside something else.</Text>
     </Stack>
   ),
 };
 
-/** The level is the outline; the step is the size. Here a level-four heading takes
- *  the display step, which a component that conflated the two could not express. */
+/** The level is the outline and the step is the size. Here each heading takes a
+ *  step its level would not default to. */
 export const LevelAndStepAreSeparate: Story = {
   render: () => (
     <Stack gap="lg">
       <Title level={2} step="subheading">A level-two heading at the subheading step</Title>
-      {/* Level three, not four. The point is that the level and the step move
-          independently, which a three-at-the-title-step makes just as well — and
-          jumping straight from two to four is `heading-order`, a real failure
-          for anyone navigating by heading. A story that demonstrates a
-          specification by breaking an unrelated one is not a good example. */}
+      {/* Level three, so the outline does not jump from two to four. That jump
+          fails `heading-order` and breaks navigation by heading. A level three
+          at the title step shows the level and the step moving independently
+          just as well. */}
       <Title level={3} step="title">A level-three heading at the title step</Title>
     </Stack>
   ),
@@ -102,8 +101,8 @@ export const LongForm: Story = {
         A <abbr title="Cascading Style Sheets">CSS</abbr> approximation is not a native optical
         specification.
       </p>
-      {/* The figure is interpolated from the live token rather than typed into the
-          sample, so a code example cannot drift from the material it describes. */}
+      {/* The figure is interpolated from the live token instead of typed into the
+          sample, so the code example cannot drift from the material it describes. */}
       <pre><code>{`.cr-haze { filter: blur(${crystalTokens['material.haze.feather']}); }`}</code></pre>
     </Prose>
   ),
@@ -114,8 +113,8 @@ export const Composed: Story = {
     <Stack gap="lg">
       <Display>A design system</Display>
       <Lead>
-        The standfirst beneath a title reads like a heading and is not one — putting a sentence of
-        copy into the document outline is what that prevents.
+        The standfirst beneath a title reads like a heading but is not one, which keeps a sentence
+        of copy out of the document outline.
       </Lead>
       <Card aria-label="Search result">
         <Highlight query={['resin', 'frost']}>
@@ -136,7 +135,7 @@ export const Composed: Story = {
         Quoted from <Cite>Crystal, Materials</Cite>, with <Abbr expansion="Cascading Style Sheets">CSS</Abbr> examples.
       </Text>
       <Truncate lines={2}>
-        A paragraph long enough to clamp at two lines, so the control to expand it appears — and it
+        A paragraph long enough to clamp at two lines, so the control to expand it appears. It
         appears only because there is something to reveal, since a control that does nothing still
         costs a keyboard user a tab stop to find that out. The full text stays in the document
         throughout, which is why clamping is used rather than cutting the string.

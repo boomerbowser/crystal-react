@@ -1,16 +1,15 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* Checkbox and Radio — a luminous Resin control with a contained mark.
+/* Checkbox and Radio. A luminous Resin control with a contained mark.
  *
- * "Contained" is the word that matters. The mark sits inside the box rather than
- * overflowing it, and it carries the contrast: the box is a material and the mark
- * is ink, so the pair is checkable as a pair. A mark that bleeds past the box
- * reads as a sticker on top of the control rather than as its state.
+ * "Contained" is the requirement. The mark sits inside the box and does not
+ * overflow it, and it carries the contrast. The box is a material and the mark
+ * is ink, so contrast is checked on the pair. A mark that bleeds past the box
+ * reads as a sticker on top of the control instead of as its state.
  *
- * The whole label is the target. A 26px box is a 26px picture; the row around it
- * reaches 44px, which is why the label is inside the control rather than beside
- * it.
+ * The whole label is the target. The box is 26px; the row around it reaches
+ * 44px, which is why the label is inside the control and not beside it.
  */
 
 .choice {
@@ -54,7 +53,7 @@
 
 .choice[data-selected] .mark, .choice[data-indeterminate] .mark { opacity: 1; }
 
-/* A radio's centre is a dot rather than a glyph, contained the same way. */
+/* A radio's centre is a dot instead of a glyph, contained the same way. */
 .dot {
   inline-size: calc(#{$cr-choice-box-size} * 0.42);
   block-size: calc(#{$cr-choice-box-size} * 0.42);
@@ -74,7 +73,7 @@
 .choice[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 .choice[data-invalid] .box { border-color: var(--cr-danger-ink); }
 
-/* A group is a fieldset with rhythm, not a panel. */
+/* A group is a fieldset with spacing and no panel. */
 .group { @include field.field; }
 .legend { @include field.label; }
 .options { display: flex; flex-direction: column; gap: $cr-spacing-2xs; }

@@ -11,12 +11,12 @@ const meta = {
         component:
           '"The outcome is stated in the heading; symbol and colour reinforce it." The title is '
           + 'a real heading at the level the page needs, and the symbol beside it is '
-          + '`aria-hidden` — a reader told both would hear "exclamation mark, Payment '
+          + '`aria-hidden`. A reader told both would hear "exclamation mark, Payment '
           + 'declined".\n\n'
           + 'Six outcomes, four ink pairs. `not-found` and `unauthorised` are outcomes rather '
-          + 'than statuses, and Crystal publishes no fifth and sixth semantic pair; inventing '
-          + 'two here would be two more colours to hold at 4.5:1 across twelve palette and mode '
-          + 'combinations. Each maps onto the pair that says the same thing.',
+          + 'than statuses, and Crystal publishes no fifth and sixth semantic pair. Two new pairs '
+          + 'would be two more colours to hold at 4.5:1 across twelve palette and mode '
+          + 'combinations, so each maps onto the pair that says the same thing.',
       },
     },
   },

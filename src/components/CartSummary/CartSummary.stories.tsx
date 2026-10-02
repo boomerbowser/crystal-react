@@ -16,14 +16,12 @@ const meta = {
       description: {
         component:
           '"**A description list**, so each line is a labelled pair; the total is marked as '
-          + 'such." The markup is the requirement. A summary built from rows of two spans is, '
-          + 'to anything that is not a pair of eyes, a stream of words and numbers in which '
-          + '"Shipping" and "£3.99" are two unrelated pieces of text that happen to be '
-          + 'adjacent. A `<dl>` says which amount belongs to which line, for free, and it is '
-          + 'the one structure in HTML that means exactly this.\n\n'
-          + 'And "updating" is a state rather than a spinner over the top: a total being '
-          + 'recalculated is still a number, and replacing it takes away the only thing the '
-          + 'reader had.',
+          + 'such." The markup is the requirement. To assistive technology, a summary built '
+          + 'from rows of two spans is a stream of words and numbers in which "Shipping" and '
+          + '"£3.99" are unrelated pieces of text. A `<dl>` says which amount belongs to which '
+          + 'line, and it is the HTML structure with exactly that meaning.\n\n'
+          + 'Updating is a state, shown without a spinner. A total being recalculated is still '
+          + 'a number, so it stays on screen.',
       },
     },
   },
@@ -35,8 +33,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** Being recalculated. The figures stay and go quiet, and the state is
- *  announced politely — a total settling is not an interruption. */
+/** Being recalculated. The figures stay and fade, and the state is announced
+ *  politely, because a total settling does not need to interrupt the reader. */
 export const Updating: Story = {
   args: { lines, total: { amount: 111.96, currency: 'GBP' }, isUpdating: true },
 };

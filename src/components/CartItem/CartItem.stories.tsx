@@ -10,19 +10,18 @@ const meta = {
     docs: {
       description: {
         component:
-          '"**Removal is announced and undoable**; quantity changes announce the new '
-          + 'subtotal." Both halves are about the same thing: a basket line changes the price '
+          '"Removal is announced and undoable; quantity changes announce the new '
+          + 'subtotal." Both halves have the same cause: a basket line changes the price '
           + 'of the whole order, and the reader making the change is not looking at the '
           + 'total.\n\n'
-          + 'A quantity change announces the **subtotal**, not the quantity — the stepper '
+          + 'A quantity change announces the subtotal, not the quantity. The stepper '
           + 'already says the quantity, because it is the value of the control being operated. '
-          + 'What the reader does not have is what it did to the money, which is the reason '
-          + 'they touched it. And the line\'s subtotal rather than the order\'s, because this '
-          + 'component knows one and not the other; announcing an order total it was never '
-          + 'given would be guessing.\n\n'
-          + 'Removal takes a `returnFocusTo`, because the control they pressed is the control '
-          + 'that has just been unmounted — without it, focus falls to the document body and a '
-          + 'keyboard reader starts again from the top of the page.',
+          + 'What the reader does not have is what the change did to the money. It is the '
+          + 'line\'s subtotal and not the order\'s, because this component knows one and not '
+          + 'the other, and it would have to guess an order total it was never given.\n\n'
+          + 'Removal takes a `returnFocusTo`, because the control the reader pressed has just '
+          + 'been unmounted. Without it, focus falls to the document body and a keyboard reader '
+          + 'starts again from the top of the page.',
       },
     },
   },
@@ -78,5 +77,5 @@ export const Removable: Story = {
 };
 
 /** Being recalculated. The figures stay: a line being repriced is still a line,
- *  and a spinner over the top takes away the only numbers the reader had. */
+ *  and a spinner over the top would hide the only numbers the reader has. */
 export const Updating: Story = { args: { isUpdating: true } };

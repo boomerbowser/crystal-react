@@ -18,11 +18,11 @@ const meta = {
       description: {
         component:
           '"Opening moves focus in and returns it on close; total changes are announced."\n\n'
-          + 'The drawer is `Drawer`, the lines are `CartItem`s and the figures are `CartSummary`; the '
-          + 'opinion is the announcement. `CartSummary` says that the basket is updating; the drawer '
-          + 'says what it came to, once the total has settled — never on opening and never mid-'
-          + 'recalculation. Checkout waits for the figures, and an empty basket says so rather than '
-          + 'showing a blank panel.',
+          + 'The drawer is `Drawer`, the lines are `CartItem`s and the figures are `CartSummary`. '
+          + 'What this component adds is the announcement. `CartSummary` says that the basket is '
+          + 'updating, and the drawer says what it came to once the total has settled, never on '
+          + 'opening and never mid-recalculation. Checkout waits for the figures, and an empty '
+          + 'basket says so instead of showing a blank panel.',
       },
     },
   },

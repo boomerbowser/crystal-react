@@ -1,18 +1,18 @@
 'use client';
 
-/* OverlayBadge — a mark over the corner of something else.
+/* OverlayBadge: a mark over the corner of something else.
  *
- * Where `Badge` is a count attached to a host, this is a *glyph* over one: a
+ * Where `Badge` is a count attached to a host, this is a glyph over one: a
  * verification tick on an avatar, a lock on a document tile, an error mark on a
- * thumbnail. The distinction the catalogue draws is what it is for — "labels its
- * host rather than standing alone" — and that is why the accessible name lands
- * next to the host instead of on the badge's own shape.
+ * thumbnail. The catalogue says it "labels its host rather than standing
+ * alone", so the accessible name lands next to the host instead of on the
+ * badge's own shape.
  *
- * "Never clipped by its host" is the one geometric rule and it is easy to break
- * by accident: the badge overhangs the corner, so the wrapper must not clip, and
- * the host must not be the positioned ancestor. Both are this component's job,
- * because a caller who wraps a rounded image in `overflow: hidden` has no idea
- * they have just cut the badge in half.
+ * "Never clipped by its host" is the one geometric rule, and it is easy to
+ * break by accident. The badge overhangs the corner, so the wrapper must not
+ * clip, and the host must not be the positioned ancestor. Both are this
+ * component's job, because a caller who wraps a rounded image in
+ * `overflow: hidden` cannot see that the badge has been cut in half.
  *
  * Without a `label` the badge is `aria-hidden`, because a decorative mark over a
  * named thing is read as a second unnamed thing otherwise.
@@ -50,9 +50,9 @@ export const OverlayBadge = forwardRef<HTMLSpanElement, OverlayBadgeProps>(funct
     ? { 'aria-hidden': true as const }
     : { role: 'img' as const, 'aria-label': label };
 
-  /* `attention` when what the badge says changes — compared as text, since
-     `badge` is usually an element and a new element is not a new value — and
-     never on the render that first shows it. */
+  /* Plays `attention` when what the badge says changes, and never on the render
+     that first shows it. The comparison is by text, because `badge` is usually
+     an element and a new element is not a new value. */
   const [cue, play] = useMotion();
   const said = useRef<string | null>(null);
   useEffect(() => {

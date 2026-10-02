@@ -1,15 +1,15 @@
 @use '../../styles/tokens' as *;
 
-/* Spoiler — "edge fade drawn from the surrounding material".
+/* Spoiler. "edge fade drawn from the surrounding material".
  *
- * Drawn *from* the surrounding material, not painted over it: the fade is a mask
- * on the content, so what shows through is whatever the spoiler is sitting on.
- * A gradient painted in a surface colour would be a stripe of the wrong colour on
- * every material except the one it was written for, and Crystal has six.
+ * The fade is a mask on the content, so what shows through is whatever the
+ * spoiler is sitting on. A gradient painted in a surface colour would be a stripe
+ * of the wrong colour on every material except the one it was written for, and
+ * Crystal has six.
  *
- * The depth is Crystal's stated edge-fade depth — the same 24px the scroll
- * contract uses for a scrolled edge, and the same gesture: content continuing
- * past a boundary. Binding them means a change to the fade is one change.
+ * The depth is Crystal's edge-fade depth, the same 24px the scroll contract uses
+ * for a scrolled edge, because both show content continuing past a boundary. A
+ * change to the fade is then one change.
  */
 
 .spoiler {
@@ -23,8 +23,8 @@
   position: relative;
   overflow: hidden;
   /* The mask fades the content itself, so the material underneath shows through
-     unchanged. `to bottom` rather than a logical direction on purpose: the cut is
-     at the bottom of a block of text in every writing mode. */
+     unchanged. It uses `to bottom` rather than a logical direction because the
+     cut is at the bottom of a block of text in every writing mode. */
   mask-image: linear-gradient(to bottom, #000 calc(100% - #{$cr-scroll-area-fade-depth}), transparent 100%);  /* crystal-allow-literal: mask coverage, not a colour */
 }
 

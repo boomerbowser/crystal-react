@@ -3,15 +3,15 @@
 @use '../../charts/svg' as chart;
 
 /* "Entries are pills and reach 44px." Both are Crystal's action geometry, so
- * both come from Crystal's action tokens rather than from numbers chosen here.
+ * both come from Crystal's action tokens and not from numbers chosen here.
  *
- * "Haze entry fills" — the same content fill every other reading surface in the
- * system gets, so a legend entry is a pad with a label on it and its contrast is
- * independent of whatever the chart was put on.
+ * "Haze entry fills." This is the content fill every other reading surface
+ * gets, so a legend entry is a pad with a label on it and its contrast does not
+ * depend on what the chart sits on.
  *
- * Selection is weight. A shown series is heavier than a hidden one; nothing is
- * drawn beside the label to mark it, and the swatch is which series this is
- * rather than whether it is showing.
+ * Selection is weight. A shown series is heavier than a hidden one. Nothing is
+ * drawn beside the label to mark it, and the swatch says which series this is,
+ * not whether it is showing.
  */
 
 .legend {
@@ -51,8 +51,8 @@
 .toggle {
 
   cursor: pointer;
-  /* Off is the lighter one. Weight alone, in both directions from the same
-     rule, so there is one place the pair is decided. */
+  /* Off is the lighter weight. Both weights are set here, so the pair is
+     decided in one place. */
   font-weight: 450;
   &[data-shown] { font-weight: 700; }
   &:focus-visible {
@@ -63,9 +63,9 @@
 
 .entry { font-weight: 450; }
 
-/* A hidden series keeps its swatch at full strength: the swatch says which
-   series the entry is *for*, and a faded one would make the reader work out
-   whether they are looking at a pale series or a hidden one. */
+/* A hidden series keeps its swatch at full strength. The swatch says which
+   series the entry is for, and a faded one would leave the reader unable to
+   tell a pale series from a hidden one. */
 .swatch {
   @include chart.chart-canvas;
   flex: none;

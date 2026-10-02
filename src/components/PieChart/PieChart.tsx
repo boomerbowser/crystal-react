@@ -1,16 +1,16 @@
 'use client';
 
-/* PieChart — parts of a whole as segments.
+/* PieChart: parts of a whole as segments.
  *
- * "Each segment is labelled with its value; the total is stated." Both, and the
- * second is the one people leave out: a pie asserts that its segments are *the
- * whole of something*, and a reader cannot check that assertion — or notice that
- * 4% is missing — unless the total is written down. So the total is in the
- * caption area and in the table, always.
+ * "Each segment is labelled with its value; the total is stated." The second is
+ * the one people leave out. A pie asserts that its segments are *the whole of
+ * something*, and a reader cannot check that assertion, or notice that 4% is
+ * missing, unless the total is written down. So the total is always in the
+ * caption area and in the table.
  *
- * Areas are the marks here, so the second channel is the **label** rather than a
- * pattern — see `charts/channel.ts` for why that is the right answer for an area
- * and not a concession. Each wedge states its name, its value and its share.
+ * Areas are the marks here, so the second channel is the label rather than a
+ * pattern; `charts/channel.ts` explains why a label suits an area. Each wedge
+ * states its name, its value and its share.
  *
  * The order is the caller's. A pie sorted by size is a different chart from a pie
  * in the caller's order, and a component that re-ordered silently would make
@@ -66,9 +66,9 @@ export function PieChart({
       table={table ?? pieTable(slices, format, formatShare, total)}
       empty={surface.empty ?? slices.length === 0}
       /* A wedge carries its share as a label and its name nowhere. On a pie the
-         legend is not decoration, it is the only place the slice is named — so
-         it is here by default, and `legend={null}` is how a caller who has
-         named them some other way says so. */
+         legend is the only place the slice is named, so it is here by default.
+         A caller who has named the slices some other way passes
+         `legend={null}`. */
       legend={legend === undefined && slices.length > 1
         ? <ChartLegend entries={slices.map((one, index) => ({ name: one.name, index }))} />
         : legend}
@@ -130,8 +130,8 @@ export function PieChart({
               >
                 <path className={styles['fill']} d={wedge.path} />
                 {/* The label is the second channel. It is drawn only where the
-                    wedge is big enough to hold it — a label spilling out of a 2%
-                    sliver is worse than no label, and the same words are on the
+                    wedge is big enough to hold it, so a 2% sliver gets no label
+                    rather than one that spills out. The same words are on the
                     mark itself and in the table either way. */}
                 {wedge.share >= 0.08 ? (
                   <text
@@ -164,8 +164,8 @@ export function PieChart({
   );
 }
 
-/** The table, with the share and the total both written down — the two things a
- *  reader would otherwise have to work out from the picture. */
+/** The table, with the share and the total both written down. A reader would
+ *  otherwise have to work both out from the picture. */
 export function pieTable(
   slices: readonly PieSlice[],
   format: (value: number) => string,

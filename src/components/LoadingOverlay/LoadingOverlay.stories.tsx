@@ -11,12 +11,12 @@ const meta = {
       description: {
         component:
           '"Blocked content is **inert**; focus does not enter it; the reason is announced." '
-          + 'The first is the half that is usually faked: a scrim hides a region and stops the '
-          + 'mouse, and does nothing about the tab key — so a keyboard reader walks into a form '
+          + 'The first is the one usually missed. A scrim hides a region and stops the '
+          + 'mouse, and does nothing about the tab key, so a keyboard reader walks into a form '
           + 'they cannot see and fills in fields that are about to be replaced. `inert` takes '
           + 'the subtree out of the tab order, out of hit testing and out of the accessibility '
-          + 'tree at once, which is why this component wraps its region rather than being '
-          + 'dropped on top of it.\n\n'
+          + 'tree at once. This component wraps its region so that it can apply `inert` to '
+          + 'it.\n\n'
           + 'Mirage at region scope, inheriting the region\'s radius: a square wash over a '
           + 'rounded panel says the page is blocked rather than the panel.',
       },

@@ -1,21 +1,19 @@
 'use client';
 
-/* BulletChart — a measure against a target and qualitative ranges.
+/* BulletChart: a measure against a target and qualitative ranges.
  *
- * `role="meter"` with the target stated in text, which is the catalogue's
- * requirement and the whole difference between this and a progress bar: a bullet
- * chart is a *reading* against a target, and the target is the point. A reader
- * told "62" has been told nothing; "62 of a target of 80, in the acceptable
- * band" is the sentence the picture is drawing.
+ * `role="meter"` with the target stated in text, as the catalogue requires. This
+ * is what separates it from a progress bar: a bullet chart is a reading against
+ * a target. "62" alone tells a reader nothing, and "62 of a target of 80, in
+ * the acceptable band" is what the chart shows.
  *
  * "The target is a crisp marker, not a bar." A bar drawn to the target would be
- * a second measurement, and the eye would compare two lengths rather than a
- * length against a line. The marker is the full height of the row and it is the
- * one thing in the chart that never has a material.
+ * a second measurement, and the eye would compare two lengths instead of a
+ * length against a line. The marker is the full height of the row and is the
+ * one part of the chart that never has a material.
  *
- * "Haze range bands" — the qualitative ranges behind the measure, each a step of
- * Crystal's intensity ramp so that "acceptable" and "good" are a scale rather
- * than three colours somebody chose.
+ * "Haze range bands" are the qualitative ranges behind the measure. Each is a
+ * step of Crystal's intensity ramp, so "acceptable" and "good" read as a scale.
  */
 import { type CSSProperties, type ReactNode } from 'react';
 import { intensityFill } from '../../charts/intensity.js';
@@ -78,8 +76,8 @@ export function BulletChart({
         <span className={styles['measure']} style={{ '--measure-to': at(value) } as CSSProperties} />
         <span className={styles['target']} style={{ '--target-at': at(target) } as CSSProperties} />
       </div>
-      {/* The sentence the picture is drawing. Shown, not only announced: the
-          target is the point of the chart and it is the thing a bar cannot say. */}
+      {/* The reading as text. It is shown as well as announced, because a bar
+          alone cannot state the target. */}
       <span className={styles['reading']}>{text}</span>
     </div>
   );

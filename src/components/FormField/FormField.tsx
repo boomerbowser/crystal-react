@@ -2,23 +2,25 @@
 
 /* FormField, Fieldset and HelperText.
  *
- * `FormField` is the wrapper for a control this library does not ship — a
- * third-party editor, a canvas, something bespoke. Every Crystal input already
- * binds its own label and messages through React Aria; this exists so a product
- * that reaches outside the library does not have to rebuild the wiring, and get
- * it subtly wrong.
+ * `FormField` wraps a control this library does not ship, such as a
+ * third-party editor, a canvas or something bespoke. Every Crystal input
+ * already binds its own label and messages through React Aria. This component
+ * gives a product that reaches outside the library the same wiring, so it does
+ * not have to rebuild it.
  *
- * The wiring is the whole component, and it is four things:
+ * The component is the wiring, in four parts:
  *
  *   - `label` points at the control by id, so clicking it focuses the control.
- *   - `aria-describedby` points at the helper text **and** the error, because a
- *     field can have both and dropping one silently removes it from the
+ *   - `aria-describedby` points at the helper text and the error, because a
+ *     field can have both and leaving one out removes it from the
  *     announcement.
- *   - `aria-invalid` says so, rather than leaving it to a red border.
- *   - `aria-required` says so, rather than leaving it to an asterisk.
+ *   - `aria-invalid` states the invalid state, which a red border alone does
+ *     not.
+ *   - `aria-required` states that the field is required, which an asterisk
+ *     alone does not.
  *
- * **Errors are text, never colour alone.** That is the catalogue's wording and
- * the reason the error carries a mark as well as a colour. A red outline is
+ * Errors are text, never colour alone. That is the catalogue's wording, and it
+ * is why the error carries a mark as well as a colour. A red outline is
  * invisible to a reader who cannot distinguish it and says nothing to one who
  * cannot see it at all.
  *
@@ -32,7 +34,7 @@ import styles from './FormField.module.scss';
 import { useDistributedErrors } from './useDistributedErrors.js';
 
 export interface FormFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-  /** The visible label. A field without one is a field nobody can name. */
+  /** The visible label. Without it nobody can name the field. */
   label: ReactNode;
   /** Guidance beneath the field. Replaced by the error when there is one. */
   description?: ReactNode;
@@ -44,8 +46,8 @@ export interface FormFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ch
   isInvalid?: boolean;
   /**
    * The field's name in a form. Without it the field cannot be submitted, and a
-   * `Form` distributing a server's errors has no name to match it against — so
-   * the field sits there looking untouched while the server objects.
+   * `Form` distributing a server's errors has no name to match it against, so
+   * the field looks untouched while the server rejects it.
    */
   name?: string;
   /**
@@ -63,12 +65,12 @@ export function FormField({
   const descriptionId = useId();
   const errorId = useId();
 
-  /* An error message is the invalid state. Two ways to say the same thing
-     eventually disagree, and the one the reader is told is the one that matters. */
+  /* An error message is the invalid state, so the message and the flag cannot
+     disagree. */
   const validation = useDistributedErrors(name, errorMessage, isInvalid);
   const invalid = validation.isInvalid;
 
-  /* Both, when there are both. Describing a field by only its error drops the
+  /* Both, when there are both. Describing a field by its error alone drops the
      guidance that would have prevented it. */
   const describedBy = [
     description ? descriptionId : null,
@@ -145,9 +147,9 @@ export interface HelperTextProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 export function HelperText({ isError = false, className, children, ...props }: HelperTextProps): React.JSX.Element {
-  /* Shown and hidden by the product: inside `AnimatePresence` the hint arrives
-     with `hint-in` and, once it is no longer needed, leaves with `hint-out`;
-     rendered plainly, nothing. */
+  /* The product shows and hides the hint. Inside `AnimatePresence` it arrives
+     with `hint-in` and leaves with `hint-out`. Rendered without it, nothing
+     plays. */
   const presence = usePresenceMotion('hint-in', 'hint-out');
   return (
     <span

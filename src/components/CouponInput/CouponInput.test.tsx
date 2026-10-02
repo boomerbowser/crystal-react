@@ -11,8 +11,8 @@ function Harness({ onApply = vi.fn() }: { onApply?: (code: string) => void }) {
 }
 
 describe('CouponInput', () => {
-  /* A field beside a button that only answers to the button is a field that
-     swallows the key every reader will try first. */
+  /* Enter in the field applies the code, because Enter is the key every reader
+     tries first. */
   it('applies from the keyboard as well as from the control', async () => {
     const user = userEvent.setup();
     const onApply = vi.fn();
@@ -31,9 +31,9 @@ describe('CouponInput', () => {
     expect(onApply).not.toHaveBeenCalled();
   });
 
-  /* "Success and failure are announced." A refused code is something the reader
-     must act on before they can finish, which is the narrow case where
-     interrupting is right — so it is an alert and success is a status. */
+  /* "Success and failure are announced." The reader must act on a refused code
+     before they can finish, which is the narrow case where interrupting is
+     right. So failure is an alert and success is a status. */
   it('announces a refusal assertively', () => {
     renderWithCrystal(
       <CouponInput value="NOPE" onValueChange={() => {}} onApply={() => {}} error="That code has expired" />,
@@ -50,8 +50,7 @@ describe('CouponInput', () => {
     expect(screen.queryByRole('alert')).toBeNull();
   });
 
-  /* "An applied code is removable" — a control with a name, not an empty box
-     and a hope. */
+  /* "An applied code is removable", through a control with a name. */
   it('offers a named control to remove an applied code', async () => {
     const user = userEvent.setup();
     const onRemove = vi.fn();
@@ -68,9 +67,8 @@ describe('CouponInput', () => {
     expect(onRemove).toHaveBeenCalled();
   });
 
-  /* A control that vanishes under the cursor mid-press is a control the reader
-     has to find again — so applying disables the action rather than replacing
-     it with a spinner. */
+  /* A control that vanishes under the cursor mid-press has to be found again,
+     so applying disables the action and does not replace it with a spinner. */
   it('keeps the action in place while a code is on its way', () => {
     renderWithCrystal(
       <CouponInput value="HARBOUR10" onValueChange={() => {}} onApply={() => {}} isApplying />,
@@ -86,9 +84,8 @@ describe('CouponInput', () => {
 
 describe('CouponInput, after removing a code', () => {
   /* "The field is what is there once the code is gone." The applied state and
-     the form are two entirely different trees, so the input the ref points at
-     does not exist at the moment Remove is pressed — focusing it there focuses
-     nothing at all. */
+     the form are two different trees, so the input the ref points at does not
+     exist when Remove is pressed. Focusing it then focuses nothing. */
   it('puts focus in the field it just brought back', async () => {
     const user = userEvent.setup();
     function Harness() {

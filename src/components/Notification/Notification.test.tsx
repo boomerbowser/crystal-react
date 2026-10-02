@@ -4,9 +4,9 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { Notification } from './Notification.js';
 
 describe('Notification', () => {
-  /* Crystal's rule, doing the same job one component along: nothing is drawn
-     beside the title to mark it. A dot beside the title offsets the very title
-     it points at, so the unread item stops lining up with the others. */
+  /* Crystal's selection rule, applied here: nothing is drawn beside the title
+     to mark it. A dot beside the title offsets the title it points at, so the
+     unread item stops lining up with the others. */
   it('marks unread with label weight and nothing beside the label', () => {
     const { container } = renderWithCrystal(
       <ul><Notification unread title="Build failed" /></ul>,
@@ -17,7 +17,7 @@ describe('Notification', () => {
     expect(item!.querySelectorAll('[aria-hidden="true"]')).toHaveLength(1);
   });
 
-  /* Weight is not something a screen reader reads out, so it is said too. */
+  /* A screen reader does not read out weight, so it is said in words too. */
   it('says "unread" for a reader who cannot see the weight', () => {
     renderWithCrystal(<ul><Notification unread title="Build failed" /></ul>);
     expect(screen.getByRole('listitem', { name: /^Unread\.\s*Build failed$/ })).toBeInTheDocument();
@@ -28,8 +28,9 @@ describe('Notification', () => {
     expect(screen.getByRole('listitem', { name: 'Build failed' })).toBeInTheDocument();
   });
 
-  /* The words are the caller's — "3 minutes ago" has to be in the reader's
-     language and has to age — but the machine-readable stamp is the element's. */
+  /* The words are the caller's, because "3 minutes ago" has to be in the
+     reader's language and has to age. The machine-readable stamp is the
+     element's. */
   it('carries a machine-readable time beside the words', () => {
     const { container } = renderWithCrystal(
       <ul>

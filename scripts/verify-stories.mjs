@@ -1,16 +1,10 @@
-/* The review surface, checked.
+/* Checks that every story file is reviewable in Storybook: it names a component,
+ * reaches the Crystal environment, and has a Controls panel that moves something.
  *
- * Meridian has now reported a broken review surface three times: components that
- * did not look like Crystal because the ground was flat, an environment that
- * could not be reached, and a Controls panel reading "This story has no
- * controls". Each was visible to anyone who opened Storybook and invisible to
- * every check in the repository, because nothing here had ever looked at a story
- * file and asked whether it was reviewable.
- *
- * So this is not a lint. It is a ratchet: the counts below are the floor the
- * library is at today, and a change that lowers one fails. New stories may be
- * added freely — the floor only stops the total going backwards — and raising
- * the floor is a deliberate edit somebody makes in the same commit.
+ * It is a ratchet. The counts below are the floor the library is at today, and a
+ * change that lowers one fails. New stories may be added freely, since the floor
+ * only stops the total going backwards. Raising the floor is an edit made in the
+ * same commit.
  *
  *   node scripts/verify-stories.mjs
  */
@@ -20,7 +14,7 @@ import { join, relative, resolve } from 'node:path';
 const ROOT = resolve(process.cwd(), 'src');
 
 /* What the library is at today. Raise these when you add; never lower them to
-   make a build pass, which is the one way a ratchet stops being one. */
+   make a build pass. */
 const FLOOR = {
   filesWithComponent: 161,
   filesWithArgs: 155,
@@ -29,11 +23,10 @@ const FLOOR = {
   actionArgs: 18,
 };
 
-/* A story file that is not about a component, and says so. `Parity` renders one
-   bare specimen per *material* for `verify-materials` to measure; there is no
-   component to point docgen at, and inventing one would make the gate pass by
-   naming something the file is not about. An exemption is a named list, not a
-   pattern — a pattern would quietly excuse the next file somebody forgot. */
+/* Story files that are not about a component. `Parity` renders one bare
+   specimen per material for `verify-materials` to measure, so there is no
+   component to point docgen at. Exemptions are a named list, because a pattern
+   would also excuse the next file that forgets its component. */
 const NOT_A_COMPONENT = new Set(['styles/parity/Parity.stories.tsx']);
 
 function storyFiles(directory) {
@@ -46,22 +39,19 @@ function storyFiles(directory) {
   return found;
 }
 
-/* The callbacks in `.storybook/react-aria.ts`, read from it rather than listed
-   here: a second copy of that list is the thing the table exists to avoid.
-   Read from its flat `ARIA_EVENTS` array, which exists in that shape because a
-   regex over the nested table got this wrong — see the note beside it there. */
+/* The callbacks in `.storybook/react-aria.ts`, read from it rather than copied
+   here. The script reads the flat `ARIA_EVENTS` array, because a regex over the
+   nested table does not parse reliably; see the note beside it there. */
 const ARIA_SOURCE = readFileSync(resolve(process.cwd(), '.storybook/react-aria.ts'), 'utf8');
 const ARIA_EVENTS = new Set(
   [...(/export const ARIA_EVENTS = \[([\s\S]*?)\] as const/.exec(ARIA_SOURCE)?.[1] ?? '')
     .matchAll(/'([A-Za-z][A-Za-z0-9]*)'/g)].map(([, name]) => name),
 );
 
-/* A floor on the *table*, not just on the stories. This counter reads another
-   file by regex, and the failure that matters is not it finding the wrong
-   number — it is finding none, reporting zero action args, and blaming the
-   stories. Verified by mutation: reshaping the array drops the count below
-   this and the run stops here rather than three lines later with a wrong
-   diagnosis. */
+/* A floor on the table as well as on the stories. This counter reads another
+   file by regex. If the array is reshaped, the regex finds fewer names (or
+   none), and the run would report too few action args and blame the stories.
+   This floor stops the run here with the right diagnosis instead. */
 const LEAST_ARIA_EVENTS = 9;
 if (ARIA_EVENTS.size < LEAST_ARIA_EVENTS) {
   console.error(
@@ -91,21 +81,18 @@ const counts = {
 
 /* A story whose whole subject is one instance of the component must take args.
  *
- * R-17's second item said 79 `render:` closures ignore their args and asked for
- * all of them to be converted. Counted properly that premise was wrong, and the
- * correction matters more than the number: **most of those closures are
- * compositions**, and a composition is not a story you drive by args. A strip
- * shown beside a segmented control, the same destinations in three shells, seven
- * gaps of the spacing scale at once — the subject is the *relationship*, and
+ * Most `render:` closures that ignore their args are compositions (R-17): a
+ * strip shown beside a segmented control, the same destinations in three shells,
+ * seven gaps of the spacing scale at once. Their subject is the relationship, and
  * giving one of several components live controls would make it disagree with its
- * neighbours while a reviewer watched.
+ * neighbours. Compositions are not checked.
  *
- * What is left after that distinction is small and worth holding: a story that
- * renders exactly one of its own `meta.component` and hard-codes its props. That
- * one is a control panel that moves nothing, which is the complaint.
+ * What is checked is a story that renders exactly one of its own
+ * `meta.component` and hard-codes its props, because its Controls panel moves
+ * nothing.
  *
- * Deliberate exceptions carry a reason rather than being counted, because a
- * floor would let this quietly get worse one story at a time.
+ * Exceptions are listed by name with a reason rather than counted, because a
+ * floor would let this get worse one story at a time.
  */
 const RENDER_ONLY_BY_DESIGN = new Map([
   ['components/Menu/Overlays.stories.tsx::OnRightClick', 'the subject is the right-click gesture on a target, not the menu\'s own props'],
@@ -144,9 +131,7 @@ for (const file of files) {
 
   /* `component:` at meta's own indent. Matching it anywhere also matches
      `docs: { description: { component: … } }`, which is a documentation string
-     and not a component reference — an earlier count of this was wrong by eight
-     for exactly that reason, and a gate that counts the wrong thing is the
-     failure mode this whole file exists for. */
+     and would inflate the count. */
   const hasComponent = /^ {2}component: [A-Za-z0-9_]+,/m.test(source);
   if (hasComponent) counts.filesWithComponent += 1;
   else if (!NOT_A_COMPONENT.has(name)) {
@@ -168,21 +153,18 @@ for (const file of files) {
   if (/^ {2}args: \{/m.test(source)) counts.filesWithArgs += 1;
   if (/^ {2}argTypes: \{/m.test(source)) counts.filesWithArgTypes += 1;
   counts.storiesWithPlay += (source.match(/^ {2}play: /gm) ?? []).length;
-  /* Both forms, because both put a callback in the Actions panel and counting
-     one of them understates the library. `argTypes: { onPress: { action: … } }`
-     wires a callback docgen cannot see — nearly every callback here is inherited
-     from a React Aria interface, and this Storybook uses `react-docgen`, which
-     does not resolve what an interface extends. `fn()` in `args` does the same
-     job and additionally gives a `play` function something to assert against. */
+  /* Both forms, because both put a callback in the Actions panel.
+     `argTypes: { onPress: { action: … } }` wires a callback docgen cannot see:
+     nearly every callback here is inherited from a React Aria interface, and
+     this Storybook uses `react-docgen`, which does not resolve what an interface
+     extends. `fn()` in `args` does the same job and also gives a `play` function
+     something to assert against. */
   counts.actionArgs += (source.match(/\baction: '/g) ?? []).length
     + (source.match(/: fn\(\)/g) ?? []).length
-    /* Third form, and the reason it had to be added: the shared React Aria
-       table declares `action` centrally, so a story that switches an event on
-       through `ariaArgTypes` has an Actions entry with neither literal in it.
-       Counting only the literals made this ratchet fall from 15 to 6 the moment
-       nine stories stopped repeating themselves — a gate reporting a
-       *reduction* in the very thing that had just increased, because it was
-       counting the spelling rather than the substance. */
+    /* Third form. The shared React Aria table declares `action` centrally, so a
+       story that switches an event on through `ariaArgTypes` has an Actions
+       entry with neither literal in it. Counting only the literals undercounts
+       every story that uses the table. */
     + ariaEventArgs(source);
 }
 
@@ -197,18 +179,13 @@ for (const [key, floor] of Object.entries(FLOOR)) {
 
 /* No story that a measurement gate probes may carry a `play` function.
  *
- * This is a rule the hard way. A `play` runs whenever the story *loads*, not
- * only under the test runner, so a gate that opens one is measuring whatever the
- * play is in the middle of doing — or whatever it left behind. Adding a play to
- * the tree's `Files` story cost `verify-targets` three of its twenty-nine probes
- * and it stayed green, measuring six rows where there had been nine. Restoring
- * the tree was not enough either: the gate then arrived mid-keystroke and
- * reported three rows whose own centre did not belong to them.
+ * A `play` runs whenever the story loads, as well as under the test runner, so a
+ * gate that opens the story measures whatever the play is in the middle of doing
+ * or has left behind. The gate can stay green while measuring fewer elements, or
+ * report elements mid-interaction.
  *
- * `overlays-drawer--modal` then did the same thing and passed, by luck, which is
- * why this is a check and not a note. The ids are read out of the gate scripts
- * themselves, so a gate that starts probing a new story is covered without
- * anybody remembering to come back here. */
+ * The ids are read out of the gate scripts themselves, so a gate that starts
+ * probing a new story is covered without anybody updating this file. */
 const GATES = ['verify-targets.mjs', 'verify-behaviour.mjs', 'verify-appearance.mjs', 'verify-materials.mjs', 'verify-theme.mjs'];
 const probed = new Set();
 for (const gate of GATES) {
@@ -222,8 +199,8 @@ for (const gate of GATES) {
 
 /* Storybook's own id rule: the title and the story's name, each lowercased with
    every run of non-alphanumerics collapsed to a dash. A story with no explicit
-   `name` takes its export name split at the capitals — `TabStrip` is
-   "Tab Strip" is `tab-strip`. */
+   `name` takes its export name split at the capitals, so `TabStrip` becomes
+   "Tab Strip" and then `tab-strip`. */
 const slug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const fromExport = (name) => name.replace(/_+$/, '').replace(/([a-z0-9])([A-Z])/g, '$1 $2');
 
@@ -248,9 +225,9 @@ for (const file of files) {
   }
 }
 
-/* The environment must reach every story, and from one place. Declaring it in
-   `preview.ts` is what makes it per-component without twenty-seven authors
-   having remembered — which is what Meridian asked for, twice. */
+/* The environment must reach every story, from one place. Declaring it in
+   `preview.ts` puts it on every component's stories without each story file
+   having to declare it, as Meridian asked. */
 const preview = readFileSync(resolve(process.cwd(), '.storybook/preview.ts'), 'utf8');
 for (const needed of ['args: environmentArgs', 'argTypes: environmentArgTypes']) {
   if (!preview.includes(needed)) {
@@ -261,8 +238,8 @@ for (const needed of ['args: environmentArgs', 'argTypes: environmentArgTypes'])
   }
 }
 
-/* An exception for a story that no longer exists silences nothing today and
-   hides a real one tomorrow, when the name comes back on a different story. */
+/* An exception must name an existing story. A stale exception would excuse a
+   different story that later reuses the name. */
 {
   const known = new Set();
   for (const file of files) {

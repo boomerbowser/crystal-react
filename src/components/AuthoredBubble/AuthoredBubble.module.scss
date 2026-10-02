@@ -1,20 +1,19 @@
 @use '../../styles/tokens' as *;
 
-/* AuthoredBubble — Crystal's `.cr-bubble`, worn by the component, with `.own` for
+/* AuthoredBubble: Crystal's `.cr-bubble`, worn by the component, with `.own` for
  * the reader's own messages.
  *
- * Until 28 September this restated the recipe "value for value" and differed in
- * two of them — 12/16 padding for Crystal's 14/18, and no 1px edge — which is
- * what a restatement does. The Haze fill on its own paint layer, the content
- * shadow, the 6px cut, the content-own pair, and the opaque, reduced-transparency
- * and forced-colours routes are all the class's now. That own pair is the one
- * place in Crystal where a Haze fill carries a palette colour and stays soft — a
+ * The class supplies the Haze fill on its own paint layer, the content shadow,
+ * the 6px cut, the content-own pair, Crystal's 14/18 padding and 1px edge, and
+ * the opaque, reduced-transparency and forced-colours routes. Do not restate any
+ * of them here; a copy drifts from the recipe. The own pair is the one place in
+ * Crystal where a Haze fill carries a palette colour and stays soft. A
  * conversation is a wall of these, and the solid action colour behind every
  * second message would make the thread unreadable.
  */
 
 /* In a run, the cut marks where the run starts, so the rest of the run is
-   rounded all round. Crystal has no run; this is layout the thread decides. */
+   rounded all round. Crystal has no run. This is layout the thread decides. */
 .grouped,
 .grouped.own {
   border-radius: var(--cr-radius);
@@ -42,10 +41,10 @@
   color: var(--cr-muted);
 }
 
-/* A failed message is a real state, said in words and given the danger boundary
-   `components.md` asks destructive and error surfaces to carry. Never opacity:
-   a faded message over a coloured atmosphere is a legibility problem, not a
-   status. */
+/* A failed message is said in words and given the danger boundary
+   `components.md` asks destructive and error surfaces to carry. It is never shown
+   with opacity, because a faded message over a coloured atmosphere is hard to
+   read and does not say what happened. */
 .bubble[data-delivery='failed'] { border: 1px solid var(--cr-danger-ink); }
 .bubble[data-delivery='failed'] .delivery { color: var(--cr-danger-ink); }
 

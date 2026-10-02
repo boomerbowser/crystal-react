@@ -24,10 +24,10 @@ describe('StatusBadge', () => {
      glyph: a symbol would imply a meaning the state does not have. */
   it('shows no symbol for neutral', () => {
     renderWithCrystal(<StatusBadge status="neutral" data-testid="badge">Draft</StatusBadge>);
-    /* The symbol, not the child count. Counting children asserted this through
-       a wrapper around the word, which is no longer there — Crystal paints
-       `span.cr-status > span` as the well, so a span around the word would be
-       painted as a second one. The symbol is what the rule is about. */
+    /* This checks the symbol, which is what the rule is about, rather than the
+       child count. The word has no wrapper span, because Crystal paints
+       `span.cr-status > span` as the well and a span around the word would be
+       painted as a second one. */
     expect(screen.getByTestId('badge').querySelector('[aria-hidden="true"]')).toBeNull();
     expect(screen.getByText('Draft')).toBeInTheDocument();
   });

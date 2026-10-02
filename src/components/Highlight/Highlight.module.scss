@@ -1,16 +1,14 @@
 @use '../../styles/tokens' as *;
 
-/* Mark and Highlight — a search match, inline.
+/* Mark and Highlight mark a search match inline.
  *
- * The fill is the palette's soft primary with its own ink on top, which is the
- * pair Crystal already uses for a selected surface: a match is a kind of
- * selection. Using the pair rather than a yellow means the contrast holds in
- * every palette and both modes, and it is checked as a pair rather than hoped
- * for.
+ * The fill is the palette's soft primary with its own ink on top, the pair
+ * Crystal uses for a selected surface, because a match is a kind of selection.
+ * Using the pair and not a yellow means the contrast holds in every palette and
+ * both modes, and it is checked as a pair.
  *
  * The geometry is a small radius and a hair of padding, so a mark inside a
- * sentence does not change the line height — a highlight that reflows the
- * paragraph it is in draws attention to the wrong thing.
+ * sentence does not change the line height or reflow the paragraph.
  */
 
 .mark {

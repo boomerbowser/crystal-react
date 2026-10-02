@@ -1,19 +1,19 @@
 'use client';
 
-/* Alert — an inline banner with a semantic symbol, a title, body text and
+/* Alert: an inline banner with a semantic symbol, a title, body text and
  * optional actions.
  *
  * "**role=alert only for genuinely urgent, interrupting content**; otherwise a
- * plain region." That is the sharpest sentence in the entry and the one that is
- * almost always got wrong: `role="alert"` is an assertive live region, and an
- * assertive live region interrupts whatever a screen reader was saying — mid
+ * plain region." That is the sharpest sentence in the entry, and the one most
+ * often gotten wrong. `role="alert"` is an assertive live region, and an
+ * assertive live region interrupts whatever a screen reader was saying, mid
  * word, mid sentence. A page that renders four of them on load has interrupted
  * the reader four times to tell them things that were already on the screen.
  *
  * So `urgent` is an explicit opt-in, it is not implied by `danger`, and the
  * default alert is an ordinary labelled region that a reader meets in document
- * order like everything else. A validation summary that appears *because the
- * reader pressed submit* is the case `urgent` exists for.
+ * order like everything else. A validation summary that appears because the
+ * reader pressed submit is the case `urgent` exists for.
  *
  * "Haze surface with the semantic ink pair **on the symbol well**." The panel
  * stays Haze over whatever it sits on and the message is ordinary text; only the
@@ -21,7 +21,7 @@
  * a coloured ground, and a danger-coloured perimeter is the shape Crystal uses
  * for focus.
  *
- * Motion: `attention` on a status that arrives, not on mount — nothing moves at
+ * Motion: `attention` on a status that arrives, not on mount. Nothing moves at
  * rest, and an alert that animated as the page loaded is ambient movement.
  * Crystal assigns a recipe to two of the four statuses and this library authors
  * none for the others.
@@ -37,16 +37,16 @@ import styles from './Alert.module.scss';
 
 export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   status?: FeedbackStatus;
-  /** The heading. Required — an alert with no title is a paragraph in a box. */
+  /** The heading, required. An alert with no title is a paragraph in a box. */
   title: ReactNode;
   /** The message. */
   children?: ReactNode;
   /** The recovery action, or actions. Rendered after the message. */
   actions?: ReactNode;
   /**
-   * Interrupt the reader. **Off by default.** Turn it on only for content that
-   * has just arrived and cannot wait — a submission that failed, a session about
-   * to end. Not for anything that was already on the page.
+   * Interrupt the reader. Off by default. Turn it on only for content that
+   * has just arrived and cannot wait (a submission that failed, a session about
+   * to end). Not for anything that was already on the page.
    */
   urgent?: boolean;
   /** Called when the dismiss control is pressed. Without it there is none. */

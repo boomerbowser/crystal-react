@@ -1,23 +1,22 @@
 /* Avatar's size table, in one place.
  *
- * `Avatar` and `AvatarGroup`'s overflow chip must be the same circle — the
- * catalogue says the chip "matches avatar size" — and two copies of four numbers
- * is the drift CONTRACT §1 is about: it would stay invisible until somebody
- * changed one of them, and then show up as a row where the last disc is the wrong
- * size. CSS modules scope class names per file, so the table is emitted into each
- * module rather than imported as a class, and this mixin is the single definition
- * both emissions come from.
+ * `Avatar` and `AvatarGroup`'s overflow chip must be the same circle (the
+ * catalogue says the chip "matches avatar size"). Two copies of these four
+ * numbers would drift as CONTRACT §1 warns: invisibly, until somebody changed
+ * one and a row showed its last disc at the wrong size. CSS modules scope class
+ * names per file, so the table is emitted into each module instead of imported
+ * as a class, and this mixin is the single definition both emissions use.
  *
- * The property is `--avatar-size` and not `--cr-avatar-size`: the `--cr-` prefix
+ * The property is `--avatar-size`, not `--cr-avatar-size`. The `--cr-` prefix
  * means "Crystal publishes this", and two gates check that every `--cr-…` the
- * stylesheets read resolves to something on a mounted provider. This one is
- * written and read inside these two modules and nowhere else, so it has no claim
- * on that namespace — borrowing it would have meant adding a name to two
- * hand-maintained exception lists to say it was not really an exception.
+ * stylesheets read resolves to something on a mounted provider. This property
+ * is written and read only inside these two modules, so it stays out of that
+ * namespace. Using the prefix would mean adding it to two hand-maintained
+ * exception lists.
  *
  * The steps are on Crystal's 4px rhythm. They are literals because 2.0.0
- * publishes action geometry as tokens and avatar geometry as nothing at all; when
- * a core release carries them, this is the one file that changes.
+ * publishes action geometry as tokens and avatar geometry not at all. When a
+ * core release carries them, this is the one file that changes.
  */
 
 $sm: 24px; /* crystal-allow-literal: 4px rhythm; wants a core token */

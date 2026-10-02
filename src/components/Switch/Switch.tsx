@@ -2,16 +2,16 @@
 
 /* Switch.
  *
- * React Aria's Switch gives it `role="switch"` with `aria-checked`, which is the
- * distinction that matters: a switch and a checkbox are announced differently
- * because they mean different things. A checkbox is a value in a form that will
- * be submitted; a switch takes effect now. Rendering one as the other tells the
- * reader the wrong thing about when their change applies.
+ * React Aria's Switch gives it `role="switch"` with `aria-checked`. A switch and
+ * a checkbox are announced differently because they mean different things. A
+ * checkbox is a value in a form that will be submitted; a switch takes effect
+ * now. Rendering one as the other tells the reader the wrong thing about when
+ * their change applies.
  *
- * **State does not rely on position alone.** The track changes colour and the
- * thumb changes with it, so the control is readable in greyscale, at a glance,
- * and by somebody who cannot tell which end is which — the most common failure in
- * this control, and the one the catalogue names.
+ * State does not rely on position alone. The track changes colour and the thumb
+ * changes with it, so the control is readable in greyscale, at a glance, and by
+ * somebody who cannot tell which end is which. That is the most common failure
+ * in this control, and the one the catalogue names.
  *
  * Crystal's `switch-on` and `switch-off` recipes play on the value, not on the
  * click, so a keyboard user sees what a pointer user sees.
@@ -54,10 +54,10 @@ export const Switch = forwardRef<HTMLLabelElement, SwitchProps>(function Switch(
  * Bound to the value rather than to the press, so a switch changed by a form
  * reset or by a server response animates the same way one changed by hand does.
  *
- * It reads the value **React Aria resolved**, which is the part the first version
- * got wrong: it read `props.isSelected ?? props.defaultSelected ?? false`, and an
- * uncontrolled switch has neither — so the commonest switch of all, the one a
- * person simply clicks, sat at `false` for ever and never animated at all.
+ * It reads the value React Aria resolved. Reading
+ * `props.isSelected ?? props.defaultSelected ?? false` does not work, because an
+ * uncontrolled switch has neither prop, so the value would stay `false` and an
+ * uncontrolled switch would never animate.
  *
  * A component rather than an effect in the parent, because the resolved value
  * arrives through a render function and hooks cannot be called inside one.

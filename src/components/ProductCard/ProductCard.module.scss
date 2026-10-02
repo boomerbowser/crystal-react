@@ -29,7 +29,7 @@
 
 /* The pointer affordance: the link's hit area covers the card. It is one
    pseudo-element on the existing link rather than a second control, so the tab
-   order stays at two — the name and the action. */
+   order stays at two: the name and the action. */
 .name::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
 
 .name:hover { text-decoration: underline; }

@@ -3,15 +3,14 @@
 
 /* "Segments separated by a hairline in the surface colour."
  *
- * The separation is the `padAngle` in `charts/Radial.tsx` — a gap showing the
- * ground through, not a border round each wedge — so there is no stroke here at
- * all. Two adjacent segments read as two pieces of one circle rather than as two
- * objects, which is what a pie is claiming.
+ * The separation is the `padAngle` in `charts/Radial.tsx`, a gap that shows the
+ * ground through, so there is no stroke here. Two adjacent segments read as two
+ * pieces of one circle rather than as two objects.
  *
  * The label on a wedge is the second channel, so it has to be readable on every
- * series colour — which no ink is on its own. It is Crystal's Stone backing that
- * makes it so; `charts/_label.scss` sets out why, and why the backing is a halo
- * here rather than a pad.
+ * series colour, and no ink is readable on all of them by itself. Crystal's Stone
+ * backing makes it readable; `charts/_label.scss` explains this and why the
+ * backing is a halo here rather than a pad.
  */
 
 .wedge .fill {
@@ -23,8 +22,8 @@
 
 .wedge:focus-visible { outline: none; }
 
-/* Emphasis on everything else, not on this one: a wedge that brightens changes
-   the colour a reader is matching to the legend. */
+/* Hover and focus dim the other wedges and leave this one as it is, because a
+   wedge that brightens changes the colour a reader is matching to the legend. */
 .chart :global(svg) g:hover .wedge:not(:hover) .fill,
 .chart :global(svg) g:focus-within .wedge:not([data-active]) .fill {
   opacity: 0.55;
@@ -45,8 +44,8 @@
   .wedge .fill { transition: none; }
 }
 
-/* With one fill for everything the gap is no longer a separation, so the wedges
-   take a real stroke — the one place the hairline is a border rather than a gap. */
+/* With one fill for everything the gap no longer separates the wedges, so they
+   take a real stroke. This is the one place the hairline is a border. */
 @media (forced-colors: active) {
   .wedge .fill {
     fill: Canvas;

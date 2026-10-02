@@ -1,23 +1,21 @@
 'use client';
 
-/* ChartLegend — names the series in a chart and toggles them.
+/* ChartLegend names the series in a chart and toggles them.
  *
- * "Toggles are buttons with a pressed state; hidden series are announced." Both
- * halves matter and the second is the one that gets left out: turning a series
- * off changes the picture, and a reader who cannot see the picture is told
- * nothing unless somebody says it. So each entry carries `aria-pressed` and the
- * change is announced in words.
+ * "Toggles are buttons with a pressed state; hidden series are announced."
+ * Turning a series off changes the picture, and a reader who cannot see the
+ * picture is told nothing unless the change is announced. So each entry carries
+ * `aria-pressed` and the change is announced in words.
  *
- * Selection is by **weight**, not by a mark and not by colour. A legend entry
- * that is on is heavier than one that is off; the swatch beside it is which
- * series this is, never whether it is showing. That is Crystal's rule
- * everywhere and it matters more here than usual, because the one thing a legend
- * entry already carries is a colour.
+ * Selection is by weight, never by a mark or by colour. A legend entry that is
+ * on is heavier than one that is off. The swatch beside it says which series
+ * this is, never whether it is showing. That is Crystal's rule everywhere, and it
+ * matters more here because a legend entry already carries a colour.
  *
- * The swatch carries the series' second channel too — the dash for a line, the
- * shape for a point — so that a reader matching the legend to the chart is
- * matching the same two things in both places rather than a colour in one and a
- * pattern in the other.
+ * The swatch also carries the series' second channel (the dash for a line, the
+ * shape for a point), so a reader matching the legend to the chart matches the
+ * same two things in both places, and not a colour in one and a pattern in the
+ * other.
  */
 import { useId, useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { markerPath, seriesColour, seriesDash, seriesMarker } from '../../charts/channel.js';
@@ -30,7 +28,7 @@ export type LegendMark = 'swatch' | 'line' | 'point';
 
 export interface ChartLegendEntry {
   name: string;
-  /** The index into the series scale — which colour and which second channel. */
+  /** The index into the series scale, which picks the colour and the second channel. */
   index: number;
   /** Showing. Omitted entirely for a legend that does not toggle. */
   shown?: boolean;
@@ -40,8 +38,8 @@ export interface ChartLegendProps extends Omit<HTMLAttributes<HTMLElement>, 'onT
   entries: readonly ChartLegendEntry[];
   /** What the swatch draws, so it matches the marks it names. */
   mark?: LegendMark;
-  /** Given a series name, toggles it. Without this the legend is a key, not a
-   *  control, and it renders as text rather than as buttons. */
+  /** Given a series name, toggles it. Without this the legend is a key and
+   *  renders as text instead of buttons. */
   onToggle?: (name: string, shown: boolean) => void;
   /** How a change is announced. */
   announce?: (name: string, shown: boolean) => string;
@@ -52,10 +50,9 @@ export function ChartLegend({
 }: ChartLegendProps): ReactNode {
   const id = useId();
   const said = announce ?? ((name, shown) => `${name} ${shown ? 'shown' : 'hidden'}`);
-  /* What the reader last did, not what the data last was. Announcing a state
-     derived from the entries would say something on every render the chart made
-     for any reason, and a live region that speaks when nobody acted is a live
-     region people turn off. */
+  /* Holds what the reader last did, not the current data. A state derived from
+     the entries would be announced on every render the chart made for any
+     reason, and people turn off a live region that speaks when nobody acted. */
   const [spoken, setSpoken] = useState<string | null>(null);
 
   return (
@@ -132,8 +129,8 @@ function Swatch({ mark, index }: { mark: LegendMark; index: number }): ReactNode
   );
 }
 
-/* A series toggle, playing `selection` when the series is turned on — the one
-   state a legend entry enters — and not on the render that shows it on. */
+/* A series toggle. It plays `selection` when the series is turned on, which is
+   the one state a legend entry enters, and not on the render that shows it on. */
 function Toggle({ isShown, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   isShown: boolean;
   'data-shown'?: string | undefined;

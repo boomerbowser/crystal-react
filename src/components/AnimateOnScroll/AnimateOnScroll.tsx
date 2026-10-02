@@ -2,32 +2,30 @@
 
 /* AnimateOnScroll.
  *
- * Plays an entry recipe the first time an element comes into view, and then never
- * again — "pending" and "played" are the only two states the catalogue gives it,
- * and an element that re-animates every time it scrolls past is the pattern that
- * makes a long page exhausting.
+ * Plays an entry recipe the first time an element comes into view, and never
+ * again. "pending" and "played" are the only two states the catalogue gives it.
+ * An element that re-animates every time it scrolls past makes a long page tiring
+ * to read.
  *
- * The rule that shapes the implementation: **content is present and readable
- * before the animation runs, never revealed by it.** So this does not start the
- * element at `opacity: 0` in CSS and fade it in — that is the common approach and
- * it means a reader whose IntersectionObserver never fires, whose JavaScript
- * failed, or who is reading with a screen reader gets an invisible page. The
- * element is fully rendered and fully opaque; the recipe plays over it.
+ * Content is present and readable before the animation runs, and is never
+ * revealed by it. The element does not start at `opacity: 0` in CSS and fade in,
+ * because then a reader whose IntersectionObserver never fires, whose JavaScript
+ * failed, or who uses a screen reader gets an invisible page. The element is
+ * fully rendered and fully opaque, and the recipe plays over it.
  *
- * Reduced motion removes the movement. `useMotion` already refuses to animate,
- * and the element was already readable, so the reduced-motion path is simply the
- * page with nothing moving on it.
+ * Reduced motion removes the movement. `useMotion` refuses to animate and the
+ * element is already readable, so the reduced-motion path is the page with
+ * nothing moving on it.
  */
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useMotion } from '../../motion/useMotion.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 
 /* "Which recipes are allowed" is Crystal's half of this component, so it is a
-   list rather than a free string. Entry recipes only: a press or a field
-   validation playing because something scrolled into view is motion that means
-   nothing, and motion that means nothing is what makes a page feel restless.
-   `list-in` is the default because an element arriving in the viewport is the
-   same event as an item arriving in a list. */
+   list and not a free string. Only entry recipes are allowed. A press or a field
+   validation playing because something scrolled into view means nothing to the
+   reader. `list-in` is the default because an element arriving in the viewport
+   is the same event as an item arriving in a list. */
 const ENTRY_RECIPES = ['list-in', 'message-in', 'media-in', 'page-in', 'accordion-in'] as const;
 
 export type ScrollEntryRecipe = typeof ENTRY_RECIPES[number];
@@ -60,9 +58,8 @@ export function AnimateOnScroll({
     const element = host.current;
     if (!element || played.current) return undefined;
 
-    /* No observer — an older browser, a test environment — means the content is
-       simply there, unanimated. Never the other way round: a missing observer
-       must not leave the page hidden. */
+    /* With no observer (an older browser, a test environment) the content is
+       shown unanimated. A missing observer must not leave the page hidden. */
     if (typeof IntersectionObserver !== 'function') {
       played.current = true;
       return undefined;

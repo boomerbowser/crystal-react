@@ -12,23 +12,21 @@
  * no way to jump to the trail, and with several trails on a page no way to tell
  * them apart.
  *
- * **The current crumb is label weight, not colour.** It is also the one crumb
- * that is not a link, because a link to the page you are on is a promise that
- * nothing happens. React Aria drops the `href` on the last child for exactly
- * that reason, so the trail ends in text.
+ * The current crumb is marked by label weight, never by colour alone. It is also
+ * the one crumb that is not a link, because a link to the page you are on does
+ * nothing. React Aria drops the `href` on the last child for that reason, so the
+ * trail ends in text.
  *
- * **A collapsed crumb is hidden, never removed.** The catalogue asks for the
- * middle to collapse, and the reason to collapse the middle rather than the end
- * is that the two crumbs carrying the most meaning are the root and the page you
- * are on. What is collapsed goes into a menu that says how many it holds; a trail
- * that simply truncates deletes navigation silently.
+ * A collapsed crumb is hidden, never removed. The catalogue asks for the middle
+ * to collapse, because the two crumbs carrying the most meaning are the root and
+ * the page you are on. What is collapsed goes into a menu that says how many it
+ * holds, so no navigation is lost.
  *
- * The collapse is declarative — `maxItems` — rather than measured from the
- * available width. The catalogue's wording is "when space is short", and a
- * width-measured version is possible: `OverflowList` already does the measuring
- * pass in this library. It is not used here because it drops from the end, which
- * for a trail means dropping the current page, and because a trail that
- * rearranges itself while somebody is reading it is worse than one that does not.
+ * The collapse is declarative (`maxItems`), not measured from the available
+ * width. The catalogue's wording is "when space is short", and `OverflowList`
+ * already does a measuring pass in this library. It is not used here because it
+ * drops from the end, which for a trail means dropping the current page, and
+ * because a trail should not rearrange itself while somebody is reading it.
  * Mantine, MUI and Ant Design all take the declarative route for the same reason.
  */
 import { useEffect, useRef, type ReactNode } from 'react';
@@ -83,12 +81,12 @@ export interface BreadcrumbsProps
   className?: string;
 }
 
-/* Text for the disclosure, so the count is announced rather than implied.
+/* Text for the disclosure, so the count is announced.
  *
- * Always plural, and that is not an oversight. A collapse hides everything
- * between the first and the last crumb, so hiding exactly one would mean a trail
- * of three — and putting one crumb behind a disclosure saves no room and costs a
- * click. `collapses` below refuses that case, so `count` is never 1. */
+ * Always plural. A collapse hides everything between the first and the last
+ * crumb, so hiding exactly one would mean a trail of three, and one crumb behind
+ * a disclosure saves no room and costs a click. `collapses` below refuses that
+ * case, so `count` is never 1. */
 function collapsedLabel(count: number): string {
   return `Show ${count} hidden breadcrumbs`;
 }
@@ -96,19 +94,18 @@ function collapsedLabel(count: number): string {
 export function Breadcrumbs({
   items, maxItems, label = 'Breadcrumb', className, ...props
 }: BreadcrumbsProps): React.JSX.Element {
-  /* Two conditions, and the second is the one worth stating. A collapse always
-     leaves the first crumb, the disclosure and the last crumb, so it hides
-     `length - 2`. Hiding one of those is not a saving: the disclosure occupies
-     roughly the room the crumb did and the crumb now costs a click to reach. So
-     a trail shorter than four never collapses, whatever `maxItems` says. */
+  /* A collapse always leaves the first crumb, the disclosure and the last crumb,
+     so it hides `length - 2`. Hiding one saves nothing: the disclosure takes
+     about the room the crumb did, and the crumb then costs a click to reach. A
+     trail shorter than four never collapses, whatever `maxItems` says. */
   const collapses = maxItems !== undefined && items.length > maxItems && items.length >= 4;
   const hidden = collapses ? items.slice(1, items.length - 1) : [];
   const visible = collapses ? [items[0]!, items[items.length - 1]!] : items;
-  /* A crumb that was not in the trail before — the reader went a level deeper —
-     arrives with Crystal's `breadcrumb`; the trail the page loads with does not.
-     Decided by the crumbs already seen rather than by mounting: React Aria
+  /* A crumb that was not in the trail before (the reader went a level deeper)
+     arrives with Crystal's `breadcrumb`. The trail the page loads with does not.
+     This is decided by the crumbs already seen, not by mounting: React Aria
      rebuilds every item when the trail changes, so a crumb that stayed put is
-     mounted afresh too, and would otherwise arrive again. */
+     mounted afresh too and would otherwise arrive again. */
   const seen = useRef<Set<string> | null>(null);
   const isNew = (id: string): boolean => seen.current !== null && !seen.current.has(id);
   useEffect(() => { seen.current = new Set(items.map((item) => item.id)); });
@@ -135,10 +132,9 @@ export function Breadcrumbs({
           {collapses && index === 0 ? (
             <>
               <MenuTrigger>
-                {/* A React Aria `Button`, not a bare one. `MenuTrigger` hands
-                    its press behaviour down through context, and a plain
-                    `<button>` never receives it — the menu simply does not
-                    open, silently, which is how this was found. */}
+                {/* A React Aria `Button`. `MenuTrigger` hands its press
+                    behaviour down through context, and a plain `<button>`
+                    never receives it, so the menu would not open. */}
                 <IconButton
                   label={collapsedLabel(hidden.length)}
                   icon={EllipsisIcon}

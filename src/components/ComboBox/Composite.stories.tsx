@@ -22,17 +22,16 @@ const meta = {
     docs: {
       description: {
         component:
-          'A combobox has a set of values and the text is a way of finding one; an autocomplete '
-          + 'has suggestions and the text *is* the value. Both are `role="combobox"` and only the '
+          'A combobox has a set of values and the text is a way of finding one. An autocomplete '
+          + 'has suggestions and the text is the value. Both are `role="combobox"` and only the '
           + 'second keeps whatever was typed.\n\n'
           + '**Focus never leaves the text field.** The highlighted row is named through '
-          + '`aria-activedescendant`, which is what lets typing continue while the list is open — '
-          + 'every implementation that moves focus into the list breaks typing, and most of them '
-          + 'do.\n\n'
-          + 'Empty and loading are surfaces rather than an absent popover: a list showing nothing '
-          + 'is indistinguishable from one still thinking, and both from a broken field.\n\n'
-          + 'Transfer moves items with **named controls rather than a drag** — dragging between '
-          + 'two lists is the obvious gesture and it is unavailable to a keyboard user and '
+          + '`aria-activedescendant`, which lets typing continue while the list is open. Any '
+          + 'implementation that moves focus into the list breaks typing, and most do.\n\n'
+          + 'Empty and loading are surfaces, shown in the popover. A list showing nothing cannot '
+          + 'be told apart from one still loading, or from a broken field.\n\n'
+          + 'Transfer moves items with named controls instead of a drag. Dragging between two '
+          + 'lists is the obvious gesture, but it is unavailable to a keyboard user and '
           + 'invisible to a screen reader. Cascader announces the whole path, because "Edinburgh" '
           + 'alone has lost what disambiguates it.',
       },

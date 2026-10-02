@@ -1,30 +1,31 @@
 'use client';
 
-/* EditorBlock — a rich text surface with its toolbar, and its save state.
+/* EditorBlock: a rich text surface with its toolbar, and its save state.
  *
  * "**The toolbar is a real toolbar with one tab stop; formatting state is
  * announced.**" States: `at-rest`, `focus-visible`, `dirty`, `saving`, `saved`.
  *
- * The engine and its schema are the product's; `RichTextSurface` already takes
- * whatever editor a product brings. The block adds what sits around a document:
+ * The engine and its schema belong to the product, and `RichTextSurface`
+ * already takes whatever editor a product brings. The block adds what sits
+ * around a document:
  *
- *   - **One tab stop for the toolbar.** It is React Aria's toolbar: Tab reaches
- *     it once, the arrow keys move along it, and Tab again leaves for the text.
- *   - **Formatting state is said wherever the reader is.** On the toolbar each
+ *   - One tab stop for the toolbar. It is React Aria's toolbar: Tab reaches it
+ *     once, the arrow keys move along it, and Tab again leaves for the text.
+ *   - Formatting state is announced wherever the reader is. On the toolbar each
  *     control is `aria-pressed`, which a screen reader speaks as it is reached
  *     and as it flips. In the text the toolbar is out of reach, and a shortcut
- *     such as Ctrl+B changes a format silently; so while focus is in the text,
- *     a change to the active formats is said politely, coalesced into one
- *     sentence — "Bold on", "Italic off, Code on".
- *   - **Save state is words.** "Unsaved changes", "Saving", "Saved": shown
- *     beside Save and said as they change. Ctrl+S or Cmd+S saves from anywhere
- *     in the block while there is something to save; the keys are printed
- *     beside the button and describe it, so the shortcut is read with the
- *     button's name. (Not `aria-keyshortcuts`, which React Aria's button does
- *     not pass through, and which only a screen reader would ever have met.)
+ *     such as Ctrl+B changes a format silently. So while focus is in the text,
+ *     a change to the active formats is announced politely, coalesced into one
+ *     sentence such as "Bold on" or "Italic off, Code on".
+ *   - Save state is in words. "Unsaved changes", "Saving" and "Saved" are shown
+ *     beside Save and announced as they change. Ctrl+S or Cmd+S saves from
+ *     anywhere in the block while there is something to save. The keys are
+ *     printed beside the button and describe it, so the shortcut is read with
+ *     the button's name. `aria-keyshortcuts` is not used, because React Aria's
+ *     button does not pass it through and only a screen reader would expose it.
  *
- * "Haze surface in a Frost frame": the block is the Frost frame; the surface is
- * `RichTextSurface`'s Haze, under its toolbar.
+ * "Haze surface in a Frost frame": the block is the Frost frame, and the surface
+ * is `RichTextSurface`'s Haze, under its toolbar.
  */
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { RichTextSurface, type FormatAction } from '../RichTextSurface/RichTextSurface.js';

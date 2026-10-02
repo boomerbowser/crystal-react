@@ -4,7 +4,7 @@ import { DropIndicator } from './DropIndicator.js';
 
 describe('DropIndicator', () => {
   /* Announced as the drag moves, so a keyboard drag is followable without sight.
-     An indicator that is only drawn is invisible to the route that needs it most. */
+     An indicator that is only drawn cannot be followed without sight. */
   it('is announced, not only drawn', () => {
     renderWithCrystal(<DropIndicator label="Insert before Beta" isActive />);
     const target = screen.getByRole('option', { name: 'Insert before Beta' });
@@ -12,7 +12,7 @@ describe('DropIndicator', () => {
   });
 
   /* A reader who cannot see the indicator appear has no way to tell "not here"
-     from "not yet", so an invalid target says so rather than showing nothing. */
+     from "not yet", so an invalid target is announced as one. */
   it('says when a target cannot be used', () => {
     renderWithCrystal(<DropIndicator label="Insert before Beta" isActive isInvalid />);
     expect(screen.getByRole('option', { name: /not allowed here/ })).toBeInTheDocument();

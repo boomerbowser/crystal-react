@@ -13,9 +13,8 @@ describe('RichTextSurface', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* A bold button that looks pressed and announces as an ordinary button leaves
-     a reader unable to tell whether their selection is already bold — which is
-     the only thing a formatting toolbar is for. */
+  /* A bold button that looks pressed but announces as an ordinary button leaves
+     a reader unable to tell whether their selection is already bold. */
   it('reports active formatting with aria-pressed', async () => {
     const onToggle = vi.fn();
     renderWithCrystal(
@@ -48,8 +47,8 @@ describe('RichTextSurface', () => {
 });
 
 describe('Mentions', () => {
-  /* A listbox the text surface points at rather than one focus moves into:
-     typing has to continue while the list is open. */
+  /* The text surface points at the listbox and focus stays in the surface,
+     because typing has to continue while the list is open. */
   it('offers a listbox without taking focus from the surface', async () => {
     const onSelect = vi.fn();
     renderWithCrystal(

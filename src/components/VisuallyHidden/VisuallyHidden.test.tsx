@@ -3,9 +3,8 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { VisuallyHidden } from './VisuallyHidden.js';
 
 describe('VisuallyHidden', () => {
-  /* The whole point: available to assistive technology, absent from sight.
-     `display: none` would remove it from the accessibility tree too, which is the
-     mistake this component exists to prevent. */
+  /* Available to assistive technology, absent from sight. `display: none` would
+     remove it from the accessibility tree too. */
   it('stays in the accessibility tree', () => {
     renderWithCrystal(<VisuallyHidden>Loading complete</VisuallyHidden>);
     const hidden = screen.getByText('Loading complete');

@@ -1,10 +1,10 @@
 'use client';
 
-/* Kbd — a key cap.
+/* Kbd. A key cap.
  *
- * A real `kbd` element, because the semantics are the point: assistive technology
- * and search indexes both treat `kbd` as "this is a key to press", and a styled
- * `span` is a picture of one.
+ * A real `kbd` element, for its semantics. Assistive technology and search
+ * indexes both treat `kbd` as "this is a key to press", and a styled `span` is
+ * only a picture of one.
  *
  * "Key names are spelled, not drawn as symbols alone." A cap reading "⌘" tells a
  * screen-reader user nothing and tells a Windows user the wrong thing, so a

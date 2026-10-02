@@ -17,12 +17,12 @@ describe('DonutChart', () => {
     expect(screen.getByText('100 total')).toBeInTheDocument();
   });
 
-  /* "Ring thickness is a declared proportion of the radius" — Crystal's, so a
-     donut is the same object at every size. */
+  /* "Ring thickness is a declared proportion of the radius". The proportion is
+     Crystal's, so a donut is the same object at every size. */
   it('takes its ring thickness from Crystal rather than from the caller', () => {
     const { container } = renderWithCrystal(<DonutChart label="Sessions" slices={slices} />);
-    /* An arc with a hole draws two curves and closes, where a wedge from the
-       centre draws one and goes home. */
+    /* An arc with a hole draws two curves and closes. A wedge from the centre
+       draws one curve and returns to the centre. */
     const path = container.querySelector('[role="graphics-symbol"] path')?.getAttribute('d') ?? '';
     expect((path.match(/A/g) ?? []).length).toBeGreaterThan(1);
   });

@@ -16,9 +16,9 @@ describe('media time', () => {
     expect(formatTime(-1)).toBe('0:00');
   });
 
-  /* The whole reason there are two functions: `1:23` is right on the screen and
-     wrong in an announcement, where a screen reader reads it as "one colon
-     twenty-three" or "one twenty-three" depending on the engine. */
+  /* There are two functions because `1:23` is right on the screen and wrong in
+     an announcement, where a screen reader reads it as "one colon twenty-three"
+     or "one twenty-three" depending on the engine. */
   it('is said in words rather than in punctuation', () => {
     expect(speakTime(83)).toBe('1 minute 23 seconds');
     expect(speakTime(3661)).toBe('1 hour 1 minute 1 second');

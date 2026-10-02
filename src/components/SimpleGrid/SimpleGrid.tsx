@@ -6,10 +6,9 @@
  * the column count follows the space available, so the same grid works in a
  * sidebar and across a page.
  *
- * The `min(..., 100%)` inside the template is what keeps it from overflowing. A
- * plain `minmax(240px, 1fr)` cannot go below 240px, so in a 200px column the grid
- * is wider than its container and the page scrolls sideways — the classic
- * auto-fit defect.
+ * The `min(..., 100%)` inside the template keeps it from overflowing. A plain
+ * `minmax(240px, 1fr)` cannot go below 240px, so in a 200px column the grid is
+ * wider than its container and the page scrolls sideways.
  */
 import { forwardRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';

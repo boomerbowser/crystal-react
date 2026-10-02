@@ -19,9 +19,9 @@ describe('ScatterChart', () => {
     expect(screen.getByLabelText('Ash, Seats 2, Sessions 40, 1')).toBeInTheDocument();
   });
 
-  /* Sizing by area, not by diameter: equal differences in the data are equal
-     differences in the amount of ink. The obvious mapping — the value onto the
-     diameter — makes the largest point three times the area it should be. */
+  /* Sizing by area, so equal differences in the data are equal differences in
+     the amount of ink. Mapping the value onto the diameter makes the largest
+     point three times the area it should be. */
   it('sizes a point by its area', () => {
     const { container } = renderWithCrystal(
       <ScatterChart
@@ -43,8 +43,8 @@ describe('ScatterChart', () => {
     expect((middle - small) / (large - small)).not.toBeCloseTo(0.5, 2);
   });
 
-  /* A dense scatter is exactly the chart whose table matters most, and exactly
-     the one an author is tempted to summarise instead. */
+  /* A dense scatter needs its table most, and is the chart an author is most
+     tempted to summarise instead. */
   it('puts every point in the table, not a summary', () => {
     renderWithCrystal(
       <ScatterChart label="Usage" series={series} xLabel="Seats" yLabel="Sessions" />,

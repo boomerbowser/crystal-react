@@ -5,9 +5,9 @@ const drawerIn = getRecipe('drawer-in')!;
 const transforms = (recipe: typeof drawerIn) => recipe.keyframes.map((frame) => frame.transform);
 
 describe('reorientRecipe', () => {
-  /* The authored recipe is one direction, written with physical transforms. This
-     is the fact everything below depends on, so it is stated rather than
-     assumed: if Crystal reauthors `drawer-in`, this fails first and loudly. */
+  /* The authored recipe runs in one direction, written with physical transforms.
+     Every test below depends on this, so it is checked here: if Crystal
+     reauthors `drawer-in`, this test fails first. */
   it('starts from a recipe that arrives from the right', () => {
     expect(transforms(drawerIn)[0]).toContain('translateX(105%)');
     expect(transforms(drawerIn)[0]).toContain('rotateY(-12deg)');
@@ -22,9 +22,9 @@ describe('reorientRecipe', () => {
     expect(mirrored[0]).toContain('translateX(-105%)');
     expect(mirrored[0]).toContain('rotateY(12deg)');
     /* The overshoot frame flips with the rest of the movement: the panel that
-       overshot 8px to the left now overshoots 8px to the right. Read from the
-       authored recipe rather than written down, so this stays a statement about
-       mirroring rather than a copy of Crystal's numbers. */
+       overshot 8px to the left now overshoots 8px to the right. The expected
+       value is derived from the authored recipe, so the test checks mirroring
+       without copying Crystal's numbers. */
     const authored = transforms(drawerIn)[1] ?? '';
     const signFlipped = authored
       .replace(/translateX\((-?)([^)]*)\)/, (_m, sign: string, v: string) => `translateX(${sign ? '' : '-'}${v})`)
@@ -55,8 +55,8 @@ describe('reorientRecipe', () => {
   });
 
   /* Physics, offsets and everything that is not a direction are carried through.
-     Reorienting is geometry; a second copy of the movement with its own spring
-     is the thing this exists to avoid. */
+     Reorienting changes only geometry, so there is never a second copy of the
+     movement with its own spring. */
   it('carries the spring, the duration and the offsets through untouched', () => {
     const turned = reorientRecipe(drawerIn, { toBlockAxis: true, mirrorInline: true });
     expect(turned.spring).toEqual(drawerIn.spring);
@@ -65,8 +65,8 @@ describe('reorientRecipe', () => {
       .toEqual(drawerIn.keyframes.map((frame) => frame.offset));
   });
 
-  /* Against the authored recipe rather than against a number: the perspective is
-     Crystal's, and a test that writes it down is a second place it lives. */
+  /* Compared with the authored recipe instead of a number, because the
+     perspective value belongs to Crystal and should not be copied here. */
   it('leaves perspective and every other transform function alone', () => {
     const authored = transforms(drawerIn);
     const turned = transforms(reorientRecipe(drawerIn, { mirrorInline: true }));

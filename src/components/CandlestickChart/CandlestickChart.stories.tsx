@@ -23,12 +23,11 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Rise and fall colour from the status tokens, never red and green alone." The second '
-          + 'clause is the design: a candle that rose is drawn **hollow**, one that fell is '
-          + 'drawn **filled**, and the colour sits on top of that. It is the convention the '
-          + 'instrument has had since long before screens had colour, which is why this chart '
-          + 'needs no dash or hatch invented for it — the second channel is already part of how '
-          + 'a candle is drawn.\n\n'
+          '"Rise and fall colour from the status tokens, never red and green alone." A candle '
+          + 'that rose is drawn hollow, one that fell is drawn filled, and the colour sits on top '
+          + 'of that. Candlestick charts have used this convention since long before screens had '
+          + 'colour, so the second channel is already part of how a candle is drawn and the chart '
+          + 'needs no dash or hatch.\n\n'
           + '"Wick and body share one x centre; body has no radius." A candle is four numbers at '
           + 'one instant, and a rounded body would make the open and close read as approximate.',
       },

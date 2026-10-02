@@ -1,25 +1,24 @@
 'use client';
 
-/* ProductCard — one product, and exactly two tab stops.
+/* ProductCard: one product, and exactly two tab stops.
  *
  * "**The whole card is not a link**; the name is, and the action is a button.
  * One tab stop each."
  *
- * That sentence is the whole component, and it is a correction of the thing
- * almost every storefront does. A card wrapped in an anchor gives a screen
- * reader one enormous link whose name is every word on the card — "Harbour
- * print A2 39.99 reduced from 49.99 four point five out of five 128 reviews in
- * stock add to basket" — and nests the Add control inside it, which is invalid
- * and behaves differently in every browser. It also takes away the two things a
- * reader actually wants: going to the product, and buying it, as two separate
- * decisions.
+ * Almost every storefront wraps the card in an anchor instead. That gives a
+ * screen reader one enormous link whose name is every word on the card, such as
+ * "Harbour print A2 39.99 reduced from 49.99 four point five out of five 128
+ * reviews in stock add to basket", and nests the Add control inside it, which
+ * is invalid and behaves differently in every browser. It also takes away the
+ * two things a reader wants: going to the product, and buying it, as two
+ * separate decisions.
  *
  * So the name is the link and the action is a button, and everything else on the
  * card is text. A pointer still gets a large target, because the name's own hit
- * area is stretched over the card by the stylesheet — which is a pointer
- * affordance rather than a second control, and leaves the tab order at two.
+ * area is stretched over the card by the stylesheet. That is a pointer
+ * affordance rather than a second control, so the tab order stays at two.
  *
- * **An unavailable product keeps its card.** The action goes, because there is
+ * An unavailable product keeps its card. The action goes, because there is
  * nothing to press; the name stays a link, because the product page is still
  * where a reader goes to find out when it will be back.
  */
@@ -36,7 +35,7 @@ import styles from './ProductCard.module.scss';
 
 export interface ProductCardProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
   /**
-   * The name's heading level, so a card fits the outline it is placed in — under
+   * The name's heading level, so a card fits the outline it is placed in. Under
    * a storefront's `h1` its name is an `h2`. Defaults to 3.
    */
   headingLevel?: 2 | 3 | 4 | 5 | 6;
@@ -47,13 +46,13 @@ export interface ProductCardProps extends Omit<HTMLAttributes<HTMLElement>, 'chi
   price: Money;
   /** What it used to cost. With it, a `DiscountBadge` appears and is computed. */
   was?: Money;
-  /** The picture. Decorative — the name is the name. */
+  /** The picture. Decorative, because the name already names the product. */
   media?: ReactNode;
   availability?: Availability;
   availabilityLabel?: ReactNode;
   /** The rating, as a `Rating` in read-only mode. */
   rating?: ReactNode;
-  /** The primary action. A button — never nested inside the link. */
+  /** The primary action. A button, never nested inside the link. */
   action?: ReactNode;
   /** A wishlist toggle or similar. Sits over the media. */
   aside?: ReactNode;
@@ -83,8 +82,8 @@ export const ProductCard = forwardRef<HTMLElement, ProductCardProps>(function Pr
       <div className={styles['body']}>
         <Heading className={styles['heading']}>
           {/* The one link. Its hit area is stretched over the card by the
-              stylesheet, which is a pointer affordance and not a second tab
-              stop — the card is still two. */}
+              stylesheet. That is a pointer affordance, not a second tab stop,
+              so the card still has two. */}
           <a href={href} className={styles['name']}>{name}</a>
         </Heading>
 
@@ -92,8 +91,8 @@ export const ProductCard = forwardRef<HTMLElement, ProductCardProps>(function Pr
           <Price value={price} as="span" />
           {was === undefined ? null : (
             <>
-              {/* The old price, struck through *and* said: a line through text
-                  is a drawing, and `<s>` is what carries it to a reader. */}
+              {/* The old price, struck through and said. A line through text
+                  is only drawn; `<s>` carries it to a reader. */}
               <s className={styles['was']}>
                 <Price value={was} as="span" tabular={false} />
               </s>

@@ -1,26 +1,23 @@
 'use client';
 
-/* PaymentMethod — a choice among stored methods, and a slot for the provider's.
+/* PaymentMethod: a choice among stored methods, and a slot for the provider's.
  *
- * "A radio group. **Card fields are never reimplemented — the host supplies its
- * provider element.**"
+ * "A radio group. Card fields are never reimplemented: the host supplies its
+ * provider element."
  *
- * That second sentence is a boundary, not a preference, and it is the reason
- * this component is in the catalogue at all. A card number, an expiry and a CVC
- * typed into inputs this library rendered would put every product using Crystal
- * inside PCI scope — the whole cardholder data environment — because the data
- * touched their page in the clear. Stripe, Adyen, Braintree and the rest all
- * solve this the same way: they hand you an element you cannot read the inside
- * of, hosted on their origin, and the number never reaches your JavaScript.
+ * The second sentence is the reason this component is in the catalogue. A card
+ * number, an expiry and a CVC typed into inputs this library rendered would put
+ * every product using Crystal inside PCI scope (the whole cardholder data
+ * environment), because the data touched their page in the clear. Stripe, Adyen,
+ * Braintree and the others hand you an element hosted on their origin that you
+ * cannot read the inside of, so the number never reaches your JavaScript.
  *
- * So there is a `provider` slot and there are no card fields. It is worth
- * stating the failure mode plainly, because it does not look like a failure:
- * a card form built here would work, would look right, would pass every test in
- * this repository, and would quietly move a compliance obligation onto every
- * product that adopted it.
+ * So there is a `provider` slot and there are no card fields. A card form built
+ * here would work, look right and pass every test in this repository, and it
+ * would move a compliance obligation onto every product that adopted it.
  *
- * Everything else is the option group the shipping selector uses — the same
- * cards, the same rule that selection is label weight rather than a fill.
+ * Everything else is the option group the shipping selector uses: the same
+ * cards, and the same rule that selection is label weight rather than a fill.
  */
 import { useContext, type ReactNode } from 'react';
 import { RadioGroupStateContext } from 'react-aria-components';
@@ -33,7 +30,8 @@ export interface StoredMethod {
   value: string;
   /** How the method reads. "Visa ending 4242". Never the full number. */
   label: string;
-  /** Anything more — an expiry, a billing name. Part of the option's name. */
+  /** Anything more, such as an expiry or a billing name. Part of the option's
+   *  name. */
   detail?: ReactNode;
   /** A brand mark. Decorative: the label is what says which card this is. */
   mark?: ReactNode;
@@ -46,9 +44,10 @@ export interface PaymentMethodProps
   methods?: readonly StoredMethod[];
   label?: ReactNode;
   /**
-   * The provider's own element — Stripe's `PaymentElement`, Adyen's drop-in.
-   * Rendered inside the "a new method" option when that option is chosen.
-   * This library never renders a card field of its own; see the note above.
+   * The provider's own element, such as Stripe's `PaymentElement` or Adyen's
+   * drop-in. Rendered inside the "a new method" option when that option is
+   * chosen. This library never renders a card field of its own; see the note
+   * above.
    */
   provider?: ReactNode;
   /** The value that selects the provider's element. */
@@ -56,19 +55,14 @@ export interface PaymentMethodProps
   newMethodLabel?: ReactNode;
 }
 
-/* Whether the provider's element is mounted is asked of the radio group's own
-   state rather than of a `value` prop.
+/* Whether the provider's element is mounted is read from the radio group's own
+   state, not from a `value` prop.
  *
- * The obvious version of this reads a `value` the caller passed. It typechecks,
- * it works in every controlled example, and it fails silently for anyone using
- * the `defaultValue` the group's props also offer: `value` is `undefined`
- * forever, so the option is selectable, looks chosen, and mounts nothing. A
- * component whose one job is to host somebody else's payment element cannot
- * have an uncontrolled mode that quietly hosts nothing.
- *
- * React Aria publishes the state both modes share, which is the answer to the
- * question actually being asked — "is this option the chosen one" — rather than
- * to a proxy for it. */
+ * A group used with the `defaultValue` its props also offer has no `value`: it
+ * stays `undefined`, so a check on that prop fails silently, leaving the option
+ * selectable and looking chosen while it mounts nothing. React Aria publishes
+ * the selection state that controlled and uncontrolled groups share, and that
+ * state says whether this option is the chosen one. */
 function ProviderSlot(
   { when, children }: { when: string; children: ReactNode },
 ): React.JSX.Element | null {
@@ -111,9 +105,9 @@ export function PaymentMethod({
             <span className={styles['name']}>{newMethodLabel}</span>
           </SelectedRadio>
           {/* Mounted only while it is chosen. A provider's element is an iframe
-              that talks to a payment processor; four of them sitting behind
-              unchosen options is four sessions opened for nothing, and one of
-              them is focusable inside a card the reader did not pick. */}
+              that talks to a payment processor. Four of them behind unchosen
+              options would open four sessions for nothing, and one of them
+              would be focusable inside a card the reader did not pick. */}
           <ProviderSlot when={newMethodValue}>{provider}</ProviderSlot>
         </div>
       ) : null}

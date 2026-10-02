@@ -24,10 +24,9 @@ describe('BottomNavigation', () => {
 
   it('always shows every label', () => {
     render(<BottomNavigation items={items} currentId="feed" />);
-    /* Not an icon-only bar that reveals the label for the current destination
-       only: that is the leading-mark defect in another form — the targets move
-       as you navigate, and two of the three are unnamed to anyone who does not
-       recognise the icon. */
+    /* An icon-only bar that reveals the label for the current destination only
+       repeats the leading-mark defect. The targets move as you navigate, and two
+       of the three are unnamed to anyone who does not recognise the icon. */
     for (const item of items) {
       expect(screen.getByRole('link', { name: item.label })).toBeTruthy();
     }

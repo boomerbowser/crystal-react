@@ -6,20 +6,20 @@ import { renderWithCrystal, screen, within } from '../../test/render.js';
 import { Calendar, RangeCalendar } from './Calendar.js';
 
 describe('Calendar', () => {
-  /* "Usable on its own rather than only inside a picker" — the whole reason the
-     month grid left `DatePicker`. */
+  /* "Usable on its own rather than only inside a picker" is why the month grid
+     lives outside `DatePicker`. */
   it('stands on its own, as a named grid', () => {
     renderWithCrystal(<Calendar label="Departure" defaultValue={new CalendarDate(2026, 9, 23)} />);
     expect(screen.getByRole('application', { name: /Departure/ })).toBeInTheDocument();
     expect(screen.getByRole('grid')).toBeInTheDocument();
   });
 
-  /* The weekday row is there and is `aria-hidden`, which is React Aria's choice
-     and the better one: each cell's accessible name is the whole date — "Wednesday
-     23 September 2026" — so a reader hears the day of the week without having to
-     cross-reference a column header they cannot see the position of. Asserted
-     rather than assumed, because "a grid with row and column headers" reads like
-     a requirement for `columnheader` roles and is not one. */
+  /* The weekday row is present and `aria-hidden`, which is React Aria's choice.
+     Each cell's accessible name is the whole date ("Wednesday 23 September
+     2026"), so a reader hears the day of the week without cross-referencing a
+     column header whose position they cannot see. This is asserted, because
+     "a grid with row and column headers" reads like a requirement for
+     `columnheader` roles and is not one. */
   it('shows the weekday row and keeps it out of the accessibility tree', () => {
     const { container } = renderWithCrystal(
       <Calendar label="Departure" defaultValue={new CalendarDate(2026, 9, 23)} />,

@@ -5,8 +5,8 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { Spoiler } from './Spoiler.js';
 
 describe('Spoiler', () => {
-  /* The opposite of a disclosure: a spoiler is a visual economy, so the hidden
-     part stays readable to anyone who is not looking at the page. */
+  /* Unlike a disclosure, a spoiler is a visual economy, so the hidden part stays
+     readable to anyone who is not looking at the page. */
   it('keeps the truncated content in the accessibility tree', () => {
     renderWithCrystal(<Spoiler>Six paragraphs of it</Spoiler>);
     expect(screen.getByText('Six paragraphs of it')).toBeInTheDocument();

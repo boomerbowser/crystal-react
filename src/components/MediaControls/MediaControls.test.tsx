@@ -27,7 +27,7 @@ describe('MediaControls', () => {
     expect(onPlayPause).toHaveBeenCalledOnce();
 
     rerender(<MediaControls {...base} isPlaying onPlayPause={onPlayPause} />);
-    /* The same button, still called Play, now pressed. Not a second control. */
+    /* The same button, still called Play, now pressed. */
     expect(screen.getAllByRole('button', { name: 'Play' })).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Play' })).toHaveAttribute('aria-pressed', 'true');
   });
@@ -39,7 +39,8 @@ describe('MediaControls', () => {
     expect(screen.queryByRole('progressbar')).toBeNull();
   });
 
-  /* And it announces a *time*. `1:23` is not a time to a screen reader. */
+  /* It announces a time in words. A screen reader does not read `1:23` as a
+     time. */
   it('says the position in words', () => {
     renderWithCrystal(<MediaControls {...base} />);
     expect(screen.getByRole('slider', { name: 'Seek' }))
@@ -52,16 +53,16 @@ describe('MediaControls', () => {
     expect(screen.getByText('4:56')).toBeInTheDocument();
   });
 
-  /* A scrubber with a range of nought is a control that cannot be operated, and
-     a length nobody knows yet is not a length to claim. */
+  /* A scrubber with a range of nought cannot be operated, and the component
+     must not claim a length nobody knows yet. */
   it('disables the scrubber until the length is known', () => {
     renderWithCrystal(<MediaControls {...base} duration={0} />);
     expect(screen.getByRole('slider', { name: 'Seek' })).toBeDisabled();
     expect(screen.getByText('--:--')).toBeInTheDocument();
   });
 
-  /* Buffering is not paused — the reader did not ask for this — and a spinner is
-     information only a sighted reader gets. */
+  /* Buffering differs from paused, because the reader did not ask for it, and
+     a spinner reaches only sighted readers. */
   it('says it is buffering rather than only drawing it', () => {
     renderWithCrystal(<MediaControls {...base} isBuffering />);
     expect(screen.getByRole('status')).toHaveTextContent('Buffering at 1 minute 23 seconds');

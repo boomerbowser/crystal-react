@@ -4,9 +4,9 @@
 
 .title { margin: 0; font-weight: 750; }
 
-/* The element is not drawn — the transport is the control surface — but it is
-   not `display: none` either: a hidden media element is one some engines decline
-   to load, and it has to stay in the accessibility tree as the thing being
+/* The element is not drawn, because the transport is the control surface. It is
+   not `display: none` either. Some engines decline to load a hidden media
+   element, and it has to stay in the accessibility tree as the thing being
    controlled. */
 .element {
   position: absolute;

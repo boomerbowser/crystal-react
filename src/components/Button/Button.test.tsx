@@ -17,8 +17,8 @@ describe('Button', () => {
   });
 
   /* Motion binds to press state, not to click. A keyboard user presses with Space
-     and Enter and must get the same feedback a pointer user gets — which is the
-     whole reason the upstream engine binds to state. */
+     and Enter and must get the same feedback a pointer user gets, which is why
+     the upstream engine binds to state. */
   it('plays the press recipe for a keyboard press, not only a pointer one', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Button>Save</Button>);
@@ -79,8 +79,7 @@ describe('Button', () => {
 
   it('passes an unknown recipe name up as an error rather than failing silently', () => {
     /* Recipes come from @crystal-ui/core. A typo must not degrade to "no animation",
-       because that is indistinguishable from a working component that is subtly
-       dead — which is how eleven hollow recipes shipped upstream. */
+       because that cannot be told apart from a working component. */
     expect(() => renderWithCrystal(<Button>A</Button>)).not.toThrow();
   });
 });

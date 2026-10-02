@@ -6,17 +6,16 @@
  *
  * Two things it will not do, both from the catalogue:
  *
- *   - **It is never a heading.** `as` renders `p`, `span`, `div` and the like; a
+ *   - It is never a heading. `as` renders `p`, `span`, `div` and the like; a
  *     heading is `Title`, where the level is part of the document outline rather
- *     than a size. The catalogue is explicit that the visual level must not be
- *     chosen independently of the outline, and the way to enforce that is to make
- *     the two separate components.
- *   - **Truncated text keeps its full value.** Clipping with an ellipsis removes
- *     the text from sight and not from the DOM, so a screen reader still reads it
- *     — but a sighted reader loses it, and `title` is what gives them a way back.
- *     It is set from the children when they are a plain string, because that is
- *     the case where it can be done correctly without the caller repeating
- *     themselves.
+ *     than a size. The catalogue says the visual level must not be chosen
+ *     independently of the outline, and keeping the two as separate components
+ *     enforces that.
+ *   - Truncated text keeps its full value. Clipping with an ellipsis removes the
+ *     text from sight and not from the DOM, so a screen reader still reads it,
+ *     but a sighted reader loses it. `title` gives them a way back. It is set
+ *     from the children when they are a plain string, because that is the case
+ *     where it can be done correctly without the caller repeating themselves.
  */
 import { forwardRef, type CSSProperties, type ElementType, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -38,7 +37,7 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, 'color'> {
   /** Colour role, not a colour. Defaults to the surface's ink. */
   tone?: TextTone;
   weight?: 'regular' | 'medium' | 'strong';
-  /** Constrain to a comfortable measure — around 68 characters. */
+  /** Constrain to a comfortable measure of around 68 characters. */
   measure?: boolean;
   /** Clip to one line. The full value stays reachable through `title`. */
   truncate?: boolean;

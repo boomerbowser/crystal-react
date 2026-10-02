@@ -1,21 +1,16 @@
 /* Render the same material in Crystal and in Crystal React, and compare.
  *
- * This is the aesthetic drift check. Not "does the token have the right value" —
- * `lint:tokens` and the round-trip gate already cover that, and both passed
- * throughout the period in which every Resin surface in this library rendered
- * without its optical rims and at half Crystal's elevation. A value can be
- * correct in a token and never reach a pixel.
+ * This is the aesthetic drift check. Token values are covered by `lint:tokens`
+ * and the round-trip gate; this checks that the values reach a pixel, which a
+ * correct token does not guarantee.
  *
- * So both sides are *rendered*: Crystal's own preview at one origin, Crystal
- * React's Storybook at another, the same material in each, and the computed
- * style compared property by property. Neither side is written down here. If
- * Crystal changes, the expectation changes with it, which is the only way a
- * parity check stays true.
+ * Both sides are rendered: Crystal's own preview at one origin, Crystal React's
+ * Storybook at another, the same material in each, and the computed style
+ * compared property by property. Neither side is written down here, so when
+ * Crystal changes, the expectation changes with it.
  *
- * What it caught on its first run is what it exists for: Crystal React painted
- * Resin with `--cr-shadow-content` — two layers, no rims, half the elevation —
- * where Crystal paints `--cr-shadow-float`, which is four. Meridian saw it before
- * any gate did, which is the argument for having one.
+ * Resin takes `--cr-shadow-float`, which has four layers. `--cr-shadow-content`
+ * has two layers, no rims and half the elevation, and must not be used for Resin.
  *
  *   node scripts/verify-materials.mjs
  *   CRYSTAL_ORIGIN=… STORYBOOK_ORIGIN=… node scripts/verify-materials.mjs
@@ -30,38 +25,35 @@ const STORYBOOK = process.env['STORYBOOK_ORIGIN'] ?? 'http://127.0.0.1:6006';
    the toolbar, so a reviewer who left it in dark mode does not fail the build. */
 const STORY = 'materials-parity--every-material';
 
-/* What is compared, and what is deliberately not.
+/* What is compared.
  *
  * `backdropFilter`, `boxShadow`, `backgroundColor` and `border` are the material.
- * Geometry is not: Crystal's preview and a Storybook example are different
- * compositions at different sizes, and a radius or a padding difference between
- * them is a layout choice rather than a material drift. */
+ * Geometry is left out: Crystal's preview and a Storybook example are different
+ * compositions at different sizes, so a radius or padding difference between
+ * them is a layout choice. */
 const MATERIAL = ['backdropFilter', 'boxShadow', 'backgroundColor', 'borderColor', 'borderWidth'];
 
-/* The Haze content fill, which is a *pseudo-element*, and that is the whole
- * reason R-15 went unseen. Crystal holds an 80% reading fill on an isolated
- * `::before` behind every Resin control's label, inset from the rim so the glass
- * edge still reads. Sixteen of this library's twenty Resin surfaces painted none
- * of it, and every gate stayed green, because each one asked the element about
- * itself and a `::before` is not the element.
+/* The Haze content fill, which lives on a pseudo-element (R-15). Crystal holds an
+ * 80% reading fill on an isolated `::before` behind every Resin control's label,
+ * inset from the rim so the glass edge still reads. A check that reads the
+ * element's own computed style does not see it.
  *
- * `content` is first and it is load-bearing: a pseudo-element with no `content`
- * does not exist, and every other property on it still computes to a plausible
- * value. Checking the colour without checking `content` compares the style of
- * something that was never painted.
+ * `content` comes first because a pseudo-element with no `content` does not
+ * exist, yet every other property on it still computes to a plausible value.
+ * Checking the colour without `content` compares the style of something that was
+ * never painted.
  *
- * The inset is read as four longhands rather than as `inset`, which browsers do
- * not reliably serialise back from the shorthand. */
+ * The inset is read as four longhands, because browsers do not reliably
+ * serialise `inset` back from the shorthand. */
 const HAZE_LAYER = ['content', 'backgroundColor', 'filter', 'top', 'right', 'bottom', 'left'];
 
 /* Each pair is one material: where Crystal renders it, and where this library
    does. Crystal's side uses its own primitive classes, which are the exported
-   contract — `.cr-frost`, `.cr-resin`, `.cr-haze`, `.cr-plastic`. */
-/* The `:not()` chains are load-bearing. `controls.css` styles `.cr-resin-haze`,
+   contract: `.cr-frost`, `.cr-resin`, `.cr-haze`, `.cr-plastic`. */
+/* The `:not()` chains are required. `controls.css` styles `.cr-resin-haze`,
    `.cr-control`, `.cr-field-shell` and every bare `button` with the Resin recipe,
    so the first `.cr-haze` on the playground is a control wearing Haze's class and
-   Resin's shadow. Comparing against it reports a drift that is really a mismatched
-   specimen — which is its own kind of gate that guards nothing. */
+   Resin's shadow. Comparing against it reports a mismatched specimen as drift. */
 const PAIRS = [
   {
     material: 'resin',
@@ -69,17 +61,15 @@ const PAIRS = [
     react: '[data-material="resin"]',
   },
   { material: 'frost', crystal: '.cr-frost:not(button):not(.cr-control)', react: '[data-material="frost"]' },
-  /* A Resin *control*, which is a different specimen from a Resin surface and
-     needs its own pair. The `resin` pair above excludes buttons and controls on
-     purpose — `controls.css` gives them a recipe the bare primitive does not
-     have — so it can never see the Haze fill, because the fill only exists on
-     the controls it excludes. Adding a `::before` comparison there would have
-     compared nothing against nothing and passed. */
+  /* A Resin control is a different specimen from a Resin surface and needs its
+     own pair. The `resin` pair above excludes buttons and controls, because
+     `controls.css` gives them a recipe the bare primitive does not have. The
+     Haze fill exists only on those controls, so a `::before` comparison on the
+     `resin` pair would compare nothing against nothing and pass. */
   /* The neutral control only. From 2.1.0 a `.primary` action tints its reading
-     pad in the palette's primary, and the preview marks its main actions so; the
-     first painting `button.cr-button` on the playground became a primary one the
-     day the preview installed a Crystal that paints `.primary`, and the pair
-     reported the tint as drift — a mismatched specimen again. */
+     pad in the palette's primary, and the preview marks its main actions as
+     primary, so an unfiltered selector can land on a primary button and report
+     the tint as drift. */
   {
     material: 'resin-control',
     crystal: 'button.cr-button:not(.primary):not(.quiet):not(.danger)',
@@ -89,35 +79,27 @@ const PAIRS = [
   },
 ];
 
-/* Haze is not in that list, and its absence is the honest thing rather than the
-   convenient one.
+/* Haze has no pair.
  *
  * Crystal's preview has no bare Haze specimen to compare against: every
  * `.cr-haze` there is either an unpainted wrapper carrying the class, or an
  * element `controls.css` has also given the Resin recipe. Comparing against
- * either measures the wrong thing, and a gate that reports a drift which is
- * really a mismatched specimen is worse than one that admits a gap.
+ * either measures the wrong thing, so the gap is left visible here instead.
  *
- * A declared pair that cannot be compared *fails* — so a specimen disappearing
- * from Crystal is caught. An undeclared one is a gap in this file, where somebody
- * reading it can see it. Closing this needs a bare Haze surface in Crystal's own
- * preview; the parity story here already has one waiting for it. */
+ * A declared pair that cannot be compared fails, so a specimen disappearing from
+ * Crystal is caught. Closing this gap needs a bare Haze surface in Crystal's own
+ * preview; the parity story here already renders one. */
 
 /* Differences that are known, explained and somebody's decision.
  *
- * Empty, and it was not always. The one entry it held was M-4: Crystal had two
- * Resin shadows — the exported `--cr-shadow-float` and a hand-written copy in
- * `controls.css` — and because the preview loads the second, a platform library
- * following the first could not reproduce the appearance that was blessed.
+ * Empty. Its one former entry was M-4, resolved when `controls.css` began
+ * reading `--cr-shadow-float`, which carries the approved rims over its tinted,
+ * elevation-responsive spread. Crystal now has one Resin shadow recipe. An entry
+ * here is a difference somebody decided to live with, never a way to silence an
+ * inconvenient one.
  *
- * Meridian approved fixing it rather than allowing it, so `controls.css` reads
- * the token now and the token carries the blessed rims over the tinted,
- * elevation-responsive spread it always had. One recipe, and this list is empty
- * again — which is the state it should be kept in. An entry here is a difference
- * somebody decided to live with, not a place to put one that is inconvenient.
- *
- * Named rather than pattern-matched, and printed on every run: an allowance that
- * says nothing is a gate quietly switched off. */
+ * Entries are named rather than pattern-matched, and printed on every run, so
+ * an allowance is always visible. */
 const KNOWN = new Map([]);
 
 const failures = [];
@@ -134,11 +116,9 @@ const measure = async (url, ready, pairs, side) => {
   return page.evaluate(({ list, props, which }) => {
     const out = {};
     for (const pair of list) {
-      /* The first match that actually *paints*. Crystal's preview uses several of
-         these classes on bare wrappers that carry the name and no fill, and
-         comparing against one of those reports a drift that is really a
-         mismatched specimen — a gate measuring the wrong thing rather than the
-         wrong value. A material that paints nothing is not a specimen of it. */
+      /* The first match that paints. Crystal's preview uses several of these
+         classes on bare wrappers that carry the name and no fill, and comparing
+         against one of those reports a mismatched specimen as drift. */
       const element = [...document.querySelectorAll(pair[which])].find((candidate) => {
         const style = getComputedStyle(candidate);
         return style.backgroundColor !== 'rgba(0, 0, 0, 0)' || style.backdropFilter !== 'none';
@@ -156,8 +136,8 @@ const measure = async (url, ready, pairs, side) => {
 };
 
 /* The playground, because it is where Crystal renders the primitives as real UI
-   on a real foundation — `materials.html` describes them and uses none of the
-   classes. It is also the page the reference scene Meridian sent comes from. */
+   on a real foundation. `materials.html` describes them and uses none of the
+   classes. The playground is also the source of Meridian's reference scene. */
 const theirs = await measure(`${CRYSTAL}/playground.html`, '.cr-frost', PAIRS, 'crystal');
 const ours = await measure(
   `${STORYBOOK}/iframe.html?id=${STORY}&viewMode=story`,

@@ -1,28 +1,26 @@
-/* DiscountBadge — a reduction, stated completely.
+/* DiscountBadge: a reduction, stated completely.
  *
  * "**States what is reduced from what**; a percentage alone is not a claim."
  *
- * That sentence is the whole API. This component will not take `percent={20}`,
- * because a percentage handed in from outside is a number nobody can check: it
- * says twenty per cent off *something*, and the something is the part that makes
- * it either a saving or a marketing noise. So it takes the two amounts and
- * computes the reduction itself, which means the badge cannot disagree with the
- * price beside it.
+ * The API follows from that. The component does not take `percent={20}`,
+ * because nobody can check a percentage handed in from outside. It says twenty
+ * per cent off something, and that something decides whether it is a saving or
+ * marketing noise. So the component takes the two amounts and computes the
+ * reduction itself, and the badge cannot disagree with the price beside it.
  *
- * **The pill shows the reduction and the name states the whole thing.** A pill
- * is a few characters wide and "£40, reduced from £50 (20% off)" does not fit in
- * one; but the shorter text is the *same fact more briefly*, not a different
- * fact, so the full statement goes in the accessible name where there is room
- * for it. That is the distinction worth holding on to: `NumberFormatter` refuses
- * a separate spoken form because "1.2M" and `1204893` are two different values,
- * and this adds to a form rather than replacing it — the same pattern as the
- * notification's "Unread." and the gallery's position.
+ * The pill shows the reduction and the accessible name states the whole thing. A
+ * pill is a few characters wide, and "£40, reduced from £50 (20% off)" does not
+ * fit in one. The shorter text is the same fact stated briefly, so the full
+ * statement goes in the accessible name, where there is room. `NumberFormatter`
+ * refuses a separate spoken form because "1.2M" and `1204893` are two different
+ * values. This component adds to the visible form and does not replace it, the
+ * same pattern as the notification's "Unread." and the gallery's position.
  *
- * **A status accent, and the status is success.** A reduction is a favourable
- * fact about a price, so it takes the success ink over the Haze fill; painting
- * it in the attention colour would tell a reader that something needs their
- * care. There is no perimeter stroke, for the reason `StatusBadge` gives: a
- * coloured ring around a pill is the shape Crystal uses for focus.
+ * The status accent is success. A reduction is a favourable fact about a price,
+ * so it takes the success ink over the Haze fill. The attention colour would
+ * tell a reader that something needs their care. There is no perimeter stroke,
+ * for the reason `StatusBadge` gives: a coloured ring around a pill is the shape
+ * Crystal uses for focus.
  */
 import { forwardRef, useMemo, type HTMLAttributes } from 'react';
 import { useNumberFormatter } from 'react-aria';
@@ -39,14 +37,14 @@ export interface DiscountBadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>
   /** What the price is. */
   to: Money;
   /**
-   * Which reduction the pill shows. The name states both either way, so this is
-   * a question of which one a shopper scans for, not of what is disclosed.
+   * Which reduction the pill shows. The name states both either way, so this
+   * only changes which figure a shopper scans for.
    */
   show?: 'percentage' | 'amount';
   /**
-   * The full statement, given the three formatted figures. Default English; the
-   * order of "reduced from" is different in other languages and this component
-   * has no business assuming one.
+   * The full statement, given the three formatted figures. Default English.
+   * The order of "reduced from" differs in other languages, so the component
+   * does not assume one.
    */
   statement?: (parts: { to: string; from: string; percentage: string }) => string;
 }
@@ -55,14 +53,14 @@ export const DiscountBadge = forwardRef<HTMLSpanElement, DiscountBadgeProps>(
   function DiscountBadge({ from, to, show = 'percentage', statement, className, ...props }, ref) {
     const money = useNumberFormatter(moneyFormat(from));
     const percentage = percentOff(from, to);
-    /* `attention` when the reduction changes while it is shown — a price cut
-       again — and never on the render that first shows it. */
+    /* `attention` when the reduction changes while it is shown, such as a price
+       cut again. Never on the render that first shows it. */
     const cue = useChangeMotion(percentage, (was, is) => (was !== null && is !== null ? 'attention' : null));
     const merged = useMemo(() => mergeRefs(ref, cue as never), [ref, cue]);
 
-    /* Two currencies are not a reduction, and neither is an increase. Rendering
-       either as a discount would be the component asserting something it has
-       just worked out is false. */
+    /* Two currencies are not a reduction, and neither is an increase. The
+       component has just worked out that neither is a discount, so it renders
+       nothing. */
     if (percentage === null || to.amount >= from.amount) return <></>;
 
     const formatted = {

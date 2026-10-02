@@ -27,8 +27,8 @@ describe('Heatmap', () => {
     expect(container.querySelectorAll('[data-empty]').length).toBe(1);
   });
 
-  /* Each cell carries the ink Crystal measured against its own step, which is
-     what makes the pairing readable rather than merely present. */
+  /* Each cell carries the ink Crystal measured against its own step, so its
+     number is readable on its own paint. */
   it('gives every cell the ink measured against its own step', () => {
     const { container } = renderWithCrystal(
       <Heatmap label="Incidents" rows={rows} rowLabels={rowLabels} columnLabels={columnLabels} />,
@@ -39,9 +39,8 @@ describe('Heatmap', () => {
     for (const ink of inks) expect(ink).toMatch(/--cr-chart-on-heat-\d|--cr-muted/);
   });
 
-  /* Three states, three marks. A cell of nought and a cell nobody measured are
-     as different from each other as either is from a busy one, and drawing them
-     alike is a chart inventing a zero. */
+  /* A cell of nought, a cell nobody measured and a busy cell are each drawn
+     differently. Drawing the first two alike would invent a zero. */
   it('tells a measured nought from a missing measurement', () => {
     renderWithCrystal(
       <Heatmap label="Incidents" rows={[[0, null]]} rowLabels={['Europe']} columnLabels={['Mon', 'Tue']} />,

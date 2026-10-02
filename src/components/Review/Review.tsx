@@ -1,27 +1,24 @@
 'use client';
 
-/* Review — one person's review.
+/* Review: one person's review.
  *
- * "**The rating is text as well as stars.**"
+ * "The rating is text as well as stars."
  *
- * Which `Rating` already does in read-only mode — it renders the value as words
- * beside the symbols rather than only drawing them — so the rating here is a
- * `Rating`, not a second row of glyphs. The sentence is in the catalogue at all
- * because a row of five stars is, to anything that does not see it, either
+ * `Rating` already does this in read-only mode, rendering the value as words
+ * beside the symbols, so the rating here is a `Rating` and not a second row of
+ * glyphs. To anything that does not see it, a row of five stars is either
  * nothing or "star star star star star", and neither of those is four out of
  * five.
  *
- * **The body expands rather than truncating, and the control says so.** A review
- * clipped with an ellipsis and no way to open it is a review the reader is told
- * exists and cannot read. `Spoiler` is the component for that and it already
- * gets the part that matters right: the hidden text is still in the document, so
- * a screen reader and a page search both find it.
+ * The body expands rather than truncating, and the control says so. A review
+ * clipped with an ellipsis and no way to open it cannot be read. `Spoiler`
+ * handles this, and keeps the hidden text in the document, so a screen reader
+ * and a page search both find it.
  *
- * **The author and the date are not decoration.** A review with no attribution
- * is an assertion from nobody, and a review with no date is one from any time —
- * both change how much weight it should carry, which is the reader's judgement
- * to make rather than ours to remove. So they are a `<footer>` with the date in
- * a `<time>`, which is the markup that says what they are.
+ * The author and the date are always shown. A review with no attribution is an
+ * assertion from nobody, and a review with no date is one from any time. Both
+ * change how much weight it should carry, and that judgement is the reader's.
+ * They are a `<footer>` with the date in a `<time>`.
  */
 import { forwardRef, useMemo, type HTMLAttributes, type ReactNode } from 'react';
 import { Spoiler } from '../Spoiler/Spoiler.js';
@@ -59,8 +56,8 @@ export const Review = forwardRef<HTMLElement, ReviewProps>(function Review({
   const body = <div className={styles['body']}>{children}</div>;
 
   /* In a product's `ListPresence`, this arrives with `list-in` when it is
-     added and leaves with `list-out` when it is removed; anywhere else,
-     nothing. */
+     added and leaves with `list-out` when it is removed. Anywhere else it does
+     not animate. */
   const scope = useListItemMotion();
   const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
   return (

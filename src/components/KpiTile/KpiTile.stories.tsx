@@ -10,17 +10,17 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Target attainment is stated in words as well as shown." The bar is the *shown* half '
+          '"Target attainment is stated in words as well as shown." The bar is the shown half '
           + 'and the half that fails first: a bar near its end and a bar past its end look the '
           + 'same at a glance, and neither says whether past the end is good. So the words come '
           + 'first and the bar follows as reinforcement.\n\n'
-          + '`onTarget` is the caller\'s judgement rather than a comparison this tile makes — a '
-          + 'cost target is met by coming in *under* it, and a tile that decided for itself '
+          + '`onTarget` is the caller\'s judgement. The tile makes no comparison, because a '
+          + 'cost target is met by coming in under it, and a tile that decided for itself '
           + 'would report every saving as a miss. The bar is a real `progress` element, and its '
           + `treatment is Crystal's own: the ${crystalTokens['slider.trackHeight']} band at the pill radius that \`crystal.css\` `
-          + 'already gives the range control. It is a native `<progress>` rather than the `Progress` '
-          + 'component, and that is a decision rather than an omission: this bar is '
-          + 'reinforcement for words that are already on the screen, so a component that names '
+          + 'already gives the range control. It is a native `<progress>`, not the `Progress` '
+          + 'component, because this bar is '
+          + 'reinforcement for words that are already on the screen, and a component that names '
           + 'itself would label it twice.',
       },
     },
@@ -53,7 +53,7 @@ export const OffTarget: Story = {
   },
 };
 
-/** A cost target is met by coming in *under* it — which is why the judgement is
+/** A cost target is met by coming in under it, which is why the judgement is
  *  the caller's and not a comparison. */
 export const ACostTarget: Story = {
   args: {

@@ -4,41 +4,38 @@
 /* The pill strip, and the pills inside it.
  *
  * Two controls draw this: a segmented control, which picks a value, and a tab
- * list, which picks a view. They are different semantics — a radio group and a
- * tablist, announced differently and deliberately so — and the same material.
+ * list, which picks a view. Their semantics differ (a radio group and a tablist,
+ * announced differently) and their material is the same.
  *
- * It lives here because the second one was about to copy the first. CONTRACT §1
- * forbids repeating a Crystal *value*, and repeating a whole material recipe is
- * the same hazard a level up: somebody improves the strip in one file, the other
- * stays as it was, and two controls that are supposed to look alike stop looking
- * alike with nothing failing.
+ * It is shared so the two cannot diverge. CONTRACT §1 forbids repeating a
+ * Crystal value, and repeating a whole material recipe has the same risk: an
+ * improvement to the strip in one file leaves the other behind, and two
+ * controls meant to look alike stop doing so with nothing failing.
  *
- * **The strip is Crystal's dock.** Crystal's catalogue names both a tab strip
- * and a segmented control as the `dock` surface (D-23, 28 September 2026), and
- * `.cr-dock` is the recipe: a Resin plane holding one Haze fill under labels that
- * carry no material of their own. The caller wears the class; nothing of the
- * material is written here.
+ * The strip is Crystal's dock. Crystal's catalogue names both a tab strip and a
+ * segmented control as the `dock` surface (D-23, 28 September 2026), and
+ * `.cr-dock` is the recipe: a Resin plane holding one Haze fill under labels
+ * that carry no material of their own. The caller wears the class, and nothing
+ * of the material is written here.
  *
- * **The pills are Crystal's too, from 2.3.0.** Crystal keyed the dock's controls
- * on `button` until then, and React Aria renders a tab as `div[role=tab]` and a
- * segment as a `label` around a hidden radio, so this file restated the dock
- * button's values for them and `verify:appearance` compared each pill with a
- * planted `.cr-dock button`. D-26 extended `.cr-dock` to tabs, radio labels and
- * links, and the restatement went; the comparison stays, and now compares
- * Crystal with Crystal.
+ * The pills are Crystal's too, from 2.3.0. React Aria renders a tab as
+ * `div[role=tab]` and a segment as a `label` around a hidden radio, and D-26
+ * extended `.cr-dock` from `button` to tabs, radio labels and links, so this
+ * file restates none of the dock button's values. `verify:appearance` still
+ * compares each pill with a planted `.cr-dock button`.
  *
- * **Selection is weight and the primary fill.** 800 over 700, and the primary
- * fill with its ink — what the tab and segmented-control entries specify and what
- * the dock draws. Weight is typographic, so selection never rests on colour
- * alone, and nothing is drawn beside the label. Until 28 September this was
- * primary-soft, which was the library's, not Crystal's. In forced colours the fill
- * goes, because Chromium's text backplate paints over a filled label, and a
- * Highlight ring carries it.
+ * Selection is weight and the primary fill: 800 over 700, and the primary fill
+ * with its ink, as the tab and segmented-control entries specify and the dock
+ * draws. Weight is typographic, so selection never rests on colour alone, and
+ * nothing is drawn beside the label. A primary-soft selection fill was the
+ * library's choice, not Crystal's, and is not used here. In forced colours the
+ * fill is removed, because Chromium's text backplate paints over a filled label,
+ * and a Highlight ring shows the selection.
  */
 
-/* Layout only; the material is `.cr-dock`'s. Inline, and aligned to the start of
+/* Layout only. The material is `.cr-dock`'s. Inline, and aligned to the start of
    a column parent, because a strip is a control and a flex child stretches across
-   its parent by default — a segmented control spanning the page reads as a broken
+   its parent by default. A segmented control spanning the page reads as a broken
    tab bar. */
 @mixin strip {
   display: inline-flex;

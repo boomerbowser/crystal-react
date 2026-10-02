@@ -3,17 +3,16 @@
 /* PinInput.
  *
  * A row of single-character wells that advance as they are filled. There is no
- * React Aria primitive for this, so the keyboard behaviour is built here — and
- * the catalogue names the three parts that are always missing from a hand-rolled
- * one:
+ * React Aria primitive for this, so the keyboard behaviour is built here. The
+ * catalogue names the three parts a hand-rolled one usually lacks:
  *
- *   - **Paste must fill the whole value.** A code arrives from a text message and
+ *   - Paste must fill the whole value. A code arrives from a text message and
  *     is pasted as one string. A row of six inputs that each take one character
- *     turns that into one character in the first box, which is the single most
- *     common complaint about this pattern.
- *   - **Backspace must move back.** Deleting in an empty box moves to the
- *     previous one and deletes there; otherwise correcting a typo means clicking.
- *   - **One labelled group.** Six inputs each announced as "digit" is six fields;
+ *     turns that into one character in the first box, which is the most common
+ *     complaint about this pattern.
+ *   - Backspace must move back. Deleting in an empty box moves to the previous
+ *     one and deletes there; otherwise correcting a typo means clicking.
+ *   - One labelled group. Six inputs each announced as "digit" are six fields;
  *     the group is what says "verification code, six characters".
  *
  * Arrow keys move between the wells too, because a person who wants to change the
@@ -43,8 +42,8 @@ export interface PinInputProps {
   isInvalid?: boolean;
   /**
    * The field's name in a form. Without it the field cannot be submitted, and a
-   * `Form` distributing a server's errors has no name to match it against — so
-   * the field sits there looking untouched while the server objects.
+   * `Form` distributing a server's errors has no name to match it against, so
+   * the field looks untouched while the server reports an error for it.
    */
   name?: string;
   className?: string;
@@ -124,7 +123,7 @@ export function PinInput({
       <div
         ref={shellScope as never}
         /* React's onFocus is focusin, so focus arriving at any control inside
-           marks the field once — Crystal's `field-focus`. */
+           marks the field once with Crystal's `field-focus`. */
         onFocus={() => { void playField('field-focus'); }}
         role="group"
         aria-labelledby={labelId}

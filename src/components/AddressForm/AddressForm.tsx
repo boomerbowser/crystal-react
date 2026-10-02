@@ -1,6 +1,6 @@
 'use client';
 
-/* AddressForm — a locale-aware address, with the country in charge.
+/* AddressForm: a locale-aware address, with the country in charge.
  *
  * "**Field order, labels and required-ness change by country**; postcode
  * validation is per-locale, not one regular expression."
@@ -9,23 +9,23 @@
  * That is the whole structure: everything below it is decided by what is chosen
  * in it, so a country picked last is a form filled in wrong and then rearranged
  * under the reader's hands. Changing it re-renders the fields in that country's
- * own order — "postcode, city" in one place and "city, state, ZIP" in another —
+ * own order ("postcode, city" in one place and "city, state, ZIP" in another)
  * rather than showing every field any country might want and greying out the
  * rest.
  *
- * **The country list and the descriptors are the product's.** See
+ * The country list and the descriptors are the product's. See
  * `commerce/address.ts` for why: a design system that ships a table of countries
  * has taken on a data set that is wrong the week it is written, and a wrong one
- * is invisible — the form renders, and one country's addresses are quietly
- * unusable.
+ * is invisible. The form renders, and one country's addresses stop working
+ * without any error.
  *
- * **Every field carries an autofill token**, which is why `autoComplete` is
+ * Every field carries an autofill token, which is why `autoComplete` is
  * required rather than optional on the descriptor. An address form without them
  * is a form every reader types by hand every time, and it is the single largest
  * thing a checkout can do for somebody using a screen reader, a switch, or one
  * hand on a phone.
  *
- * **Validation is per-field and per-locale**, and its message goes on the field
+ * Validation is per-field and per-locale, and its message goes on the field
  * it is about. A summary at the top saying "there are errors" is a message about
  * the form; the reader needs to know which box.
  */
@@ -47,7 +47,7 @@ export interface AddressFormProps
   onCountryChange: (country: string) => void;
   value: AddressValue;
   onChange: (value: AddressValue) => void;
-  /** Errors the product knows about — a server's rejection, usually. */
+  /** Errors the product knows about: a server's rejection, usually. */
   errors?: Record<string, string>;
   onSubmit?: (value: AddressValue) => void;
   /** On its way. The controls stay put and stop accepting. */
@@ -122,7 +122,7 @@ export const AddressForm = forwardRef<HTMLFormElement, AddressFormProps>(
               /* The token goes on a select as much as on an input: a state or
                  a province is part of an address a browser can fill in, and
                  leaving it off makes autofill complete three of four fields and
-                 stop — which is worse than not offering it, because the reader
+                 stop, which is worse than not offering it, because the reader
                  has to find the one it missed. */
               <Select
                 {...shared}

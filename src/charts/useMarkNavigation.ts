@@ -6,12 +6,12 @@
  * reachable. Reachable cannot mean one tab stop each: a scatter chart with two
  * hundred points would be two hundred stops between the control before it and the
  * control after it, and a keyboard user would learn to avoid the page. So the
- * plot is one stop and the marks are a roving tabindex inside it — the same
+ * plot is one stop and the marks are a roving tabindex inside it, the same
  * arrangement a toolbar, a radio group and a grid all use, and the one a reader
  * already knows.
  *
  * The marks are SVG `<g>` elements carrying `tabindex`, which is SVG 2 and works
- * in every engine this library gates against — but "works" is a claim, so
+ * in every engine this library gates against. "Works" is a claim, though, so
  * `verify:behaviour` drives it in a real browser rather than trusting the spec.
  *
  * Home and End go to the ends. There is no wrap: arriving back at the first point
@@ -74,8 +74,8 @@ export function useMarkNavigation(count: number): MarkNavigation {
     move(to);
   }, [active, count, move]);
 
-  /* The tab stop, which is not simply `active`. A chart whose data shrinks — six
-     categories replaced with three — leaves `active` past the end, and then no
+  /* The tab stop, which is not simply `active`. A chart whose data shrinks (six
+     categories replaced with three) leaves `active` past the end, and then no
      mark carries `tabIndex: 0` and Tab skips the whole plot. The state is not
      corrected, because the reader may be about to get their marks back; the stop
      is clamped, because a chart nobody can tab into is a chart with no keyboard

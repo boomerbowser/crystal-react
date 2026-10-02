@@ -1,26 +1,25 @@
 @use '../../styles/tokens' as *;
 
-/* Code — canvas fill, edge rim, no diffusion anywhere.
+/* Code. Canvas fill, edge rim, no diffusion anywhere.
  *
- * Two radii, because they answer different questions. Inline code sits inside a
- * line of prose and a 28px content radius on a 20px-tall fragment would round it
- * into a pill; 14px keeps it a rectangle with softened corners at that height. A
- * block is a surface in its own right and takes the content radius like every
- * other surface.
+ * There are two radii. Inline code sits inside a line of prose, and a 28px
+ * content radius on a 20px-tall fragment would round it into a pill; 14px keeps
+ * it a rectangle with softened corners at that height. A block is a surface in
+ * its own right and takes the content radius like every other surface.
  */
 
 $code-inline-radius: 14px; /* crystal-allow-literal: the catalogue's stated inline radius */
 
 .code {
-  /* The monospace stack is the reader's, not Crystal's: Crystal specifies Manrope
-     for reading and names no mono face, and substituting one would be this
-     library inventing a typographic decision the design system did not make. */
+  /* The monospace stack is the reader's system stack. Crystal specifies Manrope
+     for reading and names no mono face, and this library must not make a
+     typographic decision the design system did not make. */
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
   background: var(--cr-canvas);
   color: var(--cr-text);
   border: 1px solid var(--cr-edge);
-  /* Said explicitly rather than inherited by luck. Code must stay exact, and the
-     one thing that would make it inexact is the feather it sits near. */
+  /* Set explicitly instead of relying on inheritance. Code must stay exact, and
+     a feather from a nearby surface would make it inexact. */
   filter: none;
 }
 
@@ -55,9 +54,9 @@ $code-inline-radius: 14px; /* crystal-allow-literal: the catalogue's stated inli
 
 .withCopy { position: relative; }
 
-/* Over the block rather than above it, so the sample keeps its full width. It is
-   inset by the same step the block is padded by, which is what makes it look
-   placed rather than floating. */
+/* Over the block instead of above it, so the sample keeps its full width. It is
+   inset by the same step the block is padded by, so it lines up with the
+   content. */
 .copy {
   position: absolute;
   inset-block-start: var(--cr-space);

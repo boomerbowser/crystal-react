@@ -1,6 +1,6 @@
 'use client';
 
-/* Center. Presentational, and deliberately tiny. */
+/* Center. Presentational and kept small. */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
 import styles from './Center.module.scss';

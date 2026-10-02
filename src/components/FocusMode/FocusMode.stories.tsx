@@ -10,21 +10,16 @@ const meta = {
       description: {
         component:
           '"Entering and leaving are announced; nothing becomes unreachable, only hidden."\n\n'
-          + 'That sentence contains a tension worth resolving in the open. Chrome that is '
-          + 'genuinely still reachable has not been hidden — it is on screen, or it is '
-          + '`visibility: hidden` and still in the tab order, which is the worst of both: '
-          + 'invisible and focusable, so a keyboard reader tabs into something nobody can '
-          + 'see. Chrome that is genuinely hidden is unreachable while it is hidden, and '
-          + 'that is what hiding means.\n\n'
-          + 'The reading that makes both halves true is about the mode: nothing is lost, '
-          + 'because leaving is always available. So the chrome is not rendered, and the '
-          + 'control that leaves focus mode belongs inside the task, where it cannot be '
-          + 'hidden by the thing it undoes.\n\n'
-          + 'The half that fails silently is focus. Focus resting in the chrome when the '
-          + 'mode turns on falls to the document body, and a screen reader says nothing '
-          + 'because nothing happened that it reports. Knowing that has to be done in '
-          + 'advance: by the time an effect can see the change, the chrome has unmounted and '
-          + '`document.activeElement` is already the body. So focus is followed as it moves.',
+          + 'Hidden chrome cannot also be reachable. Chrome left `visibility: hidden` in the '
+          + 'tab order is invisible and focusable, so a keyboard reader tabs into something '
+          + 'nobody can see. Chrome that is hidden is unreachable while it is hidden.\n\n'
+          + 'The sentence holds for the mode as a whole: nothing is lost, because leaving is '
+          + 'always available. The chrome is not rendered, and the control that leaves focus '
+          + 'mode belongs inside the task, where hiding the chrome cannot hide it.\n\n'
+          + 'Focus can fail without any warning. Focus resting in the chrome when the mode '
+          + 'turns on falls to the document body, and a screen reader says nothing. By the '
+          + 'time an effect can see the change, the chrome has unmounted and '
+          + '`document.activeElement` is already the body, so focus is followed as it moves.',
       },
     },
   },

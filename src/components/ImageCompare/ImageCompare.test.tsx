@@ -14,13 +14,13 @@ describe('ImageCompare', () => {
   it('is a real slider with a percentage value', () => {
     renderWithCrystal(<ImageCompare before={before} after={after} label="Before and after cleaning" />);
     /* React Aria renders the thumb as a real `input type="range"`, so the value
-       is the input's and the browser derives `aria-valuenow` from it. What is
-       worth asserting is the text, which is the part a reader hears. */
+       is the input's and the browser derives `aria-valuenow` from it. The test
+       asserts the text, which is the part a reader hears. */
     const slider = screen.getByRole('slider', { name: 'Before and after cleaning' }) as HTMLInputElement;
     expect(slider.value).toBe('50');
     expect(slider.min).toBe('0');
     expect(slider.max).toBe('100');
-    /* "50%", not "5,000%" — `style: 'unit'` with the percent unit, because
+    /* "50%", not "5,000%". `style: 'unit'` with the percent unit, because
        `style: 'percent'` multiplies by a hundred. */
     expect(slider).toHaveAttribute('aria-valuetext', '50%');
   });

@@ -34,18 +34,18 @@ const meta = {
     docs: {
       description: {
         component:
-          'The other half of the split M-3 made. A `tree-view` row is selectable; a navigation '
-          + 'tree\'s rows are destinations, and "which one am I on" is `aria-current` rather than '
-          + 'selection. React Aria ships both patterns and the catalogue names this one as the '
-          + 'parity target outright.\n\n'
-          + 'Worth knowing, because the name suggests otherwise: `NavigationTree` renders a '
-          + '`treegrid` of pressable rows carrying `data-href`, routed through `RouterProvider` '
-          + '— not a nested set of `a` elements. It also does not set `aria-current`; it computes '
-          + '`data-current` and `data-current-ancestor` for styling and stops, so this library '
-          + 'puts the attribute on the row from React Aria\'s own `isCurrent`.\n\n'
+          'The other half of the split M-3 made. A `tree-view` row is selectable. A navigation '
+          + 'tree\'s rows are destinations, and the current one is marked with `aria-current`, '
+          + 'not selection. React Aria ships both patterns and the catalogue names this one as the '
+          + 'parity target.\n\n'
+          + 'Despite the name, `NavigationTree` renders a `treegrid` of pressable rows carrying '
+          + '`data-href`, routed through `RouterProvider`, not a nested set of `a` elements. It '
+          + 'also does not set `aria-current`. It computes `data-current` and '
+          + '`data-current-ancestor` for styling only, so this library puts the attribute on the '
+          + 'row from React Aria\'s own `isCurrent`.\n\n'
           + `Crystal owns the rest: Haze rows at the ${crystalTokens['action.minTarget']} destination floor, the current row `
           + 'marked by **label weight** with the soft fill as the second signal, and '
-          + '`accordion-in` on a row that arrives because somebody expanded its parent — never '
+          + '`accordion-in` on a row that arrives because somebody expanded its parent, never '
           + 'on the rows that were there when the page loaded.',
       },
     },
@@ -66,7 +66,7 @@ export const OnACurrentPage: Story = {
 };
 
 /** Collapsed, with the current page two levels inside it. `data-current-ancestor`
- *  is what keeps the trail visible without expanding anything. */
+ *  keeps the trail visible without expanding anything. */
 export const CurrentInsideACollapsedBranch: Story = {
   render: (args) => (
     <NavigationTree {...only(args)} selectedRoute="/docs/materials#stone" defaultExpandedKeys={[]} />

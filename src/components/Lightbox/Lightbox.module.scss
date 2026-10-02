@@ -1,8 +1,8 @@
 @use '../../styles/tokens' as *;
 
-/* "Mirage scrim; the item sits above it." A filter rather than a dark fill, so
-   the wash takes its chroma from whatever is behind it instead of inventing a
-   colour the scene does not have. */
+/* "Mirage scrim; the item sits above it." A filter, so the wash takes its
+   chroma from whatever is behind it. A dark fill would add a colour the scene
+   does not have. */
 .scrim {
   position: fixed;
   inset: 0;
@@ -27,17 +27,16 @@
 .modal { display: contents; }
 
 /* "The scrim is full-bleed" and the item keeps its own aspect, so the viewer is
-   a layout rather than a panel: no material of its own, nothing to read the item
-   against but the wash. */
+   a layout with no material of its own. The item is read against the wash
+   alone. */
 .viewer {
   inline-size: 100%;
   block-size: 100%;
   outline: none;
 }
 
-/* The shortcut wrapper, which is also the layout: one element rather than two,
-   because a second box between the dialog and its rows would be a box with no
-   job. */
+/* The shortcut wrapper, which is also the layout. A second box between the
+   dialog and its rows would have no job. */
 .keys {
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -57,12 +56,12 @@
 /* The pan. `overflow: auto` is the whole mechanism: the engine's own scrolling,
    its own scrollbars, its own arrow-key behaviour.
  *
- * The item is *not* centred here, and that is deliberate. A scroll container
- * only ever scrolls forward from its content origin — a scroll position cannot
- * go negative — so anything a centring rule pushes above or to the left of that
- * origin is in a region no scrollbar, no arrow key and no screen reader can
- * reach. Centring belongs inside the item, where it moves the picture within a
- * box that starts at the origin rather than moving the box itself. */
+ * The item is not centred here. A scroll container only scrolls forward from
+ * its content origin, because a scroll position cannot go negative. Anything a
+ * centring rule pushes above or to the left of that origin is in a region no
+ * scrollbar, no arrow key and no screen reader can reach. Centring belongs
+ * inside the item, where it moves the picture within a box that starts at the
+ * origin. */
 .frame {
   overflow: auto;
   display: grid;
@@ -70,26 +69,24 @@
   scrollbar-gutter: stable;
 }
 
-/* The zoom is the item's *size*, not a transform on it.
+/* The zoom is the item's size, not a transform on it.
  *
  * A transform paints outside the box without changing it, so a scaled item
  * leaves the scroll container's content the size it always was: nothing to
- * scroll, nothing to pan, and half the picture off the edge. Sizing the box is
- * what gives the platform something to scroll — which is the whole claim this
- * component makes about panning.
+ * scroll, nothing to pan, and half the picture off the edge. Sizing the box
+ * gives the platform something to scroll, and panning depends on that.
  *
  * Both percentages resolve against the grid area, which is definite: the
  * frame's own width, and the `1fr` row of a wrapper with a set height. So the
  * item is exactly the frame at 1x and a multiple of it after that, and the
  * picture inside is contained by a box that always has a real size.
  *
- * That definiteness is also the bug this replaces. `max-inline-size: 100%` on
- * the picture used to resolve against a *content-sized* item — the item's size
- * depended on the picture and the picture's limit depended on the item — and a
- * cyclic percentage like that is resolved against zero. The item measured 0x0
- * in every browser, so the lightbox showed no picture at all while eight unit
- * tests passed, because jsdom measures nothing and had no size to disagree
- * with. */
+ * The item must keep a definite size. `max-inline-size: 100%` on the picture,
+ * resolved against a content-sized item, is a cyclic percentage (the item's
+ * size depends on the picture and the picture's limit on the item), and a
+ * cyclic percentage resolves against zero. The item then measures 0x0 in every
+ * browser and the lightbox shows no picture. Unit tests cannot catch this,
+ * because jsdom measures nothing. */
 .item {
   inline-size: calc(100% * var(--lightbox-zoom, 1));
   block-size: calc(100% * var(--lightbox-zoom, 1));

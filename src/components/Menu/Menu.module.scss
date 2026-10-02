@@ -2,8 +2,8 @@
 @use '../../styles/overlay' as overlay;
 
 /* A menu narrower than its trigger looks like a mistake, and one narrower than
-   its own shortcuts wraps them. `min-content` is what "as wide as the widest row"
-   actually means, and it needs no number. */
+   its own shortcuts wraps them. `min-content` means "as wide as the widest row"
+   and needs no number. */
 .popover {
   @include overlay.surface;
   padding: $cr-spacing-2xs;
@@ -19,10 +19,10 @@
   gap: $cr-spacing-md;
 }
 
-/* A check mark here means checked, which is the one place in Crystal it means
-   anything: a checkable menu item is a checkbox in a menu, and `aria-checked` is
-   what it reports. Everywhere else a check means validated, and selection is
-   label weight — which is also what this uses for the highlighted row. */
+/* A check mark here means checked, the one place in Crystal it does: a
+   checkable menu item is a checkbox in a menu, and it reports `aria-checked`.
+   Everywhere else a check means validated, and selection is label weight, which
+   this also uses for the highlighted row. */
 .mark { inline-size: $cr-icon-size; block-size: $cr-icon-size; flex: none; color: var(--cr-primary); }
 .mark[data-hidden] { visibility: hidden; }
 
@@ -47,9 +47,9 @@
   border: 0;
 }
 
-/* The 1x1 anchor a context menu opens from. Positioned at the pointer, invisible,
-   and never a focus target — it exists only so the popover has something to
-   measure against. */
+/* The 1x1 anchor a context menu opens from. It is positioned at the pointer,
+   invisible and never a focus target, and exists only so the popover has
+   something to measure against. */
 .pointAnchor { position: fixed; inline-size: 1px; block-size: 1px; pointer-events: none; }
 
 

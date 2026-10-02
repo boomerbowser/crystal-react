@@ -2,32 +2,30 @@
 
 /* NumberInput.
  *
- * React Aria's NumberField is doing more here than it looks. A number field is
- * one of the places where the native element is genuinely worse than a built one:
+ * Built on React Aria's NumberField, because the native element is worse here.
  * `<input type="number">` silently drops values it cannot parse, formats
- * according to the browser rather than the locale, scrolls the value on a mouse
+ * according to the browser instead of the locale, scrolls the value on a mouse
  * wheel over the field, and announces nothing about its bounds. React Aria gives
  * locale-aware parsing through `@internationalized/number` and arrow keys that
  * step, which is what the catalogue requires.
  *
- * What it deliberately does *not* give is the `spinbutton` role. It computes the
- * spin-button props and then strips them — `role: null`, `aria-valuenow: null`,
- * `aria-valuemin: null`, `aria-valuemax: null` — with the reason in its own
- * comment: "we can't focus a spin button with VO". What arrives instead is an
- * ordinary text input with `inputmode="numeric"` and
+ * React Aria does not give the `spinbutton` role, and that is its decision. It
+ * computes the spin-button props and then strips them (`role: null`,
+ * `aria-valuenow: null`, `aria-valuemin: null`, `aria-valuemax: null`), with
+ * the reason in its own comment: "we can't focus a spin button with VO". The
+ * result is an ordinary text input with `inputmode="numeric"` and
  * `aria-roledescription="Number field"`, and the value is read as the input's
- * text. This header used to claim the opposite, which is worth naming: a stale
- * sentence in a header is a source somebody will believe. The catalogue used to
- * ask for `role=spinbutton` too; since R-22 was ruled on 28 September 2026 it
- * asks for this — a typable numeric field whose bounds are announced.
+ * text. Until R-22 was ruled on 28 September 2026 the catalogue asked for
+ * `role=spinbutton`. It now asks for a typable numeric field whose bounds are
+ * announced.
  *
- * The steppers are pointer affordances and nothing more. Each is short so the
- * pair reaches the field's height together; making each 44px would make the field
- * 88px tall. That is not a target-size exception, because the value is always
- * reachable by the arrow keys — the route the catalogue names first.
+ * The steppers are pointer affordances only. Each is short so the pair reaches
+ * the field's height together. Making each 44px would make the field 88px tall.
+ * This is not a target-size exception, because the arrow keys, the route the
+ * catalogue names first, always reach the value.
  *
- * At a bound the stepper is disabled and says so. A control that silently refuses
- * to move is indistinguishable from one that is broken.
+ * At a bound the stepper is disabled and says so. A control that silently
+ * refuses to move cannot be told apart from a broken one.
  */
 import { forwardRef, type ReactNode } from 'react';
 import {
@@ -69,8 +67,9 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
       {({ isInvalid }) => (
       <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      {/* The validity React Aria resolved, not the one the caller declared, so a
-          server's rejection moves the field exactly as a local rule would. */}
+      {/* The validity React Aria resolved, which can differ from the one the
+          caller declared, so a server's rejection moves the field exactly as a
+          local rule would. */}
       <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
         <Input
           ref={forwardedRef}
@@ -78,8 +77,9 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
           {...(placeholder ? { placeholder } : {})}
         />
         <div className={cx(styles['steppers'])}>
-          {/* React Aria names these from the field's own label, so they are not
-              two buttons called "Increase" on a form with three number fields. */}
+          {/* React Aria names these from the field's own label, so a form with
+              three number fields does not have several buttons all called
+              "Increase". */}
           <Button slot="increment" className={cx(styles['stepper'], 'cr-bare')}><Chevron up /></Button>
           <Button slot="decrement" className={cx(styles['stepper'], 'cr-bare')}><Chevron up={false} /></Button>
         </div>

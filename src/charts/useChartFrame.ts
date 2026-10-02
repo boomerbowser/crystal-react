@@ -2,12 +2,12 @@
 
 /* How a chart learns how wide it is.
  *
- * Drawn in CSS pixels rather than in a scaled viewBox, and that is the whole
- * reason this hook exists. A fixed viewBox stretched to the container is far
- * less code, and it scales the stroke scale, the point scale and every axis
- * label along with the plot — a 2px line becomes 3.4px on a wide screen and 1.1px
- * on a narrow one, which is a design value that changes with the window. So the
- * box is measured and the drawing is done at true size.
+ * Drawn in CSS pixels rather than in a scaled viewBox. That is why this hook
+ * exists. A fixed viewBox stretched to the container is far less code, but it
+ * scales the stroke scale, the point scale and every axis label along with the
+ * plot. A 2px line becomes 3.4px on a wide screen and 1.1px on a narrow one,
+ * which is a design value that changes with the window. So the box is measured
+ * and the drawing is done at true size.
  *
  * Before the first measurement the frame is the declared fallback. Nothing is
  * wrong then and nothing should be hidden: a chart rendered on a server, or in a

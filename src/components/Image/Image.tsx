@@ -1,17 +1,17 @@
 'use client';
 
-/* Image — media with a reserved ratio, a placeholder and a failure fallback.
+/* Image. Media with a reserved ratio, a placeholder and a failure fallback.
  *
- * The ratio is reserved before anything loads, and that is the whole reason this
- * component exists rather than an `img` tag. An image that arrives and pushes the
- * paragraph below it down the page is the most common layout shift on the web,
- * and it is one a component can simply not do: the box is sized from `ratio`, the
- * picture fills it, and nothing moves when the bytes arrive.
+ * The ratio is reserved before anything loads, which is why this component
+ * exists in place of an `img` tag. An image that arrives and pushes the
+ * paragraph below it down the page is the most common layout shift on the web.
+ * Here the box is sized from `ratio`, the picture fills it, and nothing moves
+ * when the bytes arrive.
  *
- * `alt` is required and may be empty, which is deliberately not the same as
- * absent. "Meaningful images carry alt text; decorative images carry empty alt" —
- * and an image with no `alt` attribute at all is announced by its filename, which
- * is neither. Making the prop required forces the author to say which one this
+ * `alt` is required and may be empty, and empty differs from absent.
+ * "Meaningful images carry alt text; decorative images carry empty alt". An
+ * image with no `alt` attribute at all is announced by its filename, which is
+ * neither. Making the prop required forces the author to say which one this
  * is.
  *
  * `media-in` plays on arrival, because the picture appearing is the thing that
@@ -25,7 +25,7 @@ import styles from './Image.module.scss';
 
 export interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'alt' | 'children'> {
   src: string;
-  /** What the image says. Empty for a decorative one — empty, not absent. */
+  /** What the image says. Empty for a decorative one. Empty, not absent. */
   alt: string;
   /** Width over height, reserved before the picture arrives. */
   ratio?: number;

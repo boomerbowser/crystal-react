@@ -11,15 +11,15 @@ const meta = {
       description: {
         component:
           '"Contains the h1; breadcrumbs are a navigation landmark."\n\n'
-          + 'The `h1` settles a three-way contest. `Screen` says "the heading is the view '
+          + 'Three components bear on the `h1`. `Screen` says "the heading is the view '
           + 'name", `Result` takes a `headingLevel`, and this says it contains the h1. Read '
-          + 'together: the page header owns it, the screen draws no heading at all, and a '
+          + 'together: the page header owns it, the screen draws no heading, and a '
           + 'state screen takes level 1 only because it has replaced the view and there is no '
           + 'header left.\n\n'
-          + 'Condensing is the header taking less room, never taking things away. On scroll '
-          + 'the band tightens and the description goes; the title, breadcrumbs and actions '
-          + 'stay. A header that dropped its actions once the reader scrolled would remove '
-          + 'the controls at the moment they went looking for them.',
+          + 'Condensing makes the header take less room and removes nothing the reader needs. '
+          + 'On scroll the band tightens and the description goes. The title, breadcrumbs and '
+          + 'actions stay. A header that dropped its actions once the reader scrolled would '
+          + 'remove the controls at the moment they went looking for them.',
       },
     },
   },

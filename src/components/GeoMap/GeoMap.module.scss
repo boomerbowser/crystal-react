@@ -1,14 +1,12 @@
 @use '../../styles/tokens' as *;
 
-/* "Region borders are hairlines in the rim colour." The rim is what separates two
- * regions painted at the same step, which is the common case in any real
- * choropleth, so the border is not decoration — it is the only thing that says
- * there are two regions there.
+/* "Region borders are hairlines in the rim colour." Two neighbouring regions
+ * are often painted at the same step in a real choropleth, and then the rim is
+ * the only thing that shows there are two regions.
  *
- * A region with no value is the plot showing through with its border intact. As
- * everywhere else in the slice, "no data" and "the least data" are different
- * facts, and a map that painted them the same would invent a measurement for
- * every region the join missed.
+ * A region with no value is the plot showing through with its border intact.
+ * "No data" and "the least data" are different facts, and painting them the
+ * same would invent a measurement for every region the join missed.
  */
 
 .shape {
@@ -36,15 +34,15 @@
 }
 
 /* One colour left. A choropleth cannot carry intensity in paint here, and a
-   region is not a square that can be scaled about its centre — so the ramp
-   becomes a stroke weight, which is the one channel an irregular outline has. */
+   region is not a square that can be scaled about its centre, so the ramp
+   becomes a stroke weight, the one channel an irregular outline has. */
 @media (forced-colors: active) {
   .shape {
     fill: Canvas;
     stroke: CanvasText;
     /* From a hairline at the lowest step to Crystal's chart stroke and a half
-       at the highest — the widest a border can be before it eats the region it
-       is drawn around. */
+       at the highest. A wider border would cover the region it is drawn
+       around. */
     stroke-width: calc(var(--cr-chart-hairline) + var(--cell-strength) * var(--cr-chart-stroke) * 1.5);
   }
   .region[data-empty] .shape { fill: none; }

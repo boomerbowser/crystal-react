@@ -1,29 +1,27 @@
 'use client';
 
-/* ChartSurface — the frame every chart in this library draws into.
+/* ChartSurface is the frame every chart in this library draws into.
  *
- * "Every chart owes a text equivalent of its data — a chart is a second
- * representation, never the only one." That sentence is the reason this
- * component exists and the reason it is not optional: `table` is a required
- * prop, and no chart below it renders a table of its own. A chart that could be
- * drawn without one would eventually be.
+ * "Every chart owes a text equivalent of its data, so the chart is never the
+ * only representation." This component exists for that sentence,
+ * and it is not optional: `table` is a required prop, and no chart below it
+ * renders a table of its own. If a chart could be drawn without one, eventually
+ * one would be.
  *
- * The table is folded away behind a disclosure, and that is a real trade rather
- * than a free one: a closed `<details>` keeps its content out of the
- * accessibility tree as well as off the screen, so the numbers are one action
- * away rather than nought. The alternative — the table always in the tree, as
- * `Spoiler` does it — is right for six paragraphs and wrong here, because the
- * table equivalent of a two-hundred-point scatter read out in full is not access
- * to the data, it is the data used as a wall. What makes one action acceptable is
- * that the control is in the tab order, immediately after the plot, and named for
- * what it opens.
+ * The table is folded away behind a disclosure, which has a cost. A closed
+ * `<details>` keeps its content out of the accessibility tree as well as off the
+ * screen, so the numbers are one action away. Keeping the table always in the
+ * tree, as `Spoiler` does, suits six paragraphs but not this: a two-hundred-point
+ * scatter read out in full as a table buries the reader. One action is
+ * acceptable because the control is in the tab order, immediately after the
+ * plot, and named for what it opens.
  *
- * What the surface owns: the figure and its caption, the Haze plot fill, the
- * measured box, the axis gutters, the legend and tooltip slots, and the empty
- * and loading states. What it does not own: scales, axes ticks, and marks. Those
- * differ per chart and are drawn by the child, which is given the frame.
+ * The surface owns the figure and its caption, the Haze plot fill, the measured
+ * box, the axis gutters, the legend and tooltip slots, and the empty and loading
+ * states. It does not own scales, axis ticks or marks. Those differ per chart
+ * and are drawn by the child, which is given the frame.
  *
- * The plot is one tab stop. Marks inside it are a roving tabindex — see
+ * The plot is one tab stop. Marks inside it use a roving tabindex. See
  * `useMarkNavigation`, which explains why two hundred scatter points are not two
  * hundred stops.
  */
@@ -33,10 +31,10 @@ import { useChartFrame } from '../../charts/useChartFrame.js';
 import type { ChartFrame, ChartInsets, ChartTableData } from '../../charts/types.js';
 import styles from './ChartSurface.module.scss';
 
-/* Gutters for the axis labels. A default rather than a token because it is a
-   consequence of the caller's own tick text — a chart of four-digit currency
-   needs a wider left gutter than one of percentages, and only the caller knows
-   which it has. */
+/* Gutters for the axis labels. This is a default and not a token because it
+   depends on the caller's own tick text. A chart of four-digit currency needs a
+   wider left gutter than one of percentages, and only the caller knows which it
+   has. */
 const INSETS: ChartInsets = { top: 8, right: 8, bottom: 28, left: 44 };
 
 export interface ChartSurfaceProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
@@ -45,23 +43,23 @@ export interface ChartSurfaceProps extends Omit<HTMLAttributes<HTMLElement>, 'ch
   /** A sentence under the caption, for what the title cannot carry. */
   description?: ReactNode;
   /**
-   * The same data as text. Required: a chart is a second representation of
-   * something, and this is the first.
+   * The same data as text. It is required because a chart is a second
+   * representation of something, and this is the first.
    */
   table: ChartTableData;
   /** Height of the drawn area, in pixels. The width is measured. */
   height?: number;
   /** Extra room for axis labels, over the defaults. */
   insets?: Partial<ChartInsets>;
-  /** Rendered above the plot — a `ChartLegend`, usually. */
+  /** Rendered above the plot, usually a `ChartLegend`. */
   legend?: ReactNode;
   /**
    * Rendered over the plot, positioned by the chart.
    *
-   * As a function it is called with the measured frame **after** `children`,
-   * in the same render pass. Charts rely on that order: the positions a tooltip
-   * has to be placed at are computed while the marks are drawn, and a chart
-   * hands them across in a ref rather than building its scales twice.
+   * As a function it is called with the measured frame after `children`, in the
+   * same render pass. Charts rely on that order. The positions a tooltip is
+   * placed at are computed while the marks are drawn, and a chart hands them
+   * across in a ref so it does not build its scales twice.
    */
   tooltip?: ReactNode | ((frame: ChartFrame) => ReactNode);
   /** Nothing to draw yet. The caption, the frame and the control all stay. */
@@ -103,11 +101,11 @@ export function ChartSurface({
       {legend ? <div className={styles['legend']}>{legend}</div> : null}
 
       <div className={styles['plot']} ref={ref}>
-        {/* `group`, not `img`. `img` is a leaf: everything inside it, including
-            the marks a keyboard moves between, stops being reachable. `group`
-            takes the chart's name and lets its children keep theirs, so tabbing
-            into the plot announces what is being plotted and then what is under
-            the cursor. With nothing drawn there is nothing to name. */}
+        {/* `group`, not `img`. `img` is a leaf, so everything inside it,
+            including the marks a keyboard moves between, stops being reachable.
+            `group` takes the chart's name and lets its children keep theirs, so
+            tabbing into the plot announces what is being plotted and then what
+            is under the cursor. With nothing drawn, there is nothing to name. */}
         <svg
           className={styles['canvas']}
           width={frame.width}
@@ -120,9 +118,9 @@ export function ChartSurface({
           {empty || loading ? null : children?.(frame)}
         </svg>
         {empty ? <p className={styles['empty']}>{emptyLabel}</p> : null}
-        {/* Not an animation: Crystal's rule is that nothing moves at rest, and a
-            chart waiting for data is at rest. The plot is held at its size so the
-            page does not jump when the numbers arrive. */}
+        {/* Static text, with no animation. Crystal's rule is that nothing moves
+            at rest, and a chart waiting for data is at rest. The plot is held at
+            its size so the page does not jump when the numbers arrive. */}
         {loading ? <p className={styles['empty']}>{'Loading'}</p> : null}
         {empty || loading ? null : typeof tooltip === 'function' ? tooltip(frame) : tooltip}
       </div>
@@ -144,10 +142,10 @@ interface ChartTableProps {
   hideLabel: string;
 }
 
-/* `<details>` rather than a button and a piece of state: open and closed is a
+/* `<details>` instead of a button and a piece of state. Opening and closing is
    platform behaviour, the summary is a real control with a real expanded state
-   without anybody writing `aria-expanded`, and find-in-page reaches inside it in
-   engines that have shipped that. What it costs is described above. */
+   without any `aria-expanded` written here, and find-in-page reaches inside it
+   in engines that have shipped that. The cost is described above. */
 function ChartTable({ data, id, showLabel, hideLabel }: ChartTableProps): ReactNode {
   return (
     <details className={styles['disclosure']} id={id}>

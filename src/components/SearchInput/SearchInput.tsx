@@ -3,22 +3,22 @@
 /* SearchInput.
  *
  * React Aria's SearchField gives it `type="search"`, Escape to clear, and a clear
- * button that is a real named control rather than a decorative cross.
+ * button that is a real named control.
  *
- * The catalogue asks for it to sit "inside a search landmark", and that is the
- * one thing this component deliberately does not do for you. A landmark is a
- * statement about the page — "this is the search for this view" — and a component
- * that emits one every time it is rendered gives a page with a header search and
- * a filter box two search landmarks, which is worse than none. `landmark` is
- * offered, defaulting to off, so the page decides.
+ * The catalogue asks for it to sit "inside a search landmark", and this component
+ * leaves that to the page. A landmark is a statement about the page
+ * ("this is the search for this view"). A component that emitted one on every
+ * render would give a page with a header search and a filter box two search
+ * landmarks, which is worse than none. `landmark` is offered, off by default, so
+ * the page decides.
  *
- * The leading icon is decoration and is `aria-hidden` with pointer events off:
- * making it pressable puts a tab stop in front of the field for something that
- * does nothing.
+ * The leading icon is decoration and is `aria-hidden` with pointer events off.
+ * Making it pressable would put a tab stop in front of the field for something
+ * that does nothing.
  *
  * Loading is announced. A spinner that only spins tells a reader who cannot see
  * it that nothing is happening, so the state is a live region as well as a mark.
- * Debounce and the results are the product's: Crystal renders the state it is
+ * Debounce and the results are the product's. Crystal renders the state it is
  * told about and never decides when a search has started.
  */
 import { forwardRef, type ReactNode } from 'react';
@@ -37,8 +37,8 @@ export interface SearchInputProps extends Omit<SearchFieldProps, 'className' | '
   errorMessage?: ReactNode;
   placeholder?: string;
   /**
-   * Whether a search is running. Announced, not only drawn — a spinner that only
-   * spins says nothing to a reader who cannot see it.
+   * Whether a search is running. It is announced as well as drawn, because a
+   * spinner says nothing to a reader who cannot see it.
    */
   isLoading?: boolean;
   /**

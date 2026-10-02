@@ -2,21 +2,20 @@
 
 /* Checkbox, CheckboxGroup, Radio and RadioGroup.
  *
- * A check mark here means **checked**, which is the one place in Crystal it is
- * allowed to: the system's rule is that a check mark never means "selected" in a
- * list or a menu, where selection is label weight. A checkbox is not a list — its
- * mark is the value of a boolean, and it is contained inside the box so the pair
- * reads as one control rather than as a sticker on top of one.
+ * A check mark here means checked. This is the one place in Crystal it may: the
+ * system's rule is that a check mark never means "selected" in a list or a menu,
+ * where selection is label weight. A checkbox's mark is the value of a boolean,
+ * and it is contained inside the box so the pair reads as one control and not as
+ * a sticker on top of one.
  *
  * Indeterminate is set through the property and never through a class. The DOM
- * property is what a screen reader reads as "mixed"; a class that draws a dash
+ * property is what a screen reader reads as "mixed". A class that draws a dash
  * produces a control that looks partially checked and announces as unchecked,
  * which is worse than not drawing it at all.
  *
- * The group is a real fieldset with a legend, and its error describes the group.
- * That is the catalogue's wording and the distinction is practical: "choose at
- * least one" belongs to the set, and attaching it to the first checkbox makes it
- * a message about that checkbox.
+ * The group is a real fieldset with a legend, and its error describes the group,
+ * as the catalogue words it. "Choose at least one" belongs to the set; attached
+ * to the first checkbox, it would describe only that checkbox.
  */
 import { forwardRef, useEffect, useRef, type ReactNode } from 'react';
 import {
@@ -35,15 +34,15 @@ import { FieldShell } from '../FormField/FieldShell.js';
 import styles from './Checkbox.module.scss';
 
 /* Plays `check` when the value becomes true and `check-off` when it returns to
- * false — Crystal's iris opening and closing toward the same point. Bound to the
- * value React Aria resolved rather than to a click, so a checkbox changed by the
- * keyboard, by a form reset or by a server response animates the same way one
- * changed by hand does; and undefined first, so a box that mounts already
- * checked does not animate, because that state was never entered.
+ * false: Crystal's iris opening and closing toward the same point. It is bound
+ * to the value React Aria resolved, not to a click, so a checkbox changed by the
+ * keyboard, a form reset or a server response animates the same way as one
+ * changed by hand. The previous value starts undefined, so a box that mounts
+ * already checked does not animate, because that state was never entered.
  *
- * The catalogue assigned both recipes to the checkbox and the radio from 2.0,
- * and R15h in Crystal's request log recorded that the web preview had `check`
- * "wired to nothing". This library shipped the same way until now. */
+ * The catalogue assigns both recipes to the checkbox and the radio from 2.0.
+ * R15h in Crystal's request log recorded that the web preview had `check`
+ * "wired to nothing". */
 function ChoiceMotion({ isSelected, play }: {
   isSelected: boolean;
   play: ReturnType<typeof useMotion>[1];
@@ -79,14 +78,14 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(function Che
   { children, className, ...props },
   ref,
 ) {
-  /* The recipe plays on the box, which is the indicator: the label stays still. */
+  /* The recipe plays on the box, which is the indicator. The label stays still. */
   const [scope, play] = useMotion();
   return (
     <AriaCheckbox {...props} ref={ref} className={cx(styles['choice'], className)}>
       {({ isIndeterminate, isSelected }) => (
         <>
           <span ref={scope as never} className={cx(styles['box'])}>
-            {/* Driven by React Aria's state rather than by a class, so the drawn
+            {/* Driven by React Aria's state and not by a class, so the drawn
                 mark and the announced one cannot disagree. */}
             {isIndeterminate ? DashMark : CheckMark}
           </span>
@@ -145,9 +144,9 @@ export function CheckboxGroup({
       {({ isInvalid }) => (
       <>
       <Label className={cx(styles['legend'])}>{label}</Label>
-      {/* The validity React Aria resolved, not the one the caller declared: a
-          server's "choose at least one" has to move the set exactly as a local
-          rule would. */}
+      {/* Uses the validity React Aria resolved, not the one the caller
+          declared, so a server's "choose at least one" moves the set exactly as
+          a local rule would. */}
       <FieldShell
         isInvalid={isInvalid}
         playsFocus={false}
@@ -158,8 +157,8 @@ export function CheckboxGroup({
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
-      {/* The error describes the set. "Choose at least one" attached to the first
-          checkbox is a message about that checkbox. */}
+      {/* The error describes the set. "Choose at least one" attached to the
+          first checkbox would describe only that checkbox. */}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
       </>
       )}
@@ -179,9 +178,9 @@ export function RadioGroup({
       {({ isInvalid }) => (
       <>
       <Label className={cx(styles['legend'])}>{label}</Label>
-      {/* The validity React Aria resolved, not the one the caller declared: a
-          server's "choose at least one" has to move the set exactly as a local
-          rule would. */}
+      {/* Uses the validity React Aria resolved, not the one the caller
+          declared, so a server's "choose at least one" moves the set exactly as
+          a local rule would. */}
       <FieldShell
         isInvalid={isInvalid}
         playsFocus={false}

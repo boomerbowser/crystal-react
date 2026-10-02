@@ -8,14 +8,14 @@ import { Text } from '../Text/Text.js';
 
 const meta = {
   title: 'Navigation/Links',
-  /* Without this docgen has nothing to read and Storybook generates no
-     controls at all — the message Meridian screenshotted. This file shows
-     several components together; the one named here is its subject, and the
-     others are the context it is normally seen in. */
+  /* Without this, docgen has nothing to read and Storybook generates no
+     controls at all. This file shows several components together. The one
+     named here is its subject, and the others are the context it is normally
+     seen in. */
   component: Anchor,
   /* The callbacks as actions, so the Actions panel shows what fired and with
      what. They are declared by hand because this Storybook uses `react-docgen`
-     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
+     rather than `react-docgen-typescript` (see `.storybook/main.ts`), and
      react-docgen reads a component's own interface without resolving what it
      extends. Every callback here is inherited from a React Aria interface, so
      docgen cannot see one of them. Each was checked against the compiler
@@ -34,18 +34,18 @@ const meta = {
     docs: {
       description: {
         component:
-          '**A link goes somewhere; a control that acts is a `Button`.** Both components here '
+          'A link goes somewhere, and a control that acts is a `Button`. Both components here '
           + 'require an `href`, which is the catalogue\'s rule enforced in the type rather than '
           + 'documented beside it. React Aria will render a `<span role="link">` when given no '
           + 'destination, and the result announces as a link while being absent from the browser\'s '
           + 'link list, unopenable in a new tab, and silent in the status bar.\n\n'
-          + '**An `Anchor` is underlined at rest.** The underline is the non-chromatic signal that '
+          + 'An `Anchor` is underlined at rest. The underline is the non-chromatic signal that '
           + 'distinguishes a link from the sentence around it, so it is not a hover affordance. '
           + 'Crystal offsets it clear of the descenders.\n\n'
-          + '**A `NavLink` marks the current page with a dot and with weight**, and reserves the '
+          + 'A `NavLink` marks the current page with a dot and with weight, and reserves the '
           + 'dot\'s room whether or not it is drawn. A column that appears only for the current '
-          + 'entry shifts every label in the list the moment you navigate — which is the defect '
-          + 'that had the leading selection mark withdrawn from Crystal, and it would be the same '
+          + 'entry shifts every label in the list the moment you navigate (the defect '
+          + 'that had the leading selection mark withdrawn from Crystal), and it would be the same '
           + 'defect here under a different name.',
       },
     },

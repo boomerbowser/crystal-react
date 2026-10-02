@@ -1,14 +1,13 @@
 @use '../../styles/tokens' as *;
 
-/* StatCard — "Haze content fill on the surrounding material; content radius;
+/* StatCard. "Haze content fill on the surrounding material; content radius;
  * spacing from the scale."
  *
- * All three of those belong to `Card`, which is why this file is short: it lays
- * the parts out and owns nothing else. A second Haze recipe here would be a copy
- * of the one thing in this library that has already drifted once.
+ * All three belong to `Card`, so this file only lays the parts out. Do not add a
+ * second Haze recipe here. The Haze recipe has drifted once already.
  *
- * The period sits *after* the trend, at the end of the sentence the card reads
- * as. Putting it beside the figure breaks the order the semantics rule is about.
+ * The period sits after the trend, at the end of the sentence the card reads as.
+ * Putting it beside the figure breaks the order the semantics rule is about.
  */
 
 .card {

@@ -10,14 +10,14 @@ const meta = {
     docs: {
       description: {
         component:
-          'A hairline in Crystal\'s edge colour, never a heavy rule — a divider that competes '
-          + 'with the content it separates is doing the opposite of its job.\n\n'
-          + 'The accessibility behaviour splits two ways, and shipping only half of it is the '
-          + 'usual mistake. An unlabelled divider is decoration: the headings either side already '
-          + 'describe the boundary, so announcing "separator" is noise, and it is `aria-hidden`. '
-          + 'A labelled one names the boundary, so it is a real separator with an accessible '
-          + 'name — supplied by `aria-labelledby`, because `separator` is not a name-from-content '
-          + 'role and a label left as a child text node is announced as nothing.',
+          'A hairline in Crystal\'s edge colour, never a heavy rule, so it does not compete '
+          + 'with the content it separates.\n\n'
+          + 'The accessibility behaviour splits two ways, and both halves are needed. An '
+          + 'unlabelled divider is decoration. The headings either side already describe the '
+          + 'boundary, so announcing "separator" is noise, and it is `aria-hidden`. A labelled '
+          + 'one names the boundary, so it is a real separator with an accessible name. The name '
+          + 'comes from `aria-labelledby`, because `separator` is not a name-from-content role '
+          + 'and a label left as a child text node is announced as nothing.',
       },
     },
   },

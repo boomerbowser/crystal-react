@@ -10,8 +10,8 @@ describe('Badge', () => {
     expect(formatCount(100, 99)).toBe('99+');
   });
 
-  /* Zero is not "no badge" — it is a badge the caller may or may not want, and
-     the two are different answers to different questions. */
+  /* A zero count still has a badge, and the caller decides whether it is
+     shown. */
   it('hides a zero count unless asked to show it', () => {
     const { rerenderWithCrystal } = renderWithCrystal(<Badge count={0} />);
     expect(screen.queryByText('0')).toBeNull();

@@ -7,7 +7,7 @@ describe('Text', () => {
     renderWithCrystal(<Text data-testid="t">Body</Text>);
     const el = screen.getByTestId('t');
     expect(el.tagName).toBe('P');
-    /* `body` is the reading size exactly, so it declares no override — the
+    /* `body` is the reading size exactly, so it declares no override. The
        stylesheet's default is the token. */
     expect(el.style.getPropertyValue('--cr-text-size')).toBe('');
   });
@@ -19,7 +19,7 @@ describe('Text', () => {
   });
 
   /* Clipping removes the text from sight and not from the DOM, so a screen reader
-     still reads it — but a sighted reader loses it, and `title` is the way back. */
+     still reads it, but a sighted reader loses it. `title` is the way back. */
   it('keeps the full value reachable when it truncates', () => {
     renderWithCrystal(<Text truncate data-testid="t">A sentence long enough to clip</Text>);
     expect(screen.getByTestId('t').getAttribute('title')).toBe('A sentence long enough to clip');

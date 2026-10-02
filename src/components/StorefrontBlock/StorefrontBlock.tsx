@@ -1,27 +1,28 @@
 'use client';
 
-/* StorefrontBlock — a product grid with filters, sort and pages.
+/* StorefrontBlock. A product grid with filters, sort and pages.
  *
  * "Result count is announced on filter change; **the grid is a labelled
  * list**." States: `at-rest`, `loading`, `empty`, `filtering`.
  *
  * The announcement is `FilterPanel`'s, and the block does not make a second
- * one: the panel already says what is applied and how many results there are
- * as the filters change, from the count the block hands it. Two regions saying
- * the count would say it twice.
+ * one. The panel says what is applied and how many results there are as the
+ * filters change, from the count the block hands it. A second region would say
+ * the count twice.
  *
- * **The opinion is the list.** The products are a `ul` named for what they are
- * — "Products" by default — so a screen reader says "list, 24 items" before the
- * first card, which is how a reader learns the size of what they are browsing
- * without paging through it. The count is also shown, in words, beside the
- * sort, because sighted readers need it as much.
+ * The products are a `ul` named for what they are ("Products" by default), so a
+ * screen reader says "list, 24 items" before the first card. That is how a
+ * reader learns the size of what they are browsing without paging through it.
+ * The count is also shown, in words, beside the sort, because sighted readers
+ * need it as much.
  *
- * **Loading replaces the list; filtering does not.** While the first page loads
+ * Loading replaces the list and filtering does not. While the first page loads
  * there is nothing to show, and a grid of empty cards would say "these are the
  * products". While a filter is being applied the previous results stay, marked
  * busy, so the page does not collapse and reflow under a reader who is still
- * looking at it. Empty is `no-results` — the filters found nothing — with a way
- * out, not the same words a shop with no products would use.
+ * looking at it. Empty is `no-results`, meaning the filters found nothing, and
+ * it offers a way out. It does not use the words a shop with no products would
+ * use.
  */
 import type { ReactNode } from 'react';
 import { FilterPanel, type AppliedFilter } from '../FilterPanel/FilterPanel.js';
@@ -46,7 +47,7 @@ export interface StorefrontBlockProps {
   products: readonly StorefrontProduct[];
   /** How many products match, across every page. */
   resultCount: number;
-  /** The facets — `FilterPanel`'s children. */
+  /** The facets, rendered as `FilterPanel`'s children. */
   filters: ReactNode;
   applied?: readonly AppliedFilter[];
   onRemoveFilter?: (id: string) => void;

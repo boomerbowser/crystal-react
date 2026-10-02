@@ -10,9 +10,9 @@ const harbourDarkCanvas = (crystalFlat as {
 }).palettes['harbor']!.modes['dark']!['canvas'];
 
 describe('GlobalStyles', () => {
-  /* The defect this pins: the first version set `background: var(--cr-canvas)` on
-     body and painted nothing. The properties live on the provider's scope, body
-     is above it, and custom properties inherit downward only. */
+  /* Setting `background: var(--cr-canvas)` on body paints nothing. The
+     properties live on the provider's scope, body is above it, and custom
+     properties inherit downward only. */
   it('copies the resolved properties onto the document rather than referencing them', () => {
     const { unmount } = renderWithCrystal(<GlobalStyles />, {
       theme: { palette: 'harbor', mode: 'dark' },

@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
-/* Switch — a Resin track with a contrast-bearing thumb.
+/* Switch. A Resin track with a contrast-bearing thumb.
  *
- * "State must not rely on position alone" is the catalogue's rule and the reason
- * the track changes colour as well as the thumb moving: a switch distinguished
- * only by which end its thumb is at is unreadable in greyscale and at a glance,
- * and it is the most common accessibility failure in this control.
+ * "State must not rely on position alone" is the catalogue's rule, so the track
+ * changes colour as well as the thumb moving. A switch distinguished only by
+ * which end its thumb is at is unreadable in greyscale and at a glance. It is
+ * the most common accessibility failure in this control.
  */
 
 .switch {
@@ -23,11 +23,10 @@
    Crystal's values rather than wearing a class, and `verify:appearance` holds the
    restatement to a native switch planted beside it, in both states.
 
-   It used to be its own design. On, the track took the palette's primary with a
-   primary border and a 16px thumb in its ink, no shadow; Crystal's switch takes
-   primary-soft, keeps the rim, and carries a 22px primary thumb with a contact
-   shadow. The catalogue says the same — "primary-soft track when on, opaque
-   thumb". Both still move, so position is never the only signal. */
+   On, Crystal's switch takes primary-soft for the track, keeps the rim, and
+   carries a 22px primary thumb with a contact shadow. This matches the
+   catalogue's "primary-soft track when on, opaque thumb". The track colour and
+   the thumb both change, so position is never the only signal. */
 $switch-thumb-inset: 2px; /* crystal-allow-literal: core's native switch thumb inset */
 $switch-thumb-gap: 6px;   /* crystal-allow-literal: core's native switch, thumb = track height - 6px */
 
@@ -62,9 +61,9 @@ $switch-thumb-gap: 6px;   /* crystal-allow-literal: core's native switch, thumb 
   translate: calc(#{$cr-switch-track-width} - #{$cr-switch-track-height}) 0;
 }
 
-/* `translate` is physical, so right to left it is the other way — the thumb starts
-   at the inline start, which is the right-hand end there. The old rule moved it
-   right from the right-hand end, off the track. */
+/* `translate` is physical, so right to left it runs the other way. The thumb
+   starts at the inline start, which is the right-hand end there, and a positive
+   translate would move it off the track. */
 .switch[data-selected]:dir(rtl) .thumb {
   translate: calc(#{$cr-switch-track-height} - #{$cr-switch-track-width}) 0;
 }

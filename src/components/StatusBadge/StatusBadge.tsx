@@ -1,28 +1,27 @@
 'use client';
 
-/* StatusBadge — a semantic symbol in a circular well, followed by a visible word.
+/* StatusBadge. A semantic symbol in a circular well, followed by a visible word.
  *
- * The catalogue is unusually firm about this one, and each rule is here for a
- * reason a reader can feel:
+ * The catalogue sets three rules for this component:
  *
- *   - **The word carries the meaning.** Symbol and colour are reinforcement,
- *     never the only signal. So the label is required, not optional, and the
- *     symbol is `aria-hidden` — a screen reader that read both would say
- *     "exclamation mark, Action blocked".
- *   - **Never a coloured perimeter stroke.** A status ring around a pill is the
+ *   - The word carries the meaning. Symbol and colour are reinforcement, never
+ *     the only signal. So the label is required, and the symbol is
+ *     `aria-hidden`. A screen reader that read both would say "exclamation
+ *     mark, Action blocked".
+ *   - Never a coloured perimeter stroke. A status ring around a pill is the
  *     shape Crystal uses for focus, and a danger-coloured one reads as a control
  *     in an error state rather than a fact being reported.
- *   - **Success uses a check mark**, which is the one legitimate use of that
- *     glyph in Crystal: it is information display. A check mark never means
- *     "selected" — selection is label weight alone.
+ *   - Success uses a check mark, which is the one legitimate use of that glyph
+ *     in Crystal: information display. A check mark never means "selected".
+ *     Selection is label weight alone.
  *
  * `neutral` is the fifth state and has no tested ink pair, because it is the
  * absence of a status rather than one more of them. It takes the surface pair
  * every unremarkable thing takes, and shows no symbol: a glyph would imply a
  * meaning the state does not have.
  *
- * Motion plays on a *change* of status, never on mount. Crystal's rule is that
- * nothing moves at rest and motion is only ever something a person started — a
+ * Motion plays on a change of status, never on mount. Crystal's rule is that
+ * nothing moves at rest and motion is only ever something a person started. A
  * badge that animated as the page loaded would be ambient movement, which was
  * withdrawn from 2.0 deliberately.
  */

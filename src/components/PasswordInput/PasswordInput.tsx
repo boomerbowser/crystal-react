@@ -2,23 +2,22 @@
 
 /* PasswordInput.
  *
- * The reveal toggle is the component. The catalogue is unusually specific about
- * it — "a button with `aria-pressed` and a real accessible name; never a
- * decorative icon" — and every part of that sentence is a mistake somebody has
- * shipped:
+ * The reveal toggle is the main part. The catalogue specifies it as "a button
+ * with `aria-pressed` and a real accessible name; never a decorative icon".
+ * Each part of that sentence prevents a known failure:
  *
  *   - A `div` with an onClick cannot be reached by keyboard, so the only way to
  *     check a password you typed is to delete it and start again.
  *   - Without `aria-pressed` the control announces the same thing in both
  *     states, so a screen reader user cannot tell whether the password is
- *     currently visible — which is a privacy question, not a convenience one.
+ *     currently visible, which is a matter of privacy.
  *   - "Show" alone does not say what is shown, and an eye icon says nothing at
  *     all.
  *
- * The strength meter carries a **word** as well as a bar. A bar that is longer or
+ * The strength meter carries a word as well as a bar. A bar that is longer or
  * shorter is meaningless to a reader who cannot see it and imprecise to one who
- * can, so the word is the meaning and the bar is the picture of it. Strength
- * policy is the product's: Crystal scores nothing, because a scoring rule that
+ * can, so the word carries the meaning and the bar illustrates it. Strength
+ * policy is the product's. Crystal scores nothing, because a scoring rule that
  * disagrees with the server's is worse than none.
  */
 import { forwardRef, useState, type ReactNode } from 'react';
@@ -31,11 +30,11 @@ import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import { FieldGroupShell } from '../FormField/FieldShell.js';
 import styles from './PasswordInput.module.scss';
 
-/** What the product decided about the value. Crystal renders it; it scores nothing. */
+/** What the product decided about the value. Crystal renders it and scores nothing. */
 export interface PasswordStrength {
   /** 0 to 1. Drives the bar's length only. */
   score: number;
-  /** The meaning — "Weak", "Strong". This is what is announced. */
+  /** The meaning, such as "Weak" or "Strong". This is what is announced. */
   label: string;
   /** Colour role. Defaults to the palette's ink so it never implies a status Crystal did not assign. */
   tone?: 'danger' | 'attention' | 'success' | 'neutral';
@@ -46,7 +45,7 @@ export interface PasswordInputProps extends Omit<AriaTextFieldProps, 'className'
   description?: ReactNode;
   errorMessage?: ReactNode;
   placeholder?: string;
-  /** What the toggle reveals, for its name — "the password", "the recovery key". */
+  /** What the toggle reveals, for its name, such as "the password" or "the recovery key". */
   reveals?: string;
   /** The product's verdict on the value. Rendered, never computed here. */
   strength?: PasswordStrength;
@@ -86,16 +85,18 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
       {({ isInvalid }) => (
       <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      {/* The validity React Aria resolved, not the one the caller declared, so a
-          server's rejection moves the field exactly as a local rule would. */}
+      {/* The validity React Aria resolved, which can differ from the one the
+          caller declared, so a server's rejection moves the field exactly as a
+          local rule would. */}
       <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
         <Input
           ref={forwardedRef}
           className={cx(styles['control'])}
           {...(placeholder ? { placeholder } : {})}
         />
-        {/* A real button, named for what it reveals, announcing which state it is
-            in — whether the password is currently visible is a privacy question. */}
+        {/* A real button, named for what it reveals, announcing which state it
+            is in. Whether the password is currently visible is a matter of
+            privacy. */}
         <Button
           aria-label={revealed ? `Hide ${reveals}` : `Show ${reveals}`}
           aria-pressed={revealed}
@@ -116,7 +117,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
               } as React.CSSProperties}
             />
           </div>
-          {/* The word is the meaning; the bar is a picture of it. */}
+          {/* The word carries the meaning, and the bar illustrates it. */}
           <span role="status" aria-live="polite">{strength.label}</span>
         </div>
       ) : null}

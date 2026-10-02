@@ -8,17 +8,15 @@ const meta = {
     docs: {
       description: {
         component:
-          '"The divider is a slider with a percentage value and keyboard steps." That sentence '
-          + 'is the component: a divider that is only draggable is a control nobody without a '
-          + 'pointer can use, and one that looks like a slider without being one announces '
-          + 'nothing. So it is React Aria\'s slider — role, value, arrow keys with Home and End, '
-          + 'and `aria-valuetext`, so it says "62%" rather than "62". Note `style: \'unit\'` with '
-          + 'the percent unit rather than `style: \'percent\'`, which multiplies by a hundred and '
-          + 'would announce "6,200%".\n\n'
-          + 'The top picture is *clipped*, not resized: a width would squash it, and a squashed '
-          + 'picture is two pictures at different scales pretending to be the same one. Both '
-          + 'carry their own `alt`, because a reader told about one of them has been told half '
-          + 'the comparison.',
+          '"The divider is a slider with a percentage value and keyboard steps." A divider that '
+          + 'is only draggable is a control nobody without a pointer can use, and one that looks '
+          + 'like a slider without the role announces nothing. So it is React Aria\'s slider, '
+          + 'with the role, the value, arrow keys with Home and End, and `aria-valuetext`, so it '
+          + 'says "62%" rather than "62". It uses `style: \'unit\'` with the percent unit. '
+          + '`style: \'percent\'` multiplies by a hundred and would announce "6,200%".\n\n'
+          + 'The top picture is clipped. A width would squash it, and a squashed picture is two '
+          + 'pictures at different scales presented as the same one. Both carry their own `alt`, '
+          + 'because a reader told about one of them has been told half the comparison.',
       },
     },
   },

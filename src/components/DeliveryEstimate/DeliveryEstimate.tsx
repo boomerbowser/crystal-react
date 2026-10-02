@@ -1,25 +1,22 @@
-/* DeliveryEstimate — when something will arrive.
+/* DeliveryEstimate: when something will arrive.
  *
- * "**An absolute date, not only a relative phrase.**"
+ * "An absolute date, not only a relative phrase."
  *
- * "Arrives in 3 days" is a sentence that stops being true the moment it is
- * cached, screenshotted, emailed, read the next morning, or reached by somebody
- * who left the tab open over a weekend. It is also unanswerable: a reader who
- * wants to know whether the parcel beats a Friday has to do arithmetic with a
- * date they were not given. So the date is always there, and the relative phrase
- * is *additional* — it makes the date easier to feel, and it is never the only
- * thing said.
+ * "Arrives in 3 days" stops being true once it is cached, screenshotted,
+ * emailed, read the next morning, or left open in a tab over a weekend. A reader
+ * who wants to know whether the parcel arrives before Friday would also have to
+ * work it out from a date they were not given. So the date is always shown, and
+ * the relative phrase is an addition beside it, never the only thing said.
  *
- * The date is in a `<time dateTime>`, which is what makes it machine-readable to
- * anything that wants to offer a calendar entry, and the attribute is built from
- * the local calendar fields rather than from `toISOString` — that returns the
- * UTC day, which is the previous one for anybody east of Greenwich in the
- * evening.
+ * The date is in a `<time dateTime>`, so anything that offers a calendar entry
+ * can read it. The attribute is built from the local calendar fields, because
+ * `toISOString` returns the UTC day, which is the previous day for anybody east
+ * of Greenwich in the evening.
  *
- * **Three states, and two of them are not a date.** `loading` announces that the
- * estimate is being worked out, because a blank space where a delivery date goes
- * is indistinguishable from a delivery date of never. `unavailable` says so in
- * words rather than rendering nothing, for the same reason.
+ * There are three states, and two of them are not a date. `loading` announces
+ * that the estimate is being worked out, because an empty space where a delivery
+ * date goes cannot be told apart from no delivery at all. `unavailable` says so
+ * in words, for the same reason.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { useDateFormatter, type DateFormatterOptions } from 'react-aria';
@@ -33,12 +30,12 @@ export interface DeliveryEstimateProps extends Omit<HTMLAttributes<HTMLSpanEleme
   loading?: boolean;
   /**
    * How `Intl` renders the day. Defaults to a weekday and a date, because the
-   * weekday is the part a shopper is actually deciding against.
+   * weekday is the part a shopper is deciding against.
    */
   format?: DateFormatterOptions;
   /**
-   * An extra phrase beside the date — "in 3 days", "tomorrow". Additional,
-   * never instead: see above.
+   * An extra phrase beside the date, such as "in 3 days" or "tomorrow". It is
+   * shown in addition to the date, never instead of it.
    */
   relative?: ReactNode;
   /** The sentence around the date. Default English. */
@@ -66,9 +63,8 @@ export const DeliveryEstimate = forwardRef<HTMLSpanElement, DeliveryEstimateProp
   }, ref) {
     const day = useDateFormatter(format ?? DEFAULT_FORMAT);
 
-    /* Polite, because an estimate settling is not an interruption — and a live
-       region at all, because the thing a reader is waiting for is the answer
-       replacing the wait. */
+    /* A live region, so the reader hears the answer when it replaces the wait.
+       It is polite because an estimate settling does not need to interrupt. */
     if (loading) {
       return (
         <span {...props} ref={ref} role="status" className={cx(styles['estimate'], className)}>

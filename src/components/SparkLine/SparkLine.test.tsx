@@ -4,15 +4,15 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { SparkLine } from './SparkLine.js';
 
 describe('SparkLine', () => {
-  /* "It is never the only carrier of the value." That is the API here, not
-     advice: the summary is required and it is rendered. */
+  /* "It is never the only carrier of the value." The API enforces this: the
+     summary is required and it is rendered. */
   it('shows the summary beside the line', () => {
     renderWithCrystal(<SparkLine values={[1, 4, 2, 6]} summary="+42% this week" />);
     expect(screen.getByText('+42% this week')).toBeInTheDocument();
   });
 
-  /* The picture is decoration: everything it carries is in the summary, and a
-     reader who hears both hears the same thing twice. */
+  /* The picture is decoration. Everything it carries is in the summary, and a
+     reader who heard both would hear the same thing twice. */
   it('hides the picture from the accessibility tree', () => {
     const { container } = renderWithCrystal(<SparkLine values={[1, 4, 2]} summary="+2" />);
     expect(container.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');

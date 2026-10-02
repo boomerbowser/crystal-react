@@ -2,25 +2,24 @@
 
 /* DropIndicator.
  *
- * Shows where a dragged item will land, and — the half that is easy to skip —
- * says so out loud. The catalogue's requirement is that it is "announced as the
- * drag moves, so a keyboard drag is followable without sight", which means the
- * indicator is not decoration drawn beside a collection; it is a real drop target
- * in the accessibility tree with a name, and React Aria's own `DropIndicator` is
- * what makes it one inside a collection.
+ * Shows where a dragged item will land, and also announces it. The catalogue
+ * requires that it is "announced as the drag moves, so a keyboard drag is
+ * followable without sight". So the indicator is a real drop target in the
+ * accessibility tree, with a name, and not decoration drawn beside a collection.
+ * Inside a collection, React Aria's own `DropIndicator` makes it one.
  *
- * Crystal owns the material and the motion. The material is the palette's primary
- * rather than a surface fill, because the line belongs to the gesture rather than
- * to the page. The motion is that it appears without moving anything: the rule is
- * drawn on a pseudo-element with no height in the flow, so the list does not part
- * to make room and shift the gap the reader is aiming at.
+ * Crystal owns the material and the motion. The material is the palette's
+ * primary, not a surface fill, because the line belongs to the gesture and not
+ * to the page. It appears without moving anything: the rule is drawn on a
+ * pseudo-element with no height in the flow, so the list does not part to make
+ * room and shift the gap the reader is aiming at.
  *
  * Inside a React Aria collection, use `DropIndicator` from
- * `react-aria-components` with `className={dropIndicatorClassName}` — this
+ * `react-aria-components` with `className={dropIndicatorClassName}`. This
  * component is the standalone form, for a list a product lays out itself. It is
- * an `option`, as React Aria's is, so that list is a `listbox`: an option
- * anywhere else is a choice with nothing to choose among (axe's
- * `aria-required-parent`, found by its story).
+ * an `option`, as React Aria's is, so that list must be a `listbox`. An option
+ * anywhere else is a choice with nothing to choose among, which axe reports as
+ * `aria-required-parent`.
  */
 import { forwardRef, type HTMLAttributes } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -34,7 +33,7 @@ export interface DropIndicatorProps extends HTMLAttributes<HTMLDivElement> {
   isActive?: boolean;
   /** The gap is a target the drag cannot use. Says so rather than showing nothing. */
   isInvalid?: boolean;
-  /** What dropping here would do — announced, not only drawn. */
+  /** What dropping here would do. It is announced as well as drawn. */
   label: string;
 }
 

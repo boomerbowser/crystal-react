@@ -19,16 +19,15 @@ const meta = {
     docs: {
       description: {
         component:
-          'The catalogue entry is `gallery`\'s word for word — "arrow keys move between items '
+          'The catalogue entry is `gallery`\'s word for word: "arrow keys move between items '
           + 'with position announced", "Haze thumbnails; Mirage scrim when enlarged", "the '
-          + 'viewer is full-bleed within the scrim" — and there is nothing in it that a '
-          + 'product\'s media needs and a photographer\'s set does not.\n\n'
+          + 'viewer is full-bleed within the scrim". Nothing in it differs between a '
+          + 'product\'s media and a photographer\'s set.\n\n'
           + 'So this is `Gallery` with the vocabulary a shop uses, and no second implementation '
           + 'of a listbox, a roving tabindex, a dialog, a zoom, a pan or a position '
-          + 'announcement. It is worth being explicit that this is a rename with a narrower '
-          + 'API rather than a component, because the temptation in a commerce slice is to '
-          + 'build a second viewer with "product" in its name and discover a year later that '
-          + 'only one of the two had the focus fix.',
+          + 'announcement. It is a rename with a narrower API, not a separate component. A '
+          + 'second viewer with "product" in its name would need every fix made twice, and a '
+          + 'focus fix made only in one of them would leave the other broken.',
       },
     },
   },

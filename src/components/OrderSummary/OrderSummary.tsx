@@ -1,32 +1,31 @@
 'use client';
 
-/* OrderSummary — an order that has already been placed.
+/* OrderSummary: an order that has already been placed.
  *
- * "**Status is a word**; the status colour reinforces it."
+ * "Status is a word; the status colour reinforces it."
  *
- * Which is `StatusBadge`'s contract, so the status is one — the same badge every
- * other part of this library uses, rather than a fifth drawing of a coloured
- * well. The four order states map onto Crystal's four semantic statuses, and the
- * mapping is the one judgement this component makes:
+ * That is `StatusBadge`'s contract, so the status is a `StatusBadge`, the same
+ * badge every other part of this library uses, and no fifth drawing of a
+ * coloured well. The four order states map onto Crystal's four semantic
+ * statuses, and the mapping is the one judgement this component makes:
  *
- *   - `pending` is **info**. Waiting is the ordinary outcome of placing an
- *     order, not a warning about it.
- *   - `shipped` is **success**. It is the thing the reader wanted.
- *   - `delivered` is **success** as well, because both are good outcomes and a
+ *   - `pending` is info. Waiting is the ordinary outcome of placing an order,
+ *     not a warning about it.
+ *   - `shipped` is success. It is the thing the reader wanted.
+ *   - `delivered` is success as well, because both are good outcomes and a
  *     fifth colour for "even better" would be a distinction with no meaning.
- *   - `cancelled` is **danger**, which is the one that deserves a second look:
- *     an order the reader cancelled themselves is not a problem. But the status
- *     colour is reinforcement and the *word* is what is read, so "Cancelled" in
- *     the danger ink says what happened rather than that something is wrong —
- *     and the alternative, a neutral cancelled order sitting in a list of live
- *     ones, is the state that actually misleads.
+ *   - `cancelled` is danger, which needs a second look, because an order the
+ *     reader cancelled themselves is not a problem. The status colour only
+ *     reinforces, and the word is what is read, so "Cancelled" in the danger
+ *     ink says what happened. A neutral cancelled order in a list of live ones
+ *     would mislead more.
  *
  * The wording is the product's, as everywhere else in this slice: an order model
  * with six states or another language's words passes its own.
  *
  * The totals are `CartSummary`, because "with items and totals" is the same
- * description list under a different heading, and a second one would be a second
- * place for the total's markup to stop being a total.
+ * description list under a different heading. A second description list would
+ * be a second copy of the total's markup to keep correct.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { StatusBadge } from '../StatusBadge/StatusBadge.js';
@@ -61,7 +60,7 @@ export interface OrderSummaryProps extends Omit<HTMLAttributes<HTMLElement>, 'ch
   stateLabel?: ReactNode;
   /** When it was placed, already formatted. */
   placed?: ReactNode;
-  /** The lines and the totals — a `CartSummary`, usually. */
+  /** The lines and the totals, usually a `CartSummary`. */
   children?: ReactNode;
   /** Actions on the order: track it, return it, buy it again. */
   actions?: ReactNode;

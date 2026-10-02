@@ -1,14 +1,14 @@
 @use '../../styles/tokens' as *;
 
-/* List — Haze rows on whatever surrounds them.
+/* List. Haze rows on whatever surrounds them.
  *
- * The row is the Haze surface and the `li` is not, which is what lets a trailing
- * action sit *outside* the row's press target while still belonging to the row.
- * A button inside a button is invalid and a button inside a link is worse, so the
- * geometry has to keep them as siblings.
+ * The row is the Haze surface and the `li` is not, so a trailing action can sit
+ * outside the row's press target while still belonging to the row. A button
+ * inside a button is invalid and a button inside a link is worse, so the
+ * geometry keeps them as siblings.
  *
- * "Separators are hairlines." One border-width, never a filled bar: a 1px line in
- * the edge colour is a boundary, and anything thicker is a piece of furniture.
+ * "Separators are hairlines." One border-width, never a filled bar: a 1px line
+ * in the edge colour is a boundary, and anything thicker reads as an object.
  */
 
 .list {
@@ -60,7 +60,7 @@ a.row:focus-visible, button.row:focus-visible {
 }
 
 /* Selection is label weight. The fill is the second signal, never the only
-   one — and never a leading mark, which would offset the very label it points
+   one. There is no leading mark, which would offset the very label it points
    at and break the column the rows line up in. */
 .row[aria-current='true'],
 .row[aria-pressed='true'],

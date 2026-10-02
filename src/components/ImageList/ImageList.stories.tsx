@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ImageList } from './ImageList.js';
 
-/* Sources that do not resolve, deliberately: a story that depends on the network
-   is a story that sometimes reviews a broken image icon. What shows is the
+/* The sources are chosen not to resolve, because a story that depends on the
+   network sometimes shows a broken image icon. What shows is the
    reserved box, the Haze placeholder and the caption bar, which is the
    composition this component is about. */
 const items = [
@@ -19,14 +19,13 @@ const meta = {
     docs: {
       description: {
         component:
-          'A real `ul`, so a reader is told how many images there are before walking them — a '
+          'A real `ul`, so a reader is told how many images there are before walking them. A '
           + 'grid of divs announces nothing and gives no way out. Every item requires `alt`, '
           + 'exactly as `Image` does: empty means decorative, absent means announced by '
-          + 'filename, and the author has to say which. The caption is not the alt text; it '
-          + 'says what the picture *means* where the alt says what it *is*. The caption bar is '
-          + 'Haze on a pseudo-element so its text stays crisp, and it keeps the tile\'s radius '
-          + 'on the two corners it actually meets — logically, so a right-to-left grid needs no '
-          + 'second rule.',
+          + 'filename, and the author has to say which. The caption says what the picture '
+          + 'means, and the alt says what it is. The caption bar is Haze on a pseudo-element so '
+          + 'its text stays crisp, and it keeps the tile\'s radius on the two corners it meets. '
+          + 'The corners use logical properties, so a right-to-left grid needs no second rule.',
       },
     },
   },

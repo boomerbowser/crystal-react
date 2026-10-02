@@ -1,11 +1,12 @@
 @use '../../styles/tokens' as *;
 
-/* OverflowList — one row that measures itself and hides what does not fit.
+/* OverflowList: one row that measures itself and hides what does not fit.
  *
  * The measuring pass needs the items laid out before it can know which fit, and
  * laying them out visibly first produces a flash of the overflowing row. So the
- * row is measured while hidden from sight but still laid out — `visibility`, not
- * `display` — and revealed once the decision is made.
+ * row is measured while hidden from sight but still laid out, using
+ * `visibility` (`display` would remove it from layout), and revealed once the
+ * decision is made.
  */
 
 .overflowList {

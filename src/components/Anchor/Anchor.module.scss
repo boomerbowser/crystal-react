@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* Anchor — a link in running text.
+/* Anchor: a link in running text.
  *
  * No material. A link inherits the reading surface it sits on, because it is part
  * of the sentence rather than a control placed in one.
@@ -9,7 +9,7 @@
 .anchor {
   color: var(--cr-primary);
   /* Present at rest, not on hover. The underline is what distinguishes a link
-     from the text around it without relying on colour — WCAG 1.4.1 — and a link
+     from the text around it without relying on colour (WCAG 1.4.1), and a link
      that only underlines on hover has no signal at all for a reader who is not
      pointing at it. */
   text-decoration: underline;
@@ -40,8 +40,8 @@
    have already read is. The underline stays, so the link is still a link without
    colour.
 
-   `:visited` accepts almost nothing else — browsers restrict it to avoid leaking
-   history, and `getComputedStyle` always reports the unvisited value — so this
+   `:visited` accepts almost nothing else. Browsers restrict it to avoid leaking
+   history, and `getComputedStyle` always reports the unvisited value, so this
    cannot be tested from script and is not gated. */
 .anchor:visited { color: var(--cr-muted); }
 

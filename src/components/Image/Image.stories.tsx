@@ -8,12 +8,11 @@ const meta = {
     docs: {
       description: {
         component:
-          'Media with the ratio reserved before anything loads, which is the reason this exists '
-          + 'rather than an `img` tag: an image that arrives and pushes the paragraph below it down '
-          + 'the page is the most common layout shift on the web, and it is one a component can '
-          + 'simply not do. The placeholder is Haze rather than a grey rectangle, because a grey '
-          + 'rectangle on Crystal\'s coloured atmosphere reads as a hole in the page. `alt` is '
-          + 'required and may be empty — empty means decorative, absent means announced as a '
+          'Media with the ratio reserved before anything loads. An image that arrives and pushes '
+          + 'the paragraph below it down the page is the most common layout shift on the web, and '
+          + 'a component with a reserved box does not cause it. The placeholder is Haze, because '
+          + 'a grey rectangle on Crystal\'s coloured atmosphere reads as a hole in the page. `alt` '
+          + 'is required and may be empty. Empty means decorative, absent means announced as a '
           + 'filename, and the author has to say which.',
       },
     },
@@ -25,8 +24,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** The source does not resolve, so this is the reserved box with its placeholder
- *  and then its fallback — which is the state worth reviewing, because it is the
- *  one users actually hit. */
+ *  and then its fallback. Review this state, because it is the one users hit. */
 export const Default: Story = {
   args: { fallback: 'Photograph unavailable' },
 };
@@ -36,7 +34,7 @@ export const SquareAndUnrounded: Story = {
   args: { ratio: 1, rounded: false, fallback: 'Photograph unavailable' },
 };
 
-/** Empty alt: decorative, and said so deliberately. */
+/** Empty alt: decorative, and stated as such by the author. */
 export const Decorative: Story = {
   args: { alt: '', fallback: '' },
 };

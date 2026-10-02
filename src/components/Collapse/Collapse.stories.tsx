@@ -12,13 +12,13 @@ const meta = {
       description: {
         component:
           'A region that opens and closes. "Hidden content is genuinely hidden from assistive '
-          + 'technology", which rules out the usual `max-height: 0` — that leaves a zero-height '
+          + 'technology", which rules out the usual `max-height: 0`. That leaves a zero-height '
           + 'region full of focusable links a keyboard user can still tab into. So a collapsed '
-          + 'region is not rendered at all, and the exit recipe is what makes that possible to do '
-          + 'gracefully: `play` returns a promise that settles when the movement finishes, so the '
-          + 'content stays for exactly as long as `accordion-out` runs and then goes. The trigger '
-          + 'is not part of this component, because its `aria-expanded` and `aria-controls` belong '
-          + 'to whoever owns the button.',
+          + 'region is not rendered at all, and the exit recipe still plays: `play` returns a '
+          + 'promise that settles when the movement finishes, so the content stays for exactly as '
+          + 'long as `accordion-out` runs and then goes. The trigger is not part of this '
+          + 'component, because its `aria-expanded` and `aria-controls` belong to whoever owns '
+          + 'the button.',
       },
     },
   },
@@ -31,9 +31,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** The assembled pair: a button that owns the state and names the region.
- *  `Accordion` solves the same problem a different way — on React Aria's
- *  disclosure, which keeps a collapsed row reachable by find-in-page and, in
- *  exchange, owns the hiding itself. */
+ *  `Accordion` solves the same problem on React Aria's disclosure, which keeps
+ *  a collapsed row reachable by find-in-page and in exchange owns the hiding
+ *  itself. */
 export const WithItsTrigger: Story = {
   render: (args) => {
     const Demo = () => {
@@ -50,7 +50,7 @@ export const WithItsTrigger: Story = {
           </Button>
           <Collapse {...only(args)} id="collapse-demo" isExpanded={open}>
             <p style={{ margin: 0 }}>
-              Closed, this paragraph is not in the document at all — not hidden, absent.
+              When closed, this paragraph is removed from the document, not just hidden.
             </p>
           </Collapse>
         </div>

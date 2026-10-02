@@ -1,16 +1,14 @@
 'use client';
 
-/* Histogram — frequency across bins.
+/* Histogram. Frequency across bins.
  *
- * "Bins meet without gaps." A histogram is not a bar chart of categories: its x
- * axis is continuous, the bins partition it, and a gap between two bins would
- * draw a range where nothing was counted. That is also why the bins are computed
- * here from the values rather than taken as categories — a caller who binned the
- * data themselves would have to keep the bin edges and the axis in step, and one
- * of the two would eventually move.
+ * "Bins meet without gaps." The x axis is continuous and the bins partition it,
+ * so a gap between two bins draws a range where nothing was counted. The bins
+ * are computed here from the values for the same reason. A caller who bins the
+ * data has to keep the bin edges and the axis in step by hand.
  *
- * "Bin bounds and counts are text." Both, in the label and in the table: "10 to
- * 20, 14" rather than a position and a height.
+ * "Bin bounds and counts are text." Both appear in the label and in the table,
+ * as "10 to 20, 14".
  */
 import { type CSSProperties, type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
@@ -86,9 +84,9 @@ export function Histogram({
             <g {...marks.containerProps}>
               {binned.map((bin, index) => {
                 const x = inner.x + across(bin.from);
-                /* Adjacent edges, not width per bin: a rounded width leaves a
-                   sub-pixel gap between two bins that should meet, and the gap
-                   draws a range where nothing was counted. */
+                /* The width comes from adjacent edges. A rounded width per bin
+                   leaves a sub-pixel gap between two bins that should meet,
+                   and the gap draws a range where nothing was counted. */
                 const width = across(bin.to) - across(bin.from);
                 const top = count(bin.count);
                 const height = inner.height - top;

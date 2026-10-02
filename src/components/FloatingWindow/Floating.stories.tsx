@@ -29,7 +29,7 @@ const meta = {
   argTypes: {
     label: { control: 'text', table: { category: 'Window' } },
     isModal: {
-      description: 'Announce as a dialog and trap focus. Off by default: a window that traps focus without being modal is a window you cannot Tab out of.',
+      description: 'Announce as a dialog and trap focus. Off by default, because a window that traps focus without being modal cannot be left with Tab.',
       control: 'boolean', table: { category: 'Window' },
     },
     step: {
@@ -47,18 +47,16 @@ const meta = {
       description: {
         component:
           '**Both surfaces here are Resin, and neither may contain Resin.** Crystal\'s materials nest '
-          + 'Plastic → Frost → Resin, back to front, and an overlay portals to `body` — so the DOM '
-          + 'nesting that would normally answer "what am I inside?" is gone by the time it renders. '
-          + 'The answer comes from `SurfaceProvider` instead, which is why the rule survives the '
-          + 'portal.\n\n'
-          + '**A window moves from the keyboard.** Drag is the obvious affordance and the one a '
-          + 'keyboard user does not have: the title bar is focusable and the arrow keys move the '
-          + 'window by `step`, Shift by ten times that. A floating window that can only be dragged is '
-          + 'a floating window that can only be placed by a mouse.\n\n'
-          + '**A hover card is not a tooltip.** A tooltip names a control; a hover card previews the '
+          + 'Plastic → Frost → Resin, back to front. An overlay portals to `body`, so by the time it '
+          + 'renders the DOM no longer shows what it sits inside. `SurfaceProvider` supplies that '
+          + 'answer instead, so the rule still holds across the portal.\n\n'
+          + '**A window moves from the keyboard.** A keyboard user cannot drag, so the title bar is '
+          + 'focusable and the arrow keys move the window by `step`, or ten times that with Shift.\n\n'
+          + '**A hover card is not a tooltip.** A tooltip names a control. A hover card previews the '
           + 'thing behind a link and contains its own content, sometimes focusable. It therefore '
           + 'carries a name of its own, opens on a delay so a pointer crossing a paragraph of links '
-          + 'does not strobe, and waits before closing so the pointer can travel into it.',
+          + 'does not make cards flash open and shut, and waits before closing so the pointer can '
+          + 'travel into it.',
       },
     },
   },

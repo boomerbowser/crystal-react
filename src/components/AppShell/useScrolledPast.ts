@@ -2,17 +2,15 @@
 
 /* Whether the view has been scrolled away from its top.
  *
- * Two components need this and they need the same answer: `AppBar` shows
- * elevation once something has scrolled under it, and `PageHeader` condenses on
- * the same signal. Asking the window is wrong in both of them whenever there is
- * a surrounding `AppShell` — the bar and the header never move, the content
- * region scrolls beneath them, so the window's scroll position stays zero
- * forever and the state never arrives.
+ * Two components need the same answer: `AppBar` shows elevation once something
+ * has scrolled under it, and `PageHeader` condenses on the same signal. Inside an
+ * `AppShell` the window is the wrong thing to ask. The bar and the header never
+ * move and the content region scrolls beneath them, so the window's scroll
+ * position stays zero.
  *
- * It lives here, beside the context it reads, for the reason the scroll tab stop
- * does: two copies of one rule drift the first time one of them is touched, and
- * a drift in this one is a header that condenses in a shell and not on a page,
- * or the reverse, with nothing to say which is correct.
+ * It lives here, beside the context it reads, as one shared rule, for the same
+ * reason as the scroll tab stop. Two copies would drift apart, and a header
+ * would condense in a shell and not on a page, or the reverse.
  */
 import { useEffect, useState } from 'react';
 import { useShellScroll } from './scrollContext.js';

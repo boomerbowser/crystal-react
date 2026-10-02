@@ -5,9 +5,9 @@ import { LoadingOverlay } from './LoadingOverlay.js';
 
 describe('LoadingOverlay', () => {
   /* "Blocked content is inert; focus does not enter it." A scrim hides a region
-     and stops the mouse and does nothing at all about the tab key — a keyboard
-     reader walks into a form they cannot see and fills in fields that are about
-     to be replaced. This is the half that is usually faked. */
+     and stops the mouse and does nothing at all about the tab key, so a
+     keyboard reader walks into a form they cannot see and fills in fields that
+     are about to be replaced. This is the half that is usually missed. */
   it('makes the region it blocks inert', () => {
     const { container } = renderWithCrystal(
       <LoadingOverlay loading label="Saving changes">
@@ -29,7 +29,7 @@ describe('LoadingOverlay', () => {
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
   });
 
-  /* "The reason is announced" — in words, not as a spinner and a guess. */
+  /* "The reason is announced", in words. */
   it('says why the region is blocked', () => {
     renderWithCrystal(
       <LoadingOverlay loading label="Saving changes"><p>Form</p></LoadingOverlay>,

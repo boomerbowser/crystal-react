@@ -10,10 +10,10 @@ const meta = {
         component:
           '"The formatted value **is** the text content; currency is stated, not implied by a '
           + 'symbol alone." Both halves decide the API. The value is a `Money`, so the currency '
-          + 'arrives as data and the component formats it — a caller cannot hand this a string '
-          + 'with a symbol already glued to the front, which is what makes a price '
-          + 'untranslatable and unreadable to anything but a pair of eyes. And there is one '
-          + 'string: no visible form with a different spoken form beside it. Where `$` is '
+          + 'arrives as data and the component formats it. A caller cannot hand this a string '
+          + 'with a symbol already glued to the front, which would make the price '
+          + 'untranslatable and readable only by sight. There is one string, so no visible form '
+          + 'has a different spoken form beside it. Where `$` is '
           + 'ambiguous, `currencyDisplay="name"` spells the currency out for everybody.',
       },
     },
@@ -26,8 +26,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** The platform's currency data, not ours: the yen has no minor unit, the dinar
- *  has three, and neither is a fact this library keeps a copy of. */
+/** The platform's currency data: the yen has no minor unit and the dinar has
+ *  three. This library keeps no copy of either fact. */
 export const ByCurrency: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 4, justifyItems: 'end', width: 'fit-content' }}>
@@ -40,8 +40,8 @@ export const ByCurrency: Story = {
 };
 
 /** Spelled out, for everybody. A product whose readers cannot tell which dollar
- *  is meant changes what is *shown*, rather than announcing one thing and
- *  displaying another. */
+ *  is meant changes what is shown, so what is announced and what is displayed
+ *  stay the same. */
 export const CurrencyInWords: Story = {
   args: { value: { amount: 39.99, currency: 'USD' }, currencyDisplay: 'name' },
 };

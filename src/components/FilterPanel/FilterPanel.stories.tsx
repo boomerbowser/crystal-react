@@ -12,15 +12,13 @@ const meta = {
       description: {
         component:
           '"**Applied filters are announced and individually removable**; counts update '
-          + 'politely." Both halves are about the same gap: filtering is the one interaction on '
-          + 'a storefront where the reader\'s action happens *here* and its whole effect happens '
-          + 'somewhere else — a list they are not looking at gets shorter. A checkbox going on '
+          + 'politely." On a storefront the reader acts in the filter panel, and the effect '
+          + 'happens somewhere else. A list they are not looking at gets shorter. A checkbox '
           + 'says "checked", and nothing about the four hundred products that just became '
           + 'eleven.\n\n'
-          + '*Individually* removable means a control per applied filter and not only Clear '
-          + 'all: a reader who has applied six filters and wants five of them is otherwise made '
-          + 'to start again. And Clear all appears only when there is something to clear, '
-          + 'because a disabled Clear all is a control that exists to be greyed out.',
+          + '*Individually* removable means a control per applied filter as well as Clear all, '
+          + 'so a reader who has applied six filters and wants to keep five does not have to '
+          + 'start again. Clear all appears only when there is something to clear.',
       },
     },
   },
@@ -38,8 +36,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Remove a filter and listen: the announcement is the set that is left and how
- *  many results it leaves, which is the fact the reader does not otherwise get. */
+/** Remove a filter and listen: the announcement names the filters that are left
+ *  and how many results they leave. */
 export const Default: Story = {
   render: (args) => {
     function Live() {

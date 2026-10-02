@@ -6,8 +6,8 @@ import { CommandPalette, groupCommands, type Command } from './CommandPalette.js
 
 /* A closing scrim withdraws on Crystal's 650ms departure clock (`mirage-out`),
    and `AnimatePresence` unmounts only after it. Testing Library waits one second
-   by default, which the hand-written opacity fade used to fit inside and the
-   real departure does not — so the exits wait for the departure, not for luck. */
+   by default, which is too short for the departure, so the exit assertions wait
+   for `DEPARTURE`. */
 const DEPARTURE = 2500;
 import { Button } from '../Button/Button.js';
 
@@ -60,9 +60,9 @@ describe('CommandPalette', () => {
     expect(screen.getByRole('group', { name: 'View' })).toBeInTheDocument();
   });
 
-  /* The requirement every hand-built palette breaks. Move real focus into the
-     list and typing stops working, so the user has to arrow back up to keep
-     searching. The caret stays put and the row is named instead. */
+  /* If real focus moves into the list, typing stops working and the user has to
+     arrow back up to keep searching. The caret stays put and the row is named
+     instead. */
   it('never moves focus out of the search field', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
@@ -93,8 +93,8 @@ describe('CommandPalette', () => {
     expect(screen.getByRole('option', { name: /Save/ })).toBeInTheDocument();
   });
 
-  /* Accent-insensitive, because `toLowerCase().includes` is the reflex and it
-     fails for every reader whose language writes a letter more than one way. */
+  /* Accent-insensitive, because `toLowerCase().includes` fails for every reader
+     whose language writes a letter more than one way. */
   it('matches without regard to case or accent', async () => {
     const user = userEvent.setup();
     renderWithCrystal(
@@ -104,19 +104,19 @@ describe('CommandPalette', () => {
     await waitFor(() => { expect(screen.getAllByRole('option')).toHaveLength(1); });
   });
 
-  /* Three different answers to "why is this list empty", and a palette that gives
-     one of them for all three is a palette nobody can debug. */
+  /* A list can be empty for three different reasons, and the palette says
+     which one applies. */
   it('says nothing matched, rather than showing an empty list', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     await user.type(screen.getByRole('searchbox'), 'zzzz');
     await waitFor(() => { expect(screen.queryByRole('option', { name: /Save/ })).toBeNull(); });
     expect(screen.getByRole('status')).toHaveTextContent('No matching commands');
-    /* Not "no options at all": React Aria wraps whatever `renderEmptyState`
-       returns in a `role="option"` of its own, to keep the listbox structurally
-       valid — a listbox may hold only options and groups. That wrapper carries
-       no id and the collection is empty, so nothing arrows onto it. What is
-       asserted is what matters: no command is listed, and the reason is said. */
+    /* The listbox still holds one option. React Aria wraps whatever
+       `renderEmptyState` returns in a `role="option"` of its own, because a
+       listbox may hold only options and groups. That wrapper carries no id and
+       the collection is empty, so nothing arrows onto it. The test asserts that
+       no command is listed and that the reason is given. */
     expect(screen.getByRole('listbox')).toHaveAttribute('data-empty', 'true');
   });
 
@@ -145,8 +145,8 @@ describe('CommandPalette', () => {
     expect(onAction).toHaveBeenCalledOnce();
   });
 
-  /* A palette is a way of doing things, not a list you pick from: nothing stays
-     selected afterwards, so nothing is marked as chosen. */
+  /* A palette runs actions. Nothing stays selected afterwards, so nothing is
+     marked as chosen. */
   it('selects nothing, and marks nothing with a check', () => {
     renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     for (const option of screen.getAllByRole('option')) {
@@ -185,9 +185,8 @@ describe('CommandPalette', () => {
 });
 
 describe('groupCommands', () => {
-  /* The registry's order is a product decision — most-used first, usually — so
-     the grouping preserves it rather than sorting alphabetically and quietly
-     overruling whoever wrote it. */
+  /* The registry's order is a product decision, usually most-used first, so the
+     grouping preserves it and does not sort alphabetically. */
   it('keeps the registry’s order and puts ungrouped commands first', () => {
     const groups = groupCommands([
       { id: 'a', label: 'A', section: 'Zulu' },

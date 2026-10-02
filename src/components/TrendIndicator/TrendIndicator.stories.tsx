@@ -9,13 +9,12 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Direction is carried by a word and a symbol, never by colour alone." Three things '
-          + 'follow and all three are the component rather than a guideline it hopes callers '
-          + 'remember: the words are required, because a direction with no words is a coloured '
-          + 'arrow; the arrow is `aria-hidden`, because a reader who hears both hears it twice; '
-          + 'and `flat` takes the supporting ink rather than a third status colour, because "no '
-          + 'change" is not a status and giving it one makes every unremarkable figure look like '
-          + 'a report.',
+          '"Direction is carried by a word and a symbol, never by colour alone." The component '
+          + 'enforces three consequences. The words are required, because a direction with no '
+          + 'words is a coloured arrow. The arrow is `aria-hidden`, because a reader who hears '
+          + 'both hears it twice. `flat` takes the supporting ink instead of a third status '
+          + 'colour, because "no change" is not a status and a status colour makes every '
+          + 'unremarkable figure look like a report.',
       },
     },
   },

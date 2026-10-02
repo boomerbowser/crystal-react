@@ -1,11 +1,10 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* AngleSlider and Knob — circular controls for a bounded value.
+/* AngleSlider and Knob: circular controls for a bounded value.
  *
  * Both draw an arc and both put the value in text beside it, which the catalogue
  * asks for twice: "a text equivalent" and "readable as text, not only as an arc".
- * An arc is a picture of a number, and the number is the thing being set.
  */
 
 .field { @include field.field; }
@@ -38,8 +37,8 @@
     var(--cr-primary) var(--cr-arc, 0deg),
     transparent var(--cr-arc, 0deg)
   );
-  /* The mask turns the filled circle into a ring. `#000` here is coverage rather
-     than colour — a mask's alpha is what paints, and nothing in it is visible. */
+  /* The mask turns the filled circle into a ring. `#000` here is coverage. Only
+     a mask's alpha is used, and none of it is visible. */
   mask: radial-gradient(farthest-side, transparent calc(100% - #{$cr-slider-track-height}), #000 0);  /* crystal-allow-literal: mask coverage, not a colour */
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - #{$cr-slider-track-height}), #000 0);  /* crystal-allow-literal: mask coverage, not a colour */
 }
@@ -47,11 +46,11 @@
 /* The thumb rides the rim. Its hit area is the whole dial, which is why the dial
    carries the pointer handling rather than the thumb.
  *
- * It is placed by rotating an orbit rather than by a sine and a cosine in
- * JavaScript. The arithmetic version needs the rim radius as a number, and that
- * radius is a token — so it would have been a magic number in a template literal,
- * drifting the moment the dial or the thumb changed size. Here only the angle
- * comes from JavaScript and the geometry stays in CSS. */
+ * It is placed by rotating an orbit, not by a sine and a cosine in JavaScript.
+ * The arithmetic needs the rim radius as a number, and that radius is a token, so
+ * it would become a magic number in a template literal that drifts when the dial
+ * or the thumb changes size. Only the angle comes from JavaScript. The geometry
+ * stays in CSS. */
 .orbit {
   position: absolute;
   inset: 0;

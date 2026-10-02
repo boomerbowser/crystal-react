@@ -13,10 +13,9 @@ describe('DragHandle', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The catalogue makes keyboard drag a requirement, not an enhancement, and a
-     button is what a keyboard and a screen reader can start one from. A decorated
-     div is the version where the pointer path looks finished and the other one was
-     never written. */
+  /* The catalogue makes keyboard drag a requirement, and a keyboard or a screen
+     reader can start one from a button. A decorated div supports only the
+     pointer path. */
   it('offers a real button to start a keyboard drag', async () => {
     renderWithCrystal(
       <DragHandle getItems={items} handleLabel="Move Alpha"><p>Alpha</p></DragHandle>,

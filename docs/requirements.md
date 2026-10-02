@@ -1,7 +1,7 @@
-# Crystal React — the brief, as given
+# Crystal React: the brief, as given
 
-Meridian's requirements, recorded verbatim so the plan can be checked against them
-rather than against a paraphrase. Where a requirement was clarified later, the
+Meridian's requirements are recorded here verbatim, so that the plan can be
+checked against the original wording. Where a requirement was clarified later, the
 clarification is recorded beneath it with its date.
 
 ---
@@ -56,8 +56,8 @@ Motion for javaScript to motion for React, if it hasn't already", and then:
 upgraded libraries in React should've received that upgrade already, and we're
 concerned this wasn't part of your implementation plan."
 
-**What parity actually meant (2026-09-18).** The correction that reshaped the
-scope, recorded at length because the first reading of "parity" was wrong:
+**What parity actually meant (2026-09-18).** This correction changed the scope.
+It is recorded at length because the first reading of "parity" was wrong:
 
 > Same thing goes for features, (just as an example) Crystal's drag element
 > specification can't actually yet handle users click-and-dragging elements.
@@ -81,20 +81,20 @@ they don't require a paid license".
 
 ## What the last clarification changed
 
-The first reading of parity counted component *names* against four benchmark
-libraries. That is a check a catalogue can pass while still being unable to drag
-an element, upload a file with progress, or play a video — because counting names
-against names cannot see a missing capability.
+The first reading of parity counted component names against four benchmark
+libraries. A catalogue can pass that check while still being unable to drag an
+element, upload a file with progress or play a video, because a count of names
+does not show a missing capability.
 
 Two things followed:
 
-1. **React Aria's own component list became a source.** CONTRACT §3 says to wrap a
-   maintained primitive rather than rebuild it, so a primitive React Aria ships
-   that Crystal does not name is a gap by definition: Crystal would be leaving
-   accessible behaviour on the floor. The installed package was enumerated and
+1. React Aria's own component list became a source. CONTRACT §3 says to wrap a
+   maintained primitive rather than rebuild it, so a primitive that React Aria
+   ships and Crystal does not name is a gap: Crystal would go without accessible
+   behaviour that is already available. The installed package was enumerated and
    diffed against the catalogue.
-2. **Capability is specified per component**, not inferred from the name. See §4.1
-   of the implementation plan.
+2. Capability is specified per component and is no longer inferred from the
+   name. See §4.1 of the implementation plan.
 
-28 components were added on that basis, including a `media` category Crystal had
-never had at all. The catalogue is now **202 components**.
+28 components were added on that basis, including a `media` category, which
+Crystal did not have before. The catalogue now holds 202 components.

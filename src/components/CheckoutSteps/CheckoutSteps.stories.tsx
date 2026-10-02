@@ -9,15 +9,14 @@ const meta = {
       description: {
         component:
           '"The current step is `aria-current`; **completion is stated in words**, and a check '
-          + 'mark here means validated rather than selected." All three are `Stepper`\'s, which '
-          + 'is why this is `Stepper` with a shape rather than a second implementation. The '
-          + 'catalogue asks for two *drawings* — circular markers on a Haze track for a '
-          + 'stepper, pills with hairline connectors for this — and one set of semantics. '
-          + 'Writing the semantics twice would be two places for `aria-current` and the state '
-          + 'wording to drift, and the wording is what carries the meaning to anybody not '
-          + 'looking at the markers.\n\n'
-          + 'The check mark is the one place in Crystal this glyph is right: it means '
-          + '*validated*, which is information display. It never means "selected".',
+          + 'mark here means validated rather than selected." All three come from `Stepper`, so '
+          + 'this is `Stepper` with a shape and not a second implementation. The catalogue asks '
+          + 'for two drawings (circular markers on a Haze track for a stepper, pills with '
+          + 'hairline connectors for this) and one set of semantics. Writing the semantics twice '
+          + 'would give `aria-current` and the state wording two places to drift, and the '
+          + 'wording carries the meaning to anybody not looking at the markers.\n\n'
+          + 'This is the one place in Crystal the check mark glyph is right. It means validated, '
+          + 'which is information display. It never means "selected".',
       },
     },
   },
@@ -36,8 +35,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** A step that failed validation. It says "needs attention" in its name, because
- *  a warning glyph is a shape and to a reader who does not see it, nothing. */
+/** A step that failed validation. It says "needs attention" in its name,
+ *  because a warning glyph tells a reader who cannot see it nothing. */
 export const WithAStepToGoBackTo: Story = {
   args: {
     steps: [

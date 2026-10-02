@@ -1,27 +1,25 @@
 'use client';
 
-/* Indicator — a small circular mark attached to a control, carrying state.
+/* Indicator. A small circular mark attached to a control, carrying state.
  *
- * Every word of "the real control supplies the state; the mark only shows it" is
- * load-bearing. The indicator is `aria-hidden` and is never a click target: it
- * sits on a navigation entry, a busy control or a field, and that control already
- * carries `aria-current`, `aria-busy`, `required` or `aria-invalid`. A mark that
+ * The rule is "the real control supplies the state; the mark only shows it".
+ * The indicator is `aria-hidden` and is never a click target. It sits on a
+ * navigation entry, a busy control or a field, and that control already carries
+ * `aria-current`, `aria-busy`, `required` or `aria-invalid`. A mark that
  * announced anything would say it twice, and a mark that could be pressed would
  * be a second control for the same thing.
  *
- * **It is Crystal's `.cr-indicator`, and its host decides what it shows.** A
- * 20px Haze disc with a feathered fill at the host's top end corner, carrying a
- * glyph rather than a colour: ● on a host that is `aria-current`, … on one that
- * is `aria-busy`, and nothing otherwise; on a field shell ○ at rest, ● focused,
- * * required and ! invalid, read from the field inside it. Shape rather than
- * colour, so the state never rests on colour alone — and because the host's own
- * attributes switch it, the mark cannot disagree with the control it describes.
- * It must be the host's own child for that to work.
+ * It is Crystal's `.cr-indicator`, and its host decides what it shows. A 20px
+ * Haze disc with a feathered fill at the host's top end corner, carrying a
+ * glyph: ● on a host that is `aria-current`, … on one that is `aria-busy`, and
+ * nothing otherwise. On a field shell it shows ○ at rest, ● focused, * required
+ * and ! invalid, read from the field inside it. The state is a shape, so it
+ * never rests on colour alone. Because the host's own attributes switch it, the
+ * mark cannot disagree with the control it describes. It must be the host's own
+ * child for that to work.
  *
- * Until Crystal React adopted 2.3.0 (R-25) this was a colour dot whose fill was
- * the state, set by a `state` prop, and it had a `selection` kind. Selection in
- * Crystal is label weight and nothing drawn beside the label, so that kind is
- * gone rather than renamed.
+ * There is no `selection` kind and no `state` prop (R-25). Selection in Crystal
+ * is label weight, with nothing drawn beside the label.
  */
 import { forwardRef, type HTMLAttributes } from 'react';
 import { cx } from '../../styles/cx.js';

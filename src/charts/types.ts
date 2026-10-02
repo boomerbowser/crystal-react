@@ -10,12 +10,12 @@ export interface ChartSeries {
   name: string;
   values: readonly (number | null)[];
   /**
-   * Not drawn. The series stays in the array, which is the whole point: a
-   * chart's colours and dashes are its *position* in this list, so a caller who
-   * hides a series by filtering it out of the array repaints every series after
-   * it. Nothing in the picture changed meaning, but everything in it changed
-   * appearance — and the legend the reader is matching against is now wrong.
-   * Hiding is a view state, so it is said here rather than by removal.
+   * Not drawn. The series stays in the array. A chart's colours and dashes are
+   * its position in this list, so a caller who hides a series by filtering it
+   * out of the array repaints every series after it. The picture's meaning
+   * does not change, but its appearance does, and the legend the reader is
+   * matching against is now wrong. Hiding is a view state, so it is said here
+   * rather than by removal.
    */
   hidden?: boolean;
 }

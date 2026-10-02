@@ -42,14 +42,14 @@ describe('Collapse', () => {
     expect(region.dataset['crMotionName'] ?? region.dataset['crMotionState']).toBeDefined();
   });
 
-  /* The whole reason `play` returns a promise: a region that unmounted the moment
-     the state changed would play `accordion-out` into a detached node. */
+  /* `play` returns a promise because a region that unmounted the moment the
+     state changed would play `accordion-out` into a detached node. */
   it('stays for the length of the exit recipe, and then goes', async () => {
     const { container, rerenderWithCrystal } = renderWithCrystal(<Region open />);
     rerenderWithCrystal(<Region open={false} />);
-    /* Still there, which is the half of this that a `waitFor` alone would not
-       catch: if the region unmounted synchronously the recipe would have run on
-       a detached node and this test would still have passed. */
+    /* Still there. A `waitFor` alone would not catch this: if the region
+       unmounted synchronously, the recipe would run on a detached node and the
+       test would still pass. */
     expect(container.querySelector('#region')).not.toBeNull();
     await waitFor(() => { expect(container.querySelector('#region')).toBeNull(); });
   });

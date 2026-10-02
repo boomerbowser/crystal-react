@@ -2,30 +2,27 @@
 
 /* RichTextSurface and Mentions.
  *
- * **Crystal owns the chrome; the product owns the engine.** That is the
- * catalogue's split, in its own words — "product: the entire editing engine,
- * serialisation and paste handling" — and it is the right one. An editor is a
- * document model, a paste pipeline and a serialisation format, and a design
- * system with an opinion about any of those has taken a decision that belongs to
- * the application.
+ * Crystal owns the chrome and the product owns the engine. The catalogue states
+ * the split: "product: the entire editing engine, serialisation and paste
+ * handling". An editor is a document model, a paste pipeline and a
+ * serialisation format, and those decisions belong to the application.
  *
- * So this ships the toolbar, the frame, the surface and the active-format
- * treatment, and takes whatever editor a product brings — TipTap, Lexical,
- * ProseMirror, a plain `contenteditable`. The plan's dependency table names
- * `@tiptap/react` as the choice *if* the library needed an engine; reading the
- * catalogue, it does not, and a bundled editor would be a large dependency
+ * This ships the toolbar, the frame, the surface and the active-format
+ * treatment, and takes whatever editor a product brings: TipTap, Lexical,
+ * ProseMirror, or a plain `contenteditable`. The plan's dependency table names
+ * `@tiptap/react` as the choice if the library needed an engine. The catalogue
+ * does not require one, and a bundled editor would be a large dependency
  * imposed on every consumer for a component most of them will not use.
  *
- * The one accessibility rule the chrome owns is the toolbar's: **active
- * formatting is `aria-pressed`.** A bold button that looks pressed and announces
+ * The one accessibility rule the chrome owns is the toolbar's: active
+ * formatting is `aria-pressed`. A bold button that looks pressed but announces
  * as an ordinary button leaves a screen reader user unable to tell whether their
- * selection is already bold — and the whole point of a formatting toolbar is
- * telling you the state of what you have selected.
+ * selection is already bold, and the toolbar exists to show the state of the
+ * selection.
  *
- * `Mentions` is the other half of the same idea: Crystal owns the popover, the
- * rows and the inserted token; the product owns the trigger characters, the data
- * and the insertion, because where a mention goes in a document is a question
- * only the document model can answer.
+ * `Mentions` follows the same split. Crystal owns the popover, the rows and the
+ * inserted token. The product owns the trigger characters, the data and the
+ * insertion, because only the document model knows where a mention goes.
  */
 import { useId, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -39,7 +36,7 @@ import { useDistributedErrors } from '../FormField/useDistributedErrors.js';
 
 export interface FormatAction {
   id: string;
-  /** What it does — "Bold", "Bulleted list". The control's accessible name. */
+  /** What it does, such as "Bold" or "Bulleted list". The control's accessible name. */
   label: string;
   icon: ReactNode;
   /** Whether the current selection already has this format. Becomes `aria-pressed`. */
@@ -57,17 +54,17 @@ export interface RichTextSurfaceProps {
   isReadOnly?: boolean;
   isInvalid?: boolean;
   /**
-   * The field's name, **for matching a server's errors only**. Unlike the other
+   * The field's name, used only to match a server's errors. Unlike the other
    * fields here this does not submit anything, because this component holds no
    * value: the editor lives in `children` and owns the document, the paste
-   * pipeline and the serialisation. Whatever renders there is what puts a value
-   * in the form — a hidden input of its own, or its own submit handling.
+   * pipeline and the serialisation. Whatever renders there puts a value in the
+   * form, through a hidden input of its own or its own submit handling.
    */
   name?: string;
   className?: string;
   /**
    * The editor. Whatever renders here owns the document, the paste pipeline and
-   * the serialisation — Crystal renders the frame around it and nothing else.
+   * the serialisation. Crystal renders only the frame around it.
    */
   children: ReactNode;
 }
@@ -87,18 +84,17 @@ export function RichTextSurface({
         {actions.length > 0 ? (
           <Toolbar aria-label={`Formatting for ${typeof label === 'string' ? label : 'the editor'}`} className={cx(styles['toolbar'])}>
             {actions.map((action) => (
-              /* aria-pressed, not a class. A bold button that looks pressed and
+              /* aria-pressed, not a class. A bold button that looks pressed but
                  announces as an ordinary button leaves a reader unable to tell
-                 whether their selection is already bold — which is the only thing
-                 a formatting toolbar is for. */
+                 whether their selection is already bold. */
               <IconButton
                 key={action.id}
                 label={action.label}
                 icon={action.icon}
-                /* Said only when the product has decided. `isSelected={false}`
-                   is not "this is off" but "I own whether it is on", so an
-                   action that does not report its own state was frozen off and
-                   could not toggle itself at all. */
+                /* Passed only when the product has decided. `isSelected={false}`
+                   makes the selection controlled, so an action that does not
+                   report its own state would be frozen off and could not
+                   toggle. */
                 {...(action.isActive !== undefined ? { isSelected: action.isActive } : {})}
                 {...(action.isDisabled !== undefined ? { isDisabled: action.isDisabled } : {})}
                 onPress={action.onToggle}
@@ -134,7 +130,7 @@ export interface MentionsProps {
   options: readonly MentionOption[];
   /** Which row is highlighted. Announced through the surface's own semantics. */
   highlightedValue?: string;
-  /** Called when a row is chosen. Insertion is the product's — only it knows the document. */
+  /** Called when a row is chosen. Insertion is the product's, because only it knows the document. */
   onSelect: (option: MentionOption) => void;
   isLoading?: boolean;
   emptyMessage?: ReactNode;
@@ -160,9 +156,9 @@ export function Mentions({
             ) : options.length === 0 ? (
               <div className={cx(styles['state'])}>{emptyMessage}</div>
             ) : (
-              /* A listbox the text surface points at rather than one focus moves
-                 into: typing must continue while the list is open, which is the
-                 same rule the combobox follows. */
+              /* The text surface points at this listbox and focus does not move
+                 into it, because typing must continue while the list is open.
+                 The combobox follows the same rule. */
               <ul role="listbox" aria-label={label} className={cx(styles['list'])}>
                 {options.map((option) => (
                   <li
@@ -182,8 +178,8 @@ export function Mentions({
           </Suggestions>
         ) : null}
       </AnimatePresence>
-      {/* The inserted value is announced, which the catalogue asks for: a token
-          appearing in a document is otherwise silent. */}
+      {/* The catalogue asks for the inserted value to be announced, because a
+          token appearing in a document is otherwise silent. */}
       <VisuallyHidden as="div" role="status" aria-live="polite">
         {isOpen && options.length > 0 ? `${options.length} matches` : ''}
       </VisuallyHidden>

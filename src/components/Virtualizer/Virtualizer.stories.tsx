@@ -20,15 +20,15 @@ const meta = {
       description: {
         component:
           'Renders only what is near the viewport. This is React Aria\'s `Virtualizer`, '
-          + 're-exported rather than wrapped, because the hard part is not the windowing — it is '
-          + 'keeping `aria-setsize` and `aria-posinset` correct across recycling and never '
-          + 'dropping focus when a focused row is reused. React Aria\'s virtualizer is integrated '
-          + 'with its collections, so both come for free; a general-purpose windowing library is '
-          + 'not, and every one of them has the accessibility bolted back on by the product.\n\n'
-          + 'Crystal\'s half is the **scroll surface**, and it is composed rather than implied: '
-          + 'the virtualized collection goes inside a `ScrollArea`, which brings the scroll '
-          + 'contract — contained overscroll, a stable gutter, native gestures — and the right '
-          + 'scrollbar for the material. This story is that assembly, two thousand rows deep.',
+          + 're-exported instead of wrapped. The hard part is keeping `aria-setsize` and '
+          + '`aria-posinset` correct across recycling and never dropping focus when a focused '
+          + 'row is reused. React Aria\'s virtualizer is integrated with its collections, so it '
+          + 'does both. A general-purpose windowing library is not, and the product has to add '
+          + 'the accessibility back.\n\n'
+          + 'Crystal\'s half is the scroll surface, which the caller composes: the virtualized '
+          + 'collection goes inside a `ScrollArea`, which brings the scroll contract (contained '
+          + 'overscroll, a stable gutter, native gestures) and the right scrollbar for the '
+          + 'material. This story is that assembly, two thousand rows deep.',
       },
     },
   },
@@ -40,8 +40,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Two thousand rows, windowed, on a Frost scroll surface — Frost because a long
- *  reading surface is a panel rather than a control plane. */
+/** Two thousand rows, windowed, on a Frost scroll surface. Frost, because a long
+ *  reading surface is a panel and not a control plane. */
 export const TwoThousandRows: Story = {
   render: (args) => (
     <ScrollArea variant="frost" style={{ blockSize: VIEWPORT }} aria-label="Rows">

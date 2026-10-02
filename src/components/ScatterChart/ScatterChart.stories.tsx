@@ -19,13 +19,13 @@ const meta = {
       description: {
         component:
           '"Point size is a scale, not an arbitrary radius." A third value is mapped onto '
-          + "Crystal's point scale by **area** rather than by diameter — a point twice as wide "
-          + 'is four times as big to the eye, so sizing by diameter doubles every difference in '
+          + "Crystal's point scale by area rather than by diameter. A point twice as wide is "
+          + 'four times as big to the eye, so sizing by diameter doubles every difference in '
           + 'the data without saying so.\n\n'
           + '"Dense regions remain describable; a table equivalent is required." The table is '
-          + 'the surface\'s and is never optional. What this chart adds is that a dense region '
-          + 'stays navigable: every point is a mark, the arrow keys move between them in the '
-          + 'order given, and each says both of its coordinates.\n\n'
+          + 'the surface\'s and is never optional. This chart also keeps a dense region '
+          + 'navigable: every point is a mark, the arrow keys move between them in the order '
+          + 'given, and each says both of its coordinates.\n\n'
           + "Both axes fit their data. A scatter's marks are positions in both directions, so "
           + "the bar chart's zero rule does not apply in either.",
       },

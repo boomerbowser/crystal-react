@@ -1,26 +1,27 @@
 'use client';
 
-/* SplitView — two resizable regions.
+/* SplitView.
+ *
+ * Two resizable regions.
  *
  * States: `at-rest`, `resizing`, `collapsed`, `focus-visible`.
  *
  * Three of those four already exist. `Resizable` is Crystal's separator: React
  * Aria's `useMove` behind a `role="separator"` that carries `aria-valuenow`,
- * `aria-valuemin` and `aria-valuemax`, so it is resizable by keyboard rather
- * than only by pointer, and its 44px target sits around a 4px grip because a
- * few pixels is a picture of a control, not a place to press. None of that is
- * rebuilt here.
+ * `aria-valuemin` and `aria-valuemax`, so it is resizable by keyboard as well as
+ * by pointer. Its 44px target sits around a 4px grip, because a few pixels is
+ * too small to press. None of that is rebuilt here.
  *
- * What this adds is `collapsed`, and the reason it is a component rather than a
- * prop on `Resizable` is what collapsing has to do to the divider. A collapsed
- * split view has one pane; a separator between one region and nothing is a
- * control that announces a value it cannot change, and a keyboard user who
- * lands on it can press arrow keys at it forever. So collapsing removes the
- * divider rather than disabling it — there is nothing to separate — and the
- * remaining pane simply fills the space.
+ * This component adds `collapsed`. It is a component and not a prop on
+ * `Resizable` because of what collapsing has to do to the divider. A collapsed
+ * split view has one pane. A separator between one region and nothing announces
+ * a value it cannot change, and a keyboard user who lands on it can press arrow
+ * keys at it forever. So collapsing removes the divider instead of disabling it,
+ * and the remaining pane fills the space.
  *
- * Which pane survives is the product's: `collapse="secondary"` keeps the first,
- * which is the common case of a detail pane folding away on a narrow display.
+ * Which pane survives is the product's choice. `collapse="secondary"` keeps the
+ * first, which is the common case of a detail pane folding away on a narrow
+ * display.
  */
 import { type HTMLAttributes, type ReactNode } from 'react';
 import { Resizable } from '../Resizable/Resizable.js';
@@ -33,8 +34,8 @@ export interface SplitViewProps extends Omit<HTMLAttributes<HTMLDivElement>, 'on
   /** The region that takes the remaining space. */
   secondary?: ReactNode;
   /**
-   * Fold one pane away. The divider goes with it: a separator between one
-   * region and nothing announces a value it cannot change.
+   * Fold one pane away. The divider goes with it, because a separator between
+   * one region and nothing announces a value it cannot change.
    */
   collapse?: 'none' | 'primary' | 'secondary';
   size?: number;
@@ -44,18 +45,17 @@ export interface SplitViewProps extends Omit<HTMLAttributes<HTMLDivElement>, 'on
   orientation?: 'horizontal' | 'vertical';
   isDisabled?: boolean;
   onSizeChange?: (size: number) => void;
-  /** Names the divider — what it resizes. */
+  /** Names the divider by what it resizes. */
   'aria-label'?: string;
 }
 
 export function SplitView({
   children, secondary, collapse = 'none', className,
-  /* Named so they can be *withheld* from the collapsed branch. They are
+  /* Named so they can be withheld from the collapsed branch. They are
      `Resizable`'s vocabulary, and React puts an unrecognised prop straight onto
-     the DOM node: a collapsed split view spreading them renders
+     the DOM node. A collapsed split view spreading them renders
      `<div minsize="200" orientation="horizontal">`, which is invalid markup, a
-     console warning in development, and silence in production. Nothing in the
-     tests or the stories passed one alongside `collapse`, so nothing saw it. */
+     console warning in development, and silent in production. */
   size, defaultSize, minSize, maxSize, orientation, isDisabled, onSizeChange,
   ...props
 }: SplitViewProps): React.JSX.Element {

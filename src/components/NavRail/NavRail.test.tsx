@@ -19,8 +19,8 @@ describe('NavRail', () => {
     const current = screen.getByRole('link', { current: 'page' });
     expect(current.textContent).toContain('Inbox');
     /* `aria-selected` belongs to a widget with a selection model. Arriving
-       somewhere is not picking an option, and announcing it that way says the
-       wrong thing about what the reader has done. */
+       somewhere is not picking an option, and announcing it as one misreports
+       what the reader has done. */
     for (const link of screen.getAllByRole('link')) {
       expect(link.getAttribute('aria-selected')).toBeNull();
     }
@@ -31,8 +31,8 @@ describe('NavRail', () => {
     const expanded = screen.getAllByRole('link').map((l) => l.textContent?.trim());
     rerender(<NavRail items={items} currentId="home" isCollapsed />);
     /* The accessible name must be the same string in both states. An icon-only
-       rail whose links lose their names is the most common way this component
-       becomes unusable without sight, and it looks identical on screen. */
+       rail whose links lose their names is unusable without sight and looks
+       identical on screen. */
     for (const label of ['Home', 'Inbox', 'Settings']) {
       expect(screen.getByRole('link', { name: new RegExp(label) })).toBeTruthy();
     }
@@ -51,9 +51,9 @@ describe('NavRail', () => {
 
   it('separates a badge from the label in the accessible name', () => {
     render(<NavRail items={items} />);
-    /* Without the space the name accumulates as "Inbox12" — one token,
-       announced as one word, because the name computation joins adjacent
-       inline content with nothing between it. */
+    /* Without the space the name accumulates as "Inbox12", announced as one
+       word, because the name computation joins adjacent inline content with
+       nothing between it. */
     expect(screen.getByRole('link', { name: 'Inbox 12' })).toBeTruthy();
   });
 });

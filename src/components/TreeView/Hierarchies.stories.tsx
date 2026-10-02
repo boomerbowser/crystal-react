@@ -40,10 +40,10 @@ const files: TreeNode[] = [
 
 const meta = {
   title: 'Navigation/Hierarchies',
-  /* Without this docgen has nothing to read and Storybook generates no
-     controls at all — the message Meridian screenshotted. This file shows
-     several components together; the one named here is its subject, and the
-     others are the context it is normally seen in. */
+  /* Without this, docgen has nothing to read and Storybook generates no
+     controls at all. This file shows several components together. The one named
+     here is its subject, and the others are the context it is normally seen
+     in. */
   component: TreeView,
   args: { items: files, label: 'Project files' },
   parameters: {
@@ -51,19 +51,19 @@ const meta = {
       description: {
         component:
           '**Both mark their current row with label weight, and neither puts anything in the '
-          + 'leading space.** That space is already carrying meaning in both components — it is '
-          + 'the depth — so a mark there would be read as a level rather than as a state.\n\n'
+          + 'leading space.** In both components that space shows the depth, so a mark there '
+          + 'would be read as a level instead of a state.\n\n'
           + '**The tree is a `treegrid`.** A `treeitem` in the plain tree pattern must not contain '
           + 'independently focusable widgets, and Crystal\'s row contains the disclosure button the '
-          + 'catalogue asks for. Level, expansion and full arrow-key navigation are all present; '
-          + 'only the role names differ, and the divergence is recorded rather than hidden.\n\n'
-          + '**Rows revealed by expanding play `accordion-in`; rows present on first render play '
+          + 'catalogue asks for. Level, expansion and full arrow-key navigation are all present. '
+          + 'Only the role names differ, and the divergence is recorded.\n\n'
+          + '**Rows revealed by expanding play `accordion-in`. Rows present on first render play '
           + 'nothing.** Nothing in Crystal moves at rest, and a tree animating itself into '
-          + 'existence on page load is exactly that.\n\n'
+          + 'existence on page load would be motion at rest.\n\n'
           + '**The table of contents is controlled.** The catalogue puts "which headings are '
           + 'collected, scroll spy thresholds" with the product, so the component is told which '
-          + 'entry is active and `useHeadingInView` ships beside it for products that want the '
-          + 'default answer.',
+          + 'entry is active, and `useHeadingInView` ships beside it for products that want the '
+          + 'default behaviour.',
       },
     },
   },
@@ -83,17 +83,17 @@ export const Files: Story = {
   ),
 };
 
-/* The keyboard model gets a story of its own, and the separation is deliberate.
+/* The keyboard model has a story of its own, separate from `Files`.
  *
- * A `play` function runs whenever the story *loads*, not only under the test
- * runner, so a browser gate that opens a story with one is measuring whatever
- * the play is in the middle of doing. This started on `Files`, and
- * `verify-targets` — which probes that story — reported three 320×44 tree rows
- * whose own centre did not belong to them. Nothing was wrong with the rows; the
- * gate had arrived while the play was still pressing keys.
+ * A `play` function runs whenever the story loads, not only under the test
+ * runner, so a browser gate that opens a story with one measures whatever the
+ * play is in the middle of doing. `verify-targets` probes `Files`, and with a
+ * play function there it reported three 320×44 tree rows whose own centre did
+ * not belong to them, because it measured while the play was still pressing
+ * keys.
  *
- * So: a story that a measurement gate probes does not carry a play function, and
- * a story with a play function is not probed. */
+ * A story that a measurement gate probes does not carry a play function, and a
+ * story with a play function is not probed. */
 export const Keyboard: Story = {
   name: 'Keyboard navigation',
   args: { label: 'Files', selectionMode: 'single', defaultExpandedKeys: ['src'] },
@@ -102,10 +102,10 @@ export const Keyboard: Story = {
       <TreeView {...only(args)} />
     </div>
   ),
-  /* A tree's keyboard model, watched rather than asserted about. The unit tests
-     check what React Aria reports; this checks what a person pressing Down and
-     then Left actually gets, which is the half jsdom cannot answer — it has no
-     layout, so it cannot tell a collapsed row from a hidden one. */
+  /* A tree's keyboard model, exercised in a browser. The unit tests check what
+     React Aria reports. This checks what a person pressing Down and then Left
+     actually gets, which jsdom cannot answer: it has no layout, so it cannot
+     tell a collapsed row from a hidden one. */
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const rows = () => canvas.getAllByRole('row');
@@ -124,21 +124,19 @@ export const Keyboard: Story = {
       await userEvent.click(parent!);
       await userEvent.keyboard('{ArrowLeft}');
       await expect(parent).toHaveAttribute('aria-expanded', 'false');
-      /* Put it back. A `play` function runs when the story *loads*, not only
-         under the test runner, so whatever it leaves behind is what every other
-         browser gate then measures. This one collapsed the tree and walked away,
-         and `verify-targets` quietly dropped from 29 probes to 26 — it was still
-         green, and it was measuring three fewer rows. A play function that
-         changes what a story shows has to hand it back. */
+      /* Put it back. A `play` function runs when the story loads, not only under
+         the test runner, so whatever it leaves behind is what every other
+         browser gate then measures. Left collapsed, the tree drops
+         `verify-targets` from 29 probes to 26 while the gate stays green. A play
+         function that changes what a story shows has to restore it. */
       await userEvent.keyboard('{ArrowRight}');
       await expect(parent).toHaveAttribute('aria-expanded', 'true');
-      /* And wait for the rows to finish arriving. Re-expanding is not enough:
-         the revealed rows animate in, and while they are doing it they are
-         part-transparent and offset, so `elementsFromPoint` does not land on
-         them. `verify-targets` then reported three 320×44 rows whose own centre
-         did not belong to them — a real-looking failure caused entirely by
-         being asked mid-animation. Waited on the rows' own opacity rather than
-         on a duration, so it tracks the motion speed rather than guessing it. */
+      /* Then wait for the rows to finish arriving. The revealed rows animate in,
+         and while they do they are part-transparent and offset, so
+         `elementsFromPoint` does not land on them. Measured mid-animation,
+         `verify-targets` reports three 320×44 rows whose own centre does not
+         belong to them. The wait is on the rows' own opacity instead of a
+         duration, so it tracks the motion speed without guessing it. */
       await waitFor(async () => {
         for (const row of canvas.getAllByRole('row')) {
           await expect(getComputedStyle(row).opacity).toBe('1');
@@ -166,8 +164,8 @@ const sections = [
   { id: 'timings', label: 'Timings', level: 3 },
 ];
 
-/* The scroll spy is the half of this component no unit test can see: jsdom has
-   no IntersectionObserver and reports every rect as zero. Scroll the column. */
+/* No unit test can see the scroll spy, because jsdom has no
+   IntersectionObserver and reports every rect as zero. Scroll the column. */
 export const ScrollSpy: Story = {
   render: function ScrollSpyStory() {
     const ids = useMemo(() => sections.map((section) => section.id), []);
@@ -176,12 +174,11 @@ export const ScrollSpy: Story = {
 
     return (
       <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'start' }}>
-        {/* The library's own scroll region rather than a hand-rolled one. A
+        {/* The library's own scroll region instead of a hand-rolled one. A
             column of headings and paragraphs holds nothing focusable, so without
-            a tab stop of its own a keyboard cannot scroll it at all — which is
-            what this story shipped as, and what `ScrollArea` already knows how
-            to avoid. A story that hand-rolls what the library provides also
-            stops being an example of it. */}
+            a tab stop of its own a keyboard cannot scroll it at all. `ScrollArea`
+            provides that tab stop, and the story also serves as an example of
+            it. */}
         <ScrollArea
           ref={setRoot}
           aria-label="Specification sections"

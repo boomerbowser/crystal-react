@@ -17,10 +17,9 @@ const meta = {
       description: {
         component:
           '"Unread count is announced; marking read is undoable."\n\nThe count is shown in words and '
-          + 'said when it changes. Marking read — one or all — leaves an Undo beside a sentence saying '
-          + 'what was marked, until it is used, replaced or dismissed: not a toast that leaves before a '
-          + 'keyboard can reach it. The centre is the Frost panel; the notifications in it step down to '
-          + 'Haze rows.',
+          + 'said when it changes. Marking one or all as read leaves an Undo beside a sentence saying '
+          + 'what was marked, until it is used, replaced or dismissed, so it does not leave before a keyboard can reach it. '
+          + 'The centre is the Frost panel, and the notifications in it step down to Haze rows.',
       },
     },
   },

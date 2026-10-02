@@ -10,9 +10,9 @@ const meta = {
       description: {
         component:
           '"The figure and its trend are one readable sentence, not a number beside an arrow." '
-          + 'That is a rule about *order*, and order is the one thing a card can enforce: label, '
-          + 'figure, the period it covers, then what it did. Read straight down that is a '
-          + 'sentence; any other arrangement is a number with decoration around it, and a reader '
+          + 'That is a rule about order, which a card can enforce: label, '
+          + 'figure, the period it covers, then what it did. Read straight down, that is a '
+          + 'sentence. Any other arrangement is a number with decoration around it, and a reader '
           + 'moving linearly gets the decoration first. It is `Card` and `Statistic` rather than '
           + 'a third implementation of either.',
       },
@@ -31,8 +31,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** A row, which is what these are for — and why the loading state keeps the box
- *  rather than emptying it. */
+/** A row, which is what these are for. The loading state keeps the box rather
+ *  than emptying it so the row does not reflow. */
 export const ARow: Story = {
   render: (args) => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 'var(--cr-space)' }}>

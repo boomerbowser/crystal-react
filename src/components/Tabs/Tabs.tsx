@@ -7,17 +7,17 @@
  * between a tab and its panel, and the automatic-versus-manual activation
  * distinction. Crystal owns the material and the one semantic rule.
  *
- * **Selection is weight and the primary fill**, as Crystal's dock draws a
- * selected control: the tab is heavier and filled, so selection never rests on
- * colour alone. The strip is Crystal's `.cr-dock`, shared with the segmented
- * control through `styles/_strip.scss` — the same material carrying different
- * semantics. A segmented control picks a *value* and announces as a
- * radio group; a tab list picks a *view* and promises a panel will change. The
- * catalogue rules out borrowing one for the other by name: "never
- * `aria-selected` outside a tablist".
+ * Selection is weight and the primary fill, as Crystal's dock draws a selected
+ * control. The tab is heavier and filled, so selection never rests on colour
+ * alone. The strip is Crystal's `.cr-dock`, shared with the segmented control
+ * through `styles/_strip.scss`. The material is the same and the semantics differ.
+ * A segmented control picks a value and announces as a radio group; a tab list
+ * picks a view and promises a panel will change. The catalogue rules out
+ * borrowing one for the other by name: "never `aria-selected` outside a
+ * tablist".
  *
- * The panel plays `tab-in` on arrival. That is movement somebody started — they
- * pressed the tab — which is the only kind Crystal has. Nothing moves at rest.
+ * The panel plays `tab-in` on arrival. That is movement somebody started by
+ * pressing the tab, which is the only kind Crystal has. Nothing moves at rest.
  */
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import {
@@ -51,7 +51,7 @@ export interface TabsProps extends Omit<AriaTabsProps, 'className' | 'style' | '
   /**
    * Show the label above the strip. It then names the list by reference rather
    * than by `aria-label`, so the visible text and the announced name cannot
-   * drift apart — and a rich label works, which an `aria-label` cannot carry.
+   * drift apart. A rich label also works, which an `aria-label` cannot carry.
    */
   labelVisible?: boolean;
   className?: string;
@@ -94,8 +94,8 @@ export function Tabs({
 /** One panel, playing `tab-in` when it becomes the shown one. */
 function TabPanel({ id, children }: { id: Key; children: ReactNode }): React.JSX.Element {
   const [scope, play] = useMotion();
-  /* RAC unmounts a hidden panel, so mounting *is* arrival and an effect that
-     runs once per mount plays exactly once per arrival. Keying the effect on the
+  /* RAC unmounts a hidden panel, so mounting is arrival and an effect that runs
+     once per mount plays exactly once per arrival. Keying the effect on the
      selected tab instead would replay the panel already on screen every time any
      tab changed. The ref survives the double-invoked effect in StrictMode. */
   const played = useRef(false);

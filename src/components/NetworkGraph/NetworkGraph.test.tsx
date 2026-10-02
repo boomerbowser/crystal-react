@@ -11,16 +11,16 @@ const nodes = [
 const edges = [{ source: 'a', target: 'b' }, { source: 'b', target: 'c' }];
 
 describe('NetworkGraph', () => {
-  /* The whole content of a network graph is who is connected to whom, so a node
-     that announced only its name would leave a reader with a list of names. */
+  /* A network graph's content is who is connected to whom, so a node that
+     announced only its name would leave a reader with a list of names. */
   it('states a node degree and its neighbours', () => {
     renderWithCrystal(<NetworkGraph label="Team" nodes={nodes} edges={edges} />);
     expect(screen.getByLabelText('Brook, 2 connections, to Ash, Cedar')).toBeInTheDocument();
     expect(screen.getByLabelText('Ash, 1 connection, to Brook')).toBeInTheDocument();
   });
 
-  /* An edge is a connection rather than a direction unless the caller says so,
-     and a node that listed only its outgoing edges would under-report itself. */
+  /* An edge has no direction unless the caller gives it one, and a node that
+     listed only its outgoing edges would under-report itself. */
   it('counts an edge from both ends', () => {
     const joined = adjacency(nodes, edges);
     expect(joined.get('c')).toEqual(['b']);

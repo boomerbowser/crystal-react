@@ -1,8 +1,8 @@
 @use '../../styles/tokens' as *;
 
-/* Bins. The same bar treatment as the bar chart — the radius on the value end
- * only, the base on the axis — and one series colour, because a histogram has
- * one series by definition: it is a count of one thing.
+/* Bins. The same bar treatment as the bar chart, with the radius on the value
+ * end only and the base on the axis. One series colour, because a histogram
+ * counts one thing and so has one series.
  */
 
 .bin .fill {
@@ -19,9 +19,9 @@
   .bin .fill { transition: none; }
 }
 
-/* One colour for every bin means the boundary between two of them is the only
-   thing separating them, and forced colours takes the fill away. They keep a
-   rim, which is what a bin is: a box over a range. */
+/* Every bin has the same colour, so only the boundary separates two of them,
+   and forced colours removes the fill. Each bin keeps a rim, drawing it as a
+   box over its range. */
 @media (forced-colors: active) {
   .bin .fill { fill: Canvas; stroke: CanvasText; stroke-width: 1px; }
   .bin[data-active] .fill { fill: Highlight; }

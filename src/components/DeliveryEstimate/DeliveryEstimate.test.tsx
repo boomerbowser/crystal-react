@@ -3,8 +3,8 @@ import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen } from '../../test/render.js';
 import { DeliveryEstimate } from './DeliveryEstimate.js';
 
-/* Constructed from local calendar fields, because that is what the component
-   claims to render — a date built from a UTC string is a different day for half
+/* Constructed from local calendar fields, because the component renders the
+   local calendar day. A date built from a UTC string is a different day for half
    the world. */
 const friday = new Date(2026, 9, 2);
 
@@ -15,17 +15,15 @@ describe('DeliveryEstimate', () => {
     expect(screen.getByTestId('d')).toHaveTextContent('Arrives Friday, October 2');
   });
 
-  /* Machine-readable, and built from the local calendar day rather than from
-     `toISOString` — which returns a different day for anybody whose clock is
-     not on UTC.
-   *
-     Two instants, early and late, because one is not enough to see the bug: a
-     date at local midnight has the same UTC day in a zone behind Greenwich, and
-     one at local midnight has the same UTC day in a zone ahead of it. Whatever
-     the offset, one of these two crosses — and in UTC itself neither does,
-     which is the one place the defect does not exist. The expected value is the
-     local calendar read the way a person reads a calendar, which is the
-     specification rather than a second copy of the implementation. */
+  /* The `datetime` attribute is the local calendar day. `toISOString` returns
+     a different day for anybody whose clock is not on UTC.
+
+     The test uses an early and a late local instant. In any zone ahead of UTC
+     the early one falls on the previous UTC day, and in any zone behind it the
+     late one falls on the next, so one of the two crosses the UTC day boundary
+     whatever the offset. In UTC neither crosses. The expected value is read
+     from the local calendar fields, as a person reads a calendar, and does not
+     reuse the implementation. */
   it('marks the date up as the local calendar day', () => {
     const calendar = (date: Date) => [
       date.getFullYear(),

@@ -1,23 +1,22 @@
 @use '../../styles/tokens' as *;
 
-/* NavLink — a navigation entry, Crystal's `.cr-nav-item` (2.2.0).
+/* NavLink: a navigation entry, Crystal's `.cr-nav-item` (2.2.0).
  *
  * "None of its own: a navigation entry is furniture on the panel beneath it."
- * Crystal's catalogue said "Resin shell with Haze fill" until 2.2.0, and this
- * file painted exactly that — a floating capsule per link. Crystal's reference
- * implementation, the documentation site's side menu, never did: it is Plastic,
- * and its own comment says why — a column of floating capsules is the legibility
- * noise the material hierarchy exists to prevent. 2.2.0 published that entry as
- * a recipe and the catalogue now names it, so the link wears the class and
- * Crystal paints it: muted at rest, the text colour and a surface-alt fill on
- * hover, and the current entry at weight 800 on the same fill.
+ * The link has no floating capsule: a column of floating capsules is the
+ * legibility noise the material hierarchy exists to prevent. Crystal's
+ * reference implementation, the documentation site's side menu, is Plastic.
+ * 2.2.0 published that entry as a recipe and the catalogue names it, so the
+ * link takes the class and Crystal paints it: muted at rest, the text colour
+ * and a surface-alt fill on hover, and the current entry at weight 800 on the
+ * same fill.
  *
- * **The current-location dot is Crystal's too**, from 2.3.0 (D-22): the class
- * draws it on `aria-current`, in the entry's own padding, so the label never
- * moves. This file drew its own until then (R-26).
+ * The current-location dot is Crystal's too, from 2.3.0 (D-22). The class draws
+ * it on `aria-current`, in the entry's own padding, so the label never moves.
+ * This file must not draw its own (R-26).
  *
- * The rest is layout, which is this component's: it fills the row it sits in,
- * and it has slots for an icon and a trailing count.
+ * The rest is layout, which belongs to this component: it fills the row it sits
+ * in, and it has slots for an icon and a trailing count.
  */
 
 .navLink {

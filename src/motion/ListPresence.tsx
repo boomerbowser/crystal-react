@@ -2,24 +2,24 @@
 
 /* A collection's items arriving and leaving: Crystal's `list-in` and `list-out`.
  *
- * The catalogue gives these to every collection — chips in a tags field, rows
- * of files, cards, reviews, the items of a list — and its text is exact about
- * when: `list-in` for "real added" items, `list-out` "after completion", with
- * the change announced and focus kept valid. Two rules follow, and Motion for
- * React's own presence machinery is what keeps them:
+ * The catalogue gives these to every collection (chips in a tags field, rows of
+ * files, cards, reviews, the items of a list) and says when they play: `list-in`
+ * for "real added" items, `list-out` "after completion", with the change
+ * announced and focus kept valid. Motion for React's presence machinery
+ * enforces two rules that follow from this:
  *
- *   - **An item present when the collection first renders did not arrive.** A
- *     page of twelve cards does not play twelve arrivals on load. `ListPresence`
- *     is `AnimatePresence` with `initial={false}`, which marks exactly those
+ *   - An item present when the collection first renders did not arrive. A page
+ *     of twelve cards does not play twelve arrivals on load. `ListPresence` is
+ *     `AnimatePresence` with `initial={false}`, which marks exactly those
  *     first-render children, and the hook plays `list-in` only on the others.
- *   - **An item leaves after its exit, not before.** When a keyed child is
- *     removed, `AnimatePresence` keeps it rendered until the child says it is
- *     done; the hook plays `list-out` and then says so. Under reduced motion the
- *     recipe resolves at once and the item goes at once.
+ *   - An item is removed after its exit has played. When a keyed child is
+ *     removed, `AnimatePresence` keeps it rendered until the child reports it
+ *     is done. The hook plays `list-out` and then reports. Under reduced motion
+ *     the recipe resolves at once and the item is removed at once.
  *
- * The hook is inert outside a `ListPresence`: a `Card` on its own is not in a
+ * The hook is inert outside a `ListPresence`. A `Card` on its own is not in a
  * collection, and nothing plays. A product that renders its own collection of
- * cards wraps them in `ListPresence`, keyed, and the cards do the rest.
+ * cards wraps them, keyed, in `ListPresence`, and the cards handle the rest.
  */
 import { forwardRef, useContext, useEffect, useMemo, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { AnimatePresence, PresenceContext, usePresence } from 'motion/react';
@@ -34,7 +34,7 @@ export function ListPresence({ children }: { children: ReactNode }): React.JSX.E
 
 export interface ListItemMotionOptions {
   /** Play `list-out` before the item goes. Off where the catalogue assigns only
-   *  the arrival — a timeline's events are added, not taken away. */
+   *  the arrival, such as a timeline, whose events are added and never removed. */
   leaves?: boolean;
 }
 
@@ -44,12 +44,13 @@ export function useListItemMotion({ leaves = true }: ListItemMotionOptions = {})
 }
 
 /**
- * The same rule for any element Motion's presence decides: `enter` when it
- * genuinely arrives inside an `AnimatePresence` (not on that presence's first
- * render if it was told `initial={false}`), `exit` before it goes, awaited, with
- * the element inert meanwhile. Outside an `AnimatePresence`, nothing — so a
- * floating window a product simply renders does not sweep itself in, and one it
- * shows and hides inside `AnimatePresence` does.
+ * The same rule for any element whose presence Motion controls. It plays
+ * `enter` when the element arrives inside an `AnimatePresence` (not on that
+ * presence's first render if it was given `initial={false}`), and plays and
+ * awaits `exit` before the element goes, with the element inert meanwhile.
+ * Outside an `AnimatePresence` it does nothing, so a floating window a product
+ * renders directly does not sweep in, and one it shows and hides inside
+ * `AnimatePresence` does.
  */
 export function usePresenceMotion(enter: string, exit: string | null): ReturnType<typeof useMotion>[0] {
   const [scope, play] = useMotion();
@@ -68,8 +69,8 @@ export function usePresenceMotion(enter: string, exit: string | null): ReturnTyp
   useEffect(() => {
     if (presence === null || isPresent) return;
     if (exit === null) { safeToRemove?.(); return; }
-    /* Removed as far as anybody reading or tabbing is concerned: the element is
-       only still here to be seen leaving, so it is inert while it does. */
+    /* The element stays only so its exit can be seen. It is inert meanwhile, so
+       it is already gone for anyone reading or tabbing. */
     (scope.current as HTMLElement | null)?.setAttribute('inert', '');
     void play(exit).finally(() => safeToRemove?.());
   }, [presence, isPresent, play, safeToRemove, scope, exit]);

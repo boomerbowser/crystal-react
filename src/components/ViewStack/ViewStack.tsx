@@ -1,50 +1,45 @@
 'use client';
 
-/* ViewStack — pushed views with a back affordance.
+/* ViewStack shows pushed views with a back affordance.
  *
  * "Focus moves to the new view and **returns on pop**; the back control is a
  * real button." "Views enter and leave along the reading direction."
  *
- * **Focus is the contract, and it is the half that is not decoration.** Pushing
- * a view replaces what the reader was looking at; leaving focus on the control
- * that did it leaves it on a button that is no longer displayed, and the next
- * key press goes somewhere that is not there. Popping has the mirror problem
- * and a harder answer: the reader came *from* somewhere, and putting them back
- * at the top of the previous view makes them find their place again every time.
- * So each view records what was focused when it was left, and a pop restores
- * it — the same contract `Drawer` and `Banner` carry, applied to a whole view.
+ * Focus is the contract. The movement is decoration. Pushing a view replaces
+ * what the reader was looking at. Focus left on the control that pushed would
+ * sit on a button that is no longer displayed, and the next key press would go
+ * nowhere. Popping has the mirror problem: the reader came from somewhere, and
+ * leaving focus on the document body sends them to the top of the page. So on a
+ * push and on a pop, focus moves to the region of the view now on screen. On a
+ * pop, the control the reader left was unmounted with its view, so the view
+ * they return to is where focus returns. `Drawer` and `Banner` carry the same
+ * contract, here applied to a whole view.
  *
- * **The back control is a real button** because a back affordance drawn as an
- * icon in a div is unreachable by keyboard and unnamed to a screen reader, and
- * the browser's own back button is not a route the product offered.
+ * The back control is a real button. A back affordance drawn as an icon in a
+ * div is unreachable by keyboard and unnamed to a screen reader, and the
+ * browser's own back button is not a route the product offered.
  *
- * **On the movement.** Crystal authors `view-push-in` — a view arriving from the
- * inline-end edge — and `view-push-out`, the view it covers travelling a
- * fraction of that distance behind it. Two recipes rather than four, because a
- * pop is a push mirrored and right-to-left is a push mirrored again, which is
- * what `reorient` points.
+ * Movement. Crystal authors `view-push-in` (a view arriving from the inline-end
+ * edge) and `view-push-out` (the view it covers travelling a fraction of that
+ * distance behind it). Two recipes instead of four, because a pop is a push
+ * mirrored and right-to-left is a push mirrored again, which is what `reorient`
+ * points.
  *
- * Only the arrival is played here, and that is a consequence of the stack rather
- * than an omission: the covered view is *unmounted*, so there is nothing left to
- * play a departure on. `view-push-out` is for a stack that keeps its views
- * mounted, which is a different component.
+ * Only the arrival is played. The covered view is unmounted, so there is
+ * nothing to play a departure on. `view-push-out` is for a stack that keeps its
+ * views mounted, which is a different component.
  *
  * A push and a pop are the same recipe pointing opposite ways, so there are two
- * hooks with fixed orientations rather than one whose mirror is recomputed. A
- * single hook would have to change its `reorient` as the stack moved, and the
- * value it animates with is the one captured when the hook rendered — so the
- * pop would play with the push's orientation and arrive from the edge it was
- * leaving towards. Inert while the recipe is unavailable, and wrong the day it
- * arrives, which is the worst order for a defect to appear in.
+ * hooks with fixed orientations instead of one whose mirror is recomputed. A
+ * single hook would have to change its `reorient` as the stack moved, but it
+ * animates with the value captured when the hook rendered. The pop would then
+ * play with the push's orientation and arrive from the edge it was leaving
+ * towards.
  *
  * Both recipes are Crystal's, published in `@crystal-ui/core` 2.1.0 and
- * required here. There was a `getRecipe` guard while this library was still
- * pinned to `^2.0.0` and the recipes were unreachable; it is gone with the
- * pin, and deliberately, because it was the right shape for exactly one
- * situation and the wrong shape for every other. A missing recipe is now a
- * mistake rather than a version skew, and `useMotion` throwing on one is how a
- * mistake becomes visible. A guard would turn it back into a stack that
- * silently does not move.
+ * required here. Do not add a `getRecipe` guard. A missing recipe is a mistake,
+ * not a version skew, and `useMotion` throws on one so the mistake is visible.
+ * A guard would turn it into a stack that silently does not move.
  */
 import { useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { useMotion } from '../../motion/useMotion.js';
@@ -95,11 +90,11 @@ export function ViewStack({
     previousDepth.current = views.length;
     if (was === views.length || top === undefined) return;
 
-    /* Pushed or popped, focus lands on the view that is now on screen. Pushing,
-       because it has just replaced what the reader was looking at and there is
-       no way to know which of its controls they wanted; popping, because the
-       control they left was unmounted with the view it belonged to. Either way
-       the alternative is the document body, which is the top of the page. */
+    /* Pushed or popped, focus lands on the view that is now on screen. On a
+       push, the view has replaced what the reader was looking at and there is
+       no way to know which of its controls they want. On a pop, the control
+       they left was unmounted with its view. Otherwise focus would fall to the
+       document body, which is the top of the page. */
     region.current?.focus();
 
     void (views.length > was ? playPush : playPop)(ARRIVES);
@@ -119,8 +114,8 @@ export function ViewStack({
         key={top.id}
         ref={mergeRefs(region, pushScope as never, popScope as never)}
         aria-label={top.label}
-        /* Focusable as the target of the move above, never a tab stop: a region
-           a keyboard stops on for no reason announces nothing. */
+        /* Focusable as the target of the move above, never a tab stop. A region
+           the keyboard stops on for no reason announces nothing. */
         tabIndex={-1}
         className={cx(styles['view'])}
       >

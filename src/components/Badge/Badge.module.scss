@@ -1,18 +1,17 @@
 @use '../../styles/tokens' as *;
 
-/* Badge — a Resin shell with a Haze fill.
+/* Badge: a Resin shell with a Haze fill.
  *
- * "Pill or circle; never smaller than legible." Both come out of one rule: a
+ * "Pill or circle; never smaller than legible." Both come from one rule: a
  * circle is a pill whose content is narrower than its own minimum size, so the
- * shape follows the content. One digit is a circle, three digits is a pill, and
- * neither needed a variant.
+ * shape follows the content. One digit is a circle and three digits is a pill,
+ * with no variant for either.
  *
  * That rule is Crystal's count size from 2.3.0, `.cr-resin-haze.count`, which the
  * badge wears: the 20px minimum, the pill radius, no block padding, the Haze pad
- * filled to the badge's own edge, weight 700 in tabular figures. Until then the
- * compact display was sized for a tag — an 8px inset that left a pad a few
- * pixels across, and block padding that made a badge 55px tall — and this file
- * released both and restated the rest (D-27).
+ * filled to the badge's own edge, weight 700 in tabular figures. The tag sizing
+ * does not fit a badge: its 8px inset leaves a pad a few pixels across, and its
+ * block padding makes a badge 55px tall (D-27).
  */
 
 /* Crystal 2.0.0 publishes action geometry as tokens and badge geometry only as
@@ -29,19 +28,19 @@ $badge-ring-width: 2px;
   background: var(--cr-primary);
 }
 
-/* A dot's whole message is that it is there, so it carries no Haze fill: there is
-   no label underneath it to protect. */
+/* A dot only signals presence, so it carries no Haze fill. There is no label
+   underneath it to protect. */
 .dot::before { display: none; }
 
 .host {
   position: relative;
   display: inline-flex;
-  /* The host is a wrapper, not a surface — it must not introduce its own box. */
+  /* The host is a wrapper, not a surface. It must not introduce its own box. */
   vertical-align: middle;
 }
 
-/* Attached to a host: the badge straddles the corner, so half of it overhangs.
-   The ring is what keeps it readable where it overlaps the host's own edge. */
+/* Attached to a host, the badge straddles the corner, so half of it overhangs.
+   The ring keeps it readable where it overlaps the host's own edge. */
 .attached {
   position: absolute;
   z-index: 1;
@@ -53,8 +52,8 @@ $badge-ring-width: 2px;
 .bottomEnd { inset-block-end: 0; inset-inline-end: 0; translate: 50% 50%; }
 .bottomStart { inset-block-end: 0; inset-inline-start: 0; translate: -50% 50%; }
 
-/* Forced colours replaces the composition. A badge that keeps its shape and its
-   border stays a badge; one painted in Highlight would claim to be selected. */
+/* Forced colours replaces the composition. A badge keeps its shape and its
+   border. Painted in Highlight, it would look selected. */
 @media (forced-colors: active) {
   .badge {
     background: Canvas;

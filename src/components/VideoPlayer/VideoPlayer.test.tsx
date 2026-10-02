@@ -20,41 +20,40 @@ describe('VideoPlayer', () => {
   });
 
   /* "Captions are supported and their state is announced." A `<track>` alone is
-     not support: a reader has no way to turn it on and no way to know if it is
-     on. What is checkable here is the other side of it — a player with nothing
-     to caption offers no control for it. */
+     not support, because a reader has no way to turn it on or to know if it is
+     on. This test checks the case jsdom can reach: a player with nothing to
+     caption offers no control for it. */
   it('offers no caption toggle when there is nothing to caption', () => {
     renderWithCrystal(<VideoPlayer label="The tour" />);
     expect(screen.queryByRole('button', { name: 'Captions' })).toBeNull();
   });
 
-  /* The other half — that the toggle appears when a track exists, carries the
-     track's real mode, and announces the change — is in `verify:behaviour`.
-     jsdom parses `<track>` and populates no `textTracks` for it, so the state
-     this component reads does not exist there; asserting it against a stub
-     would be asserting the stub. */
+  /* The other half (the toggle appears when a track exists, carries the track's
+     real mode, and announces the change) is in `verify:behaviour`. jsdom parses
+     `<track>` and populates no `textTracks` for it, so the state this component
+     reads does not exist there, and a stub would only test the stub. */
 
   /* "Keyboard shortcuts do not trap focus." The shortcut must never take a key
-     from the control the reader is actually on. Tested on the scrubber and `m`:
-     a slider ignores `m`, so if the player answered it anyway the video would
-     mute while the reader was seeking.
+     from the control the reader is on. Tested on the scrubber and `m`: a slider
+     ignores `m`, so if the player answered it anyway the video would mute while
+     the reader was seeking.
 
-     An earlier version of this pressed Space on the play toggle and counted the
-     plays. It passed with the guard deleted — React Aria's button does not let
-     the press bubble as a second toggle — so it was checking nothing. */
+     Space on the play toggle cannot test the guard. React Aria's button does not
+     let the press bubble as a second toggle, so that test passes with the guard
+     deleted. */
   it('leaves a control its own keys', () => {
     const { container } = renderWithCrystal(<VideoPlayer label="The tour" />);
     const video = container.querySelector('video')!;
 
-    /* `fireEvent`, not `userEvent`: typing a printable character at a focused
-       `<input type="range">` does not dispatch the keydown this is about, so a
-       `userEvent` version of this test passes whatever the component does. */
+    /* `fireEvent`, not `userEvent`. Typing a printable character at a focused
+       `<input type="range">` does not dispatch the keydown under test, so a
+       `userEvent` version passes whatever the component does. */
     fireEvent.keyDown(screen.getByRole('slider', { name: 'Seek The tour' }), { key: 'm' });
     expect(video.muted).toBe(false);
   });
 
-  /* And it does work, from inside the player and outside a control — otherwise
-     the check above would be satisfied by a player with no shortcuts at all. */
+  /* The shortcut works from inside the player and outside a control. Without
+     this, a player with no shortcuts at all would pass the check above. */
   it('answers the shortcut when the press is the player\'s to answer', () => {
     const { container } = renderWithCrystal(<VideoPlayer label="The tour" />);
     const video = container.querySelector('video')!;
@@ -79,8 +78,8 @@ describe('VideoPlayer', () => {
     expect(played).toBe(0);
   });
 
-  /* The element is the product's half — sources, tracks, streaming and
-     playlists all happen on it — so it is handed over rather than hidden. */
+  /* Sources, tracks, streaming and playlists all happen on the element, which is
+     the product's to use, so it is handed over instead of hidden. */
   it('hands the element to the caller', () => {
     const ref = createRef<HTMLVideoElement>();
     const { container } = renderWithCrystal(

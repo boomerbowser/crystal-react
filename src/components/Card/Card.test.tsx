@@ -16,7 +16,7 @@ describe('Card', () => {
   });
 
   /* A landmark without a name is noise in a screen reader's landmark list, so the
-     region is earned by having one rather than granted by default. */
+     card is a region only when it has a name. */
   it('is a plain div until it is named, then a region', () => {
     const { container, rerenderWithCrystal } = renderWithCrystal(<Card>Contents</Card>);
     expect(container.querySelector('section')).toBeNull();
@@ -28,14 +28,14 @@ describe('Card', () => {
 
   it('forwards a ref and merges a className rather than replacing it', () => {
     const ref = { current: null as HTMLElement | null };
-    /* Queried by test id, not by container.firstElementChild — that is the
+    /* Queried by test id, not by container.firstElementChild. That is the
        provider's scope element, and asserting against it passes vacuously. */
     renderWithCrystal(<Card ref={ref} className="mine" data-testid="card">C</Card>);
     expect(ref.current).toBeInstanceOf(HTMLElement);
     const el = screen.getByTestId('card');
     expect(el.className).toMatch(/mine/);
     /* Crystal's own class must survive a consumer className, or the material is
-       silently lost the first time someone adds a margin. */
+       lost as soon as someone adds a class for a margin. */
     expect(el.className.split(' ').length).toBeGreaterThan(1);
   });
 

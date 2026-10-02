@@ -3,27 +3,26 @@
 /* Transition.
  *
  * Entry and exit choreography bound to Crystal's timings, easings and travel
- * limits. It is a thin component over `usePreset` and `AnimatePresence`, and the
- * thinness is the point: everything it could decide is already decided in
- * `@crystal-ui/core`, and a transition component that carries its own durations is a
- * second motion system.
+ * limits. It is a thin component over `usePreset` and `AnimatePresence`.
+ * Everything it could decide is already decided in `@crystal-ui/core`, and a
+ * transition component that carried its own durations would be a second motion
+ * system.
  *
- * Why `AnimatePresence` rather than a mount flag: without it, a closing element
- * unmounts immediately and its exit never plays — the animation and the unmount
- * race, and the unmount wins. This is the same reason `Dialog` uses it, and it is
- * the single thing a hand-rolled transition almost always gets wrong.
+ * It uses `AnimatePresence` instead of a mount flag. Without it, a closing
+ * element unmounts immediately and its exit never plays, because the unmount
+ * wins the race with the animation. `Dialog` uses it for the same reason.
  *
- * The catalogue's two rules, both about not making a transition a liability:
+ * The catalogue sets two rules:
  *
- *   - **Interruptible.** Motion is asked to reverse mid-flight rather than queue,
+ *   - Interruptible. Motion is asked to reverse mid-flight instead of queueing,
  *     so a person toggling something twice quickly does not wait out the first
  *     animation.
- *   - **Never delays a semantic change.** The content is present and correct
- *     before the animation runs; the movement describes the change rather than
+ *   - Never delays a semantic change. The content is present and correct before
+ *     the animation runs, and the movement describes the change without
  *     performing it. A transition that gates when text becomes readable makes a
  *     page slower for everyone and unusable for somebody who cannot wait.
  *
- * Reduced motion is handled inside `usePreset` — the movement is removed, the
+ * Reduced motion is handled inside `usePreset`. The movement is removed, the
  * state change is kept, and the promise still settles so an exit is not left
  * hanging.
  */
@@ -32,7 +31,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { usePreset, type CrystalPresetName } from '../../motion/usePreset.js';
 import { crystalTokens } from '../../theme/tokens.generated.js';
 
-/* Crystal's exit duration, not a number chosen here. Motion takes seconds. */
+/* Crystal's exit duration, read from the tokens. Motion takes seconds. */
 const EXIT_SECONDS = Number.parseFloat(crystalTokens['motion.duration.exit']) / 1000;
 
 export interface TransitionProps {
@@ -44,14 +43,14 @@ export interface TransitionProps {
    */
   preset?: CrystalPresetName;
   /**
-   * Anchored things fade on the way out; unanchored ones drop away. A panel fixed
-   * to the page is anchored, a floating control is not.
+   * Anchored things fade on the way out and unanchored ones drop away. A panel
+   * fixed to the page is anchored, and a floating control is not.
    */
   anchored?: boolean;
   /**
-   * Transition renders a wrapping `div`. It cannot be `display: contents` —
-   * an element that generates no box cannot be faded, which would silently
-   * remove the exit animation this component exists for.
+   * Transition renders a wrapping `div`. It cannot be `display: contents`,
+   * because an element that generates no box cannot be faded, and the exit
+   * animation would silently disappear.
    */
   children?: ReactNode;
 }
@@ -70,9 +69,9 @@ export function Transition({
       {isPresent ? (
         <motion.div
           ref={scope as never}
-          /* Opacity only on the way out, and through Motion rather than through
-             the preset, because `AnimatePresence` needs to own the exit in order
-             to hold the subtree mounted until it settles. */
+          /* Opacity only on the way out, and through Motion instead of the
+             preset, because `AnimatePresence` must own the exit to hold the
+             subtree mounted until it settles. */
           exit={{ opacity: 0 }}
           transition={{ duration: EXIT_SECONDS }}
         >

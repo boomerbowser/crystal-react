@@ -1,22 +1,21 @@
 'use client';
 
-/* Loader — a compact indeterminate activity mark.
+/* Loader. A compact indeterminate activity mark.
  *
  * "**Accompanied by text saying what is loading.**" So the text is a required
- * prop, not an optional one, and this is the whole of the component's opinion.
- * A bare spinner tells a sighted reader that something is happening and tells
- * everyone else nothing at all; and even for the sighted reader, "something is
- * happening" is rarely the question — "is this stuck, and on what" is.
+ * prop. A bare spinner tells a sighted reader that something is happening and
+ * tells everyone else nothing at all. Even for the sighted reader, "something
+ * is happening" is rarely the question. The question is "is this stuck, and on
+ * what".
  *
  * `role="status"` rather than `role="progressbar"`: there is no range and no
- * position, and a progressbar without either is a progressbar that has to be
- * explained. A polite live region says what is loading when it appears and does
- * not interrupt.
+ * position, and a progressbar without either has to be explained. A polite live
+ * region says what is loading when it appears and does not interrupt.
  *
- * The mark is `ActivityArc`, which is also the indeterminate `RingProgress` —
- * one object, so a loader and a ring progress cannot end up two sizes of the
- * same idea. "Sizes on the 4px rhythm": the three named sizes are multiples of
- * Crystal's smallest spacing step rather than numbers chosen by eye.
+ * The mark is `ActivityArc`, which is also the indeterminate `RingProgress`.
+ * Using one object means a loader and a ring progress cannot end up two sizes
+ * of the same idea. "Sizes on the 4px rhythm": the three named sizes are
+ * multiples of Crystal's smallest spacing step.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { ActivityArc } from '../../feedback/ActivityArc.js';
@@ -36,7 +35,7 @@ const SIZE: Record<LoaderSize, number> = {
 };
 
 export interface LoaderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-  /** What is loading. Required — a mark with no words says nothing to anyone
+  /** What is loading. Required. A mark with no words says nothing to anyone
    *  who cannot see it, and little to anyone who can. */
   label: ReactNode;
   size?: LoaderSize;

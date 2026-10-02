@@ -1,8 +1,8 @@
 @use '../../styles/tokens' as *;
 
-/* "Reflows by container width." By the *container*, which is the whole claim: a
-   metrics row inside a split view or a workspace pane is narrower than the
-   window, and a media query would give it four columns in a 300px pane. */
+/* "Reflows by container width." A metrics row inside a split view or a
+   workspace pane is narrower than the window, and a media query would give it
+   four columns in a 300px pane. */
 .row {
   display: grid;
   gap: $cr-spacing-md;

@@ -2,30 +2,29 @@
 
 /* OverflowList.
  *
- * A single row that measures itself and moves what does not fit into a menu. It
- * is the pattern behind a toolbar that narrows gracefully, a breadcrumb trail
- * that collapses, and a tag row that says "+3 more".
+ * A single row that measures itself and moves what does not fit into a menu.
+ * It is the pattern behind a toolbar that narrows, a breadcrumb trail that
+ * collapses, and a tag row that says "+3 more".
  *
- * Three things that decide whether it works:
+ * Three rules:
  *
- *   - **Hidden items stay reachable.** The catalogue says so and it is the whole
- *     accessibility contract: items that fall out of the row are not removed from
- *     the page, they move into a menu that announces how many it holds. A row
- *     that simply clips is a row that silently deletes functionality at narrow
- *     widths.
- *   - **Measuring must not flash.** The row has to be laid out before its widths
- *     can be read, so the first pass renders everything with `visibility: hidden`
- *     — laid out, invisible — rather than showing an overflowing row for a frame.
- *   - **Priority order is the product's.** Which item is dropped first is a
+ *   - Hidden items stay reachable. The catalogue requires it, and it is the
+ *     accessibility contract: items that fall out of the row stay on the page,
+ *     in a menu that announces how many it holds. A row that only clips
+ *     silently removes functionality at narrow widths.
+ *   - Measuring must not flash. The row has to be laid out before its widths
+ *     can be read, so the first pass renders everything laid out but invisible,
+ *     with `visibility: hidden`, and never shows an overflowing row for a frame.
+ *   - Priority order is the product's. Which item is dropped first is a
  *     product decision, so children are considered in order and the caller
- *     arranges them by importance. Crystal does not guess that the last one
+ *     arranges them by importance. Crystal does not assume that the last one
  *     matters least.
  *
- * Widths are recorded during the measuring pass and measured from that record
- * afterwards, never from the DOM. Reading the DOM works while the row is
- * shrinking and fails the moment it widens: the hidden items are not rendered, so
- * a second pass can only ever conclude that the items still visible are the ones
- * that fit, and the row never grows back.
+ * Widths are recorded during the measuring pass and later fits are computed
+ * from that record, never from the DOM. Reading the DOM works while the row
+ * shrinks and fails when it widens: the hidden items are not rendered, so a
+ * second pass can only conclude that the items still visible are the ones that
+ * fit, and the row never grows back.
  *
  * The trigger is a pill that reaches the minimum target, like every other action.
  */
@@ -44,25 +43,26 @@ export interface OverflowListProps extends Omit<HTMLAttributes<HTMLDivElement>, 
   gap?: CrystalSpacing;
   /**
    * Renders the overflow affordance. Receives the items that did not fit and how
-   * many there are, so a product can use a menu, a popover or a dialog — Crystal
-   * owns that the affordance exists and names its count, not what it opens.
+   * many there are, so a product can use a menu, a popover or a dialog. Crystal
+   * requires that the affordance exists and names its count, and leaves what it
+   * opens to the product.
    */
   renderOverflow: (hidden: readonly ReactNode[], count: number) => ReactNode;
 }
 
 /* The items, with a top-level fragment opened out.
  *
- * `Children.toArray` counts a fragment as one child, so a caller who wrapped
- * their row in `<>…</>` — which JSX invites, and which every other component
- * here treats as transparent — hands this one item. The row then measures one
- * item, finds that it does not fit, and moves *everything* into the overflow
- * menu: a bar of seven commands renders as the words "1 more" and nothing else.
- * It typechecks, it throws nothing, and the commands are still reachable, so
- * the only symptom is a toolbar that looks empty.
+ * `Children.toArray` counts a fragment as one child. A caller who wraps their
+ * row in `<>…</>`, which JSX invites and every other component here treats as
+ * transparent, would hand this one item. The row would measure one item, find
+ * that it does not fit, and move everything into the overflow menu, so a bar of
+ * seven commands renders as the words "1 more" and nothing else. That
+ * typechecks, throws nothing and keeps the commands reachable, so the only
+ * symptom is a toolbar that looks empty.
  *
- * Opened out here rather than in each caller, because the caller cannot see the
- * problem: there is nothing about `children: ReactNode` that says a fragment
- * means something different from the elements inside it.
+ * The fragment is opened out here, in one place, because a caller cannot see
+ * the problem: nothing about `children: ReactNode` says a fragment means
+ * something different from the elements inside it.
  */
 function itemsOf(children: ReactNode): ReactNode[] {
   return Children.toArray(children).flatMap((child) => (
@@ -77,8 +77,8 @@ export function OverflowList({
 }: OverflowListProps): React.JSX.Element {
   const items = itemsOf(children);
   const row = useRef<HTMLDivElement | null>(null);
-  /* Each item's width, taken once while every item was laid out. This is what
-     makes the row able to grow back. */
+  /* Each item's width, taken once while every item was laid out. This record
+     lets the row grow back. */
   const widths = useRef<number[]>([]);
   const triggerWidth = useRef(0);
   const [visibleCount, setVisibleCount] = useState<number | null>(null);
@@ -94,8 +94,8 @@ export function OverflowList({
     let fits = 0;
     for (let i = 0; i < widths.current.length; i += 1) {
       const next = used + (i > 0 ? gapSize : 0) + (widths.current[i] ?? 0);
-      /* Room for the trigger has to be reserved whenever anything is going to be
-         hidden — otherwise the last item that "fits" pushes the trigger out. */
+      /* Room for the trigger is reserved whenever anything is going to be
+         hidden. Otherwise the last item that "fits" pushes the trigger out. */
       const needsTrigger = i < widths.current.length - 1;
       const budget = available - (needsTrigger ? gapSize + triggerWidth.current : 0);
       if (next > budget) break;
@@ -105,8 +105,8 @@ export function OverflowList({
     setVisibleCount(fits);
   }, []);
 
-  /* A change in the item list invalidates the record, so the row goes back to
-     measuring rather than deciding from widths that belonged to other items. */
+  /* A change in the item list invalidates the record, so the row measures again
+     and does not decide from widths that belonged to other items. */
   useEffect(() => {
     widths.current = [];
     setVisibleCount(null);
@@ -128,7 +128,7 @@ export function OverflowList({
     return () => observer?.disconnect();
   }, [measure, visibleCount === null, items.length]);
 
-  /* Null means "not measured yet": everything is rendered so the widths exist to
+  /* Null means "not measured yet". Everything is rendered so the widths exist to
      be read, and the row is invisible so the overflow is never seen. */
   const measuring = visibleCount === null;
   const shown = measuring ? items : items.slice(0, visibleCount);

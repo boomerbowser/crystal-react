@@ -19,17 +19,16 @@ const meta = {
     docs: {
       description: {
         component:
-          'The one component in Crystal whose default state is movement at rest, which is the '
-          + 'rule Crystal otherwise holds absolutely. The catalogue lists it anyway, and the '
-          + 'reconciliation is the last clause of its own semantics line — "removed entirely '
-          + 'under reduced motion". So it is motion a reader can switch off system-wide and, '
-          + 'until they do, stop by pointing at it or tabbing to it. None of that is optional '
-          + 'here: under reduced motion the animation and the duplicate copy both go, and the '
-          + 'viewport takes a tab stop so "pausable on focus" means something without a '
-          + 'pointer.\n\n'
-          + 'Crystal assigns no duration and could not: a continuous scroll depends on how long '
-          + 'the content is. `speed` is therefore a rate in pixels per second, and the duration '
-          + 'is measured from the rendered width — then gated by `--cr-motion-enabled` and '
+          'The one component in Crystal whose default state is movement at rest, which Crystal '
+          + 'otherwise forbids. The catalogue lists it anyway, on the condition in the last clause '
+          + 'of its own semantics line: "removed entirely under reduced motion". A reader can '
+          + 'switch it off system-wide and, until they do, stop it by pointing at it or tabbing '
+          + 'to it. All of that is required here: under reduced motion the animation and the '
+          + 'duplicate copy both go, and the viewport takes a tab stop so "pausable on focus" '
+          + 'works without a pointer.\n\n'
+          + 'Crystal assigns no duration, because a continuous scroll depends on how long the '
+          + 'content is. `speed` is therefore a rate in pixels per second, and the duration is '
+          + 'measured from the rendered width. It is then gated by `--cr-motion-enabled` and '
           + 'divided by the reader\'s motion-speed preference, the same as every recipe.',
       },
     },

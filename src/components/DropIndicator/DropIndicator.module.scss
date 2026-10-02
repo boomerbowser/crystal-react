@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
-/* DropIndicator — where the thing will land.
+/* DropIndicator: where the item will land.
  *
- * A line in the palette's primary, because it is a control affordance rather than
- * a material: it belongs to the gesture, not to the surface. It has no height of
- * its own in the flow — the rule is drawn on a pseudo-element so appearing does
- * not push the list apart, which would move the very gap the reader is aiming at.
+ * A line in the palette's primary, because it is a control affordance and not a
+ * material. It belongs to the gesture, not to the surface. It has no height of
+ * its own in the flow. The rule is drawn on a pseudo-element, so appearing does
+ * not push the list apart and move the gap the reader is aiming at.
  */
 
 .dropIndicator {
@@ -28,8 +28,8 @@
 
 .dropIndicator[data-drop-target]::before { opacity: 1; }
 
-/* An invalid target says so rather than showing nothing: a reader who cannot see
-   the indicator appear has no way to tell "not here" from "not yet". */
+/* An invalid target is shown, not hidden. Otherwise a reader who cannot see the
+   indicator appear has no way to tell "not here" from "not yet". */
 .invalid::before {
   background: var(--cr-danger-ink);
   opacity: 1;

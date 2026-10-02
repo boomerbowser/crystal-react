@@ -11,10 +11,9 @@ describe('ErrorScreen', () => {
       .toBeInTheDocument();
   });
 
-  /* A view that has replaced the thing the reader asked for is the case that
-     earns an assertive announcement. `Result` sets no role of its own, because
-     it is used for successes too, and a success announced as an alert is a
-     component shouting about good news. */
+  /* A view that has replaced what the reader asked for warrants an assertive
+     announcement. `Result` sets no role of its own, because it is used for
+     successes too, and a success should not be announced as an alert. */
   it('announces assertively, where an offline screen announces politely', () => {
     const { unmount } = renderWithCrystal(<ErrorScreen title="It failed" />);
     expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -25,10 +24,9 @@ describe('ErrorScreen', () => {
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
-  /* "Never only a code." The arrangement that shows `0x80070005` and nothing
-     else does not typecheck — `title` is required and `code` is an extra — so
-     what is left to assert is that the code is an aside to the sentence rather
-     than a replacement for it. */
+  /* "Never only a code." A screen that shows `0x80070005` and nothing else does
+     not typecheck, because `title` is required and `code` is an extra. This test
+     asserts that the code follows the sentence and does not replace it. */
   it('puts the reference after the sentence, never instead of it', () => {
     renderWithCrystal(
       <ErrorScreen title="The report could not be built" code="E_NO_ROWS">

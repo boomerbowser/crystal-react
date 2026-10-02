@@ -22,17 +22,16 @@ const meta = {
     docs: {
       description: {
         component:
-          '`DataTable` with resizing on and every column resizable unless it says otherwise — and '
-          + 'that is the whole of it. The catalogue lists it separately and says its material '
-          + '"inherits the table surface", so a second implementation would be a second table to '
-          + 'keep in step with the first.\n\n'
-          + 'What the separate name buys is the API: `DataTable` is the full instrument, and a '
-          + 'product that only needs columns a reader can widen should not have to switch '
-          + 'selection and sorting off to get one. Here resizing is the point, so it is opt-out.\n\n'
-          + `The rule the catalogue attaches is geometric: the resizer is a ${crystalTokens['action.minTarget']} target that does `
+          '`DataTable` with resizing on and every column resizable unless it says otherwise. The '
+          + 'catalogue lists it separately and says its material "inherits the table surface", so '
+          + 'it reuses `DataTable` rather than being a second table to keep in step.\n\n'
+          + '`DataTable` is the full instrument, and a product that only needs columns a reader '
+          + 'can widen should not have to switch selection and sorting off to get one, so the '
+          + 'separate name is the API. Here resizing is the point, so it is opt-out.\n\n'
+          + `The catalogue's rule is geometric: the resizer is a ${crystalTokens['action.minTarget']} target that does `
           + 'not shift the column it borders. It reaches the floor by filling the header cell\'s '
-          + 'height, and it sits *inside* the header\'s box rather than straddling the boundary — '
-          + 'a resizer that overhangs moves the edge it is supposed to report. It is a slider, so '
+          + 'height, and it sits inside the header\'s box rather than straddling the boundary, '
+          + 'because a resizer that overhangs moves the edge it reports. It is a slider, so '
           + 'arrow keys resize it and the new width is announced as "N pixels".',
       },
     },
@@ -45,8 +44,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** One column pinned. A column that must keep its width says so, which is the
- *  opt-out this component is named for. */
+/** One column pinned. A column that must keep its width opts out. */
 export const WithAFixedColumn: Story = {
   args: { columns: columns.map((column) => ({ ...column, isResizable: column.id !== 'plan' })) },
 };

@@ -2,15 +2,17 @@
 @use '../../styles/strip' as strip;
 @use '../../styles/tokens' as *;
 
-/* SegmentedControl — a pill strip of mutually exclusive options.
+/* SegmentedControl.
  *
- * **Selection is weight and the primary fill**, as Crystal's dock draws it —
- * see `styles/_strip.scss`. The weight is what makes it more than colour.
+ * A pill strip of mutually exclusive options.
+ *
+ * Selection is weight and the primary fill, as Crystal's dock draws it. See
+ * `styles/_strip.scss`. The weight keeps selection from resting on colour alone.
  *
  * The strip and its pills are `styles/_strip.scss`, shared with the tab list,
- * which is the same material carrying different semantics. Everything here is
- * what a segmented control has and a tab list does not: a legend, a description
- * and an error message.
+ * which is the same material carrying different semantics. This file holds what
+ * a segmented control has and a tab list does not: a legend, a description and
+ * an error message.
  */
 
 .group { @include field.field; }
@@ -18,9 +20,9 @@
 
 .strip { @include strip.strip; }
 
-/* The segment is Crystal's dock control: `.cr-dock` reaches a label holding a
-   radio from 2.3.0 (D-26), React Aria's wrapped one included — selected by the
-   checked radio, its focus ring drawn on the label. */
+/* The segment is Crystal's dock control. From 2.3.0, `.cr-dock` reaches a label
+   holding a radio, including React Aria's wrapped one (D-26). The checked radio
+   selects it, and its focus ring is drawn on the label. */
 
 
 .segment[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }

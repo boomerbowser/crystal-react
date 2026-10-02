@@ -9,14 +9,12 @@ const meta = {
       description: {
         component:
           '"Ring thickness is a declared proportion of the radius" and "the centre value is '
-          + 'text, not an image". Both are the whole difference between this and the pie, and '
-          + 'both are decisions rather than styling.\n\n'
-          + 'The thickness comes from Crystal rather than from the caller, so a donut is '
-          + 'recognisably the same object at every size — one whose ring thins as it grows is '
-          + 'two different components.\n\n'
-          + 'The centre is real text in the document: selectable, translatable, read out. It is '
-          + 'not the total by default, because the middle of a donut is the most valuable space '
-          + 'in the chart and what belongs there is what the chart is *for*, which only the '
+          + 'text, not an image". These two decisions are what separate it from the pie.\n\n'
+          + 'The thickness comes from Crystal, not from the caller, so a donut is recognisably '
+          + 'the same object at every size.\n\n'
+          + 'The centre is real text in the document, so it is selectable, translatable and read '
+          + 'out. It is not the total by default, because the middle of a donut is the most '
+          + 'valuable space in the chart and should hold what the chart is for, which only the '
           + 'caller knows.',
       },
     },
@@ -41,7 +39,7 @@ export const WithACentreValue: Story = {
   args: {
     centre: (
       <span>
-        {/* Relative to the reader's own text, not a design value: the centre of a
+        {/* Relative to the reader's own text, not a design value. The centre of a
             donut scales with the donut, and a fixed size would outgrow a small one. */}
         <strong style={{ display: 'block', fontSize: '1.6em' }}>100k</strong>{/* crystal-allow-literal */}
         {' sessions'}

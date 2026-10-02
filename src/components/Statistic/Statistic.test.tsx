@@ -11,9 +11,9 @@ describe('Statistic', () => {
     expect(screen.getByText('this month')).toBeInTheDocument();
   });
 
-  /* "Trend direction is stated in text, not by colour or arrow alone." A reader
-     who hears the arrow and the words has heard it twice; one who hears only the
-     figure has not heard it at all. */
+  /* "Trend direction is stated in text, not by colour or arrow alone." The arrow
+     is hidden so a screen reader does not announce the direction twice, and the
+     words are present so it is announced at all. */
   it('says the trend in words and hides the arrow', () => {
     renderWithCrystal(
       <Statistic label="Revenue" value="£48,210" trend={{ direction: 'up', label: '4.2% up on last month' }} />,

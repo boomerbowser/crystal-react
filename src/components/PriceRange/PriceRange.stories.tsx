@@ -8,12 +8,12 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Reads as a **sentence** rather than two numbers with a dash." A dash between two '
-          + 'prices is a glyph that means nothing out loud — a screen reader says "forty dash '
-          + 'sixty", or nothing at all — and a reader who cannot see the layout has to guess '
-          + 'whether the second number is an upper bound, an instalment or a saving. So the '
-          + 'ends are joined by words, and the words are a prop: the sentence is different in '
-          + 'every language and this component has no business assuming English word order.',
+          '"Reads as a sentence rather than two numbers with a dash." A dash between two '
+          + 'prices means nothing out loud. A screen reader says "forty dash sixty", or nothing '
+          + 'at all, and a reader who cannot see the layout has to guess whether the second '
+          + 'number is an upper bound, an instalment or a saving. So the ends are joined by '
+          + 'words, and the words are a prop, because the sentence is different in every '
+          + 'language and this component must not assume English word order.',
       },
     },
   },
@@ -26,9 +26,8 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /** A range whose ends are equal is a price. Saying it twice tells a reader there
- *  is a spread when there is not, so that case collapses — as does a missing
- *  upper bound, and as do two different currencies, which are not an interval at
- *  all. */
+ *  is a spread when there is not, so that case collapses. So do a missing upper
+ *  bound and two different currencies, which are not an interval at all. */
 export const WhenItIsNotARange: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 8 }}>

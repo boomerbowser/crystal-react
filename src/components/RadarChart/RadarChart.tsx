@@ -1,16 +1,15 @@
 'use client';
 
-/* RadarChart — several measures on radial axes.
+/* RadarChart: several measures on radial axes.
  *
  * "Axis labels sit outside the outer ring" and "axes are labelled; series are
- * named". A radar is the chart most often shipped as a decorative polygon with
- * no axis labels at all, at which point it says only "this shape is bigger than
- * that shape" — which is not what the measures were for.
+ * named". A radar without axis labels says only that one shape is bigger than
+ * another.
  *
  * "Haze fill inside each series polygon", at Crystal's fill opacity, so two
- * overlapping series stay two. The outline carries the series' dash as well, for
- * the same reason the line chart's does: two polygons at a quarter opacity are
- * two very similar shapes, and the edge is what a reader follows.
+ * overlapping series stay distinct. The outline carries the series' dash as
+ * well, as the line chart's does, because two polygons at a quarter opacity look
+ * very similar and a reader follows the edge.
  *
  * Every axis of every series is a mark. A radar of six measures and two series is
  * twelve numbers, and a reader who cannot see the shape needs all twelve rather
@@ -60,7 +59,7 @@ export function RadarChart({
     <ChartSurface
       {...surface}
       height={height}
-      /* Room outside the ring for the axis labels, which is where they go. */
+      /* Room outside the ring for the axis labels. */
       insets={{ top: 28, right: 72, bottom: 28, left: 72 }}
       table={table ?? seriesTable(drawn.map((one) => one.series), axes, format)}
       empty={surface.empty ?? axes.length === 0}

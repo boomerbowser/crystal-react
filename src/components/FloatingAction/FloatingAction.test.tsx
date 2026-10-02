@@ -51,8 +51,8 @@ describe('ActionBar', () => {
     expect(screen.queryByRole('toolbar')).toBeNull();
   });
 
-  /* The bar appearing and the size of the selection are the same piece of news,
-     and neither is visible to somebody who cannot see the bar. */
+  /* The bar's arrival and the size of the selection are announced together,
+     for somebody who cannot see the bar appear. */
   it('announces the count when it appears', () => {
     renderWithCrystal(<ActionBar isVisible selectedCount={3}><Button>Delete</Button></ActionBar>);
     expect(screen.getByRole('toolbar', { name: 'Selection actions' })).toBeInTheDocument();

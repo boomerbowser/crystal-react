@@ -3,7 +3,8 @@
 @use '../../styles/status';
 
 /* Full-bleed: the region's width and the region's corners. A radius here would
-   make it a card floating inside its container, and a card is not pinned. */
+   make it look like a card floating inside its container, and a card is not
+   pinned. */
 .banner {
   @include material.haze-fill;
 

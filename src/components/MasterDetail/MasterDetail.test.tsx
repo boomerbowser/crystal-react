@@ -3,16 +3,14 @@ import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
 import { MasterDetail } from './MasterDetail.js';
 
-/* This environment implements no `matchMedia` at all — `window.matchMedia` is
-   `undefined` — so `useMediaQuery` falls back to its server value and the
-   component renders the wide layout and only ever the wide layout. A test of
-   the collapsed behaviour written without noticing that would exercise the wide
-   path twice and pass, which is a test that cannot fail.
+/* This environment implements no `matchMedia` (`window.matchMedia` is
+   `undefined`), so `useMediaQuery` falls back to its server value and the
+   component always renders the wide layout. A test of the collapsed behaviour
+   that relied on it would exercise the wide path twice and could not fail.
  *
- * So the query is supplied here, explicitly, and both branches are driven. What
- * is still not asked in this file is whether the panes actually sit side by side
- * at one width and stack at the other; that is geometry, and it belongs in
- * `verify:behaviour` where there is a viewport. */
+ * The query is therefore supplied here and both branches are driven. Whether
+ * the panes sit side by side at one width and stack at the other is geometry,
+ * and is tested in `verify:behaviour`, where there is a viewport. */
 function atWidth(wide: boolean): void {
   vi.stubGlobal('matchMedia', (query: string) => ({
     matches: wide,
@@ -76,7 +74,7 @@ describe('MasterDetail', () => {
   });
 
   /* Stacked, one pane is displayed at a time. Showing both would be the list
-     and the detail in sequence, which is a page rather than a master–detail. */
+     and the detail in sequence, which is a page. */
   it('shows one pane at a time when stacked', () => {
     atWidth(false);
     renderWithCrystal(
@@ -88,8 +86,8 @@ describe('MasterDetail', () => {
     expect(screen.getByRole('region', { name: 'Message' })).toBeInTheDocument();
   });
 
-  /* The state products forget: wide, with nothing chosen, the detail pane is a
-     large empty rectangle beside a list. */
+  /* The state products often leave out: wide, with nothing chosen, the detail
+     pane is a large empty rectangle beside a list. */
   it('says what to do when nothing is chosen', () => {
     atWidth(true);
     renderWithCrystal(

@@ -1,14 +1,13 @@
 @use '../../styles/tokens' as *;
 
 /* Crystal's dock, worn as `.cr-dock` around `.cr-dock-inner`: one Resin plane
-   and one Stone label backing behind the whole row, as the catalogue specifies —
-   "Resin plane, Stone label backing, primary fill on the selected destination".
-   Until 28 September this painted its own Resin and its own Stone, and the
-   plane had no Haze fill, which `.cr-dock` has.
+   and one Stone label backing behind the whole row, as the catalogue specifies.
+   The catalogue says "Resin plane, Stone label backing, primary fill on the
+   selected destination". `.cr-dock` also gives the plane its Haze fill.
 
-   One backing behind the row rather than one per destination: per-label backings
-   would draw a box around each and turn this into a segmented control, which
-   picks a view rather than going somewhere. */
+   There is one backing behind the row, not one per destination. Per-label
+   backings would draw a box around each destination and turn this into a
+   segmented control, which picks a view instead of going somewhere. */
 
 .dock { display: inline-flex; }
 
@@ -19,8 +18,8 @@
 
 /* A destination is a link, and `.cr-dock` reaches a link from 2.3.0 (D-26): the
    dock control's 52px, its padding, and on `aria-current` the primary fill and
-   weight. The destination itself changes material; nothing is drawn beside the
-   label. What is here is the icon's gap. */
+   weight. The destination itself changes material, and nothing is drawn beside
+   the label. This rule adds only the icon's gap. */
 .item { gap: $cr-action-gap; }
 
 .item[aria-current] .icon { color: var(--cr-on-primary); }

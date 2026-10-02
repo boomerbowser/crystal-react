@@ -4,10 +4,9 @@ import { act, fireEvent, renderWithCrystal, screen } from '../../test/render.js'
 import { ScrollArea } from './ScrollArea.js';
 
 /* jsdom has no ResizeObserver, and the component's production path for "the
-   content changed size" runs through one. A stub that only exists would leave
-   that path untested, so this one keeps its callbacks and `resize()` fires them —
-   which is what lets a test change the stubbed geometry and see the component
-   react the way it does in a browser. */
+   content changed size" runs through one. This stub keeps its callbacks and
+   `resize()` fires them, so a test can change the stubbed geometry and see the
+   component react the way it does in a browser. */
 const observers = new Set<() => void>();
 const resize = () => act(() => { for (const callback of [...observers]) callback(); });
 
@@ -26,8 +25,8 @@ afterEach(() => { delete (globalThis as { ResizeObserver?: unknown }).ResizeObse
 /* jsdom lays nothing out: every element reports a client and scroll size of zero,
    so a scroll area there never overflows and every measurement below would assert
    the same "nothing to scroll" answer. These stub the four numbers the component
-   reads, which is enough to exercise the decision without a real layout engine —
-   and it is the decision, not the arithmetic, that has the failure modes.
+   reads, which is enough to exercise its edge decision without a real layout
+   engine.
  */
 function layout(
   element: HTMLElement,
@@ -103,7 +102,7 @@ describe('ScrollArea', () => {
 
   /* Fractional layout means a container at its end can report a position a
      fraction short of the maximum. Without the tolerance the far edge stays
-     faded at the bottom of every list, which is the bug this pins. */
+     faded at the bottom of every list. */
   it('counts a fractional pixel short of the end as the end', () => {
     renderWithCrystal(<ScrollArea data-testid="a"><p>long</p></ScrollArea>);
     const el = screen.getByTestId('a');
@@ -133,8 +132,8 @@ describe('ScrollArea', () => {
     expect(screen.getByTestId('a').dataset['crScrollAxis']).toBe('x');
   });
 
-  /* Two crossed gradients darken the corners rather than describing them, so a
-     two-axis area carries no fade — and says so by carrying no attribute. */
+  /* Two crossed gradients darken the corners, so a two-axis area carries no fade
+     and no fade attribute. */
   it('does not fade a two-axis area, or one that opts out', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <ScrollArea axis="both" data-testid="a">C</ScrollArea>,
@@ -166,7 +165,7 @@ describe('ScrollArea', () => {
   });
 
   /* A landmark without a name is noise in a screen reader's landmark list, so the
-     region is earned by having one rather than granted by default. */
+     area takes the `region` role only when it has a name. */
   it('is a region only when it is both a tab stop and named', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <ScrollArea data-testid="a"><p>text</p></ScrollArea>,

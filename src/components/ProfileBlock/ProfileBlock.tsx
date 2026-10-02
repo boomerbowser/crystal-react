@@ -1,24 +1,23 @@
 'use client';
 
-/* ProfileBlock — identity, avatar, contact details and account actions.
+/* ProfileBlock: identity, avatar, contact details and account actions.
  *
- * "**Destructive actions confirm and say what they remove.**" States:
+ * "Destructive actions confirm and say what they remove." States:
  * `at-rest`, `editing`, `saving`.
  *
  * The profile model is the product's. The block owns the confirmation, and
- * makes the product say the one thing a confirmation is for:
+ * makes the product say what is removed:
  *
- *   - **An action is destructive because it says what it removes.** Giving an
- *     action `removes` is what makes it destructive: pressing it opens an alert
- *     dialog titled with the action, whose body is that sentence or list, and
- *     whose confirm button is the danger variant and repeats the action's name.
- *     A confirmation that only asks "Are you sure?" has asked nothing; there is
- *     no way to build one here.
- *   - **Focus lands on Cancel**, as it does in `Popconfirm`: the default answer
- *     to a question about losing something is no. Escape cancels too.
- *   - **Editing is the product's form in the block's frame.** The details give
- *     way to the product's fields; Save hands over their values, saving holds
- *     them, and the return to the details says "Profile saved".
+ *   - An action is destructive because it says what it removes. Giving an
+ *     action `removes` makes it destructive: pressing it opens an alert dialog
+ *     titled with the action, whose body is that sentence or list, and whose
+ *     confirm button is the danger variant and repeats the action's name. There
+ *     is no way to build a confirmation here that only asks "Are you sure?".
+ *   - Focus lands on Cancel, as it does in `Popconfirm`, because the default
+ *     answer to a question about losing something is no. Escape cancels too.
+ *   - Editing is the product's form in the block's frame. The details give way
+ *     to the product's fields; Save hands over their values, saving holds them,
+ *     and the return to the details says "Profile saved".
  *
  * "Haze content fill on the surrounding material": the profile is a Haze card
  * on whatever the page gives it.
@@ -53,7 +52,7 @@ export interface ProfileAction {
 
 export interface ProfileBlockProps {
   name: string;
-  /** A role, a handle, an address — what sits under the name. */
+  /** What sits under the name, such as a role, a handle or an address. */
   subtitle?: ReactNode;
   avatarSrc?: string;
   details?: readonly ProfileDetail[];

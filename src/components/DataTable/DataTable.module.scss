@@ -1,19 +1,17 @@
 @use '../../styles/tokens' as *;
 
-/* DataTable — Crystal's table surface, shared with `Table`.
+/* DataTable: Crystal's table surface, shared with `Table`.
  *
- * The material is the same recipe `crystal.css` gives `.cr-table`, for the
- * obvious reason: a reader should not be able to tell from the paint whether a
- * table happens to be interactive. Resin shell, Haze fill inset 6px, hairline
- * separators, the primary-soft header band with its corners inset 8px from the
- * shell's radius.
+ * The material is the same recipe `crystal.css` gives `.cr-table`, so a reader
+ * cannot tell from the paint whether a table is interactive. Resin shell, Haze
+ * fill inset 6px, hairline separators, the primary-soft header band with its
+ * corners inset 8px from the shell's radius.
  *
- * What is different is the resizer, and it is the one piece of geometry with a
- * rule of its own: "a 44px target that does not shift the column it borders".
- * Both halves matter. It reaches the floor by filling the header cell's height
- * and carrying its own width, and it is positioned *inside* the header's box
- * rather than straddling the boundary — a resizer that overhangs moves the
- * column edge it is supposed to be reporting.
+ * The resizer is the one piece of geometry with a rule of its own: "a 44px
+ * target that does not shift the column it borders". It reaches the floor by
+ * filling the header cell's height and carrying its own width. It is positioned
+ * inside the header's box, because a resizer that overhangs the boundary moves
+ * the column edge it reports.
  */
 
 $table-header-inset: 8px; /* crystal-allow-literal: the catalogue's stated header corner inset */
@@ -25,12 +23,10 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
 
 /* The frame is Crystal's `.cr-table-scroll`: the Resin frame, the rim, the
    content shadow, the 6px-inset Haze fill under the rows, the Resin scrollbar,
-   contained overscroll, and both fallbacks. This file restated every one of those
-   beside the class, down to a literal for the inset with an exemption saying it
-   was core's — two copies of a recipe with one of them able to drift. Its focus
-   ring is Crystal's too, which reaches any element with a tab index. What stays
-   is the gutter, which Crystal does not set and a table whose rows arrive after
-   it renders needs. */
+   contained overscroll, and both fallbacks. None of these is restated here. Its
+   focus ring is Crystal's too, which reaches any element with a tab index. This
+   file sets only the gutter, which Crystal does not set and which a table whose
+   rows arrive after it renders needs. */
 .scroller {
   display: block;
   scrollbar-gutter: stable;
@@ -44,16 +40,14 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
   outline: none;
 }
 
-/* Resizing's layout is React Aria's, not this file's.
+/* React Aria owns the resizing layout.
  *
  * `ResizableTableContainer` sets `table-layout: fixed` and `width: min-content`
- * on the table *inline*, which is what makes the per-column widths it computes
- * authoritative and lets the container scroll when their sum exceeds the frame.
- * A rule here would be redundant — and was: one was added on the assumption that
- * the fixed layout was missing, and `verify:behaviour` showed it guarded nothing
- * because the inline style had been there all along. The inline `width` also
- * outranks `inline-size: 100%` above, which is correct and worth knowing before
- * somebody tries to "fix" the table not filling its frame when resizing is on.
+ * on the table as inline styles. That makes the per-column widths it computes
+ * authoritative and lets the container scroll when their sum exceeds the frame,
+ * so a rule here would be redundant. The inline `width` also outranks
+ * `inline-size: 100%` above. That is correct, and must not be overridden to
+ * make the table fill its frame when resizing is on.
  */
 
 .column, .selectColumn {
@@ -89,17 +83,16 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
 
 /* "A 44px target that does not shift the column it borders."
  *
- * Both halves, and they pull against each other. The height is the header cell
- * it fills. The *width* was 12px until a browser measured it — the grip is a
- * line, and a line is not a target — so the element is the target floor wide and
- * the line is drawn at its trailing edge. The hit area therefore extends
- * *inward*, over the header's own right-hand 44px, rather than straddling the
- * boundary: straddling would put it over the neighbouring column, where it would
- * steal that header's presses, and `verify:targets`' ownership check exists
- * because that failure is invisible until somebody tries to sort.
+ * The two halves pull against each other. The height is the header cell it
+ * fills. The grip is a line, which is too thin to be a target, so the element
+ * is the target floor wide and the line is drawn at its trailing edge. The hit
+ * area extends inward, over the header's own right-hand 44px. Straddling the
+ * boundary would put it over the neighbouring column, where it would steal
+ * that header's presses. `verify:targets` checks this ownership, because the
+ * failure is invisible until somebody tries to sort.
  *
- * It does not shift the column either way: the element is absolutely positioned
- * inside a header that is already `position: relative`.
+ * It does not shift the column: the element is absolutely positioned inside a
+ * header that is already `position: relative`.
  */
 .resizer {
   position: absolute;
@@ -147,8 +140,8 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
 
 .row[data-hovered] :is(td, th) { background: var(--cr-label-fill); }
 
-/* Selection is label weight — "not a check badge on the row". The checkbox is
-   the control that makes the selection; the row shows that it *is* selected by
+/* Selection is label weight, "not a check badge on the row". The checkbox is
+   the control that makes the selection. The row shows that it is selected by
    being heavier, as every selected thing in Crystal does. */
 .row[data-selected] :is(td, th) {
   font-weight: 800;

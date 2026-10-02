@@ -5,8 +5,8 @@ import { ButtonGroup, SplitButton } from './ButtonGroup.js';
 import { Button } from '../Button/Button.js';
 
 describe('ButtonGroup', () => {
-  /* The role is earned by a name. An unnamed group announces "group" and tells
-     the reader nothing; unrelated buttons announced as a group tell them
+  /* The role needs a name. An unnamed group announces "group" and tells the
+     reader nothing, and unrelated buttons announced as a group tell them
      something untrue. */
   it('is a group only when it is named', async () => {
     const { container, rerenderWithCrystal } = renderWithCrystal(

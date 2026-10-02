@@ -8,7 +8,7 @@ describe('MetricsRow', () => {
   /* "A labelled list of figures." A screen reader saying "list, four items"
      before the first one tells the reader how much is coming, which is most of
      what they need from a dashboard's summary band. Four sibling divs say
-     nothing at all. */
+     nothing. */
   it('is a named list whose items are the figures', () => {
     renderWithCrystal(
       <MetricsRow label="This month">
@@ -22,8 +22,8 @@ describe('MetricsRow', () => {
   });
 
   /* One announcement for the band, not one per tile. Six tiles each saying they
-     are loading is a screen reader saying the same sentence six times — the
-     same shape as `LoadingScreen`'s one skeleton over many shapes. */
+     are loading would make a screen reader say the same sentence six times.
+     `LoadingScreen` likewise renders one skeleton over many shapes. */
   it('announces the wait once, however many figures are coming', () => {
     renderWithCrystal(
       <MetricsRow label="This month" loading>
@@ -42,10 +42,9 @@ describe('MetricsRow', () => {
     expect(screen.queryByRole('list')).toBeNull();
   });
 
-  /* Both states, because the violation that shipped was only in one of them: a
-     `ul` may contain only `li`, and the live region was a direct child of it.
-     An axe assertion against the at-rest render passes in a world where the
-     loading render is malformed. */
+  /* Both states, because a `ul` may contain only `li` and the live region
+     exists only while loading. An axe assertion against the at-rest render
+     passes even when the loading render is malformed. */
   it.each([false, true])('has no axe violations while loading is %s', async (loading) => {
     const { container } = renderWithCrystal(
       <MetricsRow label="This month" loading={loading}>

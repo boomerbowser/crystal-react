@@ -2,8 +2,8 @@
 @use '../../styles/material';
 @use '../../styles/status';
 
-/* "Frost panel with Haze reading fill (R15e)." Like the toast: a transient panel
-   over content, not a Resin control. */
+/* "Frost panel with Haze reading fill (R15e)." Like the toast, it is a transient
+   panel over content, and Resin is for controls. */
 .notification {
   /* The Frost panel is Crystal's `.cr-frost`, which the element wears. The Haze
      reading fill under the text is the catalogue's "Frost panel with Haze
@@ -29,11 +29,10 @@
 
 .content { flex: 1; min-inline-size: 0; }
 
-/* Unread is label weight and nothing else. No dot, no rail, no colour: a mark
+/* Unread is label weight and nothing else, with no dot, rail or colour. A mark
    beside the title offsets the title it points at, so the unread item stops
-   lining up with the others — Crystal's selection rule, doing the same job here.
-   Read is the lighter of the two, which makes unread the emphasis rather than
-   read the omission. */
+   lining up with the others. This is Crystal's selection rule, applied here.
+   Read is the lighter weight, so unread is the emphasis. */
 .title { margin: 0; font-weight: 500; }
 
 .notification[data-unread] .title { font-weight: 800; }

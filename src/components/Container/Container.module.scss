@@ -1,11 +1,10 @@
 @use '../../styles/tokens' as *;
 
-/* Container — the page shell, as Crystal's own preview draws it.
+/* Container: the page shell, as Crystal's own preview draws it.
  *
  * A ceiling and a gutter that steps down as the viewport narrows. The three
- * gutter values and the breakpoints they change at are Crystal's tokens, not
- * this library's opinion; before they were tokens they lived only in the
- * preview's stylesheet, where no other implementation could reach them.
+ * gutter values and the breakpoints they change at are Crystal's tokens, so
+ * every implementation reads the same values.
  */
 
 .container {

@@ -10,19 +10,20 @@ const series = [
 const axes = ['Speed', 'Clarity', 'Coverage', 'Stability', 'Docs'];
 
 describe('RadarChart', () => {
-  /* A radar shipped without axis labels says only "this shape is bigger than
-     that shape", which is not what the measures were for. */
+  /* A radar without axis labels says only "this shape is bigger than that
+     shape", and the measures are lost. */
   it('labels every axis outside the ring', () => {
     const { container } = renderWithCrystal(
       <RadarChart label="Review" series={series} axes={axes} />,
     );
-    /* In the picture, not only in the table beside it — which is where the
-       other copy of each of these names is. */
+    /* In the picture as well as in the table beside it, which holds the other
+       copy of each name. */
     const drawn = Array.from(container.querySelectorAll('svg text')).map((t) => t.textContent);
     for (const axis of axes) expect(drawn).toContain(axis);
   });
 
-  /* Twelve numbers, not a description of an outline. */
+  /* Each value is its own mark, so a reader gets the numbers and not only an
+     outline. */
   it('makes every axis of every series a reachable value', () => {
     const { container } = renderWithCrystal(
       <RadarChart label="Review" series={series} axes={axes} />,
@@ -31,8 +32,8 @@ describe('RadarChart', () => {
     expect(screen.getByLabelText('Coverage, This release, 9')).toBeInTheDocument();
   });
 
-  /* Two polygons at a quarter opacity are two very similar shapes, so the edge
-     carries the dash as well. */
+  /* Two polygons at a quarter opacity look very similar, so the edge carries
+     the dash as well. */
   it('dashes the outline of every series after the first', () => {
     const { container } = renderWithCrystal(
       <RadarChart label="Review" series={series} axes={axes} />,

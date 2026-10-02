@@ -15,9 +15,8 @@ describe('AreaChart', () => {
     expect(screen.getByLabelText('February, Direct, 18')).toBeInTheDocument();
   });
 
-  /* Stacked changes what the picture asserts: the top edge is the total. The
-     table says so, because a reader should not have to add the columns to check
-     what the chart is claiming. */
+  /* Stacked, the top edge is the total. The table carries it, so a reader does
+     not have to add the columns to check what the chart claims. */
   it('adds a total column when stacked, and not when it is not', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <AreaChart label="Sessions" series={series} categories={categories} stacked />,
@@ -28,17 +27,16 @@ describe('AreaChart', () => {
     expect(screen.queryByRole('columnheader', { name: 'Total' })).toBeNull();
   });
 
-  /* Stacked, a point's label is its running total rather than its own value:
-     the edge a reader is looking at is at 27, not at 9. */
+  /* Stacked, a point's label is its running total, because that is where its
+     edge is: at 27, not at 9. */
   it('labels a stacked point with where its edge is', () => {
     renderWithCrystal(<AreaChart label="Sessions" series={series} categories={categories} stacked />);
     expect(screen.getByLabelText('February, Referral, 27')).toBeInTheDocument();
   });
 
-  /* The band is generated rather than assembled from a forward path and a
-     reversed one: a reversed cubic is not the same cubic with its points
-     swapped, so the second approach is correct for straight segments and quietly
-     wrong for every curve. */
+  /* The band is generated, not assembled from a forward path and a reversed one.
+     A reversed cubic is not the same cubic with its points swapped, so a
+     reversed path is correct for straight segments and wrong for every curve. */
   it('draws a smooth stacked band without breaking its floor', () => {
     const { container } = renderWithCrystal(
       <AreaChart label="Sessions" series={series} categories={categories} stacked curve="smooth" />,

@@ -1,15 +1,15 @@
-/* Standard Schema, version 1 — the types only.
+/* Standard Schema, version 1. The types only.
  *
  * https://standardschema.dev · the specification is frozen at version 1.
  *
- * Declared here rather than depended on. `@standard-schema/spec` ships exactly
- * this interface and nothing else, and a package in the dependency tree for
- * twenty lines of frozen type is the wrong trade — it is one more thing a
- * consumer resolves, audits and keeps in step for no runtime benefit.
+ * Declared here instead of depended on. `@standard-schema/spec` ships exactly
+ * this interface and nothing else. A package in the dependency tree for twenty
+ * lines of frozen type is one more thing a consumer resolves, audits and keeps
+ * in step, for no runtime benefit.
  *
- * What it buys: Zod, Valibot, ArkType and anything else implementing `~standard`
- * work here untouched, and none of them is a dependency of this library. The
- * product picks its validator; Crystal does not.
+ * Zod, Valibot, ArkType and anything else implementing `~standard` work here
+ * unchanged, and none of them is a dependency of this library. The product
+ * picks its validator, not Crystal.
  */
 
 /** A validator that speaks Standard Schema v1. */
@@ -42,7 +42,7 @@ export type FieldErrors = Record<string, string[]>;
 
 export interface SchemaOutcome<Output> {
   readonly value?: Output;
-  /** Keyed by field name — `address.city` for a nested issue. */
+  /** Keyed by field name, such as `address.city` for a nested issue. */
   readonly fieldErrors: FieldErrors;
   /** Issues with no path: the form is wrong, no single field is. */
   readonly formErrors: string[];
@@ -51,11 +51,11 @@ export interface SchemaOutcome<Output> {
 /**
  * Run a schema and sort its issues into the two kinds a form has.
  *
- * An issue's `path` is a mix of bare keys and `{ key }` segments — both forms are
- * in the specification, and vendors differ — so both are normalised. An issue
- * with **no** path is not a field's fault: a rule like "one of these two must be
- * filled in" belongs to the form, and routing it to a field would put the message
- * somewhere it does not explain anything.
+ * An issue's `path` is a mix of bare keys and `{ key }` segments. Both forms are
+ * in the specification and vendors differ, so both are normalised. An issue with
+ * no path belongs to the form, not a field. A rule like "one of these two must be
+ * filled in" is about the form, and under a field the message would explain
+ * nothing.
  */
 export async function runSchema<Schema extends StandardSchemaV1>(
   schema: Schema,
@@ -87,12 +87,12 @@ export async function runSchema<Schema extends StandardSchemaV1>(
 /**
  * A form's values, as the browser reports them.
  *
- * Deliberately no coercion. `FormData` yields strings and `File`s; a repeated
- * name becomes an array; an unchecked checkbox is **absent** rather than `false`,
- * which is how HTML has always worked. Turning `"3"` into `3` or an absent
- * checkbox into `false` is the schema's job — `z.coerce.number()`,
- * `v.pipe(v.string(), v.transform(Number))` — and doing it here would mean
- * guessing at a type the schema already states.
+ * No coercion. `FormData` yields strings and `File`s, a repeated name becomes an
+ * array, and an unchecked checkbox is absent instead of `false`, which is how
+ * HTML has always worked. Turning `"3"` into `3` or an absent checkbox into
+ * `false` is the schema's job (`z.coerce.number()`,
+ * `v.pipe(v.string(), v.transform(Number))`). Doing it here would mean guessing
+ * at a type the schema already states.
  */
 export function valuesFromForm(form: HTMLFormElement): Record<string, unknown> {
   const values: Record<string, unknown> = {};

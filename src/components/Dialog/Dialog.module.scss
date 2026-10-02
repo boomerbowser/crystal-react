@@ -1,16 +1,17 @@
 @use '../../styles/tokens' as *;
 
-/* Dialog — a Haze surface above a Mirage scrim.
+/* Dialog: a Haze surface above a Mirage scrim.
  *
- * The catalogue is specific about this and it is easy to get wrong: the surface
- * is Haze, not Resin. Resin is the floating control plane; a dialog is content to
- * be read, so it is an 80% feathered content fill, and what separates it from the
- * page is the Mirage scrim beneath it rather than elevation above it.
+ * The catalogue specifies the surface as Haze, not Resin. Resin is the floating
+ * control plane. A dialog is content to be read, so it is an 80% feathered
+ * content fill, and the Mirage scrim beneath it separates it from the page
+ * instead of elevation above it.
  */
 
-/* The scrim is Crystal's Mirage, `.cr-mirage` (2.2.0): chroma drawn from the real
-   backdrop rather than an invented overlay gradient, which is why it is a filter
-   and not just a dark fill — and its fallbacks. What is left is the layout. */
+/* The scrim is Crystal's Mirage, `.cr-mirage` (2.2.0), with its fallbacks. It
+   draws chroma from the real backdrop instead of an invented overlay gradient,
+   which is why it is a filter and not a dark fill. This rule holds only the
+   layout. */
 .scrim {
   position: fixed;
   inset: 0;
@@ -21,7 +22,7 @@
 
 /* React Aria's Modal sits between the scrim and the surface. As a grid item it
    would shrink to its content, and the surface's `width: 100%` would follow it
-   down; spanning the row lets the surface reach its reading measure and centre. */
+   down. Spanning the row lets the surface reach its reading measure and centre. */
 .modal {
   display: grid;
   justify-items: center;
@@ -30,21 +31,20 @@
 
 /* The surface is Crystal's `.cr-dialog`: the 80% feathered Haze fill on its own
    paint layer, so the feather never touches text, with its rim, its panel radius,
-   its shadow and both fallbacks. And from 2.3.0 it is Crystal's in the three ways
-   this file used to disagree with the class:
+   its shadow and both fallbacks. From 2.3.0 this file follows the class in three
+   places:
 
-   - The body scrolls, not the surface: the scroll area wears `.cr-dialog-body`,
-     and a dialog with a body is a column whose surface does not scroll (D-25).
-   - The position: `.cr-dialog` is fixed only on a native `<dialog>` now (D-29),
-     so React Aria's surface sits in the scrim's grid, which centres it, without
-     an override.
-   - The radius: the catalogue said the content radius and the class draws the
-     panel radius; the catalogue now says the panel radius (D-23), so this file
-     no longer overrides it.
+   - Scrolling. The scroll area wears `.cr-dialog-body`, and a dialog with a body
+     is a column whose surface does not scroll (D-25).
+   - Position. `.cr-dialog` is fixed only on a native `<dialog>` (D-29), so React
+     Aria's surface sits in the scrim's grid, which centres it, without an
+     override.
+   - Radius. The catalogue specifies the panel radius (D-23), which the class
+     draws, so this file does not override it.
 
-   What stays is the reading measure and the padding — at least the catalogue's
-   12px from content to the feathered edge, at the page's own spacing — which are
-   this component's. */
+   The reading measure and the padding belong to this component. The padding is
+   at least the catalogue's 12px from content to the feathered edge, at the
+   page's own spacing. */
 .dialog {
   max-width: 560px;  /* crystal-allow-literal: reading measure, not a material value */
   width: 100%;

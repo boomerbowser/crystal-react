@@ -1,24 +1,23 @@
 @use '../../styles/tokens' as *;
 
-/* Kbd — "a Resin cap with a defined lower rim".
+/* Kbd. "a Resin cap with a defined lower rim".
  *
- * Resin already carries two optical rims in `--cr-shadow-float`; what the
- * catalogue asks for on top of that is a *defined* lower one, which is the
- * difference between glass and a key you could press. The extra inset highlight
- * along the bottom edge is the physical cue: light from overhead, a lip
- * underneath.
+ * Resin already carries two optical rims in `--cr-shadow-float`. The catalogue
+ * asks for a defined lower one on top of that, so the cap reads as a key you
+ * could press. The extra inset highlight along the bottom edge is the physical
+ * cue: light from overhead, a lip underneath.
  *
  * No Haze fill. Haze protects a label sitting over a translucent control, and a
  * cap this small with one or two characters on it would be almost entirely
- * feather — the fill's own 8px inset is wider than the cap's padding.
+ * feather. The fill's own 8px inset is wider than the cap's padding.
  */
 
 $kbd-radius: 8px; /* crystal-allow-literal: the catalogue's stated cap radius */
 
-/* A cap is Crystal's compact display, `.cr-resin-haze` (2.2.0) — the catalogue
-   gives `kbd` the compact surface, which is Resin with Haze under the glyph. This
-   painted the Resin alone, so a glyph on a 20% fill read against whatever was
-   behind the page; it has the Haze pad now. The lip below is the key's own. */
+/* A cap is Crystal's compact display, `.cr-resin-haze` (2.2.0). The catalogue
+   gives `kbd` the compact surface, which is Resin with Haze under the glyph.
+   Without the Haze pad, a glyph on a 20% fill reads against whatever is behind
+   the page. The lip below is the key's own. */
 .kbd {
 
   display: inline-flex;
@@ -26,8 +25,8 @@ $kbd-radius: 8px; /* crystal-allow-literal: the catalogue's stated cap radius */
   justify-content: center;
   box-sizing: border-box;
   min-inline-size: $cr-indicator-size;
-  /* A cap sits in a line of text; the compact display's block padding is a
-     tag's, and taking it made every cap 55px tall. */
+  /* A cap sits in a line of text. The compact display's block padding is a
+     tag's, and with it every cap is 55px tall. */
   padding-block: 0;
   padding-inline: $cr-spacing-2xs;
   border-radius: $kbd-radius;

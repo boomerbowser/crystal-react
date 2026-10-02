@@ -5,7 +5,7 @@ import { AuthoredBubble } from './AuthoredBubble.js';
 
 describe('AuthoredBubble', () => {
   /* "Author and time are text, not implied by side alone." The silhouette is a
-     shortcut for people who can see it; the words are for everybody. */
+     shortcut for people who can see it. The words are for everybody. */
   it('writes the author and the time rather than implying them', () => {
     renderWithCrystal(
       <AuthoredBubble author="Ada Lovelace" time="09:42">Morning.</AuthoredBubble>,
@@ -30,9 +30,9 @@ describe('AuthoredBubble', () => {
     expect(screen.getByTestId('b').dataset['own']).toBe('');
   });
 
-  /* A failure is a thing that happened, so it is announced — and it is said in
-     words rather than in opacity, which would be a legibility problem over a
-     coloured atmosphere rather than a status. */
+  /* A failure is an event, so it is announced. It is said in words, not with
+     opacity, which over a coloured atmosphere is hard to read and does not say
+     what happened. */
   it('says a failed delivery in words, in a live region', () => {
     renderWithCrystal(
       <AuthoredBubble author="You" own delivery="failed" deliveryLabel="Not delivered. Try again.">
@@ -50,15 +50,13 @@ describe('AuthoredBubble', () => {
     expect(screen.getByText('Sending…')).toBeInTheDocument();
   });
 
-  /* "Only on a new message; do not replay on virtualised history or steal
-     scroll" — Crystal's own note on the recipe, and only the caller knows which
-     this is. */
+  /* Crystal's own note on the recipe: "Only on a new message; do not replay on
+     virtualised history or steal scroll". Only the caller knows which this is. */
   it('plays the arrival only when it is told the message is new', () => {
-    /* Two mounts rather than a rerender, because that is what the distinction
-       *is*: a new message is a bubble that did not exist a moment ago, and
-       history is one that did. Flipping `arriving` on a bubble already in the
-       document is not either of those, and the component does not treat it as
-       one — the recipe is bound to the mount. */
+    /* Two mounts, not a rerender. A new message is a bubble that did not exist a
+       moment ago, and history is one that did. The recipe is bound to the
+       mount, so flipping `arriving` on a bubble already in the document plays
+       nothing. */
     const history = renderWithCrystal(
       <AuthoredBubble author="Ada" data-testid="history">History</AuthoredBubble>,
     );

@@ -9,17 +9,15 @@ const meta = {
       description: {
         component:
           '"**Unavailable options stay perceivable and say why**; selection is label weight, '
-          + 'never a check mark." Removing an unavailable variant is the obvious thing and it '
-          + 'is wrong: a shopper who cannot find the large sees a product that does not come '
-          + 'in large, and goes somewhere else. One who sees "Large — out of stock" knows the '
-          + 'product is right and the timing is not. Same information, and only one of them '
-          + 'tells the reader anything.\n\n'
+          + 'never a check mark." An unavailable variant stays in the list. A shopper who '
+          + 'cannot find the large assumes the product does not come in large, and goes '
+          + 'somewhere else. One who sees "Large — out of stock" knows the product is right '
+          + 'and the timing is not.\n\n'
           + 'Two shapes carry selection differently. A pill has a label, so selection is its '
-          + 'weight — Crystal\'s rule, and the reason it is weight is that weight is '
-          + 'typographic rather than chromatic and so never rests on colour alone. A swatch '
-          + 'has no label to weight, so it takes the one thing a labelless option has: its '
-          + 'pad tints and the colour draws back into it. Never an outline — an outline at an '
-          + 'offset is how Crystal draws focus.',
+          + 'weight, which is Crystal\'s rule. Weight is typographic instead of chromatic, so '
+          + 'selection never rests on colour alone. A swatch has no label to weight, so its '
+          + 'pad tints and the colour draws back into it. It never takes an outline, because '
+          + 'an outline at an offset is how Crystal draws focus.',
       },
     },
   },
@@ -40,8 +38,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** Swatches. Each carries its variant's name, which is what a screen reader
- *  reads and what anybody who cannot separate two similar colours has instead. */
+/** Swatches. Each carries its variant's name, which a screen reader reads and
+ *  which anybody who cannot separate two similar colours relies on. */
 export const Swatches: Story = {
   args: {
     label: 'Colour',
@@ -59,9 +57,9 @@ export const Swatches: Story = {
 
 /** The two cases a tinted pad has to survive: a swatch the same colour as the
  *  palette's primary, which the pad is painted in, and a white one on a light
- *  surface. Both keep an edge because the colour carries a hairline *inside*
- *  itself — inside, so it stays a colour with an edge rather than becoming a
- *  ring, which is the shape focus owns. Select each and look. */
+ *  surface. Both keep an edge because the colour carries a hairline inside
+ *  itself. Inside, so it stays a colour with an edge and does not become a ring,
+ *  which is the shape focus uses. Select each and look. */
 export const SwatchesThatFightTheirPad: Story = {
   args: {
     label: 'Colour',

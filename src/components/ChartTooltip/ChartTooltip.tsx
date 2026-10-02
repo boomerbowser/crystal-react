@@ -1,24 +1,23 @@
 'use client';
 
-/* ChartTooltip — values at a position, following the pointer or the focused item.
+/* ChartTooltip shows values at a position, following the pointer or the focused
+ * item.
  *
  * "Mirrors the tooltip contract: reachable by keyboard, dismissible with
- * Escape." The first half is what separates a chart tooltip from an ordinary one
- * and it is why this is not `Tooltip` with different content: an ordinary tooltip
- * describes *the element that has focus*, and a chart tooltip describes the mark
- * the roving cursor is on — which is inside a single focusable plot, so there is
- * no per-element hover or focus to hang it from.
+ * Escape." Keyboard reach is what separates a chart tooltip from an ordinary
+ * one, and it is why this is a separate component from `Tooltip`. An ordinary
+ * tooltip describes the element that has focus. A chart tooltip describes the
+ * mark the roving cursor is on, which is inside a single focusable plot, so
+ * there is no per-element hover or focus to hang it from.
  *
- * So it is a panel the chart positions, and it is `aria-hidden`. That is
- * deliberate rather than an oversight: every value in it is already on the mark
- * it describes, as that mark's own label, and announcing both would read every
- * number twice. The tooltip is the *sighted* reader's version of what the mark
- * already says.
+ * So it is a panel the chart positions, and it is `aria-hidden` because every
+ * value in it is already on the mark it describes, as that mark's own label.
+ * Announcing both would read every number twice. The tooltip is the
+ * sighted reader's version of what the mark already says.
  *
- * "Never covers the point it describes": it is offset from the point, and it
- * flips to the other side rather than being clipped when the point is near an
- * edge. Escape hides it, which is the contract, and it comes back on the next
- * move.
+ * "Never covers the point it describes." It is offset from the point, and near
+ * an edge it flips to the other side instead of being clipped. Escape hides it,
+ * as the contract requires, and it comes back on the next move.
  */
 import { useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { seriesColour } from '../../charts/channel.js';
@@ -46,25 +45,25 @@ export interface ChartTooltipProps extends Omit<HTMLAttributes<HTMLDivElement>, 
   rows: readonly ChartTooltipRow[];
 }
 
-/* How far the panel sits from the point it describes. Not a token: it is the
-   distance that keeps the panel clear of a mark drawn at Crystal's largest point
-   size, which is what it is derived from rather than chosen. */
+/* How far the panel sits from the point it describes. It is not a token. It is
+   derived from Crystal's largest point size, as the distance that keeps the
+   panel clear of a mark drawn at that size. */
 const CLEARANCE = 14;
 
 export function ChartTooltip({
   shown, x, y, bounds, title, rows, className, style, ...props
 }: ChartTooltipProps): ReactNode {
-  /* Turned rather than clipped. The panel is positioned from whichever side
-     leaves it inside the plot, which is a decision made from the point's
-     position rather than after measuring the panel — measuring would need a
-     layout pass, and a tooltip that appears one frame late under a moving
-     pointer is a tooltip that trails. */
+  /* Turned instead of clipped. The panel is positioned from whichever side
+     leaves it inside the plot, chosen from the point's position without
+     measuring the panel. Measuring would need a layout pass, and a tooltip that
+     appears one frame late under a moving pointer trails. */
   const right = x > bounds.width / 2;
   const below = y < bounds.height / 2;
 
-  /* `tooltip-in` as the panel is shown, and `tooltip-out` as it is hidden — kept
-     displayed while it plays, since hiding it at once would leave the exit
-     nothing to move. Neither on the render that first shows the chart. */
+  /* `tooltip-in` plays as the panel is shown and `tooltip-out` as it is hidden.
+     The panel stays displayed while the exit plays, since hiding it at once
+     would leave the exit nothing to move. Neither plays on the render that
+     first shows the chart. */
   const [scope, play] = useMotion();
   const [leaving, setLeaving] = useState(false);
   usePlayOnChange(shown, (was, is) => (is ? 'tooltip-in' : was ? 'tooltip-out' : null), (recipe) => {

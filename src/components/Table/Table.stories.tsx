@@ -26,16 +26,16 @@ const meta = {
       description: {
         component:
           'A real `table` with `scope` on every header, because header association is what lets '
-          + 'a reader hear "Seats, column 3, 12" while moving across a row — and there is no '
-          + 'ARIA pattern that recovers it once the elements are divs.\n\n'
+          + 'a reader hear "Seats, column 3, 12" while moving across a row. No ARIA pattern '
+          + 'recovers it once the elements are divs.\n\n'
           + 'Sorting follows the catalogue\'s other clause, "sort controls are buttons carrying '
-          + '`aria-sort`", with the two things that are easy to get wrong handled here: '
-          + '`aria-sort` belongs on the `th` rather than the button inside it, and only *one* '
+          + '`aria-sort`", and handles the two things that are easy to get wrong. '
+          + '`aria-sort` belongs on the `th` rather than the button inside it, and only one '
           + 'column may carry it, because it describes the table\'s current order rather than '
           + 'each column\'s capability.\n\n'
-          + 'The shell scrolls rather than the page, so it is a named tab stop — a scroll '
-          + 'container with nothing focusable in it cannot be reached without a pointer — and '
-          + 'its scrollbar is Resin, because a compact horizontal scroller is a control plane. '
+          + 'The shell scrolls rather than the page, so it is a named tab stop, because a scroll '
+          + 'container with nothing focusable in it cannot be reached without a pointer. '
+          + 'Its scrollbar is Resin, because a compact horizontal scroller is a control plane. '
           + 'The material is Crystal\'s own `.cr-table` recipe value for value, down to the Haze '
           + 'fill being inset 6px here rather than the usual 8.',  // crystal-allow-literal: quoting the two insets in prose
       },

@@ -1,24 +1,22 @@
 'use client';
 
-/* List — ordered or unordered rows.
+/* List. Ordered or unordered rows.
  *
  * "Interactive rows are buttons or links, not clickable divs." A div with an
  * `onClick` is not reachable by keyboard, is not announced as anything, and
- * cannot be opened in a new tab when it was really a link — so `ListItem` takes
+ * cannot be opened in a new tab when it was really a link. So `ListItem` takes
  * `href` or `onPress` and renders the element each of those means. There is no
  * third option that makes a row pressable without saying what it is.
  *
- * Motion: an item that mounts *after* the list has settled has arrived, and
- * plays `list-in`. An item present on the first render has not arrived; it was
- * always there, and nothing moves at rest. React's own mount semantics answer
- * that question exactly, which is why the list carries a "settled" flag rather
- * than diffing keys.
+ * Motion: an item that mounts after the list has settled has arrived, and
+ * plays `list-in`. An item present on the first render was always there and
+ * does not move, because nothing moves at rest. React's own mount semantics
+ * answer that question exactly, so the list carries a "settled" flag and does
+ * not diff keys.
  *
- * `list-out` is not played here and cannot be: a recipe runs on an element, and
- * the element of a removed item is gone by the time this component hears about
- * it. Removing with an exit belongs to whoever owns the data and can hold the
- * row for the length of the recipe — `useMotion`'s `play` returns a promise so
- * that they can.
+ * A removed item plays `list-out`. The list wraps its rows in
+ * `AnimatePresence`, which keeps a removed row mounted until its recipe has
+ * finished, and the row is inert while it plays.
  */
 import {
   Children, createContext, useContext, useEffect, useRef, useState,
@@ -91,13 +89,13 @@ export function ListItem({
   const arrived = useRef(settled);
 
   useEffect(() => {
-    /* `arrived` is read from the context as it was at *mount*, so a row that was
+    /* `arrived` is read from the context as it was at mount, so a row that was
        in the first render never plays, however many times the list re-renders. */
     if (arrived.current) void play('list-in');
   }, [play]);
 
-  /* `list-out` before a removed row goes — the list holds it in presence — and
-     inert while it does. */
+  /* `list-out` before a removed row goes (the list holds it in presence), and
+     the row is inert while it plays. */
   const [isPresent, safeToRemove] = usePresence();
   useEffect(() => {
     if (isPresent || !safeToRemove) return;

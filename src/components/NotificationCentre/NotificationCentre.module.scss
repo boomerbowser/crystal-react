@@ -2,7 +2,7 @@
 
 /* "Frost panel with Haze rows." The centre wears `.cr-frost`; the notifications
    inside it step down to Haze through the surface context. The undo row is a
-   Haze fill too — reading content inside the panel. */
+   Haze fill too, as reading content inside the panel. */
 .centre {
   display: grid;
   gap: $cr-spacing-md;
@@ -19,7 +19,7 @@
 
 .heading { margin: 0; }
 
-/* The count, in words: weight rather than a coloured bubble. */
+/* The count, in words and set in weight, with no coloured bubble. */
 .count { font-weight: 800; margin-inline-end: auto; }
 
 .undo {

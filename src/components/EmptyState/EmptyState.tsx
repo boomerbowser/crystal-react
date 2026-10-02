@@ -1,25 +1,25 @@
 'use client';
 
-/* EmptyState — why a region is empty, and the action that would fill it.
+/* EmptyState: why a region is empty, and the action that would fill it.
  *
- * "**No-results and truly-empty are different states and read differently.**"
- * They are the whole component. "No projects yet — create your first one" and
- * "No projects match 'wxyz' — clear the filter" are opposite messages: one says
- * the collection is new and offers to start it, the other says the collection is
- * full and the reader is looking through the wrong window. A component with one
- * empty state says the first when it means the second, and tells a reader with
- * three hundred projects that they have none.
+ * "No-results and truly-empty are different states and read differently."
+ * The component is built around that. "No projects yet — create your first one"
+ * and "No projects match 'wxyz' — clear the filter" are opposite messages. The
+ * first says the collection is new and offers to start it. The second says the
+ * collection is full and the reader is looking through the wrong window. A
+ * component with one empty state says the first when it means the second, and
+ * tells a reader with three hundred projects that they have none.
  *
- * So `state` is **required**. There is no default, because every default would
- * be one of the four being chosen silently for callers who did not think about
- * it, and the one this catalogue entry exists to prevent is exactly that.
+ * So `state` is required. There is no default, because any default would choose
+ * one of the four silently for callers who did not think about it, which is what
+ * this catalogue entry exists to prevent.
  *
  * "Real text; never an illustration alone." The illustration slot is `aria-
- * hidden` and the title is required, in that order of insistence.
+ * hidden` and the title is required.
  *
- * `empty-in` plays when the state *changes*, not on mount — the house rule
- * across this library, and Crystal's: an empty state that was on the page when
- * it loaded did not arrive.
+ * `empty-in` plays when the state changes, not on mount. That is the rule across
+ * this library and Crystal: an empty state that was on the page when it loaded
+ * did not arrive.
  */
 import {
   forwardRef, useEffect, useId, useRef, type HTMLAttributes, type ReactNode,
@@ -34,7 +34,7 @@ export type EmptyStateKind = 'empty' | 'no-results' | 'error' | 'unauthorised';
 export interface EmptyStateProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Which kind of empty. Required; see the note above. */
   state: EmptyStateKind;
-  /** What the reader is looking at. Required — an illustration is not text. */
+  /** What the reader is looking at. Required, because an illustration is not text. */
   title: ReactNode;
   children?: ReactNode;
   /** What would fill it. */

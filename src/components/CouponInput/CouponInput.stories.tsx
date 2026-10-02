@@ -10,17 +10,16 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Field and action share one pill row", and "success and failure are **announced**; '
-          + 'an applied code is **removable**." The answer is the whole component: a coupon '
-          + 'field is one of the few places in a checkout where a reader has done something '
-          + 'and genuinely cannot tell whether it worked — the total may or may not have moved, '
-          + 'it may have moved for another reason, and the code may have been refused for a '
-          + 'reason nobody printed.\n\n'
+          '"Field and action share one pill row", and "success and failure are announced; '
+          + 'an applied code is removable." A coupon field is one of the few places in a '
+          + 'checkout where a reader has done something and cannot tell whether it worked. '
+          + 'The total may or may not have moved, it may have moved for another reason, and '
+          + 'the code may have been refused for a reason nobody printed.\n\n'
           + 'Failure is an `alert` and success is a `status`. A code that did not apply is '
           + 'something the reader must act on before they can continue, which is the narrow '
-          + 'case where interrupting is correct; a code that did apply is a fact they can hear '
-          + 'when they reach it. The same split the feedback slice made between `Alert` and '
-          + '`Banner`.',
+          + 'case where interrupting is correct. A code that did apply is a fact they can hear '
+          + 'when they reach it. This is the same split the feedback slice made between '
+          + '`Alert` and `Banner`.',
       },
     },
   },
@@ -30,9 +29,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Type a code and press Enter — the field applies from the keyboard, because a
- *  field beside a button that only answers to the button swallows the key every
- *  reader will try first. `HARBOUR10` is accepted; anything else is refused. */
+/** Type a code and press Enter. The field applies from the keyboard, because
+ *  Enter is the key every reader tries first. `HARBOUR10` is accepted and
+ *  anything else is refused. */
 export const Default: Story = {
   render: (args) => {
     function Live() {
@@ -58,8 +57,8 @@ export const Default: Story = {
   },
 };
 
-/** A refused code. Assertive, because it is the thing standing between the
- *  reader and finishing. */
+/** A refused code. Assertive, because it stands between the reader and
+ *  finishing. */
 export const Refused: Story = {
   args: { value: 'EXPIRED', onValueChange: () => {}, onApply: () => {}, error: 'That code has expired' },
 };
@@ -70,9 +69,8 @@ export const Applied: Story = {
   args: { value: '', onValueChange: () => {}, onApply: () => {}, applied: 'HARBOUR10', onRemove: () => {} },
 };
 
-/** On its way. The action is disabled rather than replaced by a spinner: a
- *  control that vanishes under the cursor mid-press is one the reader has to
- *  find again. */
+/** On its way. The action is disabled and not replaced by a spinner. A control
+ *  that vanishes under the cursor mid-press has to be found again. */
 export const OnItsWay: Story = {
   args: { value: 'HARBOUR10', onValueChange: () => {}, onApply: () => {}, isApplying: true },
 };

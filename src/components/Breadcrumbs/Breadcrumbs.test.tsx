@@ -29,8 +29,8 @@ describe('Breadcrumbs', () => {
     expect(within(nav).getAllByRole('listitem')).toHaveLength(5);
   });
 
-  /* A link to the page you are on promises something will happen. React Aria
-     drops the href on the last child, and the current crumb is text. */
+  /* A link to the page you are on does nothing. React Aria drops the href on
+     the last child, and the current crumb is text. */
   it('ends in the current page, which is marked and is not a link', () => {
     renderWithCrystal(<Breadcrumbs items={trail} />);
     /* The element that says "Q3" is the crumb's text; the one marked current is
@@ -63,8 +63,8 @@ describe('Breadcrumbs', () => {
     expect(screen.queryByText('Reports')).toBeNull();
   });
 
-  /* A trail that simply truncates deletes navigation silently. Everything
-     collapsed stays reachable, and the disclosure says how many it holds. */
+  /* Everything collapsed stays reachable, and the disclosure says how many it
+     holds. */
   it('keeps every collapsed crumb reachable, and counts them', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Breadcrumbs items={trail} maxItems={3} />);
@@ -87,9 +87,9 @@ describe('Breadcrumbs', () => {
   });
 
   /* A collapse hides everything between the first and the last crumb, so a
-     three-crumb trail would hide exactly one — and one crumb behind a disclosure
-     saves no room and costs a click. The refusal is why the disclosure's label
-     is always plural: the singular case cannot be reached. */
+     three-crumb trail would hide exactly one. One crumb behind a disclosure
+     saves no room and costs a click. Because of this refusal, the disclosure's
+     label is always plural. */
   it('refuses to collapse a trail that would hide only one crumb', () => {
     renderWithCrystal(<Breadcrumbs items={trail.slice(0, 3)} maxItems={1} />);
     expect(screen.getAllByRole('listitem')).toHaveLength(3);

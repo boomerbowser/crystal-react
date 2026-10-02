@@ -2,25 +2,25 @@
 
 /* SharedElement.
  *
- * Carries one element between two views so it reads as the same object rather
- * than as one thing disappearing and another appearing. A thumbnail in a grid and
- * the hero image on the page it opens are the same photograph, and a transition
- * that says so is the difference between a view change and a page reload.
+ * Carries one element between two views so it reads as the same object instead
+ * of one thing disappearing and another appearing. A thumbnail in a grid and the
+ * hero image on the page it opens are the same photograph, and the transition
+ * shows that.
  *
  * Motion's `layoutId` is the mechanism: two elements sharing an id in the same
  * `AnimatePresence` are animated from one position and size to the other. It is
  * the only implementation in the ecosystem that does this without the product
  * measuring anything itself.
  *
- * **Reduced motion removes it entirely**, which is the catalogue's wording and is
+ * Reduced motion removes it entirely, which is the catalogue's wording and is
  * stronger than damping it. A shared-element transition is a moving object
- * crossing the viewport; slowing it down still moves it. So under reduced motion
- * the element renders without a `layoutId` at all and the views simply swap.
+ * crossing the viewport, and slowing it down still moves it. Under reduced motion
+ * the element renders without a `layoutId` and the views swap.
  *
- * The other rule — "never the only way a view change is signalled" — cannot be
- * enforced from inside a component, so it is said here: the destination needs a
- * heading, a title change, or focus moving into it. Somebody who cannot see the
- * object travel must still know they arrived.
+ * The other rule, "never the only way a view change is signalled", cannot be
+ * enforced from inside a component. The destination needs a heading, a title
+ * change, or focus moving into it, so that somebody who cannot see the object
+ * travel still knows they arrived.
  */
 import { motion } from 'motion/react';
 import type { HTMLAttributes, ReactNode } from 'react';
@@ -30,8 +30,8 @@ export interface SharedElementProps extends Omit<HTMLAttributes<HTMLDivElement>,
   'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration' | 'onDrag' | 'onDragStart' | 'onDragEnd'> {
   /**
    * The identity. Two elements with the same id in the two views are treated as
-   * the same object; the id must be stable across the change, so it is usually
-   * the thing's own id rather than its position.
+   * the same object. The id must be stable across the change, so it is usually
+   * the thing's own id, not its position.
    */
   id: string;
   children?: ReactNode;
@@ -48,8 +48,8 @@ export function SharedElement({ id, style, children, ...props }: SharedElementPr
   return (
     /* Motion's `MotionStyle` is a superset of React's `CSSProperties` whose
        members are non-optional, so under `exactOptionalPropertyTypes` the two do
-       not unify even though every real value is valid in both. The cast is the
-       narrow fix, at the one place it is needed. */
+       not unify even though every real value is valid in both. The cast is
+       confined to this one place. */
     <motion.div {...props} {...(style ? { style: style as never } : {})} layoutId={id} data-cr-shared={id}>
       {children}
     </motion.div>

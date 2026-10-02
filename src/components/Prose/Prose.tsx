@@ -2,22 +2,22 @@
 
 /* Prose, Blockquote and Abbr.
  *
- * `Prose` is the reading rhythm applied to content the product did not lay out —
+ * `Prose` is the reading rhythm applied to content the product did not lay out:
  * rendered Markdown, a CMS body, anything arriving as HTML. It is a wrapper whose
- * stylesheet reaches its descendants, which is the one place in this library where
- * that is right: the alternative is asking a content author to know Crystal.
+ * stylesheet reaches its descendants. This is the one place in this library where
+ * that is allowed, because otherwise a content author would have to know Crystal.
  *
  * `Blockquote` and `Abbr` exist as components as well, for quotations and
- * abbreviations a product composes itself. Both are thin, and both are here for
- * one semantic detail each that is easy to get wrong:
+ * abbreviations a product composes itself. Both are thin, and each is here for
+ * one semantic detail that is easy to get wrong:
  *
- *   - A quotation's attribution is a `cite`, and `cite` names a *work* rather
- *     than a person — so the attribution reads "Name, Work" with only the work
+ *   - A quotation's attribution is a `cite`, and `cite` names a work rather
+ *     than a person. So the attribution reads "Name, Work" with only the work
  *     marked up, and the whole thing lives inside the `blockquote` so the two are
  *     associated.
- *   - An abbreviation must be **focusable**. `abbr[title]` shows its expansion on
- *     hover, which is no use without a pointer; a tab stop is what makes the
- *     expansion reachable, and the catalogue asks for it explicitly.
+ *   - An abbreviation must be focusable. `abbr[title]` shows its expansion on
+ *     hover, which is no use without a pointer. A tab stop makes the expansion
+ *     reachable, and the catalogue asks for it explicitly.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -85,7 +85,7 @@ export const Abbr = forwardRef<HTMLElement, AbbrProps>(function Abbr(
 ) {
   return (
     /* A tab stop, because the expansion is otherwise only reachable with a
-       pointer — which the catalogue names as the requirement. */
+       pointer. The catalogue names this as the requirement. */
     <abbr {...props} ref={ref} title={expansion} tabIndex={0} className={className}>
       {children}
     </abbr>

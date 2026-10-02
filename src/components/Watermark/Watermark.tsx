@@ -8,27 +8,27 @@
  * and `pointer-events: none`, because a wash that eats clicks makes the content
  * under it unusable.
  *
- * The opacity is the part that needs care and is why it has a ceiling rather than
- * being a free number. A watermark exists to be noticed and ignored; past a few
- * percent it starts competing with body text, and text that has to be read
- * through a pattern is text whose contrast ratio no longer means what it says.
- * The default is 6% and the prop is clamped.
+ * The opacity has a ceiling. A watermark should be noticed and then ignored.
+ * Past a few percent it competes with body text, and the contrast ratio of text
+ * read through a pattern is no longer accurate. The default is 6% and the prop
+ * is clamped.
  *
  * The mark is rotated because an axis-aligned repeat reads as a background
- * texture rather than as a mark, and a rotated one is also harder to crop out of
- * a screenshot — which is usually why a watermark is there.
+ * texture, and a rotated one is harder to crop out of a screenshot, which is
+ * usually why a watermark is there.
  *
- * The tile is a **mask**, not a background image. A data URI is its own document,
- * so `currentColor` inside one resolves to black no matter what the page around
- * it is doing — a black mark on a dark surface. Masking a `currentColor` fill
- * makes the mark take the surface's own ink in every palette and both modes.
+ * The tile is a mask, not a background image. A data URI is its own document,
+ * so `currentColor` inside one resolves to black whatever the page around it
+ * does, which gives a black mark on a dark surface. Masking a `currentColor`
+ * fill makes the mark take the surface's own ink in every palette and both
+ * modes.
  */
 import { useMemo, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
 import styles from './Watermark.module.scss';
 
-/* Past this the mark competes with body text. It is a contrast decision, not a
-   taste one, so it is a ceiling rather than a suggestion. */
+/* Past this the mark competes with body text. The limit protects contrast, so
+   the prop is clamped to it. */
 const MAX_OPACITY = 0.12;
 
 export interface WatermarkProps extends HTMLAttributes<HTMLDivElement> {
@@ -47,17 +47,14 @@ export const Watermark = function Watermark({
   text, opacity = 0.06, tile = 180, angle = -24, className, style, children, ...props
 }: WatermarkProps): React.JSX.Element {
   const image = useMemo(() => {
-    /* Built as an SVG data URI rather than a repeated DOM node: one tiled
+    /* Built as an SVG data URI instead of a repeated DOM node. One tiled
        background paints at any size without adding hundreds of elements to the
        tree for a screen reader to skip past. */
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${tile}" height="${tile}">`
       + `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" `
       + `transform="rotate(${angle} ${tile / 2} ${tile / 2})" `
-      /* Solid black in the mask's own document; the mask turns it into coverage,
-         and the surface's ink is what actually paints. */
-      /* Opaque in the mask's own document, which is coverage rather than colour:
-         the mask turns it into where the ink paints, and the ink is the
-         surface's. */
+      /* Solid black in the mask's own document. The mask turns it into coverage,
+         and the surface's ink is what paints. */
       + `font-family="system-ui, sans-serif" font-size="16" fill="#000">`  // crystal-allow-literal: mask coverage, not a colour
       + text.replace(/[<>&"]/g, (c) => `&#${c.charCodeAt(0)};`)
       + '</text></svg>';

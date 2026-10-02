@@ -1,12 +1,12 @@
 @use '../../styles/tokens' as *;
 
-/* TrendIndicator — "Material: inherits. Geometry: sits inline with the figure it
+/* TrendIndicator. "Material: inherits. Geometry: sits inline with the figure it
  * qualifies."
  *
- * So it paints no surface and takes no box of its own: it is a run of text with a
- * glyph in front, sitting on the baseline of whatever it qualifies. The only
- * thing it owns is which ink the pair takes, and that ink is always the second
- * signal — the words beside it are the first.
+ * It paints no surface and takes no box of its own. It is a run of text with a
+ * glyph in front, on the baseline of whatever it qualifies. It sets only the ink
+ * of the pair, and that ink is always the second signal. The words beside it are
+ * the first.
  */
 
 .trend {
@@ -23,14 +23,13 @@
 
 .trend[data-direction='up'] { color: var(--cr-success-ink); }
 .trend[data-direction='down'] { color: var(--cr-danger-ink); }
-/* "No change" is not a status, so it takes the supporting ink rather than a third
+/* "No change" is not a status, so it takes the supporting ink instead of a third
    status colour. */
 .trend[data-direction='flat'] { color: var(--cr-muted); }
 
 .arrow { font-weight: 800; }
 
-/* Forced colours replaces the palette, and the words are what survive — which is
-   the point of the rule that put them there. */
+/* Forced colours replaces the palette. The words still carry the direction. */
 @media (forced-colors: active) {
   .trend { color: CanvasText; }
 }

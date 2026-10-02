@@ -25,7 +25,7 @@ describe('Accordion', () => {
   });
 
   /* "Only one at a time" is a property of the group, not of five rows each
-     watching the others — which is what `DisclosureGroup` is for. */
+     watching the others. That is what `DisclosureGroup` is for. */
   it('closes the open row when another opens, unless several are allowed', async () => {
     const { rerenderWithCrystal } = renderWithCrystal(<Accordion items={items} />);
     await userEvent.click(screen.getByRole('button', { name: 'Shipping' }));
@@ -43,9 +43,9 @@ describe('Accordion', () => {
     expect(screen.getByRole('button', { name: 'Returns' })).toHaveAttribute('aria-expanded', 'true');
   });
 
-  /* `icon-turn` is a rotate-and-scale torsion. On the header button it turns the
-     title with it and leaves the final keyframe applied there — which is what it
-     did until this test existed. */
+  /* `icon-turn` is a rotate-and-scale torsion. On the header button it would turn
+     the title with it and leave the final keyframe applied there. This test
+     keeps it scoped to the chevron. */
   it('turns the chevron and not the header', async () => {
     renderWithCrystal(<Accordion items={items} />);
     const header = screen.getByRole('button', { name: 'Shipping' });
@@ -55,8 +55,8 @@ describe('Accordion', () => {
     expect(header.dataset['crMotionName'] ?? header.dataset['crMotionState']).toBeUndefined();
   });
 
-  /* Crystal's `accordion-in` is a clip and a fade on the content — "no scripted
-     height measurement needed" — and it plays when the row opens, never on a row
+  /* Crystal's `accordion-in` is a clip and a fade on the content ("no scripted
+     height measurement needed"), and it plays when the row opens, never on a row
      that was open when the page loaded. */
   it('plays the arrival on the content when the row opens, and not on load', async () => {
     const { container } = renderWithCrystal(<Accordion items={items} defaultExpandedKeys={['shipping']} />);

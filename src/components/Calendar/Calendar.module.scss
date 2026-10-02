@@ -1,17 +1,16 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* Calendar — a Frost panel with Haze day cells.
+/* Calendar: a Frost panel with Haze day cells.
  *
- * Frost, because a calendar is a panel: something you read and reach into, not
- * a control plane floating above the page. The cells inside it are the content,
- * so they take the reading fill.
+ * Frost, because a calendar is a panel you read and reach into, not a control
+ * plane floating above the page. The cells inside it are the content, so they
+ * take the reading fill.
  *
- * These rules came out of `DatePicker`, where the month grid used to live and
- * where nothing else could reach it. They are unchanged: a calendar opened in a
- * picker and one standing on a page are the same grid, and the only difference
- * is which of them carries the material — inside a popover the panel is already
- * there, so `CalendarBody` paints nothing and `Calendar` paints the panel.
+ * A calendar opened in a picker and one standing on a page are the same grid.
+ * The only difference is which of them carries the material. Inside a popover
+ * the panel is already there, so `CalendarBody` paints nothing and `Calendar`
+ * paints the panel.
  */
 
 .panel {
@@ -84,9 +83,9 @@
 .cell[data-unavailable] { color: var(--cr-muted); text-decoration: line-through; cursor: not-allowed; }
 .cell[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 
-/* Today is marked with a rule beneath rather than a fill, so it cannot be
-   mistaken for the selected day. Two fills would be two things a reader has to
-   tell apart by shade. */
+/* Today is marked with a rule beneath instead of a fill, so it cannot be
+   mistaken for the selected day. With two fills, a reader would have to tell
+   them apart by shade. */
 .cell[data-today]:not([data-selected]) { box-shadow: inset 0 -2px 0 var(--cr-primary); }
 
 .cell[data-focus-visible] {
@@ -94,7 +93,7 @@
   outline-offset: calc(-1 * #{$cr-focus-core-offset});
 }
 
-/* The span between two dates in a range, drawn behind the days rather than on
+/* The span between two dates in a range, drawn behind the days instead of on
    them so the numbers keep their contrast. */
 .cell[data-selection-start], .cell[data-selection-end] { font-weight: 800; }
 .cell[data-selected][data-selection-start] { border-start-end-radius: 0; border-end-end-radius: 0; }

@@ -1,7 +1,7 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* PinInput — a row of single-character wells. */
+/* PinInput: a row of single-character wells. */
 
 .field { @include field.field; }
 .label { @include field.label; }
@@ -9,7 +9,7 @@
 .wells { display: flex; gap: $cr-spacing-xs; }
 
 /* "Square-ish wells at the field radius; 44px minimum." Each well is Crystal's
-   field shell — its 20px radius and 8px inset — around a cell that takes
+   field shell, with its 20px radius and 8px inset, around a cell that takes
    Crystal's 44px floor, so the well is as tall as every other field and as wide
    as it is tall. */
 .well {

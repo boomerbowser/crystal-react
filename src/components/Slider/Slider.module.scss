@@ -1,16 +1,17 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* Slider and RangeSlider — a value-driven track with a Resin thumb.
+/* Slider and RangeSlider.
+ *
+ * A value-driven track with a Resin thumb.
  *
  * The thumb is 26px and the target is 44px, which it reaches through padding
- * rather than by growing: a 44px circle on an 8px track looks like a mistake, and
- * a 26px one that is only 26px to press is one a fingertip misses.
+ * instead of by growing. A 44px circle on an 8px track looks like a mistake, and
+ * a fingertip misses a 26px target.
  *
- * Everything here is logical rather than physical — `inset-inline-start`, not
- * `left` — so the track mirrors in right-to-left without a second stylesheet.
- * React Aria reverses the value mapping to match, which is the half that CSS
- * cannot do.
+ * Everything here is logical, not physical (`inset-inline-start`, not `left`), so
+ * the track mirrors in right-to-left without a second stylesheet. React Aria
+ * reverses the value mapping to match, which CSS cannot do.
  */
 
 .field { @include field.field; }
@@ -58,10 +59,10 @@
 }
 
 /* React Aria places the thumb with an inline `left` and `translate(-50%, -50%)`
-   and leaves the top to the stylesheet: the vertical half of the translate
+   and leaves the top to the stylesheet. The vertical half of the translate
    centres the thumb only if its top is at the middle of the track. Without this
-   the track's flex centring and the translate both applied, and every thumb sat
-   half its own height above the rail. */
+   rule the track's flex centring and the translate both apply, and the thumb
+   sits half its own height above the rail. */
 .thumb {
   position: relative;
   inset-block-start: 50%;

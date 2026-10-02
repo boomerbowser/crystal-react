@@ -23,9 +23,8 @@ describe('Dialog', () => {
     await expectNoAxeViolations(baseElement);
   });
 
-  /* React Aria owns focus containment and its return. Asserting it here is not
-     testing someone else's library — it is testing that this component did not
-     break it by rendering the parts in the wrong order. */
+  /* React Aria owns focus containment and its return. This checks that the
+     component does not break it by rendering the parts in the wrong order. */
   it('moves focus into the dialog and traps it there', async () => {
     const user = userEvent.setup();
     renderWithCrystal(
@@ -54,8 +53,8 @@ describe('Dialog', () => {
   });
 
   /* The catalogue specifies a Mirage scrim with a Haze surface above it. Resin is
-     the floating control plane and is the wrong material here — an earlier draft
-     of the plan had it backwards, so this is pinned. */
+     the floating control plane and is the wrong material here. An earlier draft
+     of the plan had it backwards, so this test pins it. */
   it('renders a Haze surface over a Mirage scrim, not Resin', () => {
     const { baseElement } = renderWithCrystal(<Dialog isOpen title="Settings">Body</Dialog>);
     const dialog = screen.getByRole('dialog');
@@ -64,17 +63,16 @@ describe('Dialog', () => {
     expect(baseElement.querySelector('[class*="scrim"]')).not.toBeNull();
   });
 
-  /* A dialog that overflows on a phone is the defect Meridian reported from the
-     deployed preview. Its body scrolls, with Crystal's Frost scrollbar — a dialog
-     is a reading surface, not a control plane — and the surface itself does not,
-     because the surface is what carries the material. */
+  /* A dialog can overflow on a phone. Its body scrolls, with Crystal's Frost
+     scrollbar because a dialog is a reading surface. The surface itself does not
+     scroll, because it carries the material. */
   it('scrolls its body with the Frost scrollbar, leaving the surface to the material', () => {
     renderWithCrystal(<Dialog isOpen title="Terms">Body</Dialog>);
     const body = screen.getByText('Body').closest('.cr-scroll-frost');
     expect(body).not.toBeNull();
     expect(body?.className).not.toMatch(/\bcr-scroll-resin\b/);
 
-    /* The heading stays out of the scroller: context that scrolls away is lost. */
+    /* The heading stays out of the scroller, so it remains visible. */
     expect(screen.getByRole('heading', { name: 'Terms' }).closest('.cr-scroll-frost')).toBeNull();
   });
 });

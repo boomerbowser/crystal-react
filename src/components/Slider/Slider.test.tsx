@@ -5,9 +5,8 @@ import { Slider, RangeSlider } from './Slider.js';
 
 describe('Slider', () => {
   /* React Aria renders a native `input type="range"`, which carries its value and
-     bounds natively — so `aria-valuenow` is deliberately absent and the native
-     attributes are what to assert. Asserting the ARIA ones would be asserting a
-     mechanism React Aria is right not to use. */
+     bounds natively. React Aria leaves `aria-valuenow` off, so the test asserts
+     the native attributes instead. */
   it('has no accessibility violations and announces its bounds', async () => {
     const { container } = renderWithCrystal(
       <Slider label="Volume" defaultValue={40} minValue={0} maxValue={100} />,
@@ -19,10 +18,9 @@ describe('Slider', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The one that matters most, and the one the first version got wrong: a slider
-     whose value is a price must announce "£24" rather than "24". The old test
-     asserted only that aria-valuetext was non-empty, which is why it passed
-     while the unit reached the screen and not the announcement. */
+  /* A slider whose value is a price must announce "£24", not "24". Asserting
+     only that aria-valuetext is non-empty would pass with the unit on the screen
+     and missing from the announcement, so the test checks for the unit. */
   it('announces the value with its unit, not only shows it', () => {
     renderWithCrystal(
       <Slider
@@ -33,7 +31,7 @@ describe('Slider', () => {
     );
     const announced = screen.getByRole('slider', { name: 'Price' }).getAttribute('aria-valuetext') ?? '';
     expect(announced).toContain('£');
-    /* And the visible output is the same string, so the two cannot drift. */
+    /* The visible output is the same string, so the two cannot drift. */
     expect(document.querySelector('output')?.textContent).toBe(announced);
   });
 
@@ -48,8 +46,7 @@ describe('Slider', () => {
 
 describe('RangeSlider', () => {
   /* Two sliders with distinct names. One control with two handles announces one
-     value, so a reader moving the lower bound is told the upper one — they are
-     two separate questions. */
+     value, so a reader moving the lower bound is told the upper one. */
   it('is two sliders, each announcing its own bound', () => {
     renderWithCrystal(
       <RangeSlider

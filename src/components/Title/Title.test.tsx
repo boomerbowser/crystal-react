@@ -3,10 +3,10 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { Title, Display, Lead } from './Title.js';
 
 describe('Title', () => {
-  /* The rule the catalogue states twice: the level is the document outline, the
-     size is a step of the scale, and the two are chosen separately. A component
-     where level also means size forces a choice between a correct outline and a
-     correct appearance, and products choose appearance. */
+  /* The catalogue states this rule twice: the level is the document outline, the
+     size is a step of the scale, and the two are chosen separately. If level also
+     meant size, products would have to choose between a correct outline and a
+     correct appearance, and they choose appearance. */
   it('separates the outline level from the size', () => {
     renderWithCrystal(<Title level={4} step="display">Loud but deep</Title>);
     const heading = screen.getByRole('heading', { level: 4, name: 'Loud but deep' });
@@ -25,8 +25,8 @@ describe('Title', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'The one statement' })).toBeInTheDocument();
   });
 
-  /* It reads like a heading and is not one: putting a sentence of standfirst copy
-     into the document outline is what this prevents. */
+  /* It reads like a heading but is a paragraph, so a sentence of standfirst copy
+     stays out of the document outline. */
   it('keeps Lead a paragraph', () => {
     renderWithCrystal(<Lead data-testid="l">A standfirst</Lead>);
     expect(screen.getByTestId('l').tagName).toBe('P');

@@ -1,15 +1,14 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material';
 
-/* The tour covers the page, and that is deliberate: `aria-modal` says the rest
-   of the interface is not available, and a spotlight that let the target be
-   pressed would be saying two different things. The hole in the scrim is about
-   *seeing* the target, not reaching it. */
+/* The tour covers the page. `aria-modal` says the rest of the interface is not
+   available, so the target must not be pressable through the spotlight. The
+   hole in the scrim lets the target be seen, not reached. */
 .tour { position: fixed; inset: 0; z-index: 1100; }
 
-/* Mirage, with the step's target cut out of it. One element rather than a ring
-   drawn over the page: a ring has to out-stack everything between it and the
-   viewport, and a hole has nothing to fight. */
+/* Mirage, with the step's target cut out of it. One element instead of a ring
+   drawn over the page, because a ring has to out-stack everything between it
+   and the viewport, and a hole does not. */
 .scrim {
   position: absolute;
   inset: 0;
@@ -22,11 +21,11 @@
 /* The cut is a `clip-path: path(evenodd, …)` written by the component, because
    it is arithmetic on a measured rectangle and CSS cannot do it: `clip-path`
    takes a single shape and has no combinator to subtract one from another.
-   See `spotlight()` — and see why, in the note there about the version of this
-   that used `xywh() exclude`, which is not CSS and was silently dropped.
+   See `spotlight()`. `xywh() exclude` is not CSS and is silently dropped as
+   invalid.
 
-   Where `path()` is unavailable the scrim is simply whole: the step still reads
-   and the target is not lit. A tour that failed to open would be worse. */
+   Where `path()` is unavailable the scrim is whole. The step still reads and
+   the target is not lit, which is better than a tour that fails to open. */
 @supports not (clip-path: path('M0,0H1V1H0Z')) {
   .scrim[data-cut] { clip-path: none !important; }
 }

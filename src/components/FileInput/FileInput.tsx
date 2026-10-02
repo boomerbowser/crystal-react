@@ -4,22 +4,21 @@
  *
  * Four catalogue entries over two ideas: choosing files, and watching them go.
  *
- * **A drop zone is never the only way to choose a file.** Dragging requires a
- * pointer, a steady hand and sight of both ends of the gesture; it is an
- * enhancement over a button, never a replacement for one. So every surface here
- * contains a real `FileTrigger` — React Aria's, which wraps a hidden native input
+ * A drop zone is never the only way to choose a file. Dragging requires a
+ * pointer, a steady hand and sight of both ends of the gesture, so it is an
+ * enhancement over a button and never a replacement for one. Every surface here
+ * contains a real `FileTrigger`, React Aria's, which wraps a hidden native input
  * so the platform's own file picker opens, with its recent files, its search and
  * its accessibility.
  *
- * **Progress is a number as well as a bar.** A bar alone says "something is
- * happening"; the number says how much, which is what somebody waiting actually
- * wants — and it is the only half of it that a screen reader can read. Crystal
- * renders progress it is told about and computes none: an upload's state belongs
- * to whatever is doing the uploading.
+ * Progress is a number as well as a bar. A bar alone says "something is
+ * happening". The number says how much, which is what somebody waiting wants,
+ * and a screen reader can read only the number. Crystal renders progress it is
+ * told about and computes none, because an upload's state belongs to whatever is
+ * doing the uploading.
  *
- * The dashed edge on a drop surface is the one place Crystal uses one. It says
- * "this boundary is a target, not a surface", which is exactly the distinction a
- * drop zone needs to make.
+ * A drop surface has a dashed edge, the one place Crystal uses one. It marks the
+ * boundary as a target and not a surface.
  */
 import { useId, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import {
@@ -80,8 +79,8 @@ export interface FileInputProps {
 
 /**
  * A button that opens the platform's file picker. React Aria's `FileTrigger`
- * wraps a real input, so the picker is the system's — with its recent files, its
- * search and its own accessibility — rather than a web imitation of one.
+ * wraps a real input, so the picker is the system's, with its recent files, its
+ * search and its own accessibility, and not a web imitation of one.
  */
 export function FileInput({
   label, description, errorMessage, acceptedFileTypes, allowsMultiple = false,
@@ -110,24 +109,23 @@ export interface DropZoneProps extends FileInputProps {
 }
 
 /**
- * A surface files can be dropped onto — **and** a button, always. Dragging needs
- * a pointer, a steady hand and sight of both ends of the gesture; it is an
- * enhancement over choosing, never a replacement.
+ * A surface files can be dropped onto, always with a button as well. Dragging
+ * needs a pointer, a steady hand and sight of both ends of the gesture, so it is
+ * an enhancement over choosing and never a replacement.
  */
 export function DropZone({
   label, description, errorMessage, acceptedFileTypes, allowsMultiple = false,
   onSelect, onDrop, chooseLabel = 'Choose a file', children, className,
 }: DropZoneProps): React.JSX.Element {
   /* The zone lifts with `drag-pickup` as files are carried over it and settles
-     with `drag-settle` once they are dropped — a valid move completed. Nothing
-     for a drag that passes over and leaves. */
+     with `drag-settle` once they are dropped, a valid move completed. A drag
+     that passes over and leaves gets no settle. */
   const [scope, play] = useMotion();
 
-  /* What was dropped, delivered where choosing delivers it. Until 28 September
-     the drop zone had no drop handler at all: React Aria's zone accepted the
-     gesture and discarded the files, and `onDrop` — documented just above — was
-     never read. Types the picker would not offer are left out, and so is every
-     file after the first when only one is allowed. */
+  /* What was dropped, delivered where choosing delivers it. Without this
+     handler React Aria's zone accepts the gesture and discards the files. Types
+     the picker would not offer are left out, and so is every file after the
+     first when only one is allowed. */
   const receive = async (event: DropEvent): Promise<void> => {
     const deliver = onDrop ?? onSelect;
     const dropped = await Promise.all(event.items
@@ -177,9 +175,8 @@ export interface UploadProps extends FileInputProps {
 
 /**
  * The list of what was chosen and how far each has got, without a chooser of its
- * own. Shared by `Upload`, which puts a `FileInput` above it, and `UploadZone`,
- * which puts a `DropZone` there instead — neither of them by rendering the other
- * and hiding half of it.
+ * own. `Upload` puts a `FileInput` above it, and `UploadZone` puts a `DropZone`
+ * there instead. Neither renders the other and hides half of it.
  */
 function UploadedFiles({ files, onRemove }: {
   files: readonly UploadedFile[];
@@ -192,7 +189,7 @@ function UploadedFiles({ files, onRemove }: {
       {files.length > 0 ? (
         <ul className={cx(styles['files'])}>
           {/* A file joins the list with `list-in` as it is chosen and leaves with
-              `list-out` when it is removed; the files already there when the
+              `list-out` when it is removed. The files already there when the
               list first renders do neither. */}
           <ListPresence>
             {files.map((file) => (
@@ -203,8 +200,8 @@ function UploadedFiles({ files, onRemove }: {
                 ) : null}
                 {file.progress !== undefined ? (
                   <>
-                    {/* A real progressbar: the bar is a picture of the number, and
-                        the number is what a screen reader reads. */}
+                    {/* A real progressbar. The bar draws the number, and a screen
+                        reader reads the number. */}
                     <MovingProgress
                       value={file.progress}
                       role="progressbar"
@@ -238,7 +235,7 @@ function UploadedFiles({ files, onRemove }: {
           </ListPresence>
         </ul>
       ) : null}
-      {/* The arrival and completion of an upload are events, not only pictures. */}
+      {/* The arrival and completion of an upload are announced as well as drawn. */}
       <VisuallyHidden as="div" id={statusId} role="status" aria-live="polite">
         {files.filter((file) => file.progress === undefined && !file.error).length} of {files.length} uploaded
       </VisuallyHidden>
@@ -261,11 +258,11 @@ export type UploadZoneProps = UploadProps & { children?: ReactNode };
 /**
  * The drop surface with the list beneath it.
  *
- * It used to compose `Upload` with `label=""` to suppress the second heading.
- * That left an empty `span` in the accessibility tree — and, less visibly, a
- * second "Choose a file" button, a second copy of the description, and a second
- * `role="alert"` carrying the same error, so a failure was announced twice. Both
- * halves now draw on the same list and only the drop surface carries the chooser.
+ * It does not compose `Upload`. Doing so with `label=""` leaves an empty `span`
+ * in the accessibility tree, a second "Choose a file" button, a second copy of
+ * the description, and a second `role="alert"` carrying the same error, so a
+ * failure is announced twice. Both halves draw on the same list, and only the
+ * drop surface carries the chooser.
  */
 export function UploadZone({ files, onRemove, children, ...props }: UploadZoneProps): React.JSX.Element {
   return (
@@ -276,9 +273,9 @@ export function UploadZone({ files, onRemove, children, ...props }: UploadZonePr
   );
 }
 
-/* A file's upload, marking each move of its progress with `progress-change` —
-   after the value is set, never in place of it — and not on the render that
-   first shows the row. */
+/* A file's upload, marking each move of its progress with `progress-change`.
+   The motion plays after the value is set, never in place of it, and not on the
+   render that first shows the row. */
 function MovingProgress({ value, ...props }: HTMLAttributes<HTMLDivElement> & { value: number }): React.JSX.Element {
   const scope = useChangeMotion(value, () => 'progress-change');
   return <div ref={scope as never} {...props} />;
@@ -287,8 +284,8 @@ function MovingProgress({ value, ...props }: HTMLAttributes<HTMLDivElement> & { 
 type DropEvent = Parameters<NonNullable<AriaDropZoneProps['onDrop']>>[0];
 
 /* The picker's rule for one accepted type against a dropped file's type:
-   `image/*` accepts any image, an exact type accepts itself. Extensions are the
-   picker's to match, since a drop carries a media type and not a name. */
+   `image/*` accepts any image, and an exact type accepts itself. The picker
+   matches extensions, since a drop carries a media type and not a name. */
 function accepts(accepted: string, type: string): boolean {
   if (accepted.endsWith('/*')) return type.startsWith(accepted.slice(0, -1));
   return accepted === type || accepted.startsWith('.');

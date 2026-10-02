@@ -3,17 +3,18 @@
 /* The colour family: ColorInput, ColorArea, ColorSlider, ColorWheel, ColorSwatch
  * and ColorSwatchPicker.
  *
- * One rule runs through all six and the catalogue states it twice: **colour is
- * never the only representation.** A swatch carries its name as text. A field
- * keeps an editable text value. A picker announces the colour it moved to. Every
- * one of these is a component whose entire subject is a colour, which is exactly
- * why none of them may rely on one.
+ * One rule runs through all six, and the catalogue states it twice: colour is
+ * never the only representation. A swatch carries its name as text. A field
+ * keeps an editable text value. A picker announces the colour it moved to. Each
+ * of these components has a colour as its whole subject, so none of them may
+ * rely on colour alone.
  *
- * The thumb is the other shared problem. It sits on an arbitrary colour, so a
+ * The thumb is the other shared concern. It sits on an arbitrary colour, so a
  * single-colour border disappears against part of the gamut. Crystal's thumb is
- * two rings — white inside dark — which keeps an edge against anything. The two
- * colours are the one place besides the QR code where a literal is correct: they
- * are contrast, not palette, and theming them would undo the reason they exist.
+ * two rings, white inside dark, which keeps an edge against anything. The two
+ * colours are the one place besides the QR code where a literal is correct. They
+ * provide contrast and are not palette colours, so theming them would defeat
+ * their purpose.
  *
  * React Aria supplies the parsing, the channel arithmetic, the two linked sliders
  * inside a colour area and the announcements. What Crystal adds is the material
@@ -36,9 +37,9 @@ import { FieldGroupShell } from '../FormField/FieldShell.js';
 import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import styles from './ColorPicker.module.scss';
 
-/* Crystal's own signature, read from the tokens rather than typed in. A picker
-   has to open on something, and a hex literal here would be the one colour in
-   the library that stopped tracking the palette it came from. */
+/* Crystal's own signature colour, read from the tokens and not typed in. A
+   picker has to open on something, and a hex literal here would stop tracking
+   the palette it came from. */
 const flat = crystalFlat as unknown as {
   default: { palette: string };
   palettes: Record<string, { seed: string }>;
@@ -57,7 +58,7 @@ export interface ColorInputProps {
 }
 
 /**
- * A text value with a swatch beside it. The text is always editable — a picker
+ * A text value with a swatch beside it. The text is always editable. A picker
  * that can only be pointed at is unusable without a pointer, and unusable for
  * anybody who knows the hex they want.
  */
@@ -90,9 +91,9 @@ export function ColorInput({
 }
 
 /* Each of the three surfaces below works on its own as well as inside a
-   `ColorPicker`. The catalogue lists them as separate components, so they have to:
-   React Aria throws without a value when there is no picker above to inherit
-   one from, which is what made the first version unusable standalone. */
+   `ColorPicker`, because the catalogue lists them as separate components. React
+   Aria throws without a value when there is no picker above to inherit one
+   from. */
 interface StandaloneColour {
   value?: string | Color;
   defaultValue?: string | Color;
@@ -110,12 +111,11 @@ export interface ColorAreaProps extends StandaloneColour {
 export function ColorArea({
   xChannel = 'saturation', yChannel = 'brightness', value, defaultValue, onChange, className,
 }: ColorAreaProps): React.JSX.Element {
-  /* The same conversion `ColorSlider` does, and it was missing here. An area's
-     two channels have to exist in the colour it is given: handed `#7338EF`,
-     which is RGB, it asks an RGBColor for its saturation and React Aria throws
-     `Unknown color channel: saturation` — the story rendered nothing at all.
-     No unit test saw it, because the defect is a render-time throw in a browser
-     and the Colour story had no assertion of its own. */
+  /* The same conversion `ColorSlider` does. An area's two channels have to
+     exist in the colour it is given. Handed `#7338EF`, which is RGB, it would
+     ask an RGBColor for its saturation and React Aria would throw
+     `Unknown color channel: saturation`. That is a render-time throw in a
+     browser, which unit tests do not see. */
   const resolvedValue = inSpaceFor(xChannel, value);
   const resolvedDefault = inSpaceFor(xChannel, defaultValue);
 
@@ -140,11 +140,11 @@ export interface ColorSliderProps extends StandaloneColour {
   className?: string;
 }
 
-/* A colour only has the channels of the space it is in: `#7338EF` is RGB and has
-   no hue, so a hue slider handed a hex throws rather than converting. Everybody's
-   colour is a hex, so the conversion happens here — the alternative is a
-   component that works only when it is passed a value in a format nobody writes
-   by hand. */
+/* A colour only has the channels of the space it is in. `#7338EF` is RGB and
+   has no hue, so a hue slider handed a hex throws instead of converting. Most
+   colours are written as hex, so the conversion happens here. Otherwise the
+   component would work only when passed a value in a format nobody writes by
+   hand. */
 const SPACE_FOR_CHANNEL = {
   hue: 'hsb', saturation: 'hsb', brightness: 'hsb',
   lightness: 'hsl',
@@ -222,7 +222,7 @@ export function ColorSwatch({ color, name, className }: ColorSwatchProps): React
   return (
     <span className={className}>
       <AriaColorSwatch color={color} className={cx(styles['swatch'])} />
-      {/* Not a tooltip and not a title: the name is content. */}
+      {/* The name is content, not a tooltip or a title. */}
       <span className={cx(styles['name'])}>{name}</span>
     </span>
   );
@@ -279,16 +279,15 @@ export interface ColorPickerProps {
 export function ColorPicker({
   label, defaultValue = DEFAULT_COLOUR, onChange, className,
 }: ColorPickerProps): React.JSX.Element {
-  /* Held in HSB, not in whatever space the hex parsed to.
+  /* Held in HSB, not in the space the hex parsed to.
      
-     Every child of this picker reads an HSB channel — the area moves saturation
-     and brightness, the slider moves hue — and `parseColor('#7338EF')` returns
+     Every child of this picker reads an HSB channel (the area moves saturation
+     and brightness, the slider moves hue), and `parseColor('#7338EF')` returns
      an RGBColor, which has none of them. React Aria throws on the first render
-     rather than converting, so the whole picker rendered as an error boundary.
-     Converting once here is the fix for all three children at once; converting
-     in each child would leave them disagreeing about what the current colour is
-     the moment one of them changed it. `toString('hex')` still works from HSB,
-     so a consumer reading the value back sees no difference. */
+     instead of converting. Converting once here covers all three children.
+     Converting in each child would leave them disagreeing about the current
+     colour as soon as one of them changed it. `toString('hex')` still works from
+     HSB, so a consumer reading the value back sees no difference. */
   const [colour, setColour] = useState<Color>(() => parseColor(defaultValue).toFormat('hsb'));
   const groupId = useId();
 
@@ -301,16 +300,15 @@ export function ColorPicker({
         <span id={groupId} className={cx(styles['label'])}>{label}</span>
         <ColorArea />
         <ColorSlider channel="hue" />
-        {/* Always editable, and always present: the text is the representation
+        {/* Always editable and always present. The text is the representation
             that does not depend on seeing the colour.
 
-            Named, and it was not. The picker's own caption is a `span` heading a
-            group, so it labels the group and not the input inside it, and the
-            hex field went out with no accessible name at all — React Aria said
-            so in a console warning on every render and nobody was reading the
-            console. "Hexadecimal value" rather than repeating the picker's
-            label: inside a group that is already announced as "Accent", a field
-            called "Accent" says nothing a listener did not just hear. */}
+            The field needs its own name. The picker's caption is a `span`
+            heading a group, so it labels the group and not the input inside it,
+            and without `aria-label` the hex field has no accessible name. It is
+            "Hexadecimal value" instead of the picker's label, because inside a
+            group already announced as "Accent", a field called "Accent" tells
+            the listener nothing new. */}
         <ColorField className={cx(styles['field'])} aria-label="Hexadecimal value">
           {({ isInvalid }) => (
             <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
@@ -324,10 +322,10 @@ export function ColorPicker({
   );
 }
 
-/* The swatch inside a picker option, playing `selection` when its option becomes
-   the chosen colour — and not on the render that opens the picker with one
-   already chosen. React Aria hands the option's state to a render function, so
-   the motion is on the swatch rather than on the option around it. */
+/* The swatch inside a picker option. It plays `selection` when its option
+   becomes the chosen colour, and not on the render that opens the picker with
+   one already chosen. React Aria hands the option's state to a render function,
+   so the motion is on the swatch and not on the option around it. */
 function PickedSwatch({ isSelected }: { isSelected: boolean }): React.JSX.Element {
   const scope = useChangeMotion(isSelected, entered('selection'));
   return <AriaColorSwatch ref={scope as never} />;

@@ -1,34 +1,32 @@
 'use client';
 
-/* DataView — a collection rendered as a list or a grid.
+/* DataView: a collection rendered as a list or a grid.
  *
  * "A list; the layout switch is a control with a pressed state, not a hidden
- * toggle." Both halves are the component.
+ * toggle."
  *
  * It is a real `ul` in both layouts, because a grid of items is still a list of
- * items — the arrangement is a visual choice and the *count* is information. A
+ * items. The arrangement is a visual choice and the count is information. A
  * reader is told "12 items" either way, and switching layout does not change
  * what they were told.
  *
- * The switch is `SegmentedControl`, which is a radio group — and the catalogue
- * says "a control with a pressed state", so the divergence is worth stating.
- * Picking one of two arrangements is a *choice* rather than a pressed state, and
- * both Crystal and React Aria reached that independently: Crystal's own
- * segmented control is a radio group, and React Aria's `ToggleButtonGroup`
- * renders `role="radiogroup"` with `aria-checked` the moment its selection is
- * single. What the catalogue's clause rules out is the thing this pattern
- * usually ships as — two unlabelled icons whose state is a colour — and a named
- * radio group rules that out at least as firmly as `aria-pressed` would.
+ * The switch is `SegmentedControl`, which is a radio group, although the
+ * catalogue says "a control with a pressed state". Picking one of two
+ * arrangements is a choice, and both Crystal and React Aria treat it that way:
+ * Crystal's own segmented control is a radio group, and React Aria's
+ * `ToggleButtonGroup` renders `role="radiogroup"` with `aria-checked` when its
+ * selection is single. The catalogue's clause rules out two unlabelled icons
+ * whose state is a colour, and a named radio group rules that out at least as
+ * firmly as `aria-pressed` would.
  *
  * Below Crystal's small breakpoint the grid becomes a list and the switch goes
  * away, which is the catalogue's "layout switches at a declared breakpoint". It
- * is a **container** query rather than a media query, so it follows the
- * collection's own box: the same collection is a grid in a full-width page and a
- * list in a 320px sidebar of the same window. The breakpoint is Crystal's rather
- * than a prop because a container query's condition cannot read a custom
- * property — a limit rather than a choice, and `$cr-breakpoint-sm` is the right
- * constant to be stuck with. The switch goes away rather than going inert,
- * because a control that cannot change anything is worse than no control.
+ * is a container query, so it follows the collection's own box: the same
+ * collection is a grid in a full-width page and a list in a 320px sidebar of
+ * the same window. The breakpoint is Crystal's `$cr-breakpoint-sm` and not a
+ * prop, because a container query's condition cannot read a custom property.
+ * The switch is removed, not made inert, because a control that cannot change
+ * anything is worse than no control.
  */
 import {
   forwardRef, useState,
@@ -57,12 +55,12 @@ export interface DataViewProps extends Omit<HTMLAttributes<HTMLElement>, 'childr
   onLayoutChange?: (layout: DataViewLayout) => void;
   /** Hide the layout switch, for a collection that only has one arrangement. */
   switchable?: boolean;
-  /** What the two options say. Announced; never left to an icon. */
+  /** What the two options say. Announced, and never left to an icon. */
   listLabel?: string;
   gridLabel?: string;
   /** Smallest grid cell before the grid drops a column. */
   minCellWidth?: string;
-  /** Sorting, paging — whatever belongs above the collection. */
+  /** Whatever belongs above the collection, such as sorting and paging. */
   toolbar?: ReactNode;
   /** Shown instead of the list when there is nothing in it. */
   empty?: ReactNode;
@@ -100,9 +98,8 @@ export const DataView = forwardRef<HTMLElement, DataViewProps>(function DataView
         <div className={styles['toolbar']}>
           <div className={styles['tools']}>{toolbar}</div>
           {switchable ? (
-            /* Crystal's own control rather than a second one that renders the
-               same thing. Named by visible text, so the name a reader hears is
-               the name on the screen. */
+            /* Crystal's own control. Named by visible text, so the name a
+               reader hears is the name on the screen. */
             <SegmentedControl
               label="Layout"
               value={current}
@@ -124,8 +121,8 @@ export const DataView = forwardRef<HTMLElement, DataViewProps>(function DataView
           {loading ? (
             <li aria-hidden="true" className={cx(styles['item'], styles['placeholder'])} />
           ) : (
-            /* An item added after the view first rendered arrives with `list-in`;
-               one removed leaves with `list-out`. */
+            /* An item added after the view first rendered arrives with `list-in`.
+               One removed leaves with `list-out`. */
             <ListPresence>
               {items.map((item) => (
                 <PresenceItem key={item.id} className={styles['item']}>{item.content}</PresenceItem>

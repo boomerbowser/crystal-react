@@ -4,8 +4,8 @@ import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen } from '../../test/render.js';
 import { MultiSelect } from './MultiSelect.js';
 
-/* The accessible name as a reader assembles it, rather than as a matcher
-   summarises it — a matcher given a wrong expectation here still passed. */
+/* The accessible name as a reader assembles it, not as a matcher summarises
+   it. A matcher given a wrong expectation here still passes. */
 const describedName = (element: HTMLElement): string =>
   (element.getAttribute('aria-labelledby') ?? '')
     .split(' ')
@@ -25,11 +25,10 @@ const open = async () => {
 };
 
 describe('MultiSelect', () => {
-  /* The two assertions that matter, and the two the component never had. The
-     first version nested its listbox inside React Aria's `Select`, which owns
-     and replaces the selection of whatever listbox it contains: the rendered
-     listbox had no `aria-multiselectable` and every option read
-     `aria-selected="false"`, however many chips were on screen. */
+  /* React Aria's `Select` owns and replaces the selection of any listbox it
+     contains. A listbox nested inside one has no `aria-multiselectable`, and
+     every option reads `aria-selected="false"` however many chips are on
+     screen. These two assertions catch that. */
   it('announces itself as multi-selectable, and says which options are chosen', async () => {
     renderWithCrystal(<MultiSelect label="Tags" options={TAGS} defaultValue={['design']} />);
     const list = await open();
@@ -72,7 +71,7 @@ describe('MultiSelect', () => {
     expect(screen.getByText(/No options match/)).toBeInTheDocument();
   });
 
-  /* The catalogue's `at-limit` state. The options are disabled rather than
+  /* The catalogue's `at-limit` state. The options are disabled instead of
      removed, so the list does not change shape under the reader. */
   it('stops at the limit and says why', async () => {
     renderWithCrystal(
@@ -81,12 +80,13 @@ describe('MultiSelect', () => {
     await open();
     expect(screen.getByRole('status').textContent).toContain('the most allowed');
     expect(screen.getByRole('option', { name: 'Writing' }).getAttribute('aria-disabled')).toBe('true');
-    /* And the one already chosen stays available, so it can be given back. */
+    /* The one already chosen stays available, so it can be deselected. */
     expect(screen.getByRole('option', { name: 'Design' }).getAttribute('aria-disabled')).not.toBe('true');
   });
 
-  /* Chips are not tab stops — six values would be seven stops before the next
-     field — so the count belongs in the trigger's name, which is reached. */
+  /* Chips are not tab stops, because six values would be seven stops before
+     the next field. The count therefore goes in the trigger's name, which a
+     keyboard user does reach. */
   it('carries the selection in the trigger name', () => {
     renderWithCrystal(
       <MultiSelect label="Tags" options={TAGS} defaultValue={['design', 'writing']} />,

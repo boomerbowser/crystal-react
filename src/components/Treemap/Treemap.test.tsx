@@ -21,7 +21,7 @@ describe('Treemap', () => {
       .toBeInTheDocument();
   });
 
-  /* "Navigable as a tree" — one level at a time, with a way in and a way back. */
+  /* "Navigable as a tree": one level at a time, with a way in and a way back. */
   it('descends into a branch and comes back out', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Treemap label="Spend" root={root} />);
@@ -33,8 +33,8 @@ describe('Treemap', () => {
     expect(screen.getByLabelText(/^Sales,/)).toBeInTheDocument();
   });
 
-  /* A flat list of leaves with no path is the thing the drill-down avoids, so
-     the table carries the branch each leaf is on. */
+  /* The drill-down avoids a flat list of leaves with no path, so the table
+     carries the branch each leaf is on. */
   it('says which branch every leaf is on in the table', () => {
     renderWithCrystal(<Treemap label="Spend" root={root} />);
     expect(screen.getByRole('columnheader', { name: 'Within' })).toBeInTheDocument();

@@ -15,10 +15,10 @@ const meta = {
     docs: {
       description: {
         component:
-          'Ordered events on a Haze connector with Resin markers. An ordered list, because the '
-          + 'order is the meaning — a reader told "list, 4 items" without the numbers has lost the '
-          + 'only thing a timeline adds to a list. The current event carries `aria-current="step"` '
-          + 'and is heavier; the rest say their status in words, because three of the four states '
+          'Ordered events on a Haze connector with Resin markers. It is an ordered list, because '
+          + 'the order is the meaning: a reader told "list, 4 items" without the numbers has lost '
+          + 'what a timeline adds to a list. The current event carries `aria-current="step"` and '
+          + 'is heavier. Every event states its status in words, because three of the four states '
           + 'are otherwise indistinguishable to anyone who cannot compare two small circles by '
           + 'colour. The connector is drawn per event, so it ends exactly where the events do.',
       },
@@ -32,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** An error is a fourth state, not a failure of the list. */
+/** An error is the fourth state of an event. */
 export const WithAnError: Story = {
   args: {
     items: [

@@ -1,29 +1,28 @@
 'use client';
 
-/* Pagination — moving through a paged result set.
+/* Pagination: moving through a paged result set.
  *
- * **Every control says what it is, not what it is drawn as.** A row of bare
- * numbers is a row of unlabelled buttons: "3" announced alone tells a reader
- * nothing about what pressing it does. Each page control is named "Page 3", the
- * arrows are named rather than left to their glyphs, and the current page is
- * additionally marked `aria-current="page"` — which is what distinguishes
- * "where you are" from "where you could go" for someone who cannot see that one
- * pill is heavier than the others.
+ * Every control is named for what it does. A row of bare numbers is a row of
+ * unlabelled buttons: "3" announced alone tells a reader nothing about what
+ * pressing it does. Each page control is named "Page 3", the arrows are named
+ * in words, and the current page is also marked `aria-current="page"`. That
+ * mark tells "where you are" from "where you could go" for someone who cannot
+ * see that one pill is heavier than the others.
  *
- * **The ellipsis is not a control.** It stands for pages that were elided, and
- * it is neither focusable nor announced as an option — a reader tabbing through
- * should meet pages and arrows, not a decoration. It is `aria-hidden`, and the
- * count of elided pages is carried by the page numbers on either side of it,
- * which are real.
+ * The ellipsis is not a control. It stands for pages that were elided, and it
+ * is neither focusable nor announced as an option, so a reader tabbing through
+ * meets only pages and arrows. It is `aria-hidden`, and the page numbers on
+ * either side of it carry the count of elided pages.
  *
- * **Previous and next are disabled at the bounds, not hidden.** A control that
- * disappears at the edge changes the shape of the row and moves every other
- * target; a disabled one keeps the geometry and says why it cannot be used.
+ * Previous and next are disabled at the bounds and stay visible. A control
+ * that disappears at the edge changes the shape of the row and moves every
+ * other target. A disabled one keeps the geometry and says why it cannot be
+ * used.
  *
- * **Elision is computed from a window, not from a fixed pattern.** The first
- * and last page are always shown, because they are the two destinations anyone
- * asks for by name, and a window of neighbours around the current page is shown
- * so the row's width does not change as you move through it.
+ * Elision is computed from a window. The first and last page are always shown,
+ * because they are the two destinations anyone asks for by name, and a window
+ * of neighbours around the current page is shown so the row's width does not
+ * change as you move through it.
  */
 import { Button, type ButtonProps } from 'react-aria-components';
 import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
@@ -51,9 +50,8 @@ export interface PaginationProps {
   className?: string;
 }
 
-/* A gap of exactly one page is rendered as that page rather than as an
-   ellipsis: "1 … 3 4 5" spends the same width as "1 2 3 4 5" and hides a
-   destination behind a decoration. */
+/* A gap of exactly one page is rendered as that page. "1 … 3 4 5" spends the
+   same width as "1 2 3 4 5" and hides a destination behind a decoration. */
 function pagesToShow(total: number, page: number, siblings: number): (number | 'gap')[] {
   const shown = new Set<number>([1, total]);
   for (let offset = -siblings; offset <= siblings; offset += 1) {
@@ -95,9 +93,9 @@ export function Pagination({
         {entries.map((entry, index) => (
           <li key={entry === 'gap' ? `gap-${String(index)}` : entry}>
             {entry === 'gap' ? (
-              /* Not focusable and not announced: it stands for pages that were
-                 elided, and a reader tabbing through should meet pages and
-                 arrows rather than a decoration. */
+              /* Not focusable and not announced. It stands for pages that were
+                 elided, and a reader tabbing through should meet only pages
+                 and arrows. */
               <span className={cx(styles['gap'])} aria-hidden="true">…</span>
             ) : (
               <PageButton
@@ -126,9 +124,9 @@ export function Pagination({
   );
 }
 
-/* A page, playing `selection` when it becomes the current one — by its own
-   press, an arrow, or a page set from outside — and not on the render that
-   first shows it current. */
+/* A page that plays `selection` when it becomes the current one, whether by
+   its own press, an arrow, or a page set from outside. It does not play on the
+   render that first shows it current. */
 function PageButton({ isCurrent, ...props }: ButtonProps & { isCurrent: boolean; 'aria-current'?: 'page' }): React.JSX.Element {
   const scope = useChangeMotion(isCurrent, entered('selection'));
   return <Button ref={scope as never} {...props} />;

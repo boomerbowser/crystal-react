@@ -10,9 +10,9 @@ const meta = {
         component:
           '"Says which permission and why; the request is a real button." Both halves are '
           + 'required props. "You do not have access" names neither, so the reader cannot '
-          + 'tell whether to ask an administrator, switch account, or stop trying — and the '
+          + 'tell whether to ask an administrator, switch account or stop trying, and the '
           + 'person who could grant it does not know what to grant.\n\n'
-          + 'There is no `at-rest` state: a permission screen is always either denied or '
+          + 'There is no `at-rest` state. A permission screen is always either denied or '
           + 'requesting, and `requesting` is a busy state of the button rather than a second '
           + 'screen.',
       },

@@ -12,12 +12,10 @@ describe('TextArea', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* A live region that speaks on every keystroke is a field nobody can use with
-     a screen reader, so the count announces only as the limit approaches — but
-     the region itself exists from the first render, because one that appears at
-     the same moment as its content is not reliably announced. The old test
-     asserted the region was absent before the threshold, which is exactly the
-     behaviour that was wrong. */
+  /* A live region that speaks on every keystroke makes the field unusable with a
+     screen reader, so the count announces only as the limit approaches. The
+     region itself exists from the first render, because one that appears at the
+     same moment as its content is not reliably announced. */
   it('mounts the live region silent and fills it as the limit approaches', async () => {
     renderWithCrystal(<TextArea label="Bio" maxLength={30} />);
     const region = screen.getByRole('status');
@@ -25,7 +23,7 @@ describe('TextArea', () => {
 
     const field = screen.getByRole('textbox', { name: 'Bio' });
     await userEvent.type(field, 'a'.repeat(5));
-    /* Still 25 remaining — nothing to say yet, and the same node is still there. */
+    /* Still 25 remaining, so nothing is said yet, and the same node is still there. */
     expect(screen.getByRole('status')).toBe(region);
     expect(region.textContent).toBe('');
 
@@ -51,10 +49,9 @@ describe('TextArea', () => {
 
 describe('NumberInput', () => {
   /* The catalogue allows either a native number input or a text input with
-     `inputmode` — React Aria takes the second, which is the better half of the
-     choice: a native number input drops values it cannot parse and formats to the
-     browser's locale rather than the document's. What has to be true either way
-     is that the arrow keys step. */
+     `inputmode`. React Aria uses the text input. A native number input drops
+     values it cannot parse and formats to the browser's locale instead of the
+     document's. Either way, the arrow keys must step. */
   it('takes a numeric keypad and steps from the keyboard', async () => {
     const { container } = renderWithCrystal(
       <NumberInput label="Quantity" defaultValue={2} minValue={0} maxValue={10} />,
@@ -68,8 +65,7 @@ describe('NumberInput', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* A control that silently refuses to move is indistinguishable from one that
-     is broken. */
+  /* A control that silently refuses to move looks broken. */
   it('disables the stepper at a bound rather than refusing silently', () => {
     renderWithCrystal(<NumberInput label="Quantity" defaultValue={10} minValue={0} maxValue={10} />);
     expect(screen.getByRole('button', { name: /Increase/i })).toBeDisabled();
@@ -84,19 +80,19 @@ describe('NumberInput', () => {
 });
 
 describe('SearchInput', () => {
-  /* A landmark is a statement about the page, and two of them is worse than
-     none — so it is opt-in. */
+  /* A landmark describes the page, and two search landmarks are worse than none,
+     so it is opt-in. */
   it('emits no landmark unless asked', () => {
     const { container, rerenderWithCrystal } = renderWithCrystal(<SearchInput label="Find" />);
     expect(container.querySelector('search')).toBeNull();
 
-    /* The native `search` element rather than `role="search"`: it is the same
-       landmark, and jsdom's role mapping simply predates the element. */
+    /* Queries the native `search` element instead of `role="search"`. It is the
+       same landmark, and jsdom's role mapping predates the element. */
     rerenderWithCrystal(<SearchInput label="Find" landmark />);
     expect(container.querySelector('search')).not.toBeNull();
   });
 
-  /* A spinner that only spins says nothing to a reader who cannot see it. */
+  /* A spinner alone tells a reader who cannot see it nothing. */
   it('announces that a search is running', () => {
     renderWithCrystal(<SearchInput label="Find" isLoading />);
     expect(screen.getByRole('status').textContent).toBe('Searching');
@@ -104,8 +100,8 @@ describe('SearchInput', () => {
 });
 
 describe('JsonInput', () => {
-  /* The parser's own message names the position. Replacing it with "Invalid JSON"
-     throws away the only part that helps. */
+  /* The parser's own message names the position, so it is reported as is. "Invalid
+     JSON" would lose the position. */
   it('reports the parse error in text, associated with the field', async () => {
     renderWithCrystal(<JsonInput label="Configuration" defaultValue="{ oops }" />);
     const field = screen.getByRole('textbox', { name: 'Configuration' });
@@ -117,8 +113,8 @@ describe('JsonInput', () => {
     expect(message).toMatch(/JSON|token|position/i);
   });
 
-  /* JSON is invalid for almost the whole time it is being typed, so reporting
-     after every character is a field shouting at somebody mid-sentence. */
+  /* JSON is invalid for almost the whole time it is being typed, so the error is
+     not reported after every character. */
   it('stays quiet while it is being typed', async () => {
     renderWithCrystal(<JsonInput label="Configuration" />);
     /* `{` starts a special-key sequence for userEvent, so it is escaped. */

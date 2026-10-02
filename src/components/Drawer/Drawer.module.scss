@@ -1,13 +1,13 @@
 @use '../../styles/tokens' as *;
 
-/* Drawer — a Frost panel anchored to an edge.
+/* Drawer: a Frost panel anchored to an edge.
  *
- * Frost rather than Haze, which is what separates it from a dialog: a dialog is
- * content to be read in the middle of the page and takes an 80% content fill; a
- * drawer is a *surface the page grew*, attached to an edge, and Frost is the
- * diffused intermediate surface. Anything opened from inside it is therefore
- * floating above Frost and is Resin, which is the correct stack and the reason
- * the panel declares it rather than leaving the DOM to imply it.
+ * The panel is Frost, not Haze, and that separates it from a dialog. A dialog is
+ * content to be read in the middle of the page and takes an 80% content fill. A
+ * drawer is a surface the page grew, attached to an edge, and Frost is the
+ * diffused intermediate surface. Anything opened from inside it therefore floats
+ * above Frost and is Resin. The panel declares this instead of leaving the DOM
+ * to imply it.
  */
 
 .scrim {
@@ -19,17 +19,15 @@
 
 /* The holder pins the panel to its edge. The panel itself knows nothing about
    where it is except its radius, which keeps the sweep a pure transform.
-   
-   It spans the whole viewport and aligns the panel, rather than being pinned to
-   one edge and shrinking to fit. Pinning is the obvious spelling and it is wrong
-   on the end edge: a shrink-to-fit box anchors its content at its *start*, so a
-   panel narrower than the box it was given sat 151px clear of the edge it was
-   supposed to be attached to — measured at 1000px wide, where the box resolved
-   to 543 and the panel to 392. Aligning is symmetrical and has no such
-   arithmetic to get wrong.
-   
-   `pointer-events` is the cost of covering the viewport: without it the holder
-   swallows the clicks the scrim needs to dismiss on. */
+
+   The holder spans the whole viewport and aligns the panel. It is not pinned to
+   one edge and shrunk to fit, because a shrink-to-fit box anchors its content
+   at its start, and on the end edge a panel narrower than its box then sits
+   clear of the edge. At 1000px wide the box resolved to 543 and the panel to
+   392, leaving a 151px gap. Aligning is symmetrical and avoids that.
+
+   Because the holder covers the viewport, it needs `pointer-events: none`.
+   Without it the holder swallows the clicks the scrim needs to dismiss on. */
 .modalHolder {
   position: fixed;
   inset: 0;
@@ -62,7 +60,8 @@
 
 /* "Panel radius on the inner edges only." The outer edge is flush against the
    viewport, and rounding it would leave a sliver of page showing through a
-   corner that is supposed to be the screen's own. Logical, so it mirrors. */
+   corner that belongs to the screen. The properties are logical, so they
+   mirror. */
 .panel.start {
   block-size: 100%;
   inline-size: min(#{$cr-layout-sidebar-width} * 1.4, 100%);
@@ -103,10 +102,9 @@
   border-block-end: 0;
 }
 
-/* Not modal: it sits in the layout rather than over it, so it is not fixed, has
-   no scrim above the page, and does not stretch to the viewport. Every rule that
-   would make it *look* modal is absent, which is the point — the appearance and
-   the behaviour say the same thing. */
+/* Not modal. It sits in the layout instead of over it, so it is not fixed, has
+   no scrim above the page, and does not stretch to the viewport. No rule makes
+   it look modal, so the appearance matches the behaviour. */
 .panel.inline {
   position: relative;
   block-size: auto;

@@ -16,8 +16,8 @@ describe('CandlestickChart', () => {
       .toBeInTheDocument();
   });
 
-  /* "Never red and green alone": the direction is a fill as well as a colour —
-     hollow rose, filled fell — and it is a word in the label and in the table. */
+  /* "Never red and green alone": the direction is a fill as well as a colour
+     (hollow rose, filled fell), and a word in the label and in the table. */
   it('carries the direction as a fill and as a word, not only as a colour', () => {
     const { container } = renderWithCrystal(<CandlestickChart label="Price" candles={candles} />);
     const directions = Array.from(container.querySelectorAll('[data-direction]'))

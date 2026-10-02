@@ -9,9 +9,9 @@ describe('PasswordInput', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* Every part of the catalogue's sentence is a mistake somebody has shipped: a
-     div that cannot be reached by keyboard, a toggle that announces the same
-     thing in both states, and an eye icon that says nothing at all. */
+  /* Each part of the catalogue's sentence prevents a known failure: a div that
+     cannot be reached by keyboard, a toggle that announces the same thing in
+     both states, and an eye icon that says nothing at all. */
   it('has a named toggle that says which state it is in', async () => {
     renderWithCrystal(<PasswordInput label="Password" reveals="the password" />);
     const toggle = screen.getByRole('button', { name: 'Show the password' });
@@ -30,7 +30,7 @@ describe('PasswordInput', () => {
   });
 
   /* A bar that is longer or shorter is meaningless to a reader who cannot see it
-     and imprecise to one who can, so the word is the meaning. */
+     and imprecise to one who can, so the word carries the meaning. */
   it('says the strength in words, not only as a bar', () => {
     renderWithCrystal(
       <PasswordInput label="Password" strength={{ score: 0.3, label: 'Weak', tone: 'danger' }} />,

@@ -18,7 +18,7 @@ describe('Review', () => {
   });
 
   /* A review with no attribution is an assertion from nobody, and one with no
-     date is from any time — both change how much weight it should carry. */
+     date is from any time. Both change how much weight it should carry. */
   it('marks the date up as a date', () => {
     const { container } = renderWithCrystal(
       <Review author="Ada" date="2 October 2026" dateTime="2026-10-02">Good.</Review>,
@@ -27,9 +27,9 @@ describe('Review', () => {
     expect(screen.getByText('Ada')).toBeInTheDocument();
   });
 
-  /* A review clipped with an ellipsis and no way to open it is a review the
-     reader is told exists and cannot read. The hidden text stays in the
-     document, so a screen reader and a page search both find it. */
+  /* A review clipped with an ellipsis and no way to open it cannot be read.
+     The hidden text stays in the document, so a screen reader and a page
+     search both find it. */
   it('offers a control to read a collapsed review, and keeps the text', async () => {
     const user = userEvent.setup();
     renderWithCrystal(

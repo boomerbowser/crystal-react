@@ -1,20 +1,22 @@
 'use client';
 
-/* SemiCircleProgress — a half-ring showing progress toward a value.
+/* SemiCircleProgress.
+ *
+ * A half-ring showing progress toward a value.
  *
  * "Stroke matches the ring progress contract", so it reads the same
- * `--cr-progress-ring-stroke` and the same arc generator. What differs is only
- * the sweep: half a turn, drawn from nine o'clock to three.
+ * `--cr-progress-ring-stroke` and the same arc generator. Only the sweep
+ * differs: half a turn, drawn from nine o'clock to three.
  *
- * "role=progressbar **with a text value beside it**" — the catalogue asks for
- * the value in words on the screen, not only in the accessible tree, which is
- * why `valueLabel` is rendered rather than merely announced.
+ * "role=progressbar **with a text value beside it**". The catalogue asks for the
+ * value in words on the screen as well as in the accessible tree, so
+ * `valueLabel` is rendered as well as announced.
  *
- * A half-ring has no honest indeterminate state and the catalogue lists one
- * anyway, so it is drawn the only way that does not lie: the whole arc at
- * reduced strength, with the busy label where the number would be. Nothing
- * travels along a half circle, because a segment sliding from one end to the
- * other and jumping back reads as a value that reset.
+ * The catalogue lists an indeterminate state, which a half-ring has no natural
+ * way to show. It is drawn as the whole arc at reduced strength, with the busy
+ * label where the number would be. Nothing travels along a half circle, because
+ * a segment sliding from one end to the other and jumping back reads as a value
+ * that reset.
  */
 import {
   forwardRef, useEffect, useId, useRef, type HTMLAttributes, type ReactNode,
@@ -102,8 +104,8 @@ export const SemiCircleProgress = forwardRef<HTMLDivElement, SemiCircleProgressP
             </g>
           </svg>
         </div>
-        {/* Beside it, on the screen — the catalogue's words, and the reason this
-            is rendered rather than only announced. */}
+        {/* "Beside it", in the catalogue's words, so the value is rendered on the
+            screen as well as announced. */}
         <p className={styles['readout']}>
           <span className={cx(styles['label'], hideLabel && styles['hidden'])} id={`${id}-label`}>
             {label}

@@ -1,6 +1,6 @@
 'use client';
 
-/* Accordion — disclosure rows.
+/* Accordion: disclosure rows.
  *
  * React Aria owns the part that is easy to get subtly wrong: the header is a
  * real button carrying `aria-expanded` and `aria-controls`, the panel is
@@ -9,8 +9,8 @@
  * what makes "only one at a time" a property of the group rather than five rows
  * each watching the others.
  *
- * It also answers the catalogue's quietest line — "content is not hidden from
- * search when collapsed unless intended" — by hiding the panel with
+ * It also answers the catalogue's quietest line ("content is not hidden from
+ * search when collapsed unless intended") by hiding the panel with
  * `hidden="until-found"` rather than `display: none`, so find-in-page still
  * reaches a collapsed answer and opens the row on the way. That is not something
  * this library had to add; it is the reason to use React Aria's disclosure rather
@@ -18,27 +18,26 @@
  *
  * Crystal owns the material and three rules:
  *
- *   - **The header meets 44px.** It is the whole row's press target, so the
- *     padding is what reaches the floor rather than a grown hit area — there is
+ *   - The header meets 44px. It is the whole row's press target, so the
+ *     padding reaches the floor rather than a grown hit area. There is
  *     nothing beside it to overlap.
- *   - **The chevron's rotation is a CSS end state.** `icon-turn` plays on the
- *     chevron *and only the chevron*: the recipe is a rotate-and-scale torsion,
+ *   - The chevron's rotation is a CSS end state. `icon-turn` plays on the
+ *     chevron and only the chevron. The recipe is a rotate-and-scale torsion,
  *     and on the header button it would turn the title with it. The turned
- *     chevron is correct at rest whether or not the recipe ran — a
+ *     chevron is correct at rest whether or not the recipe ran. A
  *     reduced-motion reader, a re-render mid-animation and a server-rendered
  *     expanded row all need that. This is the rule `Burger` established.
- *   - **`accordion-in` plays on the content, not on the panel.** Crystal's recipe
- *     is a clip and a fade — "animate visible content after expanding; no
- *     scripted height measurement needed" — which is a different mechanism from
+ *   - `accordion-in` plays on the content, not on the panel. Crystal's recipe
+ *     is a clip and a fade ("animate visible content after expanding; no
+ *     scripted height measurement needed"), a different mechanism from
  *     React Aria's `--disclosure-panel-height`, and the two do not need to agree.
  *
  * `accordion-out` plays on the content as the row closes, and the panel is held
- * open until it has — Crystal's note on the recipe is "hide content after
- * completion". React Aria applies `hidden` once the *panel's own* animations
+ * open until it has. Crystal's note on the recipe is "hide content after
+ * completion". React Aria applies `hidden` once the panel's own animations
  * settle, checked from a layout effect in the disclosure, which runs after this
- * content's; so the content registers a hold on the panel first (`Departure`),
- * and React Aria waits for it. This was recorded as impossible until the same
- * mechanism was found under React Aria's overlays.
+ * content's, so the content registers a hold on the panel first (`Departure`),
+ * and React Aria waits for it.
  */
 import { useEffect, useRef, type ReactNode } from 'react';
 import {
@@ -92,7 +91,7 @@ function Content({ isExpanded, children }: { isExpanded: boolean; children: Reac
 
 function Row({ item }: { item: AccordionItem }): ReactNode {
   /* The scope is on the chevron. `icon-turn` is a rotate-and-scale torsion, and
-     on the button it would turn the title with it — and leave the final keyframe
+     on the button it would turn the title with it, leaving the final keyframe
      applied there afterwards. */
   const [chevron, turn] = useMotion();
 

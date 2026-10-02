@@ -1,12 +1,11 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* ComboBox and Autocomplete — a field with a filtered list beneath it.
+/* ComboBox and Autocomplete. A field with a filtered list beneath it.
  *
  * The list is Frost, like every transient overlay in Crystal. The row treatment
- * is the same as Select's, and deliberately so: a person who has learned what a
- * chosen row looks like in one list should not have to learn it again in
- * another.
+ * matches Select's, so a person who has learned what a chosen row looks like in
+ * one list does not have to learn it again in another.
  */
 
 .field { @include field.field; }
@@ -17,10 +16,10 @@
 .control:focus { outline: none; }
 .shell:focus-within { @include field.focus-ring; }
 /* Two selectors for one state. The shell carries `data-invalid` when this
-   component set it; the field wrapper carries it when React Aria worked it out —
-   a native constraint, or an error a `Form` distributed from a server. Styling
-   only the first meant a field could be announced as invalid and drawn as if it
-   were fine. */
+   component set it. The field wrapper carries it when React Aria worked it out
+   from a native constraint or an error a `Form` distributed from a server.
+   Styling only the first would let a field be announced as invalid and drawn as
+   if it were fine. */
 .shell[data-invalid],
 .field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
 
@@ -28,10 +27,10 @@
 .trigger svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
 .popover {
-  /* The panel is Crystal's `.cr-frost`, which the popover wears: the Frost fill,
-     the rim, the panel shadow and the diffusion. This painted the fill with the
-     float shadow and an edge — Resin's shadow on Frost's fill — and it is gone.
-     The catalogue's popover geometry is the content radius, stated here. */
+  /* The popover wears Crystal's `.cr-frost`, which supplies the Frost fill, the
+     rim, the panel shadow and the diffusion. Do not add the float shadow or an
+     edge here; that is Resin's shadow on Frost's fill. The catalogue's popover
+     geometry is the content radius, stated here. */
   min-inline-size: var(--trigger-width);
   max-block-size: 40vh;
   padding: $cr-spacing-2xs;
@@ -58,8 +57,8 @@
 .option[data-selected][data-focused] { background: var(--cr-primary-soft); }
 .optionDescription { font-weight: 400; font-size: var(--cr-text-caption-size); color: var(--cr-muted); }
 
-/* Empty and loading are surfaces of their own rather than a blank popover: a list
-   that shows nothing is indistinguishable from one that is still thinking. */
+/* Empty and loading are surfaces of their own instead of a blank popover. A list
+   that shows nothing cannot be told apart from one that is still loading. */
 .state {
   display: flex;
   align-items: center;

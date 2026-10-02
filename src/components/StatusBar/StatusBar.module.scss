@@ -1,10 +1,10 @@
 @use '../../styles/tokens' as *;
 
-/* "Full-bleed; text stays crisp." Both come from core's `.cr-stone`, which is
-   why this component wears that class rather than a mixin of its own: Stone's
-   feather lives on an isolated `::before` at `z-index: -1`, so the backing is
-   soft and the label on top of it is not. Feathering the element itself would
-   feather the text with it, which is the failure the recipe exists to avoid. */
+/* "Full-bleed; text stays crisp." Both come from core's `.cr-stone`, so this
+   component wears that class rather than a mixin of its own. Stone's feather
+   lives on an isolated `::before` at `z-index: -1`, so the backing is soft and
+   the label on top of it is not. Feathering the element itself would feather
+   the text with it. */
 .bar {
   display: flex;
   align-items: center;

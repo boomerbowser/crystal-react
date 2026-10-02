@@ -1,12 +1,10 @@
-/* Collapse — "Material: inherits. Geometry: inherits."
+/* Collapse. "Material: inherits. Geometry: inherits."
  *
- * The catalogue says both, and this file is what taking that seriously looks
- * like: a collapse is a region that appears and disappears, not a surface. It
- * paints nothing, so whatever it is placed inside keeps its own material and its
- * own radius, and a collapse inside a Resin panel does not quietly introduce a
- * second box.
+ * A collapse is a region that appears and disappears, not a surface. It paints
+ * nothing, so whatever it is placed inside keeps its own material and radius,
+ * and a collapse inside a Resin panel adds no second box.
  *
- * `overflow: hidden` is the one thing it does own. The recipe animates height,
+ * `overflow: hidden` is the one property it owns. The recipe animates height,
  * and content that spilled past the animating box would jump.
  */
 

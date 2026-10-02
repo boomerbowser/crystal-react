@@ -1,12 +1,12 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* Timeline — "Resin markers on a Haze connector", 2px.
+/* Timeline: "Resin markers on a Haze connector", 2px.
  *
- * The connector is drawn behind the markers rather than between them, which is
- * what keeps it unbroken when an event's body is taller than another's. It stops
- * at the last marker's centre, because a line continuing past the final event
- * promises one that is not there.
+ * The connector is drawn behind the markers instead of between them, so it stays
+ * unbroken when one event's body is taller than another's. It stops at the last
+ * marker's centre, because a line continuing past the final event implies
+ * another event.
  */
 
 .timeline {
@@ -27,9 +27,9 @@
   align-items: start;
 }
 
-/* The connector, per event rather than per list: an event that is not the last
-   one carries the segment reaching down to the next marker, so the line ends
-   exactly where the events do. */
+/* The connector is drawn per event. Every event except the last carries the
+   segment reaching down to the next marker, so the line ends exactly where the
+   events do. */
 .event:not(:last-child)::before {
   content: '';
   position: absolute;
@@ -63,8 +63,8 @@
 
 .body { display: flex; flex-direction: column; gap: $cr-spacing-2xs; }
 
-/* The current event is heavier. Weight, not colour: it is the same rule that
-   carries selection everywhere else in Crystal. */
+/* The current event is marked by a heavier weight, the same rule that carries
+   selection everywhere else in Crystal. */
 .title { color: var(--cr-text); font-weight: 650; }
 .event[data-status='current'] .title { font-weight: 800; }
 

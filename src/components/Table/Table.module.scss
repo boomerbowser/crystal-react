@@ -1,19 +1,18 @@
 @use '../../styles/tokens' as *;
 
-/* Table — Crystal's own recipe, value for value.
+/* Table. Crystal's own recipe, value for value.
  *
- * `crystal.css` already carries a complete `.cr-table` treatment, so this file
- * follows it rather than choosing again: a Resin shell with the content shadow,
- * a Haze fill inset **6px** — not the usual 8, which is what the shell's own
- * rule says and the one value here most likely to be "corrected" by somebody
- * reading the Haze default — hairline `--cr-edge` separators, 14px/18px cells,
- * and a primary-soft header band whose top corners are inset 8px from the
- * shell's radius. The last one is the catalogue's "header corners inset 8px",
- * and `calc(var(--cr-radius) - 8px)` is how it stays right when the radius
- * slider moves.
+ * `crystal.css` already carries a complete `.cr-table` treatment, and this file
+ * follows it: a Resin shell with the content shadow, a Haze fill inset 6px,
+ * hairline `--cr-edge` separators, 14px/18px cells, and a primary-soft header
+ * band whose top corners are inset 8px from the shell's radius. The Haze inset
+ * is 6px rather than the usual 8 because the shell's own rule says so. Do not
+ * "correct" it to the Haze default. The header inset is the catalogue's "header
+ * corners inset 8px", and `calc(var(--cr-radius) - 8px)` keeps it right when the
+ * radius slider moves.
  *
  * The header band is the one place in this library where `--cr-primary-soft` is
- * a *surface* rather than a ring, and it is paired with `--cr-on-primary-soft`,
+ * a surface rather than a ring, and it is paired with `--cr-on-primary-soft`,
  * which is the ink tested against it. Both come from Crystal's rule.
  *
  * The scrollbar comes from `.cr-table-scroll` in the library stylesheet, which
@@ -29,12 +28,10 @@ $table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewpor
 
 /* The frame is Crystal's `.cr-table-scroll`: the Resin frame, the rim, the
    content shadow, the 6px-inset Haze fill under the rows, the Resin scrollbar,
-   contained overscroll, and both fallbacks. This file restated every one of those
-   beside the class, down to a literal for the inset with an exemption saying it
-   was core's — two copies of a recipe with one of them able to drift. Its focus
-   ring is Crystal's too, which reaches any element with a tab index. What stays
-   is the gutter, which Crystal does not set and a table whose rows arrive after
-   it renders needs. */
+   contained overscroll, and both fallbacks. Do not restate them here, where a
+   copy could drift. Its focus ring is Crystal's too, which reaches any element
+   with a tab index. This file sets only the gutter, which Crystal does not set
+   and which a table whose rows arrive after it renders needs. */
 .shell {
   display: block;
   scrollbar-gutter: stable;

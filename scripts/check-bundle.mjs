@@ -1,10 +1,8 @@
 /* Fail if the build vendored a dependency.
  *
- * Twice now a dependency has been silently inlined into `dist/` because it was
- * missing from the externals list — `@crystal-ui/core` first, then Motion. Both
- * times the build succeeded and said nothing, and vendoring `@crystal-ui/core` in
- * particular breaks CONTRACT §1: a consumer would resolve two copies of the token
- * set, which can then drift.
+ * A dependency missing from the externals list is inlined into `dist/` and the
+ * build reports nothing. Vendoring `@crystal-ui/core` breaks CONTRACT §1: a
+ * consumer resolves two copies of the token set, which can then drift.
  *
  * A bundled dependency leaves `node_modules` in the output paths, so that is the
  * signal.

@@ -8,17 +8,16 @@ const meta = {
     docs: {
       description: {
         component:
-          '`role="meter"` with the target stated in text, which is the whole difference between '
-          + 'this and a progress bar: a bullet chart is a *reading against a target*, and the '
-          + 'target is the point. A reader told "62" has been told nothing; "62 of a target of '
-          + '80, acceptable" is the sentence the picture is drawing, so that sentence is on the '
-          + 'screen as well as in the meter.\n\n'
+          '`role="meter"` with the target stated in text. This is what separates it from a '
+          + 'progress bar: a bullet chart is a reading against a target. "62" alone tells a '
+          + 'reader nothing, so the text "62 of a target of 80, acceptable" is on the screen as '
+          + 'well as in the meter.\n\n'
           + '"The target is a crisp marker, not a bar." A bar drawn to the target would be a '
-          + 'second measurement, and the eye would compare two lengths rather than a length '
+          + 'second measurement, and the eye would compare two lengths instead of a length '
           + 'against a line.\n\n'
-          + '"Haze range bands" — the qualitative ranges are steps of Crystal\'s intensity ramp, '
-          + 'so "acceptable" and "good" are a scale rather than three colours somebody chose. '
-          + 'Every band is named, because a band with no name is a colour.',
+          + '"Haze range bands": the qualitative ranges are steps of Crystal\'s intensity ramp, '
+          + 'so "acceptable" and "good" read as a scale. Every band is named, because an '
+          + 'unnamed band carries meaning by colour alone.',
       },
     },
   },

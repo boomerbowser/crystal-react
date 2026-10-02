@@ -2,20 +2,19 @@
 
 /* JsonInput.
  *
- * A textarea that validates and formats JSON. The whole component is one
- * accessibility rule from the catalogue: **parse errors are described in text and
- * associated with the field.**
+ * A textarea that validates and formats JSON. It implements one accessibility
+ * rule from the catalogue: parse errors are described in text and associated
+ * with the field.
  *
  * A red border on a syntax error tells the reader something is wrong and nothing
- * about what. `JSON.parse` already produces a message naming the position — "Unexpected
- * token } in JSON at position 41" — and passing that through is the difference
- * between a field a person can fix and one they have to stare at. It is
- * associated through the field's own error message, so it is announced rather
- * than only drawn.
+ * about what. `JSON.parse` already produces a message naming the position, such
+ * as "Unexpected token } in JSON at position 41", and passing that through lets
+ * a person find and fix the error. It is associated through the field's own
+ * error message, so it is announced as well as drawn.
  *
- * Validation is on **blur**, not on every keystroke. JSON is invalid for almost
- * the whole time it is being typed, and a field that reports an error after every
- * character is a field shouting at somebody who is halfway through a sentence.
+ * Validation runs on blur, not on every keystroke. JSON is invalid for almost
+ * the whole time it is being typed, and an error after every character
+ * interrupts somebody who is halfway through a sentence.
  */
 import { useCallback, useState, type ReactNode } from 'react';
 import { TextArea } from '../TextArea/TextArea.js';
@@ -57,9 +56,9 @@ export function JsonInput({
     if (!text.trim()) { setError(null); return; }
     try {
       /* Parsed before the callback, not inside it. `onValidChange?.(JSON.parse(text))`
-         looks equivalent and is not: optional call short-circuits its arguments,
-         so with no callback attached the parse never ran — a JsonInput with no
-         `onValidChange` silently validated nothing. The test is what found it. */
+         is not equivalent: optional call short-circuits its arguments, so with
+         no callback attached the parse never runs, and a JsonInput with no
+         `onValidChange` would validate nothing. */
       const parsed: unknown = JSON.parse(text);
       onValidChange?.(parsed);
       setError(null);

@@ -1,36 +1,34 @@
 'use client';
 
-/* SortSelect — an ordering, announced when it changes.
+/* SortSelect.
  *
- * "A select **whose current ordering is announced on change**."
+ * An ordering, announced when it changes.
  *
- * That sentence exists because of what a sort control does to the page around
- * it. Pressing it silently rewrites a list of products that the reader is not
- * looking at — a sighted reader sees the list flip and knows it worked; a reader
- * using a screen reader hears the select close and then nothing, and has to
+ * "A select whose current ordering is announced on change."
+ *
+ * Pressing a sort control silently rewrites a list of products that the reader
+ * is not looking at. A sighted reader sees the list flip and knows it worked. A
+ * screen reader user hears the select close and then nothing, and has to
  * navigate back into the list to find out whether anything happened. The select
- * itself announces its own value, but a select's value and "the list beneath you
- * has been reordered" are not the same statement.
+ * announces its own value, which does not tell the reader that the list beneath
+ * them has been reordered.
  *
- * So the ordering is said, in a polite live region, on a change and never on
- * mount — a list that arrives sorted has not been reordered.
+ * So the ordering is announced in a polite live region on a change, and never on
+ * mount, because a list that arrives sorted has not been reordered.
  *
- * **Said after the reorder, not before it.** This component does not own the
- * list, so the only moment it can honestly claim the list has moved is when the
- * handler that moves it has finished. Most orderings are a round trip to a
- * server, and announcing on the press would be announcing a state of the world
- * that has not arrived yet — a reader told "sorted by newest" who then arrives
- * at the old list has been told something false by the one thing in the page
- * whose job was to tell them the truth. So `onSelectionChange` may return a
- * promise, and the announcement waits for it.
+ * The announcement comes after the reorder. This component does not own the
+ * list, so it can only claim the list has moved once the handler that moves it
+ * has finished. Most orderings are a round trip to a server, and announcing on
+ * the press could tell a reader "sorted by newest" before they arrive at the old
+ * list. So `onSelectionChange` may return a promise, and the announcement waits
+ * for it.
  *
- * If it rejects, nothing is said: a sort that failed is the product's to report,
- * and this component saying it succeeded would be worse than silence.
+ * If it rejects, nothing is said. A sort that failed is the product's to report,
+ * and this component must not say it succeeded.
  *
- * Everything else is `Select`. This is deliberately thin: the field materials,
- * the trigger geometry, the listbox, the keyboard behaviour and the validation
- * recipes all already exist, and a second select that drew its own would be a
- * second select to keep in step.
+ * Everything else is `Select`. The field materials, the trigger geometry, the
+ * listbox, the keyboard behaviour and the validation recipes already exist
+ * there, and a second select that drew its own would have to be kept in step.
  */
 import { useCallback, useRef, useState, type ReactNode } from 'react';
 import type { Key } from 'react-aria-components';
@@ -41,9 +39,9 @@ export interface SortSelectProps extends Omit<SelectProps, 'label' | 'onSelectio
   /** What is being ordered. Defaults to "Sort by". */
   label?: ReactNode;
   /**
-   * Reorder the list. May return a promise; the announcement waits for it, so
-   * a server-side ordering is announced when it has actually happened rather
-   * than when it was asked for.
+   * Reorder the list. May return a promise. The announcement waits for it, so
+   * a server-side ordering is announced when it has happened, not when it was
+   * asked for.
    */
   onSelectionChange?: (value: Key | null) => void | Promise<void>;
   /**
@@ -58,7 +56,7 @@ export function SortSelect({
 }: SortSelectProps): React.JSX.Element {
   const [said, setSaid] = useState('');
   /* Held in a ref so the callback below does not have to be rebuilt whenever the
-     caller passes a new closure — the same reason `Toast` holds `onDismiss`. */
+     caller passes a new closure. `Toast` holds `onDismiss` for the same reason. */
   const notify = useRef(onSelectionChange);
   notify.current = onSelectionChange;
 

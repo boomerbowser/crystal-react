@@ -18,8 +18,8 @@ describe('PaymentMethod', () => {
 
   /* "Card fields are never reimplemented." A card number typed into an input
      this library rendered would put every product using Crystal inside PCI
-     scope, because the data touched their page in the clear. The failure does
-     not look like one — it would work, and look right, and pass everything. */
+     scope, because the data touched their page in the clear. Such a field would
+     work, look right and pass every other test, so this test checks for it. */
   it('renders no card field of its own', () => {
     const { container } = renderWithCrystal(
       <PaymentMethod methods={methods} provider={<div data-testid="provider" />} value="new" />,
@@ -33,8 +33,8 @@ describe('PaymentMethod', () => {
   });
 
   /* A provider's element is an iframe talking to a payment processor. Four of
-     them behind unchosen options is four sessions opened for nothing, and one
-     of them is focusable inside a card the reader did not pick. */
+     them behind unchosen options would open four sessions for nothing, and one
+     of them would be focusable inside a card the reader did not pick. */
   it('mounts the provider element only while it is chosen', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <PaymentMethod methods={methods} provider={<div data-testid="provider" />} value="visa" />,
@@ -47,10 +47,9 @@ describe('PaymentMethod', () => {
     expect(screen.getByTestId('provider')).toBeInTheDocument();
   });
 
-  /* The same question asked the other way round. The group's props offer
-     `defaultValue` as well as `value`, and a component that reads only the
-     controlled one is selectable, looks chosen, and mounts nothing — a failure
-     with no error, no warning and nothing on screen to notice. */
+  /* The group's props offer `defaultValue` as well as `value`. A component that
+     reads only the controlled one is selectable, looks chosen and mounts
+     nothing, with no error or warning. */
   it('mounts the provider element for an uncontrolled group too', async () => {
     const user = userEvent.setup();
     renderWithCrystal(

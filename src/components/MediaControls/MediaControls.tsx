@@ -1,26 +1,25 @@
 'use client';
 
-/* MediaControls — the shared transport, used by both players.
+/* MediaControls: the shared transport, used by both players.
  *
- * "Each control is a button with a name; **play and pause are one toggle with a
- * pressed state**." One button, not two swapped by state: two buttons means the
- * one a reader has focused disappears under them the moment they press it, and
- * focus falls to the document. A toggle stays put, keeps focus, and says what
- * changed — "Play, pressed" is how a screen reader announces "playing".
+ * "Each control is a button with a name; play and pause are one toggle with a
+ * pressed state." With two buttons swapped by state, the one a reader has
+ * focused disappears when they press it, and focus falls to the document. A
+ * toggle stays in place, keeps focus, and reports the change: a screen reader
+ * announces "playing" as "Play, pressed".
  *
- * "The scrubber is a **slider announcing time, not a progress bar**." A progress
- * bar reports; a slider is operated, and the whole point of a scrubber is that a
- * person moves it. It also has to *say* a time: `1:23` is right on the screen
- * and wrong in an announcement, where it reads as "one colon twenty-three". So
- * the display takes `formatTime` and the thumb takes `speakPosition`, and
- * `src/media/time.ts` owns both so the two players cannot format a second
- * differently.
+ * "The scrubber is a slider announcing time, not a progress bar." A progress
+ * bar only reports, and a scrubber is something a person moves. It also has to
+ * speak a time: `1:23` is right on the screen and wrong in an announcement,
+ * where it reads as "one colon twenty-three". The display takes `formatTime` and
+ * the thumb takes `speakPosition`, and `src/media/time.ts` owns both so the two
+ * players cannot format a second differently.
  *
- * "Pill; 44px targets throughout" — the bar is a Resin pill and every control in
- * it is an `IconButton`, which is where the target floor already lives.
+ * "Pill; 44px targets throughout." The bar is a Resin pill and every control in
+ * it is an `IconButton`, which already has the target floor.
  *
- * Buffering is announced rather than only drawn. A spinner on a control bar is
- * information a sighted reader gets for free and nobody else gets at all.
+ * Buffering is announced as well as drawn. A spinner on a control bar reaches
+ * only sighted readers.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { IconButton } from '../IconButton/IconButton.js';
@@ -31,9 +30,9 @@ import styles from './MediaControls.module.scss';
 
 export interface MediaControlsProps
   /* `onVolumeChange` is also a DOM media event, and a `<div>` inherits the
-     handler for it. Ours takes a number; React's takes an event. Dropped from
-     the inherited set rather than renamed, because "the volume changed" is what
-     this prop is called everywhere a person would look for it. */
+     handler for it. Ours takes a number and React's takes an event. It is
+     dropped from the inherited set instead of renamed, because `onVolumeChange`
+     is the name a person would look for. */
   extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onVolumeChange'> {
   isPlaying: boolean;
   onPlayPause: () => void;
@@ -41,7 +40,7 @@ export interface MediaControlsProps
   currentTime: number;
   duration: number;
   onSeek: (to: number) => void;
-  /** Waiting for data — not the same as paused, and said so. */
+  /** Waiting for data. This differs from paused, and is announced. */
   isBuffering?: boolean;
   isMuted?: boolean;
   onMuteToggle?: () => void;
@@ -51,7 +50,7 @@ export interface MediaControlsProps
   /** Seconds to jump. Omit and the skip controls do not appear. */
   skipBy?: number;
   onSkip?: (seconds: number) => void;
-  /** Extra controls at the end of the bar — captions, full screen, a playlist. */
+  /** Extra controls at the end of the bar, such as captions, full screen or a playlist. */
   children?: ReactNode;
   /** What is being played, for the controls' names. */
   mediaLabel?: string;
@@ -101,8 +100,8 @@ export const MediaControls = forwardRef<HTMLDivElement, MediaControlsProps>(
   }, ref): ReactNode {
     const of = mediaLabel ? ` ${mediaLabel}` : '';
     /* Before the metadata arrives there is no duration, and a scrubber with a
-       range of nought is a control that cannot be operated. It is disabled and
-       says so, rather than pretending to a length nobody knows yet. */
+       range of nought cannot be operated. It is disabled and says so, instead
+       of claiming a length nobody knows yet. */
     const known = Number.isFinite(duration) && duration > 0;
 
     return (
@@ -115,10 +114,9 @@ export const MediaControls = forwardRef<HTMLDivElement, MediaControlsProps>(
           />
         ) : null}
 
-        {/* One toggle. Its name stays "Play" and its pressed state is what
-            changes — a button whose name and icon both change is two controls
-            wearing one element, and the reader who pressed it has to work out
-            which one they now have. */}
+        {/* One toggle. Its name stays "Play" and its pressed state changes. If
+            both the name and the icon changed, the reader who pressed it would
+            have to work out which control they now have. */}
         <IconButton
           label={`Play${of}`}
           icon={isPlaying ? PauseIcon : PlayIcon}
@@ -179,9 +177,9 @@ export const MediaControls = forwardRef<HTMLDivElement, MediaControlsProps>(
 
         {children}
 
-        {/* Said, not only drawn. A spinner on the bar is information a sighted
-            reader gets for free and nobody else gets at all. Polite, because the
-            reader is waiting rather than being interrupted. */}
+        {/* Announced as well as drawn, because a spinner on the bar reaches only
+            sighted readers. Polite, because the reader is waiting and should not
+            be interrupted. */}
         <span role="status" className={styles['announcement']}>
           {isBuffering ? `Buffering at ${speakTime(currentTime)}` : ''}
         </span>

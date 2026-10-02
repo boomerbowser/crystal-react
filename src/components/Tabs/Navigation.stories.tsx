@@ -29,8 +29,8 @@ const docs = [
 
 const meta = {
   title: 'Navigation/Tabs and breadcrumbs',
-  /* Without this docgen has nothing to read and Storybook generates no controls
-     at all — which is the message Meridian screenshotted on this very story. */
+  /* Without this, docgen has nothing to read and Storybook generates no
+     controls for this story. */
   component: Tabs,
   args: {
     items: docs,
@@ -38,8 +38,7 @@ const meta = {
     labelVisible: false,
     orientation: 'horizontal' as const,
     /* A spy rather than a no-op, so the Actions panel shows what fired and with
-       what. For a tab list that is the whole contract: the strip's job is to
-       report which view was picked. */
+       what. The strip's job is to report which view was picked. */
     onSelectionChange: fn(),
   },
   argTypes: {
@@ -92,10 +91,9 @@ export const TabStrip: Story = {
 export const TabKeyboard: Story = {
   name: 'Keyboard navigation',
   render: (args) => <Tabs {...only(args)} />,
-  /* The Interactions panel, and the first thing in this library that watches a
-     keyboard in a real browser. A tab list's arrow-key model is the part jsdom
-     cannot answer for: the unit tests assert what React Aria reports, and this
-     asserts what a person pressing Right actually gets. */
+  /* Runs in the Interactions panel and drives the keyboard in a real browser.
+     jsdom cannot test a tab list's arrow-key model: the unit tests assert what
+     React Aria reports, and this asserts what a person pressing Right gets. */
   play: async ({ canvasElement, args, step }) => {
     const canvas = within(canvasElement);
     await step('the first tab is selected and carries the weight', async () => {
@@ -133,9 +131,8 @@ export const WithADisabledTab: Story = {
   render: (args) => <Tabs {...only(args)} />,
 };
 
-/* The same strip, the other semantics. Side by side because the pair is the
-   thing worth seeing: identical material, and a screen reader is told two
-   entirely different stories. */
+/* The same strip with the other semantics, side by side. The material is
+   identical, and a screen reader is told two different things. */
 export const TheSameStripWithDifferentSemantics: Story = {
   render: () => (
     <Stack gap="lg">
@@ -166,14 +163,14 @@ export const Trail: Story = {
 };
 
 /* Collapsed. What is hidden goes into a menu that says how many it holds, and
-   every collapsed crumb is still a real anchor — middle-click, open in a new
-   tab, the status bar showing where it goes. */
+   every collapsed crumb is still a real anchor, so middle-click, open in a new
+   tab and the status bar's destination all work. */
 export const CollapsedTrail: Story = {
   render: () => <Breadcrumbs items={trail} maxItems={3} />,
 };
 
 /* Going a level deeper adds a crumb, and the new crumb arrives with Crystal's
-   `breadcrumb` — the ones the page loaded with do not move. */
+   `breadcrumb`. The ones the page loaded with do not move. */
 export const GoingDeeper: Story = {
   render: function GoingDeeperStory() {
     const [depth, setDepth] = useState(trail.length);

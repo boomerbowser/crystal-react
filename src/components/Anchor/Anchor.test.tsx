@@ -23,18 +23,16 @@ describe('Anchor', () => {
   });
 
   /* The underline is the second, non-chromatic signal that distinguishes a link
-     from the sentence around it — WCAG 1.4.1 — so it is present at rest and not
+     from the sentence around it (WCAG 1.4.1), so it is present at rest and not
      only on hover.
-     
-     Read as the shorthand, and that is not a style choice. Vitest is configured
-     with `css: true`, so the module stylesheet really is applied here, but jsdom
+
+     Read as the shorthand, not the longhand. Vitest is configured with
+     `css: true`, so the module stylesheet really is applied here, but jsdom
      does not derive longhands from a shorthand: `textDecoration` answers
      "underline" and `textDecorationLine` answers "none" for the same element.
-     The first attempt at this test read the longhand, concluded that jsdom loads
-     no CSS at all, and deleted itself. It was wrong, and so was the note it left
-     behind. What jsdom genuinely cannot do is resolve a custom property —
-     `color` here reads back as the literal text `var(--cr-primary)` — so a check
-     about a colour still belongs in a browser. */
+     What jsdom genuinely cannot do is resolve a custom property (`color` here
+     reads back as the literal text `var(--cr-primary)`), so a check about a
+     colour still belongs in a browser. */
   it('is underlined at rest, not only on hover', () => {
     renderWithCrystal(<Anchor href="/docs">The documentation</Anchor>);
     const link = screen.getByRole('link');
@@ -42,8 +40,8 @@ describe('Anchor', () => {
   });
 
   /* Against the token rather than against the number. A test that writes `4px`
-     keeps passing after the token moves, which makes it a test of nothing —
-     which is why `lint:tokens` refuses a literal in here too. */
+     keeps passing after the token moves, which makes it a test of nothing, and
+     `lint:tokens` refuses a literal in here too. */
   it('clears the descenders it runs under, by the published offset', () => {
     renderWithCrystal(<Anchor href="/docs">The documentation</Anchor>);
     const offset = getComputedStyle(screen.getByRole('link')).getPropertyValue('text-underline-offset');
@@ -60,7 +58,7 @@ describe('Anchor', () => {
 
   /* Opening a new tab is a change of context the reader did not ask for, and the
      reader most likely to be lost by it is the one who cannot see it happen. The
-     disclosure is text, not an icon — an icon announces nothing. */
+     disclosure is text, not an icon. An icon announces nothing. */
   it('says that an external link opens a new tab', () => {
     renderWithCrystal(<Anchor href="https://example.com" isExternal>Example</Anchor>);
     expect(screen.getByRole('link', { name: 'Example (opens in a new tab)' })).toBeInTheDocument();

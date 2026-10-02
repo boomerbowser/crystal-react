@@ -1,26 +1,23 @@
 'use client';
 
-/* Notification — a persistent, dismissible message with a title, body,
+/* Notification: a persistent, dismissible message with a title, body,
  * timestamp and actions.
  *
- * A toast that does not leave. What separates it from `Toast` is not its
- * appearance but its lifetime: a notification is a record, it survives the
- * session, and it has a read state — so it is a list item in something a reader
- * comes back to rather than a thing that happened while they were looking.
+ * A toast that does not leave. It differs from `Toast` in its lifetime: a
+ * notification is a record, it survives the session, and it has a read state.
+ * It is a list item in something a reader comes back to.
  *
- * "**Unread treatment**" is Crystal's, and Crystal's answer to "this one is
- * different" is already settled: **label weight alone**. Nothing is drawn beside
- * the title to mark it — a dot beside the title offsets the very title it points
- * at, so the unread one stops lining up with the others, and a check mark never
- * means a state. The weight is typographic rather than chromatic, so the
- * distinction never rests on colour either. Unread is also said in words, in the
- * item's accessible name, because weight is not something a screen reader reads
- * out.
+ * "Unread treatment" is Crystal's, and Crystal marks it with label weight
+ * alone. Nothing is drawn beside the title to mark it. A dot beside the title
+ * offsets the title it points at, so the unread one stops lining up with the
+ * others, and a check mark never means a state. Weight is typographic, so the
+ * distinction never rests on colour. Unread is also said in words, in the
+ * item's accessible name, because a screen reader does not read out weight.
  *
  * The timestamp is a `<time>` with a machine-readable `dateTime`, and the words
- * beside it are the caller's: "3 minutes ago" is a sentence that has to be
- * written in the reader's language and updated as it ages, and a component that
- * formatted it would be guessing at both.
+ * beside it are the caller's. "3 minutes ago" has to be written in the reader's
+ * language and updated as it ages, and a component that formatted it would be
+ * guessing at both.
  */
 import { forwardRef, useId, useMemo, type HTMLAttributes, type ReactNode } from 'react';
 import { STATUS_SYMBOL, type FeedbackStatus } from '../../feedback/status.js';
@@ -54,12 +51,12 @@ export const Notification = forwardRef<HTMLLIElement, NotificationProps>(functio
   const id = useId();
 
   /* In a product's list of notifications, inside `AnimatePresence`, one arrives
-     with `toast-in` and leaves with `toast-out` once dismissed; rendered plainly,
-     nothing. */
+     with `toast-in` and leaves with `toast-out` once dismissed. Rendered plainly,
+     it does not animate. */
   const presence = usePresenceMotion('toast-in', 'toast-out');
-  /* Frost on the page; inside a pane — a notification centre's Frost panel — a
-     Haze row, because Frost inside Frost is two panes of one glass that read as
-     neither. The surface context says which, as it does for every overlay. */
+  /* Frost on the page. Inside a pane, such as a notification centre's Frost
+     panel, it is a Haze row, because Frost inside Frost reads as neither pane.
+     The surface context says which, as it does for every overlay. */
   const material = useOverlayMaterial();
   const merged = useMemo(() => mergeRefs(ref, presence as never), [ref, presence]);
   return (
@@ -74,8 +71,8 @@ export const Notification = forwardRef<HTMLLIElement, NotificationProps>(functio
       <span aria-hidden="true" className={styles['well']}>{STATUS_SYMBOL[status]}</span>
       <div className={styles['content']}>
         <p className={styles['title']} id={`${id}-title`}>
-          {/* Said, not drawn. The weight is the visual treatment and the words
-              are what a screen reader gets — neither is a mark beside the label. */}
+          {/* Said in words. The weight is the visual treatment and the words
+              are what a screen reader gets. Neither is a mark beside the label. */}
           {unread ? <span className={styles['said']}>{`${unreadLabel}. `}</span> : null}
           {title}
         </p>

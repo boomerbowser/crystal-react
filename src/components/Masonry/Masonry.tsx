@@ -4,19 +4,17 @@
  *
  * Items of unequal height packed into columns without being stretched to match.
  *
- * The accessibility note the catalogue gives it — "a list when the items are a
- * set; otherwise presentational" — is doing real work here, because the layout
- * order and the reading order genuinely differ: a multi-column layout fills each
- * column top to bottom, so item two is below item one rather than beside it. For
- * a gallery that is what a reader expects and there is nothing to announce. For
- * an ordered set it matters, and `as="ul"` makes the set explicit so a screen
- * reader says "list, 12 items" and the positions are followable even though the
- * visual order is columnar.
+ * The catalogue's accessibility note, "a list when the items are a set;
+ * otherwise presentational", matters here because the layout order and the
+ * reading order differ. A multi-column layout fills each column top to bottom,
+ * so item two is below item one, not beside it. In a gallery a reader expects
+ * that and there is nothing to announce. For an ordered set, `as="ul"` makes the
+ * set explicit, so a screen reader says "list, 12 items" and the positions can
+ * be followed although the visual order is columnar.
  *
  * Reduced motion: nothing animates here. The catalogue asks for "reduced-motion
- * reflow", and the honest answer is that CSS columns reflow instantly rather than
- * animating, so there is nothing to remove — which is better than an animated
- * reflow that has to be suppressed.
+ * reflow". CSS columns reflow instantly without animating, so there is nothing
+ * to remove.
  */
 import { forwardRef, type CSSProperties, type ElementType, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';

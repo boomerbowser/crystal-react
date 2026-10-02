@@ -1,9 +1,9 @@
 @use '../../styles/tokens' as *;
 
 /* The track is the slider's track. `$cr-slider-track-height` is Crystal's
-   `component.slider.trackHeight`, and the catalogue's "matching the slider
-   track" is a sentence about two components that must not drift — so this reads
-   the same token rather than a second 8. */
+   `component.slider.trackHeight`. The catalogue says "matching the slider
+   track", so the two components must not drift, and this reads the same token
+   rather than a second 8. */
 
 .progress {
   display: flex;
@@ -48,8 +48,8 @@
   border-radius: $cr-slider-track-height;
   background: var(--cr-primary);
   /* The width is set inline from the value. A transition rather than a keyframe
-     animation, because the movement is *from where it was to where it is* and
-     nobody knows the first of those at author time. */
+     animation, because the movement is from where it was to where it is, and
+     where it was is not known at author time. */
   transition: inline-size calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
     #{$cr-motion-easing-settle};
 }
@@ -58,8 +58,8 @@
    (D-19, 2.2.0). The recipe translates by the element's own width, so what moves
    is a runner as wide as the track and the segment rides at its inline start:
    from -100% the segment is wholly before the track, at 100% wholly past it.
-   Linear, where this library's own keyframe used the settle curve — a continuous
-   indicator travels at constant speed, and that is Crystal's ruling now. */
+   Linear, because Crystal rules that a continuous indicator travels at
+   constant speed. */
 .runner {
   position: absolute;
   inset: 0;

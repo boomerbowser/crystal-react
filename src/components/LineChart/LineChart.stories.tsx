@@ -11,13 +11,13 @@ const meta = {
         component:
           '"Series are distinguishable without colour alone." Here that is the dash pattern: '
           + 'solid first, then five patterns in multiples of the stroke. It is the one second '
-          + 'channel that survives all three ways colour fails — dichromatic vision, a '
+          + 'channel that survives all three ways colour fails. Those are dichromatic vision, a '
           + 'monochrome print, and forced colours replacing every hue with one.\n\n'
-          + 'The domain is fitted to the data rather than forced through zero, which is the '
-          + "opposite of the bar chart's rule for the opposite reason. A line's marks are "
-          + '*positions*: a share price between 412 and 418 drawn from zero is a flat line that '
-          + "hides the whole story. A bar's marks are *lengths*, and a length from a false "
-          + 'baseline lies. Same data, different mark, different rule.\n\n'
+          + 'The domain is fitted to the data and not forced through zero, the reverse of the '
+          + "bar chart's rule. A line's marks are "
+          + 'positions: a share price between 412 and 418 drawn from zero is a flat line that '
+          + "hides the whole story. A bar's marks are lengths, and a length from a false "
+          + 'baseline lies.\n\n'
           + 'Every point is reachable whether or not one is drawn, and each carries a hit area '
           + `of Crystal's action minimum (${crystalTokens['action.minTarget']}) regardless of how small the marker is.`,
       },

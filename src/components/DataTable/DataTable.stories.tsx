@@ -25,20 +25,19 @@ const meta = {
     docs: {
       description: {
         component:
-          'React Aria\'s `Table`, where this library\'s `Table` is a plain one — and the split is '
-          + 'the catalogue\'s. A static table is a **document**: a reader moves through it with '
+          'React Aria\'s `Table`. This library\'s `Table` is a plain one, and the split follows '
+          + 'the catalogue. A static table is a document: a reader moves through it with '
           + 'their screen reader\'s own table commands, and a plain `<table>` is what those '
-          + 'commands are for. An interactive one is a **grid widget**: roving focus, arrow keys '
-          + 'that move a cursor between cells, selection, controls inside cells — and '
-          + '`role="grid"` is what tells assistive technology to switch from reading mode to '
-          + 'interaction mode. Rendering the interactive one as a plain table leaves every one of '
-          + 'those keys doing nothing.\n\n'
-          + '**Selection is label weight, not a check badge on the row.** The checkbox is the '
-          + 'control that makes the selection; the row shows that it *is* selected by being '
+          + 'commands are for. An interactive one is a grid widget, with roving focus, arrow keys '
+          + 'that move a cursor between cells, selection, and controls inside cells. '
+          + '`role="grid"` tells assistive technology to switch from reading mode to '
+          + 'interaction mode. Rendered as a plain table, none of those keys would work.\n\n'
+          + 'Selection is shown by label weight, with no check badge on the row. The checkbox is '
+          + 'the control that makes the selection. The row shows that it is selected by being '
           + 'heavier, as every selected thing in Crystal does. React Aria composes each '
           + 'checkbox\'s name from its own label plus the row\'s text value, so the label passed '
-          + 'in is the verb alone — "Select Gather" would otherwise announce as "Select Gather '
-          + 'Gather", which is how that was found.',
+          + 'in is the verb alone. Passing "Select Gather" would announce as "Select Gather '
+          + 'Gather".',
       },
     },
   },
@@ -50,8 +49,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** Selection through real checkboxes, with the row heavier because it is
- *  selected rather than because a box is ticked. */
+/** Selection through real checkboxes. The selected row itself is heavier. */
 export const Selectable: Story = {
   render: (args) => {
     const Demo = () => {
@@ -70,7 +68,7 @@ export const Selectable: Story = {
 };
 
 /** Sorting, driven. `aria-sort` lands on one header at a time, because it
- *  describes the table's order rather than each column's capability. */
+ *  describes the table's order and not what each column can do. */
 export const Sortable: Story = {
   render: (args) => {
     const Demo = () => {
@@ -89,8 +87,8 @@ export const Sortable: Story = {
   },
 };
 
-/** With paging under it. `Pagination` is its own component; the table's footer
- *  is where it sits. */
+/** With paging under it. `Pagination` is its own component, placed in the
+ *  table's footer. */
 export const WithPaging: Story = {
   args: {
     rows: rows.slice(0, 2),

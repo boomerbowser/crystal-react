@@ -8,12 +8,12 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Announced politely; retry is a real button." Politely is the difference from '
+          '"Announced politely; retry is a real button." Being polite is what separates it from '
           + '`ErrorScreen`: losing connectivity is not an error the reader caused and often '
-          + 'does not last, so interrupting whatever a screen reader was saying is the '
-          + 'component being more urgent than the news. The same shape, one word apart.\n\n'
-          + '"With what still works" is the half products skip — an offline screen that only '
-          + 'says "you are offline" has replaced a working view with a dead one.',
+          + 'does not last, so it is not urgent enough to interrupt whatever a screen reader '
+          + 'is saying. The two have the same shape and differ in one attribute.\n\n'
+          + '"With what still works" is the half products tend to skip. An offline screen that only '
+          + 'says "you are offline" replaces a working view with a dead one.',
       },
     },
   },

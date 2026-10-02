@@ -1,25 +1,25 @@
 'use client';
 
-/* OnboardingBlock — a guided first-run sequence, with its progress.
+/* OnboardingBlock: a guided first-run sequence, with its progress.
  *
- * "**Escapable at every step; progress announced; focus moves with the step.**"
+ * "Escapable at every step; progress announced; focus moves with the step."
  * States: `at-rest`, `active`, `complete`, `skipped`.
  *
- * The steps and their copy are the product's. The block is `Tour` — which
- * already keeps all three promises — given the shape a first run has:
+ * The steps and their copy are the product's. The block is `Tour`, which
+ * already keeps all three promises, in the shape a first run has:
  *
- *   - **Escapable.** Every step has a way out and Escape ends it from anywhere,
- *     and the block tells the product which way it ended: finishing the last
- *     step is `complete`, leaving early is `skipped`, so a product never records
+ *   - Escapable. Every step has a way out and Escape ends it from anywhere.
+ *     The block tells the product which way it ended: finishing the last step
+ *     is `complete` and leaving early is `skipped`, so a product never records
  *     a skip as a completion or asks again someone who finished.
- *   - **Progress announced.** The position is part of each step's accessible
- *     name ("Step 2 of 4. Invite your team"), and a bar shows the same to the
- *     eye. The bar is hidden from assistive technology, which has just heard it
- *     in the name. Ending is said too — "Tour complete", "Tour skipped" — as
+ *   - Progress announced. The position is part of each step's accessible name
+ *     ("Step 2 of 4. Invite your team"), and a bar shows the same to the eye.
+ *     The bar is hidden from assistive technology, which has just heard it in
+ *     the name. The ending is said too ("Tour complete", "Tour skipped") as
  *     focus goes back to where it was.
- *   - **Focus moves with the step**, onto the panel, whose name carries the step.
+ *   - Focus moves with the step, onto the panel, whose name carries the step.
  *
- * Motion is the catalogue's, `page-in` and `page-out`: a step's page leaves as
+ * Motion is the catalogue's `page-in` and `page-out`. A step's page leaves as
  * the next arrives, the two overlapping in one grid cell so nothing jumps. The
  * panel itself arrives and leaves with `Tour`'s `popover-in` and `popover-out`.
  * "Frost panel over a Mirage scrim" is `Tour`'s own material.
@@ -50,7 +50,7 @@ export interface OnboardingBlockProps {
   onStepChange: (step: number) => void;
   /** The last step was finished. */
   onComplete: () => void;
-  /** Left early — by Escape or by the way out on a step. */
+  /** Left early, by Escape or by the way out on a step. */
   onSkip: () => void;
   skipLabel?: string;
   finishLabel?: string;
@@ -64,7 +64,8 @@ export function OnboardingBlock({
   completeLabel = 'Tour complete', skippedLabel = 'Tour skipped',
   formatPosition = (at, total) => `Step ${String(at + 1)} of ${String(total)}`,
 }: OnboardingBlockProps): React.JSX.Element {
-  /* How it ended, said once as it ends — not on a page that loads already done. */
+  /* How it ended, said once as it ends. Nothing is said on a page that loads
+     with the tour already over. */
   const [said, setSaid] = useState('');
   const was = useRef(state);
   useEffect(() => {
@@ -116,7 +117,8 @@ function Pages({ step, total, page, pageKey, formatPosition }: {
 }): React.JSX.Element {
   return (
     <div className={cx(styles['pages'])}>
-      {/* Seen, not heard: the step's name has just said where the reader is. */}
+      {/* Hidden from assistive technology, because the step's name has just
+          said where the reader is. */}
       <div aria-hidden="true" className={cx(styles['progress'])}>
         <Progress label={formatPosition(step, total)} hideLabel value={step + 1} min={0} max={total} valueLabel={formatPosition(step, total)} />
       </div>

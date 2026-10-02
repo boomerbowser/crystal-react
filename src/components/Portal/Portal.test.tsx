@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { createContext, useContext } from 'react';
 import { Portal } from './Portal.js';
 
-/* A context that only reaches the child if the portal keeps the tree. This is
-   the property the component exists for — `SurfaceProvider` is one of these,
-   and "Resin never contains Resin" is enforced by it surviving the portal. */
+/* A context that only reaches the child if the portal keeps the tree.
+   `SurfaceProvider` is one of these, and "Resin never contains Resin" is
+   enforced by it surviving the portal. */
 const Material = createContext('page');
 function Reads(): React.JSX.Element {
   return <span data-testid="reader">{useContext(Material)}</span>;
@@ -16,8 +16,7 @@ describe('Portal', () => {
     render(<div data-testid="origin"><Portal><span data-testid="moved">out</span></Portal></div>);
     const moved = await screen.findByTestId('moved');
     expect(moved).toBeTruthy();
-    /* The assertion that matters is not "it rendered" but "it rendered
-       somewhere else": the whole point is escaping the layout parent. */
+    /* It must render outside the layout parent, not merely render. */
     expect(screen.getByTestId('origin').contains(moved)).toBe(false);
     expect(document.body.contains(moved)).toBe(true);
   });

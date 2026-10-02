@@ -11,12 +11,12 @@ const meta = {
         component:
           '**"No-results and truly-empty are different states and read differently."** "No '
           + 'projects yet — create your first one" and "No projects match ‘wxyz’ — clear the '
-          + 'filter" are opposite messages: one says the collection is new, the other says the '
-          + 'reader is looking through the wrong window. A component with one empty state tells '
-          + 'a reader with three hundred projects that they have none.\n\n'
-          + 'So `state` is required and has no default — every default would be one of the four '
-          + 'chosen silently for a caller who did not think about it, which is the mistake this '
-          + 'entry exists to prevent.\n\n'
+          + 'filter" are opposite messages. The first says the collection is new, and the second '
+          + 'says the reader is looking through the wrong window. A component with one empty '
+          + 'state tells a reader with three hundred projects that they have none.\n\n'
+          + 'So `state` is required and has no default. Any default would choose one of the four '
+          + 'silently for a caller who did not think about it, which is the mistake this entry '
+          + 'exists to prevent.\n\n'
           + '"Real text; never an illustration alone": the illustration is `aria-hidden` and the '
           + 'title is required.',
       },

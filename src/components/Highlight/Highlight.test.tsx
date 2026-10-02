@@ -10,15 +10,15 @@ describe('Highlight', () => {
     expect(marks[0]?.textContent).toBe('Crystal');
   });
 
-  /* The whole string stays readable as one sentence. Splitting it into an array
-     of fragments is how a screen reader ends up reading it as fragments. */
+  /* The whole string stays readable as one sentence. A string split into an
+     array of fragments is read by a screen reader as fragments. */
   it('leaves the sentence readable as one string', () => {
     renderWithCrystal(<Highlight query="design" data-testid="h">Crystal is a design system</Highlight>);
     expect(screen.getByTestId('h').textContent).toBe('Crystal is a design system');
   });
 
   /* A query is somebody's typing, not a pattern. Without escaping, a search for
-     "c++" or "(" throws — a crash on an input a person is allowed to make. */
+     "c++" or "(" throws on an input a person is allowed to make. */
   it('treats the query as text rather than as a pattern', () => {
     expect(() => renderWithCrystal(
       <Highlight query="c++ (" data-testid="h">Written in c++ (mostly)</Highlight>,

@@ -1,33 +1,30 @@
 'use client';
 
-/* Portal — render content outside its layout parent, without leaving its tree.
+/* Portal: render content outside its layout parent, without leaving its tree.
  *
- * Every overlay in this library already portals: React Aria puts popovers,
+ * Every overlay in this library already portals. React Aria puts popovers,
  * menus, tooltips and dialogs on a container under `body` so that no ancestor's
- * `overflow`, `transform` or stacking context can clip or reposition them. That
- * behaviour is thorough and was easy to mistake for this component existing.
- * It does not: a product with its own content that needs the same escape — a
- * floating toolbar, a banner that must outrank an ancestor's `transform`, a
- * third-party widget that insists on measuring against the viewport — had
- * nothing to reach for, and would have written `createPortal(node,
- * document.body)` by hand.
+ * `overflow`, `transform` or stacking context can clip or reposition them. This
+ * component is for a product's own content that needs the same escape, such as
+ * a floating toolbar, a banner that must outrank an ancestor's `transform`, or
+ * a third-party widget that insists on measuring against the viewport. Without
+ * it the product would write `createPortal(node, document.body)` by hand.
  *
- * Writing it by hand is where the two hazards are, and both are why this is a
- * component rather than a documentation note.
+ * Writing it by hand has two hazards, which is why this is a component and not
+ * a documentation note.
  *
- * **The material context has to survive.** `SurfaceProvider` is what makes
- * "Resin never contains Resin" enforceable, and it works precisely because
- * React context follows the element tree rather than the document. Content
- * portalled with `createPortal` keeps its context — that is the guarantee — but
- * only if it is rendered inside the tree. A product that portals by rendering
- * into a detached root loses it silently and gets Resin inside Resin with no
- * error anywhere. This portals the React way and says so.
+ * The material context has to survive. `SurfaceProvider` makes "Resin never
+ * contains Resin" enforceable, and it works because React context follows the
+ * element tree rather than the document. Content portalled with `createPortal`
+ * keeps its context only if it is rendered inside the tree. A product that
+ * portals by rendering into a detached root loses the context silently and gets
+ * Resin inside Resin with no error. This component portals inside the tree.
  *
- * **`document` does not exist while rendering on the server.** `createPortal`
+ * `document` does not exist while rendering on the server. `createPortal`
  * called during SSR throws, so the container is resolved in an effect and
- * nothing is rendered on the first client pass either — which keeps the server
- * and client markup identical and avoids a hydration mismatch. The cost is one
- * frame; the alternative is a component that cannot be used in the Next.js app
+ * nothing is rendered on the first client pass either. That keeps the server
+ * and client markup identical and avoids a hydration mismatch. It costs one
+ * frame, and without it the component could not be used in the Next.js app
  * this library is gated against.
  */
 import { useEffect, useState, type ReactNode } from 'react';
@@ -40,9 +37,8 @@ export interface PortalProps {
    * happens on the client. Defaults to `document.body`.
    *
    * Prefer `body`. A container inside the page can itself be inside the
-   * `transform` or `overflow` the content is trying to escape, which produces a
-   * portal that portals nowhere — the defect this component exists to avoid,
-   * reintroduced through its own prop.
+   * `transform` or `overflow` the content is trying to escape, and then the
+   * content is still clipped or repositioned by it.
    */
   container?: Element | (() => Element | null) | null;
   /**

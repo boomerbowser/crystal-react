@@ -5,7 +5,7 @@ import { Popconfirm } from './Popconfirm.js';
 import { Button } from '../Button/Button.js';
 
 describe('Popconfirm', () => {
-  /* The decision this component exists to make. A confirmation exists because
+  /* The decision this component makes. A confirmation exists because
      the action is hard to undo, and one that puts the destructive choice under
      the key the reader is already pressing has asked a question whose default
      answer is yes. Cancel is also what Escape does and what clicking away does,
@@ -45,8 +45,7 @@ describe('Popconfirm', () => {
   });
 
   /* Both controls close it. Without `slot="close"` on confirm, an uncontrolled
-     caller confirms and the popover stays open, still asking the question it
-     has just been answered. */
+     caller confirms and the popover stays open, still asking the question. */
   it('closes itself after confirming', async () => {
     renderWithCrystal(
       <Popconfirm label="Delete this project?" onConfirm={() => {}}>

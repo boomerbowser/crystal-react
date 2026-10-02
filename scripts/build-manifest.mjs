@@ -1,16 +1,15 @@
 /* Generate the machine-readable component manifest and llms.txt.
  *
- * Meridian's brief asks that the library "can be integrated with … LLMs". What
- * that needs in practice is a description an assistant can read without opening
- * the source: what each component is, what states it has, which materials and
- * recipes it uses, what it does *not* do, and which of its peers in other
- * libraries it corresponds to.
+ * Meridian's brief asks that the library "can be integrated with … LLMs". That
+ * needs a description an assistant can read without opening the source: what
+ * each component is, what states it has, which materials and recipes it uses,
+ * what it does not do, and which of its peers in other libraries it corresponds
+ * to.
  *
- * All of that already exists in Crystal's catalogue. Writing it a second time by
- * hand would create a second description of the same thing, which is the drift
- * CONTRACT §1 is about — so this reads the catalogue and reports implementation
- * status from what the package actually exports, rather than from a list somebody
- * remembers to update.
+ * All of that is in Crystal's catalogue, and a second hand-written description
+ * would drift from it (CONTRACT §1). So this reads the catalogue, and takes
+ * implementation status from what the package exports instead of from a list
+ * maintained by hand.
  *
  * Two outputs:
  *
@@ -52,21 +51,17 @@ if (unknown.length) {
 }
 const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
 
-/* What is actually implemented, read from what the package exports rather than
-   declared. A list of "done" components maintained by hand goes stale the first
-   time somebody deletes one.
+/* What is implemented, read from what the package exports. A hand-maintained
+   list of finished components goes stale when one is deleted.
  *
-   This reads exported names, not directory names, because the two stopped
-   agreeing: `Stack` and `Group` are one box turned ninety degrees and share a
-   file, so a directory scan reported Group as not started while it was exported,
-   documented and tested. A component is implemented when a consumer can import
-   it — that is the only definition that matches what "implemented" means to
-   somebody reading the manifest. */
+   This reads exported names, not directory names, because the two do not
+   always agree: `Stack` and `Group` are one box turned ninety degrees and share
+   a file, so a directory scan would miss Group. A component is implemented when
+   a consumer can import it. */
 const componentsDir = join(ROOT, 'src/components');
 const exported = new Set();
-/* The theme provider is a component of the catalogue but lives with the theme,
-   so its barrel is read alongside the component ones rather than moved to keep a
-   script happy. */
+/* The theme provider is a catalogue component but lives with the theme, so its
+   barrel is read alongside the component barrels. */
 const barrels = [join(ROOT, 'src/theme/index.ts')];
 for (const entry of existsSync(componentsDir) ? readdirSync(componentsDir) : []) {
   const dir = join(componentsDir, entry);
@@ -83,19 +78,18 @@ for (const barrel of barrels) {
     }
   }
 }
-/* Where Crystal's name for a thing is not the catalogue's id. This is not a list
-   of what is done — status still comes from the exports — it is a translation
-   table for the handful of cases where the library's own vocabulary is better
-   than the catalogue's generic one. `CrystalProvider` is the theme provider, and
-   calling it `ThemeProvider` as well would be two names for one thing. */
+/* Exports whose name differs from the catalogue id. Status still comes from the
+   exports; this table only translates names where the library's vocabulary is
+   better than the catalogue's generic one. `CrystalProvider` is the theme
+   provider, and also exporting `ThemeProvider` would give one thing two names. */
 const NAMED_DIFFERENTLY = {
   CrystalProvider: 'theme-provider',
-  /* The component *is* the element; the transition is what it does to it. */
+  /* The component is the element; the transition is what it does to it. */
   SharedElement: 'shared-element-transition',
   /* React Aria's name, and the catalogue's since 2.3.0, which removed the
-     duplicate `virtual-scroller` entry (D-29) — so the export and the id agree
-     and this line only says so. verify-behaviour checks the entry's promises:
-     the set counts and the focused row kept through recycling. */
+     duplicate `virtual-scroller` entry (D-29). The export and the id agree;
+     this line records that. verify-behaviour checks the entry's promises: the set counts
+     and the focused row kept through recycling. */
   Virtualizer: 'virtualizer',
   Abbr: 'abbreviation',
   TextArea: 'textarea',
@@ -103,10 +97,9 @@ const NAMED_DIFFERENTLY = {
      and the DOM do. */
   ComboBox: 'combobox',
   DropZone: 'dropzone',
-  /* The catalogue lists `title` and `heading` separately — one for the levels
-     with display tracking, one for levels two to six. They are the same component
-     with a different default, and shipping both names would be two names for one
-     thing, which is the mistake `ThemeProvider` was avoided for. */
+  /* The catalogue lists `title` (the levels with display tracking) and `heading`
+     (levels two to six) separately. They are one component with a different
+     default, so one export covers both, as with `CrystalProvider`. */
   Title: ['title', 'heading'],
 };
 
@@ -121,11 +114,9 @@ const implemented = new Set([...exported].flatMap((name) => {
     .toLowerCase()];
 }));
 
-/* Every recipe and preset Crystal ships, so the scan below matches against real
-   names rather than against a guess at call syntax. The first version matched
-   `play('name')` literally and missed `play(invalid ? 'field-invalid' :
-   'field-valid')` — a component that animated on validation was reported as
-   animating only on focus. */
+/* Every recipe and preset Crystal ships, so the scan below matches real names
+   instead of guessing at call syntax. Matching `play('name')` literally would
+   miss `play(invalid ? 'field-invalid' : 'field-valid')`. */
 const RECIPE_IDS = new Set(
   JSON.parse(readFileSync(
     CANDIDATES.map((p) => p.replace('catalogue.json', 'motion-recipes.json')).find(existsSync),
@@ -139,20 +130,19 @@ const PRESET_IDS = new Set(['plastic', 'frost', 'resin', 'haze', 'stone', 'mirag
    about a design system, and it is invisible from the type signature. */
 /* catalogue id -> the export that implements it, the inverse of the table above,
    so `textarea` is looked for as `TextArea` and not as a `Textarea` that does
-   not exist — which reported every text area as playing nothing. */
+   not exist. */
 const EXPORT_FOR = Object.fromEntries(Object.entries(NAMED_DIFFERENTLY)
   .flatMap(([name, ids]) => (Array.isArray(ids) ? ids : [ids]).map((id) => [id, name])));
 
 function motionUsed(componentId) {
   const pascal = EXPORT_FOR[componentId]
     ?? componentId.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join('');
-  /* A component may live in a neighbour's directory — Group is in Stack's — so
-     the source is found by looking for the directory that exports it rather than
-     by assuming one is named after it. */
-  /* A directory named after it counts only if it is a component — has a barrel.
-     Five empty directories left behind by an old move (ActionBar, CloseButton,
-     Mentions, SpeedDial, SplitButton) were being taken for the components, which
-     live beside their neighbours, and each was reported as playing nothing. */
+  /* A component may live in a neighbour's directory (Group is in Stack's), so
+     the source is found by looking for the directory that exports it. */
+  /* A directory named after it counts only if it has a barrel. An empty
+     directory left behind by a move (ActionBar, CloseButton, Mentions,
+     SpeedDial and SplitButton once had one) must not be taken for the component,
+     which lives beside its neighbour. */
   const dir = existsSync(join(componentsDir, pascal, 'index.ts'))
     ? join(componentsDir, pascal)
     : (readdirSync(componentsDir)
@@ -166,10 +156,9 @@ function motionUsed(componentId) {
   /* A component's own files, and one level of what they import from the library's
      shared modules. Motion that plays through a shared piece is still this
      component's: the loader turns through `feedback/ActivityArc`, and three charts
-     arrive through `charts/useMarkArrival`. Reading only the component's directory
-     reported both as playing nothing. One level, not a walk of the graph — a
-     component that imports another *component* is credited with its own motion
-     only, because the other one is reported under its own name. */
+     arrive through `charts/useMarkArrival`. Only one level is read, not the whole
+     graph: a component that imports another component is credited with its own
+     motion only, because the other one is reported under its own name. */
   const files = readdirSync(dir)
     .filter((file) => /\.tsx?$/.test(file) && !/\.(test|stories)\./.test(file))
     .map((file) => join(dir, file));
@@ -181,19 +170,21 @@ function motionUsed(componentId) {
       const found = resolveFrom(file, spec);
       if (found) shared.add(found);
     }
-    /* A helper that lives in a neighbour's directory — `../FormField/FieldShell`,
-       which plays the field recipes for every text field — is shared in the same
-       sense, and so is what that helper imports from its own directory
-       (`FieldShell` plays through `./useInvalidMotion`). A neighbour's *component*
-       file, `../Button/Button`, is not: it is reported under its own name. */
+    /* A helper in a neighbour's directory, such as `../FormField/FieldShell`
+       (which plays the field recipes for every text field), is shared in the
+       same sense, and so is what that helper imports from its own directory
+       (`FieldShell` plays through `./useInvalidMotion`). A neighbour's component
+       file, such as `../Button/Button`, is not shared: it is reported under its
+       own name. */
     /* The collection recipes live in `motion/ListPresence`, which plays exactly
-       `list-in` and `list-out` for whatever uses it — unlike `useContinuous`,
-       which names all three continuous recipes as a type and would credit every
-       caller with all three. So that one module is followed, from a component
-       or from a helper it uses — but only for what in it plays those two. The
-       module also exports `usePresenceMotion`, which plays whatever its caller
-       names, and those names are in the caller, where they are read already;
-       following the module for it credited a dialog, a hint and an onboarding
+       `list-in` and `list-out` for whatever uses it. `useContinuous` is not
+       followed, because it names all three continuous recipes as a type and
+       would credit every caller with all three. `motion/ListPresence` is
+       followed from a component or from a helper it uses, but only when the
+       import is one of the parts that play those two recipes. The module also
+       exports `usePresenceMotion`, which plays whatever its caller names; those
+       names are in the caller and already read there, and following the module
+       for it would credit callers such as a dialog, a hint or an onboarding
        sequence with a collection's arrival they never play. */
     const followListPresence = (from) => {
       const found = resolveFrom(from, from.includes('/components/') ? '../../motion/ListPresence' : '../motion/ListPresence');
@@ -217,19 +208,18 @@ function motionUsed(componentId) {
   const componentPlays = files.some((file) => PLAYS.test(readFileSync(file, 'utf8')));
   for (const file of [...files, ...shared]) {
     const source = readFileSync(file, 'utf8');
-    /* Only count a name in a file that actually uses a hook that plays it.
-       Without this, Button's `variant="resin"` was reported as a Resin preset:
-       a string that happens to match a preset name is not a call. A shared file
-       of names — `feedback/status.ts`, which maps a status to the recipe that
-       marks it — counts when the component that imports it plays. */
+    /* Only count a name in a file that uses a hook that plays it, so a string
+       that matches a preset name, such as Button's `variant="resin"`, is not
+       counted as a preset. A shared file of names, such as `feedback/status.ts`
+       (which maps a status to the recipe that marks it), counts when the
+       component that imports it plays. */
     const playsRecipes = PLAYS.test(source) || (componentPlays && shared.has(file));
     const playsPresets = source.includes('usePreset');
     if (!playsRecipes && !playsPresets) continue;
     /* Single-quoted names, and a recipe handed to `<Arrival recipe="menu-in" />`,
-       which is JSX and double-quoted — the one form the first pattern missed,
-       and the reason every menu, popover and tooltip read as arriving with
-       nothing. Only as a `recipe=` attribute: `slot="selection"` is not a
-       binding. */
+       which is JSX and double-quoted. Menus, popovers and tooltips arrive this
+       way. Double-quoted names count only as a `recipe=` attribute, so
+       `slot="selection"` is not read as a binding. */
     const names = [
       ...[...source.matchAll(/'([a-z][a-z-]*)'/g)].map((match) => match[1]),
       ...[...source.matchAll(/\brecipe="([a-z][a-z-]*)"/g)].map((match) => match[1]),
@@ -255,7 +245,7 @@ const components = catalogue.categories.flatMap((category) =>
     states: component.states,
     material: component.material,
     /* What the component is made of, from Crystal's closed vocabulary, back to
-       front — each id names a class in `surfaces` below. */
+       front. Each id names a class in `surfaces` below. */
     surface: component.surface ?? [],
     geometry: component.geometry,
     semantics: component.semantics,
@@ -274,7 +264,7 @@ const counts = components.reduce((acc, component) => {
 const manifest = {
   $description:
     'Crystal React component manifest. Generated from Crystal\'s catalogue and from this package\'s '
-    + 'source tree, so status reflects what exists rather than what was remembered.',
+    + 'source tree, so each status reflects what exists in the source.',
   package: pkg.name,
   version: pkg.version,
   generated: new Date().toISOString().slice(0, 10),
@@ -294,26 +284,29 @@ const done = byStatus('implemented');
 
 const llms = `# ${pkg.name}
 
-Crystal Design System for React. ${pkg.description}
+${pkg.description}
 
-Crystal is Meridian's design system; this library implements it for React. It does
-not invent visual decisions — every value, material and motion recipe comes from
-\`@crystal-ui/core\`, and a hard-coded colour or length in this library is a defect.
+Crystal is Meridian's design system, and this library implements it for React.
+Every value, material and motion recipe comes from \`@crystal-ui/core\`. A
+hard-coded colour or length in this library is a defect.
 
 ## Status
 
 ${done.length} of ${components.length - (counts['not-applicable'] ?? 0)} components implemented.
-This is early: check \`component-manifest.json\` for per-component status rather
-than assuming a component exists because it is named here.
+\`component-manifest.json\` has the status of each component.
 
 Implemented: ${done.map((component) => component.name).join(', ') || 'none yet'}
 
 ## How to use it
 
-Wrap the application — or any subtree — in \`CrystalProvider\`. It scopes to its own
-element, so a dark island inside a light page needs no second root.
+Import Crystal's stylesheets once, then this library's, and wrap the application
+or any subtree in \`CrystalProvider\`. The provider scopes the theme to its own
+element, so a dark region inside a light page needs no second root.
 
 \`\`\`tsx
+import '@crystal-ui/core/theme';
+import '@crystal-ui/core/css';
+import '${pkg.name}/styles.css';
 import { CrystalProvider, Button } from '${pkg.name}';
 
 <CrystalProvider palette="prism" mode="light">
@@ -321,28 +314,27 @@ import { CrystalProvider, Button } from '${pkg.name}';
 </CrystalProvider>
 \`\`\`
 
-\`useCrystalTheme\` throws outside a provider. That is deliberate: a component
-rendering silently un-themed is the failure that produces "it looks nothing like
-the design system" reports.
+\`useCrystalTheme\` throws outside a provider, so a component cannot render
+without a theme unnoticed.
 
-## Rules that are not style preferences
+## Rules
 
-- **Selection is label weight.** Never a rail, never a check mark. A check mark
-  means validated or informational.
-- **Action controls are pills.** A card-shaped button is the one documented
-  exception and keeps the content radius.
-- **Focus** is a crisp 2px core at 3px offset inside a four-layer feathered halo.
-  Never delayed, never blurred, never replaced by a badge.
-- **Resin never contains Resin.** A surface above Resin is a Haze content fill.
-- **Reduced motion** removes spatial movement and keeps state feedback.
-- **Ambient motion does not exist** in Crystal 2.0. Nothing moves at rest.
+- Selection is label weight. It is never a rail and never a check mark. A check
+  mark means validated or informational.
+- Action controls are pills. A card-shaped button is the one documented exception
+  and keeps the content radius.
+- Focus is a crisp 2px core at 3px offset inside a four-layer feathered halo. It is
+  never delayed, blurred or replaced by a badge.
+- Resin never contains Resin. A surface above Resin is a Haze content fill.
+- Reduced motion removes spatial movement and keeps state feedback.
+- Nothing moves at rest. Crystal 2.0 has no ambient motion.
 - Text, icons, hit areas and focus rings are never blurred.
 
 ## Materials
 
 Plastic → Frost → Resin, back to front, plus Haze (content fill), Stone (label
-backing) and Mirage (modal scrim). A dialog is Haze over Mirage, not Resin —
-Resin is the floating control plane.
+backing) and Mirage (modal scrim). Resin is the floating control plane. A dialog is
+Haze over Mirage.
 
 ## Surfaces
 
@@ -350,20 +342,20 @@ Every component names what it is made of from Crystal's closed vocabulary of
 ${surfaces.length} surfaces, and each surface is a class in \`@crystal-ui/core\`. The
 manifest's \`surface\` field lists them for each component, back to front.
 
-${surfaces.map((surface) => `- \`${surface.id}\` — ${surface.class ?? 'no class'}: ${surface.name}`).join('\n')}
+${surfaces.map((surface) => `- \`${surface.id}\`, ${surface.class ?? 'no class'}: ${surface.name}`).join('\n')}
 
 ## Motion
 
 Recipes come from Crystal and are played through Motion for React, driven by each
-recipe's own spring. Motion binds to **state**, not to events, so keyboard and
-assistive technology get what a pointer user gets.
+recipe's own spring. Motion is bound to state, so a change made by keyboard or
+assistive technology animates the same way as one made by pointer.
 
 ## Machine-readable
 
-\`component-manifest.json\` beside this file carries every component: its anatomy,
-states, material, surface, geometry, semantics, which parts Crystal owns versus the
-product, the recipes it plays, and the components it corresponds to in Mantine,
-MUI, Ant Design and PrimeReact.
+\`component-manifest.json\` beside this file lists every component with its
+anatomy, states, material, surface, geometry and semantics, the parts Crystal owns
+and the parts the product owns, the recipes it plays, and the components it
+corresponds to in Mantine, MUI, Ant Design and PrimeReact.
 `;
 
 writeFileSync(join(ROOT, 'dist/llms.txt'), llms);

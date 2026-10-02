@@ -1,10 +1,10 @@
 /* Entry points `@crystal-ui/core` ships as plain JavaScript.
  *
  * Ambient declarations for the modules the design system exports but does not yet
- * type. Where it DOES ship types — `core/state`, `core/preferences` — they are
+ * type. Where it does ship types (`core/state`, `core/preferences`), they are
  * used directly and nothing is declared here, because a second description of the
- * same shape is exactly the drift CONTRACT §1 warns about. The right long-term
- * home for these is the design system itself; they live here until it ships them.
+ * same shape is the drift CONTRACT §1 warns about. The right long-term home for
+ * these is the design system itself; they live here until it ships them.
  */
 
 /** A single step of a Crystal recipe. The vocabulary is deliberately narrow:

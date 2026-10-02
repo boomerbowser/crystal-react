@@ -1,23 +1,23 @@
 'use client';
 
-/* Caption — media with its description.
+/* Caption: media with its description.
  *
  * "A caption never replaces alt text; the two say different things." Alt text
- * says what the image *is*, for someone who cannot see it. A caption says what it
- * *means*, to everyone. So this component renders a real `figure` and
- * `figcaption` around media the caller supplies with its own alt text, and does
- * not accept an `alt` prop — offering one would invite the two to be written as
- * a single sentence, which leaves a listener hearing it twice or not at all.
+ * says what the image is, for someone who cannot see it. A caption says what it
+ * means, to everyone. This component renders a real `figure` and `figcaption`
+ * around media the caller supplies with its own alt text, and does not accept an
+ * `alt` prop. An `alt` prop would invite the two to be written as a single
+ * sentence, which a listener then hears twice or not at all.
  *
  * `hidden` is not "no caption". The text stays in the document and stays
- * associated with the figure; it is removed from the visual composition only.
- * That is the state for a gallery where the captions are read elsewhere, and the
- * reason it is a state rather than the caller simply omitting the text.
+ * associated with the figure, and is removed from the visual composition only.
+ * That is the state for a gallery where the captions are read elsewhere, which
+ * is why it is a state and the caller does not omit the text.
  *
  * Motion plays on `overlaid` only, and only when the caption arrives after the
- * figure. An overlaid caption covers part of the media, so it is something that
- * appears over what the reader is already looking at; a caption printed below has
- * always been there.
+ * figure. An overlaid caption covers part of the media, so it appears over what
+ * the reader is already looking at. A caption printed below has always been
+ * there.
  */
 import { forwardRef, useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { useMotion } from '../../motion/useMotion.js';
@@ -46,7 +46,7 @@ export const Caption = forwardRef<HTMLElement, CaptionProps>(function Caption(
 
   useEffect(() => {
     /* Not on the first pass. Nothing moves at rest, and a caption animating as
-       the page settles is ambient motion — withdrawn from 2.0 deliberately. */
+       the page settles is ambient motion, which was withdrawn from 2.0. */
     if (!mounted.current) { mounted.current = true; return; }
     if (overlaid && !captionHidden) play('caption-in');
   }, [overlaid, captionHidden, play]);
@@ -55,8 +55,8 @@ export const Caption = forwardRef<HTMLElement, CaptionProps>(function Caption(
     <figure {...props} ref={ref} className={cx(styles['figure'], className)}>
       {children}
       {captionHidden ? (
-        /* The clipping recipe belongs to React Aria, in one place — a second copy
-           of it here is exactly the drift `VisuallyHidden` exists to prevent. */
+        /* The clipping recipe belongs to React Aria, in one place. `VisuallyHidden`
+           exists so no second copy of it drifts here. */
         <VisuallyHidden as="figcaption">{caption}</VisuallyHidden>
       ) : (
         <figcaption

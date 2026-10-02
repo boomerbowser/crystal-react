@@ -155,7 +155,7 @@ export * from './OrganizationChart/index.js';
 export * from './DataTable/index.js';
 export * from './ResizableTable/index.js';
 
-/* Slice K — charts. `ChartSurface` first; everything else composes onto it. */
+/* Slice K, charts. `ChartSurface` first, because everything else composes onto it. */
 export * from './ChartSurface/index.js';
 export * from './BarChart/index.js';
 export * from './LineChart/index.js';
@@ -181,7 +181,7 @@ export * from './Sankey/index.js';
 export * from './GeoMap/index.js';
 export * from './NetworkGraph/index.js';
 
-/* Slice L — feedback. */
+/* Slice L, feedback. */
 export * from './Progress/index.js';
 export * from './RingProgress/index.js';
 export * from './SemiCircleProgress/index.js';
@@ -198,7 +198,7 @@ export * from './Notification/index.js';
 export * from './Popconfirm/index.js';
 export * from './Tour/index.js';
 
-/* Slice M — media. */
+/* Slice M, media. */
 export * from './MediaControls/index.js';
 export * from './AudioPlayer/index.js';
 export * from './VideoPlayer/index.js';
@@ -231,7 +231,7 @@ export * from './CompareTable/index.js';
 export * from './FilterPanel/index.js';
 export * from './AddressForm/index.js';
 
-/* Screens — whole views and the states one can be in before it has content. */
+/* Screens. Whole views, and the states a view can be in before it has content. */
 export * from './EmptyScreen/index.js';
 export * from './ErrorScreen/index.js';
 export * from './LoadingScreen/index.js';
@@ -248,7 +248,7 @@ export * from './Workspace/index.js';
 export * from './ViewStack/index.js';
 export * from './FocusMode/index.js';
 
-/* Blocks — composed arrangements that solve a recognisable product problem. */
+/* Blocks. Composed arrangements that solve a recognisable product problem. */
 export * from './DashboardShell/index.js';
 export * from './MetricsRow/index.js';
 export * from './AnalyticsPanel/index.js';

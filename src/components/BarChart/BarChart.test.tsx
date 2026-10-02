@@ -44,8 +44,8 @@ describe('BarChart', () => {
     expect(container.querySelectorAll('[tabindex="-1"]').length).toBe(4);
   });
 
-  /* The format reaches the axis, the mark labels and the table — one function,
-     so the three cannot disagree about what a number is. */
+  /* The format reaches the axis, the mark labels and the table. It is one
+     function, so the three cannot disagree about what a number is. */
   it('formats every reading of a value through one function', () => {
     renderWithCrystal(
       <BarChart
@@ -126,8 +126,8 @@ describe('BarChart', () => {
   });
 
   /* The tooltip is the sighted reader's version of what the mark already says
-     to everyone else — so it is `aria-hidden`, and it is found by its text
-     rather than by a role. */
+     to everyone else, so it is `aria-hidden` and is found by its text, not by a
+     role. */
   describe('the tooltip', () => {
     it('follows the pointer onto a bar and says its value', async () => {
       const user = userEvent.setup();
@@ -161,8 +161,8 @@ describe('BarChart', () => {
   });
 });
 
-/* The series names the legend shows, which are not the ones the table shows —
-   a chart says every name twice, and a query that cannot tell them apart would
+/* The series names the legend shows, as distinct from the ones the table shows.
+   A chart says every name twice, and a query that cannot tell them apart would
    pass with no legend at all. */
 function legendNames(container: HTMLElement): string[] {
   return [...container.querySelectorAll('ul li')].map((item) => item.textContent ?? '');

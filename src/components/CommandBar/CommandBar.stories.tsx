@@ -10,15 +10,14 @@ const meta = {
       description: {
         component:
           '"`role="toolbar"` with one tab stop." "Pill; overflow to a menu."\n\n'
-          + 'Both halves already exist here, and the value of this component is that it is the '
-          + 'pair. `Toolbar` is React Aria\'s roving tab index — eight commands that each took '
-          + 'a tab stop would put eight presses between the reader and the next field. '
+          + 'This component pairs two existing ones. `Toolbar` is React Aria\'s roving tab '
+          + 'index. Eight commands that each took a tab stop would put eight presses between '
+          + 'the reader and the next field. '
           + '`OverflowList` is the measuring row that moves what does not fit into an '
           + 'affordance naming its count.\n\n'
-          + 'The two together have one failure mode worth naming: an item that overflows '
-          + 'leaves the toolbar, and its roving tab index with it. That is correct — it is in '
-          + 'a menu now — but it means the overflow trigger must itself be a toolbar item, '
-          + 'which is why it is rendered inside the same row.',
+          + 'An item that overflows leaves the toolbar, and its roving tab index with it, '
+          + 'because it is in a menu now. The overflow trigger must therefore be a toolbar '
+          + 'item itself, so it is rendered inside the same row.',
       },
     },
   },

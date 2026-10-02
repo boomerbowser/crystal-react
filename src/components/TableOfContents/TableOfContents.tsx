@@ -2,25 +2,22 @@
 
 /* TableOfContents.
  *
- * The catalogue splits this one cleanly, and the split is the design: **Crystal
- * supplies "active marking by label weight, spacing"; the product supplies
- * "which headings are collected, scroll spy thresholds".** So the component is
- * controlled — it is told which entry is active and marks it — and the scroll
- * spy ships beside it as `useHeadingInView`, which a product uses, replaces or
- * ignores.
+ * The catalogue splits the work. Crystal supplies "active marking by label
+ * weight, spacing"; the product supplies "which headings are collected, scroll
+ * spy thresholds". So the component is controlled. It is told which entry is
+ * active and marks it. The scroll spy ships beside it as `useHeadingInView`,
+ * which a product uses, replaces or ignores.
  *
- * That is not a smaller component. It is the difference between a table of
- * contents that works in a virtualised document, a paginated one, a router-driven
- * one and a plain one, and a table of contents that only works in the last.
+ * This lets the table of contents work in a virtualised document, a paginated
+ * one and a router-driven one as well as a plain one.
  *
- * **`aria-current="location"`, not `"page"`.** The catalogue names it, and the
- * distinction is real: `page` means this link points at the document you are
- * reading, which is true of *every* entry here. `location` means this is where
- * in it you are.
+ * The active entry takes `aria-current="location"`, as the catalogue names.
+ * `page` means this link points at the document you are reading, which is true
+ * of every entry here. `location` means this is where in it you are.
  *
- * **The active entry is label weight.** Not a mark beside the label — the
- * indentation in this list already carries meaning, so anything in the leading
- * space would be read as depth.
+ * The active entry is marked by label weight, with nothing beside the label.
+ * The indentation in this list already carries meaning, so anything in the
+ * leading space would be read as depth.
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -42,8 +39,8 @@ export interface TableOfContentsProps {
   /** Names the landmark, so it can be told apart from the page's other navigation. */
   label?: string;
   /**
-   * Called instead of following the fragment. A product with its own scrolling —
-   * smooth, offset for a sticky header, inside a virtualised container — takes
+   * Called instead of following the fragment. A product with its own scrolling
+   * (smooth, offset for a sticky header, inside a virtualised container) takes
    * over here. Returning nothing lets the browser do its own thing.
    */
   onNavigate?: (id: string) => void;
@@ -95,8 +92,8 @@ export interface UseHeadingInViewOptions {
   /**
    * Where in the scrolling box a heading counts as "reached", as a fraction from
    * the top. The default puts the line a fifth of the way down, which is where a
-   * reader's eye is rather than at the very top edge — a heading exactly at the
-   * top is one you have just scrolled past.
+   * reader's eye is. A heading exactly at the top edge is one you have just
+   * scrolled past.
    */
   readonly line?: number;
   /** The scrolling element. Defaults to the document. */
@@ -113,28 +110,23 @@ export interface UseHeadingInViewOptions {
  *
  * ## Why a scroll listener and not an IntersectionObserver
  *
- * The observer is the more elegant instrument and it was the first
- * implementation. It was wrong three times over, each found by driving a real
- * Chromium and none of them visible to a unit test:
+ * An IntersectionObserver fails here in three ways, none of them visible to a
+ * unit test:
  *
- *   1. `rootMargin: '-20% 0px -80% 0px'` — the usual spelling of "a line a fifth
- *      of the way down" — describes a band of exactly **zero height**, and
- *      nothing can intersect a rectangle with no area. It fired three times
- *      across six scroll positions and the marking skipped two headings: right
- *      at the top, right at the bottom, stale in between.
- *   2. Giving the band real height fixed that and left the last entry
- *      unreachable. A short final section cannot push itself to the reading
- *      line — there is nothing below it to scroll — so it never crossed, so it
- *      was never marked.
+ *   1. `rootMargin: '-20% 0px -80% 0px'`, the usual spelling of "a line a fifth
+ *      of the way down", describes a band of zero height, and nothing can
+ *      intersect a rectangle with no area. The marking skips headings.
+ *   2. With a band of real height, the last entry is unreachable. A short final
+ *      section has nothing below it to scroll, so it cannot reach the reading
+ *      line and is never marked.
  *   3. Detecting "the scroll has reached the end" inside the observer's callback
- *      does not help, because **reaching the end is not a crossing** and the
+ *      does not help, because reaching the end is not a crossing and the
  *      callback never runs.
  *
- * A passive scroll listener, coalesced to one read per frame, has none of those
- * edge cases: it is told about every scroll, and the answer is recomputed from
- * geometry each time. It is also the instrument `AppBar` already settled on here,
- * and unlike the observer it works in the in-app preview browser, which delivers
- * no IntersectionObserver callbacks at all (D-5).
+ * A passive scroll listener, coalesced to one read per frame, is told about
+ * every scroll and recomputes the answer from geometry each time. `AppBar` uses
+ * the same approach, and unlike the observer it works in the in-app preview
+ * browser, which delivers no IntersectionObserver callbacks at all (D-5).
  */
 export function useHeadingInView(
   ids: readonly string[],
@@ -178,7 +170,7 @@ export function useHeadingInView(
       }
 
       /* Above the first heading, the first entry is still the one you are
-         heading for — marking nothing leaves the list looking inert. */
+         heading for. Marking nothing would leave the list looking inert. */
       setActive(current ?? headings[0]?.id);
     };
 

@@ -25,8 +25,8 @@ describe('CartDrawer', () => {
     await waitFor(() => { expect(dialog.contains(document.activeElement)).toBe(true); });
   });
 
-  /* The opinion: the settled total is said, once, when it changes — not on
-     opening, and not while it is still being recalculated. */
+  /* The settled total is said once, when it changes. It is not said on opening,
+     or while it is still being recalculated. */
   it('announces the total when it settles on a new figure, and not before', async () => {
     const { rerenderWithCrystal } = renderWithCrystal(<CartDrawer {...props} />);
     expect(screen.queryByText(/Basket total now/)).toBeNull();

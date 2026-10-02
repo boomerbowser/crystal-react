@@ -9,15 +9,15 @@ const meta = {
     docs: {
       description: {
         component:
-          'Full-bleed within its region — the region\'s width and the region\'s corners. A '
-          + 'banner with a content radius floating inside its container is a card, and a card '
-          + 'is not pinned.\n\n'
-          + '`role="status"` for information, `role="alert"` for urgency, opted into rather than '
-          + 'implied by the colour.\n\n'
-          + '**"Dismissal returns focus sensibly."** The control being pressed is the control '
+          'Full-bleed within its region: the region\'s width and the region\'s corners. A '
+          + 'banner with a content radius floating inside its container looks like a card, and a '
+          + 'card is not pinned.\n\n'
+          + '`role="status"` for information, `role="alert"` for urgency, which is opted into '
+          + 'and not implied by the colour.\n\n'
+          + '"Dismissal returns focus sensibly." The control being pressed is the control '
           + 'being removed, so without a `returnFocusTo` focus falls to the document body and a '
           + 'keyboard reader starts again from the top of the page. The component cannot guess '
-          + 'the destination; it can make the omission visible, which is what that prop is for.',
+          + 'the destination, so that prop lets the caller name it.',
       },
     },
   },

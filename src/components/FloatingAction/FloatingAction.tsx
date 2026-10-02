@@ -2,26 +2,23 @@
 
 /* FloatingAction, SpeedDial and ActionBar.
  *
- * The three Resin surfaces that float above content, and the three places the
- * same mistake gets made: a control pinned to the bottom of a viewport covers
- * whatever is underneath it, which at the end of a list is the last item and at
- * any moment might be the focused element.
+ * The three Resin surfaces that float above content. A control pinned to the
+ * bottom of a viewport covers whatever is underneath it: at the end of a list
+ * that is the last item, and at any moment it may be the focused element.
  *
- * Crystal owns the material, the elevation and the safe-area offset. What it
- * cannot own is the space the page leaves underneath — `scroll-padding-block-end`
- * on the scrolling container, or a spacer at the end of the list — because only
- * the page knows what its content is. That is said in each component's
- * documentation rather than left to be discovered at the bottom of a list.
+ * Crystal owns the material, the elevation and the safe-area offset. The page
+ * owns the space it leaves underneath (`scroll-padding-block-end` on the
+ * scrolling container, or a spacer at the end of the list), because only the
+ * page knows its content. Each component's documentation says so.
  *
- * `SpeedDial`'s actions are pills with visible labels, never icons alone. The
- * catalogue is explicit, and the reason is that an icon in a set which appeared a
- * moment ago has no surrounding context to be read from — the toolbar case, where
- * an icon is learnable, does not apply to something transient.
+ * `SpeedDial`'s actions are pills with visible labels, never icons alone, as the
+ * catalogue requires. An icon in a set that appeared a moment ago has no
+ * surrounding context to be read from. In a toolbar an icon can be learned, but
+ * that does not apply to something transient.
  *
- * `ActionBar` announces how many items are selected. A bar that appears when a
- * selection exists is invisible to somebody who cannot see it appear, so the
- * count is a live region: the arrival of the bar and the size of the selection
- * are the same piece of news.
+ * `ActionBar` announces how many items are selected. Somebody who cannot see the
+ * bar appear would not otherwise know a selection exists, so the count is a live
+ * region that reports the bar's arrival and the size of the selection together.
  */
 import { forwardRef, useState, type ReactNode } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
@@ -41,7 +38,7 @@ export interface FloatingActionProps extends Omit<AriaButtonProps, 'className' |
   icon: ReactNode;
   /**
    * Show the label beside the icon, as a pill. The circle is the compact form of
-   * the same control rather than a different one.
+   * the same control.
    */
   isExtended?: boolean;
   className?: string;
@@ -134,8 +131,8 @@ export function ActionBar({
     <Toolbar variant="resin" aria-label={label} className={cx(styles['actionBar'], className)}>
       <span className={cx(styles['count'])}>{selectedCount} selected</span>
       {children}
-      {/* The bar appearing and the size of the selection are the same piece of
-          news, and neither is visible to somebody who cannot see the bar. */}
+      {/* Announces the bar's arrival and the size of the selection together,
+          for somebody who cannot see the bar. */}
       <VisuallyHidden as="div" role="status" aria-live="polite">
         {`${selectedCount} selected. ${label} available.`}
       </VisuallyHidden>

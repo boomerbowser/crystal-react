@@ -1,14 +1,14 @@
 'use client';
 
-/* Timeline — ordered events on a connector.
+/* Timeline: ordered events on a connector.
  *
- * An ordered list, because the order is the meaning: these events happened in
+ * An ordered list, because the order is the meaning. These events happened in
  * this sequence, and a reader who is told "list, 5 items" without the numbers has
- * lost the only thing a timeline adds to a list.
+ * lost what a timeline adds to a list.
  *
- * `aria-current="step"` on the current event, and nothing on the others. The
- * status of the rest is said in words beside the marker rather than drawn into
- * it: the catalogue's four states are complete, current, upcoming and error, and
+ * `aria-current="step"` goes on the current event and nothing on the others. The
+ * status of the rest is written in words beside the marker instead of drawn into
+ * it. The catalogue's four states are complete, current, upcoming and error, and
  * three of those are indistinguishable to anyone who cannot compare two small
  * circles by colour.
  */
@@ -32,15 +32,15 @@ export interface TimelineEvent {
   /** What goes in the marker. A number, an initial, an icon. */
   marker?: ReactNode;
   /**
-   * The status, said. Shown to everyone: three of the four states differ only by
-   * the colour of a small circle otherwise.
+   * The status in words, shown to everyone. Without it, three of the four states
+   * differ only by the colour of a small circle.
    */
   statusLabel?: ReactNode;
 }
 
 export interface TimelineProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
   items: readonly TimelineEvent[];
-  /** Names the sequence. Two timelines on a page are otherwise the same list. */
+  /** Names the sequence, so two timelines on a page can be told apart. */
   label: string;
 }
 
@@ -51,8 +51,8 @@ export const Timeline = forwardRef<HTMLElement, TimelineProps>(function Timeline
   return (
     <ol {...props} ref={ref as never} aria-label={label} className={cx(styles['timeline'], className)}>
       {/* An event added after the timeline first rendered arrives with
-          `list-in`. The catalogue gives it no exit: events are recorded, not
-          withdrawn. */}
+          `list-in`. The catalogue gives it no exit, because recorded events
+          are never withdrawn. */}
       <ListPresence>
         {items.map((item) => {
           const status = item.status ?? 'upcoming';

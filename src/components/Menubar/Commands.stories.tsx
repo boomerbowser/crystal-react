@@ -64,16 +64,15 @@ const meta = {
       description: {
         component:
           '**A menu bar is one tab stop, not one per trigger.** Tab reaches the bar, the arrow keys '
-          + 'move inside it, and Tab again leaves it — so a ten-item bar costs one press to pass '
-          + 'rather than ten. That is the whole reason `role="menubar"` exists and the thing a row of '
-          + 'plain buttons gets wrong.\n\n'
-          + '**A menu bar and a navigation menu are not the same component**, and the difference is '
-          + 'the promise each makes. A menu bar holds *commands*: `menuitem`s that do something to the '
-          + 'thing on screen. A navigation menu holds *links*: ordinary anchors, announced as a '
-          + 'navigation landmark, which a screen reader lists with the page\'s other landmarks and a '
-          + 'menu bar is never listed among. Borrowing `role="menu"` for a set of links is the most '
-          + 'common way a site becomes unusable with a screen reader while passing every automated '
-          + 'check.\n\n'
+          + 'move inside it, and Tab again leaves it, so a ten-item bar costs one press to pass '
+          + 'instead of ten. That is the reason `role="menubar"` exists, and a row of plain buttons '
+          + 'does not do it.\n\n'
+          + '**A menu bar and a navigation menu are different components.** A menu bar holds '
+          + 'commands: `menuitem`s that do something to the thing on screen. A navigation menu holds '
+          + 'links: ordinary anchors, announced as a navigation landmark, which a screen reader lists '
+          + 'with the page\'s other landmarks. A menu bar is never listed there. Borrowing '
+          + '`role="menu"` for a set of links is the most common way a site becomes unusable with a '
+          + 'screen reader while passing every automated check.\n\n'
           + 'The burger is a disclosure, so its name does not change with its state. `aria-expanded` '
           + 'carries that. Renaming it "Close menu" when it opens re-announces it as a different '
           + 'control, and a user tracking it by name loses it.',
@@ -95,7 +94,7 @@ export const Sections: Story = {
 };
 
 /* Controlled, because the component is: the caller owns whether the navigation
-   is open, and a story that faked it would not show the contract. */
+   is open, and the story shows that contract. */
 export const Disclosure: Story = {
   name: 'Burger',
   render: () => {

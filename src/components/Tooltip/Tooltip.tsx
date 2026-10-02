@@ -2,17 +2,16 @@
 
 /* Tooltip.
  *
- * The rule that matters more than the appearance: **a tooltip is never the sole
- * accessible name.** It supplements a name that already exists. A control whose
- * only label is a tooltip is unusable by touch, unusable by a screen reader that
- * does not surface `aria-describedby`, and unreadable the moment the pointer
- * moves — `IconButton` takes a `label` for that reason, and this is what goes
- * beside it, not instead of it.
+ * A tooltip is never the sole accessible name. It supplements a name that
+ * already exists. A control whose only label is a tooltip is unusable by touch,
+ * unusable by a screen reader that does not surface `aria-describedby`, and
+ * unreadable once the pointer moves. `IconButton` takes a `label` for that
+ * reason, and a tooltip goes beside that label, not in place of it.
  *
- * React Aria handles the rest of what the catalogue asks: it opens on focus as
- * well as hover, so a keyboard reaches it; it stays open while the pointer is
- * over the tooltip itself, so a link inside one can be clicked; and Escape
- * dismisses it. A tooltip built on hover alone has none of those.
+ * React Aria handles the rest of what the catalogue asks. The tooltip opens on
+ * focus as well as hover, so a keyboard reaches it. It stays open while the
+ * pointer is over the tooltip itself, so a link inside one can be clicked. Escape
+ * dismisses it.
  */
 import type { ReactNode } from 'react';
 import {
@@ -42,9 +41,9 @@ export function Tooltip({
     <AriaTooltip
       {...props}
       ref={scope as never}
-      /* Frost, always — a transient overlay is Frost (Crystal R15e), and a
-         tooltip does not step down inside a dialog because it is not competing
-         with the dialog for depth: it is a small panel that lands where the
+      /* Always Frost, because a transient overlay is Frost (Crystal R15e). A
+         tooltip does not step down inside a dialog, because it does not compete
+         with the dialog for depth. It is a small panel that lands where the
          pointer is, above whatever is there. */
       data-cr-overlay="frost"
       className={cx(styles['tooltip'], 'cr-frost', className)}

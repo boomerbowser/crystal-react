@@ -19,7 +19,7 @@ describe('MeterGroup', () => {
   });
 
   /* "Meaning never rests on colour alone." The legend is where each segment's
-     name is written, so it is on by default and this is the check that it is. */
+     name is written, so it is on by default, and this checks that it is. */
   it('names every segment in words, not only by its swatch', () => {
     const { container } = renderWithCrystal(<MeterGroup label="Storage" segments={segments} />);
     const legend = container.querySelector('ul')!;
@@ -34,7 +34,8 @@ describe('MeterGroup', () => {
   });
 
   /* Without a total the whole is the sum, so the segments fill the track. With
-     one, what is left over is left empty — which is the only reason to pass it. */
+     one, the remainder of the track is left empty, which is what a total is
+     for. */
   it('fills the track when no total is given', () => {
     const { container } = renderWithCrystal(<MeterGroup label="Storage" segments={segments} />);
     const widths = [...container.querySelectorAll('[role="meter"]')]

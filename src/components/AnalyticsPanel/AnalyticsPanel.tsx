@@ -1,23 +1,23 @@
 'use client';
 
-/* AnalyticsPanel — a chart with its controls, legend and range picker.
+/* AnalyticsPanel: a chart with its controls, legend and range picker.
  *
- * "The chart carries **a table equivalent**; controls are real controls."
+ * "The chart carries a table equivalent; controls are real controls."
  * States: `at-rest`, `loading`, `empty`, `error`.
  *
- * The table equivalent is not this component's to add, and that is the point:
- * `ChartSurface` takes `table` as a **required** prop, so a chart in this
- * library cannot exist without the same data as text. A panel that accepted a
- * bare `<svg>` as its chart would be a way around that requirement, so the chart
- * is passed through as a node and the requirement stays where it is enforced.
+ * The table equivalent is not this component's to add. `ChartSurface` takes
+ * `table` as a required prop, so a chart in this library cannot exist without
+ * the same data as text. A panel that accepted a bare `<svg>` as its chart
+ * would be a way around that requirement, so the chart is passed through as a
+ * node and the requirement stays where it is enforced.
  *
- * **Four states, and three of them are where panels go wrong.** A chart that is
- * loading, empty or failed is usually drawn as an empty plot with axes — which
- * says "zero" to anyone reading it, and "zero" is a number. So each of the three
- * replaces the chart rather than decorating it, and each says which it is in
- * words: `Loader` for a wait, `EmptyState` for nothing to draw, `Result` for a
- * failure. The panel's frame, heading and controls stay, because they are how
- * the reader changes the range that might fix it.
+ * Four states, and three of them are where panels go wrong. A chart that is
+ * loading, empty or failed is usually drawn as an empty plot with axes. It
+ * says "zero" to anyone reading it, and "zero" is a number. So each of the
+ * three replaces the chart rather than decorating it, and each says which it
+ * is in words: `Loader` for a wait, `EmptyState` for nothing to draw, `Result`
+ * for a failure. The panel's frame, heading and controls stay, because they
+ * are how the reader changes the range that might fix it.
  *
  * `error` is `role="alert"` where `empty` is not, for the same reason
  * `ErrorScreen` is and `EmptyScreen` is not: one is a failure and one is a fact.

@@ -1,8 +1,8 @@
 @use '../../styles/tokens' as *;
 
-/* "Content grid." The one thing this adds to the shell's arrangement: a grid the
-   view's regions sit in, reflowing by *container* width rather than viewport,
-   so a dashboard inside a split view reflows with the pane it is in. */
+/* "Content grid." This adds one thing to the shell's arrangement: a grid the
+   view's regions sit in. It reflows by container width, not viewport width, so
+   a dashboard inside a split view reflows with the pane it is in. */
 .grid {
   display: grid;
   gap: $cr-spacing-md;

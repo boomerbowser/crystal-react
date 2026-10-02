@@ -1,15 +1,15 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* Chip — a compact pill for a value, a filter or a selection.
+/* Chip is a compact pill for a value, a filter or a selection.
  *
- * 32px tall inside a 44px target: the pill is the picture and the row around it
- * is the place to press, which is the same split every compact control in Crystal
- * makes.
+ * It is 32px tall inside a 44px target. The pill is what is drawn and the row
+ * around it is the place to press, the same split every compact control in
+ * Crystal makes.
  *
- * A removable chip is **two** controls — the chip and its remove button — so the
- * remove control has its own target inside the chip's. That is why the chip's own
- * padding shrinks when it is removable rather than the remove button being
+ * A removable chip is two controls, the chip and its remove button, so the
+ * remove control has its own target inside the chip's. That is why the chip's
+ * own padding shrinks when it is removable, instead of the remove button being
  * squeezed.
  */
 
@@ -33,13 +33,12 @@
  position: relative; cursor: pointer; }
 
 .pressable::after {
-  /* There is one `::after` per element, and Crystal's sheen is on it too — so
-     switching this back on after Crystal's `.cr-bare` (which sets both pseudo-
-     elements to `content: none`) means taking back everything
-     Crystal's rule says about it, not just `display`. The gradient would
-     otherwise paint across the chip, and `pointer-events: none` would leave the
-     box inert. This box is not decoration: it is the hit target, and Crystal's
-     rule had been disabling it since 2.1.0 was installed. */
+  /* There is one `::after` per element, and Crystal's sheen is on it too.
+     Crystal's `.cr-bare` sets both pseudo-elements to `content: none`, so
+     switching this back on means undoing everything Crystal's rule sets on it,
+     not only `display`. Otherwise the gradient paints across the chip and
+     `pointer-events: none` leaves the box inert. This box is the hit target,
+     and Crystal's rule disables it from 2.1.0 unless it is undone here. */
   display: block;
   background: none;
   pointer-events: auto;
@@ -72,7 +71,7 @@
 .removable { padding-inline-end: $cr-spacing-2xs; }
 
 /* The label half of a chip that is both selectable and removable. It carries the
-   press behaviour; the pill around it carries the material. */
+   press behaviour, and the pill around it carries the material. */
 .chipLabel {
 
   display: flex;
@@ -97,10 +96,10 @@
 
 .remove {
   /* The visible control is the 24px circle this declares, and the 44px target is
-     the `::after` below. Neither minimum may override that: Crystal's
-     `button { min-height: 48px }` did from 2.1.0, and `cr-bare`'s 44px minimum
-     would now — each made a 32px chip render 50px tall, which is the defect the
-     hit-target box was written to prevent. Measured, not assumed. */
+     the `::after` below. Neither inherited minimum may override that. Crystal's
+     `button { min-height: 48px }` (from 2.1.0) and `cr-bare`'s 44px minimum each
+     make a 32px chip render 50px tall, as measured. The hit-target box exists to
+     prevent that. */
   min-inline-size: 0;
   min-block-size: 0;
   padding: 0;
@@ -118,18 +117,16 @@
   cursor: pointer;
 }
 
-/* Its own target, centred on the visible control. The insets and the translate
-   are not decoration: without them the box takes its static position inside the
-   button's flex layout, and the button grew to 48px — a 32px chip rendering 52px
-   tall. The story is what showed it. */
+/* Its own target, centred on the visible control. Without the insets and the
+   translate, the box takes its static position inside the button's flex layout
+   and the button grows to 48px, so a 32px chip renders 52px tall. */
 .remove::after {
-  /* There is one `::after` per element, and Crystal's sheen is on it too — so
-     switching this back on after Crystal's `.cr-bare` (which sets both pseudo-
-     elements to `content: none`) means taking back everything
-     Crystal's rule says about it, not just `display`. The gradient would
-     otherwise paint across the chip, and `pointer-events: none` would leave the
-     box inert. This box is not decoration: it is the hit target, and Crystal's
-     rule had been disabling it since 2.1.0 was installed. */
+  /* There is one `::after` per element, and Crystal's sheen is on it too.
+     Crystal's `.cr-bare` sets both pseudo-elements to `content: none`, so
+     switching this back on means undoing everything Crystal's rule sets on it,
+     not only `display`. Otherwise the gradient paints across the chip and
+     `pointer-events: none` leaves the box inert. This box is the hit target,
+     and Crystal's rule disables it from 2.1.0 unless it is undone here. */
   display: block;
   background: none;
   pointer-events: auto;

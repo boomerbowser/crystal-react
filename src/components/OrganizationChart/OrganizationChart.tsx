@@ -1,24 +1,24 @@
 'use client';
 
-/* OrganizationChart — a hierarchy drawn as connected nodes.
+/* OrganizationChart: a hierarchy drawn as connected nodes.
  *
- * Drawn as a *vertical* hierarchy with connectors rather than the top-down boxes
- * a diagram tool would produce, and that is a decision about who this is for.
- * The catalogue's semantics are "a tree; collapse state is announced, and the
- * chart is navigable by keyboard", and the top-down layout is the one that makes
- * both hard: the DOM order that reads correctly is depth-first, the visual order
- * is breadth-first, and every implementation that reconciles them does it by
- * positioning absolutely and leaving the keyboard behind. A vertical hierarchy
- * has the same connectors, the same collapse, the same reading order, and React
- * Aria's tree keyboard behaviour for nothing.
+ * It is drawn as a vertical hierarchy with connectors, in place of the top-down
+ * boxes a diagram tool would produce, as a decision about who the chart is
+ * for. The catalogue's semantics are "a tree; collapse state is
+ * announced, and the chart is navigable by keyboard", and a top-down layout
+ * makes both hard: the DOM order that reads correctly is depth-first, the
+ * visual order is breadth-first, and implementations that reconcile them
+ * position absolutely and leave the keyboard behind. A vertical hierarchy has
+ * the same connectors, the same collapse and the same reading order, and gets
+ * React Aria's tree keyboard behaviour for free.
  *
- * It is `treegrid` rather than `tree`, which is M-3's decision and applies here
- * for the same reason: a node carries a disclosure control *and* is selectable,
+ * It is `treegrid` and not `tree`, by M-3's decision, which applies here for
+ * the same reason: a node carries a disclosure control and is also selectable,
  * and the ARIA tree pattern has no key left to reach a control inside an item.
  *
- * What makes it a chart rather than `TreeView` is the material. `TreeView` is a
- * list of rows with indentation guides; this is a set of **Haze node boxes** on
- * whatever surrounds them, joined by connectors in the rim colour — the
+ * The material is what separates it from `TreeView`. `TreeView` is a list of
+ * rows with indentation guides. This is a set of Haze node boxes on whatever
+ * surrounds them, joined by connectors in the rim colour, which are the
  * catalogue's own words for both.
  */
 import {
@@ -40,7 +40,7 @@ export interface OrganizationNode {
   name: ReactNode;
   /** Their role, shown under the name. */
   role?: ReactNode;
-  /** An avatar, a badge — whatever belongs beside the name. */
+  /** Whatever belongs beside the name, such as an avatar or a badge. */
   leading?: ReactNode;
   /** Typeahead string when `name` is not a plain string. */
   textValue?: string;
@@ -57,9 +57,9 @@ export interface OrganizationChartProps
 }
 
 /* False until somebody expands something, so a node that was on the page when it
-   loaded does not play an arrival. The flag flips on the expansion event rather
-   than after the first commit, because a collection renders its rows in a later
-   pass and a mount-effect flag is already true by the time they arrive. */
+   loaded does not play an arrival. The flag flips on the expansion event. A
+   collection renders its rows in a later pass, so a flag set in a mount effect
+   would already be true by the time they arrive. */
 const Settled = createContext({ current: false });
 
 const ChevronIcon = (
@@ -104,9 +104,9 @@ function Node({ node }: { node: OrganizationNode }): ReactNode {
           <NodeBox node={node} level={level} hasChildItems={hasChildItems} />
         )}
       </TreeItemContent>
-      {/* A nested collection, which is what lets React Aria compute the level,
-          the set size and the position within it — and what makes the collapse
-          state something it can announce rather than something drawn. */}
+      {/* A nested collection, so React Aria can compute the level, the set
+          size and the position within it, and can announce the collapse
+          state. */}
       {node.children?.map((child) => <Node key={child.id} node={child} />)}
     </TreeItem>
   );

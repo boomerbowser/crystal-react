@@ -2,11 +2,12 @@
 @use '../../styles/overlay' as overlay;
 @use '../../styles/material' as material;
 
-/* TreeView — Haze rows on whatever surface holds them.
+/* TreeView: Haze rows on whatever surface holds them.
  *
- * Haze rather than Resin: a tree sits *in* a panel rather than floating above
- * one, and a Resin row inside a Resin sidebar would be Resin containing Resin,
- * which Crystal forbids — two panes of the same glass read as neither pane.
+ * Haze instead of Resin, because a tree sits in a panel instead of floating
+ * above one. A Resin row inside a Resin sidebar would be Resin containing
+ * Resin, which Crystal forbids, because two panes of the same glass read as
+ * neither pane.
  */
 
 .tree {
@@ -15,9 +16,9 @@
   outline: none;
 }
 
-/* The row's focus ring belongs to the row, not to the tree. A composite widget
-   holds focus on behalf of its active row, so ringing the container would ring
-   the whole tree every time somebody pressed an arrow key. */
+/* The focus ring goes on the row, not on the tree. A composite widget holds
+   focus on behalf of its active row, so ringing the container would ring the
+   whole tree every time somebody pressed an arrow key. */
 .item { @include overlay.composite-focus; }
 
 .row {
@@ -35,9 +36,9 @@
   cursor: pointer;
 }
 
-/* The indentation guides, as one repeating gradient rather than one element per
-   level. A guide per level would mean a wrapper per level, and React Aria
-   renders the tree flat — every row is a sibling, carrying its depth as a
+/* The indentation guides, as one repeating gradient instead of one element per
+   level. A guide per level would need a wrapper per level, and React Aria
+   renders the tree flat: every row is a sibling, carrying its depth as a
    number. The gradient draws a line at every step across the indented region
    and stops where the content starts. */
 .row::before {
@@ -54,7 +55,7 @@
   );
 }
 
-/* Right-to-left mirrors the whole construction: the gradient has to run the
+/* Right-to-left mirrors the whole construction. The gradient has to run the
    other way, because `to right` is physical and depth is not. */
 [dir='rtl'] .row::before {
   background-image: repeating-linear-gradient(
@@ -101,8 +102,8 @@
 }
 
 /* The chevron points along the reading direction when closed and down when
-   open, so its own rotation says which it is — the state is not carried by
-   colour, and `aria-expanded` says it in words besides. */
+   open, so its rotation shows the state without relying on colour.
+   `aria-expanded` also states it in words. */
 .chevron svg {
   inline-size: $cr-icon-size;
   block-size: $cr-icon-size;

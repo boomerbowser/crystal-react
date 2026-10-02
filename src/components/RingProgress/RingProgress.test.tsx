@@ -16,8 +16,8 @@ describe('RingProgress', () => {
   });
 
   /* "The centre label is not the only representation." A ring with no centre
-     label must lose nothing an assistive technology needed, which is only true
-     if the value was never living in that label. */
+     label must lose nothing an assistive technology needs, so the value cannot
+     live in that label. */
   it('announces its value with no centre label at all', () => {
     renderWithCrystal(<RingProgress label="Sync" value={25} />);
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuetext', '25%');

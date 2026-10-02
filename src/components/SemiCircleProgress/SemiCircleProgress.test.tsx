@@ -7,7 +7,7 @@ describe('SemiCircleProgress', () => {
   it('is a progressbar with the value beside it on the screen', () => {
     renderWithCrystal(<SemiCircleProgress label="Battery" value={70} />);
     expect(screen.getByRole('progressbar', { name: 'Battery' })).toHaveAttribute('aria-valuenow', '70');
-    /* The catalogue asks for a text value *beside it*, not only announced. */
+    /* The catalogue asks for a text value beside it, as well as an announced one. */
     expect(screen.getByText('70%')).toBeInTheDocument();
   });
 

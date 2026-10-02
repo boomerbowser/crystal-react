@@ -8,8 +8,8 @@ const now = { amount: 40, currency: 'GBP' };
 
 describe('DiscountBadge', () => {
   /* "States what is reduced from what; a percentage alone is not a claim." The
-     pill is short, so the whole statement is in the accessible name — the same
-     fact more completely, not a different one. */
+     pill is short, so the whole statement is in the accessible name. It is the
+     same fact, stated more completely. */
   it('states what is reduced from what', () => {
     renderWithCrystal(<DiscountBadge from={was} to={now} data-testid="d" />);
     const badge = screen.getByTestId('d');
@@ -17,8 +17,8 @@ describe('DiscountBadge', () => {
     expect(badge).toHaveTextContent('£40.00, reduced from £50.00, 20% off');
   });
 
-  /* It computes the reduction rather than being handed one, which is what stops
-     the badge disagreeing with the price beside it. */
+  /* It computes the reduction instead of being handed one, so the badge cannot
+     disagree with the price beside it. */
   it('computes the reduction from the two amounts', () => {
     renderWithCrystal(
       <DiscountBadge from={{ amount: 80, currency: 'GBP' }} to={{ amount: 60, currency: 'GBP' }} data-testid="d" />,
@@ -30,13 +30,12 @@ describe('DiscountBadge', () => {
     renderWithCrystal(<DiscountBadge from={was} to={now} show="amount" data-testid="d" />);
     const badge = screen.getByTestId('d');
     expect(badge).toHaveTextContent('£10.00 off');
-    /* And the name still states the whole thing: which figure the pill shows is
-       a question of what a shopper scans for, not of what is disclosed. */
+    /* The name still states the whole thing. The `show` prop only changes which
+       figure a shopper scans for. */
     expect(badge).toHaveTextContent('reduced from £50.00');
   });
 
-  /* An increase is not a discount, and rendering one as a discount would be the
-     component asserting something it has just worked out is false. */
+  /* An increase is not a discount, so the component renders nothing. */
   it('renders nothing for an increase', () => {
     const { container } = renderWithCrystal(<DiscountBadge from={now} to={was} />);
     expect(container.textContent).toBe('');

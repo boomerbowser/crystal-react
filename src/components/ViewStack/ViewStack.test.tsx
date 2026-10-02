@@ -34,16 +34,15 @@ describe('ViewStack', () => {
     expect(onPop).toHaveBeenCalledOnce();
   });
 
-  /* Nothing to go back to. A back control on the root view is a control that
-     does nothing, which is worse than no control. */
+  /* Nothing to go back to. A back control on the root view would do nothing. */
   it('offers no way back from the root view', () => {
     renderWithCrystal(<ViewStack views={[root]} onPop={() => {}} />);
     expect(screen.queryByRole('button', { name: /^Back to/ })).toBeNull();
   });
 
   /* "Focus moves to the new view." Pushing replaces what the reader was looking
-     at; leaving focus on the control that did it leaves it on a button that is
-     no longer displayed. */
+     at. Focus left on the control that pushed would sit on a button that is no
+     longer displayed. */
   it('moves focus to the view it pushed', async () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <ViewStack views={[root]} onPop={() => {}} />,
@@ -54,13 +53,12 @@ describe('ViewStack', () => {
     });
   });
 
-  /* "And returns on pop." What a stack can truthfully restore is the view, not
-     the control: it shows one view at a time, so the control the reader left was
-     unmounted with the view it belonged to, and a reference kept to it is a
-     detached node that `focus()` accepts and silently ignores. The assertion is
-     therefore that focus lands on the region returned to — and, just as
-     importantly, that it is not on the document body, which is the top of the
-     page and the failure this exists to prevent. */
+  /* "And returns on pop." The stack restores focus to the view, not the control.
+     It shows one view at a time, so the control the reader left was unmounted
+     with its view, and a reference kept to it is a detached node that `focus()`
+     accepts and silently ignores. The test asserts that focus lands on the
+     region returned to, and that it is not on the document body, which is the
+     top of the page. */
   it('returns focus to the view it came back to, and not to the page', async () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <ViewStack views={[root, pushed]} onPop={() => {}} />,

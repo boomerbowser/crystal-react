@@ -22,9 +22,9 @@ describe('NavigationTree', () => {
     expect(screen.getByRole('navigation', { name: 'Site' })).toBeInTheDocument();
   });
 
-  /* What React Aria actually renders, checked rather than assumed: a treegrid
-     of pressable rows carrying `data-href`, routed through `RouterProvider` —
-     not a nested set of `a` elements, whatever the component's name suggests. */
+  /* What React Aria renders: a treegrid of pressable rows carrying `data-href`,
+     routed through `RouterProvider`, not a nested set of `a` elements as the
+     component's name suggests. */
   it('renders destinations as pressable rows carrying their href', () => {
     const { container } = renderWithCrystal(
       <NavigationTree items={items} label="Site" defaultExpandedKeys={['docs']} />,
@@ -37,8 +37,8 @@ describe('NavigationTree', () => {
 
   /* React Aria computes `data-current` for styling and does not set
      `aria-current`, so the catalogue's "aria-current on the active destination"
-     is this library's to supply — from the same comparison, so the announced
-     state and the painted one cannot drift. */
+     is this library's to supply. It comes from the same comparison, so the
+     announced state and the painted one cannot drift. */
   it('sets aria-current on the destination it is on, which React Aria does not', () => {
     const { container } = renderWithCrystal(
       <NavigationTree items={items} label="Site" selectedRoute="/docs/materials" defaultExpandedKeys={['docs']} />,
@@ -55,7 +55,7 @@ describe('NavigationTree', () => {
     );
     const current = container.querySelectorAll('[data-current]');
     expect(current.length).toBeGreaterThan(0);
-    /* And the ancestor, so a collapsed branch still shows where you are. */
+    /* The ancestor too, so a collapsed branch still shows where you are. */
     expect(container.querySelectorAll('[data-current-ancestor]').length).toBeGreaterThan(0);
   });
 
@@ -68,8 +68,9 @@ describe('NavigationTree', () => {
     expect(rows.some((row) => row.getAttribute('aria-level') === '2')).toBe(true);
   });
 
-  /* Nothing moves at rest: the rows present when the page loads were always
-     there. A row that arrives because somebody expanded its parent has not. */
+  /* Nothing moves at rest, so the rows present when the page loads do not
+     animate. Only a row that arrives because somebody expanded its parent
+     does. */
   it('plays nothing on the rows that were there when the page loaded', () => {
     const { container } = renderWithCrystal(
       <NavigationTree items={items} label="Site" defaultExpandedKeys={['docs']} />,

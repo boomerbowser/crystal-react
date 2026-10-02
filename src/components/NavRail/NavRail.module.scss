@@ -1,9 +1,8 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* Frost panel, Resin active destination — the catalogue's line, and a hierarchy
-   rather than two colours. The rail belongs to the page's structure; the
-   destination you are on is lifted off it. */
+/* A Frost panel, as the catalogue puts it. The rail belongs to the page's
+   structure, and its destinations are Crystal's navigation entries. */
 
 .rail {
   @include material.frost;
@@ -13,14 +12,14 @@
   padding: $cr-spacing-sm;
   border-radius: $cr-shape-content-radius;
   /* The shell's sidebar width, because a rail is what a shell's sidebar
-     holds — two numbers for one column is how they drift apart. Overridable
-     for a rail that is not in a shell. */
+     holds, and one column needs one number. Overridable for a rail that is not
+     in a shell. */
   min-inline-size: var(--cr-shell-sidebar, #{$cr-layout-sidebar-width});
 }
 
-/* Collapsed is a width and an alignment, not a different component. The labels
-   are still here; `.label` hides them from sight and from layout while leaving
-   them in the accessibility tree. */
+/* Collapsed changes only the width and the alignment. The labels are still
+   here: `.label` hides them from sight and from layout and leaves them in the
+   accessibility tree. */
 .rail[data-collapsed] {
   min-inline-size: 0;
   inline-size: max-content;
@@ -39,17 +38,9 @@
 /* Each destination is Crystal's navigation entry, `.cr-nav-item` (2.2.0): muted
    at rest, the surface-alt fill and the text colour on hover, and the current
    one at weight 800 on the same fill. The catalogue's surface for a rail is
-   `[frost, nav-item]` — the Frost panel and entries that are furniture on it.
+   `[frost, nav-item]`: the Frost panel, with entries that sit on it.
 
-   The current destination used to be a Resin capsule with a Haze fill, floated
-   off the Frost rail. That is what the catalogue's prose still says — "Resin
-   active destination" — while its checked surface field says `nav-item`; the
-   surface is the one the build validates and the documentation site renders, so
-   it is the one this follows, and the prose is corrected upstream. A Resin
-   capsule on a Frost panel was one more floating plane in a column the material
-   hierarchy says should be quiet.
-
-   What stays is layout: the row fills the rail. */
+   This rule only lays out the row so it fills the rail. */
 .item {
   display: flex;
 }
@@ -57,13 +48,10 @@
 .rail[data-collapsed] .item {
   justify-content: center;
   padding-inline: $cr-action-padding-block;
-  /* Square, not just tall. Collapsed, the label is what was giving the row its
-     width, so the block floor alone left a 32px-wide target — found by
-     `verify-targets.mjs` the day the story that addresses this state was
-     written, and invisible before that because jsdom reports every box as zero.
-     Hiding the label must not shrink the hit area; that is the whole contract
-     of a collapsed rail. And square means both axes: Crystal's entry is 44px
-     tall, so the block floor is restated here beside the inline one. */
+  /* Square. When collapsed, the row loses the width its label gave it, and the
+     block floor alone leaves a 32px-wide target. Hiding the label must not
+     shrink the hit area. Crystal's entry is 44px tall, so the block floor is
+     restated here beside the inline one. */
   min-inline-size: $cr-action-min-target;
   min-block-size: $cr-action-min-target;
 }
@@ -73,9 +61,9 @@
 
 .label { min-inline-size: 0; }
 
-/* Hidden from sight and from layout, kept in the accessibility tree. Not
-   `display: none` and not `visibility: hidden`, either of which would remove it
-   from the accessible name and leave an unlabelled link. */
+/* Hidden from sight and from layout, kept in the accessibility tree.
+   `display: none` or `visibility: hidden` would remove it from the accessible
+   name and leave an unlabelled link. */
 .rail[data-collapsed] .label {
   position: absolute;
   inline-size: 1px;

@@ -2,16 +2,15 @@
 
 /* One media query, as React state.
  *
- * `useSyncExternalStore` rather than `useEffect` plus state, because the value
- * has a server snapshot and a subscription — which is exactly the shape that
- * hook exists for. The naive version renders the wrong answer first and corrects
- * it, which on a theme query is a flash of the wrong theme on every load and on
- * a layout query is the pane arrangement jumping once per navigation.
+ * This uses `useSyncExternalStore`, because the value has a server snapshot and
+ * a subscription, which is the shape that hook exists for. `useEffect` plus
+ * state renders the wrong answer first and corrects it, which on a theme query
+ * is a flash of the wrong theme on every load and on a layout query is the pane
+ * arrangement jumping once per navigation.
  *
- * It lives in its own module because three things now read media queries — the
+ * It lives in its own module because three things read media queries: the
  * preferred scheme, reduced transparency, and `MasterDetail`'s layout
- * breakpoint — and a subscription written three times is a subscription whose
- * cleanup is right in two places.
+ * breakpoint. Sharing one subscription keeps its cleanup in one place.
  */
 import { useCallback, useSyncExternalStore } from 'react';
 

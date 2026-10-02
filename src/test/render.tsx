@@ -1,11 +1,11 @@
 /* Render a component inside Crystal, the way an application would.
  *
- * Every test needs a provider, because `useCrystalTheme` throws without one —
- * deliberately, since a component silently rendering un-themed is the failure
+ * Every test needs a provider, because `useCrystalTheme` throws without one.
+ * It throws by decision: a component silently rendering un-themed is the failure
  * that produces "it looks nothing like the design system" reports. Repeating the
- * wrapper in each file invites them to drift apart, and it is also where the
- * theme axes belong: a test that needs dark mode or right-to-left should say so
- * in one argument rather than rebuild the tree.
+ * wrapper in each file invites the copies to drift apart. The wrapper is also
+ * where the theme axes belong: a test that needs dark mode or right-to-left says
+ * so in one argument and does not rebuild the tree.
  */
 import { render, type RenderOptions, type RenderResult } from '@testing-library/react';
 import type { ReactElement, ReactNode } from 'react';
@@ -29,10 +29,10 @@ export function renderWithCrystal(
 
   return {
     ...result,
-    /* `rerender` from Testing Library replaces the tree *inside* the wrapper, but
+    /* `rerender` from Testing Library replaces the tree inside the wrapper, but
        only if the caller remembers to wrap again. This keeps the provider so a
-       rerender cannot silently drop the theme — which is a test passing for the
-       wrong reason. */
+       rerender cannot silently drop the theme and let a test pass for the wrong
+       reason. */
     rerenderWithCrystal: (next: ReactElement) => result.rerender(next),
   };
 }

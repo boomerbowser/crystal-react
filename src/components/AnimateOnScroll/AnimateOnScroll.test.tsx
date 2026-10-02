@@ -3,8 +3,8 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { AnimateOnScroll } from './AnimateOnScroll.js';
 
 describe('AnimateOnScroll', () => {
-  /* The rule that shapes the whole component: content is present and readable
-     before the animation runs, never revealed by it. A reader whose observer
+  /* Content is present and readable before the animation runs, and is never
+     revealed by it. A reader whose observer
      never fires, or whose JavaScript failed, must not get an invisible page. */
   it('renders its content readable, not hidden waiting to be revealed', () => {
     renderWithCrystal(<AnimateOnScroll><p>Body text</p></AnimateOnScroll>);
@@ -14,8 +14,7 @@ describe('AnimateOnScroll', () => {
   });
 
   /* "Which recipes are allowed" is Crystal's half of this component, so a press
-     playing because something scrolled into view is refused rather than accepted
-     and ignored. */
+     recipe is refused with an error instead of being accepted and ignored. */
   it('refuses a recipe that is not an entry', () => {
     expect(() => renderWithCrystal(
       /* @ts-expect-error deliberately outside the allowed set */

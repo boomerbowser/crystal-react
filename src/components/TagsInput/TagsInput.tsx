@@ -6,19 +6,19 @@
  * only in when a value is committed: tags are created by a delimiter as you type,
  * tokens by leaving the field. Both end as removable chips.
  *
- * Three requirements, and the third is the one that is almost always missing:
+ * There are three requirements, and implementations most often miss the third:
  *
- *   - **Each chip has a named remove control.** `Chip` already does that.
- *   - **Additions and removals are announced.** A chip appearing is a visual
- *     event; a live region is what makes it an event at all for somebody who
- *     cannot see it. Without this the field appears to swallow what was typed.
- *   - **Focus returns after a removal.** Removing the last chip destroys the
- *     element that had focus, and the browser then puts focus on the body — which
- *     drops a keyboard user out of the form entirely. Focus goes back to the entry
- *     field, which is where they were working.
+ *   - Each chip has a named remove control. `Chip` already does that.
+ *   - Additions and removals are announced. A chip appearing is a visual event,
+ *     and a live region tells somebody who cannot see it. Without this the
+ *     field appears to swallow what was typed.
+ *   - Focus returns after a removal. Removing the last chip destroys the
+ *     element that had focus, and the browser then puts focus on the body,
+ *     which drops a keyboard user out of the form entirely. Focus goes back to
+ *     the entry field, which is where they were working.
  *
- * A duplicate is refused rather than silently dropped, and the refusal names
- * itself: "nothing happened" is the worst possible answer to a keypress.
+ * A duplicate is refused rather than silently dropped, and the refusal says
+ * why, because a keypress that appears to do nothing leaves the reader guessing.
  */
 import {
   useCallback, useId, useRef, useState,
@@ -48,14 +48,14 @@ export interface TagsInputProps {
   delimiters?: readonly string[];
   /** Most values allowed. Reaching it says so rather than refusing quietly. */
   maxTags?: number;
-  /** Reject a value before it is added — a validator, a length rule. */
+  /** Reject a value before it is added, such as with a validator or a length rule. */
   validate?: (value: string) => string | null;
   isDisabled?: boolean;
   isInvalid?: boolean;
   /**
    * The field's name in a form. Without it the field cannot be submitted, and a
-   * `Form` distributing a server's errors has no name to match it against — so
-   * the field sits there looking untouched while the server objects.
+   * `Form` distributing a server's errors has no name to match it against, so
+   * the field looks untouched while the server reports an error.
    */
   name?: string;
   className?: string;
@@ -78,8 +78,7 @@ function useTags({
     const candidate = raw.trim();
     if (!candidate) return true;
 
-    /* Refused, and told why. "Nothing happened" is the worst possible answer to
-       a keypress. */
+    /* Refused, and told why, so a keypress never appears to do nothing. */
     if (tags.includes(candidate)) { setRefusal(`${candidate} is already here`); return false; }
     if (maxTags !== undefined && tags.length >= maxTags) {
       setRefusal(`That is the most you can add — ${maxTags}`);
@@ -135,7 +134,7 @@ function Field({
       <div
         ref={shellScope as never}
         /* React's onFocus is focusin, so focus arriving at any control inside
-           marks the field once — Crystal's `field-focus`. */
+           marks the field once with Crystal's `field-focus`. */
         onFocus={() => { void playField('field-focus'); }}
         className={cx(styles['shell'], 'cr-field-shell')}
         {...(invalid ? { 'data-invalid': true } : {})}
@@ -148,7 +147,7 @@ function Field({
               onRemove={() => {
                 remove(tag);
                 /* Removing the last chip destroys the element that had focus, and
-                   the browser then focuses the body — which drops a keyboard user
+                   the browser then focuses the body, which drops a keyboard user
                    out of the form. Focus goes where they were working. */
                 entry.current?.focus();
               }}

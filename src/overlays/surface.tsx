@@ -2,27 +2,24 @@
 
 /* Which material an overlay lands on.
  *
- * **A transient overlay is Frost.** Meridian moved tooltip, popover, menu and
- * toast to Frost on 17 September 2026 (R15e in Crystal's request log), and the
- * documentation site has rendered them so since: a surface that opens over
- * content is an intermediate panel, not a compact control, and its reading
- * content sits on Haze inside it. This library had them as Resin, from a reading
- * of the specification that predated the decision — Crystal 2.2.0 corrects the
- * chapters and the catalogue entries that still said Resin.
+ * A transient overlay is Frost. Meridian moved tooltip, popover, menu and toast
+ * to Frost on 17 September 2026 (R15e in Crystal's request log). A surface that
+ * opens over content is an intermediate panel, not a compact control, and its
+ * reading content sits on Haze inside it. Crystal 2.2.0 corrects the chapters
+ * and catalogue entries that still said Resin.
  *
- * **Independently blurred panes do not nest.** A menu is Frost because it opens
- * over the page; the same menu opened inside a dialog or a drawer is opening
- * over a surface that is already a pane, and two panes of diffused glass stacked
- * read as neither. So once something Frost, Resin or Haze is between the overlay
- * and the page, the overlay recesses into Haze instead — the content fill inside
- * the frame, which is what a menu inside a panel is.
+ * Independently blurred panes do not nest. A menu is Frost because it opens
+ * over the page. The same menu opened inside a dialog or a drawer opens over a
+ * surface that is already a pane, and two stacked panes of diffused glass read
+ * as neither. Once something Frost, Resin or Haze is between the overlay and the
+ * page, the overlay recesses into Haze instead: the content fill inside the
+ * frame.
  *
  * The DOM cannot answer this, because every overlay is portalled to a container
- * on `body` and loses its nesting on the way. React context is not portalled: it
- * follows the element tree, which is the tree that actually describes what is
- * inside what. So a `Dialog` or a `Drawer` declares the material it presents, and
- * an overlay rendered anywhere inside it — however far away it ends up in the
- * document — reads that and steps down.
+ * on `body` and loses its nesting. React context is not portalled. It follows
+ * the element tree, which describes what is inside what. A `Dialog` or a
+ * `Drawer` declares the material it presents, and an overlay rendered anywhere
+ * inside it, wherever it ends up in the document, reads that and steps down.
  */
 import { createContext, useContext, type ReactNode } from 'react';
 
@@ -62,12 +59,11 @@ export function overlayMaterialProps(material: CrystalOverlayMaterial): { 'data-
  * Crystal's class for an overlay of this material, beside the attribute above.
  *
  * On the page an overlay is Crystal's `.cr-frost` (2.2.0 publishes it as the
- * surface every transient overlay is), and wearing it makes Crystal the painter
- * of the panel. Inside a pane an overlay recesses into Haze, and plain `.cr-haze`
- * — a feathered fill with no edge and no shadow — drawn over a Haze dialog has no
- * visible boundary at all. Crystal 2.3.0 published the answer (D-25): the
- * recessed overlay, `.cr-haze.overlay`, a flat Haze fill with the edge rim and
- * the content shadow. The library drew its own until then.
+ * surface for every transient overlay), so Crystal paints the panel. Inside a
+ * pane an overlay recesses into Haze. Plain `.cr-haze`, a feathered fill with
+ * no edge and no shadow, has no visible boundary over a Haze dialog, so it uses
+ * the recessed overlay Crystal 2.3.0 publishes (D-25): `.cr-haze.overlay`, a
+ * flat Haze fill with the edge rim and the content shadow.
  */
 export function overlayMaterialClass(material: CrystalOverlayMaterial): string {
   return material === 'frost' ? 'cr-frost' : 'cr-haze overlay';

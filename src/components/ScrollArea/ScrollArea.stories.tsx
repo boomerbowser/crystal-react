@@ -9,22 +9,22 @@ const meta = {
     docs: {
       description: {
         component:
-          'A bounded scrolling region carrying one of Crystal\'s two scrollbars. Frost for '
+          'A bounded scrolling region carrying one of Crystal\'s two scrollbars. Frost is for '
           + 'panels and reading surfaces, because Frost is the intermediate surface and its '
-          + 'scrollbar belongs to the panel the way the panel\'s own text does; Resin for menus, '
+          + 'scrollbar belongs to the panel the way the panel\'s own text does. Resin is for menus, '
           + 'popovers and compact scrollers, because Resin is the floating control plane and a '
           + 'scrollbar there is a control. The scroll contract comes with it: a swipe that '
           + 'reaches the end does not carry on into the page underneath, a gutter is reserved so '
           + 'content does not jump when the scrollbar appears, and the browser keeps its own '
           + 'gesture handling.\n\n'
-          + 'The edge fade says there is more beyond the edge, which matters most where the '
-          + 'scrollbar is an overlay that is not there until you are already scrolling. It is a '
-          + 'mask rather than a painted overlay, so the real material shows through it, and the '
-          + 'container\'s scroll padding matches its depth — a focus ring can never come to rest '
+          + 'The edge fade shows there is more beyond the edge. This matters most where the '
+          + 'scrollbar is an overlay that does not appear until you are already scrolling. The '
+          + 'fade is a mask, not a painted overlay, so the real material shows through it. The '
+          + 'container\'s scroll padding matches its depth, so a focus ring never comes to rest '
           + 'underneath it.\n\n'
-          + 'A scroll area becomes a tab stop only when it scrolls and holds nothing focusable, '
-          + 'because a scrollable region unreachable by keyboard is a WCAG failure and an '
-          + 'unnecessary tab stop is its own annoyance.',
+          + 'A scroll area becomes a tab stop only when it scrolls and holds nothing focusable. '
+          + 'A scrollable region unreachable by keyboard fails WCAG, and a tab stop that is not '
+          + 'needed only gets in the way.',
       },
     },
   },
@@ -37,7 +37,7 @@ const paragraphs = [
   'Plastic is the foundation: opaque, and the only material that emits rather than refracts.',
   'Frost is the intermediate surface. Panels, sheets and long reading surfaces are Frost.',
   'Resin is the floating control plane, fixed at a 20% fill, and it never contains Resin.',
-  'Haze is the readable content fill — 80% opaque with a feathered perimeter on an isolated paint layer.',
+  'Haze is the readable content fill: 80% opaque, with a feathered perimeter on an isolated paint layer.',
   'Stone backs a label where it would otherwise sit on a busy surface.',
   'Mirage is the modal scrim, and a dialog is Haze over Mirage rather than Resin.',
   'Feathering applies to paint only. Text, icons, hit areas and focus rings stay crisp.',

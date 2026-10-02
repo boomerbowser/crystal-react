@@ -1,18 +1,18 @@
 'use client';
 
-/* ImageList — a grid of images with optional captions.
+/* ImageList. A grid of images with optional captions.
  *
- * "A list; each image needs an accessible name or is marked decorative." Both
- * halves are enforced rather than requested. It is a real `ul`, so a reader is
- * told how many images there are before walking them — a grid of divs announces
- * nothing and gives no way out. And `alt` is required on every item, exactly as
- * it is on `Image`: empty means decorative, absent means announced by filename,
- * and the author has to say which.
+ * "A list; each image needs an accessible name or is marked decorative." The
+ * component enforces both halves. It is a real `ul`, so a reader is told how
+ * many images there are before walking them. A grid of divs announces nothing
+ * and gives no way out. `alt` is required on every item, exactly as it is on
+ * `Image`: empty means decorative, absent means announced by filename, and the
+ * author has to say which.
  *
- * The caption is not the alt text. It sits in the item and describes what the
- * picture *means*; the alt says what it *is*, for somebody who cannot see it.
- * `Caption` makes the same distinction and refuses an `alt` prop for the same
- * reason.
+ * The caption is separate from the alt text. It sits in the item and describes
+ * what the picture means. The alt says what it is, for somebody who cannot see
+ * it. `Caption` makes the same distinction and refuses an `alt` prop for the
+ * same reason.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { Image } from '../Image/Image.js';
@@ -23,7 +23,7 @@ export interface ImageListItem {
   /** Stable across renders. */
   id: string;
   src: string;
-  /** What the image is. Empty for a decorative one — empty, not absent. */
+  /** What the image is. Empty for a decorative one. Empty, not absent. */
   alt: string;
   /** What it means. Shown over the image, and not a substitute for `alt`. */
   caption?: ReactNode;

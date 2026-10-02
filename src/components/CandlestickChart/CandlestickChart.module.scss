@@ -2,11 +2,10 @@
 
 /* "Rise and fall colour from the status tokens, never red and green alone."
  *
- * The second channel is the fill, and it is not an invention: a candle that rose
- * has been drawn hollow and one that fell filled since long before screens had
- * colour. So a reader with no colour at all still reads the chart, and one with
- * no picture at all gets the direction in words from the mark's label and the
- * table's own column.
+ * The second channel is the fill. A candle that rose has been drawn hollow and
+ * one that fell filled since long before screens had colour. A reader with no
+ * colour at all still reads the chart, and one with no picture at all gets the
+ * direction in words from the mark's label and the table's own column.
  */
 
 .candle .wick {
@@ -42,8 +41,8 @@
   .candle .body { transition: none; }
 }
 
-/* Forced colours keeps exactly the distinction the convention is built on:
-   hollow rose, filled fell, and the stroke is the one colour there is. */
+/* Forced colours keeps the distinction the convention is built on: hollow rose,
+   filled fell, and the stroke in the one colour available. */
 @media (forced-colors: active) {
   .candle .wick,
   .candle[data-direction='rose'] .wick,

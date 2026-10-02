@@ -9,9 +9,8 @@ import { FileInput, DropZone, Upload, UploadZone } from '../FileInput/FileInput.
 import { Stack, Group } from '../Stack/Stack.js';
 import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 
-/* The six palettes, from Crystal's own token file. Typing the seeds here would
-   make a swatch picker that stops matching the palettes it is showing — which is
-   a particularly bad place for a colour to drift. */
+/* The six palettes, from Crystal's own token file. Seeds typed here could drift
+   from the palettes the swatch picker is showing. */
 const palettes = (crystalFlat as unknown as {
   palettes: Record<string, { name: string; seed: string }>;
 }).palettes;
@@ -24,12 +23,11 @@ const meta = {
   title: 'Inputs/Temporal, colour and files',
   component: DatePicker,
   /* The callbacks as actions, so the Actions panel shows what fired and with
-     what. They are declared by hand because this Storybook uses `react-docgen`
-     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
+     what. They are declared by hand because this Storybook uses `react-docgen`,
+     not `react-docgen-typescript` (see `.storybook/main.ts`), and
      react-docgen reads a component's own interface without resolving what it
      extends. Every callback here is inherited from a React Aria interface, so
-     docgen cannot see one of them. Each was checked against the compiler
-     before being written down. */
+     docgen cannot see any of them. Each was checked against the compiler. */
   argTypes: {
     ...ariaArgTypes<DatePickerProps>({
       description: true,
@@ -45,20 +43,20 @@ const meta = {
     docs: {
       description: {
         component:
-          'A date field is **not** a text field with a pattern. It is a row of segments, each its '
-          + 'own spin button, which is what makes a date enterable by keyboard in any locale '
-          + 'without knowing the order — and what makes it announce "day, 14" rather than reading '
-          + 'a formatted string back. An unset segment shows `dd` rather than a plausible number: '
-          + '`01` is an answer nobody gave.\n\n'
+          'A date field is a row of segments, each its own spin button, and not a text field '
+          + 'with a pattern. Segments make a date enterable by keyboard in any locale without '
+          + 'knowing the order, and make the field announce "day, 14" instead of reading a '
+          + 'formatted string back. An unset segment shows `dd`, not a plausible number, '
+          + 'because `01` is an answer nobody gave.\n\n'
           + 'All the arithmetic is `@internationalized/date`. Dates are the largest single source '
-          + 'of wrong answers in application code, and a design system doing its own date maths is '
-          + 'a design system with a bug in it.\n\n'
+          + 'of wrong answers in application code, so the design system does no date maths of '
+          + 'its own.\n\n'
           + '**Colour is never the only representation.** A swatch carries its name as text, a '
-          + 'field keeps an editable text value, and the thumb is two rings — white inside dark — '
+          + 'field keeps an editable text value, and the thumb is two rings (white inside dark), '
           + 'because a single-colour border disappears against part of the gamut it sits on.\n\n'
-          + 'A drop surface always contains a real button: dragging needs a pointer, a steady hand '
-          + 'and sight of both ends of the gesture, so it is an enhancement over choosing rather '
-          + 'than a replacement.',
+          + 'A drop surface always contains a real button. Dragging needs a pointer, a steady hand '
+          + 'and sight of both ends of the gesture, so it is an enhancement to choosing and does '
+          + 'not replace it.',
       },
     },
   },
@@ -71,7 +69,7 @@ type Story = StoryObj<typeof meta>;
 export const Temporal: Story = {
   render: () => (
     <Stack gap="lg" style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>
-      <DateInput label="Date of birth" description="Type it — no calendar needed." />
+      <DateInput label="Date of birth" description="Type it. No calendar needed." />
       <DatePicker label="Due date" defaultValue={today(getLocalTimeZone())} />
       <DatePicker
         label="Delivery"

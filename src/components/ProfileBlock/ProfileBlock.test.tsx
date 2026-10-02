@@ -33,7 +33,7 @@ describe('ProfileBlock', () => {
     expect(screen.queryByRole('alertdialog')).toBeNull();
   });
 
-  /* The opinion: destructive actions confirm and say what they remove. */
+  /* Destructive actions confirm and say what they remove. */
   it('confirms a destructive action in an alert dialog that says what it removes', async () => {
     const onDelete = vi.fn();
     renderWithCrystal(<ProfileBlock {...props(onDelete)} />);

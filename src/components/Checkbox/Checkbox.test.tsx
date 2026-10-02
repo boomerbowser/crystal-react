@@ -10,12 +10,12 @@ describe('Checkbox', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The catalogue's rule, in as many words: indeterminate is set through the
-     property, not a class. The DOM property is what makes a native checkbox
-     expose "mixed"; a class that draws a dash gives a control that looks
-     partially checked and announces as unchecked, which is worse than not
-     drawing it. This asserts the property because that is the mechanism the rule
-     names — `aria-checked` is absent precisely because the native one is used. */
+  /* The catalogue's rule: indeterminate is set through the property, not a
+     class. The DOM property is what makes a native checkbox expose "mixed". A
+     class that draws a dash gives a control that looks partially checked and
+     announces as unchecked, which is worse than not drawing it. This asserts
+     the property because that is the mechanism the rule names. `aria-checked`
+     is absent because the native state is used. */
   it('sets indeterminate through the property, not a class', () => {
     renderWithCrystal(<Checkbox isIndeterminate>Select all</Checkbox>);
     const box = screen.getByRole('checkbox', { name: 'Select all' }) as HTMLInputElement;
@@ -33,8 +33,8 @@ describe('Checkbox', () => {
 });
 
 describe('CheckboxGroup', () => {
-  /* "Choose at least one" belongs to the set. Attached to the first checkbox it
-     becomes a message about that checkbox. */
+  /* "Choose at least one" belongs to the set. Attached to the first checkbox, it
+     would describe only that checkbox. */
   it('describes the group rather than the first option', async () => {
     const { container } = renderWithCrystal(
       <CheckboxGroup label="Notify me about" errorMessage="Choose at least one">

@@ -21,8 +21,8 @@ const props: DataTableBlockProps = {
 
 describe('DataTableBlock', () => {
   /* One landmark, the table's. A block region around a table region named the
-     same word was two stops for one table — axe's landmark-unique, found by the
-     axe assertion below on the first run. */
+     same word would be two stops for one table, which axe reports as
+     landmark-unique. */
   it('has a heading and exactly one region, the table\'s own', () => {
     renderWithCrystal(<DataTableBlock {...props} />);
     expect(screen.getByRole('heading', { name: 'Orders' })).toBeInTheDocument();
@@ -31,8 +31,8 @@ describe('DataTableBlock', () => {
     expect(within(regions[0]!).getByRole('grid', { name: 'Orders' })).toBeInTheDocument();
   });
 
-  /* The opinion. A bulk action is handed the count, so its button says what it
-     will affect — and the rows it acts on are exactly the ones it counted. */
+  /* A bulk action is handed the count, so its button says what it will affect.
+     The rows it acts on are exactly the ones it counted. */
   it('names every bulk action after what it will affect, and acts on exactly that', async () => {
     const onAction = vi.fn();
     renderWithCrystal(
@@ -48,7 +48,7 @@ describe('DataTableBlock', () => {
     expect([...(onAction.mock.calls[0]?.[0] as Set<string>)].sort()).toEqual(['a', 'c']);
   });
 
-  /* A table cannot know whether "3" is news, so it says nothing; the block owns
+  /* A table cannot know whether "3" is news, so it says nothing. The block owns
      the announcement, says it as the count changes, and is silent at rest. */
   it('announces the count as it changes and is silent at rest', async () => {
     renderWithCrystal(<DataTableBlock {...props} />);
@@ -73,8 +73,8 @@ describe('DataTableBlock', () => {
     expect(screen.queryByRole('checkbox')).toBeNull();
   });
 
-  /* Headers over no rows say "there are none". While loading or failed that is a
-     fact the data did not state; when empty it is the fact. */
+  /* Headers over no rows say "there are none". While loading or failed, the data
+     did not state that. When empty, it is true. */
   it('replaces the rows while loading or failed, and keeps the headers when empty', () => {
     const { unmount } = renderWithCrystal(<DataTableBlock {...props} state="loading" />);
     expect(screen.queryByRole('grid')).toBeNull();
@@ -100,9 +100,9 @@ describe('DataTableBlock', () => {
     expect(screen.queryByRole('navigation')).toBeNull();
   });
 
-  /* Every state, not the one that happens to be first. MetricsRow's malformed
-     live region lived in the loading render, and an assertion that ran only at
-     rest passed over it. */
+  /* Every state is checked, because a defect can live in a render other than
+     the first, as MetricsRow's malformed live region did in its loading
+     render. */
   it.each([
     ['at rest', {}],
     ['selecting', { defaultSelectedKeys: new Set(['a', 'b']) }],

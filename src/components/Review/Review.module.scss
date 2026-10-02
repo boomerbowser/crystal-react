@@ -24,8 +24,8 @@
   font-size: var(--cr-text-caption-size);
 }
 
-/* The author is the one part of the footer that is not metadata about the
-   review — it is who is speaking. */
+/* The author is who is speaking, so it is set apart from the metadata in the
+   rest of the footer. */
 .author { color: var(--cr-text); font-weight: 700; }
 
 .badge { font-weight: 700; color: var(--cr-success-ink); }

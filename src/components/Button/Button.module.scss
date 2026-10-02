@@ -2,43 +2,37 @@
 
 /* Button.
  *
- * R-19, swept. Everything Crystal's own control is made of now comes from
- * Crystal: the component wears `cr-button`, and core paints it.
+ * Everything Crystal's own control is made of comes from Crystal (R-19): the
+ * component wears `cr-button`, and core paints it.
  *
- * The sweep was rejected once, on the reading that Crystal's surface is keyed on
- * `.cr-button` and so could never reach a module class. Measured, that is not
- * what core does. The Resin recipe is keyed on
- * `:is(button, a.cr-button, .cr-control, .cr-field-shell, .cr-resin-haze, .cr-status)`
- * — on the **element** — so a bare `<button>` with no class at all already
- * resolves to the Resin fill, the rim, the float shadow, the backdrop blur,
+ * The Resin recipe is keyed on
+ * `:is(button, a.cr-button, .cr-control, .cr-field-shell, .cr-resin-haze, .cr-status)`,
+ * which matches the element. A bare `<button>` with no class already resolves
+ * to the Resin fill, the rim, the float shadow, the backdrop blur,
  * `position: relative`, `isolation: isolate` and both feathered pseudo-layers.
- * What a bare button lacks is the geometry, and the geometry is exactly what
- * `.cr-button` adds. Deleting these rules does not leave the component
- * unpainted; it stops this library painting over a coat that was already there.
+ * `.cr-button` adds the geometry.
  *
- * The duplicate had to come out as well as the class going in. A module class is
- * unlayered and Crystal styles inside `@layer crystal.component`, so a later
- * layer does not help Crystal here — an unlayered declaration wins whatever its
- * specificity. Every declaration left below is one Crystal does not make.
+ * Do not restate Crystal's rules here. A module class is unlayered and Crystal
+ * styles inside `@layer crystal.component`, and an unlayered declaration wins
+ * whatever its specificity, so a duplicate paints over Crystal. Every
+ * declaration below is one Crystal does not make.
  *
- * No `data-*` selector survives here. Every state this file used to describe —
- * `:disabled`, `:focus-visible`, `[aria-pressed]`, hover — is in the DOM, and
- * Crystal's own selectors reach it.
+ * No `data-*` selector is used. The states (`:disabled`, `:focus-visible`,
+ * `[aria-pressed]`, hover) are in the DOM, and Crystal's own selectors reach
+ * them.
  *
- * Hover is the one that changed what ships. This file lifted brightness on
- * `[data-hovered]`, attributed to "the one Crystal writes for its own filled
- * button" — `.cr-button:hover`. That rule is in `@layer crystal.reset` and
+ * The button does not brighten on hover. `.cr-button:hover` ("the one Crystal
+ * writes for its own filled button") is in `@layer crystal.reset`, and
  * `:is(button, a.cr-button):hover { filter: none }` is in
- * `@layer crystal.component`, which wins because it is later, not because it is
- * more specific. So Crystal's button does not brighten, this one no longer does
- * either, and the discrepancy is filed against core as D-21 rather than papered
- * over here.
+ * `@layer crystal.component`, which wins because the layer is later. Crystal's
+ * button does not brighten, so this one does not either. The discrepancy is
+ * filed against core as D-21.
  */
 
 .button {
-  /* Transform is set by the motion engine; declaring the origin here keeps the
+  /* The motion engine sets the transform. Declaring the origin here keeps the
      press deformation centred whatever the button's size. Crystal specifies no
-     transform on a button, so this is the library's and stays. */
+     transform on a button, so this rule belongs to the library. */
   transform-origin: center;
   will-change: transform;
 }
@@ -46,23 +40,22 @@
 /* A toggle that is on, when it is also quiet.
  *
  * Crystal paints a pressed toggle by tinting the reading pad and taking
- * `--cr-on-primary` for the ink, and a quiet button has no pad to tint —
- * `.cr-button.quiet::before` is `display: none`. On its own that leaves the
- * on-primary ink over the bare Resin shell. So this is not a duplicate of
- * Crystal's rule, it is the case Crystal's rule does not cover, and the weight
- * at 800 still comes from core: selection is label weight, and the pad is only
- * ever reinforcing it. Worth carrying back to core as a recipe. */
+ * `--cr-on-primary` for the ink. A quiet button has no pad to tint
+ * (`.cr-button.quiet::before` is `display: none`), which would leave the
+ * on-primary ink over the bare Resin shell. Crystal's rule does not cover this
+ * case. The weight of 800 still comes from core: selection is label weight, and
+ * the pad only reinforces it. This is a candidate for a core recipe. */
 .button:global(.quiet)[aria-pressed='true'] { color: var(--cr-text); }
 
 /* A card-shaped button keeps the content radius. Crystal documents the exception
-   in prose and publishes no `.cr-button.card`, so the rule is still this
-   library's — the one place here still waiting on a core recipe. */
+   in prose and publishes no `.cr-button.card`, so the rule stays in this library
+   until core has a recipe for it. */
 .card { border-radius: var(--cr-radius); }
 
 /* Reduced transparency. Core flattens its material containers under this query
    and carries no rule for a control, so removing diffusion from the button
-   itself is this library's. Shape, contour and hierarchy are kept: it never
-   flattens the control into a plain rectangle. */
+   itself is this library's. Shape, contour and hierarchy are kept, so the
+   control never flattens into a plain rectangle. */
 @media (prefers-reduced-transparency: reduce) {
   .button {
     background: var(--cr-surface);
@@ -72,9 +65,9 @@
 
 /* Forced colours. Core sets `forced-color-adjust: auto` on `.cr-button` and
    delegates the fill to the user agent, and supplies the `ButtonText` border and
-   the `Highlight` focus outline itself. Naming the system pair explicitly is
-   additive rather than duplicated, and the sheen has to go: a decorative overlay
-   survives the forced palette and reads as dirt on the control. */
+   the `Highlight` focus outline itself. Naming the system pair here adds to
+   core and does not duplicate it. The sheen is removed, because a decorative
+   overlay survives the forced palette and reads as dirt on the control. */
 @media (forced-colors: active) {
   .button {
     background: ButtonFace;

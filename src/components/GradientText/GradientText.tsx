@@ -7,13 +7,12 @@
  * catalogue lists it as its own component and a product looking for it will look
  * for this name.
  *
- * The contrast rule is why it is safe to ship at all. The gradient runs between
- * palette colours that already clear their ratio against the surface, so **every
- * point along it clears the floor** — a gradient from a passing colour to a
- * failing one has a legible start and an illegible end, and the end is where the
- * reader is by then. The solid colour beneath the clip is one of the same
- * colours, so where the clip is unsupported the text is coloured rather than
- * transparent, and forced colours replaces it outright.
+ * The gradient runs between palette colours that already clear their contrast
+ * ratio against the surface, so every point along it clears the floor. A
+ * gradient from a passing colour to a failing one would leave the end of the
+ * text illegible. The solid colour beneath the clip is one of the same colours,
+ * so where the clip is unsupported the text is coloured and not transparent,
+ * and forced colours replaces it outright.
  */
 import { forwardRef } from 'react';
 import { Title, type TitleProps } from '../Title/Title.js';

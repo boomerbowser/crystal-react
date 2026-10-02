@@ -1,12 +1,12 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* TextInput — a Haze well inside a Resin shell.
+/* TextInput: a Haze well inside a Resin shell.
  *
  * The anatomy is `styles/_field.scss`, shared with every other text-shaped
- * control. What is here is only what a single-line text field does differently,
- * which is almost nothing — and that is the point: a number input and a password
- * input are the same material with a different control inside.
+ * control. This file holds only what a single-line text field does differently,
+ * which is almost nothing. A number input and a password input are the same
+ * material with a different control inside.
  */
 
 .field { @include field.field; }
@@ -19,10 +19,9 @@
 
 /* Invalid is carried by the outline and by the message, never by colour alone. */
 /* Two selectors for one state. The shell carries `data-invalid` when this
-   component set it; the field wrapper carries it when React Aria worked it out —
-   a native constraint, or an error a `Form` distributed from a server. Styling
-   only the first meant a field could be announced as invalid and drawn as if it
-   were fine. */
+   component set it. The field wrapper carries it when React Aria resolved it
+   from a native constraint or from a server error a `Form` distributed. Both
+   are styled so a field announced as invalid is also drawn as invalid. */
 .shell[data-invalid],
 .field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
 

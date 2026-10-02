@@ -1,30 +1,28 @@
 'use client';
 
-/* WishlistButton — a toggle, with a name that stays put.
+/* WishlistButton is a toggle whose name does not change.
  *
- * "A toggle with a pressed state and **a name that says what it will do**."
+ * "A toggle with a pressed state and a name that says what it will do."
  *
- * There are two readings of that sentence and only one of them is safe. The
- * unsafe one flips the name with the state — "Save" becomes "Remove" once the
- * item is saved — and it produces a control that a screen reader announces as
- * "Remove from wishlist, pressed", which is a contradiction: pressed says the
- * item is in the list and the name says pressing is what puts it there. The
- * reader is left to work out which half is the state. It is also two things
- * changing at once for one press, so the announcement is heard twice.
+ * The name does not flip with the state. If "Save" became "Remove" once the item
+ * was saved, a screen reader would announce "Remove from wishlist, pressed".
+ * Pressed says the item is in the list, and the name says pressing puts it
+ * there, so the reader has to work out which half is the state. Two things
+ * would also change for one press, so the announcement would be heard twice.
  *
- * The safe reading is that the name is a *verb phrase* rather than a noun — "Save
- * to wishlist", not "Wishlist" — so it says what the control is for, and
- * `aria-pressed` carries whether it has been done. That is the ARIA toggle
- * pattern, and it is the decision `MediaControls` already made about play and
- * pause for exactly the same reason: one toggle, one name, the state on the
- * state attribute.
+ * The name is a verb phrase, "Save to wishlist", not a noun such as "Wishlist".
+ * It says what the control is for, and `aria-pressed` carries whether it has
+ * been done. That is the ARIA toggle pattern, and `MediaControls` makes the same
+ * decision about play and pause for the same reason: one toggle, one name, the
+ * state on the state attribute.
  *
- * **The item is in the name.** A listing page has thirty of these, and thirty
+ * The item is in the name. A listing page has thirty of these, and thirty
  * controls called "Save to wishlist" are thirty identical rows in a screen
- * reader's element list. What distinguishes them is the thing being saved.
+ * reader's element list. The thing being saved distinguishes them.
  *
- * Two shapes, both from the catalogue — "Resin pill or icon button". The pill
- * carries the words; the icon carries the same name invisibly.
+ * There are two shapes, both from the catalogue ("Resin pill or icon button").
+ * The pill shows the words, and the icon carries the same name without showing
+ * it.
  */
 import { forwardRef, type ReactNode } from 'react';
 import { Button } from '../Button/Button.js';
@@ -41,11 +39,11 @@ export interface WishlistButtonProps {
   isSaved: boolean;
   onChange: (saved: boolean) => void;
   /**
-   * The name, given the item. A verb phrase — what the control is for, not what
-   * the next press would do. Default English.
+   * The name, given the item. A verb phrase that says what the control is for,
+   * not what the next press would do. Default English.
    */
   name?: (item: string) => string;
-  /** The icon shape rather than the pill. */
+  /** The icon shape instead of the pill. */
   iconOnly?: boolean;
   /** The words on the pill. The name is separate, and is what is announced. */
   children?: ReactNode;
@@ -65,9 +63,9 @@ export const WishlistButton = forwardRef<HTMLButtonElement, WishlistButtonProps>
     isDisabled, className, ...props
   }, ref) {
     const label = (name ?? ((one) => `Save ${one} to your wishlist`))(item);
-    /* `selection` when the item is saved — by this press or by the list changing
-       elsewhere — and not on the render that shows it already saved. The press
-       itself is the button's own \`press\`. */
+    /* `selection` plays when the item becomes saved, by this press or by the list
+       changing elsewhere, and not on a render that shows it already saved. The
+       press itself plays the button's own \`press\`. */
     const scope = useChangeMotion(isSaved, entered('selection'));
     const shared = {
       ...props,

@@ -14,10 +14,10 @@ const meta = {
           + 'is already pressing has asked a question whose default answer is yes. Cancel is '
           + 'also what Escape does and what clicking away does, so the focused control and all '
           + 'three ways out agree. A reader who means it presses Tab once.\n\n'
-          + 'Focus into the popover, back to the trigger on dismiss, and Escape cancels — all '
-          + 'three from `Popover`, which is React Aria\'s.\n\n'
-          + '"Whether a full dialog is warranted instead" is the real question the catalogue '
-          + 'asks: this is for actions whose consequence fits in a sentence. Anything needing a '
+          + 'Focus into the popover, back to the trigger on dismiss, and Escape cancels: all '
+          + 'three come from `Popover`, which is React Aria\'s.\n\n'
+          + 'The catalogue asks "whether a full dialog is warranted instead". This is for '
+          + 'actions whose consequence fits in a sentence. Anything needing a '
           + 'paragraph, a list of what will be lost, or a typed confirmation is a dialog.',
       },
     },

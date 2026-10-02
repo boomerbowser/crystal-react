@@ -2,9 +2,9 @@
 @use '../../styles/tokens' as *;
 
 /* "Frost overlay with Haze rows." The suggestions are Crystal's `.cr-frost`
-   popover with the combobox's row treatment — the same rows as Select and
-   ComboBox, so a reader who has learned one list has learned this one — and the
-   results are Haze rows, worn as `.cr-haze`. The field is Crystal's field. */
+   popover with the combobox's row treatment, the same rows as Select and
+   ComboBox. The results are Haze rows, worn as `.cr-haze`. The field is
+   Crystal's field. */
 .search { display: grid; gap: $cr-spacing-md; min-inline-size: 0; }
 
 .form, .field { @include field.field; }

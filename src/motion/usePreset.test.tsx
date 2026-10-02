@@ -5,13 +5,12 @@ import presets from '@crystal-ui/core/core/presets';
 import { CrystalProvider } from '../theme/CrystalProvider.js';
 import { usePreset, type CrystalPresetName, type UsePresetOptions } from './usePreset.js';
 
-/* `usePreset` computes nothing itself — CONTRACT §1, and the numbers here come
-   from live custom properties, so a second implementation would drift silently
-   rather than fail. What it *does* own is measuring the environment, clamping
-   what it measured, handing it over, and settling the promise whatever happens.
-   Those four are what this file tests, and the hook was previously exercised
-   only through `Dialog`: a change to the geometry that happened not to move a
-   dialog passed everything. */
+/* `usePreset` computes nothing itself (CONTRACT §1). The numbers come from live
+   custom properties, so a second implementation would drift silently instead of
+   failing. The hook does own four things, and this file tests them: measuring
+   the environment, clamping what it measured, handing it over, and settling the
+   promise whatever happens. Testing the hook only through `Dialog` would miss a
+   geometry change that does not move a dialog. */
 
 function Subject({ preset, options }: {
   preset: CrystalPresetName;
@@ -44,9 +43,9 @@ describe('usePreset', () => {
     await vi.waitFor(() => expect(subject.dataset['crMotionState']).toBe('finished'), { timeout: 4000 });
   });
 
-  /* Reduced motion removes the movement, never the state change — and the
-     promise still settles, so an exit animation that waits on it before
-     unmounting is not left hanging with the dialog on screen for ever. */
+  /* Reduced motion removes the movement, never the state change. The promise
+     still settles, so an exit animation that waits on it before unmounting does
+     not leave the dialog on screen for ever. */
   it('settles instantly under reduced motion without animating', async () => {
     const spy = vi.spyOn(presets, 'presetKeyframes');
     render(
@@ -66,14 +65,13 @@ describe('usePreset', () => {
     expect(screen.getByTestId('subject').dataset['crMotionState']).toBe('instant');
   });
 
-  /* The ceiling exists so that a product setting a travel token to something
-     absurd cannot throw a panel across the viewport. Clamping is this file's
-     job, not the core module's, and it is applied to depth as well as travel. */
+  /* The ceiling stops a product that sets a travel token to an absurd value from
+     throwing a panel across the viewport. The hook does the clamping, not the
+     core module, and it applies to depth as well as travel. */
   it('clamps measured travel to Crystal’s ceiling before handing it over', async () => {
     const spy = vi.spyOn(presets, 'presetKeyframes');
-    /* 30 rather than Crystal's own 50, because depth's fallback *is* 50: a
-       ceiling that happened to equal the fallback would let a hook that never
-       clamped at all pass this test. */
+    /* 30 instead of Crystal's own 50, because depth's fallback is 50. A ceiling
+       equal to the fallback would let a hook that never clamped pass this test. */
     travel('--cr-motion-max-travel', '30');
     travel(`--cr-travel-${presets.travelRole('frost')}`, '4000');
     travel('--cr-travel-depth', '9000');
@@ -97,9 +95,9 @@ describe('usePreset', () => {
     expect(given.travel).toBeGreaterThan(0);
   });
 
-  /* A dismissal that fades rather than falls is the difference between something
-     anchored to the page and something floating above it, and it is the caller's
-     statement about its own component — so it has to reach the computation. */
+  /* A dismissal fades for something anchored to the page and falls for something
+     floating above it. Only the caller knows which its component is, so the
+     option has to reach the computation. */
   it('passes the caller’s anchoring through', async () => {
     const spy = vi.spyOn(presets, 'presetKeyframes');
     render(

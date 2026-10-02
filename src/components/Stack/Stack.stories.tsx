@@ -11,8 +11,8 @@ const meta = {
         component:
           'Two names for one box turned ninety degrees. Stack arranges vertically with one '
           + 'spacing value; Group arranges horizontally, wraps by default, and takes alignment.\n\n'
-          + 'Both are presentational and render a `div`. Pass `as` when the grouping is real — a '
-          + '`ul`, a `nav` — rather than nesting a meaningful element inside a meaningless one; a '
+          + 'Both are presentational and render a `div`. Pass `as` when the grouping is real, such as a '
+          + '`ul` or a `nav`, rather than nesting a meaningful element inside a meaningless one. A '
           + 'layout component that introduces a landmark tells assistive technology about a '
           + 'grouping that exists only visually.\n\n'
           + 'The gap comes from Crystal\'s spacing scale. `space` is the density-aware padding '

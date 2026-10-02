@@ -1,28 +1,25 @@
 'use client';
 
-/* NavRail — the persistent vertical destination list.
+/* NavRail: the persistent vertical destination list.
  *
- * **Frost, not Resin.** The catalogue's material line is "Frost panel, Resin
- * active destination", and the hierarchy is the reason: a rail is part of the
- * page's structure, sitting between the Plastic foundation and the content. It
- * is not floating above anything. The active destination *is* Resin, which is
- * what makes it read as lifted off the rail rather than painted onto it.
+ * The rail is Frost. A rail is part of the page's structure, between the
+ * Plastic foundation and the content, and does not float above anything. Its
+ * destinations are Crystal's navigation entries, and the current one is drawn
+ * at weight 800 on the surface-alt fill with the location dot.
  *
- * **Collapsing must not remove the name.** Collapsed, the rail shows icons
- * only — and an icon with no accessible name is an unlabelled link, which is the
- * most common way a rail like this becomes unusable without sight. The label
- * text is kept in the DOM and hidden visually rather than removed, so the
- * accessible name is the same string in both states and nothing has to be
- * duplicated into an `aria-label` that can drift from the label beside it.
+ * Collapsing must not remove the name. Collapsed, the rail shows icons only,
+ * and an icon with no accessible name is an unlabelled link. The label text
+ * stays in the DOM and is hidden visually, so the accessible name is the same
+ * string in both states and no `aria-label` has to duplicate the label.
  *
- * **`aria-current="page"`, never `aria-selected`.** The same rule `NavLink`
- * states: `aria-selected` belongs to a widget with a selection model, and
- * arriving somewhere is not picking an option. The rail marks location.
+ * The rail uses `aria-current="page"` and never `aria-selected`, the same rule
+ * `NavLink` states: `aria-selected` belongs to a widget with a selection model,
+ * and arriving somewhere is not picking an option. The rail marks location.
  *
- * **Selection is not drawn beside the label.** Crystal withdrew the leading
- * mark because a column that appears only for the active entry shifts every
- * label the moment you navigate. What changes here is the destination's own
- * material and its label weight — the whole row, not a mark next to it.
+ * Nothing is drawn beside the label to mark selection. Crystal withdrew the
+ * leading mark because a column that appears only for the active entry shifts
+ * every label the moment you navigate. The destination's own material and its
+ * label weight change instead, across the whole row.
  */
 import type { ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -38,7 +35,7 @@ export interface NavRailItem {
   href: string;
   /** Decorative: the label is the name, and the icon never replaces it. */
   icon?: ReactNode;
-  /** A count or status, trailing. Hidden when collapsed — there is no room. */
+  /** A count or status, trailing. Hidden when collapsed, for lack of room. */
   badge?: ReactNode;
 }
 
@@ -53,7 +50,7 @@ export interface NavRailProps {
    * these to be distinguishable, and "Navigation" twice is not.
    */
   'aria-label'?: string;
-  /** Rendered under the destinations — a collapse toggle, an account button. */
+  /** Rendered under the destinations: a collapse toggle, an account button. */
   footer?: ReactNode;
   className?: string;
 }

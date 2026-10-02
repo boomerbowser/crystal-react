@@ -1,12 +1,12 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* Rating — an ordered set of symbols expressing a score.
+/* Rating: an ordered set of symbols expressing a score.
  *
- * "Never symbol-only" is the catalogue's rule and the reason the value is always
- * text beside the symbols: four filled stars out of five is a picture of a number,
- * and a picture of a number is not a number to anybody who cannot see it — or to
- * anybody trying to tell four from five at a glance.
+ * The catalogue's rule is "Never symbol-only", so the value is always text
+ * beside the symbols. Four filled stars out of five is a picture of a number,
+ * which a reader who cannot see it does not get, and which is hard to tell from
+ * five at a glance.
  */
 
 .field { @include field.field; }
@@ -34,8 +34,8 @@
   border-radius: $cr-action-radius;
 }
 
-/* A fractional symbol is one glyph clipped, not two glyphs overlaid: overlaying
-   doubles the stroke where they meet and reads as a thicker outline. */
+/* A fractional symbol is one glyph clipped. Overlaying two glyphs doubles the
+   stroke where they meet and reads as a thicker outline. */
 .fraction { position: relative; display: inline-flex; }
 .fraction .partial {
   position: absolute;

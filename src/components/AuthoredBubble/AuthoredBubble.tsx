@@ -1,23 +1,22 @@
 'use client';
 
-/* AuthoredBubble — a reading surface with one intentionally tightened corner.
+/* AuthoredBubble: a reading surface with one intentionally tightened corner.
  *
  * The silhouette is Crystal's identity and carries through from the approved
  * baseline: three content-radius corners and one cut to 6px, on the side the
- * message came from. It is not decoration, it is the only thing that tells you
- * *without reading* which way a message went — and that is exactly why the
+ * message came from. It shows, without reading, which way a message went. The
  * catalogue also says "author and time are text, not implied by side alone".
- * A silhouette is a shortcut for people who can see it; the words are for
- * everybody, so `author` is required rather than optional.
+ * A silhouette is a shortcut for people who can see it, and the words are for
+ * everybody, so `author` is required.
  *
- * The cut is written with logical radius properties rather than mirrored in a
+ * The cut is written with logical radius properties, not mirrored in a
  * `[dir=rtl]` rule. `border-start-start-radius` is the top-left corner in a
  * left-to-right locale and the top-right in a right-to-left one, which is the
  * mirroring the catalogue asks for, expressed once instead of twice.
  *
  * `grouped` drops the cut. In a run of messages from the same author the cut
- * marks where the run *starts*; repeating it on every bubble turns a signal into
- * a texture.
+ * marks where the run starts. Repeated on every bubble, it would stop marking
+ * anything.
  */
 import { forwardRef, useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { useMotion } from '../../motion/useMotion.js';
@@ -54,8 +53,8 @@ export const AuthoredBubble = forwardRef<HTMLElement, AuthoredBubbleProps>(funct
   const settled = useRef(false);
 
   useEffect(() => {
-    /* "Only on a new message; do not replay on virtualised history or steal
-       scroll" — Crystal's own note on the recipe. The caller says which this is,
+    /* Crystal's own note on the recipe: "Only on a new message; do not replay on
+       virtualised history or steal scroll". The caller says which this is,
        because only the caller knows. */
     if (settled.current) return;
     settled.current = true;
@@ -82,8 +81,8 @@ export const AuthoredBubble = forwardRef<HTMLElement, AuthoredBubbleProps>(funct
       </p>
       <div className={styles['body']}>{children}</div>
       {delivery === 'sent' || deliveryLabel === undefined ? null : (
-        /* A failure is a thing that happened, so it is announced when it arrives
-           rather than sitting silently under the message. */
+        /* A failure is an event, so it is announced when it arrives instead of
+           sitting silently under the message. */
         <p role={delivery === 'failed' ? 'status' : undefined} className={styles['delivery']}>
           {deliveryLabel}
         </p>

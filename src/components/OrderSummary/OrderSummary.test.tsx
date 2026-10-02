@@ -11,7 +11,7 @@ describe('OrderSummary', () => {
   });
 
   /* Waiting is the ordinary outcome of placing an order, not a warning about
-     it — so pending is information, not attention. */
+     it, so pending is information. */
   it('reports a pending order as information, not as a warning', () => {
     const { container } = renderWithCrystal(
       <OrderSummary reference="Order 4821" referenceText="Order 4821" state="pending" />,

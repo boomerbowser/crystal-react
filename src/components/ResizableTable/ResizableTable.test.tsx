@@ -24,18 +24,17 @@ describe('ResizableTable', () => {
   });
 
   /* "The resizer is a slider: arrow keys resize, and the new width is
-     announced." The *announcement* is assertable here; the resize is not —
-     jsdom has no layout, so every column is the same default width and an
-     arrow key has nothing to move. The width actually changing is checked in a
-     browser, by `verify:behaviour`, which is where every other assertion made
-     of layout in this library lives. */
+     announced." Only the announcement can be asserted here. jsdom has no
+     layout, so every column is the same default width and an arrow key has
+     nothing to move. The width change is checked in a browser by
+     `verify:behaviour`, with the library's other layout assertions. */
   it('announces the width as a real slider value', () => {
     renderWithCrystal(<ResizableTable columns={columns} rows={rows} label="Workspaces" />);
     const resizer = screen.getByRole('slider', { name: 'Resize Workspace' }) as HTMLInputElement;
     expect(resizer.type).toBe('range');
     expect(resizer).toHaveAttribute('aria-valuetext', expect.stringMatching(/pixels/));
-    /* A range with somewhere to go, which is what makes the arrow keys mean
-       something once there is layout for them to act on. */
+    /* A range with room to move, so the arrow keys act once there is
+       layout. */
     expect(Number(resizer.max)).toBeGreaterThan(Number(resizer.min));
   });
 

@@ -1,23 +1,25 @@
 'use client';
 
-/* Skeleton — placeholder shapes matching the layout of content that is loading.
+/* Skeleton.
  *
- * It **wraps** what it is standing in for rather than being rendered instead of
- * it, and that is not a convenience. "Crystal: fill, sweep, reduced-motion
- * fallback, **resolve transition**" — a skeleton that is swapped out by its
- * caller has already unmounted when the data arrives, so there is nothing left
- * to play `skeleton-resolve` on. Owning the swap is the only way the resolve
- * exists at all.
+ * Placeholder shapes matching the layout of content that is loading.
+ *
+ * It wraps what it is standing in for instead of being rendered in its place.
+ * The catalogue asks for "Crystal: fill, sweep, reduced-motion fallback,
+ * **resolve transition**", and a skeleton that is swapped out by its caller has
+ * already unmounted when the data arrives, so there is nothing left to play
+ * `skeleton-resolve` on. The resolve exists only because the skeleton owns the
+ * swap.
  *
  * "`aria-hidden` with a live region announcing loading; **must not be read as
- * content**." Both halves are here: the shapes carry `aria-hidden`, so a screen
- * reader never meets a paragraph of nothing, and one polite live region says
- * what is loading. One, not one per shape — twelve skeleton lines announcing
- * themselves twelve times is the failure this is guarding against.
+ * content**." The shapes carry `aria-hidden`, so a screen reader never meets a
+ * paragraph of nothing, and one polite live region says what is loading. There
+ * is one region for the whole skeleton, not one per shape, so twelve skeleton
+ * lines are not announced twelve times.
  *
- * "Matches the real content's radius and rhythm exactly" is the caller's job and
- * cannot be otherwise: only they know what is coming. What this provides is the
- * material and the shapes to say it with.
+ * "Matches the real content's radius and rhythm exactly" is the caller's job,
+ * because only the caller knows what is coming. This component provides the
+ * material and the shapes.
  */
 import {
   forwardRef, useEffect, useRef, useState, type HTMLAttributes, type ReactNode,
@@ -45,9 +47,9 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(function Skele
 }, ref): ReactNode {
   const [scope, play] = useMotion();
   const waited = useRef(loading);
-  /* The region is rendered empty and filled in an effect. A live region created
-     with its text already inside it is one screen readers may never announce —
-     the same hazard the toast stack is built around, one component along. */
+  /* The region is rendered empty and filled in an effect. Screen readers may
+     never announce a live region created with its text already inside it. The
+     toast stack is built around the same hazard. */
   const [said, setSaid] = useState('');
   useEffect(() => { setSaid(loading ? label : ''); }, [loading, label]);
 
@@ -62,8 +64,8 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(function Skele
     <div {...props} ref={mergeRefs(ref, scope)} className={cx(styles['skeleton'], className)}>
       {loading ? (
         <>
-          {/* One region for the whole placeholder. Twelve lines announcing
-              themselves twelve times is not more information. */}
+          {/* One region for the whole placeholder, so twelve lines are not
+              announced twelve times. */}
           <span role="status" className={styles['announcement']}>{said}</span>
           <div aria-hidden="true" className={styles['shapes']}>{placeholder}</div>
         </>

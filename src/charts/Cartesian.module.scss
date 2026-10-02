@@ -3,8 +3,8 @@
 /* Lines, points and their hit areas.
  *
  * The stroke is Crystal's chart stroke and the colour arrives as a custom
- * property, never as a `fill` or `stroke` attribute: an inline presentation
- * attribute is beaten by any rule, but an inline *style* beats every rule —
+ * property, never as a `fill` or `stroke` attribute. An inline presentation
+ * attribute is beaten by any rule, but an inline style beats every rule,
  * including the forced-colours rules at the bottom of this file, which have to
  * replace the palette when the operating system takes it away.
  */
@@ -23,8 +23,8 @@
 }
 
 /* The 44px hit area. Transparent rather than absent: a shape with no fill takes
-   no pointer events at all, so `fill: transparent` is load-bearing and not a
-   way of writing "none". */
+   no pointer events at all, so `fill: transparent` is necessary here and is not
+   a way of writing "none". */
 .target {
   fill: transparent;
 }

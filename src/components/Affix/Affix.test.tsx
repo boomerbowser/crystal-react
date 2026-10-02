@@ -12,7 +12,7 @@ const original = Element.prototype.getBoundingClientRect;
 /* The fixture's height, not a design value: jsdom reports zero for everything,
    so the test has to supply a number for the component to measure, and the
    assertions below check that this exact number is what gets reserved.
-   crystal-allow-literal — a test fixture's dimension, never rendered. */
+   crystal-allow-literal: a test fixture's dimension, never rendered. */
 const FIXTURE_HEIGHT = 48;
 
 beforeEach(() => {
@@ -78,7 +78,7 @@ describe('Affix', () => {
       expect(screen.getByText('Filters').closest('[data-pinned]')).not.toBeNull();
     });
     /* The height is reserved in both states. Reserving it only while pinned is
-       what makes the page jump — and then loop, because releasing restores the
+       what makes the page jump, and then loop, because releasing restores the
        height, which scrolls the threshold back under the element. */
     expect(holder.style.blockSize).toBe(`${FIXTURE_HEIGHT}px`);
   });

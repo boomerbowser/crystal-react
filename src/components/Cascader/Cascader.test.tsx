@@ -15,8 +15,8 @@ const PLACES = [
 ];
 
 describe('Cascader', () => {
-  /* Columns were announced as "Top level", "Level 2", "Level 3" — position
-     rather than subject. A column is now named after whatever it hangs from. */
+  /* A column is named after the option it hangs from, so its name gives its
+     subject. "Top level", "Level 2" and "Level 3" gave only its position. */
   it('names each column after what it is a list of', async () => {
     renderWithCrystal(
       <Cascader label="Location" options={PLACES} defaultValue={['gb', 'sct']} />,
@@ -43,7 +43,8 @@ describe('Cascader', () => {
     expect(screen.getByRole('listbox', { name: 'Region' })).toBeInTheDocument();
   });
 
-  /* The path, not the leaf: "Edinburgh" alone has lost what disambiguates it. */
+  /* The trigger shows the whole path. "Edinburgh" alone loses what
+     disambiguates it. */
   it('shows the whole path on the trigger', () => {
     renderWithCrystal(
       <Cascader label="Location" options={PLACES} defaultValue={['gb', 'sct', 'edi']} />,

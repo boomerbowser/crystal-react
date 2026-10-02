@@ -25,7 +25,7 @@ describe('ProductDetailBlock', () => {
     expect(screen.getByRole('status', { hidden: true }).textContent ?? '').not.toMatch(/Slate/);
   });
 
-  /* The opinion: price and stock change together, and the change is said as one sentence. */
+  /* Price and stock change together, and the change is said as one sentence. */
   it('updates price and stock together when the variant changes, and says both', async () => {
     renderWithCrystal(<ProductDetailBlock {...props} />);
     await userEvent.click(screen.getByRole('radio', { name: 'Rust' }));

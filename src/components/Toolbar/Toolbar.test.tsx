@@ -22,9 +22,9 @@ describe('Toolbar', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The whole point, and an accessibility decision rather than a layout one: a
-     formatting bar of fifteen buttons is fifteen tab stops between a person and
-     the next field. One stop in, arrows within, one stop out. */
+  /* The toolbar exists for accessibility: a formatting bar of fifteen buttons
+     would otherwise be fifteen tab stops between a person and the next field.
+     One stop in, arrows within, one stop out. */
   it('is one tab stop, with arrows moving between the controls', async () => {
     renderWithCrystal(
       <div>
@@ -41,13 +41,13 @@ describe('Toolbar', () => {
     await userEvent.keyboard('{ArrowRight}');
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Italic' }));
 
-    /* Out in one press, not three: the other controls are reached by arrow. */
+    /* One press leaves the group. The other controls are reached by arrow. */
     await userEvent.tab();
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'After' }));
   });
 
-  /* A vertical toolbar uses up and down, which is the half a hand-rolled roving
-     tab index usually forgets. */
+  /* A vertical toolbar uses up and down, which a hand-rolled roving tab index
+     often omits. */
   it('moves with up and down when it is vertical', async () => {
     renderWithCrystal(<Bar orientation="vertical" />);
     screen.getByRole('button', { name: 'Bold' }).focus();

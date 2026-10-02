@@ -10,10 +10,9 @@ function Raise({ onReady }: { onReady: (api: ReturnType<typeof useToasts>) => vo
 }
 
 describe('Toast', () => {
-  /* The announcement is the provider's, not the toast's. Two reasons, and the
-     second one is why this test looks the way it does: `role="status"` on an
-     `<li>` replaces its `listitem` role, so the stack stops being a list with
-     items in it — axe caught exactly that on the first run of these stories. */
+  /* The provider makes the announcement, not the toast. One reason is that
+     `role="status"` on an `<li>` replaces its `listitem` role, so the stack
+     stops being a list with items in it. */
   it('announces from a region that was there before the message was', async () => {
     let api: ReturnType<typeof useToasts> | null = null;
     renderWithCrystal(
@@ -49,23 +48,21 @@ describe('Toast', () => {
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
-  /* The live region exists before anything is in it. A region created at the
-     same moment as its text is one screen readers may never announce, which is
-     the classic way a toast system ends up silent. */
+  /* The live region exists before anything is in it. Screen readers may never
+     announce a region created at the same moment as its text. */
   it('has its stack in the document before any toast arrives', () => {
     renderWithCrystal(<ToastProvider><p>Page</p></ToastProvider>);
     expect(screen.getByRole('list', { name: 'Notifications' })).toBeInTheDocument();
   });
 
-  /* "Auto-dismiss must never remove the only route to an action." The rule is
-     enforced in the type — a toast with an `action` cannot be given a
-     `duration` — and this is the runtime half.
+  /* "Auto-dismiss must never remove the only route to an action." The type
+     enforces the rule (a toast with an `action` cannot be given a `duration`),
+     and these two tests check it at runtime.
 
-     Real timers, deliberately. The first of these two proves the lifespan path
-     works end to end; without it the second would pass on a toast system where
-     nothing is ever dismissed, which is what happened the first time this was
-     written with fake timers: the exit recipe never settled, so no toast ever
-     left and "the action toast is still there" was true of every toast. */
+     They use real timers. With fake timers the exit recipe never settles, so no
+     toast ever leaves. The first test proves the lifespan path works end to end.
+     Without it, the second would also pass on a toast system where nothing is
+     ever dismissed. */
   it('takes an ordinary toast away when its time is up', async () => {
     let api: ReturnType<typeof useToasts> | null = null;
     renderWithCrystal(
@@ -86,9 +83,9 @@ describe('Toast', () => {
     act(() => {
       api!.show({ title: 'Message deleted', action: <button type="button">Undo</button> });
     });
-    /* Longer than the lifespan plus the exit recipe: 30ms would start the
+    /* Longer than the lifespan plus the exit recipe. 30ms would start the
        departure and `toast-out` takes 440ms to finish it, so a shorter wait
-       here would pass on a toast that *was* given a lifespan. */
+       here would pass on a toast that was given a lifespan. */
     await new Promise((settle) => { setTimeout(settle, 1200); });
     expect(screen.getByRole('listitem')).toHaveTextContent('Message deleted');
     expect(screen.getByRole('button', { name: 'Undo' })).toBeInTheDocument();
@@ -98,7 +95,7 @@ describe('Toast', () => {
     const onDismiss = vi.fn();
     renderWithCrystal(<Toast title="Saved" onDismiss={onDismiss} />);
     await userEvent.click(screen.getByRole('button', { name: 'Dismiss: Saved' }));
-    /* Awaited, because the exit recipe plays first: a toast that unmounted on
+    /* Awaited, because the exit recipe plays first. A toast that unmounted on
        the state change would play `toast-out` into a detached node. */
     await waitFor(() => { expect(onDismiss).toHaveBeenCalled(); });
   });
@@ -110,14 +107,12 @@ describe('Toast', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The defect this exists for: `onDismiss` is a new closure on every provider
-     render, so depending on it made `leave` new every time, which made the
-     lifespan effect tear its timer down and start it again — and a toast's
-     countdown restarted every time *another* toast arrived. In a busy stack the
-     oldest one outlived them all.
+  /* `onDismiss` is a new closure on every provider render. If `leave` depended
+     on it, the lifespan effect would restart its timer whenever another toast
+     arrived, and in a busy stack the oldest toast would outlive them all.
 
-     A single-toast test cannot see it, which is why every test above missed it.
-     This one keeps toasts arriving while the first is counting down. */
+     A single-toast test cannot detect this, so this one keeps toasts arriving
+     while the first is counting down. */
   it('keeps each toast on its own clock while others arrive', async () => {
     let api: ReturnType<typeof useToasts> | null = null;
     renderWithCrystal(
@@ -133,11 +128,11 @@ describe('Toast', () => {
       act(() => { api!.show({ title: `Later ${arrival}` }); });
     }
 
-    /* No `waitFor`: the assertion is that it left *on time*. Its own 120ms plus
-       the 440ms exit puts it gone by about 560ms, well before the last arrival
-       at 720ms. A toast whose clock was being restarted by its neighbours would
-       still be here — and would leave eventually, which is why waiting for it to
-       go would pass either way. */
+    /* No `waitFor`, because the assertion is that it left on time. Its own 120ms
+       plus the 440ms exit puts it gone by about 560ms, well before the last
+       arrival at 720ms. A toast whose clock was restarted by its neighbours
+       would still be here. It would leave eventually, so waiting for it to go
+       would pass either way. */
     const said = screen.getAllByRole('listitem').map((item) => item.textContent ?? '');
     expect(said.some((text) => text.includes('First'))).toBe(false);
     expect(said.length).toBeGreaterThan(0);

@@ -19,8 +19,8 @@ describe('Stepper', () => {
 
   it('says each step position, label and state in words', () => {
     renderWithCrystal(<Stepper steps={steps} onNavigate={vi.fn()} />);
-    /* A tick, a number and a warning glyph are three shapes; to a reader who
-       does not see them they are nothing at all. */
+    /* A tick, a number and a warning glyph mean nothing to a reader who does
+       not see them. */
     expect(screen.getByRole('button', { name: 'Step 1 of 4: Account, complete' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Step 2 of 4: Details, Name and address, current' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Step 3 of 4: Payment, not started' })).toBeTruthy();

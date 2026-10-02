@@ -2,8 +2,8 @@
 @use '../../styles/material' as material;
 
 /* The holder never leaves the flow. Its height is held open by the component so
-   the page does not jump — and, more importantly, so unpinning cannot restore a
-   height that scrolls the threshold back under the element and pins it again. */
+   the page does not jump, and so unpinning cannot restore a height that scrolls
+   the threshold back under the element and pins it again. */
 .holder { position: relative; }
 
 .content { inline-size: 100%; }

@@ -1,17 +1,15 @@
 # Crystal React's gates, run on every push and pull request.
 #
-# Nothing here is a new check — each step already exists as a script. What this
-# adds is that they run on somebody else's machine, on a clean checkout, before
-# a change lands rather than after somebody remembers.
+# Every step already exists as a script. This workflow runs them on a clean
+# checkout, on a machine nobody has edited, before a change lands.
 name: Verify
 
 on:
   push:
     branches: [main]
   pull_request:
-  # Re-runnable without an empty commit. A workflow that can only be triggered by
-  # a push cannot be used to check whether a secret was set correctly, which is
-  # the first thing anybody wants to check.
+  # Re-runnable without an empty commit. A workflow that only a push can trigger
+  # cannot be used to check whether a secret was set correctly.
   workflow_dispatch:
 
 concurrency:
@@ -22,12 +20,11 @@ jobs:
   verify:
     name: Tokens, types, tests and bundle
     runs-on: ubuntu-latest
-    # Crystal is a published package now: `@crystal-ui/core` is `^2.0.0` from
-    # npm, and the library reads its tokens, its resolver and its stylesheets
-    # out of `node_modules`. CONTRACT §1 is still the reason — a second copy of
-    # a value drifts from the first silently — but a registry version is a
-    # better answer than a sibling directory, because it is the same bytes for
-    # everyone and it cannot be edited underneath a build.
+    # Crystal is a published package: `@crystal-ui/core` is `^2.0.0` from npm,
+    # and the library reads its tokens, its resolver and its stylesheets out of
+    # `node_modules`. CONTRACT §1 is the reason: a second copy of a value drifts
+    # from the first. A registry version is the same bytes for everyone and
+    # cannot be edited underneath a build, which a sibling directory can.
     defaults:
       run:
         working-directory: crystal-react
@@ -37,41 +34,25 @@ jobs:
         with:
           path: crystal-react
 
-      # R-16, the push-ordering trap, is closed — and this step is what is left
-      # of it rather than a live guard.
+      # What is left of R-16, the push-ordering trap, which is closed. A
+      # published version is the same bytes for every build and cannot be
+      # half-pushed.
       #
-      # Crystal used to be checked out here as a sibling and depended on by
-      # path, so this job built against whatever Crystal's `main` was at the
-      # moment it started. A change needing a new Crystal token had to be pushed
-      # second, and getting it the wrong way round failed as
-      # `[sass] Undefined variable` — which reads like a typo in this repository
-      # and is not one. It happened, fifteen seconds apart, when
-      # `component.indicator.lineWidth` was added. Worse, if Crystal's `core/`
-      # was not there at all, pnpm said
-      # `ENOENT: no such file or directory, scandir …/crystal-design-system/core`
-      # in the middle of two hundred lines of resolution output, which reads
-      # like a broken lockfile and is not one.
-      #
-      # A published version has none of that: it is the same bytes for every
-      # build and it cannot be half-pushed. The `file:` branch below now only
-      # fires if somebody points this back at a working copy, which is a
-      # reasonable thing to do for a change spanning both repositories and an
-      # unreasonable thing to merge — so it stays, and it says so.
+      # The `file:` branch below only fires if somebody points the dependency
+      # back at a working copy. That is reasonable for a change spanning both
+      # repositories but must not be merged, and the step says so.
       - name: Crystal is present, and new enough
         run: |
           set -euo pipefail
           declared="$(node -p "const d=require('./package.json');(d.devDependencies?.['@crystal-ui/core'] ?? d.dependencies['@crystal-ui/core'])")"
           case "$declared" in
             file:*)
-              # The declared path, used verbatim — never rewritten. An earlier
-              # version of this step stripped the `../` after misreading an
-              # absolute path in pnpm's error, and then failed a checkout that
-              # was perfectly fine. A preflight that cries wolf is worse than no
-              # preflight, because the next person learns to skip it.
+              # The declared path is used verbatim. Stripping the `../` would
+              # fail a correct checkout.
               #
-              # Nothing checks Crystal out here any more, so a `file:` range
-              # will not resolve in CI at all. Saying which path is missing is
-              # more use than letting pnpm say it.
+              # CI does not check Crystal out, so a `file:` range never resolves
+              # here. The step names the missing path instead of leaving pnpm to
+              # report it.
               here="${declared#file:}"
               if [ ! -d "$here" ]; then
                 echo "::error::package.json depends on '$declared', and '$here' is not in this checkout."
@@ -109,21 +90,20 @@ jobs:
 
       - run: pnpm run typecheck
 
-      # Is the review surface reviewable? A ratchet over meta.component, args,
-      # argTypes, play functions and action args, plus the one line in
-      # preview.ts that puts Crystal's environment on every story.
-      #
-      # Meridian has reported a broken Storybook three times — a flat ground that
-      # hid the material hierarchy, an environment nothing exposed, and a
-      # Controls panel reading "This story has no controls" — and each time no
-      # check in this repository was looking. It runs before the tests because it
-      # is cheap and because a story nobody can operate makes every screenshot
-      # beneath it evidence about the wrong thing.
+      # The review surface must be reviewable. A ratchet over meta.component,
+      # args, argTypes, play functions and action args, plus the one line in
+      # preview.ts that puts Crystal's environment on every story. It guards
+      # against a flat ground that hides the material hierarchy, an environment
+      # nothing exposes, and a Controls panel reading "This story has no
+      # controls". It runs before the tests because it is cheap and because a
+      # story nobody can operate makes every screenshot beneath it evidence
+      # about the wrong thing.
       - run: node scripts/verify-stories.mjs
 
       # Both projects: unit in jsdom, and every story mounted in a real Chromium
       # with its play function and its accessibility checks. The second needs a
-      # browser, which is why the install moved up here from the gates below.
+      # browser, so Playwright is installed here rather than with the gates
+      # below.
       - run: npx playwright install --with-deps chromium
       - run: pnpm run test
       - run: pnpm run test:jest
@@ -140,58 +120,45 @@ jobs:
           }
 
       # A story that throws is a component nobody can look at, and this project
-      # has found a defect in a browser for every slice that tests passed.
+      # has found defects in a browser that passing tests did not.
       - run: pnpm run build-storybook
 
-      # Target size, measured in a real browser against the built stories.
+      # The browser gates below measure the built stories in a real browser.
       #
-      # This cannot run above with the unit tests: jsdom reports every box as
-      # zero, so an assertion about a control's size passes there whatever the
-      # control is. The tab strip was 36px against a stated 44px floor from the
-      # day the segmented control shipped, with every test green.
+      # They cannot run with the unit tests: jsdom reports every box as zero,
+      # ships no IntersectionObserver, and records a custom property's name
+      # without computing what it resolves to. The tab strip was 36px against a
+      # stated 44px floor with every test green.
       #
       # The static build is served rather than the dev server: it is what the
-      # previous step already produced, and it removes the whole class of stale
-      # transform that has twice sent this project chasing a defect that was not
-      # in the source.
+      # previous step produced, and it cannot carry a stale transform.
+      #
       # Four gates, one browser, four subjects. `verify:theme` asks whether the
-      # properties the stylesheets read actually resolve — on the themed scope
-      # and on the container every portalled overlay lives in. `verify:targets`
-      # asks how big a control is. `verify:behaviour` asks what a component does
-      # when the page scrolls or resizes. `verify:appearance` asks what a *state*
-      # looks like — R-11, and the last of that entry's three checks to be
-      # written.
+      # properties the stylesheets read resolve, on the themed scope and on the
+      # container every portalled overlay lives in. `verify:targets` asks how
+      # big a control is. `verify:behaviour` asks what a component does when
+      # the page scrolls or resizes. `verify:appearance` asks what a state
+      # looks like (R-11).
       #
-      # None of the four can be answered where the unit tests are: jsdom reports
-      # every box as zero, ships no IntersectionObserver, and records a custom
-      # property's name without ever computing what it resolves to. The scroll spy
-      # was wrong three separate ways with twelve unit tests green.
+      # `verify:theme` runs first because its failure explains the others: a
+      # material built from a property that does not resolve is a syntax
+      # error, and every check beneath it then measures a component with no
+      # styling.
       #
-      # `verify:theme` runs first because it is the one whose failure explains the
-      # others: a material built from a property that does not resolve is not a
-      # weaker material, it is a syntax error, and every check beneath it is then
-      # measuring a component with no styling.
+      # `verify:materials` is the aesthetic check and the only one that needs
+      # both servers: it renders the same material in Crystal's own preview and
+      # in this library and compares the computed style. Neither side's values
+      # are written down, so the expectation follows Crystal rather than a copy
+      # of it, and this library cannot drift from Crystal while its own tests
+      # stay green.
       #
-      # `verify:materials` is the aesthetic check, and it is the only one that
-      # needs *both* servers: it renders the same material in Crystal's own
-      # preview and in this library and compares the computed style. Neither
-      # side's values are written down, so the expectation follows Crystal rather
-      # than a copy of it. Meridian found the Resin rims missing before any gate
-      # did, which is the argument for having this one.
-      # Crystal's own site, for the material-parity gate below: the same
-      # material rendered in both and compared, so this library cannot drift
-      # from Crystal while every one of its own tests stays green.
+      # Crystal's site is built rather than only checked out. The site reaches
+      # the library through a copy its build makes, that copy is gitignored,
+      # and serve.py refuses to start without it. A site served without Crystal
+      # renders, and looks like a design regression.
       #
-      # It is built rather than merely checked out. The site reaches the
-      # library through a copy its build makes, that copy is gitignored, and
-      # serve.py refuses to start without it — which is the right refusal,
-      # because a site missing Crystal does not look broken, it looks like a
-      # design regression.
-      #
-      # crystal-preview is private, so this needs a repository-scoped token.
-      # `crystal` is public and `crystal-preview` is not, which is easy to get
-      # backwards: the library everyone installs is open and the site that
-      # documents it is not. Without the token `actions/checkout` reports
+      # crystal-preview is private (`crystal` is public), so this needs a
+      # repository-scoped token. Without the token `actions/checkout` reports
       # "Not Found", which reads like a typo in the repository name.
       - name: Check out Crystal's site
         uses: actions/checkout@v5
@@ -220,24 +187,24 @@ jobs:
           pnpm run verify:targets
           pnpm run verify:behaviour
 
-          # Every assertion in this one is a relationship and never a colour:
-          # the focused control differs from itself at rest, the selected row is
+          # Every assertion in this one is a relationship, never a colour: the
+          # focused control differs from itself at rest, the selected row is
           # heavier than its neighbour, and the disabled control differs from
-          # itself enabled by more than opacity. A gate that asserts a colour is
-          # a gate that fails on a palette change.
+          # itself enabled by more than opacity. A gate that asserts a colour
+          # fails on a palette change.
           #
-          # The focus half is not hypothetical. --cr-focus-core and
-          # --cr-focus-ring were read by every field in this library and defined
-          # by nothing, so Crystal's focus ring painted on no control anywhere
-          # through an entire slice, with every test green.
+          # The focus half guards against a property that is read but never
+          # defined: when --cr-focus-core and --cr-focus-ring were read by every
+          # field in this library and defined by nothing, no control painted a
+          # focus ring and every test passed.
           pnpm run verify:appearance
 
           # Material parity needs Crystal's own site beside the Storybook, so
           # the same material can be rendered in both and compared. It is
-          # checked out and built in the step above: the site reaches the
+          # checked out and built in the step above. The site reaches the
           # library through a copy that the build makes, and serve.py refuses
-          # to start without it rather than serving a site with no Crystal in
-          # it — which does not look broken, it looks like a design regression.
+          # to start without it. A site served without Crystal renders, and
+          # looks like a design regression.
           python3 ../crystal-preview/tools/serve.py &
           for _ in $(seq 1 40); do
             curl -sf http://127.0.0.1:4321/ >/dev/null && break

@@ -2,7 +2,7 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* NumberInput — the field anatomy with steppers. */
+/* NumberInput: the field anatomy with steppers. */
 
 .field { @include field.field; }
 .label { @include field.label; }
@@ -12,10 +12,10 @@
 .control:focus { outline: none; }
 .shell:focus-within { @include field.focus-ring; }
 /* Two selectors for one state. The shell carries `data-invalid` when this
-   component set it; the field wrapper carries it when React Aria worked it out —
-   a native constraint, or an error a `Form` distributed from a server. Styling
-   only the first meant a field could be announced as invalid and drawn as if it
-   were fine. */
+   component set it. The field wrapper carries it when React Aria worked it out,
+   from a native constraint or an error a `Form` distributed from a server.
+   Styling only the first would let a field be announced as invalid and drawn
+   as valid. */
 .shell[data-invalid],
 .field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
 
@@ -23,22 +23,21 @@
   display: flex;
   flex-direction: column;
   align-self: stretch;
-  /* No padding of its own: the shell's 8px inset is the margin now, and the two
+  /* No padding of its own. The shell's 8px inset is the margin, and the two
      20px steppers and their gap fill exactly the 44px the input sets. */
   padding: 0;
   gap: $cr-spacing-2xs;
 }
 
-/* Each stepper is short, so the pair together reaches the target height rather
-   than each one doing so — a 44px increment and a 44px decrement make an 88px
-   field, which is a field that looks like a mistake. They are pointer
-   affordances; the arrow keys are the primary route and always reach the value. */
+/* Each stepper is short, so the pair together reaches the target height. A 44px
+   increment and a 44px decrement would make an 88px field that looks like a
+   mistake. They are pointer affordances. The arrow keys are the primary route
+   and always reach the value. */
 .stepper {
-  /* Short means short. Crystal's `button { min-height: 48px }` made each stepper
-     48px from 2.1.0, so the pair made the field 110px tall — the "field that looks
-     like a mistake" this comment set out to avoid, measured in every number field.
-     `cr-bare`'s own 44px minimum would do the same, so both are released here and
-     the pair divides the field's height between them. */
+  /* From 2.1.0, Crystal's `button { min-height: 48px }` would make each stepper
+     48px and the field 110px tall. `cr-bare`'s own 44px minimum would do the same,
+     so both are released here and the pair divides the field's height between
+     them. */
   min-block-size: 0;
   padding: 0;
   display: flex;
@@ -57,7 +56,8 @@
 .stepper:disabled { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 .stepper svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
-/* Reaching a bound is a state the control shows, not a silent refusal to move. */
+/* The control shows that it has reached a bound, so it does not silently refuse
+   to move. */
 .shell[data-at-bound] .stepper:disabled { color: var(--cr-edge); }
 
 .description, .error { @include field.message; }

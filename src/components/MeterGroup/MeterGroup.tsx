@@ -1,21 +1,21 @@
 'use client';
 
-/* MeterGroup — several proportions shown on one bar.
+/* MeterGroup: several proportions shown on one bar.
  *
- * "Each segment is labelled; **meaning never rests on colour alone**." A stacked
- * bar of five tinted bands with a colour key beside it is exactly the shape that
- * rule forbids, so every segment is named twice: in the legend under the bar,
- * where the name is written out beside its swatch, and in the segment's own
- * accessible text. The colour is reinforcement in both places.
+ * "Each segment is labelled; meaning never rests on colour alone." That rule
+ * forbids a stacked bar of tinted bands with only a colour key beside it, so
+ * every segment is named twice: in the legend under the bar, beside its
+ * swatch, and in the segment's own accessible text. The colour reinforces the
+ * name in both places.
  *
- * "Segments meet without gaps" — so this is one track with segments laid end to
- * end, not a row of bars with a gap collapsed to zero. The difference shows the
- * first time a segment rounds to a fraction of a pixel.
+ * "Segments meet without gaps", so this is one track with segments laid end to
+ * end, not a row of bars with the gap collapsed to zero. The difference shows
+ * when a segment rounds to a fraction of a pixel.
  *
- * A group of meters is not one meter. Each segment is its own `role="meter"`
- * with its own value against the group's total, because "63% disk, 22% cache" is
- * two measurements and an element that reported one number would have to pick.
- * The group itself is a plain labelled region.
+ * Each segment is its own `role="meter"` with its own value against the
+ * group's total, because "63% disk, 22% cache" is two measurements and an
+ * element that reported one number would have to pick. The group itself is a
+ * plain labelled region.
  */
 import {
   forwardRef, useId, type CSSProperties, type HTMLAttributes, type ReactNode,
@@ -26,7 +26,7 @@ import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './MeterGroup.module.scss';
 
 export interface MeterSegment {
-  /** What this part is. Required — a segment with no name is a colour. */
+  /** What this part is. Required, because without a name a segment is only a colour. */
   name: string;
   value: number;
   /** The value in words. Defaults to a share of the total. */
@@ -73,11 +73,11 @@ export const MeterGroup = forwardRef<HTMLDivElement, MeterGroupProps>(function M
             aria-valuetext={segment.valueLabel ?? `${format(segment.value)} of ${format(whole)}`}
             className={styles['segment']}
             data-status={segment.status}
-            /* The colour arrives as a custom property rather than as a
+            /* The colour arrives as a custom property instead of a
                `background`, so the forced-colours rules in the stylesheet can
-               win: an inline `background` outranks every rule in every sheet,
-               including the one that has to replace it when the operating
-               system takes the palette away. Same reason as the charts. */
+               win. An inline `background` outranks every rule in every sheet,
+               including the one that replaces it when the operating system
+               takes the palette away. The charts do the same. */
             style={{
               inlineSize: `${share(segment.value) * 100}%`,
               ...(segment.status ? {} : { '--segment-colour': seriesColour(index) }),
@@ -109,9 +109,9 @@ export const MeterGroup = forwardRef<HTMLDivElement, MeterGroupProps>(function M
   );
 });
 
-/* One segment, marking a change in what it measures with Crystal's
-   `progress-change` — the value is set first, and the recipe does not stand in
-   for it — and never on the render that first shows it. */
+/* One segment. A change in what it measures plays Crystal's `progress-change`
+   after the value is set (the recipe does not stand in for the value), and
+   never on the render that first shows it. */
 function MovingSegment({ value, ...props }: HTMLAttributes<HTMLDivElement> & { value: number; 'data-status'?: string | undefined }): React.JSX.Element {
   const scope = useChangeMotion(value, () => 'progress-change');
   return <div ref={scope as never} {...props} />;

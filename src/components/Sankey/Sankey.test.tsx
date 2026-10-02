@@ -11,8 +11,8 @@ const links = [
 ];
 
 describe('Sankey', () => {
-  /* The nodes are the labels; the links are the data. Naming only the nodes
-     would leave the entire content of the chart undescribed. */
+  /* The nodes are the labels and the links are the data, so naming only the
+     nodes would describe nothing. */
   it('states both endpoints and the volume of every link', () => {
     renderWithCrystal(<Sankey label="Traffic" nodes={nodes} links={links} />);
     expect(screen.getByLabelText('Search to Left, 60')).toBeInTheDocument();
@@ -26,8 +26,8 @@ describe('Sankey', () => {
   });
 
   /* `d3-sankey` writes its layout onto the objects it is given, so the input is
-     cloned: without that a second render would lay out the first render's
-     output, and the picture would drift every time anything re-rendered. */
+     cloned. Otherwise a second render would lay out the first render's output,
+     and the picture would drift on every re-render. */
   it('does not write the layout back onto the caller data', () => {
     const own = links.map((link) => ({ ...link }));
     renderWithCrystal(<Sankey label="Traffic" nodes={nodes} links={own} />);

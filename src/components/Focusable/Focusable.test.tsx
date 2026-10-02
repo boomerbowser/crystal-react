@@ -16,7 +16,7 @@ describe('Focusable', () => {
   });
 
   /* "Without inventing a role" is the contract. A focusable div is announced as
-     whatever it already was — if it *does* something, it wants Pressable. */
+     whatever it already was. An element that does something needs Pressable. */
   it('invents no role', () => {
     renderWithCrystal(<Focusable><div data-testid="f">A region</div></Focusable>);
     expect(screen.getByTestId('f').getAttribute('role')).toBeNull();

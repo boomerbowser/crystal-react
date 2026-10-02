@@ -3,24 +3,24 @@
 /* Table.
  *
  * A real `table`, `thead`, `tbody`, `th` and `td`, with `scope` on every header.
- * That is not a preference: header association is what lets a screen reader say
- * "Revenue, column 3, £48,210" as you move across a row, and there is no ARIA
- * pattern that recovers it once the elements are divs. Crystal's catalogue says
- * "real table semantics with header associations" and this is the whole of what
- * that means in practice.
+ * Header association is what lets a screen reader say "Revenue, column 3,
+ * £48,210" as you move across a row, and no ARIA pattern recovers it once the
+ * elements are divs. This is what Crystal's catalogue means by "real table
+ * semantics with header associations".
  *
- * Sorting is the other half of that sentence: "sort controls are buttons
- * carrying aria-sort". Two things are easy to get wrong and both are handled
- * here — `aria-sort` belongs on the `th`, not on the button inside it, and only
- * *one* column may carry it at a time, because `aria-sort` describes the table's
- * current order rather than each column's capability. A column that is sortable
- * and not currently sorted carries nothing.
+ * The same catalogue entry says "sort controls are buttons carrying aria-sort".
+ * Two things are easy to get wrong and both are handled here. `aria-sort`
+ * belongs on the `th`, not on the button inside it. Only one column may carry it
+ * at a time, because `aria-sort` describes the table's current order rather than
+ * each column's capability. A column that is sortable and not currently sorted
+ * carries nothing.
  *
- * The shell scrolls, not the page. A wide table inside a reading column has to
- * scroll sideways somewhere, and a scroll container with nothing focusable in it
- * cannot be reached without a pointer — so the shell is a tab stop and a named
- * region, the same contract `Code`'s blocks and `CodeBlock` follow. Its
- * scrollbar is Resin, because a compact horizontal scroller is a control plane.
+ * The shell scrolls rather than the page. A wide table inside a reading column
+ * has to scroll sideways somewhere, and a scroll container with nothing
+ * focusable in it cannot be reached without a pointer. So the shell is a tab
+ * stop and a named region, the same contract `Code`'s blocks and `CodeBlock`
+ * follow. Its scrollbar is Resin, because a compact horizontal scroller is a
+ * control plane.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -44,7 +44,7 @@ export interface TableColumn {
   sortable?: boolean;
   /** Numbers read right-aligned; everything else reads from the start. */
   align?: 'start' | 'end';
-  /** A width for this column — any CSS length or fraction. */
+  /** A width for this column, as any CSS length or fraction. */
   width?: string;
 }
 
@@ -65,7 +65,7 @@ export interface TableProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childr
   label: string;
   /** Shown above the table. A visible caption names it better than a label. */
   caption?: ReactNode;
-  /** The current order. One column at a time — `aria-sort` describes the table. */
+  /** The current order. One column at a time, because `aria-sort` describes the table. */
   sort?: TableSort;
   onSortChange?: (sort: TableSort) => void;
   /** Shown instead of the rows when there are none. */

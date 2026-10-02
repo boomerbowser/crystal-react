@@ -1,20 +1,21 @@
 'use client';
 
-/* PlaylistBlock — an ordered, reorderable queue with a now-playing row.
+/* PlaylistBlock: an ordered, reorderable queue with a now-playing row.
  *
- * "**Reorder works by keyboard; the now-playing row is `aria-current`.**"
+ * "Reorder works by keyboard; the now-playing row is `aria-current`."
  * States: `at-rest`, `playing`, `dragging`, `focus-visible`.
  *
- * Both halves are React Aria's GridList, used for what it is for:
+ * Both halves are React Aria's GridList:
  *
- *   - **Reordering is drag and drop that the keyboard can do.** Each row has a
- *     drag handle; from it, Enter picks the track up, the arrow keys move it
- *     between the drop positions — each one announced — and Enter puts it down.
+ *   - Reordering is drag and drop that the keyboard can do. Each row has a
+ *     drag handle. From it, Enter picks the track up, the arrow keys move it
+ *     between the drop positions (each one announced), and Enter puts it down.
  *     A pointer drags the same handle. The new order is computed here and handed
  *     to the product as a list of ids, because the queue is the product's.
- *   - **The now-playing row says so.** `aria-current` on the row the reader
- *     lands on, which React Aria owns and will not take as a prop, so it is set
- *     from inside the row — the `NavigationTree` pattern. Weight shows it too.
+ *   - The now-playing row says so. `aria-current` goes on the row the reader
+ *     lands on. React Aria owns that row and will not take the attribute as a
+ *     prop, so it is set from inside the row, as `NavigationTree` does. Weight
+ *     shows it too.
  *
  * Motion is Crystal's and bound to state: a row lifts with `drag-pickup` as it
  * is picked up and settles with `drag-settle` where it lands; the rows it
@@ -138,8 +139,8 @@ function Track({ track, isCurrent, isDragging, players, handleLabel, nowPlayingL
     else row.removeAttribute('aria-current');
   }, [isCurrent, scope]);
 
-  /* Registered before the block's effect runs — a child's effects run first —
-     so a row rebuilt by the reorder is the one the block plays on. */
+  /* Registered before the block's effect runs, because a child's effects run
+     first, so a row rebuilt by the reorder is the one the block plays on. */
   useEffect(() => {
     players.set(track.id, play);
     return () => { if (players.get(track.id) === play) players.delete(track.id); };

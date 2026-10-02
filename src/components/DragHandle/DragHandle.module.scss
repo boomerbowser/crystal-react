@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
-/* DragHandle — the grip, and the lift.
+/* DragHandle: the grip, and the lift.
  *
- * The lift is elevation: a picked-up item rises off the surface it was resting
- * on, which is what makes the gesture read as carrying rather than smearing.
- * Crystal's float shadow is the same one a Resin plane uses, because a lifted
- * item *is* momentarily a floating plane.
+ * The lift is elevation. A picked-up item rises off the surface it was resting
+ * on, so the gesture reads as carrying and not as smearing. It takes Crystal's
+ * float shadow, the one a Resin plane uses, because a lifted item is briefly a
+ * floating plane.
  */
 
 .draggable {
@@ -15,9 +15,8 @@
 
 /* The handle is Crystal's `.cr-bare .cr-drag-handle`: no coat, the 44px target,
    a grip in the handle's own ink, the grab cursor, and a lift while it is held.
-   Nothing about the control itself is left for this file to say. What is this
-   file's is the item, below: the handle says it can be grabbed, and the thing
-   being carried is what rises. */
+   This file styles only the item, below. The handle shows that it can be
+   grabbed, and the item being carried is what rises. */
 
 .dragging {
   box-shadow: var(--cr-shadow-float);

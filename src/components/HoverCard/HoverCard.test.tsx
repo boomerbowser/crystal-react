@@ -3,10 +3,9 @@ import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
 import { HoverCard } from './HoverCard.js';
 
 /* Real timers, short delays. Fake timers deadlock against userEvent's own wait
-   and React Aria's internal scheduling, and the three of them together test the
-   clock rather than the component. The properties worth proving — that a delay
-   exists, that focus opens it, and that the pointer survives the crossing from
-   trigger to card — are all provable with a delay short enough to wait out. */
+   and React Aria's internal scheduling. Each property under test (a delay
+   exists, focus opens the card, the pointer survives the crossing from trigger
+   to card) can be proved with a delay short enough to wait out. */
 function Card({ openDelay = 10, closeDelay = 10 }: { openDelay?: number; closeDelay?: number }): React.JSX.Element {
   return (
     <HoverCard
@@ -52,9 +51,9 @@ describe('HoverCard', () => {
     await user.hover(screen.getByRole('link', { name: 'Ada Lovelace' }));
     await screen.findByRole('dialog', { name: 'Ada Lovelace' });
 
-    /* The crossing. A boolean would close here — the pointer leaves the trigger
-       before it enters the card — and this is the one journey the component has
-       to survive, because the card is the thing being reached for. */
+    /* The crossing. The pointer leaves the trigger before it enters the card,
+       so a boolean would close the card here. The component has to survive this
+       journey, because the card is what the pointer is reaching for. */
     await user.hover(screen.getByText('Mathematician'));
     expect(screen.getByRole('dialog', { name: 'Ada Lovelace' })).toBeTruthy();
   });
@@ -70,7 +69,7 @@ describe('HoverCard', () => {
 
   it('leaves the trigger its own accessible name', () => {
     renderWithCrystal(<Card />);
-    /* The card supplements a name that already exists; it is never the name. */
+    /* The card supplements the trigger's existing name and never replaces it. */
     expect(screen.getByRole('link', { name: 'Ada Lovelace' })).toBeTruthy();
   });
 });

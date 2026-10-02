@@ -26,9 +26,9 @@
 
 .actions { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; }
 
-/* A cancelled order is not a live one, and reads quieter without losing the
-   contrast its own words need — the status badge is what carries the state, so
-   this is only the surrounding text stepping back. */
+/* A cancelled order is no longer live, and reads quieter while keeping the
+   contrast its own words need. The status badge carries the state, so only the
+   surrounding text steps back. */
 .order[data-state='cancelled'] .placed { color: var(--cr-muted); }
 
 @media (forced-colors: active) {

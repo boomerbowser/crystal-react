@@ -1,15 +1,15 @@
-/* Price — an amount of money, formatted by the platform.
+/* Price: an amount of money, formatted by the platform.
  *
  * "The formatted value **is** the text content; currency is stated, not implied
  * by a symbol alone."
  *
  * Both halves of that decide the API. The value is a `Money`, so the currency
- * arrives as data and the component formats it — a caller cannot hand this a
- * string with a symbol already glued to the front, which is the thing that makes
- * a price untranslatable and unreadable to anything but a pair of eyes. And
- * there is one string: no visible form with a different spoken form beside it.
- * Where a product needs the currency spelled out because `$` is ambiguous,
- * `currencyDisplay="name"` spells it out **for everybody**.
+ * arrives as data and the component formats it. A caller cannot hand this a
+ * string with a symbol already glued to the front, which would make the price
+ * untranslatable and readable only by sight. There is one string, so no
+ * visible form has a different spoken form beside it. Where a product needs the
+ * currency spelled out because `$` is ambiguous, `currencyDisplay="name"`
+ * spells it out for everybody.
  *
  * Figures are tabular, which is `NumberFormatter`'s default and is the
  * catalogue's geometry: "tabular figures so a column of prices aligns". A price

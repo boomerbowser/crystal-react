@@ -2,7 +2,8 @@
 @use '../tokens' as *;
 
 /* Nothing here but the material. Radius and size are the specimen's own and are
-   not compared — Crystal's preview and this story are different compositions. */
+   not compared, because Crystal's preview and this story are different
+   compositions. */
 
 .row { display: flex; gap: $cr-spacing-lg; align-items: center; padding: $cr-spacing-xl; }
 
@@ -19,9 +20,9 @@
 }
 
 /* Haze is a content fill: `crystal.css` gives `.cr-haze` the surface colour, the
-   edge and the content shadow — not the feathered `::before` a component paints
-   under its own label. The specimen is the primitive, so it is the primitive's
-   recipe that is compared. */
+   edge and the content shadow, without the feathered `::before` a component
+   paints under its own label. The specimen is the primitive, so the primitive's
+   recipe is what is compared. */
 .haze {
   background: var(--cr-surface);
   border: 1px solid var(--cr-edge);

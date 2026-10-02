@@ -1,23 +1,22 @@
 'use client';
 
-/* AvatarGroup — overlapping avatars with an overflow count.
+/* AvatarGroup: overlapping avatars with an overflow count.
  *
  * "The group has one accessible name; the overflow count is announced, not
  * implied."
  *
  * The first half is the `ul`: a known number of peers in an order, named once.
  * A screen reader reaches it as "Project members, list, 4 items" and can then
- * walk the people inside it. The members keep their own names — the catalogue
- * asks the group to *have* a name, not for the people in it to lose theirs, and
- * a row of nameless images is a worse answer to "who is on this?" than a row of
- * names nobody is forced to hear.
+ * walk the people inside it. The members keep their own names. The catalogue
+ * asks the group to have a name, and a row of nameless images is a worse answer
+ * to "who is on this?" than a row of names nobody is forced to hear.
  *
- * The second half is the chip. "+3" read literally is a plus sign and a number;
- * what it means is "three more people". So it shows the short form and announces
- * the sentence — the same split `Badge` makes, for the same reason.
+ * The second half is the chip. "+3" read literally is a plus sign and a number,
+ * and it means "three more people". So it shows the short form and announces the
+ * sentence, the same split `Badge` makes for the same reason.
  *
- * One row, one size: the group's `size` is applied to every avatar in it, because
- * an overlap only reads as a row when the circles are the same circle.
+ * One row, one size. The group's `size` is applied to every avatar in it,
+ * because an overlap reads as a row only when the circles are the same size.
  */
 import { Children, cloneElement, forwardRef, isValidElement, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -28,7 +27,7 @@ import styles from './AvatarGroup.module.scss';
 export interface AvatarGroupProps extends HTMLAttributes<HTMLElement> {
   /** The avatars. */
   children: ReactNode;
-  /** What the group is — "Project members". The group's one accessible name. */
+  /** What the group is, such as "Project members". The group's one accessible name. */
   label: string;
   /** How many to show before the overflow chip. */
   max?: number;

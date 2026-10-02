@@ -9,10 +9,10 @@ const meta = {
     docs: {
       description: {
         component:
-          'Monospace content that is never feathered, because code must stay exact — a softened '
+          'Monospace content that is never feathered, because code must stay exact. A softened '
           + 'edge around a fragment of syntax reads as imprecision in the thing being quoted. So '
           + 'Code takes a canvas fill and an edge rim, the flattest surface Crystal has. A block is '
-          + 'a tab stop with a Resin scrollbar: a sample wider than its column scrolls, and a '
+          + 'a tab stop with a Resin scrollbar, because a sample wider than its column scrolls, and a '
           + 'scroll container with nothing focusable in it cannot be reached without a pointer. For '
           + 'a titled sample with a named region and a copy control in a header, use `CodeBlock`.',
       },
@@ -43,8 +43,8 @@ export const Block: Story = {
   },
 };
 
-/** The catalogue's `with-copy` state on a bare block: over the sample rather than
- *  above it, so the code keeps its full width. */
+/** The catalogue's `with-copy` state on a bare block. The control sits over the
+ *  sample instead of above it, so the code keeps its full width. */
 export const WithCopy: Story = {
   args: {
     block: true,

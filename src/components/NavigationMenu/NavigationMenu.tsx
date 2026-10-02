@@ -1,33 +1,32 @@
 'use client';
 
-/* NavigationMenu — a horizontal bar whose items open rich panels beneath them.
+/* NavigationMenu: a horizontal bar whose items open rich panels beneath them.
  *
- * **It is not a `menu`, and that is the whole point of it existing separately
- * from `Menubar`.** `role="menu"` and `role="menuitem"` describe an
- * application's command surface: choosing an item runs something. A site's
- * primary navigation is a set of destinations, and announcing a link as a
- * `menuitem` tells a reader that following it performs a command. It also
- * imports the menu keyboard model — arrow keys to move, Tab to escape, no Tab
- * between items — which is wrong for a panel full of links a reader expects to
- * Tab through.
+ * It is not a `menu`, which is why it is separate from `Menubar`.
+ * `role="menu"` and `role="menuitem"` describe an application's command
+ * surface, where choosing an item runs something. A site's primary navigation
+ * is a set of destinations, and announcing a link as a `menuitem` tells a
+ * reader that following it performs a command. It would also bring in the menu
+ * keyboard model (arrow keys to move, Tab to leave, no Tab between items),
+ * which is wrong for a panel full of links a reader expects to Tab through.
  *
- * So: a `nav` landmark containing disclosure buttons, each with
+ * The structure is a `nav` landmark containing disclosure buttons, each with
  * `aria-expanded` and `aria-controls`, each disclosing a panel of ordinary
- * links. This is the shape the WAI-ARIA Authoring Practices recommends for
- * navigation with fly-outs, and it is the one Crystal's catalogue describes —
- * "a horizontal menu whose items open rich panels beneath them" is a disclosure
- * pattern wearing a menu's name.
+ * links. The WAI-ARIA Authoring Practices recommend this shape for navigation
+ * with fly-outs, and Crystal's catalogue describes it: "a horizontal menu whose
+ * items open rich panels beneath them" is a disclosure pattern with a menu's
+ * name.
  *
- * **One panel at a time.** Opening a second closes the first, because two
- * overlapping panels beneath a bar is a layout with no reading order.
+ * One panel at a time. Opening a second closes the first, because two
+ * overlapping panels beneath a bar have no reading order.
  *
- * **Escape closes and returns focus to the trigger.** Without the return, a
- * reader who dismisses a panel is left focused on nothing, at the top of the
- * document, with no indication of where they were.
+ * Escape closes and returns focus to the trigger. Without the return, a reader
+ * who dismisses a panel is left focused on nothing, at the top of the document,
+ * with no indication of where they were.
  *
- * **The panel is Frost.** The catalogue's material line: the trigger inherits
+ * The panel is Frost. In the catalogue's material line the trigger inherits
  * whatever bar it sits in, and the panel is Frost because it is a reading
- * surface — a sheet of content that appears in the page, not a control plane
+ * surface: a sheet of content that appears in the page, not a control plane
  * floating over it.
  */
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react';
@@ -40,7 +39,7 @@ export interface NavigationMenuSection {
   id: string;
   /** The trigger's label, and the panel's accessible name. */
   label: string;
-  /** The panel's content — ordinary links, which is what makes this navigation. */
+  /** The panel's content: ordinary links, which is what makes this navigation. */
   children: ReactNode;
 }
 
@@ -85,8 +84,8 @@ export function NavigationMenu({ sections, className, ...props }: NavigationMenu
                 ref={(node) => { triggers.current.set(section.id, node); }}
                 aria-expanded={isOpen}
                 aria-controls={panelId}
-                /* One panel at a time: two overlapping panels beneath a bar is
-                   a layout with no reading order. */
+                /* One panel at a time: two overlapping panels beneath a bar
+                   have no reading order. */
                 onClick={() => { setOpen(isOpen ? null : section.id); }}
                 className={cx(styles['trigger'], 'cr-bare')}
               >
@@ -103,9 +102,9 @@ export function NavigationMenu({ sections, className, ...props }: NavigationMenu
   );
 }
 
-/* A section's panel: `menu-in` as it opens, and `menu-out` as it closes — kept
-   shown, and inert, while it leaves, then hidden. Neither on the render that
-   loads the bar. */
+/* A section's panel. `menu-in` plays as it opens and `menu-out` as it closes;
+   while it leaves it stays shown and inert, then it is hidden. Neither plays on
+   the render that loads the bar. */
 function Panel({ id, label, isOpen, children }: {
   id: string;
   label: string;

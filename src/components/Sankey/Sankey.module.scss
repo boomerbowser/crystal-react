@@ -3,13 +3,13 @@
 
 /* Links, and the nodes they run between.
  *
- * A link is drawn as a stroked path whose width is its volume — not as a filled
- * ribbon — because a stroke of a given width is one number, and a ribbon is two
- * edges that have to be kept in agreement.
+ * A link is drawn as a stroked path whose width is its volume, rather than as a
+ * filled ribbon. A stroke width is one number; a ribbon is two edges that have
+ * to be kept in agreement.
  *
- * The nodes are `aria-hidden`: every node's name is already in the label of every
- * link that touches it, and announcing the columns as well would read each name
- * once for itself and once per flow.
+ * The nodes are `aria-hidden`. Every node's name is already in the label of
+ * every link that touches it, and announcing the columns as well would read
+ * each name once for itself and once per flow.
  */
 
 .flow {
@@ -35,9 +35,9 @@
   .flow { transition: none; }
 }
 
-/* One colour, so opacity is the only thing separating two crossing links — and
-   opacity is what forced colours removes. They become outlines instead: a
-   crossing is then two edges over one another rather than a solid mass. */
+/* With one colour, opacity is the only thing separating two crossing links, and
+   forced colours removes opacity. The links become outlines instead, so a
+   crossing is two edges over one another rather than a solid mass. */
 @media (forced-colors: active) {
   .flow { stroke: CanvasText; stroke-opacity: 0.4; }
   .link[data-active] .flow { stroke: Highlight; stroke-opacity: 1; }

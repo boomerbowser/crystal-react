@@ -15,17 +15,17 @@ describe('EmptyScreen', () => {
     expect(screen.getByRole('button', { name: 'New report' })).toBeInTheDocument();
   });
 
-  /* A view whose content region is empty is still that view: the page header
-     goes on naming it, and the empty state labels its own group rather than
+  /* A view whose content region is empty is still that view. The page header
+     goes on naming it, and the empty state labels its own group instead of
      competing for the document's one h1. The screens that replace a view
-     outright — error, not found, permission — are the ones that take a heading. */
+     outright (error, not found, permission) are the ones that take a heading. */
   it('does not claim the view heading', () => {
     renderWithCrystal(<EmptyScreen title="No reports yet" />);
     expect(screen.queryByRole('heading')).toBeNull();
   });
 
-  /* The illustration is decoration. A reader told about it before being told
-     what is missing has been given the ornament instead of the fact. */
+  /* The illustration is decoration, so a reader is not told about it before
+     being told what is missing. */
   it('keeps the illustration out of the accessibility tree', () => {
     const { container } = renderWithCrystal(
       <EmptyScreen title="No reports yet" illustration={<svg data-testid="art" />} />,

@@ -1,9 +1,8 @@
 /* Which bucket a value falls in, on Crystal's intensity ramp.
  *
  * The ramp is five steps, each shipped with the ink that reads on it, and the
- * contrast floor is met at every one — `docs/colors.md` sets out the
- * construction. What is decided here is only which step a number lands on, and
- * that is a decision with a trap in it.
+ * contrast floor is met at every one (`docs/colors.md` sets out the
+ * construction). What is decided here is only which step a number lands on.
  *
  * Equal-width buckets over the range, not quantiles. Quantiles put the same
  * number of cells in each bucket, which makes a pretty picture of any data at
@@ -24,10 +23,10 @@ export const INTENSITY_STEPS = chartGeometry.intensitySteps;
  * calendar where an empty day looks like a quiet one is a calendar that cannot
  * be read. It returns 0, and the caller draws the ground.
  *
- * A *missing* measurement is a third case again, and it is not this function's:
- * it has no value to pass in. Callers mark it separately, because a day nobody
+ * A missing measurement is a third case again, and it is not this function's.
+ * It has no value to pass in. Callers mark it separately, because a day nobody
  * counted and a day on which nothing happened are as different as either is from
- * a busy one — and drawing them the same is a chart inventing a zero.
+ * a busy one, and drawing them the same is a chart inventing a zero.
  */
 export function intensityStep(value: number, low: number, high: number): number {
   if (value <= 0) return 0;

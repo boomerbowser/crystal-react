@@ -2,28 +2,28 @@
 
 /* Chip.
  *
- * A compact pill for a value, a filter or a selection. Three shapes in one
- * component, and the accessibility differs for each:
+ * A compact pill for a value, a filter or a selection. The component has three
+ * shapes, and the accessibility differs for each:
  *
- *   - **Static** — a label. Not a control, not focusable, nothing announced
- *     beyond its text. A chip that merely displays a value must not be a tab stop.
- *   - **Selectable** — `aria-pressed`, which the catalogue names. Not
- *     `aria-selected`: that belongs inside a listbox or a tablist, and outside one
+ *   - Static: a label. It is not a control, not focusable, and announces
+ *     nothing beyond its text. A chip that only displays a value must not be a
+ *     tab stop.
+ *   - Selectable: `aria-pressed`, which the catalogue names. Not
+ *     `aria-selected`, which belongs inside a listbox or a tablist; outside one
  *     it tells a screen reader the chip is part of a collection it is not in.
- *   - **Removable** — the remove control is a **separate named button**, because
+ *   - Removable: the remove control is a separate named button, because
  *     "remove" and "select" are two different actions on the same object. A chip
  *     that removes itself when pressed cannot also be selected, and one whose
  *     remove is a decorated span cannot be reached by keyboard at all.
  *
- * A chip that is **both** selectable and removable is a container with two
- * buttons inside it, not a button containing a button. Nesting them is invalid
- * HTML and, more to the point, unusable: a button inside a button is one control
- * to the accessibility tree and to the pointer, so the remove target and the
- * select target fight over every press. The story is what showed it — the nested
- * control rendered 48px tall inside a 32px chip.
+ * A chip that is both selectable and removable is a container with two buttons
+ * inside it, never a button containing a button. Nesting them is invalid HTML
+ * and unusable. A button inside a button is one control to the accessibility
+ * tree and to the pointer, so the remove target and the select target fight
+ * over every press, and a nested control renders 48px tall inside a 32px chip.
  *
- * Selection is label weight here as everywhere in Crystal; the soft fill is the
- * second signal rather than the only one.
+ * Selection is label weight here as everywhere in Crystal. The soft fill is the
+ * second signal, never the only one.
  */
 import { forwardRef, type ReactNode } from 'react';
 import { ToggleButton, Button, type ToggleButtonProps } from 'react-aria-components';
@@ -48,7 +48,7 @@ export interface ChipProps extends Omit<ToggleButtonProps, 'className' | 'style'
   isSelectable?: boolean;
   /** Called when the remove control is pressed. Its presence adds the control. */
   onRemove?: () => void;
-  /** What removing does, for the control's name — "Remove the London filter". */
+  /** What removing does, for the control's name, such as "Remove the London filter". */
   removeLabel?: string;
   className?: string;
 }
@@ -58,8 +58,8 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
   ref,
 ) {
   const remove = onRemove ? (
-    /* Its own button with its own name: "remove" and "select" are two actions on
-       one object, and a decorated span is reachable by neither keyboard nor
+    /* Its own button with its own name. "Remove" and "select" are two actions
+       on one object, and a decorated span is reachable by neither keyboard nor
        screen reader. */
     <Button
       aria-label={removeLabel ?? (typeof children === 'string' ? `Remove ${children}` : 'Remove')}
@@ -71,8 +71,8 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
   ) : null;
 
   if (!isSelectable) {
-    /* A label, not a control. Making it focusable would put a tab stop on a
-       thing that does nothing. */
+    /* A label, not a control. Making it focusable would put a tab stop on
+       something that does nothing. */
     return (
       <div
         ref={ref}
@@ -94,7 +94,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
 
   /* Both: two sibling controls in one pill. A button inside a button is one
      control to the accessibility tree and to the pointer, and the two targets
-     then fight over every press. */
+     would fight over every press. */
   return (
     <div
       ref={ref}
@@ -109,11 +109,11 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
   );
 });
 
-/* The selectable half of a chip, marking its two moments on one element: `press`
-   as it is pressed, and `selection` when that press — or a value set from
-   outside — makes it selected. The state is React Stately's toggle, held here
-   rather than inside React Aria's button so that the value the chip moves on is
-   the value it has; controlled and uncontrolled both pass through it. */
+/* The selectable half of a chip. It plays two recipes on one element: `press`
+   as it is pressed, and `selection` when that press, or a value set from
+   outside, makes it selected. The state is React Stately's toggle, held here
+   instead of inside React Aria's button so the chip animates on the value it
+   actually has. Controlled and uncontrolled values both pass through it. */
 function MovingToggle({ children, className, ...props }: Omit<ToggleButtonProps, 'className' | 'children'> & {
   className?: string | undefined;
   children?: ReactNode;

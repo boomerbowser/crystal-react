@@ -10,14 +10,13 @@ const meta = {
     docs: {
       description: {
         component:
-          'A mark over the corner of something else — a verification tick on an avatar, a lock '
-          + 'on a document tile. Where `Badge` is a count attached to a host, this labels its '
-          + 'host, which is why the accessible name lands beside the host rather than on the '
-          + 'badge\'s own shape; without a `label` the mark is hidden, because a decorative mark '
-          + 'over a named thing is otherwise read as a second unnamed thing. The fill is Haze on '
-          + 'a pseudo-element so the glyph above it stays crisp: feathering an element that '
-          + 'contains a glyph blurs the glyph, and a blurred tick over a photograph is '
-          + 'indistinguishable from a rendering fault.',
+          'A mark over the corner of something else, such as a verification tick on an avatar or a '
+          + 'lock on a document tile. Where `Badge` is a count attached to a host, this labels its '
+          + 'host, so the accessible name lands beside the host and not on the badge\'s own shape. '
+          + 'Without a `label` the mark is hidden, because a decorative mark over a named thing is '
+          + 'otherwise read as a second unnamed thing. The fill is Haze on a pseudo-element so the '
+          + 'glyph above it stays crisp: feathering an element that contains a glyph blurs the '
+          + 'glyph, and a blurred tick over a photograph looks like a rendering fault.',
       },
     },
   },
@@ -34,8 +33,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** All four corners. The badge overhangs by a third of its own size, and the
- *  wrapper does not clip — "never clipped by its host". */
+/** All four corners. The badge overhangs by 35% of its own size, and the
+ *  wrapper does not clip: "never clipped by its host". */
 export const Placements: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: 'var(--cr-spacing-2xl)', alignItems: 'center' }}>

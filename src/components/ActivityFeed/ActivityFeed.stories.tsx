@@ -20,7 +20,7 @@ const meta = {
       description: {
         component:
           '"Live updates are announced politely and never steal focus."\n\nArrivals are counted by the '
-          + 'ids the feed had not shown before and said politely — "2 new events" — and nothing is '
+          + 'ids the feed had not shown before and said politely ("2 new events") and nothing is '
           + 'focused; the reader goes to them when they choose. The first render says nothing. A live '
           + 'feed says so in a word beside its heading.',
       },

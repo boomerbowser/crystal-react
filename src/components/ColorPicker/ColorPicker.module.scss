@@ -3,12 +3,11 @@
 
 /* The colour family.
  *
- * The thumb is the part that needs care. It sits on top of an arbitrary colour —
- * that is the whole point of a colour area — so a thumb with a single-colour
- * border is invisible against some of the values it is meant to mark. Crystal's
- * answer is a two-ring thumb: a white ring inside a dark one, which keeps an edge
- * against anything. That is not a decorative choice; it is the only way a thumb
- * stays visible across a gamut.
+ * The thumb needs care. It sits on top of an arbitrary colour, so a thumb with a
+ * single-colour border is invisible against some of the values it is meant to
+ * mark. Crystal uses a two-ring thumb, a white ring inside a dark one, which
+ * keeps an edge against anything. It is the only way a thumb stays visible
+ * across a gamut.
  */
 
 .field { @include field.field; }
@@ -21,7 +20,7 @@
 .shell[data-invalid] { border-color: var(--cr-danger-ink); }
 
 /* A swatch over a chequerboard, so a translucent colour reads as translucent
-   rather than as a paler opaque one. */
+   and not as a paler opaque one. */
 .swatch {
   flex: none;
   inline-size: $cr-choice-box-size;
@@ -62,10 +61,10 @@
   box-shadow: 0 0 0 1px #000, inset 0 0 0 1px #000;  /* crystal-allow-literal: the dark half of the same thumb */
 }
 
-/* On a colour slider's track React Aria sets the thumb's `left` and a
-   `translate(-50%, -50%)`, and leaves its top to the stylesheet — as it does for
-   `Slider`, which explains. The area and the wheel set both, so only this one
-   needs it. */
+/* On a colour slider's track, React Aria sets the thumb's `left` and a
+   `translate(-50%, -50%)` and leaves its top to the stylesheet, as it does for
+   `Slider` (whose stylesheet explains). The area and the wheel set both, so only
+   this one needs it. */
 .track .thumb { inset-block-start: 50%; }
 
 .thumb[data-focus-visible] {
@@ -83,7 +82,7 @@
   cursor: pointer;
 }
 
-/* Selection is a ring rather than a fill, because the fill is the value. */
+/* Selection is a ring instead of a fill, because the fill is the value. */
 .swatchOption[data-selected] {
   outline: $cr-indicator-line-width solid var(--cr-primary);
   outline-offset: 2px;

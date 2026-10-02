@@ -15,14 +15,14 @@ const meta = {
       description: {
         component:
           'A toolbar is one tab stop for a group of controls, with arrows moving between them. '
-          + 'That is an accessibility decision rather than a layout one: a formatting bar of '
-          + 'fifteen buttons is otherwise fifteen stops between a person and the next field.\n\n'
-          + 'A floating toolbar is a Resin plane; one inside a surface that already has a '
+          + 'This is for accessibility: a formatting bar of fifteen buttons would otherwise be '
+          + 'fifteen tab stops between a person and the next field.\n\n'
+          + 'A floating toolbar is a Resin plane. One inside a surface that already has a '
           + 'material inherits it, because Resin never contains Resin.\n\n'
-          + 'Transition is deliberately thin — everything it could decide is already decided in '
-          + '`@crystal-ui/core`. It renders a real wrapper rather than `display: contents`, because '
-          + 'an element that generates no box cannot be faded, and the exit animation is the '
-          + 'reason the component exists.',
+          + 'Transition is thin, because everything it could decide is already decided in '
+          + '`@crystal-ui/core`. It renders a real wrapper instead of `display: contents`, because '
+          + 'an element that generates no box cannot be faded, and the component exists for the '
+          + 'exit animation.',
       },
     },
   },

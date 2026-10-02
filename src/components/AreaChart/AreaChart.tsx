@@ -1,20 +1,18 @@
 'use client';
 
-/* AreaChart — a line chart with the region beneath it filled.
+/* AreaChart: a line chart with the region beneath it filled.
  *
- * "Fill never obscures gridlines beneath it." That is the whole design of this
- * component and it is why the fill is Crystal's `--cr-chart-fill-opacity` rather
- * than a solid: at a quarter, two overlapping series are still two, and the
- * gridlines a reader measures against are still legible through both. A solid
- * area chart with three series is a picture of the topmost series and two
- * rumours.
+ * "Fill never obscures gridlines beneath it." The fill is Crystal's
+ * `--cr-chart-fill-opacity` and not a solid. At a quarter, two overlapping series
+ * stay distinct and the gridlines a reader measures against stay legible through
+ * both. A solid area chart with three series hides everything below the topmost
+ * one.
  *
- * Stacked is the other mode and it changes what the chart *means*: unstacked
- * areas each measure from zero and overlap, stacked ones measure from the one
- * below and the top edge is the total. The same numbers, two different readings,
- * so the table says which — a stacked chart's table carries the total column,
- * because the total is the thing the picture is asserting and a reader should not
- * have to add six numbers to check it.
+ * Stacking changes what the chart means. Unstacked areas each measure from zero
+ * and overlap. Stacked ones measure from the one below, and the top edge is the
+ * total. A stacked chart's table carries the total column, because the total is
+ * what the picture asserts and a reader should not have to add six numbers to
+ * check it.
  */
 import { type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
@@ -94,7 +92,7 @@ export function AreaChart({
           .map((name) => ({ offset: across(String(name)) ?? 0, label: name }));
 
         /* Where each series' own baseline runs. Unstacked it is zero for all of
-           them; stacked it is the running total under this one. */
+           them. Stacked it is the running total under this one. */
         const below = categories.map(() => 0);
         const built: MarkTip[] = [];
         tips.current = built;
@@ -127,9 +125,9 @@ export function AreaChart({
             <g {...tip.containerProps}>
               {drawn.map(({ series: one, channel, slot }) => {
                 const layer = layers[slot]!;
-                /* A stacked layer's floor moves with the data; an unstacked one
-                   is the zero line. Both are the same band with a different
-                   floor, which is why there is one path here and not two cases. */
+                /* A stacked layer's floor moves with the data. An unstacked
+                   one is the zero line. Both are the same band with a different
+                   floor, so one path covers both cases. */
                 const floor = stacked
                   ? layer.base.map((at) => inner.y + value(at))
                   : categories.map(() => inner.y + value(Math.max(0, domain[0])));

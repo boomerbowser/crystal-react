@@ -1,16 +1,15 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/avatar' as avatar;
 
-/* AvatarGroup — a -7px overlap, and stacking order that follows reading order.
+/* AvatarGroup: a -7px overlap, and stacking order that follows reading order.
  *
- * The overlap only reads as overlap if the ring is on top of the neighbour it
- * covers, which means the *first* avatar has to be in front, not behind. Source
- * order gives the opposite, so the z-index is counted down rather than up. Doing
- * it the other way produces a row that looks identical until you notice every
- * ring is cut by the avatar after it.
+ * The overlap reads as overlap only if the ring is on top of the neighbour it
+ * covers, so the first avatar has to be in front. Source order gives the
+ * opposite, so the z-index is counted down. Counted up, every ring is cut by the
+ * avatar after it.
  *
- * The overflow chip "matches avatar size", which is why it reads the same size
- * class rather than having a scale of its own.
+ * The overflow chip "matches avatar size", so it reads the same size class
+ * instead of having a scale of its own.
  */
 
 $avatar-overlap: -7px; /* crystal-allow-literal: the catalogue's stated overlap */
@@ -28,8 +27,8 @@ $avatar-overlap: -7px; /* crystal-allow-literal: the catalogue's stated overlap 
 .item + .item { margin-inline-start: $avatar-overlap; }
 
 /* Counted down from a ceiling, so the first item is in front. Nine covers the
-   groups anybody assembles by hand; past that the overlap is decoration anyway
-   and the overflow chip is doing the work. */
+   groups anybody assembles by hand. Past that the overflow chip carries the
+   count. */
 @for $index from 1 through 9 {
   .item:nth-child(#{$index}) { z-index: 10 - $index; }
 }
@@ -49,7 +48,7 @@ $avatar-overlap: -7px; /* crystal-allow-literal: the catalogue's stated overlap 
   box-shadow: 0 0 0 avatar.$ring var(--cr-surface);
 }
 
-/* The chip "matches avatar size", from Avatar's own table rather than a second
+/* The chip "matches avatar size", from Avatar's own table instead of a second
    copy of the four numbers. */
 @include avatar.sizes;
 

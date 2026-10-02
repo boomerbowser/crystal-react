@@ -1,29 +1,30 @@
 'use client';
 
-/* CartDrawer — the basket as a drawer: its lines, its totals, and checkout.
+/* CartDrawer: the basket as a drawer, with its lines, its totals and checkout.
  *
- * "Opening moves focus in and returns it on close; **total changes are
- * announced**." States: `closed`, `open`, `updating`, `empty`.
+ * "Opening moves focus in and returns it on close; total changes are
+ * announced." States: `closed`, `open`, `updating`, `empty`.
  *
- * The first half is `Drawer`'s, which is a React Aria modal: focus moves into it
+ * The first half is `Drawer`'s, which is a React Aria modal. Focus moves into it
  * as it opens and goes back to whatever opened it as it closes, and it enters
  * and leaves with Crystal's `drawer-in` and `drawer-out`. Nothing here restates
  * that.
  *
- * **The opinion is the second half.** A basket's total changes as a quantity is
- * stepped or a line removed, and a reader who cannot see the figure change has
- * no way to know the basket now costs something else. `CartSummary` says
- * *that* it is updating; the drawer says *what it came to*, once, when the new
- * total has settled — not while it is still being recalculated, which would
- * announce a figure about to be wrong, and not on opening, which is not news.
- * The line that changed says its own quantity through `CartItem`.
+ * The second half is this component's own. A basket's total changes as a
+ * quantity is stepped or a line removed, and a reader who cannot see the figure
+ * change has no way to know the basket now costs something else. `CartSummary`
+ * says that it is updating. The drawer says what it came to, once, when the new
+ * total has settled. It says nothing while the total is being recalculated,
+ * because that figure is about to be wrong, and nothing on opening, because the
+ * total has not changed. The line that changed says its own quantity through
+ * `CartItem`.
  *
- * **Checkout waits for the figures.** While the basket is updating the checkout
- * control is disabled, because the total it would commit to is the one being
- * replaced. It stays in place and says so, rather than disappearing.
+ * Checkout waits for the figures. While the basket is updating, the checkout
+ * control is disabled, because the total it would commit to is being replaced.
+ * It stays in place, disabled, instead of disappearing.
  *
- * **Empty is a state, not a blank panel.** A drawer with nothing in it says the
- * basket is empty and offers no checkout, because there is nothing to check out.
+ * Empty is a state, not a blank panel. A drawer with nothing in it says the
+ * basket is empty and offers no checkout.
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useNumberFormatter } from 'react-aria';
@@ -56,7 +57,7 @@ export interface CartDrawerProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   lines: readonly CartDrawerLine[];
-  /** Subtotal, discounts, delivery, tax — `CartSummary`'s lines. */
+  /** Subtotal, discounts, delivery and tax: `CartSummary`'s lines. */
   summary: readonly SummaryLine[];
   total: Money;
   onQuantityChange: (id: string, quantity: number) => void;
@@ -131,7 +132,7 @@ export function CartDrawer({
           </>
         )}
         {/* Polite, and rendered from the first frame, so the first change is a
-            change rather than an insertion a screen reader may not announce. */}
+            change and not an insertion, which a screen reader may not announce. */}
         <VisuallyHidden role="status">{said === null ? '' : announceTotal(said)}</VisuallyHidden>
       </div>
     </Drawer>

@@ -1,7 +1,7 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material';
 
-/* "Haze panel on the surrounding material." One fill, on the panel — the chart
+/* "Haze panel on the surrounding material." One fill, on the panel. The chart
    surface inside it carries no material of its own, because a chart drawn on a
    pad inside a pad is the two-materials-deep shape. */
 .panel {

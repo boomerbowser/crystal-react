@@ -4,9 +4,9 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { Gauge } from './Gauge.js';
 
 describe('Gauge', () => {
-  /* A meter is a measurement within a known range and is not going anywhere; a
-     progress bar is a task getting closer to finishing. They announce
-     differently, and a gauge is the first one. */
+  /* A meter is a measurement within a known range. A progress bar is a task
+     getting closer to finishing. They announce differently, and a gauge is a
+     meter. */
   it('is a meter with a text value, not a progress bar', () => {
     renderWithCrystal(<Gauge label="Disk used" value={62} valueLabel="62%" />);
     const meter = screen.getByRole('meter', { name: 'Disk used' });
@@ -15,7 +15,7 @@ describe('Gauge', () => {
     expect(meter.getAttribute('aria-valuetext')).toBe('62%');
   });
 
-  /* "Threshold colour from status tokens" — and never colour alone: the band's
+  /* "Threshold colour from status tokens", and never colour alone. The band's
      name is in the meter's own text and on the screen beside the number. */
   it('names the band as well as colouring it', () => {
     renderWithCrystal(

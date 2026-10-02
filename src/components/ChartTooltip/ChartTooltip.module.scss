@@ -2,14 +2,14 @@
 
 /* "Frost panel. Panel radius; never covers the point it describes."
  *
- * Frost rather than Haze: this is a surface that floats over the plot, and Frost
- * is Crystal's intermediate surface. The plot underneath it is the thing a reader
- * is looking at, so the panel is the material that lets some of it through.
+ * Frost, not Haze. The panel floats over the plot, and Frost is Crystal's
+ * intermediate surface. The reader is looking at the plot underneath, so the
+ * panel uses the material that lets some of it through.
  *
- * Positioned by four custom properties rather than by four rules, because the
- * side it takes is decided in JavaScript from the point's position and the panel
- * has to move every frame under a pointer. One `translate` is one composited
- * change; four class swaps are four style recalculations.
+ * It is positioned by four custom properties instead of four rules, because
+ * JavaScript picks the side from the point's position and the panel moves every
+ * frame under a pointer. One `translate` is one composited change, while four
+ * class swaps are four style recalculations.
  */
 
 .tooltip {
@@ -22,10 +22,10 @@
   min-inline-size: max-content;
   max-inline-size: $cr-overlay-tooltip-max-width;
   padding: $cr-spacing-xs $cr-spacing-sm;
-  /* "Frost panel": Crystal's `.cr-frost`, which the tooltip wears. It reached for
-     `--cr-acrylic-fill` — the alias, not the name — with Resin's float shadow and
-     an edge, because nothing said which surface a chart tooltip is. The catalogue
-     does now. Its own `position: absolute` still wins over Frost's `relative`. */
+  /* "Frost panel". The tooltip wears Crystal's `.cr-frost`, as the catalogue
+     specifies. Do not paint it with `--cr-acrylic-fill` (an alias, not the
+     name), Resin's float shadow or an edge. Its own `position: absolute` still
+     wins over Frost's `relative`. */
   border-radius: var(--cr-radius);
   color: var(--cr-text);
   font-size: var(--cr-text-caption-size);

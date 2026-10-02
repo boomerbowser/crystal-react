@@ -1,21 +1,19 @@
 /* Drive a real browser over the behaviour that only a browser has.
  *
- * Sibling of `verify-targets.mjs` and a different subject. That one asks how big
- * a control is; this one asks what a component *does* when the page scrolls,
- * resizes, or otherwise moves — the things made of layout, which jsdom does not
- * have. jsdom reports every `getBoundingClientRect` as zero and ships no
- * `IntersectionObserver`, so a component built from geometry has, in a unit test,
- * no geometry to be built from. A test written there passes on any implementation
- * at all, including one that does nothing.
+ * Sibling of `verify-targets.mjs`, with a different subject. That one asks how
+ * big a control is; this one asks what a component does when the page scrolls,
+ * resizes or otherwise moves, which depends on layout, and jsdom has none.
+ * jsdom reports every `getBoundingClientRect` as zero and ships no
+ * `IntersectionObserver`, so a unit test of a component built from geometry
+ * passes on any implementation, including one that does nothing.
  *
- * This is not hypothetical. The table of contents' scroll spy was wrong three
- * separate ways, and each was found by running this and none was visible to its
- * twelve passing unit tests:
+ * The table of contents' scroll spy shows three ways such a component can be
+ * wrong while its unit tests pass:
  *
- *   1. `rootMargin: '-20% 0px -80% 0px'` — the usual spelling of "a line a fifth
- *      of the way down" — is a band of zero height, and nothing intersects a
- *      rectangle with no area. Two of five headings were never marked.
- *   2. With a real band, the last heading was unreachable: a short final section
+ *   1. `rootMargin: '-20% 0px -80% 0px'`, the usual spelling of "a line a fifth
+ *      of the way down", is a band of zero height, and nothing intersects a
+ *      rectangle with no area. Two of five headings are never marked.
+ *   2. With a real band, the last heading is unreachable: a short final section
  *      cannot push itself to the reading line.
  *   3. Detecting the end of the scroll inside the observer callback does not
  *      help, because reaching the end is not a crossing and the callback never
@@ -24,7 +22,7 @@
  *   node scripts/verify-behaviour.mjs
  *   STORYBOOK_ORIGIN=http://127.0.0.1:6006 node scripts/verify-behaviour.mjs
  *
- * It starts no server. Point it at a running `pnpm storybook`, or — as CI does —
+ * It starts no server. Point it at a running `pnpm storybook`, or, as CI does,
  * at `storybook-static` served over HTTP.
  */
 import { chromium } from 'playwright';
@@ -43,9 +41,9 @@ const record = (name, ok, detail) => {
 };
 
 /* Wait for something, and report its absence as a finding rather than as a
-   thirty-second Playwright stack trace. Planting a defect proved the difference:
-   a drawer that stopped being a complementary landmark failed this run by timing
-   out, which says "the gate broke" where the truth was "the component did". */
+   thirty-second Playwright stack trace. A timeout reads as a broken gate; a
+   finding says the component broke, as when a drawer stops being a
+   complementary landmark. */
 const waitFor = async (description, locator) => {
   try {
     await locator.waitFor({ timeout: 5000 });
@@ -66,12 +64,10 @@ await page.waitForSelector('#storybook-root nav');
 
 const spy = await page.evaluate(async () => {
   const root = document.querySelector('#storybook-root');
-  /* Found by measuring rather than by matching a selector. This read
-     `[style*="overflow"]`, which only ever worked because the story happened to
-     set `overflowY` as an inline style; the moment the story started using the
-     library's own `ScrollArea` — which sets it in CSS, as a component should —
-     the gate crashed on a null. A behaviour gate should ask the page what
-     scrolls, not how somebody spelled it. */
+  /* Found by measuring rather than by matching a selector. A selector such as
+     `[style*="overflow"]` works only if `overflowY` is an inline style, and the
+     library's own `ScrollArea` sets it in CSS. So this asks the page what
+     scrolls. */
   const column = [...root.querySelectorAll('*')].find((el) => (
     el.scrollHeight > el.clientHeight + 1
     && ['auto', 'scroll'].includes(getComputedStyle(el).overflowY)
@@ -86,7 +82,7 @@ const spy = await page.evaluate(async () => {
   const max = column.scrollHeight - column.clientHeight;
 
   /* Walked in small steps rather than jumped: a spy can be right at the two ends
-     and stale everywhere between, which is exactly what the first one did. */
+     and stale everywhere between. */
   const seen = [];
   for (let step = 0; step <= 20; step += 1) {
     column.scrollTop = Math.round((max * step) / 20);
@@ -132,15 +128,13 @@ await page.goto(
 await page.waitForSelector('#storybook-root [role="treegrid"]');
 
 /* Nothing in Crystal moves at rest. A tree that animates its own rows into
-   existence on load is the clearest possible violation, and it is invisible in a
-   screenshot taken after the animation has finished.
-   
+   existence on load violates that, and a screenshot taken after the animation
+   has finished does not show it.
+
    `useMotion` sets `data-cr-motion-state` to "running" and then to "finished"
-   rather than clearing it, which is what makes this checkable at all: the
-   attribute is a record that an animation *happened*, not a report of one in
-   flight. So probing after the page has settled still catches a tree that
-   animated itself and then stopped. Proved by making the tree live from its
-   first render — three rows, caught. */
+   rather than clearing it, so the attribute records that an animation happened,
+   not only one in flight. Probing after the page has settled still catches a
+   tree that animated itself and then stopped. */
 const atRest = await page.evaluate(() => {
   const root = document.querySelector('#storybook-root');
   return [...root.querySelectorAll('[data-cr-motion-state]')]
@@ -154,16 +148,15 @@ record(
 
 /* --------------------------------------------------- modality must be real */
 
-/* The catalogue states it for the drawer in those words, and it is the rule that
-   cannot be checked where the rest of the drawer is. React Aria marks modality
-   with the **`inert` attribute** on everything outside the overlay — which
-   removes the page from the tab order and from the accessibility tree at once,
-   rather than `aria-modal`, which claims the first and delivers neither. jsdom
-   does not apply it, so a unit test sees a drawer that looks modal and cannot
-   tell whether anything behind it is actually blocked.
-   
+/* The catalogue states it for the drawer in those words, and it cannot be
+   checked where the rest of the drawer is. React Aria marks modality with the
+   `inert` attribute on everything outside the overlay, which removes the page
+   from the tab order and from the accessibility tree at once. `aria-modal`
+   claims the first and delivers neither. jsdom does not apply `inert`, so a unit
+   test cannot tell whether anything behind a drawer is blocked.
+
    Both directions are checked, because the defect has two halves: a scrim with
-   no containment, and containment with no way to tell. */
+   no containment, and containment with no visible sign. */
 
 await page.goto(
   `${ORIGIN}/iframe.html?id=overlays-drawer--modal&viewMode=story`,
@@ -237,13 +230,11 @@ if (inlineDrawerAppeared) {
 
 /* ------------------------------------------------ the drawer's edges */
 
-/* "Panel radius on the inner edges only", and a panel actually attached to the
-   edge it names. The second half is not obvious: pinning the holder to one edge
-   and letting it shrink to fit leaves the panel anchored at the box's *start*,
-   so an inline-end drawer sat 151px clear of the right-hand edge — correct
-   radius, correct material, correct semantics, floating in the middle of
-   nowhere. A screenshot of the whole page at one width would have shown it; a
-   unit test could not, and neither could a frame captured at another width. */
+/* "Panel radius on the inner edges only", and a panel attached to the edge it
+   names. Pinning the holder to one edge and letting it shrink to fit leaves the
+   panel anchored at the box's start, so an inline-end drawer can sit 151px clear
+   of the right-hand edge with correct radius, material and semantics. A unit
+   test cannot see this, and neither can a frame captured at another width. */
 
 await page.setViewportSize({ width: 1000, height: 700 });
 await page.goto(
@@ -318,23 +309,21 @@ for (const { edge, flush, square } of EDGES) {
 
 /* "The resizer is a slider: arrow keys resize, and the new width is announced."
  *
- * The sequence is `Enter`, *then* the arrows, and finding that out is what
- * closed D-18. React Aria gates the arrow keys on `editModeEnabled`, which is
- * the table's `isKeyboardNavigationDisabled` — `Enter` on a focused resizer
- * calls `startResize`, which disables the grid's own arrow-key navigation and
- * hands the arrows to the resizer. Without it the keys arrive at the focused
- * input, are not `defaultPrevented`, and do nothing at all; that is what three
- * earlier attempts saw, and no amount of getting focus right would have fixed
- * it. React Aria describes the resizer with "press Enter to start resizing"
- * under keyboard modality, so the affordance is announced even though it is not
- * guessable.
+ * The sequence is `Enter`, then the arrows (D-18). React Aria gates the arrow
+ * keys on `editModeEnabled`, which is the table's
+ * `isKeyboardNavigationDisabled`: `Enter` on a focused resizer calls
+ * `startResize`, which disables the grid's own arrow-key navigation and hands
+ * the arrows to the resizer. Without it the keys arrive at the focused input,
+ * are not `defaultPrevented`, and do nothing, however focus is set. React Aria
+ * describes the resizer with "press Enter to start resizing" under keyboard
+ * modality, so the affordance is announced even though it is not guessable.
  *
  * Also checked: the number the resizer announces and the width the browser draws
  * are the same. React Aria applies each computed width to its header cell as an
  * inline style, and under `table-layout: auto` a width on a cell is a suggestion
- * the browser may override from the content — so a resizer could go on
- * announcing a width its column no longer has. The fixed layout that prevents
- * that is React Aria's own, set inline by `ResizableTableContainer`.
+ * the browser may override from the content, so a resizer could announce a
+ * width its column no longer has. The fixed layout that prevents that is React
+ * Aria's own, set inline by `ResizableTableContainer`.
  */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=data-display-resizable-table--default&viewMode=story`, { waitUntil: 'networkidle' });
@@ -355,11 +344,10 @@ for (const { edge, flush, square } of EDGES) {
 
   const before = await measure();
 
-  /* The wrapper, clicked rather than `.focus()`ed. Two reasons, both learned the
-     hard way: a programmatic focus on a cell's child is taken back by the grid,
-     and React Aria's real input is a visually-hidden box *inside* the wrapper —
-     clicking it is refused because the wrapper intercepts the pointer, which is
-     the wrapper doing its job. */
+  /* The wrapper, clicked rather than `.focus()`ed, for two reasons: the grid
+     takes back a programmatic focus on a cell's child, and React Aria's real
+     input is a visually-hidden box inside the wrapper, so clicking the input is
+     refused because the wrapper intercepts the pointer, as it should. */
   await page.locator('#storybook-root [role="columnheader"] [data-resizable-direction]').first().click();
   await page.keyboard.press('Enter');
   await page.waitForTimeout(100);
@@ -397,15 +385,15 @@ for (const { edge, flush, square } of EDGES) {
 /* ------------------------------------- one tab stop per chart, arrows inside */
 
 /* Every chart in the catalogue lists `focus-visible` and most say each item is
- * reachable. Reachable cannot mean one tab stop each — a scatter of two hundred
- * points would be two hundred stops between the control before it and the one
- * after — so the plot is one stop and the marks are a roving tabindex inside it.
+ * reachable. Reachable cannot mean one tab stop each, because a scatter of two
+ * hundred points would be two hundred stops between the control before it and
+ * the one after. So the plot is one stop and the marks are a roving tabindex
+ * inside it.
  *
- * The marks are SVG `<g>` elements carrying `tabindex`, which is SVG 2 and which
- * jsdom will happily let a unit test *believe*: `element.focus()` on an
- * unfocusable node is not an error there, and `document.activeElement` follows.
- * This is the only place the claim is tested against an engine that decides for
- * itself. */
+ * The marks are SVG `<g>` elements carrying `tabindex`, which is SVG 2. jsdom
+ * does not enforce it: `element.focus()` on an unfocusable node is not an error
+ * there, and `document.activeElement` follows. This is the only place the claim
+ * is tested against an engine that decides for itself. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=charts-bar-chart--grouped&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#storybook-root [role="graphics-symbol"]');
@@ -464,8 +452,8 @@ for (const { edge, flush, square } of EDGES) {
   /* The tooltip's keyboard half. A chart tooltip cannot hang off hover: there
      is one focusable plot and the cursor inside it is a roving `tabindex`, so a
      reader who never touches a pointer would otherwise get no panel at all.
-     jsdom cannot test this honestly either — it has no focus of its own to
-     follow, and `:focus-within` is not resolved there. */
+     jsdom cannot test this either: it has no focus of its own to follow, and
+     `:focus-within` is not resolved there. */
   const panel = '#storybook-root [aria-hidden="true"][data-shown]';
   const withFocus = await page.locator(panel).count();
   record(
@@ -489,16 +477,15 @@ for (const { edge, flush, square } of EDGES) {
     + 'A dismissal that outlives the mark it dismissed is a chart whose tooltip never returns',
   );
 
-  /* The focus ring has to be *on the mark*, not on the plot. `outline` on an SVG
-     element is honoured by every engine this library gates against, which is a
-     claim worth reading back rather than believing.
+  /* The focus ring has to be on the mark, not on the plot. `outline` on an SVG
+     element is honoured by every engine this library gates against, and this
+     reads it back to confirm.
 
-     What this does **not** prove is whose rule painted it. Storybook loads
-     `crystal.css`, which carries `[tabindex]:focus-visible { outline: … }`, so
-     removing the library's own rule leaves this check green — measured, not
-     assumed. The library keeps its rule anyway, because a consumer who does not
-     load Crystal's element styles is exactly the case D-1 is about, and this
-     gate cannot see that consumer. */
+     This does not prove whose rule painted it. Storybook loads `crystal.css`,
+     which carries `[tabindex]:focus-visible { outline: … }`, so removing the
+     library's own rule leaves this check green (measured). The library keeps its
+     rule anyway, because a consumer who does not load Crystal's element styles
+     is the case D-1 is about, and this gate cannot see that consumer. */
   const ring = await page.evaluate(() => {
     const active = document.activeElement;
     if (!active) return null;
@@ -514,9 +501,9 @@ for (const { edge, flush, square } of EDGES) {
 
 /* --------------------------------------- a treemap is navigable as a tree */
 
-/* "Navigable as a tree" is the treemap's own clause and the one that cannot be
- * checked without driving it: the level changes, which no snapshot of the first
- * render shows. */
+/* "Navigable as a tree" is the treemap's own clause, and it cannot be checked
+ * without driving it: the level changes, which no snapshot of the first render
+ * shows. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=charts-treemap--default&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#storybook-root [role="graphics-symbol"]');
@@ -562,9 +549,9 @@ for (const { edge, flush, square } of EDGES) {
 /* ------------------------------------------ a hidden series is announced */
 
 /* "Toggles are buttons with a pressed state; hidden series are announced." The
- * announcement is a live region, and a live region is only a live region if it
- * is in the document *before* the text arrives — one rendered together with its
- * message announces nothing. */
+ * announcement is a live region, and a live region works only if it is in the
+ * document before the text arrives. One rendered together with its message
+ * announces nothing. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=charts-chart-legend--toggling&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#storybook-root button');
@@ -596,16 +583,16 @@ for (const { edge, flush, square } of EDGES) {
 
 /* Two claims the unit tests state and cannot check, both about the keyboard.
  *
- * jsdom does not implement `inert` for focus at all: a `<button>` inside an
- * inert subtree is still focusable there, so `LoadingOverlay`'s "focus does not
- * enter it" is green in jsdom whether the attribute is `inert` or `aria-hidden`
- * — and `aria-hidden` is the version of this that ships broken, because it hides
- * the region from a screen reader while leaving every control in the tab order.
+ * jsdom does not implement `inert` for focus: a `<button>` inside an inert
+ * subtree is still focusable there, so `LoadingOverlay`'s "focus does not enter
+ * it" passes in jsdom whether the attribute is `inert` or `aria-hidden`.
+ * `aria-hidden` is the broken version, because it hides the region from a
+ * screen reader while leaving every control in the tab order.
  *
- * And `aria-modal="true"` on the tour is a claim about the keyboard, not the
- * pointer. The scrim covers the page and blocks the mouse; Tab is a different
- * question, and a tour that let Tab walk onto the very control it is
- * spotlighting would be telling assistive technology something false. */
+ * `aria-modal="true"` on the tour is a claim about the keyboard. The scrim
+ * covers the page and blocks the mouse, but not Tab, and a tour that let Tab
+ * reach the control it is spotlighting would tell assistive technology
+ * something false. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=feedback-loading-overlay--blocked&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#storybook-root [data-cr-blocked="true"]');
@@ -653,15 +640,14 @@ for (const { edge, flush, square } of EDGES) {
 
 /* --------------------------------------------- captions, in an engine that has them */
 
-/* "Captions are supported and **their state is announced**." jsdom parses a
+/* "Captions are supported and their state is announced." jsdom parses a
  * `<track>` and populates no `textTracks` for it, so the state this component
- * reads does not exist there at all — the unit tests can say a player with
- * nothing to caption offers no control, and nothing more. Everything past that
- * is here.
+ * reads does not exist there. The unit tests can only say that a player with
+ * nothing to caption offers no control; everything past that is checked here.
  *
- * The claim is deliberately about the *track*, not about the button: a toggle
- * that flipped its own `aria-pressed` and left the track alone would look
- * right, read right, and show no subtitles. */
+ * The claim is about the track, not the button: a toggle that flipped its own
+ * `aria-pressed` and left the track alone would look and read correctly and
+ * show no subtitles. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=media-video-player--with-captions&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#storybook-root video');
@@ -683,9 +669,8 @@ for (const { edge, flush, square } of EDGES) {
     return {
       modes: [...(video?.textTracks ?? [])].map((track) => track.mode),
       pressed: document.querySelector('#storybook-root [aria-label="Captions"]')?.getAttribute('aria-pressed'),
-      /* Every live region in the player, joined. Taking the first one found the
-         transport's buffering region, which is empty and always will be —
-         another check identified by DOM position rather than by what it is. */
+      /* Every live region in the player, joined. The first one in the DOM is the
+         transport's buffering region, which is always empty here. */
       said: [...document.querySelectorAll('#storybook-root [role="status"]')]
         .map((region) => region.textContent ?? '').join(' ').trim(),
     };
@@ -712,8 +697,8 @@ for (const { edge, flush, square } of EDGES) {
  * not the one they opened. It rests on an ordering: the component claims focus
  * synchronously, and React Aria's restoration then stands down because it only
  * acts inside a `requestAnimationFrame` and only if focus is still on the body.
- * jsdom emulates both, which makes the unit test a statement about jsdom's
- * scheduler. This is the evidence. */
+ * jsdom emulates both, so the unit test only describes jsdom's scheduler. This
+ * checks the real ordering. */
 {
   await page.goto(
     `${ORIGIN}/iframe.html?id=media-gallery--a-set&viewMode=story`,
@@ -749,9 +734,9 @@ for (const { edge, flush, square } of EDGES) {
 
 /* ------------------------------------------------- screens: order and width
  *
- * Two clauses from slice O that are geometry, and geometry is the one thing the
- * unit tests genuinely cannot reach — this environment gives every element a
- * width of zero and implements no `matchMedia` at all.
+ * Two clauses from slice O that are geometry, which the unit tests cannot
+ * reach: their environment gives every element a width of zero and implements
+ * no `matchMedia`.
  */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=screens-workspace--default&viewMode=story`, { waitUntil: 'networkidle' });
@@ -761,7 +746,7 @@ for (const { edge, flush, square } of EDGES) {
        the positions, and a `grid-column`, an `order`, or a `direction` moves one
        without touching the other. A workspace where they disagree tabs from the
        left pane to the right to the middle, and nothing in the source looks
-       wrong. This is the only place the question has an answer. */
+       wrong. Only a browser can answer this. */
     const order = await page.evaluate(() => {
       const panes = [...document.querySelectorAll('#storybook-root section[aria-label]')];
       const documentOrder = panes.map((one) => one.getAttribute('aria-label'));
@@ -789,8 +774,8 @@ for (const { edge, flush, square } of EDGES) {
 
 {
   /* "Collapses to a stack below the layout breakpoint." Crystal's `md` is
-     850px, so the two viewports are chosen to sit either side of it rather than
-     near it — a gate measured at the boundary tests the rounding, not the rule. */
+     850px, so the two viewports sit well either side of it. A gate measured at
+     the boundary would test the rounding instead of the rule. */
   const layoutAt = async (width) => {
     await page.setViewportSize({ width, height: 800 });
     await page.goto(`${ORIGIN}/iframe.html?id=screens-masterdetail--default&viewMode=story`, { waitUntil: 'networkidle' });
@@ -823,12 +808,12 @@ for (const { edge, flush, square } of EDGES) {
 }
 
 {
-  /* "role=toolbar with one tab stop." Asserted in the header, and until now
-     measured nowhere: jsdom has a tab order, but React Aria's roving tab index
-     is driven by focus events and element geometry, and the thing being claimed
-     is about what a *reader* reaches with the Tab key. A bar of seven commands
-     that each took a stop would put seven presses between them and the next
-     field, which is the whole reason the role exists. */
+  /* "role=toolbar with one tab stop." Asserted in the header and measured only
+     here: jsdom has a tab order, but React Aria's roving tab index is driven by
+     focus events and element geometry, and the claim is about what a reader
+     reaches with the Tab key. A bar of seven commands that each took a stop
+     would put seven presses between the reader and the next field, which is
+     what the role exists to prevent. */
   await page.goto(`${ORIGIN}/iframe.html?id=screens-commandbar--default&viewMode=story`, { waitUntil: 'networkidle' });
   if (await waitFor('a command bar renders', page.locator('#storybook-root [role="toolbar"] button').first())) {
     const stops = await page.evaluate(async () => {
@@ -864,16 +849,15 @@ for (const { edge, flush, square } of EDGES) {
  *
  * "A pop is a push mirrored, and right-to-left is a push mirrored again."
  *
- * This is R-23's check, and it could not be written until `@crystal-ui/core`
- * 2.1.0 was published: with no `view-push-in` to resolve, both directions did
- * nothing and looked identical, so the claim was unfalsifiable rather than
- * untested. Two motion hooks with fixed orientations were written on the
- * strength of the argument alone — a single hook would animate a pop with the
- * push's orientation, arriving from the edge it was leaving towards — and an
- * argument is not evidence.
+ * This is R-23's check. It needs `@crystal-ui/core` 2.1.0 or later: without
+ * `view-push-in` to resolve, both directions do nothing and look identical.
+ * There are two motion hooks with fixed orientations because a single hook
+ * would animate a pop with the push's orientation, arriving from the edge it
+ * was leaving towards. This checks that the two hooks do what that argument
+ * says.
  *
  * Read from the running animation's first keyframe rather than from a sampled
- * position, because a position mid-flight is a race and a keyframe is a fact.
+ * position, because a position sampled mid-flight is a race.
  */
 {
   const startsAt = async (dir, action) => {
@@ -917,7 +901,7 @@ for (const { edge, flush, square } of EDGES) {
       && Math.sign(ltrPush) === -Math.sign(ltrPop)
       /* Right-to-left is a push mirrored again. */
       && Math.sign(ltrPush) === -Math.sign(rtlPush)
-      /* Which leaves the fourth determined, and worth asserting because a
+      /* That determines the fourth, which is still asserted because a
          reorientation applied twice is the case a sign flip gets wrong. */
       && Math.sign(rtlPush) === -Math.sign(rtlPop)
       /* Reading direction: a left-to-right push comes from the right. */
@@ -932,11 +916,12 @@ for (const { edge, flush, square } of EDGES) {
  *
  * Crystal 2.2.0 publishes three recipes that repeat, for work that is genuinely
  * pending, and one rule: nothing else loops, and none of them runs at rest or
- * under reduced motion. jsdom cannot see an animation at all, so the claim is
- * read here from the running animation itself — infinite, linear, at Crystal's
- * one period — and then from the same story under reduced motion, where there
- * must be none and the element must say it was resolved instantly. A static
- * fallback the stylesheet keys on that answer is what the reader then sees.
+ * under reduced motion. jsdom cannot see an animation, so the claim is read here
+ * from the running animation itself (infinite, linear, at Crystal's one period)
+ * and then from the same story under reduced motion, where there must be no
+ * animation and the element must say it was resolved instantly. The stylesheet
+ * keys a static fallback on that state, and that fallback is what the reader
+ * sees.
  */
 {
   const FLOW = 1200;
@@ -981,12 +966,12 @@ for (const { edge, flush, square } of EDGES) {
 
 /* ------------------------------------------------ a data mark arriving (R-21)
  *
- * `mark-in` grows each mark from its baseline, once, critically damped. The three
- * things that make it honest are geometric, so they are measured frame by frame
- * with the page's animation clock slowed tenfold: a bar's edge on the zero line
- * never moves, no mark is ever drawn taller than its value, and a mark waiting
- * for its turn is parked at the first frame rather than drawn at full height and
- * then collapsed. Under reduced motion, nothing arrives: every mark is at its
+ * `mark-in` grows each mark from its baseline, once, critically damped. The
+ * three properties that make it correct are geometric, so they are measured
+ * frame by frame with the page's animation clock slowed tenfold: a bar's edge on
+ * the zero line never moves, no mark is ever drawn taller than its value, and a
+ * mark waiting for its turn is parked at the first frame rather than drawn at
+ * full height and then collapsed. Under reduced motion, nothing arrives: every mark is at its
  * value from the first frame.
  */
 {
@@ -1043,9 +1028,9 @@ for (const { edge, flush, square } of EDGES) {
 
 /* ------------------------------------------- motion marks a state entered
  *
- * The catalogue's state recipes — `selection` first — are bound through
- * `useChangeMotion`, whose three rules are checked here per component rather
- * than trusted: nothing has played at rest, entering the state plays the recipe
+ * The catalogue's state recipes, `selection` first, are bound through
+ * `useChangeMotion`, whose three rules are checked here per component: nothing
+ * has played at rest, entering the state plays the recipe
  * on the item that entered it, and pressing an item already in that state plays
  * nothing more. `data-cr-motion-name` is left behind by `useMotion` when a
  * recipe has run, which is what makes the first rule checkable after the fact.
@@ -1096,7 +1081,7 @@ for (const { edge, flush, square } of EDGES) {
   }
 }
 
-/* A destination becoming current from outside — a client-side route change, which
+/* A destination becoming current from outside: a client-side route change, which
    in a story is its args changing. The bar does not remount, so the new current
    destination plays `selection`, and the page load that rendered the first one
    current played nothing. */
@@ -1120,7 +1105,7 @@ for (const id of ['navigation-rails-and-bars--dock-bar', 'navigation-rails-and-b
 }
 
 /* `field-focus` marks focus arriving at a field: on its shell, once, when a
-   control inside it is focused — never on load. Every field shell in the two
+   control inside it is focused, and never on load. Every field shell in the two
    stories that hold them all is focused in turn, so a field whose shell was
    never bound shows up by name. */
 for (const id of ['inputs-text-and-choice--text-family', 'inputs-composite--tokens', 'inputs-temporal-colour-and-files--colour']) {
@@ -1212,9 +1197,9 @@ for (const [id, trigger, recipe] of [
     atRest === 0 && after === 1 && open > 0,
     `played before ${atRest}, after opening ${after}; open surfaces ${open}`,
   );
-  /* And it leaves with its exit: still on screen, exiting and playing it, a
-     moment after it was dismissed — React Aria held it for the recipe — and
-     gone once the recipe has played. */
+  /* And it leaves with its exit: a moment after it is dismissed it is still on
+     screen, exiting and playing the exit (React Aria holds it for the recipe),
+     and it is gone once the recipe has played. */
   const exit = recipe.replace(/-in$/, '-out');
   await page.waitForTimeout(700);
   await page.keyboard.press('Escape');
@@ -1263,8 +1248,8 @@ for (const [label, open, recipe] of [
 
 /* A collection's items: the values a field starts with play nothing; a value
    committed arrives with `list-in`; a value removed stays long enough to play
-   `list-out`, inert while it does, and then goes. And an item component outside
-   a collection — a card on a page — never plays either. */
+   `list-out`, inert while it does, and then goes. An item component outside a
+   collection, such as a card on a page, never plays either. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=inputs-composite--tokens&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
@@ -1359,7 +1344,7 @@ for (const [id, openWith, exit] of [
   );
 }
 
-/* Views: a master–detail's detail when another item is chosen plays `page-in`;
+/* Views: a master-detail's detail when another item is chosen plays `page-in`;
    focus mode's chrome, leaving as focus mode begins, plays `page-out` and goes.
    Neither on load. Driven from args, as a product's state would be. */
 {
@@ -1445,8 +1430,8 @@ for (const [id, handle, keys, where] of [
 
 /* Files dropped on a drop zone arrive: the zone lifts as they are carried in,
    settles as they land, and the file is delivered where a chosen file would be
-   — the story lists it. Until 28 September a drop was accepted and discarded.
-   Dispatched with a real DataTransfer holding a real File, as a browser does. */
+   (the story lists it). Dispatched with a real DataTransfer holding a real
+   File, as a browser does. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=inputs-temporal-colour-and-files--dropping-files&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
@@ -1509,8 +1494,8 @@ for (const [id, handle, keys, where] of [
 }
 
 /* An accordion row closing: its content plays `accordion-out` while the panel is
-   still shown, and the panel is hidden once it has — "hide content after
-   completion". A row that loads closed plays nothing. */
+   still shown, and the panel is hidden once it has ("hide content after
+   completion"). A row that loads closed plays nothing. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=data-display-accordion--one-open-to-start&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
@@ -1685,11 +1670,11 @@ for (const [id, trigger, surface] of [
 /* ---------------------------------------------------------- a virtualizer windows, counts and keeps focus */
 
 /* The catalogue's two obligations for the virtualizer, which the library
-   re-exports from React Aria on the strength of both: rows keep their place in
-   the set — `aria-setsize` and `aria-posinset` — while only some of them exist,
-   and a focused row is not dropped when scrolling would recycle it. Neither is
-   visible to jsdom, which lays nothing out and so windows nothing. Measured on
-   the two-thousand-row story: few rows rendered, each counted against the whole,
+   re-exports from React Aria because it meets both: rows keep their place in the
+   set (`aria-setsize` and `aria-posinset`) while only some of them exist, and a
+   focused row is not dropped when scrolling would recycle it. Neither is visible
+   to jsdom, which lays nothing out and so windows nothing. Measured on the
+   two-thousand-row story: few rows rendered, each counted against the whole,
    and focus on the first row surviving a scroll to the bottom of the list. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=data-display-virtual-scroller--two-thousand-rows&viewMode=story`, { waitUntil: 'networkidle' });
@@ -1732,10 +1717,10 @@ for (const [id, trigger, surface] of [
 /* ---------------------------------------------------------- an onboarding step changes page */
 
 /* The catalogue gives the onboarding sequence `page-in` and `page-out`, and the
-   block plays them on the step's page — the leaving one and the arriving one in
-   the same grid cell — while the panel keeps Tour's own arrival. The pages are
+   block plays them on the step's page (the leaving one and the arriving one in
+   the same grid cell), while the panel keeps Tour's own arrival. The pages are
    the same element in the same place for every step, so React keeps it mounted
-   and its presence sees the change; built any other way the old page unmounts
+   and its presence sees the change; built any other way, the old page unmounts
    and nothing leaves. jsdom plays nothing, so it is counted here. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=blocks-onboardingblock--active&viewMode=story`, { waitUntil: 'networkidle' });

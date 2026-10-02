@@ -2,22 +2,21 @@
 
 /* NoSsr.
  *
- * Defers a subtree until the client, for the small number of things that genuinely
- * cannot render on a server — a canvas, a measurement of the viewport, a widget
- * from a third party that touches `window` on import.
+ * Defers a subtree until the client, for the few things that cannot render on a
+ * server: a canvas, a measurement of the viewport, a third-party widget that
+ * touches `window` on import.
  *
  * Two rules from the catalogue, both about what happens in the gap:
  *
- *   - **Fall back to content, not to emptiness**, wherever you can. A skeleton or
- *     a plain-text version of the thing is a page that is readable before
- *     hydration; `null` is a page with a hole in it, and on a slow connection the
- *     hole is what the reader gets.
- *   - **Reserve the final size**, so nothing shifts when it resolves. Wrap the
+ *   - Fall back to content wherever you can. A skeleton or a plain-text version
+ *     of the thing keeps the page readable before hydration. `null` leaves a
+ *     hole, and on a slow connection the hole is what the reader gets.
+ *   - Reserve the final size, so nothing shifts when it resolves. Wrap the
  *     fallback in `AspectRatio`, or give it the same box.
  *
- * `useIsSSR` rather than a `useEffect` flag: React Aria's version is tied to
- * React's own hydration signal, so the first client render matches the server's
- * and there is no hydration mismatch to warn about.
+ * It uses `useIsSSR` instead of a `useEffect` flag. React Aria's version is tied
+ * to React's own hydration signal, so the first client render matches the
+ * server's and there is no hydration mismatch.
  */
 import type { ReactNode } from 'react';
 import { useIsSSR } from 'react-aria';

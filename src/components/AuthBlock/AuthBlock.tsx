@@ -1,32 +1,32 @@
 'use client';
 
-/* AuthBlock — sign in, register, reset and verification.
+/* AuthBlock: sign in, register, reset and verification.
  *
- * "**Real form semantics with autocomplete tokens; failures never reveal which
- * factor was wrong.**" States: `at-rest`, `submitting`, `error`, `locked`.
+ * "Real form semantics with autocomplete tokens; failures never reveal which
+ * factor was wrong." States: `at-rest`, `submitting`, `error`, `locked`.
  *
  * The provider and its policy are the product's. The block owns the parts a
  * password manager and an attacker both read:
  *
- *   - **A real form.** One `<form>` per mode, a submit button, named fields, and
- *     the autocomplete token each field actually is: `username` and
- *     `current-password` to sign in, `new-password` to register, `one-time-code`
- *     to verify. A password manager fills and saves from those tokens, and a
- *     phone offers the code from the message that carried it.
- *   - **A failure names no factor.** Signing in takes one message for every
- *     failure — no account, wrong password, wrong code — and the block has no
- *     way to attach it to a field, so a product cannot say "no account uses that
+ *   - A real form. One `<form>` per mode, a submit button, named fields, and the
+ *     autocomplete token each field is: `username` and `current-password` to
+ *     sign in, `new-password` to register, `one-time-code` to verify. A password
+ *     manager fills and saves from those tokens, and a phone offers the code
+ *     from the message that carried it.
+ *   - A failure names no factor. Signing in takes one message for every failure
+ *     (no account, wrong password, wrong code), and the block has no way to
+ *     attach it to a field, so a product cannot say "no account uses that
  *     address" by accident. A reset always answers the same way, whether or not
  *     the address has an account. Registration is the exception the catalogue
  *     allows: its errors are about the shape of what was typed ("use at least
- *     12 characters"), and they are the product's to word without naming an
- *     existing account.
- *   - **Locked is said and holds the form.** Too many attempts disables the
- *     fields and says when to try again, as an alert.
+ *     12 characters"), and the product words them without naming an existing
+ *     account.
+ *   - Locked holds the form. Too many attempts disables the fields and says, as
+ *     an alert, when to try again.
  *
- * "Haze card on the Plastic foundation": the block draws both — the Plastic
- * ground it stands on and the Haze card on it — because an authentication page
- * is usually the whole page.
+ * "Haze card on the Plastic foundation": the block draws both the Plastic ground
+ * and the Haze card on it, because an authentication page is usually the whole
+ * page.
  */
 import type { FormEvent, ReactNode } from 'react';
 import { Form } from 'react-aria-components';
@@ -49,15 +49,15 @@ export interface AuthBlockProps {
   onSubmit: (values: FormData) => void;
   state?: AuthState;
   /**
-   * Shown in `error`. One message for every failure; there is deliberately no
-   * way to attach it to a field.
+   * Shown in `error`. One message for every failure. There is no way to attach
+   * it to a field, so a failure cannot name a factor.
    */
   errorMessage?: ReactNode;
   /** Shown in `locked`: when to try again. */
   lockedMessage?: ReactNode;
-  /** Registration only: field name → a message about the shape of what was typed. */
+  /** Registration only: maps a field name to a message about the shape of what was typed. */
   errors?: Readonly<Record<string, string>>;
-  /** A notice above the form — after a reset, the answer that names no account. */
+  /** A notice above the form. After a reset, it is the answer that names no account. */
   notice?: ReactNode;
   /** The product's name or mark, above the heading. */
   brand?: ReactNode;

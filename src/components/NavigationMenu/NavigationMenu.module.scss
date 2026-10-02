@@ -1,9 +1,9 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* The bar inherits; the panel is Frost. Frost because a panel of links is a
+/* The bar inherits, and the panel is Frost, because a panel of links is a
    reading surface that appears in the page, not a control plane floating over
-   it — that distinction is the whole material hierarchy in one component. */
+   it. */
 .menu { position: relative; }
 
 .bar {

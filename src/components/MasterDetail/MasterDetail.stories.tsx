@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Selection moves focus to the detail **only** when the layout has collapsed."\n\n'
+          '"Selection moves focus to the detail only when the layout has collapsed."\n\n'
           + 'Wide, both panes are on screen: moving focus when a row is chosen would take the '
           + 'reader out of the list they are still arrowing down, and the detail changed where '
           + 'they can see it. Collapsed, the detail has replaced the list, so a reader left on '

@@ -1,15 +1,15 @@
 @use '../../styles/tokens' as *;
 
-/* "Sticky first column and header." Both, because a comparison read at the
-   twelfth row with the product names scrolled away is four columns of numbers
-   belonging to nobody.
+/* "Sticky first column and header." Both, because at the twelfth row the
+   product names would otherwise have scrolled away, leaving four columns of
+   unlabelled numbers.
 
    The column head is already sticky: `Table` gives every `thead th` its
    `position` and offset, and Crystal's own `.cr-table` does the same. Repeating
-   them here would be two copies of one rule at equal specificity, settled by
-   source order — that is a drift waiting for an import to be reordered, not a
-   belt and braces. What this component adds is the one thing only it knows:
-   where the two sticky axes cross, the column head is in front. */
+   them here would make two copies of one rule at equal specificity, settled by
+   source order, which breaks if an import is reordered. This component adds
+   only the stacking: where the two sticky axes cross, the column head is in
+   front. */
 .compare :global(thead th) { z-index: 2; }
 
 .compare :global(th[scope='row']) {
@@ -23,12 +23,11 @@
 .compare :global(thead th:first-child) { z-index: 3; }
 
 /* "Differences are marked, not only coloured." The word is in the row header's
-   text and this is the second signal — never the first, and never the only. */
+   text. This colour is the second signal, never the first or the only one. */
 .note { color: var(--cr-muted); font-weight: 500; font-size: var(--cr-text-caption-size); }
 
-/* The tint is found through the mark rather than through a flag on the row,
-   which keeps the two from disagreeing: there is one place that decides a row
-   differs, and both the word and the colour come from it. */
+/* The tint is found through the mark, so the two cannot disagree. One place
+   decides that a row differs, and both the word and the colour come from it. */
 .compare :global(tbody tr):has(.differs) { background: var(--cr-surface-alt); }
 
 @media (forced-colors: active) {

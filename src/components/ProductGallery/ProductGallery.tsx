@@ -1,22 +1,21 @@
 'use client';
 
-/* ProductGallery — product media, which is a `Gallery`.
+/* ProductGallery: product media, which is a `Gallery`.
  *
  * The catalogue entry is `gallery`'s, word for word: "Arrow keys move between
  * items with position announced; zoom is keyboard reachable", "Haze thumbnails;
  * Mirage scrim when enlarged", "thumbnails keep the content radius; the viewer
- * is full-bleed within the scrim". There is nothing in it that a product's media
- * needs and a photographer's set does not.
+ * is full-bleed within the scrim". Nothing in it differs between a product's
+ * media and a photographer's set.
  *
- * So this is `Gallery` with the vocabulary a shop uses — an `alt` per image
- * rather than a `label` per item — and no second implementation of a listbox, a
- * roving tabindex, a dialog, a zoom, a pan or a position announcement. Six
- * things that are hard to get right and were got right once.
+ * So this is `Gallery` with the vocabulary a shop uses (an `alt` per image
+ * rather than a `label` per item) and no second implementation of a listbox, a
+ * roving tabindex, a dialog, a zoom, a pan or a position announcement. Those six
+ * are hard to get right and are implemented once, in `Gallery`.
  *
- * It is worth being explicit that this is a *rename with a narrower API* rather
- * than a component, because the temptation in a commerce slice is to build a
- * second viewer with "product" in its name and then discover a year later that
- * only one of the two had the focus fix.
+ * This is a rename with a narrower API, not a separate component. A second
+ * viewer with "product" in its name would need every fix made twice, and a
+ * focus fix made only in one of them would leave the other broken.
  */
 import { Gallery, type GalleryProps } from '../Gallery/Gallery.js';
 

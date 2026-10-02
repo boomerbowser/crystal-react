@@ -1,21 +1,20 @@
 'use client';
 
-/* Treemap — nested proportions as nested rectangles.
+/* Treemap: nested proportions as nested rectangles.
  *
- * "Navigable as a tree, with each node stating its share." Navigable as a tree
- * is the demanding half and it is what this component is built around: the map
- * shows one level at a time, `Enter` descends into a node that has children,
- * `Escape` comes back up, and a breadcrumb says where you are. Drawing every
- * depth at once is the usual implementation and it is not navigation — it is a
- * picture of a tree, and a reader who cannot see it is given a flat list of
- * leaves with no idea which branch they are on.
+ * "Navigable as a tree, with each node stating its share." The component is
+ * built around tree navigation. The map shows one level at a time, `Enter`
+ * descends into a node that has children, `Escape` comes back up, and a
+ * breadcrumb says where you are. Drawing every depth at once is the usual
+ * implementation, but it only pictures the tree: a reader who cannot see it is
+ * given a flat list of leaves with no idea which branch they are on.
  *
- * "Each node states its share" — of its parent *and* of the whole, because in a
- * nested structure those are different numbers and a node deep in a branch can
- * be most of its parent and almost none of the total.
+ * "Each node states its share" of its parent and of the whole. In a nested
+ * structure those are different numbers, and a node deep in a branch can be
+ * most of its parent and almost none of the total.
  *
  * "Hairline separation; labels drop out rather than overflow." A label that does
- * not fit is not drawn; it is never truncated to an ellipsis and never allowed
+ * not fit is not drawn. It is never truncated to an ellipsis and never allowed
  * to spill over the rectangle beside it. The name is on the mark and in the
  * table either way.
  */
@@ -30,7 +29,8 @@ import styles from './Treemap.module.scss';
 
 export interface TreemapNode {
   name: string;
-  /** A leaf's size. Ignored where there are children: a branch is its children. */
+  /** A leaf's size. Ignored where there are children, because a branch's size is
+   *  the sum of its children. */
   value?: number;
   children?: readonly TreemapNode[];
 }
@@ -49,7 +49,7 @@ export function Treemap({
   formatShare = (share) => `${Math.round(share * 100)}%`,
   rootLabel = 'All', table, className, height = 320, ...surface
 }: TreemapProps): ReactNode {
-  /* Where in the tree the reader is. Names rather than indices, so the path
+  /* Where in the tree the reader is. Names instead of indices, so the path
      survives the data being replaced with a longer version of itself. */
   const [path, setPath] = useState<string[]>([]);
   const current = path.reduce<TreemapNode>(
@@ -60,10 +60,9 @@ export function Treemap({
   const whole = total(root);
 
   /* Descending and ascending both move focus to the first mark of the level
-     arrived at. Without it the focused element is removed by the very key that
-     changed the level, focus falls to the document, and the next `Escape` never
-     reaches this component — which is a reader one keystroke from being stranded
-     at the bottom of a tree. */
+     arrived at. Otherwise the key that changed the level removes the focused
+     element, focus falls to the document, and the next `Escape` never reaches
+     this component, leaving the reader stranded at the bottom of the tree. */
   const descend = (name: string) => {
     const child = children.find((one) => one.name === name);
     if (!child?.children?.length) return;
@@ -160,9 +159,9 @@ export function Treemap({
                     width={width}
                     height={box}
                   />
-                  {/* Dropped rather than truncated. A label is either readable
-                      where it is or it is not drawn; the name is on the mark and
-                      in the table regardless. */}
+                  {/* Dropped instead of truncated. A label is drawn only where it
+                      is readable. The name is on the mark and in the table
+                      regardless. */}
                   {width > cell.data.name.length * 8 && box > 24 ? (
                     <text
                       className={styles['label']}
@@ -187,8 +186,8 @@ function total(node: TreemapNode): number {
   return node.children.reduce((sum, child) => sum + total(child), 0);
 }
 
-/** Every leaf, with the branch it is on: a flat list of leaves with no path is
- *  the thing the drill-down exists to avoid. */
+/** Every leaf, with the branch it is on. The drill-down exists to avoid a flat
+ *  list of leaves with no path. */
 export function treemapTable(
   root: TreemapNode,
   format: (value: number) => string,

@@ -1,22 +1,22 @@
 'use client';
 
-/* LineChart — continuous values as lines, with optional points.
+/* LineChart. Continuous values as lines, with optional points.
  *
  * "Series are distinguishable without colour alone", which here is the dash
  * pattern: solid, then five patterns in multiples of the stroke. It is the one
- * second channel that survives all three ways colour fails — dichromatic vision,
- * a monochrome print, and forced colours replacing every hue with one.
+ * second channel that survives all three ways colour fails. Those are
+ * dichromatic vision, a monochrome print, and forced colours replacing every
+ * hue with one.
  *
- * The domain is fitted to the data rather than forced through zero, and that is
- * the opposite of the bar chart's rule for the opposite reason: a line's marks
- * are *positions*, and a line chart of a share price between 412 and 418 drawn
- * from zero is a flat line that hides the whole story. A bar's marks are lengths,
- * and a length from a false baseline lies. Same data, different mark, different
- * rule.
+ * The domain is fitted to the data and not forced through zero, the reverse of
+ * the bar chart's rule. A line's marks are positions, and a line chart of a
+ * share price between 412 and 418 drawn from zero is a flat line that hides the
+ * whole story. A bar's marks are lengths, and a length from a false baseline
+ * lies.
  *
- * Every point is reachable whether or not it is drawn. A forty-point line is a
- * line rather than forty dots, but a reader moving through it with the arrow keys
- * still lands on all forty and hears each one.
+ * Every point is reachable whether or not it is drawn. A forty-point line is
+ * drawn as a line, but a reader moving through it with the arrow keys still
+ * lands on all forty points and hears each one.
  */
 import { useRef, type ReactNode } from 'react';
 import { ChartSurface, type ChartSurfaceProps } from '../ChartSurface/ChartSurface.js';
@@ -43,7 +43,7 @@ export interface LineChartProps extends Omit<ChartSurfaceProps, 'children' | 'ta
   curve?: ChartCurve;
   /** Draw a marker at every point. Off for a dense series. */
   points?: boolean;
-  /** Include zero in the value axis. Off by default — see the note above. */
+  /** Include zero in the value axis. Off by default (see the note above). */
   fromZero?: boolean;
   ticks?: number;
   format?: (value: number) => string;
@@ -120,7 +120,7 @@ export function LineChart({
             <g {...tip.containerProps} ref={arrival as never}>
               {drawn.map(({ series: one, channel, slot }) => (
                 /* A series rises from the zero line, or from the floor of the plot
-                   when zero is not in it — Crystal's `mark-in`, once. */
+                   when zero is not in it. Crystal's `mark-in`, once. */
                 <g
                   key={one.name}
                   className={styles['series']}
@@ -148,10 +148,9 @@ export function LineChart({
   );
 }
 
-/* One point, recorded for the tooltip on its way to being drawn. A function
-   rather than a second loop because the line's points are built inside an
-   expression, and a chart that walked its own data twice would eventually walk
-   it twice differently. */
+/* One point, recorded for the tooltip on its way to being drawn. A function,
+   because the line's points are built inside an expression, and a second loop
+   over the same data could come to disagree with the first. */
 function rememberAt(
   into: MarkTip[],
   index: number,

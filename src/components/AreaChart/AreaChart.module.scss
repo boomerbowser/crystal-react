@@ -1,12 +1,12 @@
 @use '../../styles/tokens' as *;
 
-/* The fill, and only the fill: the line on top of it and the points on that are
- * the shared cartesian styles.
+/* The fill only. The line on top of it and the points on the line use the
+ * shared cartesian styles.
  *
- * `--cr-chart-fill-opacity` is Crystal's, and it is the reason this chart can
- * have three series at all. The gridlines are behind the fill and must stay
- * readable through it, which is a material decision the catalogue puts on
- * Crystal's side — "fill material and opacity so overlaps stay readable".
+ * `--cr-chart-fill-opacity` is Crystal's, and it lets this chart show three
+ * series. The gridlines are behind the fill and must stay readable through it.
+ * The catalogue puts that material decision on Crystal's side: "fill material
+ * and opacity so overlaps stay readable".
  */
 
 .area {
@@ -16,9 +16,9 @@
 }
 
 /* Forced colours has one fill and one stroke, so an area drawn as a fill would
-   be a solid block that hides the gridlines and every series under it. It
-   becomes its outline: the line on top already carries the dash that says which
-   series this is. */
+   be a solid block that hides the gridlines and every series under it. Only its
+   outline is drawn. The line on top already carries the dash pattern that
+   identifies the series. */
 @media (forced-colors: active) {
   .area { fill: none; }
 }

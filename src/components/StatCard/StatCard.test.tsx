@@ -4,8 +4,8 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { StatCard } from './StatCard.js';
 
 describe('StatCard', () => {
-  /* "The figure and its trend are one readable sentence" — which is a rule about
-     order, and order is what a card can actually enforce. */
+  /* "The figure and its trend are one readable sentence". That is a rule about
+     order, which a card can enforce. */
   it('reads label, figure, period, trend in that order', () => {
     const { container } = renderWithCrystal(
       <StatCard label="Revenue" value="£48,210" period="this month"

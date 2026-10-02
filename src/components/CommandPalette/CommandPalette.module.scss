@@ -2,13 +2,12 @@
 @use '../../styles/overlay' as overlay;
 @use '../../styles/field' as field;
 
-/* CommandPalette — three materials, each named by the catalogue.
+/* CommandPalette: three materials, each named by the catalogue.
  *
  * Mirage under it, Haze for the surface, Resin for the field. The palette is a
- * surface you read and decide from rather than a control plane floating over the
- * page, so it is Haze; what lifts it off the page is the Mirage beneath rather
- * than elevation above. The field inside is a control, so it is Resin — which is
- * the ordinary field stack and not Resin inside Resin.
+ * surface you read and decide from, so it is Haze. The Mirage beneath lifts it
+ * off the page, with no added elevation. The field inside is a control, so it is
+ * Resin. That is the ordinary field stack, and is not Resin inside Resin.
  */
 
 .scrim {
@@ -45,8 +44,8 @@
   transform-origin: top center;
 }
 
-/* Haze is feathered, so it is a layer behind the content rather than the
-   element itself — feathering an element that contains text blurs the text. */
+/* Haze is feathered, so it is a layer behind the content. Feathering an
+   element that contains text blurs the text. */
 .palette::before {
   content: '';
   position: absolute;
@@ -59,8 +58,8 @@
   box-shadow: var(--cr-shadow-float);
 }
 
-/* The field: Resin, and the shell rather than the input, so the focus ring
-   traces the control and not the bare text box inside it. */
+/* The field is Resin. The styles go on the shell, so the focus ring traces the
+   control and not the bare text box inside it. */
 .field {
   @include field.shell;
   gap: $cr-spacing-xs;
@@ -70,8 +69,7 @@
   @include field.focus-ring;
 }
 
-/* Inside the shell's own 8px inset, so the glyph sits where it did when the
-   shell was padded locally. */
+/* This padding sits inside the shell's own 8px inset and positions the glyph. */
 .searchIcon { display: inline-flex; flex: none; padding-inline-start: $cr-spacing-2xs; color: var(--cr-muted); }
 .searchIcon svg {
   inline-size: $cr-icon-size;
@@ -88,9 +86,8 @@
   outline: none;
 }
 
-/* "Results list inset 8px" — from the field above it and from the surface's own
-   edge, so the rows read as content within the palette rather than as a second
-   panel butted against it. */
+/* "Results list inset 8px", from the field above it and from the surface's own
+   edge, so the rows read as content within the palette. */
 .results {
   margin-block-start: $cr-spacing-xs;
   padding: 0;
@@ -98,11 +95,10 @@
   outline: none;
 }
 
-/* The scrollbar itself is `.cr-scroll-resin`, applied in the component. Crystal
-   owns the thumb's colour, its geometry and the whole scroll contract — no
-   chaining, a stable gutter, native gestures — and writing any of it again here
-   would be a second description of one specification. A compact list of rows is
-   a control plane, which is what Resin's scrollbar is for. */
+/* The scrollbar is `.cr-scroll-resin`, applied in the component. Crystal owns
+   the thumb's colour, its geometry and the scroll contract (no chaining, a
+   stable gutter, native gestures), so none of it is restated here. A compact
+   list of rows is a control plane, which takes Resin's scrollbar. */
 
 /* The list holds focus on behalf of its active row, so the ring belongs to the
    row and not to the box around it. */
@@ -146,7 +142,7 @@
 }
 
 /* Empty and loading are the same shape so the palette does not jump between
-   them, and both are text rather than a spinner nobody hears. */
+   them. Both are text, because a spinner is not announced. */
 .status {
   padding: $cr-spacing-md $cr-spacing-sm;
   text-align: center;

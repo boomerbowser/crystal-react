@@ -10,22 +10,22 @@ const lines = [
 ];
 
 describe('CartSummary', () => {
-  /* "A description list, so each line is a labelled pair." A summary built from
-     rows of two spans is, to anything that is not a pair of eyes, a stream of
-     words and numbers with nothing joining them. */
+  /* "A description list, so each line is a labelled pair." To assistive
+     technology, rows of two spans are a stream of words and numbers with
+     nothing joining them. */
   it('pairs every label with its amount in a description list', () => {
     const { container } = renderWithCrystal(
       <CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />,
     );
     expect(container.querySelector('dl')).not.toBeNull();
-    /* Three lines and the total: four pairs, and exactly as many amounts as
-       labels — a stray `dd` is an amount belonging to nothing. */
+    /* Three lines and the total make four pairs, with exactly as many amounts
+       as labels. A stray `dd` would be an amount with no label. */
     expect(container.querySelectorAll('dt')).toHaveLength(4);
     expect(container.querySelectorAll('dd')).toHaveLength(4);
   });
 
-  /* "The total is marked as such", not merely drawn larger: size and weight are
-     what a sighted reader uses to find it, and the rest need the markup. */
+  /* "The total is marked as such" in the markup. Size and weight help a sighted
+     reader find it; other readers need the markup. */
   it('marks the total as the total', () => {
     const { container } = renderWithCrystal(
       <CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />,
@@ -34,15 +34,15 @@ describe('CartSummary', () => {
     expect(strong).toHaveTextContent('Total');
   });
 
-  /* A discount is negative and reads as one, which is `Intl`'s job rather than
-     a minus sign this component sticks on the front. */
+  /* A discount is a negative amount. `Intl` formats the sign; this component
+     does not prepend a minus sign itself. */
   it('reads a discount as a negative amount', () => {
     renderWithCrystal(<CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />);
     expect(screen.getByText('-£8.00')).toBeInTheDocument();
   });
 
-  /* A total being recalculated is still a number. Replacing it with a spinner
-     takes away the only thing the reader had. */
+  /* A total being recalculated is still a number, so it stays on screen while
+     the status region says it is updating. */
   it('keeps its figures while it updates, and says that it is', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />,

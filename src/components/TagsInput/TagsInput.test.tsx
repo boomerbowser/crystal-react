@@ -27,7 +27,7 @@ describe('TagsInput', () => {
     expect(screen.getByRole('status').textContent).toContain('design removed');
   });
 
-  /* "Nothing happened" is the worst possible answer to a keypress. */
+  /* A refused value is reported, so a keypress never appears to do nothing. */
   it('refuses a duplicate and says why', async () => {
     renderWithCrystal(<TagsInput label="Topics" defaultValue={['design']} />);
     await userEvent.type(screen.getByLabelText('Topics'), 'design{Enter}');
@@ -41,7 +41,7 @@ describe('TagsInput', () => {
   });
 
   /* Removing the last chip destroys the element that had focus, and the browser
-     then focuses the body — which drops a keyboard user out of the form. */
+     then focuses the body, which drops a keyboard user out of the form. */
   it('returns focus to the entry after a removal', async () => {
     renderWithCrystal(<TagsInput label="Topics" defaultValue={['design']} />);
     await userEvent.click(screen.getByRole('button', { name: 'Remove design' }));

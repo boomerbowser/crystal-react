@@ -19,8 +19,8 @@ describe('FocusMode', () => {
   });
 
   /* Not shrunk, not transparent, not `visibility: hidden`. Chrome that is
-     invisible and still focusable is the worst of both: a keyboard reader tabs
-     into something nobody can see. */
+     invisible and still focusable lets a keyboard reader tab into something
+     nobody can see. */
   it('leaves nothing of the chrome behind to tab into', () => {
     const { container } = renderWithCrystal(
       <FocusMode chrome={chrome} isOn><p>The task</p></FocusMode>,
@@ -28,10 +28,9 @@ describe('FocusMode', () => {
     expect(container.querySelectorAll('button')).toHaveLength(0);
   });
 
-  /* The half that fails silently. Focus resting in the chrome when the mode
-     turns on is focus on an element about to unmount: it falls to the document
-     body, a keyboard reader starts again from the top of the page, and a screen
-     reader says nothing, because nothing happened that it reports. */
+  /* Focus resting in the chrome when the mode turns on is on an element about
+     to unmount. It falls to the document body, a keyboard reader starts again
+     from the top of the page, and a screen reader says nothing. */
   it('moves focus out of the chrome before the chrome goes', async () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <FocusMode chrome={chrome}><p>The task</p></FocusMode>,
@@ -45,8 +44,8 @@ describe('FocusMode', () => {
     });
   });
 
-  /* And the other half: a reader already working in the task keeps their place.
-     Moving focus unconditionally would take it away from them. */
+  /* A reader already working in the task keeps their place. Moving focus
+     unconditionally would take it away from them. */
   it('leaves focus alone when it was never in the chrome', async () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <FocusMode chrome={chrome}><button type="button">In the task</button></FocusMode>,

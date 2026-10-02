@@ -11,7 +11,7 @@ const meta = {
       description: {
         component:
           'A semantic symbol in a circular well, followed by a visible word. The pill is Resin with '
-          + 'ordinary text and the tint lives on the well alone — a status-coloured pill would make '
+          + 'ordinary text and the tint lives on the well alone. A status-coloured pill would make '
           + 'the word decoration on a coloured ground, and a status-coloured perimeter is the shape '
           + 'Crystal uses for focus. Success uses a check mark, which is the one legitimate use of '
           + 'that glyph: information display. A check mark never means "selected".',

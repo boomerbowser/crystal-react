@@ -2,21 +2,19 @@
 
 /* The pointer that ties an overlay to its trigger.
  *
- * It is a rotated square carrying the overlay's own material, not an SVG filled
- * with the overlay's colour. That distinction is the whole component. A diffusing
- * surface and a flat triangle of the same nominal fill do not match: the surface
- * takes its colour from whatever is behind it and the triangle does not, so the
- * arrow reads as a sticker on the glass exactly where the eye is looking. The
+ * It is a rotated square carrying the overlay's own material. An SVG filled with
+ * the overlay's colour does not match: a diffusing surface takes its colour
+ * from whatever is behind it and a flat triangle does not, so the arrow would
+ * read as a sticker on the glass exactly where the eye is looking. The
  * catalogue asks that it "match the overlay material exactly, including under
  * reduced effects", and only a square that diffuses can.
  *
- * Two edges of the square are drawn and two are not — the two that meet the
+ * Two edges of the square are drawn and two are not. The two that meet the
  * overlay would otherwise draw a line across the join.
  */
 /* React Aria's own wrapper is already placed at the right edge of the overlay, so
-   this is the shape and nothing else. Positioning it again here put it at the
-   corner of the surface instead — two things placing one element, and the second
-   one winning. */
+   this rule sets the shape and nothing else. Positioning it here as well would
+   override React Aria and move it to the corner of the surface. */
 .arrow {
   inline-size: $cr-overlay-arrow-size;
   block-size: $cr-overlay-arrow-size;
@@ -25,12 +23,11 @@
   border-radius: $cr-overlay-arrow-radius;
 }
 
-/* The surface's own shadow, on the arrow too. Matching the material exactly is
-   not enough on its own: Frost is a translucent fill with a rim, and what makes the
-   surface legible against the page is the float shadow around it. A 14px square
-   with the fill and the rim and no shadow is invisible on a pale page — which is
-   what this looked like before, a correctly placed arrow nobody could see. */
-/* Frost, like the surface it points from — a transient overlay is Frost (Crystal
+/* The surface's own shadow goes on the arrow too. Frost is a translucent fill
+   with a rim, and the float shadow around it is what makes the surface legible
+   against the page. A 14px square with the fill and the rim and no shadow is
+   invisible on a pale page. */
+/* Frost, like the surface it points from. A transient overlay is Frost (Crystal
    R15e), so the arrow takes the Frost fill, blur and panel shadow. */
 .arrow[data-cr-overlay='frost'] {
   background: var(--cr-frost-fill);
@@ -44,17 +41,17 @@
   box-shadow: var(--cr-shadow-content);
 }
 
-/* React Aria positions the wrapper itself, with inline styles — `bottom: 100%`
-   and a `left` that keeps the arrow over the trigger. Positioning it again here
-   fought those and put the arrow inside the surface instead of on its edge, so
-   this sets nothing but the size.
+/* React Aria positions the wrapper itself, with inline styles: `bottom: 100%`
+   and a `left` that keeps the arrow over the trigger. Positioning it here as
+   well would fight those and put the arrow inside the surface instead of on its
+   edge, so this sets only the size.
  *
- * What is left to the stylesheet is what the arrow looks like from each side: the
- * square is nudged a quarter of its width under the surface so the join closes,
- * and the two edges that meet the surface lose their border — they would
- * otherwise draw a line straight across it. `data-placement` is where the
- * *overlay* sits relative to its trigger, so an overlay below its trigger has its
- * arrow at the top, pointing up. */
+ * The stylesheet decides what the arrow looks like from each side. The square
+ * is nudged a quarter of its width under the surface so the join closes, and
+ * the two edges that meet the surface lose their border, which would otherwise
+ * draw a line straight across it. `data-placement` is where the overlay sits
+ * relative to its trigger, so an overlay below its trigger has its arrow at the
+ * top, pointing up. */
 .wrap { inline-size: $cr-overlay-arrow-size; block-size: $cr-overlay-arrow-size; }
 
 .wrap[data-placement='bottom'] .arrow { translate: 0 25%; border-block-end-color: transparent; border-inline-end-color: transparent; }
@@ -78,7 +75,7 @@
 
 @media (forced-colors: active) {
   .wrap { display: none; }
-  /* No arrow at all: in forced colours the overlay is a plain bordered box, and
+  /* No arrow at all. In forced colours the overlay is a plain bordered box, and
      a rotated square with two transparent edges becomes a stray mark beside it. */
   .arrow { display: none; }
 }

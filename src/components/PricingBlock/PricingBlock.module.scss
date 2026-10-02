@@ -2,7 +2,8 @@
 
 /* "Haze content fill on the surrounding material": every plan is the same Haze
    card, worn as `.cr-haze`. The recommended one differs by its words, its
-   weight and its primary action — Crystal's emphasis — not by its material. */
+   weight and its primary action, which are Crystal's emphasis. Its material is
+   the same. */
 .plans {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));  /* crystal-allow-literal: a plan card's narrowest readable width */

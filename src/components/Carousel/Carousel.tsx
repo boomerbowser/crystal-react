@@ -1,26 +1,25 @@
 'use client';
 
-/* Carousel — a scrolling track of slides with controls and position indicators.
+/* Carousel: a scrolling track of slides with controls and position indicators.
  *
- * **There is no autoplay, and that is a decision rather than an omission.**
- * Crystal's rule is that nothing moves at rest and motion is only ever something
- * a person started; the catalogue says "never autoplay without a pause control";
- * and the recipes themselves say, in Crystal's own words, "explicit next/previous
- * navigation; never autoplay". Three statements of one thing. The catalogue
- * assigns autoplay *policy* to the product, so a product that must have it owns
- * both the timer and the pause control — this component will not hand it half of
- * one.
+ * There is no autoplay, and that is a decision. Crystal's rule is that nothing
+ * moves at rest and motion is only ever something a person started. The
+ * catalogue says "never autoplay without a pause control", and the recipes say,
+ * in Crystal's own words, "explicit next/previous navigation; never autoplay".
+ * The catalogue assigns autoplay policy to the product, so a product that must
+ * have it owns both the timer and the pause control. This component does not
+ * supply one without the other.
  *
- * The track is a real scroll container with scroll snapping, which means a
- * pointer user can swipe it, a trackpad user can flick it, and the platform's own
- * momentum and rubber-banding are intact. It is also a tab stop, because a scroll
- * container with nothing focusable inside cannot be reached without a pointer —
- * the same contract `Code`'s blocks and `Table`'s shell follow.
+ * The track is a real scroll container with scroll snapping, so a pointer user
+ * can swipe it, a trackpad user can flick it, and the platform's own momentum
+ * and rubber-banding are intact. It is also a tab stop, because a scroll
+ * container with nothing focusable inside cannot be reached without a pointer.
+ * `Code`'s blocks and `Table`'s shell follow the same contract.
  *
- * The movement between slides is Crystal's, and it is on the *arriving slide*
- * rather than on the track: `carousel-next` and `carousel-previous` are a 3D
- * swing-in, so animating the track as well would move the same thing twice. The
- * scroll itself is instant for that reason.
+ * The movement between slides is Crystal's, and it is on the arriving slide,
+ * not on the track. `carousel-next` and `carousel-previous` are a 3D swing-in,
+ * so animating the track as well would move the same thing twice. The scroll
+ * itself is instant for that reason.
  */
 import {
   forwardRef, useCallback, useEffect, useRef, useState,
@@ -98,22 +97,21 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     setDirection(how);
     setIndex(clamped);
     const element = track.current?.children[clamped];
-    /* `scrollIntoView` rather than arithmetic on `scrollLeft`: in a right-to-left
+    /* `scrollIntoView` instead of arithmetic on `scrollLeft`: in a right-to-left
        locale `scrollLeft` is negative in some engines and zero-at-the-right in
-       others, and every carousel that has ever done the arithmetic has been wrong
-       in one of them. Instant, because the movement is the recipe's.
+       others, so arithmetic on it is wrong in one of them. Instant, because the
+       movement is the recipe's.
      *
-     * Called optionally because jsdom does not implement it — there is no layout
-     * there to scroll. That is not defensive coding against a browser; it is the
-     * test environment having nothing to move, and the index still changes, which
-     * is the part a unit test can see. CI found this and a local run did not. */
+     * Called optionally because jsdom, which has no layout to scroll, does not
+     * implement it. The index still changes, and that is what a unit test can
+     * see. */
     element?.scrollIntoView?.({ behavior: 'auto', inline: 'start', block: 'nearest' });
   }, [count]);
 
-  /* The reader can also swipe, so the index follows the scroll position rather
-     than only the controls. A passive scroll listener rather than an
-     `IntersectionObserver`: the observer delivers nothing in the in-app preview
-     browser, which is D-5, and `Affix` learned the same lesson. */
+  /* The reader can also swipe, so the index follows the scroll position as well
+     as the controls. A passive scroll listener is used instead of an
+     `IntersectionObserver`, because the observer delivers nothing in the in-app
+     preview browser (D-5). `Affix` does the same for the same reason. */
   useEffect(() => {
     const element = track.current;
     if (!element) return undefined;
@@ -172,8 +170,9 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
           <span className={styles['stepLabel']}>{previousLabel}</span>
         </button>
 
-        {/* Indicators are buttons, which is the catalogue's word: a row of dots
-            that cannot be pressed is a progress readout dressed as a control. */}
+        {/* Indicators are buttons, as the catalogue says. A row of dots that
+            cannot be pressed would be a progress readout that looks like a
+            control. */}
         <ul className={styles['indicators']}>
           {slides.map((slide, position) => (
             <li key={slide.id}>

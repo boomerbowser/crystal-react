@@ -2,15 +2,15 @@
 @use '../../styles/material' as material;
 @use '../../styles/overlay' as overlay;
 
-/* NavigationTree — Haze rows, and the current destination marked by weight.
+/* NavigationTree: Haze rows, and the current destination marked by weight.
  *
- * Haze rather than Resin, for the reason `TreeView` gives: a navigation tree
- * sits *in* a panel rather than floating above one, and a Resin row inside a
- * Resin sidebar would be Resin containing Resin, which reads as neither pane.
+ * Haze, not Resin, for the reason `TreeView` gives: a navigation tree sits in a
+ * panel instead of floating above one, and a Resin row inside a Resin sidebar
+ * would be Resin containing Resin, which reads as neither pane.
  *
- * The current row is **heavier**. That is Crystal's rule for "this is the one
- * you are on" everywhere — selection is label weight alone, nothing is drawn
- * beside the label — and the soft fill is the second signal, never the only one.
+ * The current row is heavier. That is Crystal's rule everywhere for the item
+ * you are on: selection is label weight alone, and nothing is drawn beside the
+ * label. The soft fill is the second signal, never the only one.
  * `data-current-ancestor` gives a collapsed branch the same weight at lower
  * strength, so a reader can see which branch the current page is inside without
  * expanding it.
@@ -24,8 +24,8 @@
   outline: none;
 }
 
-/* The row's focus ring belongs to the row, not to the tree: a composite widget
-   holds focus for its active row, so ringing the container would ring the whole
+/* The focus ring belongs to the row, not to the tree. A composite widget holds
+   focus for its active row, so a ring on the container would ring the whole
    tree on every arrow key. */
 .item {
   @include overlay.composite-focus;
@@ -53,7 +53,7 @@
 
 .item[data-hovered] .row { background: var(--cr-label-fill); }
 
-/* The destination you are on. Weight first; the fill is the second signal. */
+/* The destination you are on. Weight first, and the fill is the second signal. */
 .item[data-current] .row {
   font-weight: 800;
   background: var(--cr-primary-soft);
@@ -79,8 +79,8 @@
 
 .chevron svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
-/* The end state, in CSS, correct at rest whether or not anything animated —
-   the rule `Burger` established and `Accordion` follows. */
+/* The end state, in CSS, correct at rest whether or not anything animated.
+   `Burger` and `Accordion` follow the same rule. */
 .item[data-expanded] > * .chevron svg { rotate: 90deg; }
 
 .chevronEmpty { cursor: default; }

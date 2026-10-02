@@ -1,42 +1,43 @@
 'use client';
 
-/* Tour — a sequence of steps that points at parts of the interface.
+/* Tour: a sequence of steps that points at parts of the interface.
  *
  * "Focus moves to each step; **the sequence is escapable** and its position is
- * announced." Escapable is the word that shapes this component. A tour is the
- * one pattern in a library that takes the whole interface away from someone who
- * did not ask for it, so every step carries a visible way out, Escape ends it
- * from anywhere, and ending returns focus to whatever had it when the tour
- * began — not to the last step's target, which by then may not exist.
+ * announced." A tour is the one pattern in a library that takes the whole
+ * interface away from someone who did not ask for it. So every step carries a
+ * visible way out, Escape ends it from anywhere, and ending returns focus to
+ * whatever had it when the tour began. Focus does not go to the last step's
+ * target, which by then may not exist.
  *
  * "Its position is announced": each panel says "Step 2 of 5" in its accessible
- * name, not only in small text. A reader who cannot see the progress dots
- * otherwise has no idea whether they are near the end.
+ * name as well as in small text. Without that, a reader who cannot see the
+ * progress dots cannot tell whether they are near the end.
  *
- * **The highlight is a hole in the scrim, not a ring around the target.** A ring
- * drawn over the page has to sit above the scrim and below nothing, and it
- * fights every stacking context on the way; a scrim with the target cut out of
- * it is one element, and the cut-out is what makes the target look lit rather
- * than the target being painted. It follows the target's own radius, so a pill
- * is cut as a pill.
+ * The highlight is a hole in the scrim instead of a ring around the target. A
+ * ring drawn over the page has to sit above the scrim and below nothing, and it
+ * has to get past every stacking context on the way. A scrim with the target cut
+ * out of it is one element, and the cut-out makes the target look lit without
+ * painting the target. It follows the target's own radius, so a pill is cut as a
+ * pill.
  *
- * **`aria-modal` has to be true of the keyboard, not only of the pointer.** The
- * scrim covers the page and so blocks the mouse; it does nothing at all about
- * Tab, and a tour that let Tab walk onto the very control it is spotlighting
- * would be telling assistive technology something false. Focus is contained with
- * `FocusTrap`, which is React Aria's `FocusScope`, contains it — containment
- * only. The other two jobs are done here and each for a reason the scope cannot
- * cover: focus moves **in** onto the panel rather than onto its first button,
- * because the panel's name carries the step and its position while "Next"
- * announces "Next"; and focus is given **back** after the scope has gone,
- * because doing it inside `close()` had the containment pull it straight back in
- * on the same tick, and `FocusScope`'s own `restoreFocus` records the active
- * element after the panel has already taken focus and so restores to the panel.
+ * `aria-modal` has to hold for the keyboard as well as the pointer. The scrim
+ * covers the page and so blocks the mouse, but it does nothing about Tab. A tour
+ * that let Tab reach the control it is spotlighting would be telling assistive
+ * technology something false. Focus is contained with `FocusTrap`, which is
+ * React Aria's `FocusScope`, used for containment only. The other two focus jobs
+ * are done here, each for a reason the scope cannot cover:
  *
- * **Position is measured, not guessed.** The target is read with
- * `getBoundingClientRect` on mount, on resize and on scroll. jsdom reports zero
- * for all of it, which is not a reason to avoid measuring — it is the reason the
- * positioning is verified in a browser and the semantics are verified here.
+ *   - Focus moves in onto the panel instead of its first button, because the
+ *     panel's name carries the step and its position, while "Next" announces
+ *     "Next".
+ *   - Focus is given back after the scope has gone. Done inside `close()`, the
+ *     containment pulls it straight back in on the same tick. `FocusScope`'s own
+ *     `restoreFocus` records the active element after the panel has already
+ *     taken focus, and so restores to the panel.
+ *
+ * The target's position is measured with `getBoundingClientRect` on mount, on
+ * resize and on scroll. jsdom reports zero for all of it, so the positioning is
+ * verified in a browser and the semantics are verified here.
  */
 import {
   forwardRef, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState,
@@ -52,7 +53,7 @@ import styles from './Tour.module.scss';
 
 export interface TourStep {
   /** What this step points at. A step with no target is a centred panel, which
-   *  is the right shape for "welcome" and "you are done". */
+   *  suits "welcome" and "you are done". */
   target?: RefObject<HTMLElement | null>;
   title: ReactNode;
   children?: ReactNode;
@@ -66,8 +67,8 @@ export interface TourProps {
   step?: number;
   onStepChange?: (step: number) => void;
   /**
-   * Ended — by finishing, by Escape, or by the way out on every panel. The
-   * reason tells a product that records it a completed tour from a skipped one.
+   * Ended by finishing, by Escape, or by the way out on every panel. The reason
+   * lets a product that records it tell a completed tour from a skipped one.
    */
   onClose?: (reason: 'finished' | 'dismissed') => void;
   /** How the position is said. Given the numbers, in the reader's language. */
@@ -81,7 +82,7 @@ export interface TourProps {
 interface Box { top: number; left: number; width: number; height: number; radius: number }
 
 /* How much room the cut-out leaves around the target, so the highlight reads as
-   a margin rather than as a tight crop. Crystal's smallest spacing step. */
+   a margin instead of a tight crop. Crystal's smallest spacing step. */
 const HALO = 8;
 
 export function Tour({
@@ -94,16 +95,16 @@ export function Tour({
   const [box, setBox] = useState<Box | null>(null);
 
   /* Whatever had focus when the tour opened. Written during render, on the
-     first pass where it is open — a ref callback focuses the panel during the
-     same commit, so anything later reads the panel back. Idempotent, and
-     cleared when the tour closes. */
+     first pass where it is open, because a ref callback focuses the panel
+     during the same commit and anything later reads the panel back.
+     Idempotent, and cleared when the tour closes. */
   const returnTo = useRef<HTMLElement | null>(null);
   if (isOpen && returnTo.current === null && typeof document !== 'undefined') {
     returnTo.current = document.activeElement as HTMLElement | null;
   }
 
-  /* Given back after the scope has unmounted, which is what this effect's
-     position guarantees: by the time it runs on the closing render there is no
+  /* Focus is given back after the scope has unmounted, which this effect's
+     position guarantees. By the time it runs on the closing render there is no
      containment left to pull focus in again. */
   const wasOpen = useRef(false);
   useEffect(() => {
@@ -127,9 +128,8 @@ export function Tour({
       width: rect.width + HALO * 2,
       height: rect.height + HALO * 2,
       /* The target's own radius, so a pill is cut as a pill. Crystal's action
-         radius is `999px`, which is "as round as it can be" rather than a real
-         999 — clamped to half the shorter side, which is what the browser draws
-         anyway. */
+         radius is `999px`, meaning "as round as it can be", so it is clamped to
+         half the shorter side, which is what the browser draws. */
       radius: Math.min(
         Number.parseFloat(getComputedStyle(node).borderRadius) || 0,
         (rect.width + HALO * 2) / 2,
@@ -151,15 +151,15 @@ export function Tour({
 
   const close = useCallback((reason: 'finished' | 'dismissed' = 'dismissed') => { onClose?.(reason); }, [onClose]);
 
-  /* Focus lands on the panel itself rather than on its first button: the panel
-     is what the reader has just been moved to, and its name carries the step,
-     the position and the text. Landing on "Next" announces "Next".
+  /* Focus lands on the panel itself instead of its first button. The panel is
+     what the reader has just been moved to, and its name carries the step, the
+     position and the text. Landing on "Next" announces "Next".
 
-     A callback ref for the arrival and an effect for the moves between steps.
-     An effect alone is not enough: `Portal` resolves its container in an effect
-     of its own and renders nothing on the first client pass, so an effect here
-     runs while `panel.current` is still null and the tour opens with focus
-     wherever it was — which is outside the tour, where Escape does nothing. */
+     A callback ref handles the arrival and an effect handles the moves between
+     steps. An effect alone is not enough. `Portal` resolves its container in an
+     effect of its own and renders nothing on the first client pass, so an
+     effect here runs while `panel.current` is still null. The tour would open
+     with focus outside it, where Escape does nothing. */
   const attach = useCallback((node: HTMLDivElement | null) => {
     panel.current = node;
     node?.focus();
@@ -169,8 +169,8 @@ export function Tour({
     if (isOpen) panel.current?.focus();
   }, [isOpen, step]);
 
-  /* Kept for its exit: `AnimatePresence` holds the tour while its panel plays
-     `popover-out`, and the panel plays `popover-in` as the tour opens. */
+  /* `AnimatePresence` holds the tour while its panel plays `popover-out`. The
+     panel plays `popover-in` as the tour opens. */
   return (
     <AnimatePresence>
       {isOpen && current ? (
@@ -183,22 +183,22 @@ export function Tour({
               close('dismissed');
             }}
           >
-            {/* One element, with the target cut out of it. `evenodd` is what makes
-                the hole: the viewport rectangle and the target's rounded one wind
-                the same way, so the overlap falls outside the fill.
+            {/* One element, with the target cut out of it. `evenodd` makes the
+                hole: the viewport rectangle and the target's rounded one wind the
+                same way, so the overlap falls outside the fill.
 
-                `path()` rather than `xywh() exclude`, which is not CSS — `clip-path`
-                takes a single shape and has no combinator. The first version of this
-                used one, the declaration was dropped as invalid, and the scrim
-                simply had no hole in it: `getComputedStyle` in a real browser
-                reported `clip-path: none` while every unit test passed, because
-                jsdom measures nothing and had no box to cut. */}
+                It uses `path()`, because `xywh() exclude` is not CSS: `clip-path`
+                takes a single shape and has no combinator. An invalid declaration
+                is dropped and the scrim has no hole. A real browser's
+                `getComputedStyle` then reports `clip-path: none`, while unit
+                tests still pass because jsdom measures nothing and has no box to
+                cut. */}
             <div
               className={styles['scrim']}
-              /* A stable hook for the gate that checks the hole. Finding it by DOM
-                 position broke the moment `FocusTrap` was added between the two —
-                 the scrim stopped being the dialog's previous sibling and the check
-                 reported the scrim painting nowhere. */
+              /* A stable hook for the gate that checks the hole. The gate must not
+                 find the scrim by DOM position, because `FocusTrap` sits between
+                 the scrim and the dialog, so the scrim is not the dialog's
+                 previous sibling. */
               data-cr-tour="scrim"
               data-cut={box ? '' : undefined}
               style={box ? { clipPath: spotlight(box) } as React.CSSProperties : undefined}
@@ -222,9 +222,9 @@ export function Tour({
                 {formatPosition(step, steps.length)}
               </p>
               <p className={styles['title']} id={`${id}-title`}>
-                {/* The position is part of the name, not only small text beside it:
-                    a reader who cannot see the progress has no other way to know
-                    whether they are near the end. */}
+                {/* The position is part of the name as well as small text beside
+                    it. A reader who cannot see the progress has no other way to
+                    know whether they are near the end. */}
                 <span className={styles['said']}>{`${formatPosition(step, steps.length)}. `}</span>
                 {current.title}
               </p>
@@ -232,8 +232,8 @@ export function Tour({
                 <div className={styles['body']} id={`${id}-body`}>{current.children}</div>
               ) : <span id={`${id}-body`} hidden />}
               <div className={styles['actions']}>
-                {/* The way out, on every step. A tour takes the whole interface away
-                    from someone who did not ask for it. */}
+                {/* The way out, on every step, because a tour takes the whole
+                    interface away from someone who did not ask for it. */}
                 <Button variant="quiet" onPress={() => { close('dismissed'); }}>{closeLabel}</Button>
                 <span className={styles['spacer']} />
                 {step > 0 ? (
@@ -252,9 +252,9 @@ export function Tour({
   );
 }
 
-/* The panel, arriving with `popover-in` as the tour opens and leaving with
-   `popover-out` as it closes — the catalogue's recipes for it — through Motion's
-   presence, which holds the tour until the exit has played. */
+/* The panel arrives with `popover-in` as the tour opens and leaves with
+   `popover-out` as it closes, the catalogue's recipes for it. Motion's presence
+   holds the tour until the exit has played. */
 const TourPanel = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & { 'data-anchored'?: string | undefined }>(
   function TourPanel(props, ref) {
     const scope = usePresenceMotion('popover-in', 'popover-out');
@@ -265,10 +265,10 @@ const TourPanel = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & { 
 
 /* The viewport, with a rounded rectangle taken out of it.
  *
- * Written as one `path()` with the even-odd rule rather than as a mask or a
- * giant `box-shadow`: Mirage is a *filter*, not a fill, so whatever draws the
- * scrim has to be a single element that can carry `backdrop-filter` — a
- * spotlight made of four rectangles or of a 9999px shadow cannot.
+ * Written as one `path()` with the even-odd rule instead of a mask or a giant
+ * `box-shadow`. Mirage is a filter, so whatever draws the scrim has to be a
+ * single element that can carry `backdrop-filter`. A spotlight made of four
+ * rectangles or of a 9999px shadow cannot.
  *
  * Both subpaths run clockwise. Under `evenodd` a point inside both is crossed
  * twice and therefore outside the fill, which is the hole.
@@ -288,8 +288,8 @@ function spotlight({ top, left, width, height, radius }: Box): string {
 }
 
 /* The trap, for as long as the tour is present. `AnimatePresence` renders a
-   leaving tour with the props it last had, so a trap told `isActive` would go on
-   holding focus through the exit — and pull it back from the element the tour
+   leaving tour with the props it last had, so a trap told `isActive` would keep
+   holding focus through the exit and pull it back from the element the tour
    has just returned it to. Motion's own presence says when it is leaving. */
 function PresentFocusTrap({ children }: { children: ReactNode }): React.JSX.Element {
   const isPresent = useIsPresent();

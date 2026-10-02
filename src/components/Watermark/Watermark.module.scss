@@ -1,28 +1,28 @@
 @use '../../styles/tokens' as *;
 
-/* Watermark — a repeating mark over content.
+/* Watermark is a repeating mark over content.
  *
- * Two rules from the catalogue, and both are about what it must not do: it never
- * intercepts pointer events, and it never obscures text. The first is
- * `pointer-events: none` and is absolute — a decoration that eats clicks makes
- * the content under it unusable. The second is the opacity, which is low enough
- * that body text keeps its contrast ratio with the mark on top of it.
+ * The catalogue gives two rules. It never intercepts pointer events, and it
+ * never obscures text. The first is `pointer-events: none`, without exception, because
+ * a decoration that eats clicks makes the content under it unusable. The second
+ * is the opacity, which is low enough that body text keeps its contrast ratio
+ * with the mark on top of it.
  */
 
 .watermark {
   position: relative;
   isolation: isolate;
-  /* The mask paints in `currentColor`, and `color` is inherited from the document
-     rather than from the scope's custom properties — so without this the mark
-     takes whatever ink the page above the Crystal scope happens to have, which is
-     dark ink on a dark surface the moment the scope is darker than the page. */
+  /* The mask paints in `currentColor`, and `color` is inherited from the document,
+     not from the scope's custom properties. Without this the mark takes the ink
+     of the page above the Crystal scope, which is dark ink on a dark surface when
+     the scope is darker than the page. */
   color: var(--cr-text);
 }
 
-/* A mask rather than a background image, so the mark takes the surface's own ink.
-   A data URI is its own document: `currentColor` inside one resolves to black
-   regardless of the page around it, which in dark mode is a black mark on a dark
-   surface — invisible, and wrong in the other direction in light mode too. */
+/* A mask instead of a background image, so the mark takes the surface's own ink.
+   A data URI is its own document, and `currentColor` inside one resolves to black
+   regardless of the page around it. In dark mode that is an invisible black mark
+   on a dark surface. */
 .watermark::after {
   content: '';
   position: absolute;

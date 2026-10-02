@@ -1,21 +1,21 @@
 @use '../../styles/tokens' as *;
 
-/* DeltaBadge — a Haze fill in a pill.
+/* DeltaBadge: a Haze fill in a pill.
  *
- * No Resin shell: a delta is a piece of typography inside a table cell or beside
- * a figure, not a control, and a floating glass pill in a column of numbers reads
- * as something you could press. The Haze fill alone gives it a ground without
- * giving it a surface.
+ * There is no Resin shell. A delta is typography inside a table cell or beside a
+ * figure. It is not a control, and a floating glass pill in a column of numbers
+ * reads as something you could press. The Haze fill alone gives it a ground
+ * without giving it a surface.
  *
- * The fill is inset by `0`. `--cr-haze-inset` is 8px and exists to stop the fill
- * short of an exposed glass perimeter; there is no perimeter here to protect.
+ * The fill is inset by `0`. `--cr-haze-inset` is 8px and stops the fill short of
+ * an exposed glass perimeter. There is no perimeter here.
  */
 
 .delta {
-  /* The Haze fill is Crystal's `.cr-haze` (2.2.0), which this wears; its pad
-     already fills to the edge, which is what this painted by hand. */
-  /* Crystal's surface carries a transparent 1px border; this badge has none, and
-     taking it grew every badge by two pixels in each direction. */
+  /* The Haze fill is Crystal's `.cr-haze` (2.2.0), which this element wears. Its
+     pad already fills to the edge. */
+  /* Crystal's surface carries a transparent 1px border. This badge has none,
+     because the border would grow every badge by two pixels in each direction. */
   border: 0;
 
   display: inline-flex;

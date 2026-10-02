@@ -25,8 +25,8 @@ describe('Dock', () => {
   it('holds every destination in one list, not one plane each', () => {
     const { container } = render(<Dock items={items} currentId="home" />);
     /* One Resin plane. A row of separate planes would put Resin beside Resin,
-       which is the arrangement the material contract forbids — and it is
-       invisible in a screenshot taken against a plain background. */
+       which the material contract forbids. A screenshot against a plain
+       background does not show the difference, so the structure is tested. */
     expect(container.querySelectorAll('ul')).toHaveLength(1);
     expect(screen.getAllByRole('link')).toHaveLength(items.length);
   });

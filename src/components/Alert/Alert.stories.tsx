@@ -12,13 +12,13 @@ const meta = {
           '"`role=alert` **only** for genuinely urgent, interrupting content; otherwise a plain '
           + 'region." An assertive live region interrupts a screen reader mid-word, so a page '
           + 'that renders four alerts on load has interrupted the reader four times about things '
-          + 'already on the screen. `urgent` is therefore an explicit opt-in and is **not** '
+          + 'already on the screen. `urgent` is therefore an explicit opt-in and is not '
           + 'implied by `danger`.\n\n'
           + 'The semantic pair goes on the symbol well and nowhere else: the panel stays Haze '
           + 'and the message stays ordinary text. A danger-coloured panel makes the message '
           + 'decoration on a coloured ground, and a danger-coloured perimeter is the shape '
           + 'Crystal uses for focus.\n\n'
-          + 'The dismiss control is named for what it dismisses — three alerts otherwise give a '
+          + 'The dismiss control is named for what it dismisses. Three alerts otherwise give a '
           + 'reader three identical buttons called "Close".',
       },
     },

@@ -1,8 +1,8 @@
 @use '../../styles/tokens' as *;
 
 /* "Haze surface in a Frost frame." The block is Crystal's Frost panel, worn as
-   `.cr-frost`; the writing surface is `RichTextSurface`'s Haze under its Resin
-   toolbar — back to front, as the hierarchy runs. */
+   `.cr-frost`. The writing surface is `RichTextSurface`'s Haze under its Resin
+   toolbar, back to front, as the hierarchy runs. */
 .editor {
   display: grid;
   gap: $cr-spacing-sm;

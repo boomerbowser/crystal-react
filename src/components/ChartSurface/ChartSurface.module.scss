@@ -2,18 +2,17 @@
 @use '../../styles/material';
 @use '../../charts/svg' as chart;
 
-/* ChartSurface — "Haze plot fill on the surrounding material", and the plot area
+/* ChartSurface. "Haze plot fill on the surrounding material", and the plot area
  * keeps the content radius.
  *
- * The fill goes on the plot box and not on the figure, because the figure also
- * holds a caption, a legend and a disclosure, and those are text on whatever the
- * chart was put on. Haze is a *reading ground for the marks*; giving it to the
- * whole figure would put a second pad behind a caption that already has one from
- * the card the chart usually sits in.
+ * The fill goes on the plot box and not on the figure. The figure also holds a
+ * caption, a legend and a disclosure, which are text on whatever the chart sits
+ * on. Haze is the reading ground for the marks. On the whole figure it would put
+ * a second pad behind a caption that usually already has one from its card.
  *
  * Nothing here feathers a mark. The Haze layer is a pseudo-element behind the
- * plot; the SVG above it is crisp, which is the same division of labour every
- * other surface in this library makes between its fill and its content.
+ * plot and the SVG above it is crisp, the same split between fill and content
+ * that every other surface in this library makes.
  */
 
 .surface {
@@ -54,24 +53,24 @@
 .canvas {
   @include chart.chart-canvas;
   display: block;
-  /* The measured width is written as an attribute; this keeps the drawn box and
-     the layout box the same one when the two disagree for a frame after a
-     resize, which is the only moment they can. */
+  /* The measured width is written as an attribute. This keeps the drawn box and
+     the layout box the same when they disagree for a frame after a resize, the
+     only moment they can. */
   inline-size: 100%;
   overflow: visible;
 }
 
-/* A mark takes the focus ring the rest of the system uses. `outline` on an SVG
-   element is honoured by every engine this library gates against; the feathered
-   halo is a shadow and SVG shadows are filters, so this is the crisp core alone,
-   at Crystal's offset and width — the part of the recipe that carries the
+/* A mark takes the focus ring the rest of the system uses. Every engine this
+   library gates against honours `outline` on an SVG element. The feathered halo
+   is a shadow, and SVG shadows are filters, so this is the crisp core alone at
+   Crystal's offset and width, which is the part of the recipe that carries the
    meaning.
 
-   `crystal.css` also carries `[tabindex]:focus-visible`, so in any document that
-   loads it a mark would get a ring without this rule. That is not a reason to
-   drop it: a consumer who loads only this library's stylesheet is precisely the
-   case D-1 is about, and `verify:behaviour` cannot see that consumer — removing
-   this rule leaves its focus-ring check green. Measured, not assumed. */
+   `crystal.css` also carries `[tabindex]:focus-visible`, so a document that
+   loads it gives a mark a ring without this rule. Keep the rule anyway. A
+   consumer who loads only this library's stylesheet is the case D-1 is about,
+   and `verify:behaviour` cannot see that consumer: removing this rule leaves its
+   focus-ring check green, as measured. */
 .canvas :focus-visible {
   outline: $cr-focus-core-width solid var(--cr-primary);
   outline-offset: $cr-focus-core-offset;
@@ -102,8 +101,8 @@
   border-radius: $cr-action-radius;
   color: var(--cr-muted);
   cursor: pointer;
-  /* The platform marker is a triangle that means "open", which is the one thing
-     the two labels below already say. */
+  /* The platform marker is a triangle that means "open", which the two labels
+     below already say. */
   list-style: none;
   &::-webkit-details-marker { display: none; }
   &:focus-visible {
@@ -147,10 +146,10 @@
   color: var(--cr-muted);
 }
 
-/* Forced colours. The Haze fill is paint and goes; the plot keeps a boundary so
-   the drawn area is still an area, and the marks are the chart's own problem —
-   `channel.ts` explains why every series carries something that is not colour,
-   and this is the mode where that stops being a courtesy. */
+/* Forced colours. The Haze fill is paint and is dropped. The plot keeps a
+   boundary so the drawn area is still visible as an area. The marks are each
+   chart's own concern. `channel.ts` explains why every series carries something
+   besides colour, and in this mode that channel is required. */
 @media (forced-colors: active) {
   .plot {
     border: 1px solid CanvasText;

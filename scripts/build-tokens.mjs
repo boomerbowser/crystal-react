@@ -1,26 +1,25 @@
 /* Generate Crystal React's token surfaces from Crystal's generated export.
  *
  * CONTRACT §1: "A hard-coded #7338EF, 40px or 1.95px anywhere in a library is a
- * defect, because it is a value that can no longer be changed centrally." That
- * makes this the only place a Crystal value may enter the library, and it makes
- * hand-writing _tokens.scss a defect on its first line. Both outputs are
- * gitignored for the same reason: a committed generated file is one somebody
- * will eventually edit.
+ * defect, because it is a value that can no longer be changed centrally." This
+ * script is the only place a Crystal value may enter the library, so a
+ * hand-written _tokens.scss is a defect. Both outputs are gitignored for the
+ * same reason: a committed generated file invites hand edits.
  *
- * The source is the RESOLVED flat export, not the raw DTCG tree. The same
- * section says so — "Generated exports for TypeScript, Swift and Kotlin are
- * emitted from it into core/exports/. A library imports those" — and
- * reading the tree instead would mean a second implementation of alias
- * resolution, which is exactly the divergence §1 warns about.
+ * The source is the resolved flat export, not the raw DTCG tree. The same
+ * section says so: "Generated exports for TypeScript, Swift and Kotlin are
+ * emitted from it into core/exports/. A library imports those". Reading the
+ * tree would mean a second implementation of alias resolution, which is the
+ * divergence §1 warns about.
  *
- * Palette colours are deliberately absent. Palette and mode are runtime
- * choices: their values arrive as custom properties from Crystal's theme
- * stylesheet, and the provider switches between them. What is generated here is
- * everything that does not vary that way.
+ * Palette colours are absent. Palette and mode are runtime choices: their
+ * values arrive as custom properties from Crystal's theme stylesheet, and the
+ * provider switches between them. What is generated here is everything that
+ * does not vary that way.
  *
  * Two outputs, because SCSS and TypeScript need different things:
  *
- *   src/styles/_tokens.scss       compile-time values — arithmetic, media
+ *   src/styles/_tokens.scss       compile-time values: arithmetic, media
  *                                 queries, and anything that cannot be a custom
  *                                 property, such as a blur radius inside a
  *                                 `filter` shorthand.
@@ -37,8 +36,8 @@ import { fileURLToPath } from 'node:url';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '..');
 
-/* Resolved rather than hard-coded, so moving the checkout fails loudly instead
-   of silently falling back to stale values. */
+/* Resolved at run time, so a moved checkout fails here rather than falling back
+   to stale values. */
 const CANDIDATES = [
   resolve(ROOT, 'node_modules/@crystal-ui/core/exports/crystal-tokens.ts'),
   resolve(ROOT, '../crystal-design-system/core/exports/crystal-tokens.ts'),
@@ -71,8 +70,8 @@ try {
   process.exit(1);
 }
 
-/* An alias that reaches a stylesheet is a broken value, not a fallback, so it
-   stops the build rather than being written out. */
+/* An unresolved alias that reaches a stylesheet is a broken value, so it stops
+   the build rather than being written out. */
 for (const [name, value] of Object.entries(tokenMap)) {
   if (typeof value === 'string' && /^\{.+\}$/.test(value)) {
     console.error(`Unresolved alias ${value} at "${name}".`);
@@ -82,14 +81,11 @@ for (const [name, value] of Object.entries(tokenMap)) {
 }
 
 const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/\./g, '-').toLowerCase();
-/* Quote everything that is not provably safe bare, rather than quoting the cases
-   that look dangerous.
- *
- * The first version quoted values containing a space or a comma, which let
- * `$cr-feedback-light-danger-symbol: !;` through — the danger status symbol is a
- * bare `!`, which SCSS reads as the start of `!important` and refuses. Status
- * symbols, font stacks and easing curves are all strings; only numbers, numbers
- * with a unit, and hex colours are values SCSS should read literally. */
+/* Quote everything that is not provably safe bare. The danger status symbol is
+   a bare `!`, which SCSS reads as the start of `!important` and refuses, so
+   `$cr-feedback-light-danger-symbol: !;` must be quoted. Status symbols, font
+   stacks and easing curves are all strings; only numbers, numbers with a unit,
+   and hex colours are values SCSS should read literally. */
 const SAFE_BARE = /^(-?\d*\.?\d+[a-z%]*|#[0-9a-fA-F]{3,8})$/;
 const scssValue = (value) => {
   if (typeof value === 'number') return String(value);
@@ -128,7 +124,7 @@ writeFileSync(resolve(ROOT, 'src/theme/tokens.generated.ts'), ts);
 
 /* Compile what was just written. A token file that does not parse fails here,
    with the offending line, rather than inside the first component that imports
-   it — which is where the bare `!` surfaced the first time. */
+   it. */
 const sass = await import('sass');
 try {
   sass.compileString(scss, { syntax: 'scss' });

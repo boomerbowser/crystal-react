@@ -2,17 +2,17 @@
 
 /* Scrim.
  *
- * The Mirage layer between an overlay and the scene beneath it, as its own
- * component because three things need it — a dialog, a drawer, a command palette
- * — and three copies of a material recipe is three chances to get one wrong.
+ * The Mirage layer between an overlay and the scene beneath it. It is its own
+ * component because a dialog, a drawer and a command palette all need it, so
+ * the material recipe exists once rather than in three copies.
  *
- * What the catalogue asks of it, and what this cannot supply on its own:
- * "content beneath is inert; the scrim is not a focus target; clicking it
- * dismisses only when dismissal is safe". Inertness belongs to whatever put the
- * overlay up — React Aria's `ModalOverlay` does it properly, with `aria-hidden`
- * on the rest of the document and focus contained — so this renders the wash and
- * nothing else, and is documented as not being a modality mechanism. A scrim that
- * looked modal without being modal would be the worse failure of the two.
+ * The catalogue asks: "content beneath is inert; the scrim is not a focus
+ * target; clicking it dismisses only when dismissal is safe". This component
+ * cannot supply that on its own. Inertness belongs to whatever put the overlay
+ * up. React Aria's `ModalOverlay` does it, with `aria-hidden` on the rest of the
+ * document and focus contained. This renders the wash and nothing else, and is
+ * documented as not being a modality mechanism, because a scrim that looked
+ * modal without being modal would be the worse failure.
  */
 import type { ReactNode } from 'react';
 import { motion } from 'motion/react';
@@ -28,19 +28,18 @@ export interface ScrimProps {
 }
 
 export function Scrim({ isCentred = true, children, className }: ScrimProps): React.JSX.Element {
-  /* Mirage has a wash: the catalogue's `mirage` as the scrim arrives and
-     `mirage-out` as it goes, computed by Crystal's preset module — the same the
-     dialog and the drawer play. The exit plays when a product shows and hides
-     the scrim inside `AnimatePresence`, which is where Motion can hold it. */
+  /* The catalogue's `mirage` plays as the scrim arrives and `mirage-out` as it
+     goes, computed by Crystal's preset module, as the dialog and the drawer
+     play them. The exit plays only when a product shows and hides the scrim
+     inside `AnimatePresence`, where Motion can hold it. */
   const wash = usePresetMotion('mirage', 'mirage-out');
   return (
     <motion.div
       {...wash}
-      /* Deliberately **not** `aria-hidden`. The scrim usually wraps the overlay
-         it separates, and hiding the wrapper hides the dialog inside it — which
-         would make every modal in the library invisible to a screen reader. It
-         needs no hiding anyway: a div with no role and nothing focusable is
-         already nothing to announce. */
+      /* Not `aria-hidden`. The scrim usually wraps the overlay it separates, and
+         hiding the wrapper hides the dialog inside it, which would make every
+         modal in the library invisible to a screen reader. It needs no hiding:
+         a div with no role and nothing focusable has nothing to announce. */
       className={cx(styles['scrim'], isCentred ? styles['centred'] : undefined, className)}
     >
       {children}

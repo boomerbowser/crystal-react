@@ -1,6 +1,6 @@
 'use client';
 
-/* PlayerShell — a media surface with its transport, queue and metadata.
+/* PlayerShell: a media surface with its transport, queue and metadata.
  *
  * "**Real media elements; captions and their state announced; transport
  * reachable by keyboard.**" States: `idle`, `playing`, `paused`, `buffering`,
@@ -9,25 +9,25 @@
  * Sources, the queue and DRM are the product's. The pieces that keep the three
  * promises already exist, and the shell puts them together:
  *
- *   - **Real media elements.** `VideoPlayer` and `AudioPlayer` are a native
+ *   - Real media elements. `VideoPlayer` and `AudioPlayer` are a native
  *     `<video>` and `<audio>` under Crystal's transport; the element is handed
  *     back through `mediaRef` for sources, DRM and analytics.
- *   - **Captions and their state announced.** `VideoPlayer`'s caption toggle is
+ *   - Captions and their state announced. `VideoPlayer`'s caption toggle is
  *     the track's real mode, `aria-pressed`, and says "Captions on" or "off".
- *   - **Transport reachable by keyboard.** Every control is a real button or
+ *   - Transport reachable by keyboard. Every control is a real button or
  *     slider in the tab order, and the player's shortcuts answer only while
  *     focus is inside it.
  *
  * What the shell adds:
  *
- *   - **Full screen that keeps Crystal's transport.** The shell asks for full
- *     screen on its own stage — the picture and the transport together — rather
+ *   - Full screen that keeps Crystal's transport. The shell asks for full
+ *     screen on its own stage (the picture and the transport together) rather
  *     than on the `<video>`, whose full screen is the browser's player with the
  *     browser's controls. The toggle is `aria-pressed`, and entering and leaving
- *     are said, since Escape can leave without the toggle being touched.
- *   - **The queue** is `PlaylistBlock`: reorderable by keyboard, the playing
+ *     are announced, since Escape can leave without the toggle being touched.
+ *   - The queue is `PlaylistBlock`: reorderable by keyboard, with the playing
  *     track `aria-current`.
- *   - **Metadata** on Haze, named by its heading.
+ *   - Metadata on Haze, named by its heading.
  *
  * "Resin transport over the media; Haze metadata". The transport's showing and
  * hiding is `VideoPlayer`'s, which Crystal's rule keeps to movement a person
@@ -92,9 +92,9 @@ export function PlayerShell({
     if (mediaRef) (mediaRef as { current: HTMLMediaElement | null }).current = own.current;
   });
 
-  /* Whether this document may go full screen at all — not in every frame, and
-     not on every phone — read after mount, so the server and the first client
-     render agree. */
+  /* Whether this document may go full screen at all, which not every frame or
+     phone allows. Read after mount, so the server and the first client render
+     agree. */
   useEffect(() => {
     setCanFullScreen(kind === 'video' && document.fullscreenEnabled === true);
   }, [kind]);

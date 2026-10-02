@@ -1,9 +1,9 @@
 @use '../../styles/tokens' as *;
 
-/* Text — body copy, and the small pieces of running text.
+/* Text. Body copy, and the small pieces of running text.
  *
  * Every step is the same rule with different custom properties, because the scale
- * is Crystal's: six classes each repeating a size, a leading and a tracking would
+ * is Crystal's. Six classes each repeating a size, a leading and a tracking would
  * be eighteen numbers restating what the resolver already published.
  */
 
@@ -18,9 +18,9 @@
 .muted { color: var(--cr-muted); }
 .onSurface { color: var(--cr-content-muted); }
 
-/* The measure. Long lines are hard to return from: the eye loses the next one.
-   `ch` rather than px because the comfortable measure is a count of characters,
-   not a width — it should follow the font size rather than fight it. */
+/* The measure. Long lines are hard to return from, because the eye loses the
+   next one. It uses `ch` rather than px because the comfortable measure is a
+   count of characters, so it follows the font size. */
 .measure { max-inline-size: 68ch; }
 
 .weightRegular { font-weight: 400; }

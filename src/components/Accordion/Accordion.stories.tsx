@@ -17,7 +17,7 @@ const meta = {
         component:
           'Disclosure rows on Haze. React Aria owns the part that is easy to get subtly wrong: the '
           + 'header is a real button carrying `aria-expanded` and `aria-controls`, the panel is '
-          + 'associated back to it, and `DisclosureGroup` keeps `expandedKeys` in one place — which '
+          + 'associated back to it, and `DisclosureGroup` keeps `expandedKeys` in one place. That '
           + 'is what makes "only one at a time" a property of the group rather than of five rows '
           + `each watching the others. Crystal owns the material, the ${crystalTokens['action.minTarget']} header, and the rule `
           + 'that the chevron\'s rotation is a CSS end state: `icon-turn` plays it, but the turned '

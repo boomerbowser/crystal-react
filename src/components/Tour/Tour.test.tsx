@@ -43,7 +43,7 @@ describe('Tour', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Start tour' }));
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
     expect(screen.getByRole('dialog', { name: /Step 2 of 2/ })).toBeInTheDocument();
-    /* The last step finishes rather than offering a next that goes nowhere. */
+    /* The last step offers Done instead of a Next that goes nowhere. */
     expect(screen.getByRole('button', { name: 'Done' })).toBeInTheDocument();
   });
 
@@ -78,12 +78,12 @@ describe('Tour', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Start tour' }));
     await userEvent.keyboard('{Escape}');
     expect(onClose).toHaveBeenCalledExactlyOnceWith('dismissed');
-    /* After its exit: the panel plays `popover-out` before it goes. */
+    /* Waits for the exit, because the panel plays `popover-out` before it goes. */
     await waitFor(() => { expect(screen.queryByRole('dialog')).toBeNull(); });
   });
 
-  /* Back to whatever had focus when it began — not to the last step's target,
-     which by then may be gone or may be the thing the tour was explaining. */
+  /* Focus returns to whatever had it when the tour began. The last step's target
+     may be gone by then, or may be the thing the tour was explaining. */
   it('gives focus back where it found it', async () => {
     renderWithCrystal(<Harness />);
     const trigger = screen.getByRole('button', { name: 'Start tour' });
@@ -92,8 +92,8 @@ describe('Tour', () => {
     expect(trigger).toHaveFocus();
   });
 
-  /* Focus lands on the panel, which carries the step and its position, rather
-     than on "Next", which announces "Next". */
+  /* Focus lands on the panel, which carries the step and its position. Landing
+     on "Next" would only announce "Next". */
   it('moves focus to the step, not to its first button', async () => {
     renderWithCrystal(<Harness />);
     await userEvent.click(screen.getByRole('button', { name: 'Start tour' }));

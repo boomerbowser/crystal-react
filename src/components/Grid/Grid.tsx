@@ -3,19 +3,18 @@
 /* Grid and Grid.Cell.
  *
  * A twelve-column grid with one gutter, and cells that declare a span per
- * breakpoint. The spans travel as custom properties rather than as generated
- * classes because the alternative is twelve spans times three breakpoints of
- * static CSS — 36 classes to express three numbers a caller already knows.
+ * breakpoint. The spans travel as custom properties and not as generated
+ * classes. Generated classes would need twelve spans times three breakpoints
+ * of static CSS, 36 classes to express three numbers a caller already knows.
  *
- * The defaults are the ones that fail safely: a cell with no span is full width,
- * and a cell with no phone span is full width on a phone. A grid whose cells
- * default to a narrow column produces a page of slivers the first time somebody
- * forgets a prop; one that defaults to full width produces a readable stack.
+ * The defaults fail safely. A cell with no span is full width, and a cell with
+ * no phone span is full width on a phone, so a forgotten prop produces a
+ * readable stack and not a page of slivers.
  *
- * Presentational. The catalogue is explicit that reading order must match visual
- * order, which is a rule about *not* reordering cells with CSS: a grid that
- * visually reorders its children leaves a keyboard and a screen reader walking
- * the original order, and the two no longer agree.
+ * Presentational. The catalogue requires reading order to match visual order,
+ * so cells are never reordered with CSS. A grid that visually reorders its
+ * children leaves a keyboard and a screen reader walking the original order,
+ * which no longer matches what is seen.
  */
 import { forwardRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';

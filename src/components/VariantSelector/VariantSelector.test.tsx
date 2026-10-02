@@ -15,9 +15,8 @@ const colours = [
 ];
 
 describe('VariantSelector', () => {
-  /* Removing an unavailable variant is the obvious thing and it is wrong: a
-     shopper who cannot find the large sees a product that does not come in
-     large, and goes somewhere else. */
+  /* An unavailable variant stays. A shopper who cannot find the large assumes
+     the product does not come in large, and goes somewhere else. */
   it('keeps an unavailable variant and says why', () => {
     renderWithCrystal(<VariantSelector label="Size" variants={sizes} />);
     const large = screen.getByRole('radio', { name: /Large/ });
@@ -26,9 +25,8 @@ describe('VariantSelector', () => {
     expect(large).toBeDisabled();
   });
 
-  /* A swatch is a circle of colour, so its name is the only thing anybody who
-     cannot separate two similar colours has — and the only thing a screen
-     reader has at all. */
+  /* A swatch is a circle of colour. Its name is all that anybody who cannot
+     separate two similar colours has, and all that a screen reader has. */
   it('names a swatch, because a colour is not a name', () => {
     renderWithCrystal(<VariantSelector label="Colour" variants={colours} shape="swatch" />);
     expect(screen.getByRole('radio', { name: 'Ink' })).toBeInTheDocument();

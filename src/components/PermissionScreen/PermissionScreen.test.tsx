@@ -6,8 +6,8 @@ import { PermissionScreen } from './PermissionScreen.js';
 
 describe('PermissionScreen', () => {
   /* "Says which permission and why." Both are required props, because "you do
-     not have access" names neither: the reader cannot tell whether to ask an
-     administrator, switch account, or stop trying — and the person who could
+     not have access" names neither. The reader cannot tell whether to ask an
+     administrator, switch account or stop trying, and the person who could
      grant it does not know what to grant. */
   it('names the permission and why it is needed', () => {
     renderWithCrystal(
@@ -30,7 +30,7 @@ describe('PermissionScreen', () => {
     expect(onRequest).toHaveBeenCalledOnce();
   });
 
-  /* `requesting` is a busy state of the screen, not a different screen. */
+  /* `requesting` is a busy state of the same screen. */
   it('reports the request in flight as busy', () => {
     renderWithCrystal(
       <PermissionScreen permission="Billing access" onRequest={() => {}} isRequesting data-testid="screen">
@@ -42,7 +42,7 @@ describe('PermissionScreen', () => {
   });
 
   /* Where the reader cannot grant it themselves there is no button to offer,
-     and offering a dead one would be worse than offering none. */
+     and the screen shows none rather than a dead one. */
   it('offers no request where there is nothing the reader can do', () => {
     renderWithCrystal(<PermissionScreen permission="Billing access">Ask an owner.</PermissionScreen>);
     expect(screen.queryByRole('button')).toBeNull();

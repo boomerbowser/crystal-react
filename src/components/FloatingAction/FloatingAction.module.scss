@@ -1,17 +1,17 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* FloatingAction, SpeedDial and ActionBar — the surfaces that float above content.
+/* FloatingAction, SpeedDial and ActionBar, the surfaces that float above content.
  *
- * All three are Resin at the float elevation, and all three have the same
- * obligation the catalogue states for the first: **it must not cover the final
- * content or the focused element.** The safe-area offset is part of that; so is
- * the scroll padding a page owes a floating control, which is the product's to
- * set and is said in the component's documentation because nothing here can.
+ * All three are Resin at the float elevation. The catalogue's rule for the first
+ * applies to all three: it must not cover the final content or the focused
+ * element. The safe-area offset handles part of that. The rest is the scroll
+ * padding the page owes a floating control, which the product sets and the
+ * component's documentation describes, because this stylesheet cannot set it.
  */
 
 .floating {
-  /* A floating action is a button, over whatever the page happens to scroll beneath it — which is the case the fill exists for. */
+  /* A floating action is a button over whatever content scrolls beneath it, which is the case the fill is for. */
   @include material.haze-fill;
   position: fixed;
   inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
@@ -34,7 +34,7 @@
 }
 
 /* Extended: a pill with a label beside the icon. The circle is the compact form
-   of the same control, not a different one. */
+   of the same control. */
 .extended {
   border-radius: $cr-action-radius;
   padding-inline: $cr-action-padding-inline;
@@ -43,9 +43,9 @@
 
 .floating svg { inline-size: $cr-icon-action; block-size: $cr-icon-action; }
 
-/* A dial's actions stack above the trigger. Pills with visible labels, never
-   icons alone — an icon in a set that appeared a moment ago has no context to be
-   read from. */
+/* A dial's actions stack above the trigger. They are pills with visible labels,
+   never icons alone, because an icon in a set that appeared a moment ago has no
+   context to be read from. */
 .dial {
   position: fixed;
   inset-block-end: calc(max(var(--cr-space), env(safe-area-inset-bottom)) + #{$cr-action-min-target} + #{$cr-spacing-sm});
@@ -57,11 +57,11 @@
   gap: $cr-spacing-xs;
 }
 
-/* An action bar is centred rather than cornered: it belongs to a selection in
-   the content, not to the page. */
+/* An action bar is centred rather than cornered, because it belongs to a
+   selection in the content and not to the page. */
 .actionBar {
-  /* The bar is Crystal's dock — `Toolbar`'s `resin` variant wears `.cr-dock` — so
-     what is here is only where it floats. */
+  /* The bar is Crystal's dock (`Toolbar`'s `resin` variant wears `.cr-dock`), so
+     these rules only position it. */
   position: fixed;
   inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
   inset-inline: 0;

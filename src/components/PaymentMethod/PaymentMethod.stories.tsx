@@ -15,15 +15,14 @@ const meta = {
     docs: {
       description: {
         component:
-          '"A radio group. **Card fields are never reimplemented — the host supplies its '
-          + 'provider element.**" That second sentence is a boundary, not a preference, and it '
-          + 'is why this component is in the catalogue at all. A card number, an expiry and a '
-          + 'CVC typed into inputs this library rendered would put every product using Crystal '
-          + 'inside PCI scope, because the data touched their page in the clear.\n\n'
-          + 'It is worth stating the failure mode plainly, because it does not look like one: '
-          + 'a card form built here would work, would look right, would pass every test in the '
-          + 'repository, and would quietly move a compliance obligation onto every product '
-          + 'that adopted it. So there is a `provider` slot and there are no card fields.',
+          '"A radio group. Card fields are never reimplemented: the host supplies its '
+          + 'provider element." The second sentence is why this component is in the '
+          + 'catalogue. A card number, an expiry and a CVC typed into inputs this library '
+          + 'rendered would put every product using Crystal inside PCI scope, because the data '
+          + 'touched their page in the clear.\n\n'
+          + 'A card form built here would work, look right and pass every test in the '
+          + 'repository, and it would move a compliance obligation onto every product that '
+          + 'adopted it. So there is a `provider` slot and there are no card fields.',
       },
     },
   },
@@ -35,11 +34,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** With a provider's element in its slot — a grey box standing in for Stripe's
- *  `PaymentElement` or Adyen's drop-in. Choose "A different card" to mount it:
- *  it is mounted only while it is chosen, because a provider's element is an
+/** With a provider's element in its slot. A grey box stands in for Stripe's
+ *  `PaymentElement` or Adyen's drop-in. Choose "A different card" to mount it.
+ *  It is mounted only while it is chosen, because a provider's element is an
  *  iframe talking to a payment processor, and four of them behind unchosen
- *  options is four sessions opened for nothing. */
+ *  options would open four sessions for nothing. */
 export const WithAProviderElement: Story = {
   render: (args) => {
     function Live() {

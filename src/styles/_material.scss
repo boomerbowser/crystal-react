@@ -1,25 +1,22 @@
 /* Crystal's materials, as one definition each.
  *
- * These exist because the library drifted. Crystal paints Resin with
- * `--cr-shadow-float`, which is **four layers**: two inset optical rims and a
- * two-part elevation. Crystal React painted it with `--cr-shadow-content`, which
- * is two layers, no rims, and roughly half the elevation — so every Resin surface
- * in the library rendered as a flat rounded rectangle instead of a floating,
- * rimmed control plane. Meridian saw it immediately and said none of the
- * components looked like Crystal.
+ * Resin takes `--cr-shadow-float`: four layers, two inset optical rims and a
+ * two-part elevation. `--cr-shadow-content` has two layers, no rims and about
+ * half the elevation, and must not be used for Resin. With it, a Resin surface
+ * renders as a flat rounded rectangle instead of a floating, rimmed control
+ * plane.
  *
- * The rim is not decoration. AGENTS.md lists "optical rims" among the qualities
- * the approved baseline exists to protect, and it is what makes Resin read as a
- * raised piece of glass rather than a shape: a bright edge where the light
- * catches the top, a fainter one returning underneath.
+ * AGENTS.md lists "optical rims" among the qualities the approved baseline
+ * protects. The rims make Resin read as a raised piece of glass: a bright edge
+ * where the light catches the top, a fainter one returning underneath.
  *
- * So the recipe is one token in one mixin. `scripts/verify-materials.mjs`
- * computes what Crystal's own resolver says a material should be and compares it
- * with what the browser renders, so this cannot drift again without failing.
+ * Each recipe is one token in one mixin. `scripts/verify-materials.mjs` computes
+ * what Crystal's own resolver says a material should be and compares it with
+ * what the browser renders, so a drift fails the check.
  */
 
-/* Only the unprefixed `backdrop-filter` is ever written in this library; see the
-   note in `_field.scss` for what happened the one time it was not. */
+/* Only the unprefixed `backdrop-filter` is ever written in this library. The
+   note in `_field.scss` explains why. */
 
 /** Resin: the floating optical control surface. */
 @mixin resin {
@@ -41,8 +38,8 @@
   box-shadow: var(--cr-shadow-panel);
 }
 
-/* Where a material has no backdrop to diffuse — the viewer asked for less, or the
-   renderer cannot produce it — it becomes the surface colour rather than a
+/* Where a material has no backdrop to diffuse, because the viewer asked for less
+   or the renderer cannot produce it, it becomes the surface colour instead of a
    translucent fill over nothing. */
 @mixin opaque-fallback($selector) {
   :global([data-effects='opaque']) #{$selector} {
@@ -57,47 +54,44 @@
 
 /* Haze: the protective content fill a Resin control paints under its label.
  *
- * Crystal's rule, from `controls.css`, applies to every control it styles —
+ * Crystal's rule, from `controls.css`, applies to every control it styles,
  * `:is(button, a.cr-button, .cr-control, .cr-field-shell, .cr-resin-haze,
- * .cr-status)` — and to a Resin strip. This library painted it on four surfaces
- * out of twenty, and Meridian reported it as a readability defect before an
- * aesthetic one, which is the right order: Resin is a 20% fill with a 20px
- * backdrop blur, so it transmits whatever is behind it. On Crystal's Plastic
- * foundation that is a coloured atmosphere gradient. The Haze fill is what puts
- * a stable 80% ground under the text; without it a label's contrast depends on
- * the artwork behind the control, and Crystal's contrast evidence is measured
- * against the composition *with* the fill.
+ * .cr-status)`, and to a Resin strip. Missing Haze is a readability defect
+ * first: Resin is a 20% fill with a 20px backdrop blur, so it transmits
+ * whatever is behind it, and on Crystal's Plastic foundation that is a coloured
+ * atmosphere gradient. The Haze fill puts a stable 80% ground under the text.
+ * Without it a label's contrast depends on the artwork behind the control, and
+ * Crystal's contrast evidence is measured against the composition with the fill.
  *
- * Three properties carry it and each is load-bearing:
+ * Three properties are required:
  *
  *   - It is a separate layer, at `z-index: -1` behind the content. The fill is
- *     feathered, and feathering an element that contains text blurs the text.
- *     This is why it cannot simply be a second background on the control.
+ *     feathered, and feathering an element that contains text blurs the text,
+ *     so it cannot be a second background on the control.
  *   - It is inset, so the fill stops short of the rim and the glass edge still
- *     reads. The inset is `--cr-haze-inset`, exported by Crystal — the fill and
- *     its feather were always tokens and the inset was not, which is how a
- *     library could carry every Haze token and still paint nothing.
+ *     reads. The inset is `--cr-haze-inset`, exported by Crystal alongside the
+ *     fill and feather tokens.
  *   - It is `pointer-events: none`, because it covers the control.
  *
- * The inset is an argument rather than a constant because a few surfaces
- * legitimately differ — a full-bleed navigation row fills to its own edge, since
- * it has no exposed glass perimeter to protect. Passing `0` states that as a
- * decision; a hand-written `inset: 0` beside sixteen hand-written `inset: 8px`
- * reads as an oversight.
+ * The inset is an argument because a few surfaces legitimately differ. A
+ * full-bleed navigation row fills to its own edge, since it has no exposed glass
+ * perimeter to protect. Passing `0` records that as a decision, where a
+ * hand-written `inset: 0` beside sixteen hand-written `inset: 8px` would look
+ * like an oversight.
  *
- * The feather is an argument for one reason and one only: the catalogue specifies
- * the indicator as "a 3px-inset Haze fill and a 1px feather on that fill", which
- * is the single surface in the system where the feather is not Crystal's own
- * 1.95px. A 20px mark feathered at 1.95px is a fifth of its own radius, and the
- * mark stops reading as a mark. Every other caller takes the default, and should.
+ * The feather is an argument for one case only. The catalogue specifies the
+ * indicator as "a 3px-inset Haze fill and a 1px feather on that fill", the one
+ * surface in the system where the feather is not Crystal's own 1.95px. A 20px
+ * mark feathered at 1.95px is blurred by a fifth of its own radius and stops
+ * reading as a mark. Every other caller should take the default.
  */
 @mixin haze-fill($inset: var(--cr-haze-inset), $feather: var(--cr-haze-feather)) {
-  /* Both are load-bearing, and the mixin sets them rather than trusting the host
-     to. `z-index: -1` alone puts the fill behind the *element*, not behind its
-     label — so on a Resin control, whose own background is a translucent fill,
-     the layer disappears underneath it and the result is indistinguishable from
-     not having written the rule. `isolation: isolate` makes the control its own
-     stacking context, which is what keeps -1 meaning "behind the content". */
+  /* Both are required, and the mixin sets them instead of relying on the host.
+     `z-index: -1` alone puts the fill behind the element, not behind its label.
+     On a Resin control, whose own background is a translucent fill, the layer
+     then disappears underneath it, as if the rule were absent. `isolation:
+     isolate` makes the control its own stacking context, which keeps -1 meaning
+     "behind the content". */
   position: relative;
   isolation: isolate;
 
@@ -113,8 +107,8 @@
   }
 
   /* Forced colours replaces the whole composition with system colours, and a
-     translucent fill over them is noise at best. Crystal's own rule does the
-     same. */
+     translucent fill over them only adds noise. Crystal's own rule also hides
+     it. */
   @media (forced-colors: active) {
     &::before { display: none; }
   }

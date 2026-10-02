@@ -11,7 +11,7 @@ const steps = [
 ];
 
 describe('CheckoutSteps', () => {
-  /* "The current step is aria-current" — `step`, the value that exists for
+  /* "The current step is aria-current." The value is `step`, which exists for
      exactly this, and not `page` or `aria-selected`. */
   it('marks the current step with aria-current="step"', () => {
     const { container } = renderWithCrystal(<CheckoutSteps steps={steps} />);
@@ -21,8 +21,8 @@ describe('CheckoutSteps', () => {
     expect(current[0]).toHaveTextContent('Payment');
   });
 
-  /* "Completion is stated in words." A tick and a number are two shapes; to a
-     reader who does not see them they are nothing at all. */
+  /* "Completion is stated in words." A tick and a number are shapes, and a
+     reader who cannot see them gets nothing from them. */
   it('says each state in words, not only in a glyph', () => {
     renderWithCrystal(<CheckoutSteps steps={steps} />);
     expect(screen.getByLabelText(/Step 1 of 4: Bag, complete/)).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe('CheckoutSteps', () => {
   });
 
   /* The check mark is hidden from assistive technology, because the word is
-     already there — a reader hearing both would get "tick, complete". */
+     already there. A reader hearing both would get "tick, complete". */
   it('hides the check mark from anything that reads', () => {
     const { container } = renderWithCrystal(<CheckoutSteps steps={steps} />);
     const ticks = [...container.querySelectorAll('*')]
@@ -45,8 +45,8 @@ describe('CheckoutSteps', () => {
     expect(screen.getByRole('list', { name: 'Checkout' })).toBeInTheDocument();
   });
 
-  /* The order is the meaning, and an ordered list says how many there are and
-     which one this is for free. */
+  /* The order carries meaning, and an ordered list says how many steps there
+     are and which one this is. */
   it('is an ordered list', () => {
     const { container } = renderWithCrystal(<CheckoutSteps steps={steps} />);
     expect(container.querySelector('ol')).not.toBeNull();

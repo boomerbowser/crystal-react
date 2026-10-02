@@ -4,7 +4,7 @@
  * mark on the smallest step of the point scale is six pixels across. The two
  * numbers are unrelated on purpose: the drawn size says how much the datum is,
  * and the target says how hard it is to press. Deriving the target from the
- * drawn size — the obvious thing, and what this did first — makes the smallest
+ * drawn size (the obvious thing, and what this did first) makes the smallest
  * data points the hardest to reach, which is backwards.
  */
 import { crystalTokens } from '../theme/tokens.generated.js';

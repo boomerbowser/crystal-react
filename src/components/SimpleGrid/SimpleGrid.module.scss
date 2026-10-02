@@ -1,11 +1,13 @@
 @use '../../styles/tokens' as *;
 
-/* SimpleGrid — equal cells that reflow on their own.
+/* SimpleGrid.
  *
- * `auto-fit` with a minimum cell width means the column count follows the space
- * available rather than the breakpoints, which is what makes this the right
- * choice for a gallery or a card list: the same component works inside a narrow
- * sidebar and across a full page with no breakpoint props at all.
+ * Equal cells that reflow on their own.
+ *
+ * `auto-fit` with a minimum cell width makes the column count follow the space
+ * available instead of breakpoints. That suits a gallery or a card list: the same
+ * component works inside a narrow sidebar and across a full page with no
+ * breakpoint props.
  */
 
 .simpleGrid {

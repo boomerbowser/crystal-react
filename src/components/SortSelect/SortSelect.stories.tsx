@@ -8,16 +8,15 @@ const meta = {
     docs: {
       description: {
         component:
-          '"A select whose current ordering is **announced on change**." That sentence exists '
-          + 'because of what a sort control does to the page around it: it silently rewrites a '
-          + 'list the reader is not looking at. A sighted reader sees the list flip and knows '
-          + 'it worked; a reader using a screen reader hears the select close and then nothing, '
-          + 'and has to navigate back into the list to find out whether anything happened. The '
-          + 'select announces its own value, but a select\'s value and "the list beneath you '
-          + 'has been reordered" are not the same statement.\n\n'
-          + 'Everything else is `Select`, deliberately: the materials, the trigger geometry, '
-          + 'the listbox and the keyboard behaviour all exist, and a second select drawing its '
-          + 'own would be a second select to keep in step.',
+          '"A select whose current ordering is announced on change." A sort control '
+          + 'silently rewrites a list the reader is not looking at. A sighted reader sees the '
+          + 'list flip and knows it worked. A screen reader user hears the select close and then '
+          + 'nothing, and has to navigate back into the list to find out whether anything '
+          + 'happened. The select announces its own value, which does not tell the reader that '
+          + 'the list beneath them has been reordered.\n\n'
+          + 'Everything else is `Select`. The materials, the trigger geometry, the listbox and '
+          + 'the keyboard behaviour already exist there, and a second select drawing its own '
+          + 'would have to be kept in step.',
       },
     },
   },

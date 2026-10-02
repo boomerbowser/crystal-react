@@ -3,20 +3,19 @@
 /* Slider and RangeSlider.
  *
  * React Aria's Slider gives it `aria-valuenow`, `aria-valuemin`, `aria-valuemax`
- * and — the one that matters most — `aria-valuetext`, so a slider whose value is
- * a price or a duration announces "£24" rather than "24". A number without its
- * unit is the difference between a usable control and a guess.
+ * and `aria-valuetext`. The last matters most: a slider whose value is a price or
+ * a duration announces "£24" instead of "24", and a number without its unit
+ * leaves the reader guessing.
  *
- * A range slider is **two sliders with distinct names**, which the catalogue
- * states and which is not what most implementations do: one control with two
- * handles announces one value, and a reader moving the lower bound is told the
- * upper one. Each thumb announces its own bound here, because they are two
- * separate questions.
+ * A range slider is two sliders with distinct names, as the catalogue states.
+ * Most implementations differ: one control with two handles announces one value,
+ * and a reader moving the lower bound is told the upper one. Here each thumb
+ * announces its own bound.
  *
- * Right-to-left is handled in two halves and both are needed. The layout mirrors
- * because everything here is logical rather than physical; the *value mapping*
- * reverses because React Aria does it — dragging left must increase the value in
- * a right-to-left locale, and no amount of CSS can express that.
+ * Right-to-left needs two parts. The layout mirrors because everything here is
+ * logical, not physical. The value mapping reverses because React Aria reverses
+ * it: dragging left must increase the value in a right-to-left locale, and CSS
+ * cannot express that.
  */
 import { useEffect, useRef, type ReactNode } from 'react';
 import {
@@ -30,32 +29,29 @@ import styles from './Slider.module.scss';
 export interface SliderProps extends Omit<AriaSliderProps<number>, 'className' | 'style' | 'children'> {
   label: ReactNode;
   /**
-   * How the value reads — `{ style: 'currency', currency: 'GBP' }`,
-   * `{ style: 'unit', unit: 'hour' }`. `Intl.NumberFormat` options rather than a
-   * function, deliberately: React Aria derives `aria-valuetext` from these, so
-   * the figure on screen, the figure announced and the locale they are formatted
-   * in all agree by construction.
+   * How the value reads, as in `{ style: 'currency', currency: 'GBP' }` or
+   * `{ style: 'unit', unit: 'hour' }`. These are `Intl.NumberFormat` options, not
+   * a function, because React Aria derives `aria-valuetext` from them. The figure
+   * on screen, the figure announced and the locale they are formatted in then
+   * always agree.
    *
-   * A formatting function cannot do that. The first version took one, used it for
-   * the visible output only, and left the announcement as a bare number — a
-   * budget slider showed £2,400 and said "2,400", which is precisely the failure
-   * this component exists to prevent.
+   * A formatting function formats the visible output only and leaves the
+   * announcement as a bare number, so a budget slider shows £2,400 and says
+   * "2,400".
    */
   formatOptions?: Intl.NumberFormatOptions;
   /**
    * What the thumb announces, when `Intl.NumberFormat` cannot say it.
    *
-   * The narrow escape hatch from the rule above, and it is narrow on purpose:
-   * the only values that need it are the ones no number format expresses, and
-   * the case it was added for is a media time. `1:23` is right on the screen and
-   * wrong in an announcement — a screen reader reads it as "one colon
-   * twenty-three" — while `{ style: 'unit', unit: 'second' }` says "3,600
-   * seconds" for an hour-long film.
+   * A narrow exception to the rule above. Only values that no number format
+   * expresses need it, and the case it was added for is a media time. `1:23` is
+   * right on the screen and wrong in an announcement, where a screen reader reads
+   * it as "one colon twenty-three", while `{ style: 'unit', unit: 'second' }`
+   * says "3,600 seconds" for an hour-long film.
    *
-   * It sets `aria-valuetext` and nothing else, so the **visible** output is
-   * still the formatted number and the two still describe the same value in two
-   * notations rather than saying two different things. A caller reaching for
-   * this to relabel an ordinary number wants `formatOptions`.
+   * It sets `aria-valuetext` and nothing else, so the visible output is still the
+   * formatted number, and the two describe the same value in two notations. To
+   * relabel an ordinary number, use `formatOptions`.
    */
   valueText?: (value: number) => string;
   /** Labels beneath the track, evenly spaced. */
@@ -63,7 +59,7 @@ export interface SliderProps extends Omit<AriaSliderProps<number>, 'className' |
   /** Hide the numeric output. The value is still announced. */
   hideOutput?: boolean;
   /**
-   * Hide the label visually. It stays the slider's accessible name — for a
+   * Hide the label visually. It stays the slider's accessible name. Use it for a
    * slider whose purpose its surroundings already show, as a transport's
    * scrubber and volume do.
    */
@@ -72,12 +68,12 @@ export interface SliderProps extends Omit<AriaSliderProps<number>, 'className' |
 }
 
 /* `aria-valuetext` belongs on the `<input type="range">` React Aria renders
-   inside the thumb — that input is the element with the `slider` role, and an
+   inside the thumb. That input is the element with the `slider` role, and an
    attribute put on the thumb's own `<div>` lands on a wrapper nothing reads.
    React Aria owns the input's props and writes `aria-valuetext` from
-   `formatOptions`, so the override is applied to the node afterwards rather
-   than passed through: the value it is derived from is React's, and the write
-   is idempotent. */
+   `formatOptions`, so the override is applied to the node afterwards instead of
+   passed through. The value it is derived from is React's, and the write is
+   idempotent. */
 function ValueText({ input, text }: {
   input: React.RefObject<HTMLInputElement | null>;
   text: string;
@@ -98,7 +94,7 @@ export function Slider({
       {...(formatOptions ? { formatOptions } : {})}
       className={cx(styles['field'], className)}
     >
-      {/* Hidden rather than left out: the label is what names the slider. With
+      {/* Hidden, not left out, because the label names the slider. With
           nothing visible in it the header takes no room, so the track is the
           whole of the control's height. */}
       <div className={cx(styles['header'], hideLabel && hideOutput ? styles['hidden'] : undefined)}>
@@ -134,9 +130,9 @@ export function Slider({
 
 export interface RangeSliderProps extends Omit<AriaSliderProps<number[]>, 'className' | 'style' | 'children'> {
   label: ReactNode;
-  /** What the lower bound is, for its own name — "Minimum price". */
+  /** What the lower bound is, for its own name. For example, "Minimum price". */
   startLabel?: string;
-  /** What the upper bound is, for its own name — "Maximum price". */
+  /** What the upper bound is, for its own name. For example, "Maximum price". */
   endLabel?: string;
   /** As `Slider`: `Intl` options, so the output and the announcement agree. */
   formatOptions?: Intl.NumberFormatOptions;
@@ -168,8 +164,8 @@ export function RangeSlider({
                 '--cr-fill-size': `${(state.getThumbPercent(1) - state.getThumbPercent(0)) * 100}%`,
               } as React.CSSProperties}
             />
-            {/* Two names, because they are two questions: a reader moving the
-                lower bound must not be told the upper one. */}
+            {/* Two names, so a reader moving the lower bound is not told the
+                upper one. */}
             <SliderThumb index={0} aria-label={startLabel} className={cx(styles['thumb'])} />
             <SliderThumb index={1} aria-label={endLabel} className={cx(styles['thumb'])} />
           </>

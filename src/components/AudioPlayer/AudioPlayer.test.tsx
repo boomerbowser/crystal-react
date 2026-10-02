@@ -5,9 +5,8 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { AudioPlayer } from './AudioPlayer.js';
 
 describe('AudioPlayer', () => {
-  /* "A real audio element." Not a detail behind the component: it is what the
-     operating system's media keys reach and what a headset's pause button
-     pauses. */
+  /* "A real audio element." It is what the operating system's media keys reach
+     and what a headset's pause button pauses. */
   it('is a real audio element with the controls around it', () => {
     const { container } = renderWithCrystal(
       <AudioPlayer label="Episode 4">
@@ -20,7 +19,7 @@ describe('AudioPlayer', () => {
     expect(audio!.querySelector('source')).toHaveAttribute('src', '/episode-4.mp3');
   });
 
-  /* Two sets of controls for one element is two tab stops per action and two
+  /* Two sets of controls for one element means two tab stops per action and two
      places a state can be shown differently. */
   it('does not draw the browser\'s own controls beside its own', () => {
     const { container } = renderWithCrystal(<AudioPlayer label="Episode 4" />);
@@ -34,14 +33,12 @@ describe('AudioPlayer', () => {
     expect(screen.getByRole('button', { name: 'Mute Episode 4' })).toBeInTheDocument();
   });
 
-  /* The element is the product's half — sources, playlists, streaming are all
-     done on it — so it is handed over rather than hidden. */
+  /* Sources, playlists and streaming are the product's half and are all done on
+     the element, so it is handed to the caller. */
   it('hands the element to the caller', () => {
-    /* The first version of this test read `ref.current` during the render that
-       creates the ref and asserted it was null, which is true of any component
-       and of no component — it would have passed with `mediaRef` ignored
-       entirely. What the claim is about is what the caller holds *after* the
-       render. */
+    /* The assertion reads what the caller holds after the render. Reading
+       `ref.current` during the render that creates the ref would pass even with
+       `mediaRef` ignored. */
     const ref = createRef<HTMLAudioElement>();
     const { container } = renderWithCrystal(<AudioPlayer label="Episode 4" mediaRef={ref} />);
     expect(ref.current).not.toBeNull();

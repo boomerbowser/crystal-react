@@ -1,21 +1,21 @@
 'use client';
 
-/* Gauge — a single value against a range, drawn as an arc.
+/* Gauge shows a single value against a range, drawn as an arc.
  *
- * `role="meter"` with a text value, which is the catalogue's own requirement and
- * the reason this is not a progress bar bent into a circle. A meter is a
- * *measurement within a known range* — disk usage, a temperature, a score —
- * and it is not going anywhere; a progress bar is a task getting closer to
- * finishing. The two announce differently and they should.
+ * `role="meter"` with a text value, as the catalogue requires, so this is not a
+ * progress bar bent into a circle. A meter is a measurement within a known
+ * range, such as disk usage, a temperature or a score, and it is not heading
+ * towards an end. A progress bar is a task getting closer to finishing. The two
+ * announce differently.
  *
  * "Threshold colour from status tokens." A gauge may be told that its value is
  * in a band that means something, and then it takes the status colour for that
- * band — never a colour invented here, and never colour alone: the band's name
+ * band. It never invents a colour and never uses colour alone: the band's name
  * is in the value's accessible text and beside it on screen.
  *
- * The sweep and the stroke are both Crystal's. The arc matches the ring progress
- * stroke because the catalogue says it does, and `--cr-progress-ring-stroke` is
- * one value so a gauge and a ring progress cannot drift into two objects.
+ * The sweep and the stroke are both Crystal's. The arc matches the ring
+ * progress stroke, as the catalogue requires, and `--cr-progress-ring-stroke`
+ * is one value so a gauge and a ring progress cannot drift apart.
  */
 import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { arcPath } from '../../charts/Radial.js';

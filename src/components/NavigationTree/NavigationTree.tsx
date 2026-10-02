@@ -1,37 +1,34 @@
 'use client';
 
-/* NavigationTree — a tree whose items are destinations rather than data.
+/* NavigationTree: a tree whose items are destinations, not data.
  *
- * `TreeView` and this are the two halves M-3 separated. A `tree-view` row is
- * selectable; a navigation tree's rows are destinations, and "which one am I
- * on" is `aria-current` rather than selection. React Aria ships both and names
- * this one as the catalogue's parity target outright.
+ * `TreeView` and this are the two components M-3 separated. A `tree-view` row
+ * is selectable. A navigation tree's rows are destinations, and the current one
+ * is marked with `aria-current`, not selection. React Aria ships both and names
+ * this one as the catalogue's parity target.
  *
- * What it actually renders is worth stating, because the name suggests
- * otherwise: `NavigationTree` is a `treegrid` of pressable rows carrying
- * `data-href`, routed through `RouterProvider` — **not** a nested set of `a`
- * elements. Checked, not assumed.
+ * Despite the name, React Aria's `NavigationTree` renders a `treegrid` of
+ * pressable rows carrying `data-href`, routed through `RouterProvider`, not a
+ * nested set of `a` elements.
  *
- * And it does not set `aria-current`. It computes `data-current` and
- * `data-current-ancestor` for styling and stops there, so the catalogue's
- * "aria-current on the active destination" is this library's to supply.
+ * It does not set `aria-current`. It computes `data-current` and
+ * `data-current-ancestor` for styling only, so this library supplies the
+ * catalogue's "aria-current on the active destination".
  *
- * Supplying it takes one unusual line, and the two obvious routes were tried
- * first: passing `aria-current` to `NavigationTreeItem` typechecks and is then
- * filtered out of the DOM, and putting it on the row's content leaves it on a
- * descendant of the element a reader actually lands on — in a treegrid the row
- * is the focus stop. So the row element is given the attribute directly, from
- * React Aria's own `isCurrent`, which is the same value its `data-current`
- * comes from.
+ * Passing `aria-current` to `NavigationTreeItem` typechecks but is filtered out
+ * of the DOM. Putting it on the row's content leaves it on a descendant of the
+ * element a reader lands on, because in a treegrid the row is the focus stop.
+ * The row element is therefore given the attribute directly, from React Aria's
+ * own `isCurrent`, the same value its `data-current` comes from.
  *
- * Crystal owns three things here and each is one rule:
+ * Crystal owns three things here, each one rule:
  *
- *   - **The row material.** Haze rows, and a 44px row, which is the floor the
+ *   - The row material. Haze rows, and a 44px row, which is the floor the
  *     catalogue states for a destination.
- *   - **Current marking by label weight.** Not a badge, not a leading mark, not
- *     colour alone — the same rule selection follows everywhere in Crystal. The
- *     soft fill under the current row is the second signal.
- *   - **Expansion motion.** `accordion-in` on a row that arrives because
+ *   - Current marking by label weight. Not a badge, a leading mark or colour
+ *     alone: the same rule selection follows everywhere in Crystal. The soft
+ *     fill under the current row is the second signal.
+ *   - Expansion motion. `accordion-in` plays on a row that arrives because
  *     somebody expanded its parent, and never on the rows that were there when
  *     the page loaded.
  *
@@ -76,13 +73,13 @@ export interface NavigationTreeProps
 }
 
 /* False until somebody expands something. A row mounting while it is true
-   arrived *because* of that expansion; one that was there on the first render
-   was always there, and nothing moves at rest.
+   arrived because of that expansion. A row present on the first render does
+   not animate, because nothing moves at rest.
  *
- * Flipped on the expansion event rather than after the first commit, which is
- * what `TreeView` does and for a reason this component proved the hard way: a
- * collection renders its rows in a later pass, so their effects run *after* the
- * parent's mount effect and every row on the page played on load. */
+ * It flips on the expansion event, not after the first commit as in
+ * `TreeView`. A collection renders its rows in a later pass, so their effects
+ * run after the parent's mount effect, and flipping after the first commit
+ * would play every row on the page on load. */
 const Settled = createContext({ current: false });
 
 
@@ -105,7 +102,7 @@ export function NavigationTree(
   return (
     <Settled.Provider value={settled.current}>
       {/* A `nav`, because this is navigation. React Aria gives the tree its
-          roles; the landmark is what lets a reader skip the whole thing. */}
+          roles, and the landmark lets a reader skip the whole tree. */}
       <nav aria-label={label} className={cx(styles['nav'], className)}>
         <AriaNavigationTree
           {...props}
@@ -153,9 +150,9 @@ function RowContent(
     if (settled.current) void play('accordion-in');
   }, [settled, play]);
 
-  /* The row, not this element. `aria-current` belongs on the thing a reader
-     lands on, and in a treegrid that is the row — which React Aria owns and
-     will not take the attribute as a prop. */
+  /* The row, not this element. `aria-current` belongs on the element a reader
+     lands on, which in a treegrid is the row. React Aria owns the row and does
+     not accept the attribute as a prop. */
   useEffect(() => {
     const row = (scope.current as HTMLElement | null)?.closest('[role="row"]');
     if (!row) return;
@@ -174,9 +171,9 @@ function RowContent(
       {hasChildItems ? (
         <Button slot="chevron" className={cx(styles['chevron'], 'cr-bare')}>{ChevronIcon}</Button>
       ) : (
-        /* The chevron's room, held open on a leaf. Without it every leaf label
-           sits one chevron to the left of its siblings', and the depth — the one
-           thing the indentation shows — stops reading. */
+        /* The chevron's space, held open on a leaf. Without it every leaf label
+           sits one chevron to the left of its siblings', and the indentation no
+           longer shows the depth. */
         <span aria-hidden="true" className={cx(styles['chevron'], styles['chevronEmpty'])} />
       )}
       {node.icon ? <span aria-hidden="true" className={cx(styles['icon'])}>{node.icon}</span> : null}

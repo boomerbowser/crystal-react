@@ -5,7 +5,7 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { Alert } from './Alert.js';
 
 describe('Alert', () => {
-  /* The catalogue's sharpest sentence: role=alert *only* for genuinely urgent,
+  /* The catalogue's sharpest sentence: role=alert only for genuinely urgent,
      interrupting content. An assertive live region interrupts a screen reader
      mid-word, and a page rendering four of them on load has interrupted the
      reader four times about things already on the screen. */

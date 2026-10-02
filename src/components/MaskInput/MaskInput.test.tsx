@@ -11,9 +11,9 @@ describe('MaskInput', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The mask is a display of the value, not the value. A form that receives
-     "(555) 012-3456" where the API wants "5550123456" has pushed the formatting
-     problem to the server, and the server will disagree about it. */
+  /* The mask only displays the value. A form that receives "(555) 012-3456"
+     where the API wants "5550123456" leaves the formatting problem to the
+     server. */
   it('reports the raw value and shows the formatted one', async () => {
     const onChange = vi.fn();
     renderWithCrystal(
@@ -26,9 +26,9 @@ describe('MaskInput', () => {
     expect((field as HTMLInputElement).value).toBe('(555) 012-3456');
   });
 
-  /* Two identical fields on one form, neither given an id. The fallback used to
-     be derived from the mask, so both got the same one and the second label
-     pointed at the first input. */
+  /* Two identical fields on one form, neither given an id. A fallback derived
+     from the mask gives both the same id, and the second label then points at
+     the first input. */
   it('gives two identical unnamed fields distinct ids', () => {
     renderWithCrystal(
       <>

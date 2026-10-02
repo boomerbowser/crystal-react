@@ -4,19 +4,18 @@
  *
  * Clamps text to a line count and offers a real control to expand it.
  *
- * Two requirements from the catalogue, and the second is the one usually missed:
+ * Two requirements from the catalogue:
  *
- *   - **The full text remains available to assistive technology.** Line clamping
- *     hides text visually and leaves it in the DOM, so this is satisfied by the
- *     mechanism — which is exactly why clamping is used rather than cutting the
- *     string and appending an ellipsis. A cut string is gone for everyone.
- *   - **Expansion is a real control.** Not a click handler on the paragraph: a
- *     button, with `aria-expanded`, which is the difference between a feature a
- *     keyboard user can reach and one they cannot see exists.
+ *   - The full text remains available to assistive technology. Line clamping
+ *     hides text visually and leaves it in the DOM, which is why clamping is used
+ *     instead of cutting the string and appending an ellipsis. A cut string is
+ *     gone for everyone.
+ *   - Expansion is a real control: a button with `aria-expanded`, not a click
+ *     handler on the paragraph, so a keyboard user can reach it.
  *
- * The control is only rendered when the text actually overflows, because an
- * expand button on a two-line paragraph clamped at three is a control that does
- * nothing — and finding that out costs a keyboard user a tab stop.
+ * The control is rendered only when the text overflows. An expand button on a
+ * two-line paragraph clamped at three does nothing, and it still costs a keyboard
+ * user a tab stop.
  */
 import {
   forwardRef, useCallback, useEffect, useId, useRef, useState,
@@ -49,8 +48,8 @@ export const Truncate = forwardRef<HTMLDivElement, TruncateProps>(function Trunc
   const measure = useCallback(() => {
     const element = body.current;
     if (!element) return;
-    /* Measured while clamped, which is the only state where the comparison means
-       anything: expanded, scrollHeight and clientHeight agree by definition. */
+    /* Measured only while clamped. When expanded, scrollHeight and clientHeight
+       are equal, so the comparison says nothing. */
     if (expanded) return;
     setOverflows(element.scrollHeight > element.clientHeight + 1);
   }, [expanded]);
@@ -74,8 +73,8 @@ export const Truncate = forwardRef<HTMLDivElement, TruncateProps>(function Trunc
       >
         {children}
       </div>
-      {/* Only when there is something to reveal: a control that does nothing
-          still costs a keyboard user a tab stop to find that out. */}
+      {/* Only when there is something to reveal. A control that does nothing
+          still costs a keyboard user a tab stop. */}
       {overflows && (!expanded || collapseLabel) ? (
         <Button
           variant="quiet"

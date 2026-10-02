@@ -6,14 +6,13 @@ import { Button } from '../../components/Button/Button.js';
  *
  * One bare element per Crystal material, carrying nothing but the material, so
  * `scripts/verify-materials.mjs` can put it beside the same primitive in
- * Crystal's own preview and compare the computed style. A component would bring
- * its own decisions — a button's radius, a card's padding — and the comparison
- * would be about those instead.
+ * Crystal's own preview and compare the computed style. A component would add
+ * its own decisions (a button's radius, a card's padding), and the comparison
+ * would measure those instead.
  *
- * The environment is pinned rather than left to the toolbar: a measurement is
- * worth nothing if a reviewer who left the palette in Ion turns it into a
- * failure. Crystal's own defaults, which is what the approved baseline was
- * captured at.
+ * The environment is pinned instead of left to the toolbar, so a reviewer who
+ * left the palette in Ion cannot turn a measurement into a failure. It uses
+ * Crystal's own defaults, at which the approved baseline was captured.
  */
 const meta = {
   title: 'Materials/Parity',
@@ -44,11 +43,11 @@ export const EveryMaterial: Story = {
       <div className={styles.frost} data-material="frost">Frost</div>
       <div className={styles.resin} data-material="resin">Resin</div>
       <div className={styles.haze} data-material="haze">Haze</div>
-      {/* A real control rather than a bare div, because the Haze content fill is
-          part of the *control* recipe and not of the Resin primitive. Crystal
+      {/* A real control instead of a bare div, because the Haze content fill is
+          part of the control recipe and not of the Resin primitive. Crystal
           puts an 80% reading fill on an isolated `::before` behind every Resin
-          control's label; the bare `.cr-resin` specimen above has none, so it
-          could never have caught its absence here. */}
+          control's label. The bare `.cr-resin` specimen above has none, so it
+          cannot detect a missing fill. */}
       <span data-material="resin-control"><Button>Resin control</Button></span>
     </div>
   ),

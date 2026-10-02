@@ -3,11 +3,11 @@
 /* Wedges: what a pie, a donut and a gauge all draw.
  *
  * "Segments separated by a hairline in the surface colour." A hairline in the
- * *surface* colour rather than in ink is the detail that matters: it is a gap
+ * surface colour rather than in ink is the detail that matters. It is a gap
  * showing the ground through, not a border round each wedge, so two adjacent
  * segments read as two pieces of one circle rather than as two objects. Under
- * forced colours there is no surface colour to show, so the separation becomes a
- * real stroke — that is the one place the two are not the same thing.
+ * forced colours there is no surface colour to show, so the separation becomes
+ * a real stroke, the one case where the two are not the same thing.
  */
 import { arc as d3arc, pie as d3pie } from 'd3-shape';
 import { chartGeometry } from '../theme/chartGeometry.js';
@@ -37,7 +37,7 @@ export interface WedgeOptions {
  * Wedges for a set of values, in the order given.
  *
  * The order is the caller's and is never sorted here. A pie sorted by size is a
- * different chart from a pie in the caller's order — months are months — and a
+ * different chart from a pie in the caller's order (months are months), and a
  * component that silently re-ordered would make "the third segment" mean two
  * different things in the picture and in the table beside it.
  */
@@ -52,8 +52,8 @@ export function wedges(
     .startAngle(from)
     .endAngle(from + sweep);
   const inner = radius * hole;
-  /* The gap is an angle, not a length, so it is the same width at every radius —
-     which is what makes it read as a gap in one surface rather than as a wedge
+  /* The gap is an angle, not a length, so it is the same width at every radius.
+     That is what makes it read as a gap in one surface rather than as a wedge
      that tapers. */
   const generator = d3arc<{ startAngle: number; endAngle: number }>()
     .innerRadius(inner)

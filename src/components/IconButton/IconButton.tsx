@@ -2,22 +2,21 @@
 
 /* IconButton and CloseButton.
  *
- * An icon has no text, so the accessible name is not optional — it is the only
- * name the control has. `label` is required rather than optional-with-a-warning,
- * which makes an unnamed icon button a compile error instead of an audit finding.
+ * An icon has no text, so the accessible name is the only name the control has.
+ * `label` is required, which makes an unnamed icon button a compile error
+ * instead of an audit finding.
  *
  * The icon itself is `aria-hidden`. A screen reader reading both the icon's own
  * title and the button's label says the thing twice.
  *
- * `CloseButton` is an IconButton with one extra requirement from the catalogue,
- * and it is the interesting one: **the name says what closes, not just "Close"**.
- * A page with three dismissible things has three buttons called "Close", and a
- * screen reader user listing the controls learns nothing. So `closes` is required
- * and the name is built from it.
+ * `CloseButton` is an IconButton with one extra requirement from the catalogue:
+ * the name says what closes. A page with three dismissible things has three
+ * buttons called "Close", and a screen reader user listing the controls learns
+ * nothing. So `closes` is required and the name is built from it.
  *
- * Escape must do the same thing. That belongs to whatever owns the container —
- * `Dialog` gets it from React Aria — and is stated here because a close button
- * added to something that does not handle Escape is half a dismissal.
+ * Escape must do the same thing. That belongs to whatever owns the container
+ * (`Dialog` gets it from React Aria). It is stated here because a close button
+ * added to something that does not handle Escape only half dismisses it.
  */
 import { forwardRef, useEffect, type ReactNode } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
@@ -29,7 +28,7 @@ import styles from './IconButton.module.scss';
 export interface IconButtonProps extends Omit<AriaButtonProps, 'className' | 'children' | 'style'> {
   /** What the control does. Required: an icon has no other name. */
   label: string;
-  /** The icon. Hidden from assistive technology — the label is the name. */
+  /** The icon. Hidden from assistive technology. The label is the name. */
   icon: ReactNode;
   /** `resin` floats it as a control plane; `quiet` sits on the surface it is on. */
   variant?: 'quiet' | 'resin';
@@ -45,12 +44,13 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
   ref,
 ) {
   const [scope, play] = useMotion();
-  /* A disclosure's icon: `icon-turn` when what it discloses opens or closes —
-     the expanded state, which is authoritative — and never on the render that
-     first shows it. Read from the rendered `aria-expanded` rather than a prop,
-     because a menu or a disclosure hands that to its trigger through React Aria's
-     context, which this component never sees as a prop. An icon button that
-     discloses nothing has no `aria-expanded`, and its icon never turns. */
+  /* A disclosure's icon plays `icon-turn` when what it discloses opens or
+     closes. It follows the expanded state, which is authoritative, and never
+     plays on the render that first shows it. The state is read from the
+     rendered `aria-expanded`, because a menu or a disclosure hands it to its
+     trigger through React Aria's context, which this component never sees as a
+     prop. An icon button that discloses nothing has no `aria-expanded`, and its
+     icon never turns. */
   const [turn, playTurn] = useMotion();
   useEffect(() => {
     const button = scope.current as HTMLElement | null;
@@ -76,7 +76,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
         styles['iconButton'],
         /* Nothing for `resin`: Crystal paints every `<button>` as a Resin
            control already, so the variant is the absence of a class. `quiet`
-           is the one that has work to do — it takes that coat off. */
+           takes that coat off. */
         variant === 'resin' ? undefined : styles['quiet'],
         circle ? styles['circle'] : undefined,
         className,
@@ -89,7 +89,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
 
 export interface CloseButtonProps extends Omit<IconButtonProps, 'label' | 'icon'> {
   /**
-   * What this dismisses — "the filters panel", "this notification". The name
+   * What this dismisses, such as "the filters panel" or "this notification".
+   * The name
    * becomes "Close <closes>", because a page with three things called "Close"
    * tells a screen reader user nothing about any of them.
    */

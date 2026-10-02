@@ -20,9 +20,8 @@ function facets() {
 }
 
 describe('FilterPanel', () => {
-  /* "Applied filters are announced." Filtering is the one interaction where the
-     reader's action happens here and its whole effect happens somewhere else —
-     a checkbox going on says "checked" and nothing about the four hundred
+  /* "Applied filters are announced." The effect of a filter happens elsewhere
+     on the page. A checkbox says "checked" and nothing about the four hundred
      products that just became eleven. */
   it('announces what is applied, with how many results it leaves', () => {
     renderWithCrystal(
@@ -36,9 +35,9 @@ describe('FilterPanel', () => {
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
-  /* "Individually removable" — a control per filter, not just Clear all. A
-     reader who has applied six filters and wants five of them is otherwise made
-     to start again. */
+  /* "Individually removable" means a control per filter as well as Clear all,
+     so a reader who has applied six filters and wants to keep five does not
+     have to start again. */
   it('offers a named control for each applied filter', async () => {
     const user = userEvent.setup();
     const onRemove = vi.fn();
@@ -50,8 +49,8 @@ describe('FilterPanel', () => {
     expect(screen.getByRole('button', { name: 'Remove Large' })).toBeInTheDocument();
   });
 
-  /* A disabled Clear all on a panel with nothing applied is a control that
-     exists to be greyed out. */
+  /* With nothing applied, Clear all is absent. A disabled Clear all would be a
+     control with nothing to do. */
   it('offers Clear all only when there is something to clear', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <FilterPanel onClearAll={() => {}}>{facets()}</FilterPanel>,

@@ -80,8 +80,8 @@ describe('TableOfContents', () => {
   it('follows the fragment itself when no handler is given', () => {
     renderWithCrystal(<TableOfContents entries={entries} />);
     const link = screen.getByRole('link', { name: 'Resin' });
-    /* No click handler at all, rather than one that calls preventDefault and
-       then does nothing — which is how a link silently stops working. */
+    /* No click handler at all. A handler that calls preventDefault and then
+       does nothing stops the link working without any error. */
     expect(link).toHaveAttribute('href', '#resin');
   });
 
@@ -94,17 +94,16 @@ describe('TableOfContents', () => {
 });
 
 describe('useHeadingInView', () => {
-  /* What is checked here is the guard, and nothing more. The hook is geometry:
-     it reads every heading's position against a line a fifth of the way down the
-     scrolling box. jsdom reports every rect as zero, so there is no geometry to
-     read and an assertion about which heading wins would be an assertion about
-     jsdom. The behaviour is verified in a real browser by
+  /* Only the guard is checked here. The hook reads every heading's position
+     against a line a fifth of the way down the scrolling box. jsdom reports
+     every rect as zero, so an assertion about which heading wins would be an
+     assertion about jsdom. The behaviour is verified in a real browser by
      `scripts/verify-behaviour.mjs`, which walks the scroll and records what the
-     marking does — and which found three separate defects the first time it ran.
+     marking does.
 
-     It earns its place because "the page this annotates must not crash" is a
-     real requirement and a cheap one to break: ids that match nothing is the
-     normal state of a document that has not rendered its headings yet. */
+     The guard matters because "the page this annotates must not crash" is a
+     real requirement and easy to break: ids that match nothing is the normal
+     state of a document that has not rendered its headings yet. */
   it('marks nothing, and does not throw, when no heading matches', () => {
     let seen: string | undefined = 'unset';
     function Probe(): null {

@@ -4,10 +4,8 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import { AngleSlider, Knob } from './AngleSlider.js';
 
 describe('AngleSlider and Knob', () => {
-  /* The defect this replaced: the name was written only when `label` was a
-     string, so a label carrying an icon or a fragment produced a slider with no
-     accessible name at all. It now points at the visible label, whatever that
-     label is made of. */
+  /* The slider points at the visible label, so a label carrying an icon or a
+     fragment still gives it an accessible name. */
   it('is named by its visible label even when the label is not a string', () => {
     renderWithCrystal(<Knob label={<>Gain</>} defaultValue={40} maxValue={100} />);
     expect(screen.getByRole('slider', { name: 'Gain' })).toBeInTheDocument();
@@ -35,9 +33,8 @@ describe('AngleSlider and Knob', () => {
     expect(dial.getAttribute('aria-valuenow')).toBe('45');
   });
 
-  /* Both halves of the key handling have to survive: `useMove` supplies the
-     arrows, this component supplies Home and End, and merging is what keeps
-     them from replacing one another. */
+  /* `useMove` supplies the arrows and this component supplies Home and End.
+     Merging the two handlers keeps one from replacing the other. */
   it('jumps to each end with Home and End', async () => {
     renderWithCrystal(<Knob label="Gain" defaultValue={40} maxValue={100} step={5} />);
     const dial = screen.getByRole('slider', { name: 'Gain' });

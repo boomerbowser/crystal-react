@@ -1,21 +1,20 @@
-/* StockIndicator — availability, in words.
+/* StockIndicator. Availability, in words.
  *
- * "**Words carry the state**; status colour reinforces it." Which is
- * `StatusBadge`'s contract exactly, so this is a `StatusBadge` with the
- * availability vocabulary in front of it rather than a second badge that draws
- * the same well slightly differently.
+ * "Words carry the state; status colour reinforces it." That is
+ * `StatusBadge`'s contract, so this is a `StatusBadge` with the availability
+ * vocabulary in front of it rather than a second badge that draws the same well
+ * slightly differently.
  *
  * The mapping from availability to status is in `commerce/availability.ts`,
  * shared with the variant selector's unavailable options. Backorder is `info`
- * rather than `attention`: the item can be bought, it simply arrives later, and
- * the attention colour would report a problem where there is an ordinary
+ * rather than `attention`, because the item can be bought and arrives later.
+ * The attention colour would report a problem where there is an ordinary
  * outcome.
  *
- * **The wording is overridable and the default is a fallback.** The catalogue
- * puts "thresholds and wording" on the product, which is right — "Only 2 left"
- * is a merchandising decision. What the library owns is that whatever words
- * arrive are the thing a reader is told, rather than a colour they have to
- * interpret.
+ * The wording is overridable and the default is a fallback. The catalogue puts
+ * "thresholds and wording" on the product, because "Only 2 left" is a
+ * merchandising decision. The library ensures that whatever words arrive are
+ * what a reader is told, rather than a colour they have to interpret.
  */
 import { forwardRef, type ReactNode } from 'react';
 import { StatusBadge, type StatusBadgeProps } from '../StatusBadge/StatusBadge.js';

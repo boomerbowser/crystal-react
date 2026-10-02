@@ -8,18 +8,16 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Intensity is paired with a value; colour alone never carries meaning." Both clauses, '
-          + "and they are one requirement stated twice: every cell is labelled with its number, "
-          + "and every cell's label reads on its own paint, because Crystal's intensity ramp "
-          + 'ships the ink for each step. A single ink across a five-step ramp is unreadable at '
-          + 'one end of it.\n\n'
+          '"Intensity is paired with a value; colour alone never carries meaning." Every cell is '
+          + "labelled with its number, and every cell's label reads on its own paint, because "
+          + "Crystal's intensity ramp ships the ink for each step. A single ink across a "
+          + 'five-step ramp is unreadable at one end of it.\n\n'
           + 'The buckets are equal-width, never quantiles. Quantiles put the same number of '
-          + 'cells in each bucket, which makes a pretty picture of any data at all — a week '
-          + 'where one day had four times the traffic looks exactly like a week where every day '
-          + 'was the same.\n\n'
+          + 'cells in each bucket, so any data looks evenly spread. A week where one day had four '
+          + 'times the traffic would look exactly like a week where every day was the same.\n\n'
           + 'Under forced colours the ramp becomes one colour, so the intensity becomes the '
-          + '*size* of the mark instead: a strong cell fills its square, a weak one is a small '
-          + 'one inside it.',
+          + '*size* of the mark instead. A strong cell fills its square and a weak one is a small '
+          + 'square inside it.',
       },
     },
   },

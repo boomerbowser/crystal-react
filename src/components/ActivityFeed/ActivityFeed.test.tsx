@@ -16,7 +16,7 @@ describe('ActivityFeed', () => {
     expect(within(region).getAllByRole('listitem')[0]).toHaveTextContent('Ada commented on Quarterly figures');
   });
 
-  /* The opinion: arrivals are said, politely, counted by new ids — and nothing is focused. */
+  /* The opinion: arrivals are said, politely, counted by new ids, and nothing is focused. */
   it('says how many events arrived, not on load, and moves no focus', async () => {
     const { rerenderWithCrystal } = renderWithCrystal(<ActivityFeed title="Activity" events={events} isLive />);
     expect(screen.getByRole('status')).toHaveTextContent('');

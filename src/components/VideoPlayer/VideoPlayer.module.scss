@@ -13,13 +13,12 @@
 .video { inline-size: 100%; block-size: auto; display: block; }
 
 /* "The motion of showing and hiding controls" is Crystal's, and Crystal's rule
-   is that nothing moves at rest — so the bar is not on a timer that fades it
-   away while nobody is doing anything. It is there whenever a pointer is over
-   the video or focus is inside the player, which is a person every time.
+   is that nothing moves at rest. The bar has no timer that fades it away while
+   nobody is doing anything. It shows whenever a pointer is over the video or
+   focus is inside the player, so a person always started the change.
 
-   It never disappears from the *keyboard*: `focus-within` keeps it while any
-   control in it has focus, so tabbing along the bar cannot make the bar vanish
-   under the reader's own focus. */
+   It never disappears from the keyboard. `focus-within` keeps it while any
+   control in it has focus, so tabbing along the bar cannot make it vanish. */
 .bar {
   position: absolute;
   inset-inline: $cr-spacing-sm;
@@ -32,8 +31,8 @@
 .player:hover .bar,
 .player:focus-within .bar { opacity: 1; }
 
-/* A pointer that cannot hover — a touch screen — never triggers the first rule,
-   so the bar is simply always there. */
+/* A pointer that cannot hover, such as a touch screen, never triggers the first
+   rule, so the bar is always shown. */
 @media (hover: none) {
   .bar { opacity: 1; }
 }

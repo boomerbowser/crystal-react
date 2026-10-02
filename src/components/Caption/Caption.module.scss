@@ -1,16 +1,14 @@
 @use '../../styles/tokens' as *;
 
-/* Caption — Stone backing when overlaid.
+/* Caption: Stone backing when overlaid.
  *
- * Stone exists for exactly this: a label over artwork, where contrast cannot be
- * argued from the palette because the palette is whatever the photograph happens
- * to be. It is a 55% fill in light and 60% in dark with the same 1.95px feather
- * Haze uses, and it is the reason an overlaid caption is legible over a white sky
- * and over a black one.
+ * Stone is for a label over artwork, where contrast cannot be argued from the
+ * palette because the palette is whatever the photograph happens to be. It is a
+ * 55% fill in light and 60% in dark with the same 1.95px feather Haze uses, and
+ * it keeps an overlaid caption legible over a white sky and over a black one.
  *
  * Below the media there is no backing at all. The caption is then on the page's
- * own surface, whose contrast is already known, and painting Stone there would be
- * a scrim over nothing.
+ * own surface, whose contrast is already known, so Stone is not needed there.
  */
 
 $caption-inset: 12px; /* crystal-allow-literal: the catalogue's stated inset from the media edge */
@@ -20,7 +18,7 @@ $caption-inset: 12px; /* crystal-allow-literal: the catalogue's stated inset fro
   display: block;
   margin: 0;
   /* The figure is the media's own box, so a rounded image and an overlaid caption
-     share one perimeter rather than the caption overhanging a corner. */
+     share one perimeter and the caption does not overhang a corner. */
   border-radius: var(--cr-radius);
   overflow: hidden;
   isolation: isolate;
@@ -42,9 +40,9 @@ $caption-inset: 12px; /* crystal-allow-literal: the catalogue's stated inset fro
   padding: $cr-spacing-xs;
   border-radius: var(--cr-radius);
   /* The backing is Crystal's Stone, `.cr-stone` (2.2.0), which an overlaid caption
-     wears: the fill on an isolated, feathered layer beneath crisp words, and both
-     fallbacks, which keep the protection as the surface colour rather than drop
-     it — what Stone guards is contrast. This wrote all of that out by hand. */
+     wears. It supplies the fill on an isolated, feathered layer beneath crisp
+     words, and both fallbacks, which keep the protection as the surface colour
+     instead of dropping it, because Stone guards contrast. */
   color: var(--cr-text);
 }
 

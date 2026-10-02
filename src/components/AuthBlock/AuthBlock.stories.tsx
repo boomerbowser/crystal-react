@@ -11,11 +11,11 @@ const meta = {
       description: {
         component:
           '"Real form semantics with autocomplete tokens; failures never reveal which factor was wrong."\n\n'
-          + 'One real form per mode with the token each field is — `username`, `current-password`, '
-          + '`new-password`, `one-time-code` — so password managers fill and save. Signing in takes one '
-          + 'failure message and has no way to attach it to a field; a reset answers the same whether or '
-          + 'not the address has an account. Locked holds the form and says when to try again. A Haze '
-          + 'card on the Plastic ground.',
+          + 'One real form per mode, with the autocomplete token each field is (`username`, '
+          + '`current-password`, `new-password`, `one-time-code`), so password managers fill and save. '
+          + 'Signing in takes one failure message and has no way to attach it to a field. A reset '
+          + 'answers the same whether or not the address has an account. Locked holds the form and says '
+          + 'when to try again. A Haze card on the Plastic ground.',
       },
     },
   },
@@ -34,7 +34,7 @@ export const Register: Story = { args: { mode: 'register', errors: { password: '
 export const Reset: Story = { args: { mode: 'reset', notice: 'If an account uses that address, a reset link is on its way.' } };
 export const Verify: Story = { args: { mode: 'verify' } };
 
-/** Every mode, reachable from the links; any sign-in fails the same way. */
+/** Every mode, reachable from the links. Any sign-in fails the same way. */
 export const AWorkingFlow: Story = {
   render: function Flow(args) {
     const [mode, setMode] = useState<AuthMode>('sign-in');

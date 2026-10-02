@@ -10,10 +10,10 @@ const Italic = (
   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M14 5h-4M14 19h-4M13 5l-2 14" /></svg>
 );
 
-/* The engine is the product's, so the story stands one in: an editable region
-   with the name and role a real editor carries, whose Ctrl+B / Cmd+B toggles
-   bold without the toolbar — the case the block's announcement is for — and
-   whose typing makes the document dirty. */
+/* The engine belongs to the product, so the story stands one in: an editable
+   region with the name and role a real editor carries. Its Ctrl+B or Cmd+B
+   toggles bold without the toolbar, which is the case the block's announcement
+   is for, and typing in it makes the document dirty. */
 function Working({ initial = 'at-rest' as EditorState }) {
   const [bold, setBold] = useState(false);
   const [italic, setItalic] = useState(false);
@@ -56,10 +56,11 @@ const meta = {
       description: {
         component:
           '"The toolbar is a real toolbar with one tab stop; formatting state is announced."\n\n'
-          + 'React Aria\'s toolbar is one tab stop with the arrow keys along it; its controls are '
-          + '`aria-pressed`. A format changed from the text — Ctrl+B — is said politely, since the '
-          + 'toolbar is out of reach there. Save state is words beside Save, said as it changes; the '
-          + 'shortcut is printed and describes the button. A Haze surface in a Frost frame.',
+          + 'React Aria\'s toolbar is one tab stop with the arrow keys along it, and its controls are '
+          + '`aria-pressed`. A format changed from the text with a shortcut such as Ctrl+B is '
+          + 'announced politely, since the toolbar is out of reach there. Save state is in words '
+          + 'beside Save, announced as it changes. The shortcut is printed and describes the button. '
+          + 'A Haze surface in a Frost frame.',
       },
     },
   },

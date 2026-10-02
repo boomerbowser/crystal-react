@@ -5,11 +5,11 @@ import { AddressForm } from './AddressForm.js';
 import { Button } from '../Button/Button.js';
 import type { AddressDescriptor, AddressValue } from '../../commerce/address.js';
 
-/* Three countries that genuinely disagree, which is the point. They live here
- * rather than in the library: the catalogue puts "countries supported and their
- * field rules" on the product, and a design system that ships a table of
- * countries has taken on a data set that is wrong the week it is written. These
- * are examples, and they are deliberately not exported. */
+/* Three countries that genuinely disagree. They live here rather than in the
+ * library. The catalogue puts "countries supported and their field rules" on
+ * the product, and a design system that ships a table of countries has taken on
+ * a data set that is wrong the week it is written. These are examples, and they
+ * are deliberately not exported. */
 const countries: AddressDescriptor[] = [
   {
     country: 'GB',
@@ -90,12 +90,12 @@ const meta = {
           + 'United Kingdom writes neither, and Japan writes its addresses largest-first with '
           + 'the postcode leading. A single hard-coded form has that last one backwards for '
           + 'every reader in the country.\n\n'
-          + 'The **descriptors are the product\'s**, and the ones in these stories are examples '
+          + 'The descriptors are the product\'s, and the ones in these stories are examples '
           + 'that are deliberately not exported. The catalogue puts "countries supported and '
           + 'their field rules" on the product, and rightly: a design system that ships a table '
           + 'of countries has taken on a data set that is wrong the week it is written and '
-          + 'wrong differently every year after — and a wrong table is invisible, because the '
-          + 'form renders and one country\'s addresses are quietly unusable.\n\n'
+          + 'wrong differently every year after. A wrong table is invisible. The '
+          + 'form renders and one country\'s addresses stop working without any error.\n\n'
           + 'Every field carries an autofill token, selects included. Autofill that completes '
           + 'three of four fields and stops is worse than none, because the reader has to find '
           + 'the one it missed.',
@@ -131,7 +131,7 @@ export const Default: Story = {
   },
 };
 
-/** An error the product supplies — a server saying it does not deliver there,
+/** An error the product supplies: a server saying it does not deliver there,
  *  which the form could not have known. It goes on the field it is about: "there
  *  are errors" is a message about the form, and the reader needs to know which
  *  box. */

@@ -1,17 +1,17 @@
 'use client';
 
-/* StatCard — a figure with its label, trend and period.
+/* StatCard. A figure with its label, trend and period.
  *
  * "The figure and its trend are one readable sentence, not a number beside an
- * arrow." That is a rule about *order*, and order is the one thing a card can
- * actually enforce: label, then figure, then the period it covers, then what it
- * did. Read straight down — "Revenue, £48,210, this month, 4.2% up on last
- * month" — that is a sentence. Any other arrangement is a number with decoration
- * around it, and a reader moving linearly gets the decoration first.
+ * arrow." That is a rule about order, which a card can enforce: label, then
+ * figure, then the period it covers, then what it did. Read straight down, as
+ * "Revenue, £48,210, this month, 4.2% up on last month", that is a sentence. Any
+ * other arrangement is a number with decoration around it, and a reader moving
+ * linearly gets the decoration first.
  *
  * It is `Card` and `Statistic` rather than a third implementation of either. The
  * Haze fill, the recession inside a Resin frame, the region semantics and the
- * trend's word-and-symbol rule are all already somebody's job here.
+ * trend's word-and-symbol rule already belong to those components.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { Card } from '../Card/Card.js';
@@ -26,7 +26,7 @@ export interface StatCardProps extends Omit<HTMLAttributes<HTMLElement>, 'childr
   value: ReactNode;
   /** A unit, shown quietly beside the figure. */
   unit?: ReactNode;
-  /** What span it covers — "this month", "last 7 days". */
+  /** What span it covers, such as "this month" or "last 7 days". */
   period?: ReactNode;
   trend?: StatisticTrend;
   /** No figure yet. The card keeps its size so a row of them does not reflow. */

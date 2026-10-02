@@ -1,24 +1,22 @@
 'use client';
 
-/* ErrorScreen — a view that failed, with a way forward.
+/* ErrorScreen: a view that failed, with a way forward.
  *
- * "role=\"alert\"; states what failed and what to try, **never only a code**."
+ * "role=\"alert\"; states what failed and what to try, never only a code."
  *
- * That last clause is the whole component, and it is enforced rather than
- * described: `title` is required and `code` is an extra. There is no way to
- * construct this screen showing `0x80070005` and nothing else, because the
- * arrangement that produces it does not typecheck. A code is for the person the
- * reader forwards it to; it is never the sentence they were owed.
+ * The types enforce the last clause: `title` is required and `code` is an extra.
+ * A screen showing `0x80070005` and nothing else does not typecheck. A code is
+ * for the person the reader forwards it to, and it never replaces the sentence
+ * that explains the failure.
  *
- * **The alert is on the screen, not on the card.** `Result` sets no role — it is
- * used for successes and confirmations too, and a success announced as an alert
- * is a component shouting about good news. A view that has replaced the thing
- * the reader asked for is the case that earns it, so the role is added here,
- * where the failure actually is.
+ * The alert role is on the screen, not on the card. `Result` sets no role,
+ * because it is used for successes and confirmations too, and a success should
+ * not be announced as an alert. A view that has replaced what the reader asked
+ * for does warrant an alert, so the role is added here, where the failure is.
  *
- * **Level 1 by default.** This screen has replaced the view, so there is no page
- * header left to hold the heading. A product rendering it into a region that
- * still has one passes `headingLevel={2}` and keeps its document outline.
+ * The heading is level 1 by default. This screen has replaced the view, so no
+ * page header is left to hold the heading. A product rendering it into a region
+ * that still has one passes `headingLevel={2}` and keeps its document outline.
  */
 import { type HTMLAttributes, type ReactNode } from 'react';
 import { Result } from '../Result/Result.js';
@@ -44,9 +42,9 @@ export interface ErrorScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, '
 export function ErrorScreen({
   title, children, actions, code, headingLevel = 1, className, ...props
 }: ErrorScreenProps): React.JSX.Element {
-  /* A screen is a view: inside a router's `AnimatePresence` it arrives with
-     `page-in` and leaves with `page-out`; rendered plainly — and on the page
-     load that first shows it — nothing. */
+  /* A screen is a view. Inside a router's `AnimatePresence` it arrives with
+     `page-in` and leaves with `page-out`. Rendered plainly, and on the page load
+     that first shows it, it does not move. */
   const presence = usePresenceMotion('page-in', 'page-out');
   return (
     <div ref={presence as never} {...props} role="alert" className={cx(styles['screen'], className)}>

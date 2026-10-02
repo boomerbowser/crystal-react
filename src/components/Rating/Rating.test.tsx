@@ -9,16 +9,15 @@ describe('Rating', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* "Never symbol-only" — four filled stars is a picture of a number, and a
-     picture of a number is not a number to anybody who cannot see it. */
+  /* "Never symbol-only". Four filled stars is a picture of a number, which a
+     reader who cannot see it does not get. */
   it('always shows the value as text', () => {
     renderWithCrystal(<Rating label="Rate this" value={4} isReadOnly />);
     expect(screen.getByText('4 out of 5')).toBeInTheDocument();
   });
 
-  /* Read-only is text with a picture, not a disabled radio group: a disabled
-     control announces "you may not change this", which is not what a published
-     score means. */
+  /* Read-only is text with a picture. A disabled radio group would announce
+     "you may not change this", which is not what a published score means. */
   it('is not a control when it is read-only', () => {
     renderWithCrystal(<Rating label="Average" value={4.2} isReadOnly />);
     expect(screen.queryByRole('radiogroup')).toBeNull();

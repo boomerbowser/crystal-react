@@ -10,13 +10,13 @@ const meta = {
     docs: {
       description: {
         component:
-          '"An **absolute date**, not only a relative phrase." "Arrives in 3 days" stops being '
-          + 'true the moment it is cached, screenshotted, emailed, or read the next morning — '
-          + 'and it is unanswerable: a reader deciding whether the parcel beats a Friday has to '
-          + 'do arithmetic with a date they were not given. So the date is always there and the '
-          + 'relative phrase is additional. The `datetime` attribute is built from the local '
-          + 'calendar fields rather than from `toISOString`, which returns the UTC day — the '
-          + 'previous one for anybody east of Greenwich in the evening.',
+          '"An absolute date, not only a relative phrase." "Arrives in 3 days" stops being '
+          + 'true once it is cached, screenshotted, emailed, or read the next morning. A reader '
+          + 'deciding whether the parcel arrives before Friday would also have to work it out '
+          + 'from a date they were not given. So the date is always shown and the relative '
+          + 'phrase is an addition. The `datetime` attribute is built from the local calendar '
+          + 'fields, because `toISOString` returns the UTC day, which is the previous day for '
+          + 'anybody east of Greenwich in the evening.',
       },
     },
   },
@@ -33,8 +33,8 @@ export const WithARelativePhrase: Story = {
   args: { on: inThreeDays, relative: 'in 3 days' },
 };
 
-/** The two states that are not a date. A blank space where a delivery date goes
- *  is indistinguishable from a delivery date of never, so both say so. */
+/** The two states that are not a date. An empty space where a delivery date
+ *  goes cannot be told apart from no delivery at all, so both say so in words. */
 export const WhileItIsUnknown: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 8 }}>

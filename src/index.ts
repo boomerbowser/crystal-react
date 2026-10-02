@@ -1,4 +1,4 @@
-/* @crystal-ui/react — Crystal Design System for React. */
+/* @crystal-ui/react: the Crystal Design System for React. */
 export * from './theme/index.js';
 export * from './motion/index.js';
 export * from './components/index.js';

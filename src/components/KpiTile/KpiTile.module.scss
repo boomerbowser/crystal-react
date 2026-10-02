@@ -1,17 +1,16 @@
 @use '../../styles/tokens' as *;
 
-/* KpiTile — Card's Haze fill, plus Crystal's own bar.
+/* KpiTile. Card's Haze fill, plus Crystal's own bar.
  *
- * The bar's treatment is not new. `crystal.css` styles the range control's
- * progress as an 8px band at the pill radius with the primary fill over the soft
- * one, and that is what a filled bar looks like in Crystal, so this takes it
- * rather than choosing again. The track and the fill both need their own rules
- * per engine because `progress` has no common pseudo-element — that is a
- * platform fact, not a design decision.
+ * `crystal.css` styles the range control's progress as an 8px band at the pill
+ * radius with the primary fill over the soft one. That is what a filled bar
+ * looks like in Crystal, and this file reuses it. The track and the fill each
+ * need their own rules per engine because `progress` has no common
+ * pseudo-element.
  *
- * Attainment is never carried by the bar's colour: the words above it say it, and
- * `data-state` is here for a product that wants to tint the *card*, not for this
- * file to make a red bar.
+ * Attainment is never carried by the bar's colour: the words above it say it.
+ * `data-state` is for a product that wants to tint the card. This file does not
+ * use it to make a red bar.
  */
 
 .tile {
@@ -50,8 +49,8 @@
 .bar::-webkit-progress-value { background: var(--cr-primary); border-radius: $cr-action-radius; }
 .bar::-moz-progress-bar { background: var(--cr-primary); border-radius: $cr-action-radius; }
 
-/* Indeterminate while loading: no value, so the platform decides what to draw
-   rather than this file animating something Crystal has no recipe for. */
+/* Indeterminate while loading: with no value, the platform decides what to
+   draw. Crystal has no recipe for animating it. */
 .tile[data-state='loading'] .bar { opacity: $cr-action-disabled-opacity; }
 
 @media (forced-colors: active) {

@@ -2,19 +2,19 @@
 @use '../../styles/material' as material;
 @use '../../styles/overlay' as overlay;
 
-/* OrganizationChart — "Haze nodes on the surrounding material; connectors use
+/* OrganizationChart: "Haze nodes on the surrounding material; connectors use
  * the rim colour".
  *
- * The connectors are drawn per row rather than per level, as a pair of rules on
- * the row's pseudo-elements: a vertical line down the indented gutter and an
- * elbow into the node. Drawing them per *level* would need a wrapper element per
- * level, and React Aria renders the tree flat — every row is a sibling carrying
- * its depth as a number, which is the same constraint `TreeView`'s indentation
- * guides work around and the reason both use the depth rather than the nesting.
+ * The connectors are drawn per row, as a pair of rules on the row's
+ * pseudo-elements: a vertical line down the indented gutter and an elbow into
+ * the node. Drawing them per level would need a wrapper element per level, and
+ * React Aria renders the tree flat. Every row is a sibling carrying its depth as
+ * a number. `TreeView`'s indentation guides work around the same constraint, so
+ * both use the depth and not the nesting.
  *
- * The node is Haze and the row is not. The row is the target and the connector's
- * canvas; the node is the content, and giving the whole row a fill would join
- * every box into a band.
+ * The node is Haze and the row is not. The row is the target and the
+ * connector's canvas. The node is the content, and giving the whole row a fill
+ * would join every box into a band.
  */
 
 $chart-connector: 1px;
@@ -26,8 +26,8 @@ $chart-connector: 1px;
   outline: none;
 }
 
-/* The row's focus ring belongs to the row, not the chart: a composite widget
-   holds focus for its active row. */
+/* The focus ring is drawn on the row, because a composite widget holds focus
+   for its active row. */
 .item { @include overlay.composite-focus; }
 
 .row {
@@ -40,9 +40,9 @@ $chart-connector: 1px;
   cursor: pointer;
 }
 
-/* The line down the gutter, and the elbow into the node. Both in the rim colour,
-   which is the catalogue's word — a connector is structure rather than ink, so
-   it takes the same colour the glass edges do. */
+/* The line down the gutter, and the elbow into the node. Both are in the rim
+   colour, as the catalogue says. A connector is structure, so it takes the
+   same colour as the glass edges. */
 .row::before {
   content: '';
   position: absolute;

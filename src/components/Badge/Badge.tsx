@@ -1,24 +1,23 @@
 'use client';
 
-/* Badge — a small count or label attached to a host element.
+/* Badge: a small count or label attached to a host element.
  *
- * The catalogue's hard part is not the shape, it is the sentence under
- * `semantics`: "the count reaches assistive technology through the host's
- * accessible name or a live region". A number painted in the corner of a button
- * is a fact about the button, not a separate thing to read — announcing it as
- * loose text ("Inbox 3") leaves a listener to guess what the 3 belongs to, and a
- * dot has no text at all.
+ * The catalogue's main requirement is the sentence under `semantics`: "the count
+ * reaches assistive technology through the host's accessible name or a live
+ * region". A number painted in the corner of a button is a fact about the
+ * button. Announcing it as loose text ("Inbox 3") leaves a listener to guess
+ * what the 3 belongs to, and a dot has no text at all.
  *
- * So the visual is always `aria-hidden`, and the meaning travels one of two
- * ways, both of which the caller chooses deliberately:
+ * So the visual is always `aria-hidden`, and the caller chooses one of two ways
+ * for the meaning to travel:
  *
- *   - `description` renders a polite live region carrying a whole sentence —
- *     "3 unread messages". A change to it is announced; the badge appearing is
- *     not, which is the difference between a notification and a distraction.
+ *   - `description` renders a polite live region carrying a whole sentence,
+ *     such as "3 unread messages". A change to it is announced. The badge
+ *     appearing is not announced, so it notifies without distracting.
  *   - Without one, nothing is announced and the host must already say it. That
- *     is the correct answer when the badge duplicates a label the host already
- *     carries, and it is why `description` is not defaulted to the count: a
- *     bare "3" in a live region is the failure this rule exists to prevent.
+ *     is correct when the badge duplicates a label the host already carries.
+ *     `description` is not defaulted to the count, because a bare "3" in a live
+ *     region is what this rule prevents.
  *
  * `zero` and `overflow` are formatting, not state: a count of 0 is hidden unless
  * `showZero`, and anything past `max` reads "99+".
@@ -39,11 +38,11 @@ export interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'child
   count?: number;
   /** A word or short label instead of a count. */
   label?: ReactNode;
-  /** The largest number shown literally; past it the badge reads "N+". */
+  /** The largest number shown literally. Past it the badge reads "N+". */
   max?: number;
-  /** Show a count of 0 rather than hiding the badge. */
+  /** Show a count of 0 instead of hiding the badge. */
   showZero?: boolean;
-  /** A marker with no content — presence is the whole message. */
+  /** A marker with no content, which only signals presence. */
   dot?: boolean;
   /** The host the badge is attached to. Without one the badge stands alone. */
   children?: ReactNode;
@@ -71,17 +70,16 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   ref,
 ) {
   const hasCount = typeof count === 'number';
-  /* A zero count is not "no badge" — it is a badge the caller may or may not want
-     shown, and the two are different answers to different questions. */
+  /* A zero count still has a badge. The caller decides whether it is shown. */
   const hidden = hasCount && count === 0 && !showZero;
 
   const content = dot ? null
     : label ?? (hasCount ? formatCount(count, max) : null);
 
-  /* \`attention\` when the count goes up — something new arrived, which is what a
-     count badge is for — and never on the render that shows the first count, nor
-     when it goes down, which is something being dealt with. The \`highlight\`
-     layer inside marks any change to what the badge says. */
+  /* `attention` when the count goes up, because something new arrived. Never on
+     the render that shows the first count, and never when it goes down, which
+     means something is being dealt with. The `highlight` layer inside marks any
+     change to what the badge says. */
   const scope = useChangeMotion(hasCount ? count : undefined, (was, is) =>
     (typeof was === 'number' && typeof is === 'number' && is > was ? 'attention' : null));
 
@@ -107,9 +105,9 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
     </span>
   );
 
-  /* `role="status"` rather than a bare `aria-live`, so the region exists from the
-     first render and a later change is a change rather than an insertion — an
-     inserted live region is announced inconsistently across screen readers. */
+  /* `role="status"` and not a bare `aria-live`, so the region exists from the
+     first render and a later change is a change, not an insertion. An inserted
+     live region is announced inconsistently across screen readers. */
   const announcement = description === undefined ? null : (
     <VisuallyHidden role="status">{description}</VisuallyHidden>
   );

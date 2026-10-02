@@ -1,13 +1,12 @@
 'use client';
 
-/* CandlestickChart — open, high, low and close per period.
+/* CandlestickChart: open, high, low and close per period.
  *
- * "Rise and fall colour from the status tokens, never red and green alone." The
- * second clause is the design: a candle that rose is drawn **hollow**, one that
- * fell is drawn **filled**, and the colour is on top of that. That is the
- * convention the instrument itself has had since long before screens had colour,
- * and it is why this chart does not need a dash or a hatch invented for it — the
- * second channel is already part of how a candle is drawn.
+ * "Rise and fall colour from the status tokens, never red and green alone." A
+ * candle that rose is drawn hollow, one that fell is drawn filled, and the
+ * colour is on top of that. Candlestick charts have used this convention since
+ * long before screens had colour, so the second channel is already part of how
+ * a candle is drawn and the chart needs no dash or hatch.
  *
  * "Wick and body share one x centre; body has no radius." A candle is a
  * measurement of four numbers at one instant, and a rounded body would make the
@@ -109,7 +108,7 @@ export function CandlestickChart({
                       y2={inner.y + value(candle.low)}
                     />
                     {/* A minimum of one pixel, so a period that opened and closed
-                        at the same price is still a candle rather than nothing. */}
+                        at the same price still draws a candle. */}
                     <rect
                       className={styles['body']}
                       x={x}

@@ -11,14 +11,13 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Landmarks in place: banner, navigation, main, contentinfo. One main." Which is '
-          + '`AppShell`\'s contract exactly, so this does not restate it — a block that drew '
-          + 'its own landmarks would be the second set on the page.\n\n'
-          + 'What a block adds over a shell is the opinion, and here the opinion is one '
-          + 'thing: the content is a grid that reflows. That is the difference between a '
-          + 'shell — a primitive with one job — and a dashboard, which is a shell that has '
-          + 'decided what goes in it.\n\n'
-          + 'The grid reflows by **container** width, not viewport: a dashboard inside a '
+          '"Landmarks in place: banner, navigation, main, contentinfo. One main." That is '
+          + '`AppShell`\'s contract, so this does not restate it. A block that drew its own '
+          + 'landmarks would put a second set on the page.\n\n'
+          + 'The block adds one thing to the shell: the content is a grid that reflows. A '
+          + 'shell is a primitive with one job, and a dashboard is a shell that has decided '
+          + 'what goes in it.\n\n'
+          + 'The grid reflows by container width, not viewport width. A dashboard inside a '
           + 'split view or a workspace pane is narrower than the window, and a media query '
           + 'would give it three columns in a 300px pane.', /* crystal-allow-literal: prose about a viewport that is not a value this component sets */
       },

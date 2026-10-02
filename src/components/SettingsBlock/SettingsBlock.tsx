@@ -1,27 +1,29 @@
 'use client';
 
-/* SettingsBlock — grouped preferences, saved as they change or all at once.
+/* SettingsBlock.
+ *
+ * Grouped preferences, saved as they change or all at once.
  *
  * "Each group is a labelled region; **unsaved changes are announced before
  * navigation**." States: `at-rest`, `dirty`, `saving`, `saved`.
  *
  * Which settings exist, and when they apply, are the product's. The block owns
- * the two promises:
+ * two guarantees:
  *
- *   - **Each group is a region named by its heading**, so a screen reader's
+ *   - Each group is a region named by its heading, so a screen reader's
  *     landmark list is the settings page's table of contents.
- *   - **Unsaved changes are said before the reader can lose them.** Three
- *     routes out, three answers:
- *       1. Becoming dirty is announced once, politely — "Unsaved changes" —
- *          and the save bar says the same in words beside Save and Discard.
- *       2. Leaving the document — closing the tab, reloading, following an
- *          ordinary link — is the browser's to ask about, and the block asks it
+ *   - Unsaved changes are announced before the reader can lose them. There are
+ *     three ways out, each handled differently:
+ *       1. Becoming dirty is announced once, politely ("Unsaved changes"), and
+ *          the save bar says the same in words beside Save and Discard.
+ *       2. Leaving the document (closing the tab, reloading, following an
+ *          ordinary link) is the browser's to ask about, and the block asks it
  *          to while there is anything unsaved (`beforeunload`).
  *       3. Leaving through the product's own router is invisible to the
- *          browser, so the router asks the block: it sets `isLeaving` when it
- *          intercepts a navigation, and the block puts up an alert dialog —
- *          save and leave, discard and leave, or stay — and reports the choice.
- *          A stray click on the scrim does not dismiss it; Escape stays.
+ *          browser, so the router asks the block. It sets `isLeaving` when it
+ *          intercepts a navigation, and the block puts up an alert dialog
+ *          (save and leave, discard and leave, or stay) and reports the choice.
+ *          A stray click on the scrim does not dismiss it. Escape chooses stay.
  *
  * `saveMode="immediate"` is for settings that apply as they change: there is no
  * save bar, and saving and saved are announced as each change lands.

@@ -7,10 +7,10 @@ import { MaskInput } from '../components/MaskInput/MaskInput.js';
 
 const OPTIONS = [{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }];
 
-/* A field with a `name` has to put something in the form. Four of these took a
-   name and submitted nothing, which is worse than taking no name at all: a
-   required field that never submits fails validation, gets filled in, and fails
-   again — a loop with no way out from inside the form. */
+/* A field with a `name` has to put something in the form. A field that takes a
+   name and submits nothing is worse than one with no name: if it is required,
+   it fails validation, gets filled in, and fails again, with no way out from
+   inside the form. */
 describe('a named field reaches FormData', () => {
   const read = (form: HTMLFormElement) => [...new FormData(form).entries()];
 
@@ -28,9 +28,9 @@ describe('a named field reaches FormData', () => {
     expect(read(container.querySelector('form')!)).toEqual([['f', '1234']]);
   });
 
-  /* Several values become several inputs of the same name — how HTML has always
-     carried a multiple selection, and what valuesFromForm turns back into an
-     array. */
+  /* Several values become several inputs of the same name. That is how HTML
+     has always carried a multiple selection, and valuesFromForm turns it back
+     into an array. */
   it('TagsInput submits one entry per tag', () => {
     const { container } = renderWithCrystal(
       <form><TagsInput label="P" name="f" defaultValue={['x', 'y']} /></form>,
@@ -45,8 +45,8 @@ describe('a named field reaches FormData', () => {
     expect(read(container.querySelector('form')!)).toEqual([['f', 'a'], ['f', 'b']]);
   });
 
-  /* Nothing chosen is no key at all, not an empty one — again HTML's behaviour,
-     and what the schema is told to expect. */
+  /* Nothing chosen means no key at all, not an empty one. That is HTML's
+     behaviour, and what the schema is told to expect. */
   it('submits no key when nothing is chosen', () => {
     const { container } = renderWithCrystal(
       <form><MultiSelect label="P" name="f" options={OPTIONS} /></form>,

@@ -1,12 +1,12 @@
 @use '../../styles/tokens' as *;
 
-/* Points. The shape is the second channel — one per series, from Crystal's own
- * marker set — and the 44px hit area is the same one the line chart's points
- * carry, for the same reason: a six-pixel dot is not a target.
+/* Points. The shape is the second channel, one per series, from Crystal's own
+ * marker set. The 44px hit area is the one the line chart's points carry,
+ * because a six-pixel dot is too small to be a target.
  *
- * Dense regions overlap, so the fill is held back a little. That is the
- * "overlap treatment" the catalogue asks for: at full opacity a cluster is one
- * blob, and the whole point of a scatter is how many are in it.
+ * Dense regions overlap, so the fill is held back a little. This is the
+ * "overlap treatment" the catalogue asks for. At full opacity a cluster is one
+ * blob, and a scatter has to show how many points are in it.
  */
 
 .point .shape {

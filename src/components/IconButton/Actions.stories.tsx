@@ -24,7 +24,7 @@ const meta = {
   component: IconButton,
   /* The callbacks as actions, so the Actions panel shows what fired and with
      what. They are declared by hand because this Storybook uses `react-docgen`
-     rather than `react-docgen-typescript` — see `.storybook/main.ts` — and
+     rather than `react-docgen-typescript` (see `.storybook/main.ts`), and
      react-docgen reads a component's own interface without resolving what it
      extends. Every callback here is inherited from a React Aria interface, so
      docgen cannot see one of them. Each was checked against the compiler
@@ -44,22 +44,21 @@ const meta = {
     docs: {
       description: {
         component:
-          /* The figures come from the live tokens rather than being typed into the
-             prose, so the documentation cannot drift from the geometry it
-             describes — the same rule the design system's own drift guard applies. */
-          `Every action in Crystal is a pill and every one reaches ${crystalTokens['action.minTarget']}, `
-          + `which for an icon button means the target grows and the icon does not: a `
+          /* The figures come from the live tokens, so the documentation cannot
+             drift from the geometry it describes. The design system's own drift
+             guard applies the same rule. */
+          `Every action in Crystal is a pill and every one reaches ${crystalTokens['action.minTarget']}. `
+          + `For an icon button the target grows and the icon does not: a `
           + `${crystalTokens['icon.action']} icon is a ${crystalTokens['icon.action']} picture and a `
-          + `${crystalTokens['action.minTarget']} place to press, and growing the visible control `
+          + `${crystalTokens['action.minTarget']} place to press. Growing the visible control `
           + 'instead makes a toolbar look clumsy.\n\n'
-          + 'An icon has no text, so the name is not optional — it is the only name the control '
-          + 'has, and `label` is required rather than optional-with-a-warning. CloseButton goes '
-          + 'further: it names *what* closes, because a page with three dismissible things '
-          + 'otherwise has three buttons called "Close" and a screen reader user listing the '
-          + 'controls learns nothing.\n\n'
+          + 'An icon has no text, so the label is the only name the control has, and `label` '
+          + 'is required. CloseButton also names what closes. A page with three dismissible '
+          + 'things otherwise has three buttons called "Close", and a screen reader user listing '
+          + 'the controls learns nothing.\n\n'
           + 'A group is one Resin plane: pill outside, square inside, with a hairline between. '
           + 'Rounding every child instead gives a row of separate buttons that happen to touch. '
-          + 'A split button is two buttons rather than one, because a control that behaves '
+          + 'A split button is two buttons, because a control that behaves '
           + 'differently depending on which half was pressed cannot be described to somebody who '
           + 'cannot see the halves.',
       },
@@ -94,9 +93,9 @@ export const Icons: Story = {
 export const Groups: Story = {
   render: function Groups() {
     const [open, setOpen] = useState(false);
-    /* `align="start"` because a group is a control rather than a block: a flex
-       child stretches to its container's cross axis by default, and a control
-       that fills the page is a control that looks broken. */
+    /* `align="start"` because a group is a control. A flex child stretches to
+       its container's cross axis by default, and a control that fills the page
+       looks broken. */
     return (
       <Stack gap="lg" align="start">
         <ButtonGroup label="Clipboard">
@@ -127,7 +126,7 @@ export const Groups: Story = {
 };
 
 /** These are fixed to the viewport. A page that uses one owes the space underneath
- *  it — scroll padding, or a spacer — because Crystal cannot know what the content
+ *  it, as scroll padding or a spacer, because Crystal cannot know what the content
  *  at the bottom of the page is. */
 export const Floating: Story = {
   render: function Floating() {

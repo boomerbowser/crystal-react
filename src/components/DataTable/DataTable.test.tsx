@@ -17,17 +17,17 @@ const rows = [
 
 describe('DataTable', () => {
   /* An interactive table is a grid widget: roving focus, arrow keys between
-     cells, controls inside cells. `role="grid"` is what tells assistive
-     technology to switch from reading mode to interaction mode. */
+     cells, controls inside cells. `role="grid"` tells assistive technology to
+     switch from reading mode to interaction mode. */
   it('is a grid, where the static Table is a document', () => {
     renderWithCrystal(<DataTable columns={columns} rows={rows} label="Workspaces" />);
     expect(screen.getByRole('grid', { name: 'Workspaces' })).toBeInTheDocument();
   });
 
   /* "Row selection through real checkboxes with names": a reader tabbing
-     through them hears "Select Gather" rather than "checkbox" twice. React Aria
-     composes that name from the checkbox's own label *plus* the row's text
-     value, which is why the label passed in is the verb alone — "Select Gather"
+     through them hears "Select Gather", not "checkbox" twice. React Aria
+     composes that name from the checkbox's own label plus the row's text
+     value, so the label passed in is the verb alone. Passing "Select Gather"
      would produce "Select Gather Gather". */
   it('names every selection checkbox after its row', () => {
     renderWithCrystal(
@@ -77,8 +77,8 @@ describe('DataTable', () => {
   it('offers the resizer as a named slider', () => {
     renderWithCrystal(<DataTable columns={columns} rows={rows} label="Workspaces" resizable />);
     /* "Resize" plus the column React Aria appends, and the width announced as
-       `aria-valuetext` — "the new width is announced" is React Aria's to do and
-       this asserts it arrived. */
+       `aria-valuetext`. React Aria does the announcing, and this asserts that
+       it happens. */
     const resizer = screen.getByRole('slider', { name: 'Resize Workspace' });
     expect(resizer).toHaveAttribute('aria-valuetext', expect.stringMatching(/pixels/));
   });
@@ -88,18 +88,18 @@ describe('DataTable', () => {
     expect(screen.queryByRole('slider', { name: /Plan/ })).toBeNull();
   });
 
-  /* A select-all drawn with a check mark while one row of four is selected says
-     "all of them" to anybody who glances at it. */
+  /* A select-all drawn with a check mark while one row of four is selected
+     reads as "all of them". */
   it('draws the select-all as partial when only some rows are selected', () => {
     const { container } = renderWithCrystal(
       <DataTable columns={columns} rows={rows} label="Workspaces" selectionMode="multiple"
         defaultSelectedKeys={new Set(['gather'])} />,
     );
-    /* A native checkbox carries this as a *property*, not an attribute — there
+    /* A native checkbox carries this as a property, not an attribute, so there
        is no `aria-checked="mixed"` to look for on one. */
     const all = screen.getByRole('checkbox', { name: 'Select all rows' }) as HTMLInputElement;
     expect(all.indeterminate).toBe(true);
-    /* And the glyph follows the state rather than staying a check. */
+    /* The glyph follows the state and does not stay a check. */
     const paths = [...container.querySelectorAll('label path')].map((p) => p.getAttribute('d'));
     expect(paths).toContain('M6 12h12');
   });

@@ -2,49 +2,47 @@
 
 /* The two materials an overlay can be, in one place.
  *
- * Which one it gets is decided in React rather than in CSS, because the DOM
- * cannot tell: an overlay is portalled to `body` and loses its nesting on the
- * way. `data-cr-overlay` is what the decision writes down.
+ * React decides which one it gets, because the DOM cannot tell: an overlay is
+ * portalled to `body` and loses its nesting. `data-cr-overlay` records the
+ * decision.
  *
- * A transient overlay is Frost (Crystal R15e; the `frost` surface in Crystal's
- * vocabulary). Once something Frost, Resin or Haze is already between it and the
- * page, it recesses into Haze instead — independently blurred panes do not nest.
- * Until 2.2.0 of the design system the chapters still said `.cr-resin-haze` for
- * menus and this library painted them Resin; Meridian had already decided
- * otherwise, and the documentation site has rendered Frost since 17 September.
+ * A transient overlay is Frost (Crystal R15e, the `frost` surface in Crystal's
+ * vocabulary), as Meridian decided on 17 September. Once something Frost, Resin
+ * or Haze is already between it and the page, it recesses into Haze instead,
+ * because independently blurred panes do not nest. Crystal's chapters said
+ * `.cr-resin-haze` for menus until 2.2.0.
  */
 @mixin surface {
   /* The catalogue's geometry for a menu, a popover, a toast and a notification is
-     the content radius — not the Frost panel radius `.cr-frost` brings — so it is
+     the content radius, not the Frost panel radius `.cr-frost` brings, so it is
      stated here, where it wins. */
   border-radius: var(--cr-radius);
   color: var(--cr-text);
 
   /* Frost is Crystal's: the element wears `.cr-frost` (see `overlayMaterialClass`),
-     which paints the fill, the rim, the panel shadow and the diffusion. This used
-     to write all four out beside the attribute. */
+     which paints the fill, the rim, the panel shadow and the diffusion. */
 
-  /* Recessed rather than floating, inside something that is already lifted: the
-     element wears Crystal's `.cr-haze.overlay` (2.3.0), which paints the flat Haze
-     fill, the edge and the content shadow, and its three fallbacks. */
+  /* Recessed, inside something that is already lifted: the element wears
+     Crystal's `.cr-haze.overlay` (2.3.0), which paints the flat Haze fill, the
+     edge and the content shadow, and its three fallbacks. */
 }
 
 /* A composite widget holds focus on behalf of whichever row is active, so the
-   *container* must not wear the focus ring — Crystal's global rule puts a halo on
-   anything with a tabindex, which is right for a scroll region that is itself the
-   focus target and wrong here: it draws a ring around the whole menu while the
-   thing a person is actually on is one row inside it.
+   container must not wear the focus ring. Crystal's global rule puts a halo on
+   anything with a tabindex. That suits a scroll region that is itself the focus
+   target, but here it would ring the whole menu while the person is on one row
+   inside it.
  *
- * Opting out has to be explicit, because the selector cannot tell the two cases
+ * The opt-out has to be explicit, because the selector cannot tell the two cases
  * apart. The ring moves to the row.
  */
 @mixin composite-focus {
   &:focus-visible, &:focus { outline: none; box-shadow: none; }
 }
 
-/* A row in a menu, a listbox, a tree. Selection is label weight — never a mark
-   set beside the label, which offsets the very thing it marks, and never a check
-   mark, which in Crystal means validated or informational. */
+/* A row in a menu, a listbox, a tree. Selection is label weight. Nothing is set
+   beside the label, because that offsets the label it marks, and there is never
+   a check mark, which in Crystal means validated or informational. */
 @mixin row {
   display: flex;
   align-items: center;

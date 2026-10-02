@@ -1,19 +1,17 @@
 @use '../../styles/tokens' as *;
 
-/* Marquee — "edges fade using the surrounding material, not a hard cut".
+/* Marquee: "edges fade using the surrounding material, not a hard cut".
  *
- * The fade is a mask on the strip, so what shows through at the edges is
- * whatever the marquee is sitting on. A gradient painted in a surface colour
- * would be a stripe of the wrong colour on five of Crystal's six palettes, which
- * is the same argument `Spoiler` makes and the same depth: Crystal's stated
- * edge-fade depth, once.
+ * The fade is a mask on the strip, so the edges show whatever the marquee sits
+ * on. A gradient painted in a surface colour would be a stripe of the wrong
+ * colour on five of Crystal's six palettes. `Spoiler` uses the same mask for the
+ * same reason, at the same depth: Crystal's stated edge-fade depth, once.
  *
  * `--cr-motion-enabled` multiplies the duration to zero when motion is off,
- * which stops the animation dead rather than running it invisibly. The
- * `prefers-reduced-motion` query is the platform's own answer and does not
- * depend on anyone having set Crystal's.
+ * which stops the animation instead of running it invisibly. The
+ * `prefers-reduced-motion` query is the platform's own setting and does not
+ * depend on Crystal's being set.
  */
-
 .marquee {
   position: relative;
   overflow: hidden;
@@ -40,18 +38,18 @@
   animation-name: marquee;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  /* The measured duration, gated and scaled the way every other moving thing in
-     this library is: multiplied by `--cr-motion-enabled`, which the provider
-     publishes as 0 under reduced motion, and divided by the reader's
-     motion-speed preference. Zero is a stop, not a slow. */
+  /* The measured duration, gated and scaled like every other animation in this
+     library: multiplied by `--cr-motion-enabled`, which the provider publishes
+     as 0 under reduced motion, and divided by the reader's motion-speed
+     preference. A zero duration stops the animation. */
   animation-duration: calc(var(--cr-motion-enabled) * var(--marquee-duration, 0s) / var(--cr-motion-speed));
   animation-play-state: running;
 }
 
 .moving[data-reverse] { animation-direction: reverse; }
 
-/* "Pausable on hover and focus." Focus-within rather than focus, because the tab
-   stop may be on something inside the strip rather than the strip itself. */
+/* "Pausable on hover and focus." Focus-within, because the tab stop may be on
+   something inside the strip instead of the strip itself. */
 .marquee:hover .moving,
 .marquee:focus-within .moving { animation-play-state: paused; }
 
@@ -61,7 +59,7 @@
 }
 
 /* "Removed entirely under reduced motion." The component also stops rendering
-   the second copy, so this is the belt to that braces. */
+   the second copy; this rule is the stylesheet's fallback. */
 @media (prefers-reduced-motion: reduce) {
   .moving { animation: none; }
 }

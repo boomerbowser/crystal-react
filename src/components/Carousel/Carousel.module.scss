@@ -1,24 +1,22 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* Carousel — "Resin controls floating over Haze slides".
+/* Carousel: "Resin controls floating over Haze slides".
  *
- * Two materials and the order matters: the slides are the content, so they take
- * the Haze fill, and the controls are controls, so they take the Resin shell
- * every action in Crystal has. Putting Resin on the slides would make each one
- * look pressable.
+ * Two materials, and the order matters. The slides are the content, so they
+ * take the Haze fill. The controls take the Resin shell every action in Crystal
+ * has. Resin on the slides would make each one look pressable.
  *
  * The track snaps. `scroll-snap-type: inline mandatory` with `scroll-snap-align:
- * start` on each slide is what makes a swipe land on a slide rather than between
- * two, and it is the platform doing it — so momentum, rubber-banding and the
- * trackpad's own feel are intact, which is the scroll contract's whole point.
+ * start` on each slide makes a swipe land on a slide instead of between two.
+ * The platform does the snapping, so momentum, rubber-banding and the
+ * trackpad's own feel stay intact, as the scroll contract requires.
  *
- * `perspective` on the track is load-bearing rather than decorative: Crystal's
- * `carousel-next` and `carousel-previous` are `perspective(900px) rotateY(...)`
- * on the arriving slide, and a rotateY with no perspective ancestor renders as a
- * flat horizontal squash. The recipe carries its own perspective in the
- * transform, so this is belt and braces for the case where a consumer composes
- * it differently.
+ * `perspective` on the track is functional. Crystal's `carousel-next` and
+ * `carousel-previous` are `perspective(900px) rotateY(...)` on the arriving
+ * slide, and a rotateY with no perspective ancestor renders as a flat
+ * horizontal squash. The recipe carries its own perspective in the transform,
+ * so this is a backstop for a consumer who composes it differently.
  */
 
 .carousel {
@@ -36,8 +34,8 @@
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: inline mandatory;
-  /* The scroll contract: contained overscroll, native gestures, a stable gutter
-     is not needed because this scrolls across rather than down. */
+  /* The scroll contract: contained overscroll and native gestures. No stable
+     gutter is needed, because this scrolls across, not down. */
   overscroll-behavior: contain;
   touch-action: pan-x pan-y;
 }
@@ -70,15 +68,13 @@
 }
 
 /* The step controls are Resin pills at the target floor, like every action. */
-/* R-19, swept. `.step` was a second copy of `.cr-button` — the Resin material,
-   the pill geometry, the focus recipe and the disabled pair. Crystal paints
-   every `<button>` with the material by element selector and `.cr-button` adds
-   the geometry, so the class going on is the whole of it. `:focus-visible` and
-   `:disabled` are Crystal's own selectors and reach this element directly; they
-   were only ever repeated here because this file believed it was the painter.
+/* R-19. The step controls wear `.cr-button`. Crystal paints every `<button>`
+   with the Resin material by element selector, and `.cr-button` adds the
+   geometry. `:focus-visible` and `:disabled` are Crystal's own selectors and
+   reach this element directly, so they are not repeated here.
 
-   Nothing is left to declare, so there is no `.step` rule. The arrows and the
-   label are the component's, and they are below. */
+   Nothing is left to declare, so `.step` has no rule outside forced colours.
+   The arrows and the label are the component's, and they are below. */
 
 .stepLabel { white-space: nowrap; }
 
@@ -91,9 +87,9 @@
   list-style: none;
 }
 
-/* The dot is the picture; the button is the target, and it reaches the floor
-   through its own padding rather than a grown hit area, because a row of these
-   sits close enough that grown areas would overlap. */
+/* The dot is the picture and the button is the target. The button reaches the
+   floor through its own padding instead of a grown hit area, because a row of
+   these sits close enough that grown areas would overlap. */
 .indicator {
 
   display: inline-grid;
@@ -122,9 +118,9 @@
 }
 
 /* The current slide's indicator. Crystal marks the current thing by weight
-   rather than by a badge, and a dot has no label to thicken — so it takes the
-   full-strength ink and grows to the indicator size, which is the same
-   "more of it" the weight rule expresses. */
+   instead of a badge, and a dot has no label to thicken. It takes the
+   full-strength ink and grows to the indicator size, the same "more of it"
+   the weight rule expresses. */
 .indicator[aria-current] .dot {
   inline-size: $cr-indicator-size;
   block-size: $cr-spacing-xs;

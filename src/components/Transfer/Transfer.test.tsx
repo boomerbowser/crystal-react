@@ -18,9 +18,9 @@ describe('Transfer', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The requirement that decides the whole design: keyboard must move items
-     without drag. Dragging between two lists is the obvious gesture and it is
-     unavailable to a keyboard user and invisible to a screen reader. */
+  /* The catalogue requires that the keyboard can move items without drag.
+     Dragging between two lists is unavailable to a keyboard user and invisible
+     to a screen reader. */
   it('moves items with named controls rather than a drag', async () => {
     const onChange = vi.fn();
     renderWithCrystal(<Transfer items={items} defaultValue={[]} onChange={onChange} />);
@@ -30,8 +30,8 @@ describe('Transfer', () => {
     expect(onChange).toHaveBeenLastCalledWith(['write']);
   });
 
-  /* An item silently leaving one list and appearing in another is, to a screen
-     reader, nothing happening. */
+  /* Without an announcement, a screen reader user hears nothing when an item
+     leaves one list and appears in another. */
   it('announces a move', async () => {
     renderWithCrystal(<Transfer items={items} defaultValue={[]} />);
     await userEvent.click(screen.getByRole('option', { name: 'Write' }));
@@ -58,7 +58,7 @@ describe('Cascader', () => {
   });
 
   /* The answer is "United Kingdom / Scotland / Edinburgh". A reader who hears
-     only "Edinburgh" has lost the part that disambiguates it. */
+     only "Edinburgh" loses the part that disambiguates it. */
   it('shows and announces the whole path', () => {
     renderWithCrystal(
       <Cascader label="Location" options={tree} defaultValue={['uk', 'scotland', 'edinburgh']} />,
@@ -73,7 +73,7 @@ describe('Cascader', () => {
     renderWithCrystal(<Cascader label="Location" options={tree} />);
     await userEvent.click(screen.getByRole('button', { name: /Location/ }));
     expect(screen.getByRole('option', { name: /United Kingdom, opens a further list/ })).toBeInTheDocument();
-    /* A leaf says nothing extra: choosing it finishes. */
+    /* A leaf has nothing extra in its name, because choosing it finishes. */
     expect(screen.getByRole('option', { name: 'France' })).toBeInTheDocument();
   });
 });

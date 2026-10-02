@@ -8,16 +8,16 @@ const meta = {
     docs: {
       description: {
         component:
-          '`role="meter"` with a text value, which is why this is not a progress bar bent into '
-          + 'a circle. A meter is a *measurement within a known range* — disk usage, a '
-          + 'temperature, a score — and it is not going anywhere; a progress bar is a task '
-          + 'getting closer to finishing. The two announce differently and they should.\n\n'
-          + '"Threshold colour from status tokens", and never colour alone: a gauge told which '
+          '`role="meter"` with a text value, so this is not a progress bar bent into a circle. '
+          + 'A meter is a *measurement within a known range*, such as disk usage, a temperature '
+          + 'or a score, and it is not heading towards an end. A progress bar is a task getting '
+          + 'closer to finishing. The two announce differently.\n\n'
+          + '"Threshold colour from status tokens", and never colour alone. A gauge told which '
           + "band its value is in takes that band's status colour and states the band's name "
           + 'both on screen and inside the meter\'s own text.\n\n'
-          + 'The sweep and the stroke are Crystal\'s. The arc matches the ring progress stroke '
-          + 'because the catalogue says it does, and that is one token rather than two, so a '
-          + 'gauge and a ring progress cannot drift into two different objects.',
+          + 'The sweep and the stroke are Crystal\'s. The arc matches the ring progress stroke, '
+          + 'as the catalogue requires, through one token, so a gauge and a ring progress cannot '
+          + 'drift apart.',
       },
     },
   },

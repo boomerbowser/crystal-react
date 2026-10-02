@@ -1,18 +1,18 @@
 'use client';
 
-/* ScatterChart — points in two dimensions.
+/* ScatterChart: points in two dimensions.
  *
  * "Point size is a scale, not an arbitrary radius." A third value is mapped onto
- * Crystal's point scale — between `--cr-chart-point-min` and
- * `--cr-chart-point-max` — and onto the point's **area** rather than its
- * diameter, so that equal differences in the data are equal differences in the
- * amount of ink. A point twice as wide is four times as big to the eye, so the
- * obvious mapping exaggerates the spread without saying so.
+ * Crystal's point scale (between `--cr-chart-point-min` and
+ * `--cr-chart-point-max`) and onto the point's area rather than its diameter, so
+ * that equal differences in the data are equal differences in the amount of
+ * ink. A point twice as wide is four times as big to the eye, so mapping onto
+ * the diameter exaggerates the spread without saying so.
  *
  * "Dense regions remain describable; a table equivalent is required." The table
- * is the surface's and is not optional. What this chart adds is that a dense
- * region is still navigable: every point is a mark, arrow keys move between them
- * in the order given, and each one says both of its coordinates.
+ * is the surface's and is not optional. This chart also keeps a dense region
+ * navigable: every point is a mark, arrow keys move between them in the order
+ * given, and each one says both of its coordinates.
  *
  * Both axes fit their data. A scatter's marks are positions in both directions,
  * so the bar chart's zero rule does not apply in either.
@@ -99,19 +99,17 @@ export function ScatterChart({
         const sizes = all.map((point) => point.size).filter((size): size is number => size !== undefined);
         const across = scaleLinear().domain(span(xs)).nice(ticks).range([0, inner.width]);
         const up = scaleLinear().domain(span(ys)).nice(ticks).range([inner.height, 0]);
-        /* The value maps onto the point's *area*: the range is the squares of
-           Crystal's two point sizes, and the diameter is the root of what comes
-           out. So equal differences in the data are equal differences in the
-           amount of ink, which is what the eye actually compares. Mapping onto
-           the diameter instead — the obvious way, and the usual bug — would make
-           the largest point three times the area it should be, exaggerating the
-           spread without saying so.
+        /* The value maps onto the point's area. The range is the squares of
+           Crystal's two point sizes, and the diameter is the root of the result.
+           Equal differences in the data are then equal differences in the
+           amount of ink, which is what the eye compares. Mapping onto the
+           diameter would make the largest point three times the area it should
+           be, exaggerating the spread without saying so.
 
            The scale runs between the two published sizes rather than from zero,
            so the smallest datum is always `--cr-chart-point-min` and the largest
-           always `--cr-chart-point-max`. That is what makes it a scale rather
-           than a radius, and it is also why a size is never a quantity a reader
-           can read off alone: it is in the label and in the table. */
+           always `--cr-chart-point-max`. A reader cannot read the size off the
+           point alone, so it is also in the label and in the table. */
         const area = scaleLinear()
           .domain(sizes.length ? span(sizes) : [0, 1])
           .range([chartGeometry.pointMin ** 2, chartGeometry.pointMax ** 2]);
@@ -202,8 +200,8 @@ function label(
   return parts.join(', ');
 }
 
-/** Every point as a row. A dense scatter is exactly the chart whose table
- *  matters most, and exactly the one where an author is tempted to summarise. */
+/** Every point as a row. A dense scatter needs its table most, and is the chart
+ *  an author is most tempted to summarise. */
 export function scatterTable(
   series: readonly ScatterSeries[],
   xLabel: string, yLabel: string,

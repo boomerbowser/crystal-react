@@ -1,15 +1,14 @@
 @use '../../styles/tokens' as *;
 
-/* Prose — one reading rhythm for content the product did not lay out.
+/* Prose: one reading rhythm for content the product did not lay out.
  *
  * This is the component for rendered Markdown, a CMS body, anything arriving as
- * HTML rather than as Crystal components. Its job is that a heading, a list, a
- * quotation, a table, a code block and an image all sit on the same rhythm
- * without the author of the content knowing Crystal exists.
+ * HTML rather than as Crystal components. A heading, a list, a quotation, a
+ * table, a code block and an image all sit on the same rhythm without the
+ * author of the content knowing Crystal exists.
  *
- * The rhythm is a single idea: space between blocks comes from the reading
- * leading, so a paragraph gap is one blank line. Everything else follows from
- * that — which is what makes a document look composed rather than assembled.
+ * Space between blocks comes from the reading leading, so a paragraph gap is
+ * one blank line. The rest of the spacing follows from that.
  */
 
 .prose {
@@ -47,16 +46,15 @@
 .prose li + li { margin-block-start: $cr-spacing-xs; }
 .prose li::marker { color: var(--cr-muted); }
 
-/* The standalone `Blockquote` component takes the same treatment. It cannot take
-   `.prose` for it: that rule is `.prose blockquote`, a descendant selector, and
-   the component *is* the blockquote — so it matched nothing and the rule was
-   invisible. The story is what showed it. */
+/* The standalone `Blockquote` component takes the same treatment through its
+   own class. `.prose` cannot reach it: that rule is `.prose blockquote`, a
+   descendant selector, and the component is the blockquote itself. */
 .prose blockquote,
 .blockquote {
   margin-inline: 0;
   padding-inline-start: $cr-spacing-md;
-  /* A rule rather than a panel: a quotation inside running text is part of the
-     text, and putting it on its own surface reads as a callout. */
+  /* A rule rather than a panel. A quotation inside running text is part of the
+     text, and on its own surface it would read as a callout. */
   border-inline-start: $cr-indicator-line-width solid var(--cr-primary-soft);
   color: var(--cr-muted);
 }

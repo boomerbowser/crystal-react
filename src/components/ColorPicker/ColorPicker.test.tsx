@@ -4,9 +4,8 @@ import { renderWithCrystal, screen } from '../../test/render.js';
 import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 import { ColorInput, ColorSwatch, ColorSwatchPicker, ColorSlider } from './ColorPicker.js';
 
-/* Crystal's own seeds rather than typed hexes. A colour component's test is the
-   one place it is tempting to write a literal, and it is still a value that can
-   drift from the palette it came from. */
+/* Crystal's own seeds instead of typed hexes. A literal in a colour test is
+   still a value that can drift from the palette it came from. */
 const palettes = (crystalFlat as unknown as { palettes: Record<string, { seed: string }> }).palettes;
 const PRISM = palettes['prism']!.seed;
 const HARBOR = palettes['harbor']!.seed;
@@ -29,8 +28,8 @@ describe('ColorInput', () => {
 });
 
 describe('ColorSwatch', () => {
-  /* Colour cannot be the only carrier, so the name is content beside it — not a
-     tooltip and not a title. */
+  /* Colour cannot be the only carrier, so the name is content beside it, not a
+     tooltip or a title. */
   it('carries the colour name as text', () => {
     renderWithCrystal(<ColorSwatch color={PRISM} name="Prism violet" />);
     expect(screen.getByText('Prism violet')).toBeInTheDocument();
@@ -38,7 +37,7 @@ describe('ColorSwatch', () => {
 });
 
 describe('ColorSwatchPicker', () => {
-  /* The name, not the hex: "#7338EF" is not something anybody recognises. */
+  /* The name, not the hex. Nobody recognises "#7338EF" as a colour. */
   it('announces each swatch by name', () => {
     renderWithCrystal(
       <ColorSwatchPicker
@@ -54,10 +53,10 @@ describe('ColorSwatchPicker', () => {
 describe('ColorSlider', () => {
   /* Standalone as well as inside a picker. The catalogue lists it as its own
      component, and React Aria throws without a value when there is no picker
-     above to inherit one from — which made the first version unusable alone. */
-  /* A hue slider handed a hex used to throw: `#7338EF` is RGB and has no hue
-     channel. Everybody's colour is a hex, so the conversion happens in the
-     component rather than in every call site. */
+     above to inherit one from. */
+  /* `#7338EF` is RGB and has no hue channel, so a hue slider handed a hex would
+     throw. Most colours are written as hex, so the conversion happens in the
+     component and not at every call site. */
   it('takes a hex for a channel that hex does not have', () => {
     renderWithCrystal(<ColorSlider channel="hue" label="Hue" defaultValue={PRISM} />);
     const slider = screen.getByRole('slider');

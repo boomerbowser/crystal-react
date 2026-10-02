@@ -1,18 +1,16 @@
 'use client';
 
-/* AudioPlayer — an audio transport with scrubbing and volume.
+/* AudioPlayer: an audio transport with scrubbing and volume.
  *
- * "**A real audio element.**" The `<audio>` is the component, not an
- * implementation detail behind it: it is what plays, what the operating
- * system's media keys reach, what a Bluetooth headset's pause button pauses,
- * and what the browser's own controls would drive if a product asked for them.
- * Everything drawn here reads its state from that element rather than keeping a
- * copy — see `useMediaElement`, which explains why a player that tracked its own
- * `isPlaying` is wrong the first time anything else touches the media.
+ * "A real audio element." The `<audio>` is the component. It is what plays,
+ * what the operating system's media keys reach, what a Bluetooth headset's pause
+ * button pauses, and what the browser's own controls would drive if a product
+ * asked for them. Everything drawn here reads its state from that element
+ * instead of keeping a copy. `useMediaElement` explains why a player that tracks
+ * its own `isPlaying` goes wrong when anything else touches the media.
  *
- * It is exposed, too: `mediaRef` hands the element to the caller, because
- * sources, playlists and streaming are the product's half and all of them are
- * done on the element.
+ * `mediaRef` hands the element to the caller, because sources, playlists and
+ * streaming are the product's half and all of them are done on the element.
  *
  * The transport is `MediaControls`, shared with the video player. "The scrubber
  * is a slider announcing time, not a progress bar" is enforced there.
@@ -28,9 +26,9 @@ import { useMediaArrival } from '../../media/useMediaArrival.js';
 import styles from './AudioPlayer.module.scss';
 
 export interface AudioPlayerProps
-  /* `title` is dropped from the inherited set: on an element it is the tooltip
-     attribute and must be a string, and here it is the heading above the
-     transport. A tooltip is not what a player's title is. */
+  /* `title` is omitted from the inherited set. On an element it is the tooltip
+     attribute and must be a string. Here it is the heading above the
+     transport. */
   extends Omit<AudioHTMLAttributes<HTMLAudioElement>, 'controls' | 'children' | 'title'> {
   /** What is playing. Named, because "Play" alone names nothing on a page of
    *  players. */
@@ -51,17 +49,17 @@ export const AudioPlayer = forwardRef<HTMLAudioElement, AudioPlayerProps>(functi
 }, ref): ReactNode {
   const own = useRef<HTMLAudioElement>(null);
   const media = useMediaElement(own);
-  /* `media-in` once the audio is ready. Audio has nothing to see, so it plays on
-     the player — the surface that now has something to play. */
+  /* `media-in` once the audio is ready. Audio has nothing to see, so the recipe
+     plays on the player, the surface that now has something to play. */
   const arrival = useMediaArrival(own);
 
   return (
     <div ref={arrival as never} className={cx(styles['player'], className)}>
       {title ? <p className={styles['title']}>{title}</p> : null}
-      {/* No `controls`: the transport below is the control surface, and two sets
-          of controls for one element is two sets of everything — two tab stops
-          per action, two things to style, two places a state can be shown
-          differently. The element keeps its own semantics all the same. */}
+      {/* No `controls`. The transport below is the control surface. Two sets of
+          controls for one element means two tab stops per action, two things to
+          style, and two places a state can be shown differently. The element
+          keeps its own semantics. */}
       {/* eslint-disable-next-line jsx-a11y/media-has-caption -- a caption track is the product's to supply through `children`, and an audio element with no spoken content owes none */}
       <audio
         {...props}

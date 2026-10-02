@@ -15,12 +15,11 @@ describe('StatusBar', () => {
     expect(screen.getByTestId('bar')).toHaveAttribute('aria-busy', 'true');
   });
 
-  /* "Errors escalate to assertive." The obvious implementation swaps the role on
-     one element, and on several screen readers that does nothing: politeness is
-     taken when a live region is inserted, not when its role attribute changes.
-     The text updates and the urgency does not — a bug invisible to everyone who
-     can see the bar. So the message moves into an assertive region that was
-     already there, and leaves the polite one empty so nothing is said twice. */
+  /* "Errors escalate to assertive." Swapping the role on one element does
+     nothing on several screen readers, because politeness is taken when a live
+     region is inserted, not when its role attribute changes. So the message
+     moves into an assertive region that was already there, and leaves the
+     polite one empty so nothing is said twice. */
   it('moves the message into the assertive region when it escalates', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <StatusBar status="All changes saved" />,

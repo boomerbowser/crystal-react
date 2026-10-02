@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* Toolbar — a grouped set of controls with one tab stop.
+/* Toolbar: a grouped set of controls with one tab stop.
  *
  * A dock when it floats as its own plane, inherited when it sits inside a surface
  * that already has one. The group reaches the minimum target height so a row of
@@ -17,9 +17,9 @@
 
 .vertical { flex-direction: column; align-items: stretch; }
 
-/* A floating toolbar is Crystal's dock, worn as `.cr-dock` by the component:
-   the Resin plane, its Haze fill, its fallbacks, and buttons that lose their own
-   Resin — until 28 September each button inside kept its Resin coat, which is
-   Resin inside Resin. Crystal has no vertical dock, so a vertical one keeps the
-   content radius rather than becoming a very tall pill. */
+/* A floating toolbar is Crystal's dock, worn as `.cr-dock` by the component.
+   The dock supplies the Resin plane, its Haze fill and its fallbacks, and strips
+   the Resin coat from the buttons inside so there is no Resin inside Resin.
+   Crystal has no vertical dock, so a vertical toolbar keeps the content radius
+   instead of becoming a very tall pill. */
 .vertical.resin { border-radius: var(--cr-radius); }

@@ -3,24 +3,24 @@
 /* The date and time family: DateInput, TimeInput, DatePicker, DateRangePicker,
  * DateTimePicker, MonthPicker, YearPicker and DigitalClock.
  *
- * A date field is **not** a text field with a pattern. It is a row of segments,
- * each its own spin button, which is what makes a date enterable by keyboard in
- * any locale without the person knowing the order — and what makes it announce
- * "day, 14" rather than reading a formatted string back. Every masked-text date
- * field is worse than this in three ways at once: it assumes an order, it fights
- * the caret, and it is unreadable to a screen reader.
+ * A date field is a row of segments, each its own spin button, and not a text
+ * field with a pattern. Segments let a person enter a date by keyboard in any
+ * locale without knowing the order, and make the field announce "day, 14"
+ * instead of reading a formatted string back. A masked-text date field assumes
+ * an order, fights the caret, and is unreadable to a screen reader.
  *
- * All of the arithmetic is `@internationalized/date`, which is the reason these
+ * All of the arithmetic is `@internationalized/date`, which is why these
  * components are thin. Dates are the single largest source of wrong answers in
- * application code — time zones, calendar systems, the 25-hour day — and a design
- * system that does its own date maths is a design system with a bug in it.
+ * application code (time zones, calendar systems, the 25-hour day), so the
+ * design system does no date maths of its own.
  *
- * A placeholder segment shows "dd" rather than a plausible number: `01` is an
- * answer nobody gave, and a form that submits it has invented data.
+ * A placeholder segment shows "dd", not a plausible number. `01` is an answer
+ * nobody gave, and a form that submits it has invented data.
  *
  * Month and year pickers are the same field with fewer segments. They exist
- * separately because the catalogue does: "when is this bill due" and "which year
- * were you born" are different questions and deserve different affordances.
+ * separately because the catalogue lists them separately: "when is this bill
+ * due" and "which year were you born" are different questions and need
+ * different affordances.
  */
 import type { ReactNode } from 'react';
 import {
@@ -51,9 +51,7 @@ interface FieldExtras {
   description?: ReactNode;
   errorMessage?: ReactNode;
   /* Without this a date cannot be part of a form: it is not submitted, and a
-     `Form` distributing a server's errors has no name to match it against. Every
-     other field in the library took one; these did not, which made the whole
-     temporal family unusable in the one place dates are most often collected. */
+     `Form` distributing a server's errors has no name to match it against. */
   name?: string;
   isRequired?: boolean;
   className?: string;
@@ -76,7 +74,7 @@ export interface DateInputProps extends FieldExtras {
   isInvalid?: boolean;
 }
 
-/** A date typed in segments. No calendar — for a date somebody already knows. */
+/** A date typed in segments, with no calendar. For a date somebody already knows. */
 export function DateInput({
   label, description, errorMessage, className, ...props
 }: DateInputProps): React.JSX.Element {
@@ -118,8 +116,8 @@ export function TimeInput({
       {({ isInvalid }) => (
       <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      {/* This one had no validation binding at all — not even the declared kind —
-          so it neither marked itself nor moved, whatever went wrong. */}
+      {/* The validity React Aria resolved, so the field marks itself and moves
+          whatever the source of the error. */}
       <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>{segments}</FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
@@ -131,7 +129,7 @@ export function TimeInput({
 
 
 export interface DatePickerProps extends DateInputProps {
-  /** Reject dates the product cannot accept — a booked day, a weekend. */
+  /** Reject dates the product cannot accept, such as a booked day or a weekend. */
   isDateUnavailable?: (date: DateValue) => boolean;
 }
 
@@ -167,9 +165,10 @@ export function DatePicker({
 
 export interface DateRangePickerProps extends Omit<FieldExtras, 'name'> {
   /**
-   * A range is two values, so it is two names — React Aria submits and matches
-   * each end separately, and a single `name` reaches neither. `FieldExtras`'
-   * `name` is omitted here rather than quietly ignored.
+   * A range is two values, so it takes two names. React Aria submits and
+   * matches each end separately, and a single `name` reaches neither.
+   * `FieldExtras`' `name` is omitted here so that it cannot be passed and
+   * ignored.
    */
   startName?: string;
   endName?: string;
@@ -229,9 +228,9 @@ export function DateTimePicker({ granularity = 'minute', ...props }: DateTimePic
 export type MonthPickerProps = Omit<DateInputProps, 'granularity'>;
 
 /**
- * A month and a year. The same field with the day segment gone — "which month
- * does this bill cover" is a different question from "which day", and offering a
- * day to answer it invites a wrong answer.
+ * A month and a year: the same field without the day segment. "Which month
+ * does this bill cover" is a different question from "which day", and offering
+ * a day to answer it invites a wrong answer.
  */
 export function MonthPicker(props: MonthPickerProps): React.JSX.Element {
   return <DateInput {...props} />;

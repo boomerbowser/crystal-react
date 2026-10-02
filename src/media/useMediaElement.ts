@@ -2,24 +2,23 @@
 
 /* The state of a real `<audio>` or `<video>`, read from the element itself.
  *
- * "A **real** audio element", "native video element underneath" — the catalogue
- * says it twice, and this hook is what makes it true rather than decorative. The
- * element is the source of truth for every value here: a player that kept its
- * own `isPlaying` flag would be wrong the moment anything else touched the
- * media, and plenty does — the operating system's media keys, a Bluetooth
+ * The catalogue asks for this twice: "A real audio element", "native video
+ * element underneath". The element is the source of truth for every value here.
+ * A player that kept its own `isPlaying` flag would be wrong as soon as anything
+ * else touched the media: the operating system's media keys, a Bluetooth
  * headset's pause button, another tab taking audio focus, the browser's own
- * picture-in-picture window, `autoplay` being refused.
+ * picture-in-picture window, or a refused `autoplay`.
  *
- * So nothing here is set by the controls. The controls call methods on the
- * element; the element fires events; the events are what move this state. A
- * pause button that did not work would show a paused player anyway if it were
- * the other way round.
+ * The controls set none of this state. They call methods on the element, the
+ * element fires events, and the events update the state. If the controls set
+ * the state instead, a pause button that failed would still show a paused
+ * player.
  *
- * `timeupdate` fires about four times a second, which is the browser's own rate
- * and is deliberately not supplemented with an animation frame loop: a scrubber
- * that updates sixty times a second is sixty renders a second for a bar nobody
- * is watching that closely, and "nothing moves at rest" is not the argument —
- * the argument is that it costs a phone its battery to say the same thing.
+ * `timeupdate` fires about four times a second, the browser's own rate, and is
+ * not supplemented with an animation frame loop. A scrubber that updates sixty
+ * times a second costs sixty renders a second, and a phone's battery, without
+ * showing the reader anything more. The reason is that cost, not the rule that
+ * nothing moves at rest.
  */
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 
@@ -71,9 +70,9 @@ export function useMediaElement(
     const read = (): void => {
       const next: MediaState = {
         isPlaying: !element.paused && !element.ended,
-        /* `readyState` rather than a `waiting`/`playing` flag of our own: the
+        /* Read from `readyState` instead of a local `waiting`/`playing` flag. The
            element already knows whether it has enough data, and a flag would
-           have to be unset by an event that does not always arrive. */
+           have to be cleared by an event that does not always arrive. */
         isBuffering: !element.paused && element.readyState < element.HAVE_FUTURE_DATA,
         isEnded: element.ended,
         isMuted: element.muted,
@@ -109,10 +108,10 @@ export function useMediaElement(
   }, [media]);
 
   const play = useCallback(() => {
-    /* `play()` returns a promise that rejects when the browser refuses — no
-       gesture yet, or a policy against autoplay. Swallowed rather than thrown:
-       the element stays paused and the state stays truthful, which is the
-       correct outcome and not an error anybody can act on. */
+    /* `play()` returns a promise that rejects when the browser refuses, because
+       there has been no gesture yet or a policy forbids autoplay. The rejection
+       is swallowed: the element stays paused, the state stays accurate, and
+       there is nothing anybody could do about the error. */
     void media.current?.play().catch(() => undefined);
   }, [media]);
 
@@ -140,8 +139,8 @@ export function useMediaElement(
     const element = media.current;
     if (!element) return;
     element.volume = Math.min(1, Math.max(0, volume));
-    /* Raising the volume unmutes. A slider that moved while the sound stayed off
-       would be a control that appeared to do nothing. */
+    /* Raising the volume unmutes, so the slider never moves while the sound
+       stays off. */
     if (element.volume > 0 && element.muted) element.muted = false;
   }, [media]);
 

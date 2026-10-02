@@ -13,17 +13,16 @@ import { Group } from '../components/Stack/Stack.js';
 
 const meta = {
   title: 'Forms/useCrystalForm',
-  /* Without this docgen has nothing to read and Storybook generates no
-     controls at all — the message Meridian screenshotted. This file shows
-     several components together; the one named here is its subject, and the
-     others are the context it is normally seen in. */
+  /* Without this, docgen has nothing to read and Storybook generates no
+     controls at all. This file shows several components together. The one named
+     here is its subject, and the others are the context it is normally seen in. */
   component: Form,
   args: {
-    /* Placeholders, and deliberately so. Every story in this file builds its own
-       form with `useCrystalForm`, because a form's *state* is the subject — a
-       schema, its errors and what it does on submit. These exist only so the
-       required props are satisfied and docgen has a component to read, which is
-       what generates the props table. */
+    /* Placeholders. Every story in this file builds its own form with
+       `useCrystalForm`, because the subject is a form's state: a schema, its
+       errors and what it does on submit. These exist only so the required props
+       are satisfied and docgen has a component to read, which generates the
+       props table. */
     form: undefined as unknown as CrystalFormProps,
     children: null,
   },
@@ -33,14 +32,15 @@ const meta = {
         component:
           'One hook for the whole of a form: a Standard Schema over the submitted values, '
           + 'submission state as a data attribute, a mutation of any shape with `mutateAsync`, '
-          + 'and a server\'s errors landing on the same field state a client rule produces — '
-          + 'because to the person filling in the form, a field that failed on the server and a '
-          + 'field that failed locally are the same thing.\n\n'
-          + '**React Hook Form is deliberately not wrapped.** React Aria already owns validation '
+          + 'and a server\'s errors landing on the same field state a client rule produces. To '
+          + 'the person filling in the form, a field that failed on the server and a field that '
+          + 'failed locally are the same thing.\n\n'
+          + 'React Hook Form is deliberately not wrapped. React Aria already owns validation '
           + 'display, `aria-describedby` wiring and submission semantics.\n\n'
-          + '**Native validation stays on.** The browser blocks a structurally invalid submit '
+          + 'Native validation stays on. The browser blocks a structurally invalid submit '
           + 'before the schema runs, so a field\'s `isRequired` does not have to be restated in '
-          + 'the schema — which would be CONTRACT §1\'s redeclaration with rules instead of values.',
+          + 'the schema. Restating it would be the redeclaration CONTRACT §1 forbids, with '
+          + 'rules instead of values.',
       },
     },
   },

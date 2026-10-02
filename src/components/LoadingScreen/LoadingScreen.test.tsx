@@ -11,11 +11,11 @@ describe('LoadingScreen', () => {
     expect(screen.getByTestId('screen')).toHaveAttribute('aria-busy', 'true');
   });
 
-  /* "The wait is announced once, not repeatedly." That is a count, and the
-     count is of live regions rather than of words: one `Skeleton` per shape
-     would be one region per shape, and a screen reader would say the same
-     sentence as many times as there are bars on the screen. Twelve shapes here,
-     because a claim about repetition cannot be tested with one of anything. */
+  /* "The wait is announced once, not repeatedly." That is a count of live
+     regions. One `Skeleton` per shape would be one region per shape, and a
+     screen reader would say the same sentence as many times as there are bars
+     on the screen. The test uses twelve shapes, because repetition cannot be
+     tested with one. */
   it('announces the wait once however many shapes are coming', () => {
     renderWithCrystal(
       <LoadingScreen
@@ -39,7 +39,7 @@ describe('LoadingScreen', () => {
   });
 
   /* A skeleton of the wrong shape is a promise the arriving content breaks. A
-     spinner is honest about knowing nothing, so that is the fallback. */
+     spinner claims nothing about the shape, so that is the fallback. */
   it('falls back to a spinner when the shape is not known', () => {
     renderWithCrystal(<LoadingScreen label="Loading" />);
     expect(screen.getByText('Loading')).toBeInTheDocument();

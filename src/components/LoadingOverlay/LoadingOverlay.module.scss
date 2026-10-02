@@ -5,10 +5,10 @@
 .content { border-radius: inherit; }
 
 /* Mirage, at region scope. The same layer a dialog puts between itself and the
-   scene, one level down — a filter rather than a dark fill, so it draws its
-   chroma from the region it is over instead of inventing a colour. "Inherits
-   the region's radius": a square wash over a rounded panel says the page is
-   blocked, not the panel. */
+   scene, one level down. It is a filter, so it draws its chroma from the region
+   it is over. A dark fill would add a colour of its own. "Inherits the region's
+   radius": a square wash over a rounded panel says the page is blocked, not the
+   panel. */
 .scrim {
   position: absolute;
   inset: 0;

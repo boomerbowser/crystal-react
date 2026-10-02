@@ -17,8 +17,8 @@ const props: StorefrontBlockProps = {
 };
 
 describe('StorefrontBlock', () => {
-  /* The opinion: the products are a list named for what they are, so a reader
-     hears how many before the first one. */
+  /* The products are a list named for what they are, so a reader hears how
+     many before the first one. */
   it('lists the products as a labelled list, and shows the count in words', () => {
     renderWithCrystal(<StorefrontBlock {...props} />);
     const list = screen.getByRole('list', { name: 'Products' });

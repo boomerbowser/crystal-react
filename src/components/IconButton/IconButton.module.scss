@@ -1,25 +1,19 @@
 @use '../../styles/tokens' as *;
 
-/* IconButton and CloseButton — one icon, and a target big enough to hit.
+/* IconButton and CloseButton. One icon, and a target big enough to hit.
  *
- * The target floor is the whole point. A 24px icon is a 24px picture and a 48px
- * place to press, and the two are different things: growing the visible control
- * to 48px makes a toolbar of icons look clumsy, so the padding does it instead
- * and the shape stays square.
+ * A 24px icon is a 24px picture and a 48px place to press. The box is the
+ * minimum target size and square, and the icon inside it stays the size it
+ * was drawn.
  *
- * R-19, swept — and the sweep inverted this file. Crystal paints every `<button>`
- * as a Resin control by element selector, not by class, so `resin` never needed
- * declaring: it is what a button already is. What needed declaring is `quiet`.
+ * Crystal paints every `<button>` as a Resin control by element selector, so
+ * `resin` declares nothing here (R-19). `quiet` has to remove the whole coat.
+ * Setting `background: transparent` alone leaves Crystal's 20px backdrop blur,
+ * its float shadow and its 80%-white feathered reading pad in place, as
+ * measured in a browser.
  *
- * That was a live defect rather than a tidiness argument. A quiet icon button set
- * `background: transparent` and nothing else, so it kept Crystal's 20px backdrop
- * blur, Crystal's float shadow and Crystal's 80%-white feathered reading pad —
- * measured in a browser, not inferred. It was transparent in exactly one
- * property and opaque in every other. Taking a coat off means taking the whole
- * coat off.
- *
- * So `resin` declares nothing at all now, and this file says only what a quiet
- * control is and what Crystal does not specify.
+ * This file says only what a quiet control is and what Crystal does not
+ * specify.
  */
 
 .iconButton {
@@ -38,11 +32,11 @@
 
 .circle { border-radius: 50%; }
 
-/* Quiet: the whole coat off, not just the fill.
+/* Quiet: the whole coat comes off, the fill included.
  *
  * The rim, the shadow and the blur are Crystal's `:is(button, …)` rule, and both
  * feathered layers are its `::before` and `::after`. A quiet control sits on the
- * surface it is on, which means none of them. */
+ * surface it is on, so it takes none of them. */
 .quiet {
   border-color: transparent;
   background: transparent;
@@ -56,17 +50,16 @@
 }
 
 /* A quiet control has no material to lift, so hover is a fill. Crystal's hover
-   returns a Resin control to the Resin fill, which says nothing here — there is
-   no Resin fill to return to. The resin variant is left to Crystal's own hover. */
+   returns a Resin control to the Resin fill, and a quiet control has no Resin
+   fill to return to. The resin variant is left to Crystal's own hover. */
 .quiet:hover:not(:disabled) { background: var(--cr-surface-alt); }
 
 /* A toggle that is on.
  *
- * Crystal paints this by tinting the reading pad, and a quiet control has no pad
- * — the same gap the quiet button has. So the state has to be a fill here, and
- * it takes the selected pair Crystal uses for every selected surface rather than
- * a colour chosen for this control. The resin variant needs none of this: its
- * pad is there, and Crystal tints it. */
+ * Crystal paints this by tinting the reading pad. A quiet control has no pad,
+ * the same gap the quiet button has, so the state is a fill here. It takes the
+ * selected pair Crystal uses for every selected surface. The resin variant
+ * needs none of this: its pad is there, and Crystal tints it. */
 .quiet[aria-pressed='true'] {
   background: var(--cr-primary-soft);
   color: var(--cr-on-primary-soft);
@@ -87,6 +80,6 @@
   .iconButton[aria-pressed='true'] { outline: 2px solid Highlight; }
 }
 
-/* The icon's own box, so `icon-turn` has something to turn that is not the
-   button: the control stays still while its chevron moves. */
+/* The icon's own box, so `icon-turn` turns the icon and the control stays
+   still while its chevron moves. */
 .icon { display: inline-flex; }

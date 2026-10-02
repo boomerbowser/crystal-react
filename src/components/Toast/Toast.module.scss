@@ -2,8 +2,8 @@
 @use '../../styles/material';
 @use '../../styles/status';
 
-/* The stack. Fixed to the region's end corner, newest nearest the edge, and a
-   list because three toasts are three things. */
+/* The stack. Fixed to the region's end corner, newest nearest the edge. It is a
+   list because each toast is a separate item. */
 .stack {
   position: fixed;
   z-index: 1000;
@@ -16,21 +16,20 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  /* A measure rather than a width: wide enough for a sentence and a button,
-     narrow enough that a toast is not a panel, and it moves with the type
-     instead of staying still while the type grows. The other feedback panels
-     are bounded the same way. */
+  /* A measure instead of a fixed width. It is wide enough for a sentence and a
+     button, narrow enough that a toast does not become a panel, and it grows
+     with the type. The other feedback panels are bounded the same way. */
   max-inline-size: min(92vw, 46ch);
 }
 
 /* "Frost panel with Haze reading fill and the panel shadow (R15e)." A toast
-   opens over content, so it is a transient panel like a menu or a popover, not a
-   Resin control — Meridian moved it to Frost with the others, and the catalogue
+   opens over content, so it is a transient panel like a menu or a popover and
+   takes Frost. Meridian moved it to Frost with the others, and the catalogue
    says so as of Crystal 2.2.0. */
 .toast {
   /* The Frost panel is Crystal's `.cr-frost`, which the element wears. The Haze
      reading fill under the text is the catalogue's "Frost panel with Haze
-     reading fill", and it stays: Frost has no pad of its own. */
+     reading fill", and it is needed because Frost has no pad of its own. */
   @include material.haze-fill;
 
   display: flex;

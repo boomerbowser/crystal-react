@@ -1,38 +1,36 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* Select and NativeSelect — the field anatomy with a disclosure.
+/* Select and NativeSelect.
  *
- * The catalogue is specific that the badge and any decoration stay clear of the
- * platform arrow. A native select draws its own disclosure wherever the platform
- * puts it, and a decoration placed over it is a decoration on top of a control —
+ * The field anatomy with a disclosure.
+ *
+ * The catalogue says the badge and any decoration stay clear of the platform
+ * arrow. A native select draws its own disclosure wherever the platform puts it,
  * so the trailing padding leaves room and nothing is drawn inside it.
  */
 
 .field { @include field.field; }
 .label { @include field.label; }
 .shell { @include field.shell; }
-/* One element, both roles — this button *is* the shell. It was
-   `@include field.control` here, whose `border-radius: inherit` reached past the
-   shell to the field, which has none, so the trigger rendered square while every
-   other field was a 28px well. `field.trigger` fixed the radius and kept
-   `control`'s transparent background, which left this the one field in a form
-   with no fill at all. It no longer does either. */
+/* This button is both the trigger and the shell. It carries the shell's classes,
+   which give it the shell's radius and fill, and `field.trigger` for its height,
+   font and cursor. `field.control` must not be used here. Its
+   `border-radius: inherit` reaches past the shell to the field, which has none,
+   and its background is transparent. */
 .trigger { @include field.trigger; }
 
-/* The native select is a control *inside* a shell rather than being one, so it
-   takes the recipe that unpaints. The distinction is the whole of the bug above:
-   one class was doing both jobs. */
+/* The native select is a control inside a shell, so it takes the recipe that
+   unpaints. */
 .control { @include field.control; }
 
 .trigger:focus,
 .control:focus { outline: none; }
 .shell:focus-within { @include field.focus-ring; }
 /* Two selectors for one state. The shell carries `data-invalid` when this
-   component set it; the field wrapper carries it when React Aria worked it out —
-   a native constraint, or an error a `Form` distributed from a server. Styling
-   only the first meant a field could be announced as invalid and drawn as if it
-   were fine. */
+   component set it. The field wrapper carries it when React Aria worked it out:
+   a native constraint, or an error a `Form` distributed from a server. Both are
+   styled so a field announced as invalid is also drawn as invalid. */
 .shell[data-invalid],
 .field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
 
@@ -55,9 +53,9 @@
 /* The list is a Frost panel: a transient overlay is Frost, never Resin. */
 .popover {
   /* The panel is Crystal's `.cr-frost`, which the popover wears: the Frost fill,
-     the rim, the panel shadow and the diffusion. This painted the fill with the
-     float shadow and an edge — Resin's shadow on Frost's fill — and it is gone.
-     The catalogue's popover geometry is the content radius, stated here. */
+     the rim, the panel shadow and the diffusion. Do not add the float shadow
+     here. It is Resin's. The catalogue's popover geometry is the content radius,
+     stated here. */
   min-inline-size: var(--trigger-width);
   max-block-size: 40vh;
   padding: $cr-spacing-2xs;
@@ -74,9 +72,8 @@
   padding-inline: $cr-spacing-sm;
   border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
   color: var(--cr-text);
-  /* Selection is label weight. Never a check mark: in Crystal a check mark means
-     validated or informational, and a list that uses one for selection has said
-     something else. */
+  /* Selection is label weight, never a check mark. In Crystal a check mark means
+     validated or informational. */
   font-weight: 550;
   cursor: pointer;
 }

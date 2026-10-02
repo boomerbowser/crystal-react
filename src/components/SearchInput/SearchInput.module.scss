@@ -1,7 +1,7 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* SearchInput — the field anatomy with a leading icon and a clear control. */
+/* SearchInput. The field anatomy with a leading icon and a clear control. */
 
 .field { @include field.field; }
 .label { @include field.label; }

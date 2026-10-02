@@ -3,19 +3,18 @@
 /* Mark and Highlight.
  *
  * `Mark` is one run of highlighted text. `Highlight` finds the matches inside a
- * string and marks them, which is the search-results case and the reason both
- * exist: doing it by hand means splitting a sentence into an array of fragments,
- * and a sentence split into fragments is a sentence a screen reader reads as
+ * string and marks them, for search results. Doing it by hand means splitting a
+ * sentence into an array of fragments, which a screen reader reads as
  * fragments.
  *
- * So the whole string stays one text node's worth of content with `mark` elements
+ * The whole string stays one text node's worth of content with `mark` elements
  * inside it, which is what the catalogue means by "the surrounding sentence
  * remains readable as one string".
  *
- * **Highlighting is never the only indication of a match.** That is the
- * catalogue's rule and it cannot be enforced here: a results list has to say how
- * many matches there are, or which field matched, in text. Colour alone is not an
- * indication, and neither is a background nobody can see.
+ * Highlighting is never the only indication of a match. That is the
+ * catalogue's rule, and this component cannot enforce it: a results list has to
+ * say in text how many matches there are, or which field matched. Colour alone
+ * is not an indication, and neither is a background nobody can see.
  */
 import { useEffect, useMemo, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -57,15 +56,15 @@ function ArrivingCue(): React.JSX.Element {
 export interface HighlightProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
   /** The full text. Stays one readable string; only the matches are wrapped. */
   children: string;
-  /** What to mark. A string, or several — an empty one marks nothing. */
+  /** What to mark. A string, or several. An empty one marks nothing. */
   query: string | readonly string[];
-  /** Match regardless of case. On by default: a search usually should. */
+  /** Match regardless of case. On by default, because a search usually should. */
   ignoreCase?: boolean;
 }
 
-/* Escaped, because a query is somebody's typing rather than a pattern. Without
-   this a search for "c++" or "(" throws, which is a crash on an input a person
-   is allowed to make. */
+/* Escaped, because a query is somebody's typing and not a pattern. Without
+   this a search for "c++" or "(" throws on an input a person is allowed to
+   make. */
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export function Highlight({
@@ -83,10 +82,10 @@ export function Highlight({
   const queries = (Array.isArray(query) ? query : [query]).filter(Boolean) as string[];
   const matches = new Set(queries.map((term) => (ignoreCase ? term.toLowerCase() : term)));
 
-  /* The marks on the first render were there when the text arrived; marks after
-     it appeared because the query changed, and those are the ones the catalogue's
-     \`highlight\` is for. Keyed by the query as well as the position, so a new
-     query is new marks rather than old ones with new words in them. */
+  /* Marks on the first render were there when the text arrived. Marks after it
+     appeared because the query changed, and those play the catalogue's
+     \`highlight\`. Keyed by the query as well as the position, so a new query
+     mounts new marks instead of reusing old ones with new words in them. */
   const settled = useRef(false);
   useEffect(() => { settled.current = true; });
   const generation = queries.join('\u0000');

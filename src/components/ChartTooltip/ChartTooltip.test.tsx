@@ -24,10 +24,10 @@ describe('ChartTooltip', () => {
     expect(screen.getByTestId('tip').hasAttribute('data-shown')).toBe(false);
   });
 
-  /* "Never covers the point it describes." Near the right edge it turns rather
-     than being clipped, which is a decision made from the point's position
-     rather than after measuring the panel — measuring needs a layout pass, and a
-     tooltip one frame late under a moving pointer trails. */
+  /* "Never covers the point it describes." Near the right edge it turns instead
+     of being clipped. The side is chosen from the point's position without
+     measuring the panel, because measuring needs a layout pass and a tooltip one
+     frame late under a moving pointer trails. */
   it('turns to the side that keeps it inside the plot', () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <ChartTooltip data-testid="tip" shown x={20} y={20} bounds={bounds} rows={rows} />,

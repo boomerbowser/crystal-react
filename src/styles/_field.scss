@@ -3,14 +3,13 @@
 
 /* The field anatomy, once.
  *
- * Every text-shaped control in Crystal is the same thing: a label, a Haze well
- * inside a Resin shell, and helper text or an error beneath. Writing that out in
- * ten stylesheets is ten descriptions of one material, and they diverge the first
- * time one of them changes — which is CONTRACT §1 applied inside a library rather
- * than across one.
+ * Every text-shaped control in Crystal has the same anatomy: a label, a Haze
+ * well inside a Resin shell, and helper text or an error beneath. Ten copies in
+ * ten stylesheets would diverge as soon as one changed. This is CONTRACT §1
+ * applied inside a library.
  *
- * Mixins rather than shared classes, because the sharing happens at compile time
- * and leaves no runtime class juggling for a caller to get wrong.
+ * These are mixins instead of shared classes, because the sharing happens at
+ * compile time and leaves no runtime class handling for a caller to get wrong.
  */
 
 /* The outer stack: label, control, message. */
@@ -26,86 +25,81 @@
   font-weight: 800;
 }
 
-/* The shell floats; the well inside is what you read and type into, so it is
-   recessed rather than raised. Crystal's light source is overhead throughout, so
-   recession inverts the light pair: a highlight inset along the top edge where
-   the light lands, over the content-level shadow. */
+/* The shell floats. The well inside is what you read and type into, so it is
+   recessed. Crystal's light source is overhead throughout, so recession inverts
+   the light pair: a highlight inset along the top edge where the light lands,
+   over the content-level shadow. */
 /* Only the unprefixed `backdrop-filter` is ever written in this library.
  *
- * Writing `-webkit-backdrop-filter` beside it made autoprefixer drop the standard
- * property, and Chromium does not understand the WebKit alias — so every Frost
- * and Resin surface rendered as a flat translucent fill with no diffusion at all,
- * in every story, since the beginning. Autoprefixer adds the prefix for Safari
- * on its own; the job here is to write the property once. */
+ * Writing `-webkit-backdrop-filter` beside it makes autoprefixer drop the
+ * standard property, and Chromium does not understand the WebKit alias, so every
+ * Frost and Resin surface renders as a flat translucent fill with no diffusion.
+ * Autoprefixer adds the prefix for Safari itself. Write the property once. */
 @mixin shell {
-  /* The shell is Crystal's `.cr-field-shell` (2.2.0), which every caller now wears:
+  /* The shell is Crystal's `.cr-field-shell` (2.2.0), which every caller wears:
      the Resin surround, the Haze well, the rim, the 20px radius, the 8px inset and
      the sheen, as written. Meridian ruled on 28 September 2026 (D-24) that the
-     library adopts it rim and all; until then this mixin painted its own shell
-     with the outline colour as the edge. Crystal's accessibility chapter records
-     how the rim is treated.
+     library adopts it, rim included. Crystal's accessibility chapter records how
+     the rim is treated.
 
-     What stays is layout Crystal does not decide for a React field — a shell that
-     fills its row rather than sitting inline — and the origin the field motion
-     deforms around. */
+     This mixin keeps only what Crystal does not decide for a React field: a shell
+     that fills its row instead of sitting inline, and the origin the field
+     motion deforms around. */
   display: flex;
   align-items: center;
   transform-origin: center;
 }
 
-/* The control that sits *inside* a shell: an input, a textarea, the button half
-   of a field. It takes the shell's radius by inheritance, which is what keeps a
-   focus ring and a background from squaring off inside a rounded well.
-   `@include control` on the shell itself is therefore wrong — `inherit` then
-   reaches past the shell to the field, which has no radius, and the whole
-   control renders square. Use `trigger` for an element that is both. */
-/* The floor Crystal gives a control inside a field shell —
+/* The control that sits inside a shell: an input, a textarea, the button half
+   of a field. It takes the shell's radius by inheritance, which keeps a focus
+   ring and a background from squaring off inside a rounded well. Do not
+   `@include control` on the shell itself: `inherit` then reaches past the shell
+   to the field, which has no radius, and the whole control renders square. Use
+   `trigger` for an element that is both. */
+/* The floor Crystal gives a control inside a field shell:
    `.cr-field-shell :is(input, select, textarea) { min-height: 44px; border-radius: 12px }`.
-   Published only as that rule, so it is named here once. */
+   Crystal publishes it only as that rule, so it is named here once. */
 $field-control-floor: 44px; /* crystal-allow-literal: core `.cr-field-shell :is(input,select,textarea)` min-height */
 
 /* The height a shell reaches around that floor: Crystal's 8px inset on each side
    and the 1px rim. For an element that must be exactly as tall as a field
-   without holding a native control — a trigger, a pin well's width. */
+   without holding a native control, such as a trigger, or a pin well's width. */
 $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* crystal-allow-literal: the shell's 1px rim, twice */
 
 @mixin control {
   flex: 1;
   min-width: 0;
   /* The height floor, the 12px radius, the transparent fill and the absent
-     border are Crystal's, from the rule above, which reaches every native control
-     inside the shell. This used to set its own 48px floor and inherit the shell's
-     radius, which made a field 74px tall inside Crystal's 8px inset instead of the
-     62 Crystal draws. What is left is the text's position: no block padding, so
-     the control is exactly Crystal's 44px, and inline padding that puts the text
-     roughly where it sat before the shell inset by 8px. */
+     border come from Crystal's rule above, which reaches every native control
+     inside the shell. Setting a separate floor here changes the field's height:
+     a 48px floor makes it 74px tall inside Crystal's 8px inset instead of the 62
+     Crystal draws. This mixin sets only the text's position: no block padding,
+     so the control is exactly Crystal's 44px, and inline padding that puts the
+     text roughly where it sat before the shell was inset by 8px. */
   padding: 0 $cr-spacing-sm;
 }
 
-/* One element that is the shell and the control at once — a select's trigger,
-   a cascader's. Everything `control` gives, except the inherited radius, which
-   it keeps as its own. */
+/* One element that is the shell and the control at once, such as a select's
+   trigger or a cascader's. Everything `control` gives, except the inherited
+   radius, which it keeps as its own. */
 /* A control that is also its own shell.
  *
- * Both callers put this on the same element as `shell` — a Select's button and a
- * Cascader's — and it used to `@include control`, which sets `background:
- * transparent` and `border: 0`. Those are right for a control that sits *inside*
- * a shell and wrong for one that is the shell: they erased the well the line
- * above had just painted.
- *
- * Measured in an address form, the Select was the only field of five with no
- * fill, and no border either — `border: 0` left `borderColor` resolving to
- * `currentColor`, so it read as the text ink rather than the outline. Its four
- * text-field siblings, and Crystal's own `.cr-field-shell`, all render the Resin
- * fill. So this takes the parts of `control` that describe a control and leaves
- * the two that unpaint a surface. */
+ * Both callers put this on the same element as `shell`: a Select's button and a
+ * Cascader's. It must not `@include control`, which sets `background:
+ * transparent` and `border: 0`. Those suit a control inside a shell, but on the
+ * shell itself they erase the well `shell` paints, and `border: 0` leaves
+ * `borderColor` resolving to `currentColor`, the text ink instead of the
+ * outline. Text fields and Crystal's own `.cr-field-shell` render the Resin
+ * fill. This mixin takes the parts of `control` that describe a control and
+ * leaves out the two that unpaint a surface. */
 @mixin trigger {
   flex: 1;
   min-width: 0;
   /* A trigger is its own shell, so it takes the height a shell reaches around a
-     44px control — Crystal's 8px inset on each side and the 1px rim. The inset
-     and the 20px radius are the shell's, as written; what a text field's input
-     adds inside that inset, the trigger's contents add with `trigger-content`. */
+     44px control: Crystal's 8px inset on each side and the 1px rim. The inset
+     and the 20px radius are the shell's, as written. The padding a text field's
+     input adds inside that inset, the trigger's contents add with
+     `trigger-content`. */
   min-height: $field-height;
   font: inherit;
   color: inherit;
@@ -120,7 +114,7 @@ $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* c
   padding-inline: $cr-spacing-sm;
 }
 
-/* The ring belongs to the shell, so it traces the control rather than the bare
+/* The ring belongs to the shell, so it traces the control and not the bare
    input inside it. */
 @mixin focus-ring {
   outline: $cr-focus-core-width solid var(--cr-focus-core);
@@ -132,9 +126,9 @@ $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* c
   font-size: var(--cr-text-caption-size);
 }
 
-/* A control inside the shell rather than beside it — a reveal toggle, a clear
-   button. It reaches the target floor by being as tall as the well, not by
-   growing the field. */
+/* A control inside the shell, such as a reveal toggle or a clear button. It
+   reaches the target floor by being as tall as the well, without growing the
+   field. */
 @mixin inline-action {
 
   display: flex;
@@ -149,8 +143,8 @@ $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* c
   cursor: pointer;
 }
 
-/* A leading icon is decoration and never a control: making it pressable puts a
-   tab stop in front of the field for something that does nothing. */
+/* A leading icon is decoration and never a control. Making it pressable would
+   put a tab stop in front of the field for something that does nothing. */
 @mixin leading-icon {
   display: flex;
   align-items: center;
@@ -161,7 +155,7 @@ $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* c
   pointer-events: none;
 }
 
-/* No fallback mixin. Crystal's `.cr-field-shell` publishes all three routes —
-   `[data-effects=opaque]`, reduced transparency and forced colours — for the
-   element itself, so a local copy restated them and, in forced colours, lost to
-   Crystal's `!important` anyway. */
+/* No fallback mixin. Crystal's `.cr-field-shell` publishes all three routes
+   (`[data-effects=opaque]`, reduced transparency and forced colours) for the
+   element itself. A local copy would restate them and, in forced colours, lose
+   to Crystal's `!important`. */

@@ -16,18 +16,15 @@ import { MultiSelect } from '../components/MultiSelect/MultiSelect.js';
 import { RichTextSurface } from '../components/RichTextSurface/RichTextSurface.js';
 import { FormField } from '../components/FormField/FormField.js';
 
-/* The gate that did not exist, and the reason it matters.
+/* React Aria treats a defined `isInvalid` as "the caller owns validity from
+ * here". A field that coerces it, as in `props.isInvalid ??
+ * Boolean(errorMessage)`, hands React Aria `false` when untouched, and `false`
+ * means "stop working out whether it is valid". The browser's native validation
+ * then never reaches the field, and neither does any error a `Form` was given
+ * to distribute. `<FieldError>` renders nothing and `aria-invalid` is never set.
  *
- * React Aria treats a *defined* `isInvalid` as "the caller owns validity from
- * here". Every field in this library coerced it — `props.isInvalid ??
- * Boolean(errorMessage)` — so an untouched field handed React Aria `false`, and
- * `false` is not "this field is fine": it is "stop working out whether it is".
- * Under it the browser's native validation never reached the field, and neither
- * did a single error a `Form` was given to distribute. `<FieldError>` rendered
- * nothing and `aria-invalid` was never set, however loudly the server objected.
- *
- * So: every field that takes a name is put inside a `Form` carrying an error for
- * it, and asked whether it noticed. */
+ * Every field that takes a name is put inside a `Form` carrying an error for
+ * it, and the test checks that the field shows it. */
 
 const OPTIONS = [{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }];
 
@@ -50,8 +47,8 @@ describe('a server error reaches every field', () => {
         <Form validationErrors={{ email: ['Already registered'] }}>{element}</Form>,
       );
       expect(screen.getByText('Already registered')).toBeInTheDocument();
-      /* And it is drawn as wrong, not only announced as wrong. The wrapper is
-         where React Aria puts the attribute when it resolved the state itself. */
+      /* It is drawn as invalid as well as announced. The wrapper is where React
+         Aria puts the attribute when it resolved the state itself. */
       expect(container.querySelector('[data-invalid]')).not.toBeNull();
       expect(label).toBe('Email');
     });
@@ -79,8 +76,8 @@ describe('a server error reaches every field', () => {
     expect(container.querySelector('[data-invalid]')).not.toBeNull();
   });
 
-  /* The other half: a caller who does say so still wins, and still gets the
-     message they wrote rather than one React Aria invented. */
+  /* A caller who does set validity still wins, and gets the message they wrote
+     instead of one React Aria supplies. */
   it("keeps the caller's own error message when one is given", () => {
     renderWithCrystal(
       <Form validationErrors={{ email: ['From the server'] }}>
@@ -102,16 +99,13 @@ describe('a server error reaches every field', () => {
   });
 });
 
-/* The other half of the same question, and the half that had no answer at all.
+/* The hand-built fields.
  *
  * Most fields here are React Aria components, and React Aria hands them their
- * share of a `Form`'s errors without being asked. These are not: they are built
- * by hand, they were invisible to the whole mechanism, and the only error they
- * knew how to show was one their own caller had passed in. None of them even
- * took a `name`, so there was nothing to match a server's error against.
- *
- * They read the same context React Aria's own fields read. Validation display is
- * React Aria's wheelhouse; this is how a hand-built control stays inside it. */
+ * share of a `Form`'s errors automatically. These fields are built by hand, so
+ * React Aria does not reach them. Each takes a `name`, to match a server's error
+ * against, and reads the same context React Aria's own fields read. Validation
+ * display stays with React Aria this way. */
 describe('a server error reaches the hand-built fields too', () => {
   const HAND_BUILT: Array<[string, React.JSX.Element]> = [
     ['MaskInput', <MaskInput label="Phone" name="phone" mask="(000) 000-0000" />],
@@ -131,8 +125,8 @@ describe('a server error reaches the hand-built fields too', () => {
     });
   }
 
-  /* And a caller's own message still wins: it is the more specific statement,
-     and two at once would be a field arguing with itself. */
+  /* A caller's own message still wins. It is the more specific statement, and
+     showing two at once would contradict each other. */
   it("prefers the caller's message to the form's", () => {
     renderWithCrystal(
       <Form validationErrors={{ phone: ['From the server'] }}>
@@ -144,8 +138,8 @@ describe('a server error reaches the hand-built fields too', () => {
 });
 
 /* A range is two values, so it is two names. A single `name` reaches neither
-   end, which is React Aria's design and not something to paper over: the type
-   omits `name` rather than accepting one it would ignore. */
+   end, which is React Aria's design. The type omits `name` instead of accepting
+   one it would ignore. */
 describe('DateRangePicker', () => {
   it('takes an error on either end', () => {
     renderWithCrystal(

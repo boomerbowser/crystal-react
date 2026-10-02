@@ -9,11 +9,10 @@ const meta = {
       description: {
         component:
           '"Each summary statistic is reachable as text; outliers are counted, not only drawn." '
-          + 'The second half is the one nobody does: a cluster of twelve outliers is twelve dots '
-          + 'a sighted reader counts by eye and a reader who cannot see it is told nothing '
-          + 'about. So the label says "3 outliers" and the table has a column for it beside the '
-          + 'five numbers.\n\n'
-          + '"Whisker caps align with the box width" — a narrower cap makes the whisker look '
+          + 'A cluster of twelve outliers is twelve dots a sighted reader counts by eye, and a '
+          + 'reader who cannot see it is told nothing about them. So the label says "3 outliers" '
+          + 'and the table has a column for it beside the five numbers.\n\n'
+          + '"Whisker caps align with the box width." A narrower cap makes the whisker look '
           + 'like an arrow, which says direction where the data says extent.\n\n'
           + 'The five numbers are the caller\'s. This component does not compute quartiles, '
           + 'because there are several definitions of them and a chart that picked one would be '

@@ -11,9 +11,8 @@ const stages = [
 ];
 
 describe('FunnelChart', () => {
-  /* "Relative to what" is the question a funnel exists to answer, and there are
-     two answers. People mean different things by "conversion", so both are
-     stated rather than one being picked silently. */
+  /* A stage can be relative to the first stage or to the one before. People
+     mean different things by "conversion", so both are stated. */
   it('states both shares, of the first stage and of the one before', () => {
     renderWithCrystal(<FunnelChart label="Signup funnel" stages={stages} />);
     expect(screen.getByLabelText('Activated, 408, 34% of the first stage, 68% of the one before'))
@@ -22,15 +21,14 @@ describe('FunnelChart', () => {
     expect(screen.getByRole('columnheader', { name: 'Of the previous' })).toBeInTheDocument();
   });
 
-  /* The first stage has nothing before it, and a hundred per cent there would be
-     a comparison with itself. */
+  /* The first stage has nothing before it, so it has no previous share. */
   it('gives the first stage no previous share', () => {
     renderWithCrystal(<FunnelChart label="Signup funnel" stages={stages} />);
     expect(screen.getByLabelText('Visited, 1200, 100% of the first stage')).toBeInTheDocument();
   });
 
-  /* A label that will not fit inside its band goes outside it — the catalogue's
-     own rule. */
+  /* A label that will not fit inside its band goes outside it, as the
+     catalogue requires. */
   it('puts a label outside the band when the band is narrow', () => {
     const { container } = renderWithCrystal(<FunnelChart label="Signup funnel" stages={stages} />);
     const outside = container.querySelectorAll('text[data-outside]');

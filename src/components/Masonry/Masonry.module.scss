@@ -1,16 +1,16 @@
 @use '../../styles/tokens' as *;
 
-/* Masonry — columns that pack items of unequal height without stretching them.
+/* Masonry: columns that pack items of unequal height without stretching them.
  *
- * CSS multi-column rather than a JavaScript packing pass. The trade is real and
- * worth stating: columns fill top-to-bottom before moving across, so the visual
- * order runs down each column rather than across the rows. For a gallery that is
- * what a reader expects; for an ordered set it is not, which is why the component
- * says so and offers a list role only when the items really are a set.
+ * CSS multi-column, with no JavaScript packing pass. Columns fill top to bottom
+ * before moving across, so the visual order runs down each column instead of
+ * across the rows. A reader expects that in a gallery. An ordered set is
+ * different, so the component documents it and offers a list role only when the
+ * items are a set.
  *
- * The alternative — measuring every item and placing it absolutely — reflows on
- * every resize, fights the browser, and produces a layout that a screen reader
- * walks in a different order than a sighted reader sees.
+ * Measuring every item and placing it absolutely would reflow on every resize,
+ * work against the browser's layout, and give a screen reader a different order
+ * from the one a sighted reader sees.
  */
 
 .masonry {

@@ -13,11 +13,9 @@ function Harness({ min = 1, max = 5 }: { min?: number; max?: number }) {
 }
 
 describe('QuantityStepper', () => {
-  /* "The value is typable", which is the half of "a spin button" that is
-     available: React Aria strips the role and all three value attributes,
-     because — its own comment — "we can't focus a spin button with VO". What
-     has to be true either way is that this is an operable number and not a
-     piece of text between two buttons. See R-22. */
+  /* "The value is typable". React Aria strips the role and all three value
+     attributes because, in its own comment, "we can't focus a spin button with
+     VO". The field must still be an operable number. See R-22. */
   it('is a typable number with a numeric keypad', () => {
     renderWithCrystal(<Harness />);
     const field = screen.getByRole('textbox', { name: 'Quantity' }) as HTMLInputElement;
@@ -26,8 +24,8 @@ describe('QuantityStepper', () => {
     expect(field).toHaveAttribute('aria-roledescription', 'Number field');
   });
 
-  /* A reader who wants twelve of something should not have to press a control
-     twelve times, so the arrow keys step and the value can be typed over. */
+  /* The arrow keys step and the value can be typed over, so a reader who wants
+     twelve of something does not press a control twelve times. */
   it('steps from the keyboard as well as from the controls', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<Harness />);
@@ -58,13 +56,13 @@ describe('QuantityStepper', () => {
   });
 
   /* "The bounds are announced when reached." Disabling the control shows the
-     bound and does not say it — a reader who cannot see it grey out presses it
-     again and is told nothing. */
+     bound but does not say it. A reader who cannot see it grey out would press
+     it again and be told nothing. */
   it('announces a bound when it is reached', async () => {
     const user = userEvent.setup();
-    /* Three, so that stepping back from the maximum lands somewhere that is
-       not also the minimum — with a range of one step, every value is a bound
-       and the clearing half of this test could not be seen. */
+    /* Three, so that stepping back from the maximum lands on a value that is
+       not also the minimum. With a range of one step every value is a bound,
+       and the test could not see the announcement clear. */
     renderWithCrystal(<Harness max={3} />);
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
     await user.click(screen.getByRole('button', { name: /One more/ }));
@@ -77,18 +75,17 @@ describe('QuantityStepper', () => {
     expect(screen.getByRole('status')).toHaveTextContent('1 is the smallest quantity');
   });
 
-  /* Reached, not started at. A stepper rendered at its minimum has not reached
-     anything, and announcing on mount is a component speaking at rest. */
+  /* A stepper rendered at its minimum has not reached anything, so it does not
+     announce on mount. */
   it('says nothing about a bound it started on', () => {
     renderWithCrystal(<Harness />);
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
-  /* "A bounded integer", and the bound is enforced at the parser rather than by
-     rounding afterwards: `maximumFractionDigits: 0` makes the decimal separator
-     unparseable, so a fraction cannot be entered in the first place. That is
-     the stronger of the two behaviours — rounding would accept "2.5" and then
-     silently disagree with the reader about what they asked for. */
+  /* "A bounded integer". The parser enforces it: `maximumFractionDigits: 0`
+     makes the decimal separator unparseable, so a fraction cannot be entered.
+     Rounding afterwards would accept "2.5" and then silently store a different
+     value from the one the reader typed. */
   it('cannot hold a fraction', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
@@ -104,9 +101,8 @@ describe('QuantityStepper', () => {
     expect(Number.isInteger(last)).toBe(true);
   });
 
-  /* The label is the accessible name whether or not it is drawn: a cart row
-     shows the product name beside the stepper, and a second "Quantity" on
-     every line is noise. */
+  /* The label is the accessible name whether or not it is drawn. A cart row
+     shows the product name beside the stepper and hides the label. */
   it('keeps its name when the label is not shown', () => {
     renderWithCrystal(<QuantityStepper label="Quantity" showLabel={false} defaultValue={1} />);
     expect(screen.getByRole('textbox', { name: 'Quantity' })).toBeInTheDocument();

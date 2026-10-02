@@ -11,11 +11,11 @@ const meta = {
         component:
           '"A labelled list of figures." A screen reader saying "list, four items" before '
           + 'the first one tells the reader how much is coming, which is most of what they '
-          + 'need from a dashboard\'s summary band; four sibling divs say nothing at all.\n\n'
-          + 'Loading is announced once for the band rather than once per tile. Six tiles each '
-          + 'saying they are loading is a screen reader saying the same sentence six times — '
-          + 'the same shape as `LoadingScreen` rendering one skeleton over many shapes.\n\n'
-          + 'Empty is a state rather than an absent row: a dashboard whose metrics have not '
+          + 'need from a dashboard\'s summary band. Four sibling divs say nothing.\n\n'
+          + 'Loading is announced once for the band, not once per tile. Six tiles each saying '
+          + 'they are loading would make a screen reader say the same sentence six times. '
+          + '`LoadingScreen` likewise renders one skeleton over many shapes.\n\n'
+          + 'Empty is a state, not an absent row: a dashboard whose metrics have not '
           + 'been chosen yet renders nothing at all from a bare `map`, and the reader is left '
           + 'looking at a gap where a band should be.',
       },

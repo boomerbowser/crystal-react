@@ -8,17 +8,16 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Accompanied by text saying what is loading" — so the text is a **required** prop. '
+          '"Accompanied by text saying what is loading", so the text is a required prop. '
           + 'A bare spinner tells a sighted reader that something is happening and everyone '
-          + 'else nothing at all; and even for them, "is this stuck, and on what" is usually '
-          + 'the question.\n\n'
+          + 'else nothing at all. Even for a sighted reader, "is this stuck, and on what" is '
+          + 'usually the question.\n\n'
           + '`role="status"`, not `role="progressbar"`: there is no range and no position, and '
           + 'a progressbar without either has to be explained.\n\n'
           + 'The mark is the same `ActivityArc` an indeterminate `RingProgress` draws, so a '
           + 'loader and a ring progress cannot end up two sizes of the same idea. Under reduced '
-          + 'motion the ring becomes one uniform dimmed circle rather than an arc stopped '
-          + 'somewhere — a sixth of a circle frozen at an angle reads as a position, and the '
-          + 'whole point of the shape is that there is none.',
+          + 'motion the ring becomes one uniform dimmed circle. A sixth of a circle frozen at '
+          + 'an angle would read as a position, and the shape exists to show there is none.',
       },
     },
   },

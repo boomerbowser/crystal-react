@@ -3,19 +3,17 @@
 /* Rating.
  *
  * Interactive, it is a radio group: five mutually exclusive values with arrow-key
- * movement and one tab stop, which is what a radio group already is. Read-only,
- * it is text with a picture beside it — not a disabled radio group, because a
- * disabled control announces "you may not change this" when the truth is "this is
- * not a control".
+ * movement and one tab stop. Read-only, it is text with a picture beside it. A
+ * disabled radio group would announce "you may not change this" when the truth
+ * is "this is not a control".
  *
- * **Never symbol-only.** The catalogue's rule, and the value is always text: four
- * filled stars out of five is a picture of a number, and a picture of a number is
- * not a number to anybody who cannot see it — nor easily to anybody trying to
- * tell four from five at a glance.
+ * Never symbol-only. That is the catalogue's rule, so the value is always text.
+ * Four filled stars out of five is a picture of a number, which a reader who
+ * cannot see it does not get, and which is hard to tell from five at a glance.
  *
  * A fractional symbol is one glyph clipped rather than two overlaid. Overlaying
  * doubles the stroke where the two meet, which reads as a thicker outline on the
- * partial symbol — the tell of a rating built by stacking.
+ * partial symbol.
  */
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import { RadioGroup, Radio, Label, type RadioProps } from 'react-aria-components';
@@ -39,7 +37,7 @@ export interface RatingProps {
   /** Not a control: text with a picture beside it, and fractions are allowed. */
   isReadOnly?: boolean;
   isDisabled?: boolean;
-  /** How the value reads — "4 out of 5", "4.2 stars". Always rendered. */
+  /** How the value reads, such as "4 out of 5" or "4.2 stars". Always rendered. */
   formatValue?: (value: number, max: number) => string;
   className?: string;
 }
@@ -49,9 +47,8 @@ export function Rating({
   isDisabled = false, formatValue, className,
 }: RatingProps): React.JSX.Element {
   /* Uncontrolled unless a value is given. Passing the prop through to the radio
-     group unconditionally made every Rating fully controlled, so one given only a
-     `defaultValue` could never change — it rendered, it announced correctly, and
-     clicking it did nothing. The test is what found it. */
+     group unconditionally makes every Rating fully controlled, so one given only
+     a `defaultValue` could never change. */
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const current = value ?? uncontrolled;
   const text = formatValue ? formatValue(current, max) : `${current} out of ${max}`;
@@ -126,10 +123,10 @@ export function Rating({
   );
 }
 
-/* One symbol, playing `selection` when it becomes the chosen score — by a press,
-   an arrow key or a value set from outside — and not on the render that shows a
-   rating already given. Only the chosen symbol moves; the ones filled beneath it
-   change fill, which is the value, not the choice. */
+/* One symbol. It plays `selection` when it becomes the chosen score (by a press,
+   an arrow key or a value set from outside), and not on the render that shows a
+   rating already given. Only the chosen symbol moves. The symbols beneath it
+   change fill, which shows the value. */
 function Symbol({ isChosen, ...props }: RadioProps & { isChosen: boolean }): React.JSX.Element {
   const scope = useChangeMotion(isChosen, entered('selection'));
   return <Radio ref={scope as never} {...props} />;

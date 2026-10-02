@@ -5,30 +5,26 @@
  * A field whose value is a set of chips, and a filterable listbox that toggles
  * them.
  *
- * **Why this is not built on React Aria's `Select` or `ComboBox`.** Both of them
- * own the selection of the listbox they contain, and both replace it. Nesting a
+ * It is not built on React Aria's `Select` or `ComboBox`. Both own the
+ * selection of the listbox they contain, and both replace it. Nesting a
  * `ListBox selectionMode="multiple"` inside either renders a listbox with no
- * `aria-multiselectable` and every option `aria-selected="false"` — silently, and
- * with no warning. The first version of this component did exactly that, so it
- * announced nothing as selected, and the `[data-selected]` rule that carries
- * Crystal's label weight never matched either: the selection was invisible in
- * both directions at once.
+ * `aria-multiselectable` and every option `aria-selected="false"`, with no
+ * warning. Nothing is then announced as selected, and the `[data-selected]` rule
+ * that carries Crystal's label weight never matches, so the selection is
+ * invisible both to a screen reader and on screen.
  *
- * So the listbox stands on its own inside a popover, where it keeps its own
- * multiple selection, and the trigger is a plain disclosure beside the chips.
- * The trigger reports `aria-haspopup="dialog"` because that is what it opens — a
- * filter field and a list — and saying "listbox" would be a description of the
- * half of it we wish were true.
+ * The listbox therefore stands on its own inside a popover, where it keeps its
+ * own multiple selection, and the trigger is a plain disclosure beside the
+ * chips. The trigger reports `aria-haspopup="dialog"` because it opens a dialog
+ * holding a filter field and a list. "listbox" would describe only part of it.
  *
- * The accessibility question is which of the two is the control, and the answer
- * decides everything else: **the listbox is**, and the chips are a rendering of
- * its value with their own remove buttons. That is why the chips are not
- * focusable stops of their own. A field with six selected values would otherwise
- * be seven tab stops before the next field, and a keyboard user tabbing through a
- * form would walk the contents of every answer they had already given. The
- * catalogue's requirement — "removal must be reachable by keyboard" — is met by
- * each chip's remove button being reachable *within* the field, not by every chip
- * being a stop.
+ * The listbox is the control, and the chips are a rendering of its value with
+ * their own remove buttons. That is why the chips are not tab stops of their
+ * own. A field with six selected values would otherwise be seven tab stops
+ * before the next field, and a keyboard user tabbing through a form would walk
+ * through every answer they had already given. The catalogue's requirement,
+ * "removal must be reachable by keyboard", is met by each chip's remove button
+ * being reachable within the field.
  *
  * The shell grows in whole line steps, because a field that grows by a fraction
  * of a line as each chip wraps makes the whole form jump.
@@ -66,7 +62,7 @@ export interface MultiSelectProps {
   placeholder?: string;
   /**
    * The most that may be chosen. At the limit the unchosen options are disabled
-   * rather than hidden, so the list does not change shape under the reader, and
+   * instead of hidden, so the list does not change shape under the reader, and
    * the field says what has happened. This is the catalogue's `at-limit` state.
    */
   maxSelected?: number;
@@ -76,8 +72,8 @@ export interface MultiSelectProps {
   isInvalid?: boolean;
   /**
    * The field's name in a form. Without it the field cannot be submitted, and a
-   * `Form` distributing a server's errors has no name to match it against — so
-   * the field sits there looking untouched while the server objects.
+   * `Form` distributing a server's errors has no name to match it against, so
+   * the field shows no error while the server rejects it.
    */
   name?: string;
   className?: string;
@@ -95,11 +91,11 @@ export function MultiSelect({
   const invalid = validation.isInvalid;
   const shellScope = useInvalidMotion(invalid);
   const listRef = useRef<HTMLDivElement>(null);
-  /* The popover measures and anchors itself against the trigger it was given,
-     and the trigger is now the disclosure button — which, with three chips in
-     the shell, is whatever narrow strip they left over. Anchoring there would
-     open a 32px-wide list under the chevron. The shell is what the field looks
-     like, so the shell is what the popover is told to follow. */
+  /* The popover measures and anchors itself against the trigger it is given.
+     The trigger is the disclosure button, which with three chips in the shell
+     is the narrow strip they leave over, and anchoring there would open a
+     32px-wide list under the chevron. The shell is what the field looks like,
+     so the popover follows the shell. */
   const shellRef = useRef<HTMLDivElement>(null);
 
   const labelId = useId();
@@ -128,8 +124,8 @@ export function MultiSelect({
 
   /* A filter hides options; it must not deselect them. React Aria reports the
      selection of the collection it can see, so the keys currently filtered out
-     have to be carried across by hand or narrowing the list would silently empty
-     the field. */
+     are carried across by hand. Otherwise narrowing the list would empty the
+     field without warning. */
   const receive = (keys: Iterable<unknown>): void => {
     const shown = new Set(visible.map((option) => option.value));
     const chosen = new Set([...keys].map(String));
@@ -140,9 +136,9 @@ export function MultiSelect({
     set(next);
   };
 
-  /* Down from the filter goes into the list, which is the movement a filter
-     field implies. Tab reaches it too; this is the one that does not require
-     leaving the keyboard's reading position. */
+  /* Down from the filter goes into the list, the movement a filter field
+     implies. Tab reaches it too. Down arrow does it without leaving the
+     keyboard's reading position. */
   const intoList = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== 'ArrowDown') return;
     event.preventDefault();
@@ -160,7 +156,7 @@ export function MultiSelect({
       <span id={labelId} className={cx(styles['label'])}>{label}</span>
       <DialogTrigger>
         {/* The shell is a div, not the trigger. The chips inside it are buttons,
-            and a button inside a button is not a thing a browser can render. */}
+            and a browser cannot render a button inside a button. */}
         <div
           ref={(node: HTMLDivElement | null) => {
             (shellScope as unknown as { current: HTMLDivElement | null }).current = node;
@@ -182,8 +178,8 @@ export function MultiSelect({
               </PresentChip>
             ))}
           </ListPresence>
-          {/* Fills the rest of the shell, so the whole empty area opens the list
-              rather than only the chevron. */}
+          {/* Fills the rest of the shell, so the whole empty area opens the list,
+              not only the chevron. */}
           <Button
             isDisabled={isDisabled}
             aria-labelledby={`${labelId} ${valueId}`}
@@ -197,9 +193,9 @@ export function MultiSelect({
           </Button>
         </div>
 
-        {/* The state of the field, spoken as part of the trigger's name rather
-            than left to the chips — which are not tab stops, so a keyboard user
-            never lands on them to hear them counted. */}
+        {/* The state of the field, spoken as part of the trigger's name. The
+            chips are not tab stops, so a keyboard user never lands on them to
+            hear them counted. */}
         <VisuallyHidden as="span" id={valueId}>
           {selected.length === 0
             ? 'nothing chosen'

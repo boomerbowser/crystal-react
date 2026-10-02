@@ -10,7 +10,7 @@ const items = [
 ];
 
 describe('Timeline', () => {
-  /* The order is the meaning, and a reader told "list, 3 items" has lost it. */
+  /* The order is the meaning, and a reader told only "list, 3 items" loses it. */
   it('is an ordered, named list', () => {
     const { container } = renderWithCrystal(<Timeline items={items} label="Application progress" />);
     expect(container.querySelector('ol')).not.toBeNull();

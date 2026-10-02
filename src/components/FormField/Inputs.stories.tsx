@@ -21,15 +21,15 @@ const meta = {
     docs: {
       description: {
         component:
-          'Every text-shaped control in Crystal is the same anatomy: a label, a Haze well inside '
-          + 'a Resin shell, and helper text or an error beneath. That is one stylesheet shared by '
-          + 'mixins rather than ten copies of a material.\n\n'
-          + '**Errors are text, never colour alone**, and they are announced rather than only '
-          + 'drawn — a red outline is invisible to a reader who cannot distinguish it and silent '
-          + 'to one who cannot see it at all. The hint and the error are both in '
-          + '`aria-describedby`: describing a field by only its error drops the guidance that '
-          + 'would have prevented it.\n\n'
-          + 'Motion binds to validation **state**, not to a blur handler, so a field that failed '
+          'Every text-shaped control in Crystal has the same anatomy: a label, a Haze well inside '
+          + 'a Resin shell, and helper text or an error beneath. One stylesheet is shared through '
+          + 'mixins, so the material is not copied ten times.\n\n'
+          + '**Errors are text, never colour alone**, and they are announced as well as drawn. A '
+          + 'red outline is invisible to a reader who cannot distinguish it and silent to one who '
+          + 'cannot see it at all. The hint and the error are both in `aria-describedby`, because '
+          + 'describing a field by its error alone drops the guidance that would have prevented '
+          + 'it.\n\n'
+          + 'Motion binds to validation state and not to a blur handler, so a field that failed '
           + 'on the server looks exactly like one that failed locally.',
       },
     },
@@ -61,7 +61,7 @@ export const TextFamily: Story = {
         />
         <SearchInput label="Find a document" placeholder="Search" />
         <MaskInput label="Card number" mask="0000 0000 0000 0000" id="card" description="The raw digits are what submits." />
-        <PinInput label="Verification code" length={6} description="Paste the whole code — it fills every box." />
+        <PinInput label="Verification code" length={6} description="Paste the whole code and it fills every box." />
       </Stack>
     );
   },
@@ -97,8 +97,8 @@ export const ChoiceFamily: Story = {
   ),
 };
 
-/** The wrapper for a control this library does not ship. The wiring is the whole
- *  component: label, both describedby targets, invalid and required. */
+/** The wrapper for a control this library does not ship. The component is the
+ *  wiring: label, both describedby targets, invalid and required. */
 export const AroundAnything: Story = {
   render: () => (
     <Stack gap="lg" style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>

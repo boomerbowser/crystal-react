@@ -1,11 +1,10 @@
 @use '../../styles/tokens' as *;
 
-/* DescriptionList — a term column on the 4px rhythm.
+/* DescriptionList: a term column on the 4px rhythm.
  *
- * The term column is a fraction of the row rather than a fixed width, because a
- * fixed one is wrong in every language but the one it was measured in. What is
- * held to the rhythm is the *gap*, which is what makes the two columns read as
- * columns.
+ * The term column is a fraction of the row, not a fixed width, because a fixed
+ * width is wrong in every language except the one it was measured in. The gap is
+ * held to the rhythm, and the gap is what makes the two columns read as columns.
  */
 
 .list {

@@ -4,19 +4,19 @@
  * is per-locale, not one regular expression." And, from the catalogue's own
  * product column: "**countries supported and their field rules**".
  *
- * That last line is the boundary, and it is the one worth defending. A design
- * system that ships a table of countries has taken on a data set that is wrong
- * the week it is written and wrong differently every year after: postcodes
- * change, administrative divisions are renamed and abolished, countries come and
- * go, and which of them a shop delivers to is a commercial decision this library
- * has no view on. Worse, a wrong table is invisible — the form renders, and one
- * country's addresses are quietly unusable.
+ * That last line sets the boundary this file keeps. A design system that ships
+ * a table of countries has taken on a data set that is wrong the week it is
+ * written and wrong differently every year after: postcodes change,
+ * administrative divisions are renamed and abolished, countries come and go,
+ * and which of them a shop delivers to is a commercial decision this library
+ * has no view on. A wrong table is worse. It is invisible, so the form renders
+ * and one country's addresses stop working without any error.
  *
- * So the library ships the **shape** and the renderer, and the product ships the
+ * So the library ships the shape and the renderer, and the product ships the
  * descriptors. That is a real division rather than a dodge: everything that is
- * hard and general — the field order being honoured, the autocomplete tokens
+ * hard and general (the field order being honoured, the autocomplete tokens
  * being right, required-ness reaching the control, validation reaching the
- * field's own message — lives here and is tested here.
+ * field's own message) lives here and is tested here.
  *
  * Reference descriptors live in the stories, where they are examples rather than
  * a source of truth somebody might import.
@@ -28,14 +28,14 @@ export interface AddressField {
   name: string;
   label: string;
   /**
-   * The browser's autofill token — `address-line1`, `address-level2`,
+   * The browser's autofill token: `address-line1`, `address-level2`,
    * `postal-code`, `country-name`. Required, and deliberately not optional: a
    * field without one is a field a reader has to type by hand every time, and
    * the tokens are a fixed vocabulary rather than a per-country decision.
    */
   autoComplete: string;
   required?: boolean;
-  /** Turns the field into a select — a state, a province, a region. */
+  /** Turns the field into a select: a state, a province, a region. */
   options?: readonly { value: string; label: string }[];
   /** A hint under the field. */
   description?: string;

@@ -5,7 +5,7 @@ import { NumberFormatter } from './NumberFormatter.js';
 describe('NumberFormatter', () => {
   /* One string, used as both the visible text and the announced one. A number
      rendered as "1.2M" visually and 1204893 in an aria-label is two facts that
-     drift, and the one a screen reader reads is the one nobody checks. */
+     drift, and nobody checks the one a screen reader reads. */
   it('has one form, visible and spoken', () => {
     renderWithCrystal(
       <NumberFormatter value={1204893} format={{ notation: 'compact' }} data-testid="n" />,
@@ -24,8 +24,8 @@ describe('NumberFormatter', () => {
     expect(screen.getByTestId('n').textContent).toMatch(/1[,.]234/);
   });
 
-  /* Figures in a column line up; the default suits a table because that is where
-     a formatted number usually is. */
+  /* Figures in a column line up. The default suits a table, because that is
+     where a formatted number usually is. */
   it('uses tabular figures by default', () => {
     renderWithCrystal(<NumberFormatter value={42} data-testid="n" />);
     expect(screen.getByTestId('n').className).toMatch(/tabular/);

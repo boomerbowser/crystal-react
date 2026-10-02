@@ -8,17 +8,17 @@ const meta = {
     docs: {
       description: {
         component:
-          'Where a dragged item will land, drawn and said. The line is the palette\'s primary — it '
-          + 'belongs to the gesture, not to the page — and it is drawn on a pseudo-element with no '
-          + 'height in the flow, so the list does not part to make room and move the gap the reader '
-          + 'is aiming at.\n\n'
+          'Where a dragged item will land, drawn and announced. The line is the palette\'s primary, '
+          + 'because it belongs to the gesture and not to the page. It is drawn on a pseudo-element '
+          + 'with no height in the flow, so the list does not part to make room and move the gap '
+          + 'the reader is aiming at.\n\n'
           + 'This is the standalone form, for a list a product lays out itself. Inside a React Aria '
           + 'collection, use React Aria\'s own `DropIndicator` with `dropIndicatorClassName`.',
       },
     },
   },
   args: { label: 'Drop between Quarterly figures and Board minutes', isActive: true },
-  /* An indicator is an option — the place a reader can choose to drop — so the
+  /* An indicator is an option, the place a reader can choose to drop, so the
      list it sits in is a listbox, as React Aria's own collections are. */
   render: (args) => (
     <div role="listbox" aria-label="Documents" style={{ display: 'grid', gap: 8, maxInlineSize: 320 }}>

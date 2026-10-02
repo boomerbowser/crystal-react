@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* "Fields follow the input geometry" — so there is nothing to draw here beyond
+/* "Fields follow the input geometry", so there is nothing to draw here beyond
    the rhythm between them. The fields are `TextInput` and `Select`, which carry
    the Haze wells in Resin shells the catalogue asks for. */
 .form { display: grid; gap: $cr-spacing-md; }

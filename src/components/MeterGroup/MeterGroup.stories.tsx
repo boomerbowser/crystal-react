@@ -8,15 +8,15 @@ const meta = {
     docs: {
       description: {
         component:
-          'Several proportions on one bar. **Each segment is its own `role="meter"`** — "63% '
+          'Several proportions on one bar. **Each segment is its own `role="meter"`.** "63% '
           + 'disk, 22% cache" is two measurements, and an element reporting a single number '
           + 'would have to pick which one it meant.\n\n'
           + '"Meaning never rests on colour alone", so the legend is on by default: it is where '
           + "each segment's name is written beside its swatch, and the same name is the "
-          + "segment's own accessible name. The tints are Crystal's chart series scale rather "
-          + 'than a second scale invented here.\n\n'
-          + '"Segments meet without gaps" — one track with `overflow: hidden`, so the radius '
-          + 'belongs to the track and each segment simply ends where the next begins.',
+          + "segment's own accessible name. The tints are Crystal's chart series scale, not a "
+          + 'second scale invented here.\n\n'
+          + '"Segments meet without gaps": one track with `overflow: hidden`, so the radius '
+          + 'belongs to the track and each segment ends where the next begins.',
       },
     },
   },
@@ -35,8 +35,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/* With a total, what the segments do not account for is left empty — which is
-   the only reason to pass one. */
+/* With a total, the part the segments do not account for is left empty, which
+   is what a total is for. */
 export const AgainstAKnownWhole: Story = { args: { total: 100 } };
 
 export const WithStatuses: Story = {

@@ -18,7 +18,7 @@ describe('NavLink', () => {
 
   /* `aria-selected` belongs to a widget with a selection model. Announcing a
      destination that way says somebody picked an option inside a control, when
-     what they did was arrive somewhere. */
+     they arrived somewhere. */
   it('marks the current page with aria-current and never aria-selected', () => {
     renderWithCrystal(<NavLink href="/drafts" isCurrent>Drafts</NavLink>);
     const link = screen.getByRole('link', { name: 'Drafts' });
@@ -32,8 +32,8 @@ describe('NavLink', () => {
   });
 
   /* Crystal 2.3.0 draws the location dot on `.cr-nav-item` itself (D-22), in
-     the entry's own padding. A dot of this component's as well would be two, so
-     there is none: the first thing inside the link is its content. Where the dot
+     the entry's own padding. A dot from this component as well would make two,
+     so there is none: the first thing inside the link is its content. Where the dot
      is drawn, and that the label does not move, is measured in a browser by
      verify:appearance. */
   it('draws no dot of its own, and leaves the dot to the class', () => {

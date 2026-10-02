@@ -19,15 +19,14 @@ const meta = {
       description: {
         component:
           'The components with no appearance of their own. Each is React Aria\'s behaviour with '
-          + 'Crystal\'s contract stated around it — which in two cases means Crystal is stricter '
-          + 'than the library.\n\n'
+          + 'Crystal\'s contract stated around it. In two cases Crystal is stricter than the '
+          + 'library.\n\n'
           + '`ClickAway` also dismisses on Escape, because a keyboard user has no outside to '
           + 'click and Crystal\'s rule is that a click-away is never the only way out. '
-          + '`Pressable` supplies the role React Aria deliberately leaves to the caller: a bare '
-          + 'React Aria Pressable around a span is a tab stop a screen reader announces as '
-          + 'nothing.\n\n'
-          + 'Tab through this story rather than reading it. That is the only way any of it is '
-          + 'visible.',
+          + '`Pressable` supplies the role React Aria leaves to the caller. A bare React Aria '
+          + 'Pressable around a span is a tab stop a screen reader announces as nothing.\n\n'
+          + 'Tab through this story instead of reading it. Most of it is visible only under '
+          + 'keyboard focus.',
       },
     },
   },
@@ -97,7 +96,7 @@ export const PressAndFocus: Story = {
       </Pressable>
       <Focusable>
         <div style={{ padding: 'var(--cr-spacing-sm)' }}>
-          A div that is a tab stop and nothing else — no role invented.
+          A div that is a tab stop and nothing else, with no role invented.
         </div>
       </Focusable>
       <NoSsr fallback={<p>Rendered on the server.</p>}>

@@ -6,12 +6,12 @@
  * and navigable item in Crystal routes through the host router instead of
  * reloading the page. Without it a link inside a menu, a tab, a breadcrumb or a
  * card does a full document navigation, and a single-page application silently
- * stops being one — from the inside it looks like a slow app rather than a bug,
- * which is why this is easy to ship without.
+ * stops being one. It looks like a slow app rather than a bug, so it is easy to
+ * ship without this.
  *
- * React Aria's `RouterProvider` is the mechanism and this is a re-export with
- * Crystal's reason attached. It is deliberately not wrapped: the shape React Aria
- * expects — a `navigate` function and an optional `useHref` — is the shape every
+ * React Aria's `RouterProvider` is the mechanism, and this is a re-export with
+ * Crystal's reason attached. It is not wrapped, because the shape React Aria
+ * expects (a `navigate` function and an optional `useHref`) is the shape every
  * router adapter is already written against.
  */
 import type { ComponentProps } from 'react';

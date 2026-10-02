@@ -2,17 +2,17 @@
 
 /* ButtonGroup and SplitButton.
  *
- * A group is one Resin plane with its actions on it, and the accessibility rule
- * is conditional in a way that is easy to get wrong: `role="group"` **with a
- * name** when the actions are related, and nothing at all when they are merely
- * adjacent. A group role without a name announces "group" and tells the reader
- * nothing; three unrelated buttons in a row announced as a group tells them
- * something untrue. So the role is earned by passing a label.
+ * A group is one Resin plane with its actions on it. The accessibility rule is
+ * conditional: `role="group"` with a name when the actions are related, and
+ * nothing at all when they are only adjacent. A group role without a name
+ * announces "group" and tells the reader nothing, and three unrelated buttons
+ * announced as a group tell them something untrue. The role is applied only
+ * when a label is passed.
  *
- * A split button is two buttons, not one button with a menu attached. That
- * matters because the disclosure has its own name, its own `aria-expanded` and
- * its own 44px target — a single control that behaves differently depending on
- * which half was pressed is not describable to somebody who cannot see the halves.
+ * A split button is two buttons, not one button with a menu attached. The
+ * disclosure has its own name, its own `aria-expanded` and its own 44px target.
+ * A single control that behaves differently depending on which half was pressed
+ * cannot be described to somebody who cannot see the halves.
  */
 import { forwardRef, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -51,7 +51,7 @@ export function ButtonGroup({
 export interface SplitButtonProps extends Omit<ButtonProps, 'children'> {
   /** The default action's label. */
   children: ReactNode;
-  /** What the disclosure opens — used for its name, so it is not a second "More". */
+  /** What the disclosure opens. Used for its name, so it is not a second "More". */
   menuLabel: string;
   /** Whether the menu is open. The product owns the menu itself. */
   isOpen?: boolean;
@@ -73,9 +73,9 @@ export const SplitButton = forwardRef<HTMLButtonElement, SplitButtonProps>(funct
 ) {
   return (
     <ButtonGroup {...(label ? { label } : {})} {...(className ? { className } : {})}>
-      {/* Both halves take the same variant. They looked like two different
-          controls when the disclosure defaulted to primary and the action did
-          not — which is what a split button must never look like. */}
+      {/* Both halves take the same variant. If the disclosure and the action
+          differed, they would look like two different controls, which a split
+          button must never do. */}
       <Button {...props} variant={variant} ref={ref}>{children}</Button>
       {/* Its own button, its own name, its own target. A split control whose two
           halves share one name cannot be described to somebody who cannot see

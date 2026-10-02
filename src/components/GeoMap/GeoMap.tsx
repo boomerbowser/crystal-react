@@ -1,21 +1,22 @@
 'use client';
 
-/* GeoMap — values by region on a projected map.
+/* GeoMap shows values by region on a projected map.
  *
  * "Regions are reachable by keyboard and state their name and value; a table
- * equivalent is required." A map is the chart where the picture carries the
- * *identity* of each mark as well as its value — a reader who cannot see it has
- * no idea which shape is which — so every region is a mark that names itself,
- * and the table lists every region whether or not the join found a value for it.
+ * equivalent is required." On a map the picture carries the identity of each
+ * mark as well as its value, and a reader who cannot see it cannot tell which
+ * shape is which. So every region is a mark that names itself, and the table
+ * lists every region whether or not the join found a value for it.
  *
- * The topology and the join are the caller's, which is what the catalogue says
- * and is also the only workable boundary: a component that shipped a world
- * outline would ship one political opinion about borders and names, permanently,
- * to every product that used it. So `features` is GeoJSON the product chose, and
- * `values` is keyed by whatever property of it the product joins on.
+ * The topology and the join are the caller's, as the catalogue says. A
+ * component that shipped a world outline would ship one political opinion
+ * about borders and names to every product that used it. So `features` is
+ * GeoJSON the product chose, and `values` is keyed by whatever property of it
+ * the product joins on.
  *
- * The intensity is Crystal's ramp, the same five steps the heatmap uses, with the
- * ink measured for each — a choropleth is a heatmap with an irregular grid.
+ * The intensity is Crystal's ramp, the same five steps the heatmap uses, with
+ * the ink measured for each, because a choropleth is a heatmap with an
+ * irregular grid.
  */
 import { useMemo, type CSSProperties, type ReactNode } from 'react';
 import { geoMercator, geoNaturalEarth1, geoPath, type GeoProjection } from 'd3-geo';

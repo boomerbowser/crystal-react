@@ -15,8 +15,8 @@
   gap: $cr-spacing-sm;
   min-block-size: calc(#{$cr-action-min-target} * 3);
   padding: var(--cr-space);
-  /* A dashed edge is the one place Crystal uses one: it says "this boundary is a
-     target, not a surface", which is exactly what a drop zone is. */
+  /* A drop zone is the one place Crystal uses a dashed edge. It marks the
+     boundary as a target and not a surface. */
   border: 2px dashed var(--cr-edge);
   border-radius: var(--cr-radius);
   color: var(--cr-muted);
@@ -53,8 +53,8 @@
 .fileName { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fileSize { color: var(--cr-muted); font-size: var(--cr-text-caption-size); font-variant-numeric: tabular-nums; }
 
-/* Progress is a bar and a number. The bar alone says "something is happening";
-   the number says how much, which is what somebody waiting actually wants. */
+/* Progress is a bar and a number. The bar alone says "something is happening".
+   The number says how much, which is what somebody waiting wants. */
 .progressTrack {
   flex: 1;
   block-size: $cr-slider-track-height;

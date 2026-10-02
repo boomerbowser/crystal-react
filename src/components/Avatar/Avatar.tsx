@@ -1,24 +1,22 @@
 'use client';
 
-/* Avatar — an image, initials or an icon, always circular.
+/* Avatar: an image, initials or an icon, always circular.
  *
- * The interesting requirement is not the shape, it is the fallback chain.
- * Identity images fail routinely — a deleted file, a blocked third-party host, a
- * slow network — and a broken image icon where a person's face should be is worse
- * than never having tried. So the image is rendered, watched, and replaced in
- * place: `loading` until it resolves, the initials on `error`, and an icon when
- * there is no name to reduce.
+ * The main requirement is the fallback chain. Identity images fail routinely (a
+ * deleted file, a blocked third-party host, a slow network), and a broken image
+ * icon where a person's face should be is worse than never having tried. So the
+ * image is rendered, watched, and replaced in place: `loading` until it resolves,
+ * the initials on `error`, and an icon when there is no name to reduce.
  *
- * `name` does two things and they are deliberately the same prop. It is what the
- * initials are derived from, and it is the accessible name. That is the honest
- * coupling: an avatar that shows somebody's initials is identifying them, so it
- * must say who. An avatar with no name is decoration beside a label that already
- * names the person, and is hidden from assistive technology.
+ * `name` does two things, and they are deliberately the same prop. It is what the
+ * initials are derived from, and it is the accessible name. An avatar that shows
+ * somebody's initials is identifying them, so it must say who. An avatar with no
+ * name is decoration beside a label that already names the person, and is hidden
+ * from assistive technology.
  *
- * Initials are the first letters of the first and last space-separated parts, not
- * of every part — "María del Carmen Rodríguez" is MR, not MDCR. It is a display
- * heuristic over a name, which is a thing no heuristic gets right everywhere, so
- * `initials` overrides it outright rather than being coaxed.
+ * Initials are the first letters of the first and last space-separated parts,
+ * not of every part: "María del Carmen Rodríguez" is MR, not MDCR. No heuristic
+ * over names is right everywhere, so `initials` replaces it outright.
  */
 import { forwardRef, useEffect, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -56,9 +54,9 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
 ) {
   const [state, setState] = useState<ImageState>(src === undefined ? 'error' : 'loading');
 
-  /* A new `src` starts again. Without this an avatar that has already failed
-     stays failed when the row is reused for a different person, which is how a
-     virtualised list shows one person's initials over another's photograph. */
+  /* A new `src` starts again. Otherwise an avatar that has already failed stays
+     failed when the row is reused for a different person, and a virtualised list
+     shows one person's initials over another's photograph. */
   useEffect(() => { setState(src === undefined ? 'error' : 'loading'); }, [src]);
 
   const shown = initials ?? (name === undefined ? '' : nameInitials(name));

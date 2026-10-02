@@ -1,26 +1,23 @@
 'use client';
 
-/* Marquee — content that scrolls continuously along one axis.
+/* Marquee: content that scrolls continuously along one axis.
  *
- * The honest part first: **this is the one component in Crystal whose default
- * state is movement at rest**, and Crystal's rule is that nothing moves at rest.
- * The catalogue lists it anyway, and the reconciliation is in the last clause of
- * its own semantics line — "removed entirely under reduced motion". So a marquee
- * is motion a reader can switch off system-wide and, until they do, can stop by
- * pointing at it or tabbing to it. That is the whole of what makes it shippable,
- * and it is why none of it is optional here.
+ * This is the one component in Crystal whose default state is movement at
+ * rest, and Crystal's rule is that nothing moves at rest. The catalogue lists it
+ * anyway, on the condition in the last clause of its own semantics line:
+ * "removed entirely under reduced motion". A reader can switch it off
+ * system-wide and, until they do, stop it by pointing at it or tabbing to it.
+ * None of that is optional here.
  *
- * Crystal assigns no recipe and no duration, and could not: a continuous scroll's
- * duration depends on how long the content is, which is a fact about the caller's
- * children. `speed` is therefore in pixels per second — a rate rather than a
- * time — and the duration is measured from the rendered width. What is *not* this
- * component's to choose is whether it plays: `--cr-motion-enabled` gates it, the
- * same property every other moving thing in this library divides by.
+ * Crystal assigns no recipe and no duration, because a continuous scroll's
+ * duration depends on the length of the caller's children. `speed` is therefore
+ * a rate in pixels per second, and the duration is measured from the rendered
+ * width. Whether it plays is not this component's choice: `--cr-motion-enabled`
+ * gates it, the same property every other animation in this library uses.
  *
- * The viewport takes a tab stop so that "pausable on focus" means something to
- * somebody who is not using a pointer. It is also a scroll container, so the tab
- * stop is what makes its content reachable at all — the same reason `Code`'s
- * blocks are focusable.
+ * The viewport takes a tab stop so that "pausable on focus" works without a
+ * pointer. It is also a scroll container, so the tab stop is what makes its
+ * content reachable, the same reason `Code`'s blocks are focusable.
  */
 import { forwardRef, useEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { useCrystalTheme } from '../../theme/CrystalProvider.js';
@@ -29,7 +26,7 @@ import styles from './Marquee.module.scss';
 
 export interface MarqueeProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   children: ReactNode;
-  /** Names the region. Required: a moving strip with no name is a mystery. */
+  /** Names the region. Required, so a reader knows what the moving strip is. */
   label: string;
   /** Pixels per second. A rate, because the duration depends on the content. */
   speed?: number;
@@ -60,10 +57,9 @@ export const Marquee = forwardRef<HTMLDivElement, MarqueeProps>(function Marquee
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     return () => { observer.disconnect(); };
-    /* `children` is deliberately not a dependency: it is a new object on every
-       render, so depending on it would re-measure continuously. The
-       `ResizeObserver` is what notices the content changing size, which is the
-       thing that actually matters. */
+    /* `children` is not a dependency. It is a new object on every render, so
+       depending on it would re-measure continuously. The
+       `ResizeObserver` notices when the content changes size. */
   }, [speed, reduceMotion]);
 
   /* Reduced motion removes the movement, and with it the second copy: a
@@ -88,7 +84,7 @@ export const Marquee = forwardRef<HTMLDivElement, MarqueeProps>(function Marquee
            `animationDuration`, so the stylesheet can still divide it by the
            reader's motion-speed preference and multiply it by
            `--cr-motion-enabled`. An inline `animation-duration` would outrank
-           the rule and quietly un-gate the animation. */
+           the rule and remove the gate. */
         style={moving ? ({ '--marquee-duration': `${duration}s` } as CSSProperties) : undefined}
       >
         <div className={styles['copy']}>{children}</div>

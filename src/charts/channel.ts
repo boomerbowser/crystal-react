@@ -9,16 +9,16 @@
  * Which second channel depends on what the mark is, and the answer is not the
  * same for a line as for a wedge:
  *
- * - **Marks with an outline** — lines, radar polygons, spark lines — carry a
+ * - Marks with an outline (lines, radar polygons, spark lines) carry a
  *   dash pattern. It is legible at one pixel and it survives every one of the
  *   three failures above.
- * - **Marks with a point** — scatter, line vertices — carry a shape.
- * - **Marks that are areas** — bars, wedges, cells, stages, rectangles — carry a
- *   **label**. Not a hatch: hatching an area at the sizes charts use is noise,
- *   and the catalogue already asks for the label in its own words on every one of
+ * - Marks with a point (scatter, line vertices) carry a shape.
+ * - Marks that are areas (bars, wedges, cells, stages, rectangles) carry a
+ *   label, not a hatch. Hatching an area at the sizes charts use is noise, and
+ *   the catalogue already asks for the label in its own words on every one of
  *   them ("each segment is labelled with its value", "every stage states its
  *   absolute and relative value", "intensity is paired with a value"). The
- *   requirement and the remedy are the same sentence.
+ *   catalogue's wording for each mark is the specification for the label.
  *
  * Six of each, because the scale is six. A seventh series repeats the first
  * colour, which is exactly when the second channel stops being a courtesy.
@@ -34,7 +34,7 @@ export function seriesColour(index: number): string {
 
 /* Dash patterns in multiples of the stroke, so they stay in proportion when the
    stroke scale changes. The first is solid: one series should not look like a
-   series *of* something. */
+   series of something. */
 const DASHES = ['', '7 4', '2 3', '11 4 2 4', '1 3', '9 3 1 3'];
 
 /** `stroke-dasharray` for series `index`, or undefined for the solid first. */

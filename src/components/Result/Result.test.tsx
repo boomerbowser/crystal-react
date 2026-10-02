@@ -16,8 +16,8 @@ describe('Result', () => {
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
   });
 
-  /* Six outcomes, four ink pairs, and the mapping is stated rather than implied
-     because the two that are not obvious are the two worth arguing about. */
+  /* Six outcomes, four ink pairs. The test states the mapping for the two
+     outcomes where it is not obvious. */
   it('maps the two outcomes Crystal has no pair for onto ones it does', () => {
     const { container, rerender } = renderWithCrystal(
       <Result title="Page not found" outcome="not-found" />,

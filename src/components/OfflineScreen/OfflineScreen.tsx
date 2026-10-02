@@ -1,25 +1,24 @@
 'use client';
 
-/* OfflineScreen — connectivity lost, with what still works.
+/* OfflineScreen: connectivity lost, with what still works.
  *
- * "**Announced politely**; retry is a real button." States: `at-rest`,
+ * "Announced politely; retry is a real button." States: `at-rest`,
  * `reconnecting`.
  *
- * Politely, and that is the difference from `ErrorScreen`. Losing connectivity
- * is not an error the reader caused and often not one that lasts; interrupting
- * whatever a screen reader was in the middle of, to say the network went, is the
- * component being more urgent than the news. So this is `role="status"` where
- * the error screen is `role="alert"` — the same shape, one word apart, and the
- * word is the whole difference in how it arrives.
+ * Being polite is what separates it from `ErrorScreen`. Losing connectivity is
+ * not an error the reader caused and often does not last, so it is not urgent
+ * enough to interrupt whatever a screen reader is saying. This is
+ * `role="status"` where the error screen is `role="alert"`. The two have the
+ * same shape and differ only in that attribute.
  *
- * **"With what still works" is the second half, and it is `children`.** An
- * offline screen that only says "You are offline" has replaced a working view
- * with a dead one. Products that cache have something to offer; the slot is
- * where they offer it.
+ * "With what still works" is the second half, and it is `children`. An offline
+ * screen that only says "You are offline" replaces a working view with a dead
+ * one. Products that cache have something to offer, and the slot is where they
+ * offer it.
  *
- * **Reconnecting is `aria-busy`, and the announcement does not repeat.** A retry
- * loop that re-announces every few seconds is a screen reader saying the same
- * sentence until the network returns.
+ * Reconnecting is `aria-busy`, and the announcement does not repeat. A retry
+ * loop that re-announced every few seconds would have a screen reader say the
+ * same sentence until the network returns.
  */
 import { type HTMLAttributes, type ReactNode } from 'react';
 import { Result } from '../Result/Result.js';
@@ -45,9 +44,9 @@ export function OfflineScreen({
   title = 'You are offline', children, isReconnecting = false, onRetry,
   retryLabel = 'Try again', actions, headingLevel = 1, className, ...props
 }: OfflineScreenProps): React.JSX.Element {
-  /* A screen is a view: inside a router's `AnimatePresence` it arrives with
-     `page-in` and leaves with `page-out`; rendered plainly — and on the page
-     load that first shows it — nothing. */
+  /* A screen is a view. Inside a router's `AnimatePresence` it arrives with
+     `page-in` and leaves with `page-out`. Rendered plainly, and on the page
+     load that first shows it, it does not animate. */
   const presence = usePresenceMotion('page-in', 'page-out');
   return (
     <div ref={presence as never}

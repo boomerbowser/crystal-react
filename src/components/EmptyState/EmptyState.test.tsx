@@ -5,9 +5,8 @@ import { EmptyState } from './EmptyState.js';
 
 describe('EmptyState', () => {
   /* "No-results and truly-empty are different states and read differently." The
-     component has no default state, so neither can be chosen by accident — and
-     the two render as different states rather than as one with different words
-     stuck on it. */
+     component has no default state, so neither can be chosen by accident. The
+     two render as different states, not as one state with different words. */
   it('keeps the two kinds of empty apart', () => {
     const { container, rerender } = renderWithCrystal(
       <EmptyState state="empty" title="No projects yet" />,

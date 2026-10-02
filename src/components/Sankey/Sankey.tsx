@@ -1,22 +1,21 @@
 'use client';
 
-/* Sankey — flow between stages, with width as volume.
+/* Sankey: flow between stages, with width as volume.
  *
- * "Each link states its endpoints and volume as text." A sankey is the chart
- * whose picture is least recoverable in words — a reader who cannot see it
- * cannot be told "the shape of the flow" — so every link is a mark that names
- * both ends and its size, and the table lists every one of them. Naming only the
- * nodes would leave the entire content of the chart undescribed: the nodes are
- * the labels, the links are the data.
+ * "Each link states its endpoints and volume as text." A reader who cannot see a
+ * sankey cannot be told "the shape of the flow", so every link is a mark that
+ * names both ends and its size, and the table lists every one of them. The nodes
+ * are the labels and the links are the data, so naming only the nodes would
+ * describe nothing.
  *
- * "Link opacity keeps crossings readable." Crystal's `--cr-chart-link-opacity`,
- * which is higher than a fill's because a link *is* the mark rather than its
- * backing, and low enough that a crossing reads as two links rather than as a
- * third shape.
+ * "Link opacity keeps crossings readable." Crystal's `--cr-chart-link-opacity`
+ * is higher than a fill's because a link is the mark rather than its backing,
+ * and low enough that a crossing reads as two links rather than as a third
+ * shape.
  *
  * The layout is `d3-sankey`'s. Node order and the iteration that untangles the
- * crossings are a solved problem with a published algorithm, and a second
- * implementation of it would be a different picture of the same numbers.
+ * crossings have a published algorithm, and a second implementation would draw
+ * a different picture of the same numbers.
  */
 import { type CSSProperties, type ReactNode } from 'react';
 import { sankey as d3sankey, sankeyLinkHorizontal } from 'd3-sankey';
@@ -86,8 +85,8 @@ export function Sankey({
           .nodePadding(12)
           .extent([[0, 0], [Math.max(1, inner.width), Math.max(1, inner.height)]]);
         /* Cloned, because `d3-sankey` writes the layout onto the objects it is
-           given and would otherwise mutate the caller's data — including on a
-           re-render, where the second pass would start from the first's output. */
+           given and would otherwise mutate the caller's data. On a re-render the
+           second pass would then start from the first's output. */
         const graph = layout({
           nodes: nodes.map((node) => ({ ...node })),
           links: links.map((link) => ({

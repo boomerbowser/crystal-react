@@ -1,45 +1,37 @@
 'use client';
 
-/* FocusMode — hides chrome to leave one task visible.
+/* FocusMode hides chrome to leave one task visible.
  *
  * States: `off`, `on`, `transitioning`.
  * "Entering and leaving are announced; **nothing becomes unreachable, only
  * hidden**."
  *
- * That sentence contains a tension worth resolving in the open rather than
- * implementing one half of by accident. Chrome that is genuinely still reachable
- * has not been hidden — it is on screen, or it is `visibility: hidden` and still
- * in the tab order, which is the worst of both: invisible and focusable, so a
- * keyboard reader tabs into something nobody can see. Chrome that is genuinely
- * hidden is unreachable *while it is hidden*, and that is not a violation; it is
- * what hiding means.
+ * Hidden chrome cannot also be reachable. Chrome left `visibility: hidden` in
+ * the tab order is invisible and focusable, so a keyboard reader tabs into
+ * something nobody can see. Chrome that is hidden is unreachable while it is
+ * hidden.
  *
- * The reading that makes both halves true is about the mode, not the chrome:
- * **nothing is lost, because leaving is always available.** So the chrome is not
- * rendered — not shrunk, not transparent, not `visibility: hidden` — and the
- * control that leaves focus mode is rendered inside the task, where it cannot be
- * hidden by the thing it undoes. A focus mode whose exit is in the chrome it
- * hides is a mode with no way out.
+ * The sentence holds for the mode as a whole: nothing is lost, because leaving
+ * is always available. The chrome is not rendered (not shrunk, not transparent,
+ * not `visibility: hidden`), and the control that leaves focus mode is rendered
+ * inside the task, where hiding the chrome cannot hide it. An exit placed in
+ * the chrome would leave the mode with no way out.
  *
- * **The half that fails silently is focus itself.** If the reader's focus is
- * resting inside the chrome when the mode turns on, that element unmounts under
- * them and focus falls to the document body: a keyboard reader starts again from
- * the top of the page, and a screen reader says nothing at all, because nothing
- * happened that it reports.
+ * Focus can fail without any warning. If the reader's focus is inside the
+ * chrome when the mode turns on, that element unmounts and focus falls to the
+ * document body. A keyboard reader starts again from the top of the page, and a
+ * screen reader says nothing at all.
  *
- * Knowing that has to be done in advance. The obvious version reads
- * `document.activeElement` in the effect that notices the change — and by then
- * the chrome has already unmounted and the answer is always `body`, so the
- * check passes on every render and moves focus on none of them. There is no
- * lifecycle point between "still focused" and "gone"; `useLayoutEffect` is
- * after the mutation too. So focus is tracked as it moves, and the effect reads
- * what was recorded rather than what is left. Only then is it moved, and only
- * when it was in the chrome: moving it unconditionally would take it away from
- * readers who were already working in the task.
+ * The effect that notices the change cannot read `document.activeElement`. By
+ * then the chrome has unmounted and the answer is always `body`.
+ * `useLayoutEffect` also runs after the mutation, and no lifecycle point falls
+ * between "still focused" and "gone". So focus is tracked as it moves, and the
+ * effect reads what was recorded. Focus is moved only when it was in the
+ * chrome, so a reader already working in the task keeps their place.
  *
- * "Entering and leaving are announced" is a live region rather than a role
- * change: what the reader needs to know is that the chrome went, which nothing
- * else on screen will tell them.
+ * "Entering and leaving are announced" is a live region and not a role change.
+ * The reader needs to know that the chrome went, and nothing else on screen
+ * tells them.
  */
 import {
   useEffect, useMemo, useRef, useState, type HTMLAttributes, type ReactNode,
@@ -71,8 +63,8 @@ export function FocusMode({
   const task = useRef<HTMLDivElement>(null);
   const chromeRegion = useRef<HTMLDivElement>(null);
   const was = useRef(isOn);
-  /* Where focus is *now*, recorded as it moves. See the note above: by the time
-     an effect can see the mode change, the chrome it was in has gone. */
+  /* Where focus is now, recorded as it moves. By the time an effect can see
+     the mode change, the chrome it was in has gone (see the note above). */
   const focusWasInChrome = useRef(false);
   const [said, setSaid] = useState('');
 
@@ -102,9 +94,9 @@ export function FocusMode({
       className={cx(styles['wrap'], className)}
     >
       <VisuallyHidden role="status">{said}</VisuallyHidden>
-      {/* The chrome is the view that leaves as focus mode begins and returns as
-          it ends: `page-out` and `page-in`, held in presence so it can be seen
-          going. Neither on the render that opens the page. */}
+      {/* The chrome leaves with `page-out` as focus mode begins and returns
+          with `page-in` as it ends, held in presence so it can be seen going.
+          Neither plays on the render that opens the page. */}
       <AnimatePresence initial={false}>
         {isOn ? null : <Chrome key="chrome" region={chromeRegion}>{chrome}</Chrome>}
       </AnimatePresence>

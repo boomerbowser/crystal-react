@@ -1,12 +1,12 @@
 'use client';
 
-/* The grid, the axes and their ticks — shared by every chart drawn on two
+/* The grid, the axes and their ticks: shared by every chart drawn on two
  * perpendicular scales.
  *
  * Kept out of `ChartSurface` because the surface must not know what a scale is:
  * a pie, a treemap and a map all sit on the surface and none of them has an
  * axis. Kept out of the individual charts because a bar chart and a histogram
- * differ in what they *put in* the plot, not in how the plot is ruled, and two
+ * differ in what they put in the plot, not in how the plot is ruled, and two
  * copies of "how the plot is ruled" is two grids that drift.
  *
  * Everything here is decoration and says so: the grid, the ticks and the axis

@@ -1,15 +1,14 @@
-/* How a media time reads, and how it is said.
+/* How a media time is displayed and how it is announced.
  *
- * "Crystal: … **time formatting**" — the catalogue puts this on Crystal's side
- * rather than the product's, and it belongs there for the same reason the
- * palette does: two players formatting the same second differently is a
- * difference a reader has to notice and learn.
+ * "Crystal: … **time formatting**". The catalogue assigns this to Crystal rather
+ * than the product, as it does the palette, so that two players never format
+ * the same second differently.
  *
- * Two functions, because the screen and the announcement are not the same text
- * and conflating them is the bug. `1:23` is right beside a scrubber and wrong in
- * a screen reader, which reads it as "one colon twenty-three" or "one twenty-
- * three" depending on the engine and the punctuation setting. So the thumb says
- * "1 minute 23 seconds of 4 minutes 56 seconds" and the display says "1:23".
+ * There are two functions because the screen and the announcement need
+ * different text. `1:23` is right beside a scrubber, but a screen reader reads
+ * it as "one colon twenty-three" or "one twenty-three", depending on the engine
+ * and the punctuation setting. The thumb says "1 minute 23 seconds of 4 minutes
+ * 56 seconds" and the display says "1:23".
  */
 
 /** `m:ss`, or `h:mm:ss` once there is an hour to show. For the screen. */

@@ -20,10 +20,9 @@ describe('Workspace', () => {
     expect(screen.getByRole('region', { name: 'Preview' })).toBeInTheDocument();
   });
 
-  /* Focus mode removes the other panes rather than shrinking them. A pane
+  /* Focus mode removes the other panes instead of shrinking them. A pane
      squeezed to a sliver is still a tab stop, still read by a screen reader,
-     and still catches a click — chrome that is only small is chrome the reader
-     can still fall into. */
+     and still catches a click. */
   it('removes the other panes in focus mode rather than shrinking them', () => {
     renderWithCrystal(<Workspace panes={panes} focused="editor" />);
     expect(screen.getByRole('region', { name: 'Editor' })).toBeInTheDocument();
@@ -50,10 +49,10 @@ describe('Workspace', () => {
     expect(labels).toEqual(['Files', 'Editor', 'Preview']);
   });
 
-  /* The defect `FocusMode` exists to prevent, in a second place. A reader with
-     focus in the Files pane, and a product that turns focus mode on: the pane
-     unmounts under them, focus falls to the document body, and a keyboard
-     reader starts again from the top of the page with nothing said about it. */
+  /* The defect `FocusMode` prevents, here in a second place. With focus in the
+     Files pane, the product turns focus mode on. The pane unmounts, focus falls
+     to the document body, and a keyboard reader starts again from the top of
+     the page with nothing announced. */
   it('moves focus to the surviving pane when the focused one goes', async () => {
     const { rerenderWithCrystal } = renderWithCrystal(
       <Workspace
@@ -80,8 +79,7 @@ describe('Workspace', () => {
     });
   });
 
-  /* And the other half: a reader already working in the pane being focused
-     keeps their place. */
+  /* A reader already working in the pane being focused keeps their place. */
   it('leaves focus alone when it was already in the surviving pane', async () => {
     const panesWithControl = [
       { id: 'files', label: 'Files', children: <p>Files</p> },

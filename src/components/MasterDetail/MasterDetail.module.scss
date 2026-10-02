@@ -9,8 +9,8 @@
 }
 
 /* "Frost list pane; Haze detail surface." The list is an intermediate surface
-   beside the content; the detail is the content, so it takes the protective
-   fill a reading surface owes its text rather than a material of its own. */
+   beside the content. The detail is the content, so it takes the protective
+   fill a reading surface gives its text, with no material of its own. */
 .list {
   @include material.frost;
 
@@ -26,9 +26,9 @@
   border-radius: $cr-shape-content-radius;
 }
 
-/* "Collapses to a stack below the layout breakpoint." One column, and one pane
-   in it: a stack that showed both would be the list and the detail in sequence,
-   which is a page, not a master–detail. */
+/* "Collapses to a stack below the layout breakpoint." One column, with one pane
+   in it. A stack showing both would be the list and the detail in sequence,
+   which is a page. */
 .stacked { grid-template-columns: minmax(0, 1fr); }
 
 @include material.opaque-fallback('.list');

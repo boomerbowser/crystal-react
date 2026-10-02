@@ -1,12 +1,11 @@
 @use '../../styles/tokens' as *;
 
-/* Pressable — the minimum target, enforced on whatever it wraps.
+/* Pressable: the minimum target, enforced on whatever it wraps.
  *
  * The catalogue asks this component to enforce the 44px minimum on its child.
- * Doing it by growing the child would change the design; doing it with a
- * pseudo-element extends the *hit area* without moving a pixel, which is what the
- * requirement actually is — a target big enough for a fingertip, not a control
- * big enough to look clumsy.
+ * Growing the child would change the design. A pseudo-element extends the hit
+ * area without moving a pixel, which gives a target big enough for a fingertip
+ * without making the control itself larger.
  */
 
 .pressable {

@@ -9,8 +9,8 @@
 }
 
 /* "Track keeps the content radius; segments meet without gaps." One flex row
-   with `overflow: hidden`, so the radius belongs to the track and the segments
-   simply end where the next begins. */
+   with `overflow: hidden`, so the radius belongs to the track and each segment
+   ends where the next begins. */
 .track {
   display: flex;
   overflow: hidden;
@@ -34,10 +34,9 @@
 
 .entry { display: inline-flex; align-items: center; gap: $cr-spacing-2xs; }
 
-/* Round, like the status badge's well, and on the spacing rhythm rather than at
-   a size chosen by eye. Crystal publishes no legend-swatch token; what it does
-   publish is a scale, and a swatch that sits on it stays in proportion when the
-   scale moves. */
+/* Round, like the status badge's well, and sized on the spacing scale. Crystal
+   publishes no legend-swatch token, and a swatch on the scale stays in
+   proportion when the scale changes. */
 .swatch {
   flex: none;
   inline-size: $cr-spacing-sm;
@@ -50,19 +49,18 @@
 .value { color: var(--cr-muted); font-variant-numeric: tabular-nums; }
 
 /* `--segment-colour` arrives from the component, which reads Crystal's chart
-   series scale through `seriesColour()` — the same function the charts use.
-   A meter group is not a chart, but "several things on one picture, told apart
-   by colour" is exactly the problem that scale was derived for, and a second
-   scale invented here would be a second one to keep at 3:1. */
+   series scale through `seriesColour()`, the same function the charts use.
+   A meter group is not a chart, but that scale was derived for several things
+   on one picture told apart by colour. A second scale invented here would be a
+   second one to keep at 3:1. */
 
 [data-status='success'] { --segment-colour: var(--cr-success-ink); }
 [data-status='attention'] { --segment-colour: var(--cr-attention-ink); }
 [data-status='danger'] { --segment-colour: var(--cr-danger-ink); }
 [data-status='info'] { --segment-colour: var(--cr-info-ink); }
 
-/* Colour is gone, and the names in the legend are what is left — which is the
-   reason the legend is not optional. The segments keep their boundaries with a
-   rule between them so the proportions stay readable. */
+/* Colour is gone, and the names in the legend remain. That is why the legend
+   is on by default. A rule between segments keeps the proportions readable. */
 @media (forced-colors: active) {
   .track { background: Canvas; border: 1px solid CanvasText; }
   .segment { background: Canvas; border-inline-end: 1px solid CanvasText; }

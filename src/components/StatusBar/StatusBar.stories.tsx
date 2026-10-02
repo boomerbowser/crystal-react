@@ -9,15 +9,14 @@ const meta = {
       description: {
         component:
           '"`role="status"`; errors escalate to assertive."\n\n'
-          + 'The escalation has a trap in it. The obvious implementation swaps `role="status"` '
-          + 'for `role="alert"` on the same element — and on several screen readers that does '
-          + 'nothing, because a live region\'s politeness is taken when it is inserted, not '
-          + 'when its role attribute changes. The text updates and the urgency does not, and '
-          + 'the bug is invisible to everybody who can see the bar.\n\n'
+          + 'Swapping `role="status"` for `role="alert"` on the same element does nothing on '
+          + 'several screen readers, because a live region\'s politeness is taken when it is '
+          + 'inserted, not when its role attribute changes. The text would update without the '
+          + 'urgency, and nobody who can see the bar would notice.\n\n'
           + 'So there are two regions and the message is in exactly one at a time. An '
           + 'escalated message arrives as new content in an assertive region, which every '
           + 'screen reader agrees to interrupt for.\n\n'
-          + 'Stone comes from core\'s `.cr-stone`: the feather is on an isolated `::before` '
+          + 'Stone comes from core\'s `.cr-stone`. The feather is on an isolated `::before` '
           + 'beneath the content rather than on the element, which is what "text stays crisp" '
           + 'means.',
       },

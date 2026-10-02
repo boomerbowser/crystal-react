@@ -3,9 +3,9 @@
 .coupon { display: grid; gap: $cr-spacing-xs; }
 
 /* "Field and action share one pill row." The action aligns to the bottom of the
-   row rather than the centre, because the field is taller than its control — it
-   carries a label above and a message below, and centring against the whole
-   field floats the button beside the label instead of beside the input. */
+   row, because the field is taller than its control. It carries a label above
+   and a message below, and centring against the whole field would float the
+   button beside the label instead of beside the input. */
 .row {
   display: flex;
   align-items: flex-end;
@@ -14,7 +14,7 @@
 
 .field { flex: 1; min-inline-size: 0; }
 
-/* The applied state is a statement, not a field: there is nothing left to type. */
+/* The applied state is a statement, because there is nothing left to type. */
 .applied {
   display: flex;
   align-items: center;

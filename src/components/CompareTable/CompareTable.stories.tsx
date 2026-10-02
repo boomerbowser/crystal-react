@@ -8,16 +8,14 @@ const meta = {
     docs: {
       description: {
         component:
-          '"A real table with row and column headers; **differences are stated in text**", and '
-          + '"differences are marked, not only coloured". Those are the same requirement twice, '
-          + 'and it is the whole point of a comparison: a reader comparing four products across '
-          + 'twelve attributes is looking for the rows where they *differ*. A table that marks '
-          + 'those by tinting them has answered the question for people who can see the tint '
-          + 'and for nobody else.\n\n'
-          + 'The difference is **computed**, not declared. A flag passed in from outside is a '
-          + 'claim nobody can check, and it goes stale the moment a product joins the '
-          + 'comparison — the same argument the discount badge makes about being handed a '
-          + 'percentage.',
+          '"A real table with row and column headers; differences are stated in text", and '
+          + '"differences are marked, not only coloured". Both state one requirement. A reader '
+          + 'comparing four products across twelve attributes is looking for the rows where '
+          + 'they differ. A table that marks those only by tint works only for people who can '
+          + 'see the tint.\n\n'
+          + 'The difference is computed from the values. A flag passed in from outside cannot '
+          + 'be checked, and it goes stale as soon as a product joins the comparison. The '
+          + 'discount badge makes the same argument about being handed a percentage.',
       },
     },
   },
@@ -43,6 +41,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** With the matching rows saying so too. Off by default: a table where every
- *  row carries a word is a table where the word has stopped meaning anything. */
+/** With the matching rows saying so too. Off by default, because when every
+ *  row carries a word the word no longer stands out. */
 export const SayingBoth: Story = { args: { matchesLabel: 'the same' } };

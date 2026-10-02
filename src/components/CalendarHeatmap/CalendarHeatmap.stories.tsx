@@ -18,13 +18,13 @@ const meta = {
     docs: {
       description: {
         component:
-          '"Every cell states its date and value." The date matters more than the value here: a '
-          + 'grid of squares with no axis cannot be read by position — nobody counts "third '
-          + 'column, fifth row" back to a Tuesday in March — so the date is written into every '
-          + "cell's label rather than inferred from where it sits.\n\n"
+          '"Every cell states its date and value." The date matters more than the value here. A '
+          + 'grid of squares with no axis cannot be read by position (nobody counts "third '
+          + 'column, fifth row" back to a Tuesday in March), so the date is written into every '
+          + "cell's label.\n\n"
           + 'A day with no measurement says so in words and is drawn as an outline. "No data" '
-          + 'and "the least data" are different facts, and a calendar where an empty day looks '
-          + 'like a quiet one cannot be read at all.\n\n'
+          + 'and "the least data" are different facts, and in a calendar where an empty day looks '
+          + 'like a quiet one, neither can be read.\n\n'
           + 'The ramp, the buckets and the contrast floor are the same ones the heatmap uses. '
           + 'There is one intensity scale in the system, not one per chart.',
       },

@@ -2,17 +2,17 @@
 
 /* Stack and Group.
  *
- * Crystal's catalogue treats these as two components — a vertical arrangement
- * with one spacing value, and a horizontal one with wrapping and alignment — and
- * they are two exports here because that is the vocabulary a product reads. They
+ * Crystal's catalogue treats these as two components (a vertical arrangement
+ * with one spacing value, and a horizontal one with wrapping and alignment). They
+ * are two exports here because that is the vocabulary a product reads. They
  * share an implementation because they are the same box turned ninety degrees,
  * and two copies of it would drift the first time either grew a feature.
  *
- * Both are presentational. The catalogue says so explicitly, and it matters: a
- * layout component that introduces a landmark or a list role tells assistive
- * technology about a grouping that exists only visually. `as` is offered so a
- * product can render the right element when the grouping *is* real — a `ul`, a
- * `nav` — rather than nesting a meaningful element inside a meaningless div.
+ * Both are presentational, as the catalogue states. A layout component that
+ * introduces a landmark or a list role tells assistive technology about a
+ * grouping that exists only visually. `as` lets a product render the right
+ * element when the grouping is real, such as a `ul` or a `nav`, rather than
+ * nesting a meaningful element inside a meaningless div.
  */
 import { forwardRef, type CSSProperties, type ElementType, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -41,7 +41,7 @@ export interface StackProps extends HTMLAttributes<HTMLElement> {
 }
 
 export interface GroupProps extends StackProps {
-  /** Whether children wrap onto another line. Defaults to true — a horizontal row that cannot wrap overflows. */
+  /** Whether children wrap onto another line. Defaults to true, because a horizontal row that cannot wrap overflows. */
   wrap?: boolean;
 }
 

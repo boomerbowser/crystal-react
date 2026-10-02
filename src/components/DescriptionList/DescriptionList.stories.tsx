@@ -15,12 +15,11 @@ const meta = {
     docs: {
       description: {
         component:
-          'Term and value pairs as a real `dl`. A grid of divs cannot do the one thing this '
-          + 'element exists for: keep the term and the value associated. Read out of order — which '
-          + 'is how a screen reader moves through a two-column layout — "Status" and "Active" in '
-          + 'separate cells are two unrelated words; in a definition list they are a pair. The '
-          + 'pairs are wrapped in `div`s, which HTML allows inside `dl` precisely so they can be '
-          + 'laid out as rows without breaking that association.',
+          'Term and value pairs as a real `dl`, because a grid of divs cannot keep the term and '
+          + 'the value associated. A screen reader moves through a two-column layout out of '
+          + 'order, so "Status" and "Active" in separate cells are two unrelated words. In a '
+          + 'definition list they are a pair. Each pair is wrapped in a `div`, which HTML allows '
+          + 'inside `dl` so the pairs can be laid out as rows without breaking that association.',
       },
     },
   },

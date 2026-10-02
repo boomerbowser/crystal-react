@@ -1,25 +1,22 @@
 'use client';
 
-/* RollingNumber — a number that rolls digit by digit when it changes.
+/* RollingNumber: a number that rolls digit by digit when it changes.
  *
- * **Crystal assigns this component no motion recipe**, and that is a fact worth
- * stating rather than working around. `Card` plays nothing for the same reason —
- * a library must not invent motion the design system did not specify. But here
- * the movement *is* the component: the catalogue's own anatomy is "a number that
- * animates digit by digit when it changes", so refusing to move would be
- * refusing to build it.
+ * Crystal assigns this component no motion recipe. A library must not invent
+ * motion the design system did not specify, and `Card` plays nothing for that
+ * reason. Here the movement is the component: the catalogue's own anatomy is "a
+ * number that animates digit by digit when it changes".
  *
- * The resolution is to build the roll out of Crystal's published motion *tokens*
- * rather than out of an invented recipe. The travel is one digit; the duration is
- * `motion.duration.state`, which is what Crystal uses for a value changing; the
- * easing is `motion.easing.settle`. Nothing here is a number this library chose,
- * and if Crystal ever authors a recipe for it, this is the file that changes.
+ * The roll is built from Crystal's published motion tokens rather than an
+ * invented recipe. The travel is one digit. The duration is
+ * `motion.duration.state`, which Crystal uses for a value changing. The easing
+ * is `motion.easing.settle`. This library chose none of the numbers, and if
+ * Crystal authors a recipe for it, this is the file that changes.
  *
- * The announcement is the other half. "The value is announced once it settles,
- * not on every frame": the digits are `aria-hidden`, and a polite live region
- * carries the settled value one roll-duration later. Under reduced motion the
- * roll is removed and the duration resolves to zero, so the announcement is
- * immediate — which is the correct behaviour rather than a degraded one.
+ * "The value is announced once it settles, not on every frame". The digits are
+ * `aria-hidden`, and a polite live region carries the settled value one
+ * roll-duration later. Under reduced motion the roll is removed and the
+ * duration resolves to zero, so the announcement is immediate.
  */
 import { forwardRef, useEffect, useRef, useState, type HTMLAttributes } from 'react';
 import { useCrystalTheme } from '../../theme/CrystalProvider.js';
@@ -34,7 +31,7 @@ export interface RollingNumberProps extends Omit<HTMLAttributes<HTMLSpanElement>
    *  announcement are formatted by the same thing. */
   format?: Intl.NumberFormatOptions;
   locale?: string;
-  /** What the number is *of*, appended to the announcement. */
+  /** What the number is of, appended to the announcement. */
   description?: string;
 }
 
@@ -70,9 +67,9 @@ export const RollingNumber = forwardRef<HTMLSpanElement, RollingNumberProps>(fun
           if (digit < 0) return <span key={key} className={styles['fixed']}>{character}</span>;
           return (
             <span key={key} className={styles['column']}>
-              {/* The whole strip, translated. Rendering ten glyphs per digit is
-                  what makes the roll CSS rather than a scripted animation, and a
-                  CSS translate is what `prefers-reduced-motion` can switch off. */}
+              {/* The whole strip, translated. Rendering ten glyphs per digit makes
+                  the roll a CSS transition rather than a scripted animation, and
+                  `prefers-reduced-motion` can switch a CSS translate off. */}
               <span className={styles['strip']} style={{ translate: `0 ${-digit * 100}%` }}>
                 {DIGITS.map((d) => <span key={d} className={styles['glyph']}>{d}</span>)}
               </span>

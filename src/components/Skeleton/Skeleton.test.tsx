@@ -23,8 +23,8 @@ describe('Skeleton', () => {
     expect(shapes!.querySelectorAll('[data-shape]')).toHaveLength(3);
   });
 
-  /* One live region for the whole placeholder. Twelve lines announcing
-     themselves twelve times is not more information. */
+  /* One live region for the whole placeholder, so twelve lines are not
+     announced twelve times. */
   it('announces what is loading exactly once', () => {
     renderWithCrystal(
       <Skeleton loading placeholder={placeholder} label="Loading invoices" />,
@@ -34,9 +34,9 @@ describe('Skeleton', () => {
     expect(said[0]).toHaveTextContent('Loading invoices');
   });
 
-  /* It wraps rather than replaces, and that is the reason `skeleton-resolve`
-     can exist: a skeleton swapped out by its caller has already unmounted when
-     the data arrives, so there is nothing left to play the resolve on. */
+  /* It wraps the content instead of being replaced by it, so `skeleton-resolve`
+     has something to play on. A skeleton swapped out by its caller has already
+     unmounted when the data arrives. */
   it('shows the real content in the same place once it arrives', () => {
     const { rerender } = renderWithCrystal(
       <Skeleton loading placeholder={placeholder}>Real content</Skeleton>,

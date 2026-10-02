@@ -45,7 +45,7 @@ describe('SearchBlock', () => {
     expect(within(group).getAllByRole('option').map((one) => one.textContent)).toEqual(['quarterly figures', 'board minutes']);
   });
 
-  /* The opinion, half one: arrow keys move without losing the typed value. */
+  /* The opinion's first half: arrow keys move without losing the typed value. */
   it('keeps the typed value while the arrow keys move the highlight', async () => {
     renderWithCrystal(<Harness />);
     const field = screen.getByRole('combobox');
@@ -72,7 +72,7 @@ describe('SearchBlock', () => {
     expect(field).toHaveValue('harbour master');
   });
 
-  /* Half two: results are announced by count. */
+  /* The opinion's second half: results are announced by count. */
   /* Through React Aria's announcer, which its own aria-hidden sweep leaves
      reachable while the list is open. */
   it('says how many suggestions there are as they change', async () => {
@@ -111,11 +111,11 @@ describe('SearchBlock', () => {
     await expectNoAxeViolations(container);
   });
 
-  /* The block and its popover each in their own scope. On the whole body axe's
-     best-practice `region` rule objects to the portalled popover sitting
-     outside the block's search landmark — which every React Aria popover does
-     on any page with a landmark, and which no markup inside the block could
-     change. */
+  /* The block and its popover are each checked in their own scope. On the whole
+     body, axe's best-practice `region` rule objects to the portalled popover
+     sitting outside the block's search landmark. Every React Aria popover does
+     that on any page with a landmark, and no markup inside the block can change
+     it. */
   it('has no axe violations open', async () => {
     const { container } = renderWithCrystal(<Harness />);
     await userEvent.type(screen.getByRole('combobox'), 'harb');

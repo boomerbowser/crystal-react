@@ -1,25 +1,23 @@
 'use client';
 
-/* Affix — pins its content to the viewport past a scroll threshold.
+/* Affix: pins its content to the viewport past a scroll threshold.
  *
- * **A passive scroll listener, not `IntersectionObserver`.** The observer is
- * the obvious tool and it was tried, in `TableOfContents`, where it produced
- * three separate defects before being replaced. The decisive one for this
- * library is D-5: the in-app preview browser delivers no observer callbacks at
- * all, so a component built on one appears to work everywhere except the place
+ * A passive scroll listener, not `IntersectionObserver`. The decisive reason
+ * is D-5. The in-app preview browser delivers no observer callbacks at all, so
+ * a component built on one appears to work everywhere except the place
  * Meridian reviews it. A scroll listener works in both, and coalescing it to
- * one read per frame is what makes it cheap — a scroll event can fire many
- * times between paints and every handler here reads layout.
+ * one read per frame keeps it cheap. A scroll event can fire many times
+ * between paints and every handler here reads layout.
  *
- * **The placeholder is the whole component.** Pinning means leaving the flow,
- * and an element that leaves the flow takes its height with it — so the page
+ * The placeholder is the whole component. Pinning means leaving the flow,
+ * and an element that leaves the flow takes its height with it, so the page
  * jumps by exactly that height at the moment it pins, and jumps back when it
  * unpins. That produces a loop at the threshold: unpinning restores the height,
  * which scrolls the threshold back under the element, which pins it again. The
  * placeholder holds the measured height open so the flow never changes, which
  * removes the jump and the loop together.
  *
- * **Resin once pinned, nothing before.** The catalogue's material line, and the
+ * Resin once pinned, nothing before. The catalogue's material line, and the
  * reason is legibility rather than decoration: pinned, the element floats over
  * content that scrolls beneath it, and it needs to separate itself from what it
  * is covering. Inline, it is part of the page and giving it a floating material
@@ -62,8 +60,8 @@ export function Affix({ children, offset = 0, onChange, className }: AffixProps)
     const measure = (): void => {
       frame = 0;
       /* The holder never leaves the flow, so its position is the content's
-         natural position — which is the question being asked, and it stays
-         answerable after the content has been taken out of the flow. */
+         natural position, and that position stays answerable after the content
+         has been taken out of the flow. */
       const next = node.getBoundingClientRect().top <= offset;
       setPinned((was) => {
         if (was !== next) announce.current?.(next);

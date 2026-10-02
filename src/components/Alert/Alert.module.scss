@@ -4,7 +4,7 @@
 
 /* "Content radius; 12px minimum from content to the feathered edge." The Haze
    fill is inset by `--cr-haze-inset`, so the padding is measured from the
-   element and the feather sits inside it — `$cr-spacing-sm` is that 12px. */
+   element and the feather sits inside it. `$cr-spacing-sm` is that 12px. */
 .alert {
   @include material.haze-fill;
 

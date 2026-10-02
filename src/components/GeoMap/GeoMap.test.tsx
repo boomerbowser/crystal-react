@@ -15,16 +15,15 @@ const features = [
 ];
 
 describe('GeoMap', () => {
-  /* A map is the chart where the picture carries the identity of each mark as
-     well as its value: a reader who cannot see it has no idea which shape is
-     which. */
+  /* On a map the picture carries the identity of each mark as well as its
+     value. A reader who cannot see it cannot tell which shape is which. */
   it('names every region and states its value', () => {
     renderWithCrystal(<GeoMap label="Sales" features={features} values={{ north: 42 }} />);
     expect(screen.getByLabelText('North, 42')).toBeInTheDocument();
   });
 
-  /* A region the join missed is not a region with the lowest value, and a map
-     that painted them the same would invent a measurement for every miss. */
+  /* A region the join missed is different from a region with the lowest value.
+     Painting them the same would invent a measurement for every miss. */
   it('says a region has no value rather than painting it the lowest step', () => {
     renderWithCrystal(<GeoMap label="Sales" features={features} values={{ north: 42 }} />);
     const missed = screen.getByLabelText('South, no value');

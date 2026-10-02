@@ -1,34 +1,34 @@
 'use client';
 
-/* HoverCard — a preview that opens on hover or focus after a delay.
+/* HoverCard. A preview that opens on hover or focus after a delay.
  *
- * **It opens on focus, not only on hover.** A card that appears on hover alone
- * is unreachable from the keyboard and invisible on touch, which makes whatever
- * it previews unreachable too. This is the same rule the tooltip follows and the
- * most common way this component is built wrong.
+ * It opens on focus as well as on hover. A card that appears on hover alone is
+ * unreachable from the keyboard and invisible on touch, which makes whatever it
+ * previews unreachable too. The tooltip follows the same rule, and hover-only
+ * is the most common way this component is built wrong.
  *
- * **The delay is the component.** Too short and it fires as the pointer crosses
- * on its way somewhere else, filling the screen with cards nobody asked for.
- * Too long and it reads as broken. The close delay matters as much: the pointer
- * has to travel from the trigger *into* the card, and any gap between them is
- * time the card can decide to close underneath a pointer that is on its way in.
+ * The delays matter. Too short an open delay and the card fires as the pointer
+ * crosses on its way somewhere else, filling the screen with cards nobody asked
+ * for. Too long and it reads as broken. The close delay matters as much: the
+ * pointer has to travel from the trigger into the card, and during any gap
+ * between them the card can close underneath a pointer that is on its way in.
  *
- * **An intent counter, not a boolean.** The trigger and the card each report
+ * Open state follows an intent counter. The trigger and the card each report
  * entering and leaving. Closing on the first leave would close the card the
- * instant the pointer crosses from one to the other; counting means the card
- * stays open as long as the pointer is over *either*, and closes when it is
- * over neither. This is the same defect the disclosure, popover, menu and toast
- * closures already solved with a counter, recorded in the plan as "an intent
- * counter so a stale completion cannot hide a reopened component".
+ * instant the pointer crosses from one to the other. With the counter, the card
+ * stays open while the pointer is over either and closes when it is over
+ * neither. The disclosure, popover, menu and toast closures use the same
+ * counter, recorded in the plan as "an intent counter so a stale completion
+ * cannot hide a reopened component".
  *
- * **It is never the sole accessible name.** Like the tooltip: the trigger has
- * its own name, and this supplements it. A card is a preview of a destination,
- * not the destination's label.
+ * It is never the sole accessible name. As with the tooltip, the trigger has
+ * its own name and the card supplements it. A card previews a destination and
+ * is not its label.
  *
- * **A transient overlay is Frost** (Crystal R15e). Opened from the page it is
- * Frost; opened inside a dialog or a drawer it recesses to Haze, decided in React
- * because the DOM cannot decide it — the card is portalled and loses its nesting
- * on the way.
+ * A transient overlay is Frost (Crystal R15e). Opened from the page the card is
+ * Frost. Opened inside a dialog or a drawer it recesses to Haze. React decides
+ * this, because the card is portalled and loses its nesting on the way, so the
+ * DOM cannot.
  */
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Popover as AriaPopover, Dialog, DialogTrigger } from 'react-aria-components';
@@ -42,7 +42,7 @@ import styles from './HoverCard.module.scss';
 export interface HoverCardProps {
   /** The control the card previews. Keeps its own accessible name. */
   trigger: ReactNode;
-  /** The card's accessible name — it is a surface focus can move into. */
+  /** The card's accessible name. Focus can move into the card. */
   label: string;
   children: ReactNode;
   /** How long the pointer must rest before it opens. */
@@ -62,7 +62,7 @@ export function HoverCard({
   const [isOpen, setOpen] = useState(false);
   /* How many of {trigger, card} the pointer or focus is currently within.
      A boolean would close the card the instant the pointer crossed the gap
-     between them, which is the one journey the component has to survive. */
+     between them. */
   const within = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -103,8 +103,8 @@ export function HoverCard({
             <Arrival play={play} recipe="popover-in" />
             <Departure isExiting={isExiting} play={play} recipe="popover-out" scope={scope} />
             <SurfaceProvider surface={material}>
-              {/* The card is hoverable: the pointer travelling into it must not
-                  close it, which is what the counter is for. */}
+              {/* The card is hoverable. The counter keeps the pointer travelling
+                  into it from closing it. */}
               <Dialog aria-label={label} className={cx(styles['body'])} {...intent}>
                 {children}
               </Dialog>

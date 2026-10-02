@@ -1,17 +1,15 @@
 @use '../../styles/tokens' as *;
 
-/* ImageCompare — "Resin handle over the images; handle is a pill and reaches
+/* ImageCompare. "Resin handle over the images; handle is a pill and reaches
  * 44px."
  *
- * The 44px is reached by the handle's own box rather than by a grown hit area,
- * and that is the right choice here for a reason specific to this control: the
- * handle sits *over* the pictures with nothing beside it, so a grown target has
- * nothing to overlap and hiding the real edge of a draggable thing makes it
- * harder to aim at, not easier.
+ * The handle's own box reaches the 44px, with no grown hit area. The handle
+ * sits over the pictures with nothing beside it, so a grown target has nothing
+ * to overlap, and hiding the real edge of a draggable thing makes it harder to
+ * aim at.
  *
- * The top picture is clipped rather than resized. A width would squash it, and a
- * squashed picture is not a comparison — it is two pictures at different scales
- * pretending to be the same one.
+ * The top picture is clipped. A width would squash it, and a squashed picture
+ * is two pictures at different scales presented as the same one.
  */
 
 .compare {
@@ -44,12 +42,11 @@
 }
 
 /* React Aria sets `position: relative` on the track inline, which outranks a
-   class — so `inset: 0` would silently not apply and the track would collapse to
-   nothing, taking the thumb's `50%` with it. The handle then sits at the very top
-   of the frame, half of it clipped by the container's own `overflow: hidden`.
-   That is exactly what happened, and `verify:targets` is what found it: a 44×44
-   box whose top edge was not on the control. Sizing the track instead of
-   positioning it is the fix that survives the inline style. */
+   class. `inset: 0` would not apply, the track would collapse to nothing and
+   take the thumb's `50%` with it, and the handle would sit at the very top of
+   the frame, half clipped by the container's own `overflow: hidden`
+   (`verify:targets` would report a 44×44 box whose top edge is off the control).
+   Sizing the track works despite the inline style. */
 .track {
   inline-size: 100%;
   block-size: 100%;
@@ -67,12 +64,12 @@
   pointer-events: none;
 }
 
-/* The thumb is the target and the position — React Aria's, inline — and carries
-   no material; the grip inside it is the handle you see. */
+/* The thumb is the target and the position (React Aria's, inline) and carries
+   no material. The grip inside it is the handle you see. */
 .thumb {
   position: absolute;
   inset-block-start: 50%;
-  /* The inline-start is React Aria's, written inline from the real value — so
+  /* The inline-start is React Aria's, written inline from the real value, so
      the handle and the clip cannot disagree about where the divider is. */
   box-sizing: border-box;
   inline-size: $cr-action-min-target;
@@ -91,11 +88,10 @@
   .position { background: CanvasText; }
 }
 
-/* The handle is Crystal's Resin plane at the pill, worn as `.cr-resin` — the
-   catalogue's `resin` surface (D-23) — filling the thumb. What `.cr-resin` has
-   and the local copy did not is its two optical layers, the sheen and the inner
-   highlight; its opaque, reduced-transparency and forced-colours routes are
-   Crystal's too. */
+/* The handle is Crystal's Resin plane at the pill, worn as `.cr-resin` (the
+   catalogue's `resin` surface, D-23), filling the thumb. `.cr-resin` brings its
+   two optical layers, the sheen and the inner highlight, and its opaque,
+   reduced-transparency and forced-colours routes. */
 .grip {
   position: absolute;
   inset: 0;

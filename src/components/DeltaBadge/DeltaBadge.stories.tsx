@@ -9,12 +9,12 @@ const meta = {
     docs: {
       description: {
         component:
-          '"The sign is a character, not a colour" — and it is written properly: U+2212 MINUS '
-          + 'SIGN for a negative, not the hyphen a keyboard produces. A hyphen is read as a '
-          + 'hyphen by some screen readers and rendered at hyphen width by every font, so a '
-          + 'column of deltas signed with hyphens does not line up. The component formats the '
-          + 'sign itself rather than taking it in the string, because a caller passing "-2.4%" '
-          + 'has already made both mistakes and this is the only place that can stop them.',
+          '"The sign is a character, not a colour". A negative uses U+2212 MINUS SIGN, not the '
+          + 'hyphen a keyboard produces. Some screen readers read a hyphen as a hyphen, and '
+          + 'every font renders it at hyphen width, so a column of deltas signed with hyphens '
+          + 'does not line up. The component formats the sign itself and does not take it in '
+          + 'the string, because a caller passing "-2.4%" has already made both mistakes and '
+          + 'this is the only place that can correct them.',
       },
     },
   },
@@ -26,8 +26,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** Positive, negative and zero. Zero is neutral rather than positive: a change of
- *  nothing has no direction, and signing it "+0.0%" claims one. */
+/** Positive, negative and zero. Zero is neutral, because a change of nothing has
+ *  no direction and signing it "+0.0%" would claim one. */
 export const States: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: 'var(--cr-spacing-xs)', alignItems: 'center' }}>

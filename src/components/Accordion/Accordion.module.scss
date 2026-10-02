@@ -1,7 +1,7 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/material' as material;
 
-/* Accordion — Haze rows, with the expanded content on the row's own surface.
+/* Accordion: Haze rows, with the expanded content on the row's own surface.
  *
  * "Expanded content shares the row surface": the panel is not a second card under
  * the header, it is the same piece of material grown taller. So the radius and
@@ -10,7 +10,7 @@
  * The header reaches 44px through its padding rather than through a grown hit
  * area. A grown target is for a small control with room around it; a disclosure
  * header is the full width of the row and has nothing to overlap, so making the
- * box itself big is both simpler and honest about where the press lands.
+ * box itself big is simpler, and the box is exactly where the press lands.
  */
 
 .accordion {
@@ -63,9 +63,9 @@
   block-size: $cr-icon-action;
 }
 
-/* The end state, in CSS. Correct at rest whether or not the recipe ran — which
-   is what a reduced-motion reader, a re-render mid-animation and a
-   server-rendered expanded row all need. */
+/* The end state, in CSS. Correct at rest whether or not the recipe ran. A
+   reduced-motion reader, a re-render mid-animation and a server-rendered
+   expanded row all need that. */
 .row[data-expanded] .chevron { rotate: 180deg; }
 
 .panel { padding: 0; }

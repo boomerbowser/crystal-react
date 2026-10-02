@@ -2,18 +2,17 @@
 
 /* VisuallyHidden.
  *
- * React Aria owns the clipping recipe, and that is the right place for it: the
- * technique is a pile of accumulated browser knowledge — a 1px clipped box rather
- * than `display: none`, which removes the content from the accessibility tree
- * entirely, and rather than `visibility: hidden`, `width: 0` or an off-screen
- * `position`, each of which is dropped by at least one screen reader or breaks
- * right-to-left. Crystal states the rule; React Aria carries the recipe; this
+ * React Aria owns the clipping recipe, which encodes accumulated browser
+ * knowledge. It uses a 1px clipped box. `display: none` removes the content from
+ * the accessibility tree entirely, and `visibility: hidden`, `width: 0` or an
+ * off-screen `position` are each dropped by at least one screen reader or break
+ * right-to-left. Crystal states the rule, React Aria carries the recipe, and this
  * file is the binding.
  *
  * The focusable variant is why this is a component and not a class. Content that
  * appears when focused has to be reachable, announced and then hidden again, and
  * `useVisuallyHidden` handles the focus-within bookkeeping. `SkipLink` is built
- * on exactly this.
+ * on it.
  */
 import { forwardRef, type ElementType, type HTMLAttributes, type ReactNode } from 'react';
 import { useVisuallyHidden } from 'react-aria';

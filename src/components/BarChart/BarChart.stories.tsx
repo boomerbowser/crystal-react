@@ -11,9 +11,9 @@ const meta = {
           '"Bars keep a small radius on the value end only." The base end stays square because '
           + 'it sits on the axis; rounding it would lift the bar off the line it is measured '
           + 'from.\n\n'
-          + 'The value axis always includes zero. A bar is a *length*, and a length read from a '
-          + 'baseline that is not zero exaggerates every difference in the data — so this chart '
-          + 'does not offer the option. Charts whose marks are positions rather than lengths, '
+          + 'The value axis always includes zero. A bar is a length, and a length read from a '
+          + 'baseline that is not zero exaggerates every difference in the data, so this chart '
+          + 'does not offer the option. Charts whose marks are positions and not lengths, '
           + 'like the line chart, fit their domain to the data instead.\n\n'
           + 'One tab stop for the plot, arrow keys between the bars, and every bar carries its '
           + 'own label: "February, Revenue, 18".',
@@ -40,8 +40,8 @@ export const Grouped: Story = {};
 /** Stacked, where the question is the total as well as the parts. */
 export const Stacked: Story = { args: { stacked: true } };
 
-/** One series is the common case, and it is the one where colour carries
- *  nothing: there is nothing to tell apart. */
+/** One series is the common case. Colour carries nothing here, because there is
+ *  nothing to tell apart. */
 export const OneSeries: Story = {
   args: {
     label: 'Revenue by month',
@@ -49,8 +49,8 @@ export const OneSeries: Story = {
   },
 };
 
-/** Values below zero stack away from the axis in their own direction rather
- *  than cancelling, and the radius follows the value end down. */
+/** Values below zero stack away from the axis in their own direction instead of
+ *  cancelling, and the radius follows the value end down. */
 export const BelowZero: Story = {
   args: {
     label: 'Net movement by month',

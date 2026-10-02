@@ -5,9 +5,9 @@
 .item {
   @include material.haze-fill;
 
-  /* Flex rather than a five-column grid, and no container query: the line wraps
-     on its own when the space runs out, which is the same behaviour at any
-     width without a breakpoint anybody has to maintain. */
+  /* Flex instead of a five-column grid, and no container query. The line wraps
+     on its own when the space runs out, so it behaves the same at any width
+     with no breakpoint to maintain. */
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -18,8 +18,8 @@
 }
 
 /* The thumbnail is the product's, at the product's size. Crystal publishes no
-   thumbnail scale, and inventing one here is authoring a token in a consumer —
-   so this gives it a radius and a block and nothing else. */
+   thumbnail scale, and a consumer must not author a token, so this gives it a
+   radius and a block and nothing else. */
 .media { display: flex; }
 .media img { block-size: auto; border-radius: $cr-shape-content-radius; }
 
@@ -30,9 +30,9 @@
 .quantity { inline-size: auto; }
 .subtotal { margin: 0; font-weight: 750; margin-inline-start: auto; }
 
-/* Updating: the line goes quiet and keeps its figures. A basket line being
-   recalculated is still a line, and a spinner over the top takes away the only
-   numbers the reader had. */
+/* Updating: the line dims and keeps its figures. A basket line being
+   recalculated is still a line, and a spinner over the top would hide the only
+   numbers the reader has. */
 .item[data-updating] { opacity: 0.72; }
 
 .announcement {

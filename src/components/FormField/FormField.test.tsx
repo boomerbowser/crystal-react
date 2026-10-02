@@ -17,7 +17,7 @@ describe('FormField', () => {
     expect(screen.getByRole('textbox')).toHaveFocus();
   });
 
-  /* Both, when there are both. Describing a field by only its error drops the
+  /* Both, when there are both. Describing a field by its error alone drops the
      guidance that would have prevented it. */
   it('describes the control by the hint and the error together', () => {
     renderWithCrystal(
@@ -33,15 +33,15 @@ describe('FormField', () => {
     expect(described).toContain('Already taken');
   });
 
-  /* An error message is the invalid state. Two ways to say the same thing
-     eventually disagree, and the one the reader is told is the one that matters. */
+  /* An error message is the invalid state, so the message and the flag cannot
+     disagree. */
   it('marks the control invalid from the message alone', () => {
     renderWithCrystal(<FormField label="Name" errorMessage="Already taken"><input /></FormField>);
     expect(screen.getByRole('textbox').getAttribute('aria-invalid')).toBe('true');
   });
 
-  /* Errors are text, never colour alone — and a message that appears after
-     submission has to be announced rather than only drawn. */
+  /* Errors are text, never colour alone. A message that appears after
+     submission has to be announced as well as drawn. */
   it('announces the error rather than only colouring the field', () => {
     renderWithCrystal(<FormField label="Name" errorMessage="Already taken"><input /></FormField>);
     expect(screen.getByRole('alert').textContent).toContain('Already taken');

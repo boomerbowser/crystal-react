@@ -1,14 +1,12 @@
 @use '../../styles/tokens' as *;
 
-/* QRCode — a Haze quiet zone at a fixed contrast.
+/* QRCode: a Haze quiet zone at a fixed contrast.
  *
- * The quiet zone is not padding. A scanner needs a margin of clear space to find
- * the code's edges, and a code drawn flush against a coloured surface fails to
- * scan even though it looks fine. Crystal's contribution is that the quiet zone
- * is a Haze fill rather than a hard white rectangle, so it belongs to the surface
- * it sits on — and that the code's own two colours do **not** follow the palette.
- * A scannable code needs near-maximum contrast; a palette-tinted one is a
- * decoration that sometimes works.
+ * A scanner needs a margin of clear space to find the code's edges. A code drawn
+ * flush against a coloured surface can look fine and still fail to scan. The
+ * quiet zone is a Haze fill rather than a hard white rectangle, so it belongs to
+ * the surface it sits on. The code's own two colours do not follow the palette,
+ * because a scannable code needs near-maximum contrast.
  */
 
 .qrCode {

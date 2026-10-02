@@ -18,8 +18,8 @@ describe('Stack and Group', () => {
       .toBe('var(--cr-spacing-lg)');
   });
 
-  /* `space` is the density-aware padding step, which is a different thing from a
-     step on the scale: a stack matching a card's padding wants it by name. */
+  /* `space` is the density-aware padding step, which is separate from the steps
+     on the scale. A stack matching a card's padding asks for it by name. */
   it('offers the density-aware padding step by name', () => {
     renderWithCrystal(<Stack gap="space" data-testid="s">x</Stack>);
     expect(screen.getByTestId('s').style.getPropertyValue('--cr-stack-gap')).toBe('var(--cr-space)');

@@ -1,13 +1,12 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* RichTextSurface and Mentions — a toolbar above an editable surface, and a
+/* RichTextSurface and Mentions: a toolbar above an editable surface, and a
  * popover attached to one.
  *
- * Crystal owns the chrome. The editing engine is the product's, which the
- * catalogue states in as many words, and that is the right split: an editor is a
- * document model, a paste pipeline and a serialisation format, none of which a
- * design system should have an opinion about.
+ * Crystal owns the chrome. The catalogue states that the editing engine is the
+ * product's: an editor is a document model, a paste pipeline and a
+ * serialisation format, and a design system has no opinion about any of them.
  */
 
 .field { @include field.field; }
@@ -36,8 +35,8 @@
   border-block-end: 1px solid var(--cr-edge);
 }
 
-/* The surface is a content fill inside the frame: what you read and type into is
-   recessed, as it is in every other Crystal field. */
+/* The surface is a content fill inside the frame. What you read and type into
+   is recessed, as it is in every other Crystal field. */
 .surface {
   min-block-size: calc(#{$cr-action-min-target} * 3);
   max-block-size: 50vh;
@@ -52,8 +51,8 @@
 
 .surface[data-readonly] { background: var(--cr-surface-alt); }
 
-/* A mention, once inserted. A token rather than plain text, so it is visibly a
-   reference to something rather than a word that happens to start with @. */
+/* A mention, once inserted. It is a token, so it is visibly a reference rather
+   than a word that happens to start with @. */
 .token {
   padding-inline: 0.2em;
   border-radius: $cr-spacing-2xs;

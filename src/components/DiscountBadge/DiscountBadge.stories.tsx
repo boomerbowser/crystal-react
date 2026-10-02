@@ -10,14 +10,13 @@ const meta = {
     docs: {
       description: {
         component:
-          '"States what is reduced from what; **a percentage alone is not a claim**." That '
-          + 'sentence is the whole API. This will not take `percent={20}`, because a percentage '
-          + 'handed in from outside is a number nobody can check — it says twenty per cent off '
-          + '*something*, and the something is what makes it a saving rather than marketing '
-          + 'noise. It takes the two amounts and computes the reduction, so the badge cannot '
-          + 'disagree with the price beside it. The pill is a few characters wide, so the whole '
-          + 'statement goes in the accessible name: the same fact stated more completely, not a '
-          + 'different one.',
+          '"States what is reduced from what; **a percentage alone is not a claim**." The API '
+          + 'follows from that. The component does not take `percent={20}`, because nobody can '
+          + 'check a percentage handed in from outside. It says twenty per cent off something, '
+          + 'and that something decides whether it is a saving or marketing noise. The component '
+          + 'takes the two amounts and computes the reduction, so the badge cannot disagree with '
+          + 'the price beside it. The pill is a few characters wide, so the whole statement goes '
+          + 'in the accessible name. It is the same fact, stated more completely.',
       },
     },
   },
@@ -47,7 +46,7 @@ export const PercentageOrAmount: Story = {
   ),
 };
 
-/** Where it actually sits: beside the price it is a reduction of. */
+/** In place, beside the price it is a reduction of. */
 export const BesideAPrice: Story = {
   render: (args) => (
     <p style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: 0 }}>
@@ -58,8 +57,7 @@ export const BesideAPrice: Story = {
 };
 
 /** An increase is not a discount, and neither is a ratio across two currencies.
- *  Both render nothing rather than asserting something the component has just
- *  worked out is false — so this story is deliberately empty. */
+ *  Both render nothing, so this story is empty. */
 export const WhatIsNotADiscount: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 8, minHeight: 24 }}>

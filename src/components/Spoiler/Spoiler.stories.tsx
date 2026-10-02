@@ -18,8 +18,8 @@ const meta = {
       description: {
         component:
           'Content truncated to a height, with an edge fade and a reveal control. Unlike a '
-          + 'disclosure, the hidden part stays in the accessibility tree: a spoiler is a *visual* '
-          + 'economy — six paragraphs shown as two so the page stays scannable — and a reader who '
+          + 'disclosure, the hidden part stays in the accessibility tree. A spoiler is a visual '
+          + 'economy that shows six paragraphs as two so the page stays scannable, and a reader who '
           + 'is not looking at the page has no reason to be given less of it. The fade is a mask on '
           + 'the content rather than a gradient painted over it, so what shows through is whatever '
           + 'material the spoiler is sitting on, in all six palettes.',
@@ -38,8 +38,8 @@ export const OpenToStart: Story = {
   args: { defaultExpanded: true },
 };
 
-/** A taller cut, and wording that says what is being revealed rather than
- *  "more" — which is the one thing a reader out of context cannot use. */
+/** A taller cut, and wording that says what is being revealed. A reader out of
+ *  context cannot use "more". */
 export const NamedControl: Story = {
   args: { maxHeight: '4em', showLabel: 'Read the material hierarchy', hideLabel: 'Collapse the material hierarchy' }, // crystal-allow-literal: lines of the reader's own text, not a design value
 };

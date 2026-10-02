@@ -3,17 +3,15 @@
 /* The errors a `Form` is distributing, for a field React Aria does not own.
  *
  * Most fields here are React Aria components, and React Aria hands them their
- * share of a `Form`'s `validationErrors` without anybody asking. A handful are
- * not — a masked input, a PIN, a tag list, a multi-select, a rich text surface,
- * the generic `FormField` wrapper — and those were invisible to the whole
- * mechanism: a server could reject a phone number and the field would sit there
- * looking untouched, because the only error it knew how to show was one its own
- * caller had passed in.
+ * share of a `Form`'s `validationErrors` automatically. A few are not: a masked
+ * input, a PIN, a tag list, a multi-select, a rich text surface and the generic
+ * `FormField` wrapper. Without this hook, a server could reject a phone number
+ * and such a field would look untouched, because the only error it could show
+ * was one its own caller passed in.
  *
- * React Aria publishes the same context its own fields read, so the answer is to
- * read it rather than to build a second route to the same place. Validation
- * display is React Aria's wheelhouse; this is how a hand-built control stays
- * inside it.
+ * React Aria publishes the context its own fields read, so this hook reads the
+ * same context instead of building a second route. Validation display stays
+ * with React Aria, including for hand-built controls.
  */
 import { useContext, type ReactNode } from 'react';
 import { FormValidationContext } from 'react-aria-components';
@@ -26,9 +24,9 @@ export interface FieldValidation {
 }
 
 /**
- * A caller's own `errorMessage` wins — it is the more specific statement, and two
- * messages at once would be a field arguing with itself. Failing that, whatever
- * the enclosing `Form` was given for this `name`.
+ * A caller's own `errorMessage` wins, because it is the more specific statement
+ * and two messages at once would contradict each other. Failing that, the hook
+ * returns whatever the enclosing `Form` was given for this `name`.
  */
 export function useDistributedErrors(
   name: string | undefined,

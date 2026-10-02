@@ -4,9 +4,9 @@
 /* Rectangles that meet along hairlines, and a breadcrumb that says which level
  * they are.
  *
- * The separation is the layout's own inner padding rather than a stroke: two
- * adjacent rectangles show the plot between them, which is the same "gap, not a
- * border" the pie's segments use.
+ * The separation is the layout's own inner padding instead of a stroke, so two
+ * adjacent rectangles show the plot between them. The pie's segments are
+ * separated the same way, by a gap and not a border.
  */
 
 .fill {

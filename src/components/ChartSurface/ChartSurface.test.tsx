@@ -10,9 +10,9 @@ const table = {
 };
 
 describe('ChartSurface', () => {
-  /* The clause the whole component exists for: "every chart owes a text
-     equivalent of its data — a chart is a second representation, never the only
-     one." `table` is required, and this is what makes that mean something. */
+  /* The component exists for this clause: "every chart owes a text
+     equivalent of its data, so the chart is never the only representation."
+     `table` is required, and this test checks that it is rendered. */
   it('renders the data as a table beside the picture', () => {
     renderWithCrystal(<ChartSurface label="Revenue" table={table} />);
     expect(screen.getByRole('table')).toBeInTheDocument();
@@ -21,8 +21,8 @@ describe('ChartSurface', () => {
     expect(screen.getByRole('cell', { name: '18' })).toBeInTheDocument();
   });
 
-  /* A gap is not a zero. A table that printed `0` for a month nobody measured
-     would be a chart telling a reader something nobody knows. */
+  /* A gap is not a zero. Printing `0` for a month nobody measured would tell
+     the reader a value nobody knows. */
   it('shows a gap as a gap, not as zero', () => {
     renderWithCrystal(<ChartSurface label="Revenue" table={table} />);
     expect(screen.getByRole('cell', { name: '—' })).toBeInTheDocument();
@@ -33,8 +33,8 @@ describe('ChartSurface', () => {
     expect(screen.getByRole('figure', { name: 'Revenue by month' })).toBeInTheDocument();
   });
 
-  /* `group`, not `img`. An `img` is a leaf and everything inside it — including
-     the marks a keyboard moves between — stops being reachable. */
+  /* `group`, not `img`. An `img` is a leaf, so everything inside it, including
+     the marks a keyboard moves between, stops being reachable. */
   it('gives the plot a group role so its marks stay reachable', () => {
     renderWithCrystal(
       <ChartSurface label="Revenue" table={table}>
@@ -56,9 +56,9 @@ describe('ChartSurface', () => {
     expect(container.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
   });
 
-  /* The child is given a frame even where nothing can be measured — a server, or
-     a test environment with no layout. A chart that waited for a measurement
-     would render nothing at all in both. */
+  /* The child is given a frame even where nothing can be measured, such as on a
+     server or in a test environment with no layout. A chart that waited for a
+     measurement would render nothing in either. */
   it('draws at a declared size before it has been measured', () => {
     let seen: ChartFrame | null = null;
     renderWithCrystal(

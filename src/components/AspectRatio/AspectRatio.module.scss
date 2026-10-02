@@ -1,10 +1,10 @@
 @use '../../styles/tokens' as *;
 
-/* AspectRatio — space reserved before the content arrives.
+/* AspectRatio: space reserved before the content arrives.
  *
- * The point is what does NOT happen: an image with no reserved box collapses to
- * nothing and then pushes the page down when it loads, which is the largest
- * single contributor to layout shift on a content page.
+ * An image with no reserved box collapses to nothing and then pushes the page
+ * down when it loads, which is the largest single contributor to layout shift on
+ * a content page.
  */
 
 .aspectRatio {
@@ -19,8 +19,8 @@
   object-fit: cover;
 }
 
-/* Clipping media takes the content radius, which is the radius Crystal uses
-   wherever content rather than a control is being shaped. */
+/* Clipping media takes the content radius, which Crystal uses wherever content,
+   and not a control, is being shaped. */
 .clip {
   overflow: hidden;
   border-radius: var(--cr-radius);

@@ -16,7 +16,7 @@ const meta = {
         component:
           'Rows on a Haze surface. "Interactive rows are buttons or links, not clickable divs": a '
           + 'div with an `onClick` is not reachable by keyboard, is not announced as anything, and '
-          + 'cannot be opened in a new tab when it was really a link — so `ListItem` takes `href` '
+          + 'cannot be opened in a new tab when it was really a link. So `ListItem` takes `href` '
           + 'or `onPress` and renders the element each of those means. A trailing action sits '
           + 'outside the row\'s own press target, because a button inside a button is invalid. '
           + 'A row that mounts after the list has settled has arrived and plays `list-in`; one that '
@@ -40,8 +40,8 @@ export const Default: Story = {
   },
 };
 
-/** Hairline separators, a leading avatar and a trailing badge — which is a
- *  sibling of the row's control rather than a child of it. */
+/** Hairline separators, a leading avatar and a trailing badge. The badge is a
+ *  sibling of the row's control, not a child of it. */
 export const WithLeadingAndTrailing: Story = {
   args: {
     separated: true,
@@ -59,7 +59,7 @@ export const WithLeadingAndTrailing: Story = {
 };
 
 /** Selection is label weight. The soft fill is the second signal, and there is no
- *  leading mark — one would sit inside the row and offset the very label it
+ *  leading mark. One would sit inside the row and offset the very label it
  *  points at. */
 export const Selected: Story = {
   render: (args) => (

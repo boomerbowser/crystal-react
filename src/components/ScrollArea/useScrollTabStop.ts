@@ -8,16 +8,13 @@
  * it, and somebody navigating by keyboard cannot move it at all. axe reports it
  * as `scrollable-region-focusable`, and it is a failure of WCAG 2.1.1.
  *
- * The condition is both halves. A scroll region full of links is already
- * reachable — the links are the tab stops, and adding another would put an
- * announced-as-nothing stop in front of them for no gain.
+ * Both conditions must hold. A scroll region full of links is already reachable
+ * because the links are the tab stops, and another stop in front of them would
+ * be announced as nothing.
  *
  * This lives apart from `ScrollArea` because `AppShell` puts `cr-scroll-frost`
- * straight onto its `<main>` — a landmark, which a `div` cannot be — and so
- * never went through `ScrollArea` at all. It shipped with a `<main>` a keyboard
- * could not scroll, and no check saw it until the stories began running as tests
- * in a real browser. Two copies of this rule would have drifted the first time
- * one was touched.
+ * straight onto its `<main>`, a landmark, which a `div` cannot be, so it does not
+ * go through `ScrollArea`. Both use this one hook so the rule cannot drift.
  */
 import { useCallback, useEffect, useState, type RefObject } from 'react';
 
@@ -43,8 +40,8 @@ export function useScrollTabStop(ref: RefObject<HTMLElement | null>): boolean {
     if (!element) return undefined;
     measure();
 
-    /* Content arriving later is the normal case — a list that loads, a panel
-       that expands — and neither a scroll listener nor a first render sees it. */
+    /* Content often arrives later (a list that loads, a panel that expands),
+       and neither a scroll listener nor a first render sees it. */
     const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(measure) : null;
     if (observer) {
       observer.observe(element);

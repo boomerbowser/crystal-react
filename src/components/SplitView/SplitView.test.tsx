@@ -42,9 +42,9 @@ describe('SplitView', () => {
 
   /* `minSize` and the rest are `Resizable`'s vocabulary, and React puts an
      unrecognised prop straight onto the DOM node. A collapsed split view that
-     spread them rendered `<div minsize="200" orientation="horizontal">`: invalid
-     markup, a warning in development, silence in production. Nothing caught it
-     because nothing passed one alongside `collapse`. */
+     spread them renders `<div minsize="200" orientation="horizontal">`,
+     which is invalid markup, a warning in development, and silent in
+     production. This test passes them alongside `collapse`. */
   it('does not leak the resizing vocabulary onto the collapsed element', () => {
     const { container } = renderWithCrystal(
       <SplitView

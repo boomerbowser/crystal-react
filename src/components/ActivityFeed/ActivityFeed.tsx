@@ -1,8 +1,8 @@
 'use client';
 
-/* ActivityFeed — what happened, who did it, and when, newest first.
+/* ActivityFeed: what happened, who did it, and when, newest first.
  *
- * "**Live updates are announced politely and never steal focus.**" States:
+ * "Live updates are announced politely and never steal focus." States:
  * `at-rest`, `loading`, `empty`, `live`.
  *
  * A feed that updates while it is read has two ways to go wrong, and the clause
@@ -10,15 +10,15 @@
  * learns an event arrived; or it can take them to the event, which moves them
  * out of whatever they were reading every time somebody else acts. So:
  *
- *   - **New events are said, politely, and counted.** "2 new events" — from the
+ *   - New events are said, politely, and counted. "2 new events" comes from the
  *     events whose ids the feed had not shown before, not from the length of the
  *     list, which also changes when old events page in. The first render says
  *     nothing: the events it shows were already there.
- *   - **Focus stays where it is.** An arriving event is inserted with `list-in`
+ *   - Focus stays where it is. An arriving event is inserted with `list-in`
  *     and nothing is focused; the reader goes to it when they choose to.
  *
- * `live` is shown as well as said — a word beside the heading while updates are
- * arriving — because a feed that changes by itself should say that it does.
+ * `live` is shown as well as said (a word beside the heading while updates are
+ * arriving) because a feed that changes by itself should say that it does.
  */
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { Loader } from '../Loader/Loader.js';
@@ -55,7 +55,7 @@ export interface ActivityFeedProps {
   /** What is said when events arrive. */
   announceNew?: (count: number) => string;
   emptyLabel?: ReactNode;
-  /** More, below the list — a "Show earlier" control. */
+  /** The "Show earlier" control below the list. */
   footer?: ReactNode;
   className?: string;
 }

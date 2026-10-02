@@ -13,10 +13,9 @@
 
 /* "Thumbnails are Haze; thumbnails keep the content radius."
  *
- * The pad is inset to nothing and the picture is inset by the padding instead,
- * so the Haze is a frame around the picture rather than a layer underneath it.
- * At the mixin's own inset the fill sat entirely behind a picture that fills its
- * box, which is a material nobody can see. */
+ * The pad has no inset and the picture is inset by the padding instead, so the
+ * Haze is a frame around the picture. At the mixin's own inset the fill sits
+ * entirely behind a picture that fills its box, where nobody can see it. */
 .thumb {
   @include material.haze-fill($inset: 0);
 
@@ -36,27 +35,25 @@
 
 /* Selection, in Crystal's own vocabulary for it.
  *
- * Crystal marks a selected control by tinting its reading pad — `::before` in
- * `--cr-primary` with the feather off — and weighting its label. A thumbnail
- * has no label to weight, but it has the pad, so it takes the half of the rule
- * that applies to it.
+ * Crystal marks a selected control by tinting its reading pad (`::before` in
+ * `--cr-primary` with the feather off) and weighting its label. A thumbnail
+ * has no label to weight, but it has the pad, so it takes that half of the
+ * rule.
  *
- * What it must *not* take is the outline, which was the first version of this
- * rule. Crystal paints focus as a 2px primary outline, so a selected thumbnail
- * outlined in 2px of primary is a thumbnail that looks focused — and one that
- * goes on looking focused after focus has left the strip entirely. Two states
- * drawn the same way are one state as far as a reader is concerned. Every
- * thumbnail carries the padding whether it is selected or not, so selecting one
- * tints a frame that is already there and moves nothing. */
+ * It must not take an outline. Crystal paints focus as a 2px primary outline,
+ * so a selected thumbnail outlined in 2px of primary looks focused, and goes
+ * on looking focused after focus has left the strip. Every thumbnail carries
+ * the padding whether it is selected or not, so selecting one tints a frame
+ * that is already there and moves nothing. */
 .thumb[aria-selected='true']::before {
   background: var(--cr-primary);
   filter: none;
 }
 
-/* Forced colours has no pad to tint — the mixin drops it, because a translucent
-   fill over system colours is noise — so selection falls back to the ring
-   Crystal specifies for exactly this case. Here the ring cannot be confused
-   with focus, because forced-colours focus is the platform's own. */
+/* Forced colours has no pad to tint, because the mixin drops a translucent
+   fill over system colours. Selection falls back to the ring Crystal specifies
+   for this case. Here the ring cannot be confused with focus, because
+   forced-colours focus is the platform's own. */
 @media (forced-colors: active) {
   .thumb { border: 1px solid CanvasText; }
   .thumb[aria-selected='true'] { outline: 2px solid Highlight; outline-offset: 2px; }

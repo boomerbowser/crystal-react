@@ -13,8 +13,8 @@
 }
 
 /* Cancel first in the DOM, which is what puts it under the focus that opens
-   here and under the first Tab. The visual order follows the reading order
-   rather than being reversed: the way out comes before the way on. */
+   here and under the first Tab. The visual order follows the reading order,
+   so the way out comes before the way on. */
 .actions {
   display: flex;
   justify-content: flex-end;

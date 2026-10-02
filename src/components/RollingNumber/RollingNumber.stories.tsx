@@ -11,17 +11,16 @@ const meta = {
     docs: {
       description: {
         component:
-          'A number that rolls digit by digit when it changes. **Crystal assigns this component '
-          + 'no motion recipe**, which is worth saying rather than working around: a library '
-          + 'must not invent motion the design system did not specify, and `Card` plays nothing '
-          + 'for exactly that reason. But here the movement *is* the component, so the roll is '
-          + 'built from Crystal\'s published motion *tokens* instead — the travel is one digit, '
-          + `the duration is \`motion.duration.state\` (${crystalTokens['motion.duration.state']}), and the easing is `
-          + '`motion.easing.settle`. Nothing here is a number this library chose.\n\n'
-          + 'The announcement is the other half: the digits are `aria-hidden` and a polite live '
-          + 'region carries the settled value one roll later, because "the value is announced '
-          + 'once it settles, not on every frame". Under reduced motion the roll is removed, the '
-          + 'duration resolves to zero, and the announcement is immediate.',
+          'A number that rolls digit by digit when it changes. Crystal assigns this component '
+          + 'no motion recipe. A library must not invent motion the design system did not '
+          + 'specify, and `Card` plays nothing for that reason. Here the movement is the '
+          + 'component, so the roll is built from Crystal\'s published motion tokens: the travel '
+          + `is one digit, the duration is \`motion.duration.state\` (${crystalTokens['motion.duration.state']}), and the easing is `
+          + '`motion.easing.settle`. This library chose none of the numbers.\n\n'
+          + 'The digits are `aria-hidden` and a polite live region carries the settled value one '
+          + 'roll later, because "the value is announced once it settles, not on every frame". '
+          + 'Under reduced motion the roll is removed, the duration resolves to zero, and the '
+          + 'announcement is immediate.',
       },
     },
   },
@@ -37,8 +36,8 @@ export const Currency: Story = {
   args: { value: 48210.5, locale: 'en-GB', format: { style: 'currency', currency: 'GBP' }, description: 'revenue this month' },
 };
 
-/** Changing, so the roll is visible. Movement somebody started — here, arriving
- *  data — rather than movement at rest. */
+/** Changing, so the roll is visible. The movement is started by arriving data,
+ *  so it is not movement at rest. */
 export const Changing: Story = {
   render: (args) => {
     const Demo = () => {

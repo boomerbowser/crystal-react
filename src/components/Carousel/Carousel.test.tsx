@@ -17,8 +17,8 @@ describe('Carousel', () => {
     expect(group).toHaveAttribute('aria-roledescription', 'carousel');
   });
 
-  /* "Indicators are buttons": a row of dots that cannot be pressed is a progress
-     readout dressed as a control. */
+  /* "Indicators are buttons": a row of dots that cannot be pressed would be a
+     progress readout that looks like a control. */
   it('gives every slide a pressable indicator, and marks the current one', async () => {
     renderWithCrystal(<Carousel slides={slides} label="Crystal materials" />);
     const indicators = slides.map((slide) => screen.getByRole('button', { name: slide.label }));

@@ -5,27 +5,24 @@
  * `qrcode.react` (ISC) renders the code; Crystal owns the quiet zone, the
  * contrast floor and the status surfaces.
  *
- * The contrast decision is the one worth defending: the code's two colours are
- * fixed black-on-white and do **not** follow the palette. Every other surface in
- * Crystal takes its colour from the theme, and this one must not — a scanner is
- * reading luminance, and a tastefully tinted code is a decoration that scans in
- * good light and fails in bad. The quiet zone around it is a Haze fill, so the
- * component still belongs to the surface it sits on.
+ * The code's two colours are fixed black-on-white and do not follow the palette.
+ * Every other surface in Crystal takes its colour from the theme. A scanner reads
+ * luminance, and a tinted code scans in good light and fails in bad. The quiet
+ * zone around it is a Haze fill, so the component still belongs to the surface
+ * it sits on.
  *
- * The text alternative is required rather than optional. A code is an image of a
- * string, and without the string a person using a screen reader — or anyone whose
- * camera will not focus — has no route to what it encodes. So the encoded value
- * is always available as text.
+ * The text alternative is required. A code is an image of a string, and without
+ * the string a screen reader user, or anyone whose camera will not focus, has no
+ * route to what it encodes. The encoded value is always available as text.
  */
 import { QRCodeSVG } from 'qrcode.react';
 import { useId, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
 import styles from './QRCode.module.scss';
 
-/* The one place in this library where a colour is deliberately not a token.
-   Crystal's catalogue already carries the rule — "contrast fixed regardless of
-   palette" — and making these themeable would invite exactly the change the rule
-   forbids. A scanner reads luminance, not brand. */
+/* The one place in this library where a colour is not a token. Crystal's
+   catalogue carries the rule, "contrast fixed regardless of palette". These are
+   constants so that a theme cannot change them. */
 const CODE_DARK = '#000000';  // crystal-allow-literal: scannability, never themed
 const CODE_LIGHT = '#ffffff';  // crystal-allow-literal: scannability, never themed
 
@@ -61,17 +58,17 @@ export function QRCode({
           level={level}
           fgColor={CODE_DARK}
           bgColor={CODE_LIGHT}
-          /* The quiet zone is the component's padding, in Haze, so the library's
-             own white margin would sit a white rectangle inside it. */
+          /* The quiet zone is the component's Haze padding. The library's own
+             white margin would draw a white rectangle inside it. */
           marginSize={0}
-          /* The name lives on the wrapper, which is the element with the img
-             role. Left visible to assistive technology the inner svg is a second,
-             unnamed image of the same thing — which is what axe reports. */
+          /* The name lives on the wrapper, which has the img role. Visible to
+             assistive technology, the inner svg is a second, unnamed image of the
+             same thing, and axe reports it. */
           aria-hidden="true"
         />
       </div>
-      {/* Always present, never only visual: the encoded value is the alternative
-          to an image of itself. */}
+      {/* Always rendered as text: the encoded value is the alternative to the
+          image of it. */}
       <span id={labelId} className={cx(styles['caption'])}>
         {alt ?? (isExpired ? `Expired code for ${value}` : value)}
       </span>

@@ -16,8 +16,8 @@ describe('PieChart', () => {
     expect(screen.getByLabelText('Referral, 30, 30% of 100')).toBeInTheDocument();
   });
 
-  /* The total is the assertion a pie makes, and a reader cannot check it — or
-     notice that 4% is missing — unless it is written down. */
+  /* The total is the assertion a pie makes, and a reader cannot check it, or
+     notice that 4% is missing, unless it is written down. */
   it('writes the total into the table', () => {
     renderWithCrystal(<PieChart label="Sessions" slices={slices} />);
     expect(screen.getByRole('rowheader', { name: 'Total' })).toBeInTheDocument();
@@ -35,8 +35,8 @@ describe('PieChart', () => {
     expect(names).toEqual(['Small', 'Large']);
   });
 
-  /* A label spilling out of a 2% sliver is worse than no label; the same words
-     are on the mark and in the table either way. */
+  /* A sliver of 2% gets no label rather than one that spills out of it. The
+     same words are on the mark and in the table either way. */
   it('draws a label only where the wedge can hold one', () => {
     const { container } = renderWithCrystal(
       <PieChart label="Sessions" slices={[{ name: 'Sliver', value: 2 }, { name: 'Rest', value: 98 }]} />,

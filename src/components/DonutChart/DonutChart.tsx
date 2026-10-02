@@ -1,19 +1,20 @@
 'use client';
 
-/* DonutChart — a pie with a hole, often carrying a summary value.
+/* DonutChart: a pie with a hole, often carrying a summary value.
  *
  * "Ring thickness is a declared proportion of the radius" and "the centre value
- * is text, not an image". Both are the whole difference between this and the
- * pie, and both are decisions rather than styling.
+ * is text, not an image". These two decisions are what separate this component
+ * from the pie.
  *
- * The thickness is Crystal's `--cr-chart-ring-thickness`, declared rather than
+ * The thickness is Crystal's `--cr-chart-ring-thickness`, declared once and not
  * chosen per chart, so a donut is recognisably the same object at every size. A
- * donut whose ring thins as it grows is two different components.
+ * donut whose ring thinned as it grew would be a different component at each
+ * size.
  *
- * The centre is text in the document — real, selectable, translatable, read out
- * — rather than a `<text>` inside the picture or, worse, part of an image. It is
- * also not the total by default: the middle of a donut is the most valuable space
- * in the chart, and what belongs there is what the chart is *for*, which only the
+ * The centre is real text in the document, so it is selectable, translatable and
+ * read out. It is not a `<text>` inside the picture or part of an image. It is
+ * not the total by default either. The middle of a donut is the most valuable
+ * space in the chart, and it should hold what the chart is for, which only the
  * caller knows.
  */
 import { type ReactNode } from 'react';

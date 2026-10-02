@@ -32,7 +32,7 @@ describe('ErrorSummary', () => {
   });
 
   /* A select's named element is React Aria's hidden native one, which cannot
-     take focus; the link lands on the select's own button instead. */
+     take focus, so the link lands on the select's own button instead. */
   it('takes the reader to a select, landing on its button', async () => {
     renderWithCrystal(<Fixture errors={{ plan: 'Choose a plan' }} />);
     await userEvent.click(screen.getByRole('link', { name: 'Choose a plan' }));

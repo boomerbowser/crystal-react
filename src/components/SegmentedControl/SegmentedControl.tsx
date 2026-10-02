@@ -2,17 +2,16 @@
 
 /* SegmentedControl.
  *
- * Radio group semantics, which the catalogue asks for by name and then rules out
- * the alternative: "never `aria-selected` outside a tablist". A segmented control
+ * Radio group semantics. The catalogue asks for them by name and rules out the
+ * alternative: "never `aria-selected` outside a tablist". A segmented control
  * that borrows tab semantics announces its options as tabs, and a reader then
- * expects a panel to change — which is a promise the control did not make.
+ * expects a panel to change, which this control does not do.
  *
- * **Selection is weight and the primary fill.** The fill is Crystal's dock, which
- * the catalogue names for this control; the weight is what keeps selection off
- * colour alone, because it is typographic rather than chromatic and survives
- * greyscale, forced colours and a poor screen.
- * In forced colours the fill goes and a ring takes its place, because Chromium's
- * text backplate erases a filled label.
+ * Selection is weight and the primary fill. The fill is Crystal's dock, which the
+ * catalogue names for this control. The weight keeps selection off colour alone,
+ * because it is typographic and survives greyscale, forced colours and a poor
+ * screen. In forced colours the fill goes and a ring takes its place, because
+ * Chromium's text backplate erases a filled label.
  */
 import { useContext, type ReactNode } from 'react';
 import {
@@ -44,13 +43,13 @@ export function SegmentedControl({
   label, options, description, errorMessage, labelHidden = false, className, ...props
 }: SegmentedControlProps): React.JSX.Element {
   /* A hidden label still has to name the group. Only a string can become an
-     `aria-label`, so a rich label is rendered visually-hidden instead — never
-     dropped, which would leave the group unnamed. */
+     `aria-label`, so a rich label is rendered visually hidden instead. Dropping
+     it would leave the group unnamed. */
   const hiddenStringLabel = labelHidden && typeof label === 'string' ? label : undefined;
 
   return (
-    /* A radio group rather than a tablist: these are mutually exclusive values,
-       not views, and the two are announced differently for good reason. */
+    /* A radio group, not a tablist. The options are mutually exclusive values,
+       not views, and screen readers announce the two differently. */
     <RadioGroup
       {...props}
       className={cx(styles['group'], className)}
@@ -70,8 +69,8 @@ export function SegmentedControl({
   );
 }
 
-/* One segment, playing `selection` when it becomes the chosen one — by a click,
-   an arrow key or a value set from outside — and not when the control mounts
+/* One segment. It plays `selection` when it becomes the chosen one, by a click,
+   an arrow key or a value set from outside, and not when the control mounts
    with it already chosen. The group's state is React Aria's, read from its
    context, so the segment moves on the value React Aria resolved. */
 function Segment({ option }: { option: SegmentedOption }): React.JSX.Element {

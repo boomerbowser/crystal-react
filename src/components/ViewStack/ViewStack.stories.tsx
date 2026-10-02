@@ -12,21 +12,16 @@ const meta = {
         component:
           '"Focus moves to the new view and returns on pop; the back control is a real '
           + 'button."\n\n'
-          + 'Focus is the contract and the half that is not decoration. What a stack can '
-          + 'truthfully restore on a pop is the **view**, not the control: it shows one view '
-          + 'at a time, so the control the reader left was unmounted with the view it '
-          + 'belonged to, and a reference kept to it is a detached node that `focus()` '
-          + 'accepts and silently ignores. An implementation that stored one would look '
-          + 'right, pass a test that never unmounted anything, and put every reader at the '
-          + 'top of the page in production.\n\n'
+          + 'Focus is the contract. The movement is decoration. On a pop the stack restores '
+          + 'focus to the view, not to the control. It shows one view at a time, so the '
+          + 'control the reader left was unmounted with its view, and a reference kept to it '
+          + 'is a detached node that `focus()` accepts and silently ignores. Storing one '
+          + 'passes a test that never unmounts anything and puts every reader at the top of '
+          + 'the page in production.\n\n'
           + 'The movement is Crystal\'s `view-push-in` and `view-push-out`, authored in core '
-          + '2.1.0 — a view arriving from the inline-end edge, and the view it covers '
-          + 'travelling a fraction of that distance behind it. Two recipes rather than four, '
-          + 'because a pop is a push mirrored and right-to-left is a push mirrored again. '
-          + 'This library is pinned to core `^2.0.0` until that release is out, so the '
-          + 'recipe is asked for rather than assumed and, until then, the stack behaves '
-          + 'exactly as it does under reduced motion: the state change in full, the '
-          + 'decoration absent.',
+          + '2.1.0. One is a view arriving from the inline-end edge, the other the view it covers '
+          + 'travelling a fraction of that distance behind it. Two recipes instead of four, '
+          + 'because a pop is a push mirrored and right-to-left is a push mirrored again.',
       },
     },
   },
@@ -56,10 +51,10 @@ export const Pushed: Story = {
   },
 };
 
-/* Drivable, because the thing worth checking about a stack is what happens
-   *between* two states and a static story has only one. A push and a pop are
-   the same recipe pointing opposite ways, and nothing short of pushing and
-   then popping can tell whether the second one points the other way. */
+/* Drivable, because what needs checking in a stack happens between two states
+   and a static story has only one. A push and a pop are the same recipe
+   pointing opposite ways, and only pushing and then popping shows whether the
+   second one points the other way. */
 function Drivable(): React.JSX.Element {
   const [depth, setDepth] = useState(1);
   const views: StackedView[] = [

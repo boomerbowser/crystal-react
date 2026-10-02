@@ -2,33 +2,31 @@
 
 /* CommandPalette.
  *
- * React Aria's `Autocomplete` is the primitive, and the implementation plan
- * chose it over `cmdk` for a reason worth restating: it is the same combobox
- * already carrying `ComboBox` in this library, so there is one keyboard model to
- * get right instead of two, and no second dependency whose licence and
- * maintenance have to be tracked.
+ * React Aria's `Autocomplete` is the primitive. The implementation plan chose
+ * it over `cmdk` because it is the same combobox that already carries
+ * `ComboBox` in this library, so there is one keyboard model to get right, and
+ * no second dependency whose licence and maintenance have to be tracked.
  *
- * **Focus never leaves the search field.** The list is navigated with the arrow
+ * Focus never leaves the search field. The list is navigated with the arrow
  * keys while the caret stays where you are typing, and the highlighted row is
- * named by `aria-activedescendant`. This is the requirement every hand-built
- * palette breaks: move real focus into the list and typing stops working, so the
- * user has to arrow back up to keep searching. React Aria calls it virtual focus
- * and `Autocomplete` provides it; Crystal's job is not to undo it.
+ * named by `aria-activedescendant`. If real focus moves into the list, typing
+ * stops working and the user has to arrow back up to keep searching. React Aria
+ * calls this virtual focus and `Autocomplete` provides it. Crystal must not undo
+ * it.
  *
  * ## Three materials, and the catalogue names each
  *
- * "Mirage scrim, Haze decision surface, Resin field shell." The palette is not a
- * floating control plane: it is a surface you *read and decide from*, so it is
- * Haze, and what lifts it off the page is the Mirage beneath rather than
- * elevation above. The search field inside it is a control, so it is Resin — a
- * control plane on a content fill, which is the ordinary field stack and not
- * Resin inside Resin.
+ * "Mirage scrim, Haze decision surface, Resin field shell." The palette is a
+ * surface you read and decide from, so it is Haze, and the Mirage beneath lifts
+ * it off the page with no added elevation. The search field inside it is a
+ * control, so it is Resin: a control plane on a content fill. That is the
+ * ordinary field stack, and is not Resin inside Resin.
  *
  * ## Searching, empty and loading are three different things
  *
- * A list showing nothing is indistinguishable from one still thinking, and both
- * are indistinguishable from a broken palette. Each says which it is, in text,
- * and the loading state is announced rather than left as a spinner nobody hears.
+ * A list showing nothing looks the same as one still loading, and both look
+ * like a broken palette. Each state says which it is, in text, and the loading
+ * state is announced, because a spinner is not.
  */
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -81,14 +79,14 @@ export interface CommandPaletteProps extends Omit<ModalOverlayProps,
   'className' | 'children' | 'style' | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'> {
   /** Every command the palette can run. The product owns this registry. */
   commands: readonly Command[];
-  /** Run when a command is chosen. The palette does not close itself — the product decides. */
+  /** Run when a command is chosen. The palette does not close itself; the product decides. */
   onAction: (id: Key) => void;
   /** What the field asks for. Also the palette's accessible name. */
   label?: string;
   placeholder?: string;
   /**
-   * The registry is still arriving. Says so in text rather than showing an empty
-   * list, which is indistinguishable from "nothing matched".
+   * The registry is still arriving. The palette says so in text, because an
+   * empty list looks the same as "nothing matched".
    */
   isLoading?: boolean;
   /** What to say when the search matches nothing. */
@@ -116,8 +114,8 @@ export function groupCommands(commands: readonly Command[]): { section?: string;
     group.commands.push(command);
   }
   /* Ungrouped first, then the rest in the order the registry declared them. The
-     registry's order is a product decision — most-used first, usually — and
-     sorting it alphabetically here would quietly overrule that. */
+     registry's order is a product decision, usually most-used first, so it is
+     not sorted alphabetically here. */
   return groups.sort((a, b) => Number(a.section !== undefined) - Number(b.section !== undefined));
 }
 
@@ -125,15 +123,15 @@ export function CommandPalette({
   commands, onAction, label = 'Run a command', placeholder = 'Search commands',
   isLoading = false, emptyMessage = 'No matching commands', className, ...props
 }: CommandPaletteProps): React.JSX.Element {
-  /* Locale-aware and accent-insensitive. A plain `toLowerCase().includes` is the
-     reflex and it fails for every reader whose language has more than one way of
-     writing the same letter. */
+  /* Locale-aware and accent-insensitive. A plain `toLowerCase().includes` fails
+     for every reader whose language has more than one way of writing the same
+     letter. */
   const { contains } = useFilter({ sensitivity: 'base' });
   const groups = useMemo(() => groupCommands(commands), [commands]);
   /* The recipe scales the whole palette, so it plays on the surface. */
   const [scope, play] = useMotion();
   /* The catalogue puts the palette on a Mirage scrim, and Mirage washes in and
-     withdraws — Crystal's `mirage` and `mirage-out`, from the preset module. */
+     withdraws with Crystal's `mirage` and `mirage-out`, from the preset module. */
   const wash = usePresetMotion('mirage', 'mirage-out', { active: props.isOpen === true });
 
   return (
@@ -156,29 +154,27 @@ export function CommandPalette({
                   `AnimatePresence` for its scrim, which waits for this too. */}
               <PresenceExit play={play} recipe="menu-out" />
               <Autocomplete filter={contains}>
-                {/* A real `<label>`, hidden, rather than an `aria-label` — and
-                    never both. Both is what was written first, and the two
-                    compose into `aria-labelledby` pointing at the input *and*
-                    the label, which names the field something nobody asked for.
-                    A label element is also the one a click can focus. */}
+                {/* A real `<label>`, hidden, instead of an `aria-label`, and
+                    never both. The two compose into `aria-labelledby` pointing
+                    at the input and the label, which gives the field the wrong
+                    name. A label element is also the one a click can focus. */}
                 <SearchField className={cx(styles['field'], 'cr-field-shell')} autoFocus>
                   <VisuallyHidden as="span"><Label>{label}</Label></VisuallyHidden>
                   <span className={cx(styles['searchIcon'])} aria-hidden="true">{SearchIcon}</span>
                   <Input placeholder={placeholder} className={cx(styles['input'])} />
                 </SearchField>
 
-                {/* Announced, not just shown. A spinner says nothing to a screen
-                    reader, and "nothing here" and "not finished yet" are
-                    different answers to the same question. */}
+                {/* Announced as well as shown. A spinner says nothing to a
+                    screen reader, and "nothing here" and "not finished yet"
+                    are different answers. */}
                 {isLoading ? (
                   <div className={cx(styles['status'])} role="status">Loading commands…</div>
                 ) : (
                   <ListBox
                     className={cx(styles['results'], 'cr-scroll-resin')}
                     aria-label={label}
-                    /* Each row runs its command; nothing stays selected, because
-                       a palette is a way of doing things rather than a list you
-                       pick from. */
+                    /* Each row runs its command. Nothing stays selected, because
+                       a palette runs actions and is not a list you pick from. */
                     selectionMode="none"
                     onAction={onAction}
                     renderEmptyState={() => (
@@ -211,10 +207,9 @@ export function CommandPalette({
                                 ? <Text slot="description" className={cx(styles['description'])}>{command.description}</Text>
                                 : null}
                             </span>
-                            {/* `Keyboard` is announced as the shortcut rather
-                                than read as loose text beside the label — "Open
-                                settings, Control comma" rather than running the
-                                two together. */}
+                            {/* `Keyboard` is announced as the shortcut, so a
+                                screen reader says "Open settings, Control
+                                comma" and does not run the two together. */}
                             {command.shortcut
                               ? <Keyboard className={cx(styles['shortcut'])}>{command.shortcut}</Keyboard>
                               : null}
