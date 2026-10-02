@@ -115,6 +115,17 @@ function listen(target: unknown, events: readonly string[], handler: () => void)
   return () => { for (const event of events) list.removeEventListener(event, handler); };
 }
 
+/* The cues showing now. Chromium leaves `activeCues` empty until playback or
+   a seek updates it, so a cue that starts at 0:00 was not drawn before the
+   picture moved (R-M11). When the browser reports none and the track has
+   loaded cues, they are read against the current time, which is the answer the
+   browser gives once it updates. */
+function cuesNow(track: TextTrack, time: number): TextTrackCue[] {
+  const active = [...(track.activeCues ?? [])];
+  if (active.length || !track.cues?.length) return active;
+  return [...track.cues].filter((cue) => cue.startTime <= time && time < cue.endTime);
+}
+
 export function useMediaTracks(
   media: RefObject<HTMLMediaElement | null>,
   { native = false }: { native?: boolean } = {},
@@ -144,7 +155,7 @@ export function useMediaTracks(
     })));
     const on = captions.findIndex((track) => track.mode === (native ? 'showing' : 'hidden'));
     setActiveTextTrack(on === -1 ? null : idOf(captions[on]!, on, 'text'));
-    setActiveCues(on === -1 || native ? [] : [...(captions[on]!.activeCues ?? [])]);
+    setActiveCues(on === -1 || native ? [] : cuesNow(captions[on]!, element.currentTime));
     setAudioTracks(listOf(element.audioTracks, 'Audio', 'audio'));
     setActiveAudioTrack(activeOf(element.audioTracks, 'enabled', 'audio'));
     setVideoTracks(listOf(element.videoTracks, 'Video', 'video'));
@@ -165,10 +176,15 @@ export function useMediaTracks(
        listened to. A track added later is picked up by the next `addtrack`. */
     const tracks = captionTracks(element);
     for (const track of tracks) track.addEventListener?.('cuechange', read);
+    /* A `<track>` turned on loads its file afterwards, and its cues arrive with
+       the element's `load` event, not with a `cuechange` (R-M11). */
+    const elements = [...element.querySelectorAll('track')];
+    for (const one of elements) one.addEventListener('load', read);
     return () => {
       for (const stop of stops) stop();
       element.removeEventListener('loadedmetadata', read);
       for (const track of tracks) track.removeEventListener?.('cuechange', read);
+      for (const one of elements) one.removeEventListener('load', read);
     };
   }, [media, read, textTracks.length]);
 

@@ -11,7 +11,7 @@ import { act, render } from '@testing-library/react';
 import { useRef, type ReactNode } from 'react';
 import { useMediaTracks, type MediaTracks } from './useMediaTracks.js';
 
-interface FakeTrack { id: string; kind: string; label: string; language: string; mode?: string; enabled?: boolean; activeCues?: unknown[] }
+interface FakeTrack { id: string; kind: string; label: string; language: string; mode?: string; enabled?: boolean; activeCues?: unknown[]; cues?: unknown[] }
 
 function list<T extends object>(items: T[]): T[] & EventTarget {
   const target = new EventTarget();
@@ -54,6 +54,16 @@ describe('useMediaTracks', () => {
     expect(english.mode).toBe('hidden');
     expect(result.current.textTracks.map((track) => track.label)).toEqual(['English']);
     expect(result.current.activeTextTrack).toBe('text-0');
+  });
+
+  /* R-M11. Chromium reports no active cues before playback or a seek, so a cue
+     that starts at 0:00 is read from the track's cues against the current time. */
+  it('draws a cue active at 0:00 before any time update', () => {
+    const first = { startTime: 0, endTime: 2.5, text: 'The harbour at dusk.' };
+    const later = { startTime: 3, endTime: 5, text: 'Gulls call over the water.' };
+    const english: FakeTrack = { id: '', kind: 'captions', label: 'English', language: 'en', mode: 'hidden', activeCues: [], cues: [first, later] };
+    const { result } = harness([english]);
+    expect(result.current.activeCues).toEqual([first]);
   });
 
   it('leaves the browser to draw when asked to', () => {

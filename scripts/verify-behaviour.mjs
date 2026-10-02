@@ -666,6 +666,23 @@ for (const { edge, flush, square } of EDGES) {
     return [...(video?.textTracks ?? [])].map((track) => track.mode);
   });
   await control.click();
+  /* R-M11: the cue active at 0:00 is drawn as soon as the track is on, before
+     any playback or seek. Chromium reports no active cues until the time
+     updates, so a player reading only `activeCues` showed nothing here. */
+  await page.waitForFunction(
+    () => /The harbour at dusk/.test(document.querySelector('#storybook-root [class*="captions"]:not([hidden]) > span')?.textContent ?? ''),
+    undefined,
+    { timeout: 3000 },
+  ).catch(() => {});
+  const atStart = await page.evaluate(() => ({
+    time: document.querySelector('#storybook-root video')?.currentTime ?? null,
+    cue: document.querySelector('#storybook-root [class*="captions"]:not([hidden]) > span')?.textContent ?? '',
+  }));
+  record(
+    'the cue at 0:00 is drawn when captions turn on, before anything plays',
+    atStart.time === 0 && /The harbour at dusk/.test(atStart.cue),
+    `at ${atStart.time}s the cue read "${atStart.cue}"`,
+  );
   /* Seek into the second cue, so a cue is active whether or not playback runs. */
   await page.evaluate(() => { document.querySelector('#storybook-root video').currentTime = 3.2; });
   await page.waitForTimeout(600);
