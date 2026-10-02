@@ -3,4 +3,6 @@
    one of them. What it owns is that only the top view occupies the space. */
 .stack { display: grid; min-block-size: 0; }
 .view { min-inline-size: 0; grid-area: 1 / 1; }
+/* The view a push covered, beneath the arrival for as long as it is leaving. */
+.covered { pointer-events: none; }
 .back { justify-self: start; }

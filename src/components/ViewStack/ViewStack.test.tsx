@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
@@ -32,6 +33,27 @@ describe('ViewStack', () => {
 
     await user.click(screen.getByRole('button', { name: 'Back to Inbox' }));
     expect(onPop).toHaveBeenCalledOnce();
+  });
+
+  /* `view-push-out`. The view a push covered stays beneath the arrival while it
+     leaves, as the same instance (so nothing in it mounts twice), hidden from
+     assistive technology and inert, and goes once its movement ends. */
+  it('keeps the covered view beneath the arrival while it leaves, then removes it', async () => {
+    const mounts = vi.fn();
+    function Covered(): React.JSX.Element {
+      useEffect(() => { mounts(); }, []);
+      return <p>The inbox list</p>;
+    }
+    const inbox: StackedView = { id: 'inbox', label: 'Inbox', children: <Covered /> };
+    const { rerenderWithCrystal } = renderWithCrystal(<ViewStack views={[inbox]} />);
+    rerenderWithCrystal(<ViewStack views={[inbox, pushed]} />);
+
+    const covered = screen.getByText('The inbox list').closest('section');
+    expect(covered).toHaveAttribute('aria-hidden', 'true');
+    expect(covered).toHaveAttribute('inert');
+    expect(screen.queryByRole('region', { name: 'Inbox' })).toBeNull();
+    expect(mounts).toHaveBeenCalledOnce();
+    await waitFor(() => { expect(screen.queryByText('The inbox list')).toBeNull(); });
   });
 
   /* Nothing to go back to. A back control on the root view would do nothing. */

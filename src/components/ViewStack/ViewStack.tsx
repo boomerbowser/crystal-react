@@ -25,9 +25,14 @@
  * mirrored and right-to-left is a push mirrored again, which is what `reorient`
  * points.
  *
- * Only the arrival is played. The covered view is unmounted, so there is
- * nothing to play a departure on. `view-push-out` is for a stack that keeps its
- * views mounted, which is a different component.
+ * On a push both are played: the arriving view takes `view-push-in`, and the
+ * view it covers stays mounted, inert and hidden from assistive technology,
+ * long enough to take `view-push-out` and travel a fraction of the distance
+ * behind it, so the two read as one stack. It keeps its React key while it
+ * leaves, so it is the same instance rather than a copy, and it unmounts when
+ * the movement ends (at once under reduced motion). A pop plays the arrival
+ * mirrored on the view that returns; the view it leaves is gone at once, as
+ * the view a person is going back from no longer matters.
  *
  * A push and a pop are the same recipe pointing opposite ways, so there are two
  * hooks with fixed orientations instead of one whose mirror is recomputed. A
@@ -41,7 +46,7 @@
  * not a version skew, and `useMotion` throws on one so the mistake is visible.
  * A guard would turn it into a stack that silently does not move.
  */
-import { useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { useMotion } from '../../motion/useMotion.js';
 import { useDirection } from '../../theme/hooks.js';
 import { Button } from '../Button/Button.js';
@@ -50,6 +55,7 @@ import { cx } from '../../styles/cx.js';
 import styles from './ViewStack.module.scss';
 
 const ARRIVES = 'view-push-in';
+const COVERED = 'view-push-out';
 
 export interface StackedView {
   /** Identifies the view. Stable across renders. */
@@ -80,10 +86,24 @@ export function ViewStack({
   const [pushScope, playPush] = useMotion({ reorient: { mirrorInline: rtl } });
   /* Back: the same recipe pointing the other way, mirrored again for RTL. */
   const [popScope, playPop] = useMotion({ reorient: { mirrorInline: !rtl } });
+  /* The covered view travels towards the inline-start edge, mirrored for
+     right-to-left. */
+  const [coveredScope, playCovered] = useMotion({ reorient: { mirrorInline: rtl } });
   const top = views.at(-1);
   const beneath = views.at(-2);
   const previousDepth = useRef(views.length);
   const region = useRef<HTMLElement | null>(null);
+  const [leaving, setLeaving] = useState<StackedView | null>(null);
+  /* Which view a push covered is worked out while rendering, not in an effect,
+     so the commit that mounts the arrival still holds the covered view under
+     its own key and React keeps the instance. An effect would run after that
+     commit had already unmounted it. */
+  const [seen, setSeen] = useState({ depth: views.length, top });
+  if (seen.depth !== views.length || seen.top?.id !== top?.id) {
+    const pushed = views.length > seen.depth;
+    setSeen({ depth: views.length, top });
+    setLeaving(pushed && seen.top !== undefined && top !== undefined && seen.top.id !== top.id ? seen.top : null);
+  }
 
   useEffect(() => {
     const was = previousDepth.current;
@@ -100,6 +120,14 @@ export function ViewStack({
     void (views.length > was ? playPush : playPop)(ARRIVES);
   }, [views.length, top, playPush, playPop]);
 
+  /* Once the covered view is on screen beneath the arrival, it leaves. */
+  useEffect(() => {
+    if (leaving === null) return;
+    let current = true;
+    void playCovered(COVERED).finally(() => { if (current) setLeaving(null); });
+    return () => { current = false; };
+  }, [leaving, playCovered]);
+
   if (top === undefined) {
     return <div {...props} className={cx(styles['stack'], className)} />;
   }
@@ -110,6 +138,17 @@ export function ViewStack({
       data-cr-depth={views.length}
       className={cx(styles['stack'], className)}
     >
+      {leaving === null || leaving.id === top.id ? null : (
+        <section
+          key={leaving.id}
+          ref={coveredScope as never}
+          aria-hidden="true"
+          inert
+          className={cx(styles['view'], styles['covered'])}
+        >
+          {leaving.children}
+        </section>
+      )}
       <section
         key={top.id}
         ref={mergeRefs(region, pushScope as never, popScope as never)}

@@ -1027,6 +1027,41 @@ for (const { edge, flush, square } of EDGES) {
     });
   };
 
+  /* The view a push covers takes `view-push-out`: it is still mounted beneath
+     the arrival, hidden, and travels towards the inline-start edge, a fraction
+     of the arrival's distance, mirrored for right-to-left. Read from the last
+     keyframe of its running animation. */
+  const coveredEndsAt = async (dir) => {
+    await page.goto(
+      `${ORIGIN}/iframe.html?id=screens-viewstack--drives&viewMode=story&globals=direction:${dir}`,
+      { waitUntil: 'networkidle' },
+    );
+    await page.waitForSelector('#storybook-root section[aria-label]');
+    await page.waitForTimeout(300);
+    await page.getByRole('button', { name: 'Open the message' }).click();
+    await page.waitForTimeout(90);
+    return page.evaluate(() => {
+      const covered = document.querySelector('#storybook-root section[aria-hidden="true"][inert]');
+      const running = covered?.getAnimations()[0];
+      if (!running) return null;
+      let last;
+      try {
+        last = running.effect.getKeyframes().map((k) => k.transform).filter(Boolean).at(-1);
+      } catch { return null; }
+      const travel = /translateX\((-?[\d.]+)%\)/.exec(last ?? '');
+      return travel ? Number(travel[1]) : null;
+    });
+  };
+  const ltrCovered = await coveredEndsAt('ltr');
+  const rtlCovered = await coveredEndsAt('rtl');
+  record(
+    'the view a push covers stays beneath it and leaves towards the start edge',
+    typeof ltrCovered === 'number' && typeof rtlCovered === 'number'
+      && ltrCovered < 0 && rtlCovered > 0 && Math.abs(ltrCovered) < 100,
+    `the covered view ends at ltr ${ltrCovered}%, rtl ${rtlCovered}%. A covered view that `
+    + 'is unmounted at once, or travels the wrong way, makes the push read as two unrelated slides',
+  );
+
   const ltrPush = await startsAt('ltr', 'push');
   const ltrPop = await startsAt('ltr', 'pop');
   const rtlPush = await startsAt('rtl', 'push');
