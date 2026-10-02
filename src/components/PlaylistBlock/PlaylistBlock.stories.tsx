@@ -55,3 +55,26 @@ export const Reordering: Story = {
     );
   },
 };
+
+/** Tracks added and removed for real: an added track plays `list-in`, and a
+ *  removed one plays `list-out` before it goes, passed over by the keyboard
+ *  meanwhile. */
+export const AddingAndRemoving: Story = {
+  render: function AddingAndRemovingStory(args) {
+    const [queue, setQueue] = useState<readonly PlaylistTrack[]>(tracks.slice(0, 3));
+    const next = tracks.find((track) => !queue.some((one) => one.id === track.id));
+    return (
+      <div style={{ display: 'grid', gap: 12, maxInlineSize: 520 }}>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="button" className="cr-button" disabled={next === undefined} onClick={() => { if (next) setQueue([...queue, next]); }}>
+            Add a track
+          </button>
+          <button type="button" className="cr-button" disabled={queue.length === 0} onClick={() => { setQueue(queue.slice(1)); }}>
+            Remove the first track
+          </button>
+        </div>
+        <PlaylistBlock {...args} tracks={queue} {...(queue[0] ? { nowPlaying: queue[0].id } : {})} onReorder={(ids) => { setQueue(ids.map((id) => queue.find((track) => track.id === id)!)); }} />
+      </div>
+    );
+  },
+};

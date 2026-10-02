@@ -1577,6 +1577,55 @@ for (const [id, openWith, exit] of [
   await page.keyboard.press('Escape');
 }
 
+/* The product gallery is the gallery under a shop's vocabulary, so its viewer
+   brings the next picture in with `media-in` the same way (R-A4). */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=commerce-product-gallery--default&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  await page.locator('#storybook-root [role=option]').first().click();
+  await page.waitForTimeout(900);
+  await page.locator('[role=dialog] button[aria-label="Next"]').click();
+  await page.waitForTimeout(300);
+  const media = await page.evaluate(() => document.querySelectorAll('[role=dialog] [data-cr-motion-name="media-in"]').length);
+  record(
+    'media-in on the product gallery: its viewer moving to the next picture brings it in',
+    media === 1,
+    `media-in on ${media} element(s) after moving to the next picture`,
+  );
+  await page.keyboard.press('Escape');
+}
+
+/* A playlist's tracks arriving and leaving (R-A4): a track added plays
+   `list-in`; a track removed plays `list-out`, disabled while it does, and then
+   goes. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=blocks-playlistblock--adding-and-removing&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root [role=grid] [role=row]');
+  await page.waitForTimeout(300);
+  const rows = () => page.evaluate(() => document.querySelectorAll('#storybook-root [role=grid] [role=row]').length);
+  const atRest = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-cr-motion-name]').length);
+  const before = await rows();
+  await page.getByRole('button', { name: 'Add a track' }).click();
+  await page.waitForTimeout(120);
+  const added = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [role=grid] [role=row]')].at(-1)
+    ?.querySelector('[data-cr-motion-name]')?.getAttribute('data-cr-motion-name') ?? null);
+  await page.waitForTimeout(800);
+  await page.getByRole('button', { name: 'Remove the first track' }).click();
+  await page.waitForTimeout(60);
+  const leaving = await page.evaluate(() => {
+    const row = document.querySelector('#storybook-root [role=grid] [role=row]');
+    return { disabled: row?.getAttribute('aria-disabled'), motion: row?.querySelector('[data-cr-motion-name]')?.getAttribute('data-cr-motion-name') ?? null };
+  });
+  await page.waitForFunction((n) => document.querySelectorAll('#storybook-root [role=grid] [role=row]').length === n, before, { timeout: 5000 }).catch(() => {});
+  const after = await rows();
+  record(
+    'list-in and list-out on the playlist block: an added track arrives, a removed one leaves before it goes',
+    atRest === 0 && added === 'list-in' && leaving.motion === 'list-out' && leaving.disabled === 'true' && after === before,
+    `motion on load ${atRest}; the added row played ${added}; the removed row played ${leaving.motion} with aria-disabled=${leaving.disabled}; `
+    + `rows ${before} before, ${after} after one added and one removed`,
+  );
+}
+
 /* A resize ends and what was resized settles: a split's region, and a table's
    column. By keyboard, which is how a resize is done without a pointer; nothing
    has played before. */

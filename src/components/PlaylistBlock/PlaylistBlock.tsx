@@ -19,10 +19,13 @@
  *
  * Motion is Crystal's and bound to state: a row lifts with `drag-pickup` as it
  * is picked up and settles with `drag-settle` where it lands; the rows it
- * displaced play `reorder`; a track added or removed arrives and leaves with
- * `list-in` and `list-out` where React Aria's collection lets it.
+ * displaced play `reorder`; a track added plays `list-in`, and a track removed
+ * plays `list-out` before it goes. React Aria drops a row the moment its item
+ * leaves the collection, so the block keeps a removed track in the grid for the
+ * length of its exit, disabled so the keyboard passes over it, and drops it
+ * when the recipe ends (at once under reduced motion).
  */
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   GridList, GridListItem, Button, DropIndicator, useDragAndDrop, type Key,
 } from 'react-aria-components';
@@ -66,12 +69,58 @@ export function PlaylistBlock({
      knows the old order and the new, plays it on the rows that moved. */
   const players = useRef(new Map<string, (name: string) => Promise<void>>());
   const moving = useRef<ReadonlySet<string>>(new Set());
+  const arriving = useRef(new Set<string>());
   const order = useRef<readonly string[] | null>(null);
+
+  /* Tracks the product removed that are still playing `list-out`, each with the
+     position it left. Worked out while rendering, so the commit that receives
+     the shorter list still holds the row and React Aria does not drop it. */
+  const [leaving, setLeaving] = useState<readonly { track: PlaylistTrack; at: number }[]>([]);
+  const [seen, setSeen] = useState(tracks);
+  if (seen !== tracks) {
+    const kept = new Set(tracks.map((track) => track.id));
+    const gone = seen.flatMap((track, at) => (kept.has(track.id) ? [] : [{ track, at }]));
+    setSeen(tracks);
+    if (gone.length) setLeaving((current) => [...current.filter((one) => !kept.has(one.track.id)), ...gone]);
+  }
+  const shown = [...tracks];
+  for (const { track, at } of leaving) {
+    if (!shown.some((one) => one.id === track.id)) shown.splice(Math.min(at, shown.length), 0, track);
+  }
+  const leavingKeys = leaving.map((one) => one.track.id);
+
+  /* Each exit plays once, though the list changes as the others finish. */
+  const exiting = useRef(new Set<string>());
+  useEffect(() => {
+    for (const { track } of leaving) {
+      if (exiting.current.has(track.id)) continue;
+      exiting.current.add(track.id);
+      const done = (): void => {
+        exiting.current.delete(track.id);
+        setLeaving((current) => current.filter((one) => one.track.id !== track.id));
+      };
+      const play = players.current.get(track.id);
+      if (play) void play('list-out').finally(done);
+      else done();
+    }
+  }, [leaving]);
+
   useEffect(() => {
     const now = tracks.map((track) => track.id);
     const before = order.current;
     order.current = now;
-    if (!before || before.length !== now.length) return;
+    if (!before) return;
+    /* Added since the last render: a real arrival, never the first render's
+       rows. React Aria builds a new row in a pass of its own, so its player may
+       not be registered yet; the arrival is then left for the row to play when
+       it registers. */
+    for (const id of now) {
+      if (before.includes(id)) continue;
+      const play = players.current.get(id);
+      if (play) void play('list-in');
+      else arriving.current.add(id);
+    }
+    if (before.length !== now.length) return;
     for (const [index, id] of now.entries()) {
       if (before[index] === id) continue;
       /* Put down here, or pushed along by the one that was. */
@@ -97,7 +146,8 @@ export function PlaylistBlock({
   return (
     <GridList
       aria-label={label}
-      items={tracks}
+      items={shown}
+      disabledKeys={leavingKeys}
       dragAndDropHooks={dragAndDropHooks}
       {...(onPlay ? { onAction: (key: Key) => { onPlay(String(key)); } } : {})}
       className={cx(styles['playlist'], className)}
@@ -110,6 +160,7 @@ export function PlaylistBlock({
               isCurrent={track.id === nowPlaying}
               isDragging={isDragging ?? false}
               players={players.current}
+              arriving={arriving.current}
               handleLabel={handleLabel(track.titleText)}
               nowPlayingLabel={nowPlayingLabel}
             />
@@ -120,12 +171,14 @@ export function PlaylistBlock({
   );
 }
 
-function Track({ track, isCurrent, isDragging, players, handleLabel, nowPlayingLabel }: {
+function Track({ track, isCurrent, isDragging, players, arriving, handleLabel, nowPlayingLabel }: {
   track: PlaylistTrack;
   isCurrent: boolean;
   isDragging: boolean;
   /** Where this row registers its player, for the block to play its move. */
   players: Map<string, (name: string) => Promise<void>>;
+  /** Tracks added before their row could register; the row plays `list-in`. */
+  arriving: Set<string>;
   handleLabel: string;
   nowPlayingLabel: string;
 }): React.JSX.Element {
@@ -143,8 +196,9 @@ function Track({ track, isCurrent, isDragging, players, handleLabel, nowPlayingL
      first, so a row rebuilt by the reorder is the one the block plays on. */
   useEffect(() => {
     players.set(track.id, play);
+    if (arriving.delete(track.id)) void play('list-in');
     return () => { if (players.get(track.id) === play) players.delete(track.id); };
-  }, [players, track.id, play]);
+  }, [players, arriving, track.id, play]);
 
   /* Picked up. Putting down, and being pushed along, are the block's to play. */
   usePlayOnChange(isDragging, (was, is) => (is && !was ? 'drag-pickup' : null), play);

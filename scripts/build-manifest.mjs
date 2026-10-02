@@ -270,7 +270,7 @@ const components = catalogue.categories.flatMap((category) =>
    A catalogue assignment can be played by a child: the menubar's `menu-in` is
    its menus', the cascader's field recipes are its field shell's. `recipes`
    stays what a component's own source plays; `composedRecipes` adds what the
-   components it renders play, one level down, so a reader can tell the two
+   components it renders play, and what they render in turn, so a reader can tell the two
    apart and the coverage counts both. */
 {
   const byDirectory = new Map();
@@ -280,16 +280,26 @@ const components = catalogue.categories.flatMap((category) =>
       ?? component.id.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join('');
     byDirectory.set(pascal, component);
   }
-  for (const component of components) {
-    if (!component.renders) continue;
-    const own = new Set(component.recipes);
-    const composed = new Set();
-    for (const neighbour of component.renders) {
-      for (const recipe of byDirectory.get(neighbour)?.recipes ?? []) if (!own.has(recipe)) composed.add(recipe);
+  /* Followed through, not one level only: the product gallery renders the
+     gallery, which renders the lightbox, which plays `media-in`, so the product
+     gallery plays it too (R-A4). A component already on the path is not entered
+     again. */
+  const played = (component, path) => {
+    const found = new Set();
+    for (const neighbour of component.renders ?? []) {
+      const child = byDirectory.get(neighbour);
+      if (!child || path.has(child)) continue;
+      for (const recipe of child.recipes ?? []) found.add(recipe);
+      for (const recipe of played(child, new Set([...path, child]))) found.add(recipe);
     }
-    component.composedRecipes = [...composed].sort();
-    delete component.renders;
+    return found;
+  };
+  const composedOf = new Map(components.filter((c) => c.renders).map((c) => [c, played(c, new Set([c]))]));
+  for (const [component, found] of composedOf) {
+    const own = new Set(component.recipes);
+    component.composedRecipes = [...found].filter((recipe) => !own.has(recipe)).sort();
   }
+  for (const component of components) delete component.renders;
 }
 
 const counts = components.reduce((acc, component) => {

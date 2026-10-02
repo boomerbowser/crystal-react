@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, within } from '../../test/render.js';
+import { renderWithCrystal, screen, userEvent, waitFor, within } from '../../test/render.js';
 import { PlaylistBlock, type PlaylistTrack } from './PlaylistBlock.js';
 
 const tracks: PlaylistTrack[] = [
@@ -24,6 +24,25 @@ describe('PlaylistBlock', () => {
     expect(rows[1]).toHaveAttribute('aria-current', 'true');
     expect(rows[0]).not.toHaveAttribute('aria-current');
     expect(within(rows[1]!).getByText('Now playing')).toBeInTheDocument();
+  });
+
+  /* `list-in` and `list-out` (R-A4). A track added arrives; one removed plays
+     its exit before it goes, disabled meanwhile so the keyboard passes over it. */
+  it('plays list-in on a track added, and list-out on a track removed before it goes', async () => {
+    const extra: PlaylistTrack = { id: 'd', title: 'Low Tide', titleText: 'Low Tide', duration: '5:10' };
+    const motionOf = (title: string) => (screen.getByText(title).closest('[data-cr-motion-name]') as HTMLElement | null)?.dataset['crMotionName'];
+    const { rerenderWithCrystal } = renderWithCrystal(<PlaylistBlock label="Up next" tracks={tracks} onReorder={() => {}} />);
+    expect(motionOf('Harbour Lights')).toBeUndefined();
+
+    rerenderWithCrystal(<PlaylistBlock label="Up next" tracks={[...tracks, extra]} onReorder={() => {}} />);
+    expect(motionOf('Low Tide')).toBe('list-in');
+
+    rerenderWithCrystal(<PlaylistBlock label="Up next" tracks={[tracks[0]!, tracks[2]!, extra]} onReorder={() => {}} />);
+    const leaving = screen.getByText('North Road').closest('[role="row"]');
+    expect(leaving).toHaveAttribute('aria-disabled', 'true');
+    expect(motionOf('North Road')).toBe('list-out');
+    await waitFor(() => { expect(screen.queryByText('North Road')).toBeNull(); });
+    expect(within(screen.getByRole('grid')).getAllByRole('row')).toHaveLength(3);
   });
 
   it('plays a track on Enter', async () => {
