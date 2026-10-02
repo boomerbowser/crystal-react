@@ -143,6 +143,22 @@ describe('VideoPlayer', () => {
     }
   });
 
+  /* The server cannot know the reader's choice, so a server render draws the
+     default, which the first client render agrees with; reading storage while
+     rendering would be a hydration mismatch. */
+  it('renders the default caption style on the server, whatever is saved', async () => {
+    const { renderToString } = await import('react-dom/server');
+    const { CrystalProvider } = await import('../../theme/CrystalProvider.js');
+    localStorage.setItem('crystal-caption-style', JSON.stringify({ size: 'larger', backing: 'solid' }));
+    try {
+      const html = renderToString(<CrystalProvider><VideoPlayer label="Harbour" /></CrystalProvider>);
+      expect(html).toMatch(/data-size="normal"/);
+      expect(html).toMatch(/data-backing="feathered"/);
+    } finally {
+      localStorage.removeItem('crystal-caption-style');
+    }
+  });
+
   it('ignores a saved caption style it does not recognise', () => {
     localStorage.setItem('crystal-caption-style', '{"size":"huge","backing":"neon"}');
     try {

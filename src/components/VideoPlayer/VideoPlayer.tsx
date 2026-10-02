@@ -43,11 +43,12 @@ import { UNSAFE_PortalProvider as PortalProvider, useUNSAFE_PortalContext as use
 import { IconButton } from '../IconButton/IconButton.js';
 import { MediaControls } from '../MediaControls/MediaControls.js';
 import {
-  DEFAULT_CAPTION_STYLE, DEFAULT_PLAYBACK_RATES, MediaSettings,
+  DEFAULT_PLAYBACK_RATES, MediaSettings,
   type CaptionStyle, type MediaQuality, type MediaSettingsWords,
 } from '../MediaControls/MediaSettings.js';
 import { useMediaElement } from '../../media/useMediaElement.js';
 import { useMediaTracks } from '../../media/useMediaTracks.js';
+import { useCaptionStyle } from '../../media/useCaptionStyle.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
 import { useMediaArrival } from '../../media/useMediaArrival.js';
@@ -123,23 +124,6 @@ const PLAYER_WORDS: VideoPlayerWords = {
   spokenRate: (rate) => `${rate} times`,
 };
 
-/* The reader's caption style is theirs, not the product's, so it is kept for
-   this browser and every player on the origin starts from it (R-M12). Storage
-   can be missing or refuse a write (a private window, a blocked site); the
-   player then keeps the choice for as long as it is mounted. */
-const CAPTION_STYLE_KEY = 'crystal-caption-style';
-function savedCaptionStyle(): CaptionStyle {
-  try {
-    const saved = JSON.parse(globalThis.localStorage?.getItem(CAPTION_STYLE_KEY) ?? 'null') as Partial<CaptionStyle> | null;
-    return {
-      size: saved?.size === 'large' || saved?.size === 'larger' ? saved.size : DEFAULT_CAPTION_STYLE.size,
-      backing: saved?.backing === 'solid' ? 'solid' : DEFAULT_CAPTION_STYLE.backing,
-    };
-  } catch {
-    return DEFAULT_CAPTION_STYLE;
-  }
-}
-
 const CaptionsIcon = (
   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
     <rect x="3" y="5" width="18" height="14" rx="3" />
@@ -206,11 +190,8 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
   /* `media-in` on the picture once its first frame is ready. */
   const arrival = useMediaArrival(own);
   const [said, setSaid] = useState('');
-  const [captionStyle, setCaptionStyle] = useState<CaptionStyle>(savedCaptionStyle);
-  const changeCaptionStyle = useCallback((next: CaptionStyle) => {
-    setCaptionStyle(next);
-    try { globalThis.localStorage?.setItem(CAPTION_STYLE_KEY, JSON.stringify(next)); } catch { /* kept in memory */ }
-  }, []);
+  /* The reader's caption style, kept for this browser (R-M12). */
+  const [captionStyle, changeCaptionStyle] = useCaptionStyle();
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [canFullScreen, setCanFullScreen] = useState(false);
   /* The last caption track that was on, so the toggle turns back on the
