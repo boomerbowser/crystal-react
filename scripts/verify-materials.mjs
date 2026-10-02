@@ -146,10 +146,26 @@ const ours = await measure(
   'react',
 );
 
+/* Components that wear a Crystal surface class rather than a parity specimen,
+   each measured in its own story against the same Crystal recipe. A component
+   that wears the class and then overrides part of it shows up here as drift. */
+const WORN = [
+  { name: 'mentions suggestions', material: 'frost', story: 'inputs-richtextsurface--with-mentions', react: '#storybook-root .cr-frost' },
+];
+for (const worn of WORN) {
+  const measured = await measure(
+    `${STORYBOOK}/iframe.html?id=${worn.story}&viewMode=story`,
+    worn.react,
+    [{ material: worn.material, react: worn.react }],
+    'react',
+  );
+  ours[`${worn.name}`] = measured[worn.material];
+  PAIRS.push({ material: worn.name, crystalMaterial: worn.material });
+}
 for (const pair of PAIRS) {
-  const { material } = pair;
+  const material = pair.material;
   const mine = ours[material];
-  const crystal = theirs[material];
+  const crystal = theirs[pair.crystalMaterial ?? material];
   if (!crystal) { failures.push(`${material}: Crystal's own preview has no such surface to compare against`); continue; }
   if (!mine) { failures.push(`${material}: the parity story renders no [data-material="${material}"]`); continue; }
 

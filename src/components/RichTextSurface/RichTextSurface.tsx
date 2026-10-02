@@ -244,5 +244,5 @@ export function Mentions({
 
 function Suggestions({ children }: { children: ReactNode }): React.JSX.Element {
   const presence = usePresenceMotion('menu-in', 'menu-out');
-  return <div ref={presence as never} className={cx(styles['popover'], 'cr-scroll-frost')}>{children}</div>;
+  return <div ref={presence as never} className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>{children}</div>;
 }

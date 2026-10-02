@@ -142,14 +142,14 @@
 }
 
 .popover {
+  /* The suggestions wear Crystal's `.cr-frost`, which supplies the Frost fill,
+     the rim, the panel shadow and the diffusion (R15e). This rule is the
+     geometry only: the popover takes the content radius, as the combobox's
+     does. */
   min-inline-size: calc(#{$cr-action-min-target} * 4);
   max-block-size: 30vh;
   padding: $cr-spacing-2xs;
-  border: 1px solid var(--cr-edge);
   border-radius: var(--cr-radius);
-  background: var(--cr-frost-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
   overflow: auto;
 }
 
