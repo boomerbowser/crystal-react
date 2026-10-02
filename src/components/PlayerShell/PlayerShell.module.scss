@@ -11,16 +11,6 @@
 
 .stage { min-inline-size: 0; }
 
-/* Full screen is the stage, picture and transport together, so it fills the
-   screen and centres the picture in it. */
-.stage:fullscreen {
-  display: grid;
-  place-items: center;
-  background: var(--cr-surface-alt);
-}
-
-.stage:fullscreen .player { inline-size: 100%; }
-
 .metadata {
   display: grid;
   gap: $cr-spacing-2xs;

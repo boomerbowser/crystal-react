@@ -91,6 +91,75 @@ describe('VideoPlayer', () => {
     expect(ref.current).toBe(container.querySelector('video'));
   });
 
+  /* The stage keeps a shape before the first frame decodes, so the page does
+     not jump, and the shape is the product's. */
+  it('holds the stage at the aspect ratio and fit it is given', () => {
+    const { container, rerenderWithCrystal } = renderWithCrystal(<VideoPlayer label="The tour" />);
+    const stage = () => container.querySelector('video')!.parentElement!;
+    expect(stage().style.getPropertyValue('--cr-media-aspect')).toBe('16 / 9');
+    expect(stage().style.getPropertyValue('--cr-media-fit')).toBe('contain');
+    rerenderWithCrystal(<VideoPlayer label="The tour" aspectRatio="9 / 16" fit="cover" />);
+    expect(stage().style.getPropertyValue('--cr-media-aspect')).toBe('9 / 16');
+    expect(stage().style.getPropertyValue('--cr-media-fit')).toBe('cover');
+  });
+
+  /* Speed is a choice of one, so it is radio items; the chosen one is weight,
+     never a check; the element's own rate is what changes; and it is said. */
+  it('changes the element\'s speed from the settings menu, and says so', async () => {
+    const user = userEvent.setup();
+    const { container } = renderWithCrystal(<VideoPlayer label="The tour" />);
+    const video = container.querySelector('video')!;
+    await user.click(screen.getByRole('button', { name: 'Settings' }));
+    const normal = await screen.findByRole('menuitemradio', { name: 'Normal' });
+    expect(normal).toHaveAttribute('aria-checked', 'true');
+    expect(normal.querySelector('svg')).toBeNull();
+    await user.click(screen.getByRole('menuitemradio', { name: '1.5 times' }));
+    expect(video.playbackRate).toBe(1.5);
+    fireEvent(video, new Event('ratechange'));
+    expect(screen.getAllByRole('status').some((one) => one.textContent === 'Speed 1.5 times')).toBe(true);
+  });
+
+  it('answers Shift+> and Shift+< with the next and previous speed', () => {
+    const { container } = renderWithCrystal(<VideoPlayer label="The tour" />);
+    const video = container.querySelector('video')!;
+    fireEvent.keyDown(video, { key: '>' });
+    expect(video.playbackRate).toBe(1.25);
+    fireEvent(video, new Event('ratechange'));
+    fireEvent.keyDown(video, { key: '<' });
+    expect(video.playbackRate).toBe(1);
+  });
+
+  it('leaves speed out when the product passes no speeds', () => {
+    renderWithCrystal(<VideoPlayer label="The tour" playbackRates={[]} />);
+    expect(screen.queryByRole('button', { name: 'Settings' })).toBeNull();
+  });
+
+  /* Quality is the product's to switch: the player shows the renditions it is
+     given and reports the choice, and switches nothing itself. */
+  it('offers the product\'s renditions and reports the choice', async () => {
+    const user = userEvent.setup();
+    const chosen: string[] = [];
+    renderWithCrystal(
+      <VideoPlayer
+        label="The tour"
+        playbackRates={[]}
+        qualities={[{ id: 'auto', label: 'Auto' }, { id: '1080', label: '1080p' }]}
+        quality="auto"
+        onQualityChange={(id) => chosen.push(id)}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Settings' }));
+    await user.click(await screen.findByRole('menuitemradio', { name: '1080p' }));
+    expect(chosen).toEqual(['1080']);
+  });
+
+  /* jsdom has no picture in picture, so the control is not offered. A button
+     that does nothing when pressed is worse than none. */
+  it('offers picture in picture only where the browser can do it', () => {
+    renderWithCrystal(<VideoPlayer label="The tour" />);
+    expect(screen.queryByRole('button', { name: 'Picture in picture' })).toBeNull();
+  });
+
   it('has no axe violations', async () => {
     const { container } = renderWithCrystal(
       <VideoPlayer label="The tour">

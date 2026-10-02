@@ -14,11 +14,21 @@
  *
  * The transport is `MediaControls`, shared with the video player. "The scrubber
  * is a slider announcing time, not a progress bar" is enforced there.
+ *
+ * The player is a Haze card holding the title and the transport, as the
+ * catalogue specifies ("Haze card holding a Resin transport"). Before 2 October
+ * 2026 it drew no surface at all: the transport floated on whatever was behind
+ * it, the title had no ground, and the pill sat flush with the edge of the
+ * page. The card gives both the card padding every other Haze card has.
+ *
+ * Speed is in a settings menu, as on the video player. Audio is where speed is
+ * used most (a lecture, a podcast), so it is offered by default.
  */
 import {
-  forwardRef, useRef, type AudioHTMLAttributes, type ReactNode, type RefObject,
+  forwardRef, useRef, useState, type AudioHTMLAttributes, type ReactNode, type RefObject,
 } from 'react';
 import { MediaControls } from '../MediaControls/MediaControls.js';
+import { DEFAULT_PLAYBACK_RATES, MediaSettings, type MediaSettingsWords } from '../MediaControls/MediaSettings.js';
 import { useMediaElement } from '../../media/useMediaElement.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
@@ -35,6 +45,18 @@ export interface AudioPlayerProps
   label: string;
   /** Shown above the transport. Omit it and the label is the only naming. */
   title?: ReactNode;
+  /** A second line under the title: the artist, the show, the chapter. */
+  subtitle?: ReactNode;
+  /** The speeds the settings menu offers. Pass `[]` to leave speed out. */
+  playbackRates?: readonly number[];
+  /** Words for the settings menu, so a product can translate them. */
+  words?: Partial<MediaSettingsWords> & { settings?: string };
+  /**
+   * Draw the Haze card. On by default. Off when the player sits inside a
+   * surface that is already a reading surface, such as `PlayerShell`'s stage,
+   * where a second card would be Haze on Haze.
+   */
+  surface?: boolean;
   /** `<source>` elements, or a `<track>`. The element's own children. */
   children?: ReactNode;
   /** Seconds the skip controls jump. Omit to leave them off. */
@@ -45,17 +67,24 @@ export interface AudioPlayerProps
 }
 
 export const AudioPlayer = forwardRef<HTMLAudioElement, AudioPlayerProps>(function AudioPlayer({
-  label, title, children, skipBy, mediaRef, className, ...props
+  label, title, subtitle, children, skipBy, mediaRef, playbackRates = DEFAULT_PLAYBACK_RATES,
+  words, surface = true, className, ...props
 }, ref): ReactNode {
   const own = useRef<HTMLAudioElement>(null);
   const media = useMediaElement(own);
   /* `media-in` once the audio is ready. Audio has nothing to see, so the recipe
      plays on the player, the surface that now has something to play. */
   const arrival = useMediaArrival(own);
+  const [said, setSaid] = useState('');
 
   return (
-    <div ref={arrival as never} className={cx(styles['player'], className)}>
-      {title ? <p className={styles['title']}>{title}</p> : null}
+    <div ref={arrival as never} className={cx(styles['player'], surface ? 'cr-haze' : undefined, surface ? styles['card'] : undefined, className)}>
+      {title || subtitle ? (
+        <div className={styles['heading']}>
+          {title ? <p className={styles['title']}>{title}</p> : null}
+          {subtitle ? <p className={styles['subtitle']}>{subtitle}</p> : null}
+        </div>
+      ) : null}
       {/* No `controls`. The transport below is the control surface. Two sets of
           controls for one element means two tab stops per action, two things to
           style, and two places a state can be shown differently. The element
@@ -84,7 +113,17 @@ export const AudioPlayer = forwardRef<HTMLAudioElement, AudioPlayerProps>(functi
         {...(skipBy === undefined
           ? {}
           : { skipBy, onSkip: (by: number) => media.seek(media.currentTime + by) })}
-      />
+      >
+        <MediaSettings
+          label={words?.settings ?? 'Settings'}
+          playbackRates={playbackRates}
+          playbackRate={media.playbackRate}
+          onPlaybackRateChange={media.setPlaybackRate}
+          onAnnounce={setSaid}
+          {...(words ? { words } : {})}
+        />
+      </MediaControls>
+      <span role="status" className={styles['announcement']}>{said}</span>
     </div>
   );
 });

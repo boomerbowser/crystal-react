@@ -1,17 +1,37 @@
 @use '../../styles/tokens' as *;
 
-.player { display: flex; flex-direction: column; gap: $cr-spacing-xs; inline-size: 100%; }
+/* The audio player is Crystal's `.cr-haze.cr-media.audio` (core, after 2.3.1):
+   a Haze card holding the title and a Resin transport. The card is `.cr-haze`,
+   worn in the markup; the padding and the gap are the recipe's, carried here
+   until the installed core publishes it (`src/media/coreRecipes.test.ts`). */
+.player {
+  display: grid;
+  gap: $cr-spacing-sm;
+  inline-size: 100%;
+  min-inline-size: 0;
+  container-type: inline-size;
+}
+
+/* The card padding every other Haze card has, so the transport's pill and the
+   title both stand clear of the card's edge. */
+.card { padding: var(--cr-space); }
+
+.heading { display: grid; gap: 2px; min-inline-size: 0; }
 
 .title { margin: 0; font-weight: 750; }
+
+.subtitle { margin: 0; font-size: var(--cr-text-caption-size); font-weight: 650; color: var(--cr-muted); }
 
 /* The element is not drawn, because the transport is the control surface. It is
    not `display: none` either. Some engines decline to load a hidden media
    element, and it has to stay in the accessibility tree as the thing being
    controlled. */
-.element {
+.element,
+.announcement {
   position: absolute;
   inline-size: 1px;
   block-size: 1px;
   overflow: hidden;
   clip-path: inset(50%);
+  white-space: nowrap;
 }

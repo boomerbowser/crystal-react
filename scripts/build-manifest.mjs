@@ -153,6 +153,10 @@ function motionUsed(componentId) {
   if (!dir || !existsSync(dir)) return { recipes: [], presets: [] };
   const recipes = new Set();
   const presets = new Set();
+  /* The neighbouring components it renders, by directory, for composition
+     credit (below). Recorded here and credited separately, so `recipes` keeps
+     meaning "what this component's own source plays". */
+  const renders = new Set();
   /* A component's own files, and one level of what they import from the library's
      shared modules. Motion that plays through a shared piece is still this
      component's: the loader turns through `feedback/ActivityArc`, and three charts
@@ -193,11 +197,17 @@ function motionUsed(componentId) {
     };
     followListPresence(file);
     for (const [, neighbour, name] of source.matchAll(/from '\.\.\/([A-Z]\w*)\/(\w+)\.js'/g)) {
-      if (name === neighbour) continue;
+      if (name === neighbour) { renders.add(neighbour); continue; }
       const helper = resolveFrom(file, `../${neighbour}/${name}`);
       if (!helper) continue;
       shared.add(helper);
       followListPresence(helper);
+      /* A component the helper renders is rendered by this component too:
+         the players' settings menu is `MediaControls/MediaSettings`, which
+         renders `Menu`. */
+      for (const [, child, childName] of readFileSync(helper, 'utf8').matchAll(/from '\.\.\/([A-Z]\w*)\/(\w+)\.js'/g)) {
+        if (child === childName) renders.add(child);
+      }
       for (const [, local] of readFileSync(helper, 'utf8').matchAll(/from '\.\/(\w+)\.js'/g)) {
         const next = resolveFrom(helper, `./${local}`);
         if (next) shared.add(next);
@@ -229,7 +239,7 @@ function motionUsed(componentId) {
       else if (playsPresets && PRESET_IDS.has(name)) presets.add(name);
     }
   }
-  return { recipes: [...recipes].sort(), presets: [...presets].sort() };
+  return { recipes: [...recipes].sort(), presets: [...presets].sort(), renders: [...renders].sort() };
 }
 
 const components = catalogue.categories.flatMap((category) =>
@@ -255,6 +265,32 @@ const components = catalogue.categories.flatMap((category) =>
     equivalentTo: component.parity,
     ...(implemented.has(component.id) ? motionUsed(component.id) : {}),
   })));
+
+/* Composition credit (re-evaluation of 29 September 2026, recommendation 5).
+   A catalogue assignment can be played by a child: the menubar's `menu-in` is
+   its menus', the cascader's field recipes are its field shell's. `recipes`
+   stays what a component's own source plays; `composedRecipes` adds what the
+   components it renders play, one level down, so a reader can tell the two
+   apart and the coverage counts both. */
+{
+  const byDirectory = new Map();
+  for (const component of components) {
+    if (!component.recipes) continue;
+    const pascal = EXPORT_FOR[component.id]
+      ?? component.id.split('-').map((p) => p[0].toUpperCase() + p.slice(1)).join('');
+    byDirectory.set(pascal, component);
+  }
+  for (const component of components) {
+    if (!component.renders) continue;
+    const own = new Set(component.recipes);
+    const composed = new Set();
+    for (const neighbour of component.renders) {
+      for (const recipe of byDirectory.get(neighbour)?.recipes ?? []) if (!own.has(recipe)) composed.add(recipe);
+    }
+    component.composedRecipes = [...composed].sort();
+    delete component.renders;
+  }
+}
 
 const counts = components.reduce((acc, component) => {
   acc[component.status] = (acc[component.status] ?? 0) + 1;

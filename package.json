@@ -26,6 +26,11 @@
       "import": "./dist/blocks.js",
       "require": "./dist/blocks.cjs"
     },
+    "./editor": {
+      "types": "./dist/editor.d.ts",
+      "import": "./dist/editor.js",
+      "require": "./dist/editor.cjs"
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json",
     "./component-manifest.json": "./dist/component-manifest.json",
@@ -48,11 +53,50 @@
     "verify:theme": "node scripts/verify-theme.mjs",
     "verify:materials": "node scripts/verify-materials.mjs",
     "verify:appearance": "node scripts/verify-appearance.mjs",
-    "test:jest": "jest"
+    "test:jest": "jest",
+    "sync:slice-r": "node scripts/sync-slice-r.mjs"
   },
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",
-    "react-dom": "^18.2.0 || ^19.0.0"
+    "react-dom": "^18.2.0 || ^19.0.0",
+    "@tiptap/core": "^3.31.4",
+    "@tiptap/extension-highlight": "^3.31.4",
+    "@tiptap/extension-list": "^3.31.4",
+    "@tiptap/extension-subscript": "^3.31.4",
+    "@tiptap/extension-superscript": "^3.31.4",
+    "@tiptap/extensions": "^3.31.4",
+    "@tiptap/pm": "^3.31.4",
+    "@tiptap/react": "^3.31.4",
+    "@tiptap/starter-kit": "^3.31.4"
+  },
+  "peerDependenciesMeta": {
+    "@tiptap/core": {
+      "optional": true
+    },
+    "@tiptap/extension-highlight": {
+      "optional": true
+    },
+    "@tiptap/extension-list": {
+      "optional": true
+    },
+    "@tiptap/extension-subscript": {
+      "optional": true
+    },
+    "@tiptap/extension-superscript": {
+      "optional": true
+    },
+    "@tiptap/extensions": {
+      "optional": true
+    },
+    "@tiptap/pm": {
+      "optional": true
+    },
+    "@tiptap/react": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@crystal-ui/core": "^2.3.0",
@@ -82,6 +126,15 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
+    "@tiptap/core": "3.31.4",
+    "@tiptap/extension-highlight": "3.31.4",
+    "@tiptap/extension-list": "3.31.4",
+    "@tiptap/extension-subscript": "3.31.4",
+    "@tiptap/extension-superscript": "3.31.4",
+    "@tiptap/extensions": "3.31.4",
+    "@tiptap/pm": "3.31.4",
+    "@tiptap/react": "3.31.4",
+    "@tiptap/starter-kit": "3.31.4",
     "@types/d3-geo": "^3.1.1",
     "@types/d3-hierarchy": "^3.1.7",
     "@types/d3-sankey": "^0.12.5",

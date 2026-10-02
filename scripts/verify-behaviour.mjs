@@ -647,10 +647,13 @@ for (const { edge, flush, square } of EDGES) {
  *
  * The claim is about the track, not the button: a toggle that flipped its own
  * `aria-pressed` and left the track alone would look and read correctly and
- * show no subtitles. */
+ * show no subtitles. Since 2 October 2026 Crystal draws the cues itself, on
+ * Stone above the transport, so "on" is a track in `hidden` mode (cues firing,
+ * the browser not drawing them) and a cue on the screen, above the bar. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=media-video-player--with-captions&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#storybook-root video');
+  await page.waitForFunction(() => (document.querySelector('#storybook-root video')?.readyState ?? 0) >= 1);
   const control = page.getByRole('button', { name: 'Captions' });
   record(
     'a video with a caption track offers a control for it',
@@ -663,25 +666,36 @@ for (const { edge, flush, square } of EDGES) {
     return [...(video?.textTracks ?? [])].map((track) => track.mode);
   });
   await control.click();
-  await page.waitForTimeout(200);
+  /* Seek into the second cue, so a cue is active whether or not playback runs. */
+  await page.evaluate(() => { document.querySelector('#storybook-root video').currentTime = 3.2; });
+  await page.waitForTimeout(600);
   const after = await page.evaluate(() => {
-    const video = document.querySelector('#storybook-root video');
+    const root = document.querySelector('#storybook-root');
+    const video = root.querySelector('video');
+    const cue = root.querySelector('[class*="captions"]:not([hidden]) > span');
+    const bar = root.querySelector('.cr-resin');
     return {
       modes: [...(video?.textTracks ?? [])].map((track) => track.mode),
-      pressed: document.querySelector('#storybook-root [aria-label="Captions"]')?.getAttribute('aria-pressed'),
-      /* Every live region in the player, joined. The first one in the DOM is the
-         transport's buffering region, which is always empty here. */
-      said: [...document.querySelectorAll('#storybook-root [role="status"]')]
-        .map((region) => region.textContent ?? '').join(' ').trim(),
+      pressed: root.querySelector('[aria-label="Captions"]')?.getAttribute('aria-pressed'),
+      said: [...root.querySelectorAll('[role="status"]')].map((region) => region.textContent ?? '').join(' ').trim(),
+      cue: cue?.textContent ?? '',
+      cueBottom: cue?.getBoundingClientRect().bottom ?? null,
+      barTop: bar?.getBoundingClientRect().top ?? null,
     };
   });
 
   record(
-    'the caption control turns the track on, not just itself',
-    before.every((mode) => mode !== 'showing') && after.modes.includes('showing'),
-    `the track went from ${before.join(', ') || 'none'} to ${after.modes.join(', ') || 'none'}. `
+    'the caption control turns a track on, not just itself',
+    before.every((mode) => mode !== 'showing' && mode !== 'hidden') && after.modes.includes('hidden'),
+    `the tracks went from ${before.join(', ') || 'none'} to ${after.modes.join(', ') || 'none'}. `
     + 'A toggle that flips its own pressed state and leaves the track alone looks right, '
     + 'reads right, and shows no subtitles',
+  );
+  record(
+    'the cue is drawn, and above the transport',
+    /Gulls call over the water/.test(after.cue) && after.cueBottom !== null && after.barTop !== null && after.cueBottom <= after.barTop,
+    `the cue read "${after.cue}", its bottom at ${after.cueBottom} and the bar's top at ${after.barTop}. `
+    + 'The browser draws cues at the foot of the picture, where the transport covers them',
   );
   record(
     'the control carries the track\'s state and the change is said',
@@ -689,6 +703,131 @@ for (const { edge, flush, square } of EDGES) {
     `the control reports aria-pressed=${after.pressed} and the announcement is "${after.said}". `
     + 'A reader who cannot see subtitles appear has nothing else to go on',
   );
+}
+
+/* ------------------------------------- the player's settings, aspect and transport */
+
+/* Speed, subtitles and quality are menus of radio items; the element's own rate
+ * is what changes; the audio group is offered only where the engine has
+ * `audioTracks` (Chromium does not, without a flag); the stage holds its ratio
+ * before the first frame; and the transport stands clear of the stage's edge
+ * with its readouts on Haze and the scrubber's thumb on its track. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=media-video-player--with-settings&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root video');
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('#storybook-root');
+    const stage = root.querySelector('video').parentElement.getBoundingClientRect();
+    const bar = root.querySelector('.cr-resin');
+    const pill = bar.getBoundingClientRect();
+    const first = bar.querySelector('button').getBoundingClientRect();
+    const time = bar.querySelector('[class*="time"]');
+    const thumb = bar.querySelector('[class*="thumb"]')?.getBoundingClientRect();
+    return {
+      ratio: stage.width / stage.height,
+      insetStart: pill.left - stage.left,
+      insetEnd: stage.bottom - pill.bottom,
+      firstPad: first.left - pill.left,
+      timeFill: getComputedStyle(time).backgroundColor,
+      timeEnd: time.getBoundingClientRect().right,
+      thumbStart: thumb?.left ?? null,
+      hasAudioTracks: 'audioTracks' in HTMLMediaElement.prototype,
+    };
+  });
+  record(
+    'the stage holds 16:9 before the first frame is known',
+    Math.abs(geometry.ratio - 16 / 9) < 0.02,
+    `the stage is ${geometry.ratio.toFixed(3)}:1. Without a ratio it collapses to the browser's 300×150 and the page jumps`,
+  );
+  record(
+    'the transport is inset 12px from the stage and pads its first control by 12px',
+    geometry.insetStart >= 11.5 && geometry.insetEnd >= 11.5 && geometry.firstPad >= 11.5,
+    `inset ${geometry.insetStart.toFixed(1)}px from the side, ${geometry.insetEnd.toFixed(1)}px from the foot, `
+    + `first control ${geometry.firstPad.toFixed(1)}px in. At 8px and 4px a focused end control drew its ring over the rim`,
+  );
+  record(
+    'the time readouts sit on Haze, and the scrubber\'s thumb does not cover them',
+    geometry.timeFill !== 'rgba(0, 0, 0, 0)' && geometry.thumbStart !== null && geometry.thumbStart >= geometry.timeEnd,
+    `the readout is filled ${geometry.timeFill}; it ends at ${geometry.timeEnd} and the thumb starts at ${geometry.thumbStart}`,
+  );
+
+  await page.getByRole('button', { name: 'Settings' }).click();
+  const rows = await page.getByRole('menuitem').allTextContents();
+  record(
+    'several choices are a submenu each, and audio is offered only where the engine can switch it',
+    rows.some((row) => row.startsWith('Speed')) && rows.some((row) => row.startsWith('Subtitles'))
+      && rows.some((row) => row.startsWith('Quality')) && rows.some((row) => row.startsWith('Audio')) === geometry.hasAudioTracks,
+    `rows: ${rows.join(' | ')}; this engine ${geometry.hasAudioTracks ? 'has' : 'has no'} audioTracks`,
+  );
+  await page.getByRole('menuitem', { name: /^Speed/ }).click();
+  await page.getByRole('menuitemradio', { name: '1.5 times' }).click();
+  await page.waitForTimeout(300);
+  const rate = await page.evaluate(() => ({
+    rate: document.querySelector('#storybook-root video').playbackRate,
+    said: [...document.querySelectorAll('#storybook-root [role="status"]')].map((region) => region.textContent ?? '').join(' '),
+  }));
+  record(
+    'choosing a speed changes the element\'s rate and says so',
+    rate.rate === 1.5 && /Speed 1\.5 times/.test(rate.said),
+    `playbackRate is ${rate.rate} and the announcement is "${rate.said.trim()}"`,
+  );
+}
+
+/* ----------------------------------------------- the audio player is a card */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=media-audio-player--with-a-title&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root audio', { state: 'attached' });
+  const card = await page.evaluate(() => {
+    const player = document.querySelector('#storybook-root audio').parentElement;
+    const box = player.getBoundingClientRect();
+    const pill = player.querySelector('.cr-resin').getBoundingClientRect();
+    return { haze: player.classList.contains('cr-haze'), inset: pill.left - box.left };
+  });
+  record(
+    'the audio player is a Haze card with the transport inset by the card padding',
+    card.haze && card.inset >= 19.5,
+    `cr-haze ${card.haze ? 'worn' : 'missing'}; the transport is ${card.inset.toFixed(1)}px from the card's edge`,
+  );
+}
+
+/* ------------------------------------- the editor's toolbar on a touch screen */
+
+/* On a coarse pointer the toolbar moves below the text and sticks, so it stays
+ * above the on-screen keyboard; the field never widens past a phone's screen;
+ * and the document carries real headings and checkboxes. */
+{
+  const phone = await browser.newContext({ viewport: { width: 375, height: 740 }, hasTouch: true, isMobile: true });
+  const touch = await phone.newPage();
+  await touch.goto(`${ORIGIN}/iframe.html?id=inputs-richtexteditor--every-format&viewMode=story`, { waitUntil: 'networkidle' });
+  await touch.waitForSelector('#storybook-root [role="toolbar"]');
+  const layout = await touch.evaluate(() => {
+    const root = document.querySelector('#storybook-root');
+    const toolbar = root.querySelector('[role="toolbar"]');
+    const text = root.querySelector('[contenteditable]');
+    return {
+      below: toolbar.getBoundingClientRect().top >= text.getBoundingClientRect().top,
+      position: getComputedStyle(toolbar).position,
+      pageWidth: document.documentElement.scrollWidth,
+      headings: text.querySelectorAll('h2, h3').length,
+      boxes: text.querySelectorAll('input[type="checkbox"]').length,
+    };
+  });
+  record(
+    'on a touch screen the editor\'s toolbar sits below the text and sticks',
+    layout.below && layout.position === 'sticky',
+    `toolbar ${layout.below ? 'below' : 'above'} the text, position ${layout.position}`,
+  );
+  record(
+    'the editor never widens past a phone\'s screen',
+    layout.pageWidth <= 375,
+    `the page is ${layout.pageWidth}px wide in a 375px viewport`,
+  );
+  record(
+    'the document has real headings and checkboxes',
+    layout.headings >= 2 && layout.boxes >= 3,
+    `${layout.headings} headings and ${layout.boxes} checkboxes in the document`,
+  );
+  await phone.close();
 }
 
 /* ------------------------------------------ a gallery hands focus back correctly

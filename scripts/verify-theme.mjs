@@ -31,7 +31,7 @@ const ORIGIN = process.env['STORYBOOK_ORIGIN'] ?? 'http://127.0.0.1:6006';
    column count or a tree row's depth. Keep this in step with the same list in
    `published-properties.test.tsx`; a property in one list and not the other
    needs checking. */
-const LOCAL = /^--cr-(angle|arc|arc-from|aspect|progress|fraction|strength|strength-colour|clamp-lines|fill-start|fill-size|cell-min|cell-span|cell-span-sm|cell-span-md|grid-columns|grid-gap|masonry-columns|masonry-columns-md|masonry-gap|container-max|shell-sidebar|stack-gap|toolbar-gap|overflow-gap|text-size|text-leading|text-tracking|title-size|title-leading|title-tracking|watermark-image|watermark-opacity|watermark-size|scroll-fade-start|scroll-fade-end|tree-level|toc-level)$/;
+const LOCAL = /^--cr-(angle|arc|arc-from|aspect|progress|fraction|strength|strength-colour|clamp-lines|fill-start|fill-size|cell-min|cell-span|cell-span-sm|cell-span-md|grid-columns|grid-gap|masonry-columns|masonry-columns-md|masonry-gap|container-max|shell-sidebar|stack-gap|toolbar-gap|overflow-gap|text-size|text-leading|text-tracking|title-size|title-leading|title-tracking|watermark-image|watermark-opacity|watermark-size|scroll-fade-start|scroll-fade-end|tree-level|toc-level|media-aspect|media-fit|media-transport|keyboard-inset)$/;
 
 function stylesheetsUnder(directory) {
   const found = [];

@@ -40,6 +40,16 @@ export default defineConfig({
       },
       {
         plugins: [storybookTest({ configDir: '.storybook' })],
+        /* Declared up front so Vite does not discover TipTap while the first
+           editor story is loading and reload the page under the test runner,
+           which fails every story file loaded at that moment. */
+        optimizeDeps: {
+          include: [
+            '@tiptap/react', '@tiptap/react/menus', '@tiptap/starter-kit', '@tiptap/extension-list',
+            '@tiptap/extension-highlight', '@tiptap/extension-subscript', '@tiptap/extension-superscript',
+            '@tiptap/extensions', '@tiptap/pm/state', '@tiptap/pm/view', '@tiptap/pm/model',
+          ],
+        },
         test: {
           name: 'storybook',
           /* No setup file. `@storybook/addon-vitest` has applied `preview.ts`'s

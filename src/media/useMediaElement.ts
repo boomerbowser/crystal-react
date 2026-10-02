@@ -34,6 +34,10 @@ export interface MediaState {
   currentTime: number;
   /** Seconds, or 0 until the metadata says otherwise. */
   duration: number;
+  /** 1 is normal speed. Read from the element, so a rate set elsewhere shows. */
+  playbackRate: number;
+  /** The video is in the browser's picture-in-picture window. Always false for audio. */
+  isPictureInPicture: boolean;
 }
 
 export interface MediaControlsApi extends MediaState {
@@ -43,6 +47,10 @@ export interface MediaControlsApi extends MediaState {
   seek: (to: number) => void;
   setMuted: (muted: boolean) => void;
   setVolume: (volume: number) => void;
+  setPlaybackRate: (rate: number) => void;
+  /** Whether this element can enter picture in picture here. Read after mount. */
+  canPictureInPicture: boolean;
+  togglePictureInPicture: () => void;
 }
 
 const AT_REST: MediaState = {
@@ -53,7 +61,21 @@ const AT_REST: MediaState = {
   volume: 1,
   currentTime: 0,
   duration: 0,
+  playbackRate: 1,
+  isPictureInPicture: false,
 };
+
+/* Picture in picture is a video feature, behind a document flag (Firefox has
+   its own window and no API, so the flag is absent there), and an element can
+   opt out with `disablePictureInPicture`. Any of the three hides the control:
+   a button that does nothing when pressed is worse than no button. */
+function supportsPictureInPicture(element: HTMLMediaElement | null): boolean {
+  if (typeof document === 'undefined' || !element || element.tagName !== 'VIDEO') return false;
+  const video = element as HTMLVideoElement & { disablePictureInPicture?: boolean };
+  return document.pictureInPictureEnabled === true
+    && typeof video.requestPictureInPicture === 'function'
+    && video.disablePictureInPicture !== true;
+}
 
 export function useMediaElement(
   media: RefObject<HTMLMediaElement | null>,
@@ -79,6 +101,9 @@ export function useMediaElement(
         volume: element.volume,
         currentTime: element.currentTime,
         duration: Number.isFinite(element.duration) ? element.duration : 0,
+        playbackRate: element.playbackRate,
+        isPictureInPicture: typeof document !== 'undefined'
+          && (document as Document & { pictureInPictureElement?: Element | null }).pictureInPictureElement === element,
       };
       const before = last.current;
       if (
@@ -88,6 +113,8 @@ export function useMediaElement(
         && before.isMuted === next.isMuted
         && before.volume === next.volume
         && before.duration === next.duration
+        && before.playbackRate === next.playbackRate
+        && before.isPictureInPicture === next.isPictureInPicture
         && Math.abs(before.currentTime - next.currentTime) < 0.05
       ) return;
       last.current = next;
@@ -99,6 +126,7 @@ export function useMediaElement(
     const events = [
       'play', 'pause', 'ended', 'timeupdate', 'durationchange', 'loadedmetadata',
       'volumechange', 'waiting', 'playing', 'canplay', 'seeked', 'emptied',
+      'ratechange', 'enterpictureinpicture', 'leavepictureinpicture',
     ] as const;
     for (const event of events) element.addEventListener(event, read);
     read();
@@ -144,5 +172,33 @@ export function useMediaElement(
     if (element.volume > 0 && element.muted) element.muted = false;
   }, [media]);
 
-  return { ...state, play, pause, toggle, seek, setMuted, setVolume };
+  const setPlaybackRate = useCallback((rate: number) => {
+    const element = media.current;
+    if (!element || !Number.isFinite(rate) || rate <= 0) return;
+    element.playbackRate = rate;
+    /* Pitch is kept, so speech at 1.5x is faster and not higher. It is the
+       default in every engine, and is set because a product may have turned it
+       off for music. */
+    if ('preservesPitch' in element) (element as HTMLMediaElement & { preservesPitch: boolean }).preservesPitch = true;
+  }, [media]);
+
+  /* Read after mount, so the server and the first client render agree. */
+  const [canPictureInPicture, setCanPictureInPicture] = useState(false);
+  useEffect(() => { setCanPictureInPicture(supportsPictureInPicture(media.current)); }, [media]);
+
+  const togglePictureInPicture = useCallback(() => {
+    const element = media.current as HTMLVideoElement | null;
+    if (!element || !supportsPictureInPicture(element)) return;
+    const doc = document as Document & { pictureInPictureElement?: Element | null; exitPictureInPicture?: () => Promise<void> };
+    /* Both calls return promises that reject when the browser refuses (no
+       gesture, no metadata yet). The state is read from the element's events,
+       so a refusal leaves it accurate and there is nothing to report. */
+    if (doc.pictureInPictureElement === element) void doc.exitPictureInPicture?.().catch(() => undefined);
+    else void element.requestPictureInPicture().catch(() => undefined);
+  }, [media]);
+
+  return {
+    ...state, play, pause, toggle, seek, setMuted, setVolume,
+    setPlaybackRate, canPictureInPicture, togglePictureInPicture,
+  };
 }

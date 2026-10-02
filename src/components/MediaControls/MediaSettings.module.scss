@@ -1,0 +1,24 @@
+@use '../../styles/tokens' as *;
+
+/* A settings row: the choice on the start side and its current value on the
+   end side, muted, so the row reads "Speed ... Normal" before the submenu
+   opens. */
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $cr-spacing-lg;
+  inline-size: 100%;
+  white-space: nowrap;
+}
+
+.value {
+  white-space: nowrap;
+  color: var(--cr-muted);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (forced-colors: active) {
+  .value { color: CanvasText; }
+}

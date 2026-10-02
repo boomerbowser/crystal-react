@@ -27,9 +27,16 @@ export type TextStep = Extract<TypographyStep, 'subheading' | 'body' | 'caption'
 
 export type TextTone = 'default' | 'muted' | 'on-surface';
 
-/** What `Text` may render as. Deliberately without a heading. */
+/** What `Text` may render as. Deliberately without a heading.
+ *
+ *  The edit and annotation elements carry meaning a decoration alone does not:
+ *  `del` and `ins` are a removal and an addition (a screen reader can announce
+ *  them), `s` is text that is no longer accurate, `u` an unarticulated
+ *  annotation, `mark` a highlight, `kbd` a key, `code` code, `sub` and `sup`
+ *  sub- and superscript. Each looks as it does in `Prose` and the editor. */
 export type TextElement =
-  'p' | 'span' | 'div' | 'small' | 'strong' | 'em' | 'label' | 'dd' | 'dt' | 'figcaption';
+  'p' | 'span' | 'div' | 'small' | 'strong' | 'em' | 'label' | 'dd' | 'dt' | 'figcaption'
+  | 'u' | 's' | 'ins' | 'del' | 'mark' | 'kbd' | 'code' | 'sub' | 'sup';
 
 export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, 'color'> {
   /** A step of Crystal's scale. Defaults to `body`, the reading size exactly. */
@@ -43,6 +50,12 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, 'color'> {
   truncate?: boolean;
   /** Line up figures in a column. For tables and numeric lists, not for sentences. */
   tabular?: boolean;
+  /**
+   * A decoration with no meaning of its own, such as an underlined label. Where
+   * the line means something (a deletion, a correction), render the element
+   * that says so instead: `as="del"`, `as="s"`, `as="ins"`.
+   */
+  decoration?: 'none' | 'underline' | 'line-through';
   /**
    * The element. The list is closed on purpose and holds no heading: a heading's
    * level is part of the document outline rather than a size, so it is `Title`.
@@ -60,7 +73,7 @@ const TONE: Record<TextTone, string | undefined> = {
 export const Text = forwardRef<HTMLElement, TextProps>(function Text(
   {
     step = 'body', tone = 'default', weight = 'regular', measure = false,
-    truncate = false, tabular = false, as = 'p',
+    truncate = false, tabular = false, decoration = 'none', as = 'p',
     className, style, children, title, ...props
   },
   ref,
@@ -91,6 +104,8 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
         measure ? styles['measure'] : undefined,
         truncate ? styles['truncate'] : undefined,
         tabular ? styles['tabular'] : undefined,
+        decoration === 'underline' ? styles['underline'] : undefined,
+        decoration === 'line-through' ? styles['lineThrough'] : undefined,
         className,
       )}
       style={{ ...scale, ...style }}

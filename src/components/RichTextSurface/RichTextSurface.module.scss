@@ -1,4 +1,5 @@
 @use '../../styles/field' as field;
+@use '../../styles/prose' as prose;
 @use '../../styles/tokens' as *;
 
 /* RichTextSurface and Mentions: a toolbar above an editable surface, and a
@@ -9,47 +10,126 @@
  * serialisation format, and a design system has no opinion about any of them.
  */
 
-.field { @include field.field; }
+.field { @include field.field; min-inline-size: 0; }
 .label { @include field.label; }
 
+/* The frame is Crystal's `.cr-field-shell`, worn in the markup: the Resin
+   surround with the 8px-inset Haze well. The shell is an inline control by
+   default, so the frame makes it a column at the content radius, and pads it by
+   the well's own inset so the toolbar and the text sit on the well. It is not
+   `overflow: hidden`, because that would stop the toolbar sticking above a
+   touch keyboard; the surface scrolls on its own. */
 .frame {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--cr-outline);
+  align-items: stretch;
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  padding: var(--cr-haze-inset);
   border-radius: var(--cr-radius);
-  background: var(--cr-resin-fill);
-  box-shadow: inset 0 2px 1px var(--cr-rim), var(--cr-shadow-content);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
-  overflow: hidden;
 }
 
 .frame:focus-within { @include field.focus-ring; }
 .frame[data-invalid] { border-color: var(--cr-danger-ink); }
 
 .toolbar {
+  position: relative;
+  z-index: 1;
+  /* A row that scrolls must not set the frame's width: without this its
+     one-line width props the field open past a phone's screen. */
+  min-inline-size: 0;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: $cr-spacing-2xs;
+  gap: 2px;
   padding: $cr-spacing-2xs;
   border-block-end: 1px solid var(--cr-edge);
 }
 
-/* The surface is a content fill inside the frame. What you read and type into
-   is recessed, as it is in every other Crystal field. */
+/* A separator between toolbar groups (block type, marks, lists, history). */
+.toolbar > [role='separator'] {
+  align-self: stretch;
+  inline-size: 1px;
+  margin: $cr-spacing-xs $cr-spacing-2xs;
+  background: var(--cr-edge);
+}
+
+/* On a touch screen the toolbar moves below the text and sticks above the
+   on-screen keyboard, in reach of a thumb. It scrolls sideways rather than
+   wrapping, so it stays one row tall over a short visible area. The inset is
+   the larger of the VirtualKeyboard API's and the one `useKeyboardInset`
+   measures from the visual viewport, because iOS reports only the second. */
+@mixin toolbar-below {
+  .toolbar {
+    order: 2;
+    position: sticky;
+    inset-block-end: max(env(keyboard-inset-height, 0px), var(--cr-keyboard-inset, 0px));
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    border-block-end: 0;
+    border-block-start: 1px solid var(--cr-edge);
+    border-radius: 0 0 calc(var(--cr-radius) - var(--cr-haze-inset)) calc(var(--cr-radius) - var(--cr-haze-inset));
+    background: var(--cr-haze-fill);
+  }
+
+  .toolbar > * { flex: none; touch-action: manipulation; }
+}
+
+.frame[data-toolbar='bottom'] { @include toolbar-below; }
+
+@media (pointer: coarse) {
+  .frame[data-toolbar='auto'] { @include toolbar-below; }
+}
+
+/* The surface is the document. It sits on the shell's Haze well, so it paints
+   no fill of its own, and it carries Crystal's reading vocabulary so a heading,
+   a checklist or an underline looks here as it will when published. */
 .surface {
+  @include prose.vocabulary;
+
   min-block-size: calc(#{$cr-action-min-target} * 3);
   max-block-size: 50vh;
   padding: var(--cr-space);
-  background: var(--cr-haze-fill);
   color: var(--cr-text);
   font-size: var(--cr-text-body-size);
   line-height: var(--cr-text-body-leading);
+  caret-color: var(--cr-primary);
   outline: none;
   overflow-y: auto;
+  overflow-wrap: anywhere;
 }
 
-.surface[data-readonly] { background: var(--cr-surface-alt); }
+/* The engine's editable element fills the surface and draws no ring of its
+   own: the shell draws the ring for the whole field. An engine usually wraps
+   the document's blocks in its own root (ProseMirror, Lexical), one level below
+   the surface, so the vocabulary's block rhythm is applied there as well. */
+.surface [contenteditable] {
+  @include prose.vocabulary;
+
+  outline: none;
+  min-block-size: 100%;
+}
+
+/* A 28% primary tint under unchanged text. Not the primary-soft pair, which a
+   highlight already wears, so a highlighted word that is then selected still
+   looks selected. */
+.surface ::selection { background: color-mix(in srgb, var(--cr-primary) 28%, transparent); }
+
+/* An empty block's prompt, from `data-placeholder`, as ProseMirror-based
+   engines mark it (`.is-empty`, `.is-editor-empty`). */
+.surface :is(.is-empty, .is-editor-empty)[data-placeholder]::before {
+  content: attr(data-placeholder);
+  float: inline-start;
+  block-size: 0;
+  pointer-events: none;
+  color: var(--cr-muted);
+}
+
+.surface[data-readonly] { background: var(--cr-surface-alt); border-radius: calc(var(--cr-radius) - var(--cr-haze-inset)); }
 
 /* A mention, once inserted. It is a token, so it is visibly a reference rather
    than a word that happens to start with @. */
@@ -90,17 +170,17 @@
 .description { color: var(--cr-muted); }
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
-:global([data-effects='opaque']) .frame,
 :global([data-effects='opaque']) .popover {
   background: var(--cr-surface);
   backdrop-filter: none;
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .frame, .popover { background: var(--cr-surface); backdrop-filter: none; }
+  .popover { background: var(--cr-surface); backdrop-filter: none; }
 }
 
 @media (forced-colors: active) {
-  .frame, .popover { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .popover { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
+  .surface ::selection { background: Highlight; color: HighlightText; }
   .token { background: Canvas; outline: 1px solid CanvasText; }
 }

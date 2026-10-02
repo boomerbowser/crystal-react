@@ -1,0 +1,135 @@
+@use 'tokens' as *;
+
+/* Crystal's reading vocabulary, as one mixin: the rhythm, the headings, the
+   lists and checklists, the quotation, code, tables, media and the inline marks.
+
+   `Prose` applies it to content the product did not lay out, and the rich text
+   editor applies it to the document being written, so a document reads the same
+   while it is edited as after it is published. It is Crystal's `.cr-prose` and
+   `.cr-editor` vocabulary (core, after 2.3.1); `src/media/coreRecipes.test.ts`
+   fails when the installed core publishes it, so this copy can be retired.
+
+   Every rule is a descendant of `&`, the element the mixin is included in. */
+@mixin vocabulary {
+  & > * + * { margin-block-start: $cr-spacing-lg; }
+
+  & :is(h1, h2, h3, h4, h5, h6) {
+    margin-block: $cr-spacing-xl 0;
+    font-weight: 750;
+    text-wrap: balance;
+    color: var(--cr-text);
+  }
+
+  /* Each level takes a step, so the content's own outline drives the size without
+     the author choosing one. */
+  & h1 { font-size: var(--cr-text-display-size); line-height: var(--cr-text-display-leading); letter-spacing: var(--cr-text-display-tracking); }
+  & h2 { font-size: var(--cr-text-title-size); line-height: var(--cr-text-title-leading); letter-spacing: var(--cr-text-title-tracking); }
+  & h3 { font-size: var(--cr-text-heading-size); line-height: var(--cr-text-heading-leading); letter-spacing: var(--cr-text-heading-tracking); }
+  & :is(h4, h5, h6) { font-size: var(--cr-text-subheading-size); line-height: var(--cr-text-subheading-leading); letter-spacing: var(--cr-text-subheading-tracking); }
+
+  /* The first block sets the top of the column, so it takes no lead-in space. */
+  & > :first-child { margin-block-start: 0; }
+
+  & a {
+    color: var(--cr-primary);
+    text-underline-offset: 0.2em;
+  }
+
+  & :is(ul, ol) { padding-inline-start: $cr-spacing-lg; }
+  & li + li { margin-block-start: $cr-spacing-xs; }
+  & li::marker { color: var(--cr-muted); }
+
+  & :is(code, kbd, samp) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    padding-inline: 0.2em;
+    border-radius: $cr-spacing-2xs;
+    background: var(--cr-surface-alt);
+  }
+
+  & pre {
+    padding: var(--cr-space);
+    border-radius: var(--cr-radius);
+    background: var(--cr-surface-alt);
+    overflow-x: auto;
+  }
+
+  & pre code { padding: 0; background: none; font-size: inherit; }
+
+  & :is(img, video) { max-inline-size: 100%; border-radius: var(--cr-radius); }
+
+  & table { border-collapse: collapse; inline-size: 100%; }
+  & :is(th, td) {
+    padding: $cr-spacing-sm;
+    border-block-end: 1px solid var(--cr-edge);
+    text-align: start;
+  }
+  & th { font-weight: 750; }
+
+  & hr { border: 0; block-size: 1px; background: var(--cr-edge); }
+
+  & abbr {
+    text-decoration: underline dotted;
+    text-underline-offset: 0.2em;
+    cursor: help;
+  }
+
+  & mark { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+
+  & blockquote {
+    margin-inline: 0;
+    padding-inline-start: $cr-spacing-md;
+    border-inline-start: $cr-indicator-line-width solid var(--cr-primary-soft);
+    color: var(--cr-muted);
+  }
+
+  & blockquote cite {
+    display: block;
+    margin-block-start: $cr-spacing-xs;
+    font-size: var(--cr-text-caption-size);
+    font-style: normal;
+    color: var(--cr-muted);
+  }
+
+  /* What 2 October 2026 added, from Crystal's `.cr-prose` and `.cr-editor`
+     vocabulary (core, after 2.3.1): nested lists, checklists, and the marks a
+     document needs past bold and italic. Every mark differs in shape as well as
+     colour, so none rests on colour alone. */
+  & :is(ul, ol) :is(ul, ol) { margin-block-start: $cr-spacing-xs; }
+  & li > p { margin: 0; }
+
+  /* A checklist: `ul.checklist`, or `ul[data-type=taskList]` as TipTap writes it.
+     The checkbox is the marker, so the list's own marker and indent go. Done is
+     the checkbox's state; the text recedes to the muted ink and is not struck
+     through, which would make finished work harder to read. */
+  & :is(ul.checklist, ul[data-type='taskList']) { padding-inline-start: 0; list-style: none; }
+  & :is(ul.checklist, ul[data-type='taskList']) > li { display: flex; align-items: flex-start; gap: $cr-spacing-xs; }
+  & :is(ul.checklist, ul[data-type='taskList']) > li > label {
+    flex: none;
+    display: inline-flex;
+    margin-block-start: calc((var(--cr-text-body-leading) - var(--cr-choice-box-size)) / 2);
+  }
+  & :is(ul.checklist, ul[data-type='taskList']) > li > :is(div, p, span) { flex: 1; min-inline-size: 0; }
+  & :is(ul.checklist, ul[data-type='taskList']) > li:is([data-checked='true'], :has(> label input:checked)) > :is(div, p, span) {
+    color: var(--cr-muted);
+  }
+
+  /* A key is a key cap: the edge and the deeper bottom tell it from code by shape. */
+  & kbd { border: 1px solid var(--cr-outline); border-block-end-width: 2px; }
+  & u { text-decoration: underline; text-decoration-thickness: 0.09em; text-underline-offset: 0.2em; }
+  & :is(s, strike) { text-decoration: line-through; text-decoration-thickness: 0.09em; }
+  & ins {
+    text-decoration: underline;
+    text-decoration-color: var(--cr-success-ink);
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.2em;
+  }
+  & del { text-decoration: line-through; text-decoration-color: var(--cr-danger-ink); text-decoration-thickness: 0.12em; }
+  & :is(sub, sup) { font-size: 0.75em; line-height: 0; }
+
+  @media (forced-colors: active) {
+    & :is(code, kbd, samp, pre, mark) { background: Canvas; border: 1px solid CanvasText; }
+    & blockquote { border-inline-start-color: CanvasText; }
+    & :is(ins, del) { text-decoration-color: CanvasText; }
+  }
+}

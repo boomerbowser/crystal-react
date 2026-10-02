@@ -1,16 +1,47 @@
 @use '../../styles/tokens' as *;
 
+/* The stage, the bar region and the caption cue are Crystal's `.cr-media`,
+   `.cr-media-bar` and `.cr-media-caption` (core, after 2.3.1). Until the
+   installed core publishes them this file carries their values, and
+   `src/media/coreRecipes.test.ts` fails on the day it does, so the copy is
+   removed and the classes worn instead. */
+
 .player { position: relative; inline-size: 100%; }
 
 .surface {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
+  container-type: inline-size;
+  aspect-ratio: var(--cr-media-aspect, auto);
   border-radius: $cr-shape-content-radius;
   background: var(--cr-surface-alt);
   line-height: 0;
+  /* The transport's height, which the caption cue clears: the 48px action
+     target, 4px above and below, and the 1px rim. */
+  --cr-media-transport: calc(#{$cr-action-min-target} + #{$cr-spacing-2xs} * 2 + 2px); // crystal-allow-literal: the rim, above and below
 }
 
-.video { inline-size: 100%; block-size: auto; display: block; }
+.video {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: var(--cr-media-fit, contain);
+}
+
+/* The transport's region, inset 12px on every side it touches, so the 52px pill
+   never meets the stage's 28px corner. At 8px the pill's end crossed the
+   corner's curve and a focused end control drew its halo over the rim. */
+.bar {
+  position: absolute;
+  z-index: 2;
+  inset-inline: $cr-spacing-sm;
+  inset-block-end: $cr-spacing-sm;
+  line-height: var(--cr-leading);
+  opacity: 0;
+  transition: opacity calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
+    #{$cr-motion-easing-settle};
+}
 
 /* "The motion of showing and hiding controls" is Crystal's, and Crystal's rule
    is that nothing moves at rest. The bar has no timer that fades it away while
@@ -18,18 +49,11 @@
    focus is inside the player, so a person always started the change.
 
    It never disappears from the keyboard. `focus-within` keeps it while any
-   control in it has focus, so tabbing along the bar cannot make it vanish. */
-.bar {
-  position: absolute;
-  inset-inline: $cr-spacing-sm;
-  inset-block-end: $cr-spacing-sm;
-  opacity: 0;
-  transition: opacity calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
-    #{$cr-motion-easing-settle};
-}
-
+   control in it has focus, so tabbing along the bar cannot make it vanish. A
+   paused player keeps it too, so the way back to playing is always visible. */
 .player:hover .bar,
-.player:focus-within .bar { opacity: 1; }
+.player:focus-within .bar,
+.player[data-paused] .bar { opacity: 1; }
 
 /* A pointer that cannot hover, such as a touch screen, never triggers the first
    rule, so the bar is always shown. */
@@ -37,8 +61,72 @@
   .bar { opacity: 1; }
 }
 
+/* Caption cues are labels over a moving picture, which is what Stone is for. They
+   sit above the transport whether it is shown or not, so a cue never jumps when
+   a pointer arrives. */
+.captions {
+  position: absolute;
+  z-index: 1;
+  inset-inline: $cr-spacing-lg;
+  inset-block-end: calc(var(--cr-media-transport) + #{$cr-spacing-sm} * 2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.captions > span {
+  position: relative;
+  isolation: isolate;
+  max-inline-size: 42ch;
+  padding: $cr-spacing-2xs $cr-spacing-sm;
+  border-radius: $cr-spacing-xs;
+  color: var(--cr-text);
+  font-weight: 650;
+  font-size: clamp(var(--cr-text-body-size), 3.2cqi, var(--cr-text-title-size));
+}
+
+/* The feathered Stone fill, on its own layer so the cue's text stays crisp. */
+.captions > span::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--cr-stone-fill);
+  filter: blur(var(--cr-stone-feather));
+}
+
+/* When the browser draws the cues (`nativeCaptions`), `::cue` takes the flat
+   Stone fill and Crystal's type, which is all `::cue` accepts. */
+.video::cue {
+  background: var(--cr-stone-fill);
+  color: var(--cr-text);
+  font-family: var(--cr-font);
+  font-weight: 650;
+}
+
+/* Full screen is the player, so its stage fills the screen and centres the
+   picture; the bar grows to the safe area on a phone with a notch or a home
+   bar. */
+.player[data-full-screen] { display: grid; place-items: center; background: var(--cr-surface-alt); }
+.player[data-full-screen] .surface { inline-size: 100%; block-size: 100%; aspect-ratio: auto; border-radius: 0; }
+.player[data-full-screen] .bar {
+  inset-inline: max(#{$cr-spacing-sm}, env(safe-area-inset-left), env(safe-area-inset-right));
+  inset-block-end: max(#{$cr-spacing-sm}, env(safe-area-inset-bottom));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bar { transition: none; }
+}
+
+:global([data-effects='opaque']) .captions > span::before { background: var(--cr-surface); filter: none; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .captions > span::before { background: var(--cr-surface); filter: none; }
 }
 
 .announcement {
@@ -53,4 +141,6 @@
 @media (forced-colors: active) {
   .surface { border: 1px solid CanvasText; }
   .bar { opacity: 1; }
+  .captions > span { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
+  .captions > span::before { display: none; }
 }

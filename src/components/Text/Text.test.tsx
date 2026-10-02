@@ -29,4 +29,21 @@ describe('Text', () => {
     renderWithCrystal(<Text truncate data-testid="t"><span>Rich</span> content</Text>);
     expect(screen.getByTestId('t').getAttribute('title')).toBeNull();
   });
+
+  /* A line that means something is the element that says so, so a screen
+     reader can announce a deletion; a decoration alone is only a look. */
+  it('renders the edit elements, and decorates without inventing meaning', () => {
+    const { container } = renderWithCrystal(
+      <>
+        <Text as="del">£40</Text>
+        <Text as="ins">£45</Text>
+        <Text as="span" decoration="underline">Label</Text>
+      </>,
+    );
+    expect(container.querySelector('del')).toHaveTextContent('£40');
+    expect(container.querySelector('ins')).toHaveTextContent('£45');
+    const label = screen.getByText('Label');
+    expect(label.tagName).toBe('SPAN');
+    expect(label.className).toMatch(/underline/);
+  });
 });

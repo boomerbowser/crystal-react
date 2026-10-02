@@ -47,6 +47,13 @@ page needs no second root. `useCrystalTheme` throws outside a provider.
 Crystal paints every `<button>` by element, so the core stylesheets are required.
 Without them a button renders with the browser's default appearance.
 
+Three entry points: `@crystal-ui/react` (every component), `@crystal-ui/react/blocks`
+(the blocks, which products are expected to fork) and `@crystal-ui/react/editor`
+(`RichTextEditor`, Crystal's rich text surface with TipTap bound to it). The editor's
+TipTap packages are optional peer dependencies, installed only if you import it; the
+engine-agnostic `RichTextSurface` and the format vocabulary stay in the main entry.
+See `docs/proposals/2026-10-02-media-text-and-recipe-parity.md`.
+
 ## How it consumes Crystal
 
 `@crystal-ui/core` is a dependency, installed from npm at `^2.3.0`.

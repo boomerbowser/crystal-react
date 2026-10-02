@@ -20,11 +20,13 @@
  *
  * What the shell adds:
  *
- *   - Full screen that keeps Crystal's transport. The shell asks for full
- *     screen on its own stage (the picture and the transport together) rather
- *     than on the `<video>`, whose full screen is the browser's player with the
- *     browser's controls. The toggle is `aria-pressed`, and entering and leaving
- *     are announced, since Escape can leave without the toggle being touched.
+ *   - Full screen that keeps Crystal's transport. Since 2 October 2026 this is
+ *     `VideoPlayer`'s own: it goes full screen on the player (the picture and
+ *     the transport together) rather than on the `<video>`, whose full screen is
+ *     the browser's player with the browser's controls. The toggle is
+ *     `aria-pressed`, and entering and leaving are announced, since Escape can
+ *     leave without the toggle being touched. The shell reads the state for its
+ *     own `data-cr-state`.
  *   - The queue is `PlaylistBlock`: reorderable by keyboard, with the playing
  *     track `aria-current`.
  *   - Metadata on Haze, named by its heading.
@@ -33,12 +35,10 @@
  * hiding is `VideoPlayer`'s, which Crystal's rule keeps to movement a person
  * started: shown while a pointer is over the picture or focus is inside it.
  */
-import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
+import { useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { VideoPlayer } from '../VideoPlayer/VideoPlayer.js';
 import { AudioPlayer } from '../AudioPlayer/AudioPlayer.js';
-import { IconButton } from '../IconButton/IconButton.js';
 import { PlaylistBlock, type PlaylistBlockProps } from '../PlaylistBlock/PlaylistBlock.js';
-import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { useMediaElement } from '../../media/useMediaElement.js';
 import { cx } from '../../styles/cx.js';
 import styles from './PlayerShell.module.scss';
@@ -68,56 +68,20 @@ export interface PlayerShellProps {
   className?: string;
 }
 
-const FullScreenIcon = (
-  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-    <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
-  </svg>
-);
-
 export function PlayerShell({
   kind = 'video', label, children, poster, mediaRef, metadata, queue, headingLevel = 2,
   fullScreenLabel = 'Full screen', className,
 }: PlayerShellProps): React.JSX.Element {
   const Heading = `h${headingLevel}` as 'h2';
   const metadataId = useId();
-  const stage = useRef<HTMLDivElement>(null);
   const own = useRef<HTMLVideoElement & HTMLAudioElement>(null);
   const media = useMediaElement(own);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [canFullScreen, setCanFullScreen] = useState(false);
-  const [said, setSaid] = useState('');
 
   /* The product's handle on the element is the shell's, passed on. */
   useLayoutEffect(() => {
     if (mediaRef) (mediaRef as { current: HTMLMediaElement | null }).current = own.current;
   });
-
-  /* Whether this document may go full screen at all, which not every frame or
-     phone allows. Read after mount, so the server and the first client render
-     agree. */
-  useEffect(() => {
-    setCanFullScreen(kind === 'video' && document.fullscreenEnabled === true);
-  }, [kind]);
-
-  /* The stage's full-screen state from the document, which also changes when
-     the reader presses Escape and the toggle is never touched. */
-  const shown = useRef(false);
-  useEffect(() => {
-    const read = (): void => {
-      const now = document.fullscreenElement !== null && document.fullscreenElement === stage.current;
-      if (now === shown.current) return;
-      shown.current = now;
-      setIsFullScreen(now);
-      setSaid(now ? `${fullScreenLabel} on` : `${fullScreenLabel} off`);
-    };
-    document.addEventListener('fullscreenchange', read);
-    return () => { document.removeEventListener('fullscreenchange', read); };
-  }, [fullScreenLabel]);
-
-  const toggleFullScreen = (): void => {
-    if (document.fullscreenElement) void document.exitFullscreen();
-    else void stage.current?.requestFullscreen();
-  };
 
   const state: PlayerState = isFullScreen ? 'full-screen'
     : media.isBuffering ? 'buffering'
@@ -126,21 +90,18 @@ export function PlayerShell({
 
   return (
     <div data-cr-state={state} className={cx(styles['shell'], className)}>
-      <div ref={stage} className={cx(styles['stage'])}>
+      <div className={cx(styles['stage'])}>
         {kind === 'video' ? (
           <VideoPlayer
             label={label}
             mediaRef={own}
             {...(poster ? { poster } : {})}
             className={cx(styles['player'])}
-            controls={canFullScreen ? (
-              <IconButton
-                label={fullScreenLabel}
-                icon={FullScreenIcon}
-                isSelected={isFullScreen}
-                onPress={toggleFullScreen}
-              />
-            ) : null}
+            /* Full screen is the player's own: picture and transport together,
+               announced on entering and on leaving however it was left. The
+               shell only reads it, for its state. */
+            onFullScreenChange={setIsFullScreen}
+            words={{ fullScreen: fullScreenLabel }}
           >
             {children}
           </VideoPlayer>
@@ -161,7 +122,6 @@ export function PlayerShell({
 
       {queue ? <PlaylistBlock {...queue} className={cx(styles['queue'], queue.className)} /> : null}
 
-      <VisuallyHidden role="status">{said}</VisuallyHidden>
     </div>
   );
 }

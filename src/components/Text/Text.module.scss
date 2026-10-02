@@ -38,3 +38,33 @@
 /* Tabular figures line up in a column; proportional ones read better in a
    sentence. The default is proportional because most text is a sentence. */
 .tabular { font-variant-numeric: tabular-nums; }
+
+/* Decorations, and the edit and annotation elements. The values are the reading
+   vocabulary's (`styles/_prose.scss`), so a word looks the same here as in
+   `Prose` and in the editor. Each differs from the others in shape as well as
+   colour: an insertion is underlined, a deletion struck through, a highlight
+   filled, so none rests on colour alone. */
+.underline, u.text { text-decoration: underline; text-decoration-thickness: 0.09em; text-underline-offset: 0.2em; }
+.lineThrough, s.text { text-decoration: line-through; text-decoration-thickness: 0.09em; }
+ins.text {
+  text-decoration: underline;
+  text-decoration-color: var(--cr-success-ink);
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.2em;
+}
+del.text { text-decoration: line-through; text-decoration-color: var(--cr-danger-ink); text-decoration-thickness: 0.12em; }
+mark.text { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+:is(code, kbd).text {
+  padding-inline: 0.2em;
+  border-radius: $cr-spacing-2xs;
+  background: var(--cr-surface-alt);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+kbd.text { border: 1px solid var(--cr-outline); border-block-end-width: 2px; }
+:is(sub, sup).text { font-size: 0.75em; line-height: 0; }
+
+@media (forced-colors: active) {
+  :is(ins, del).text { text-decoration-color: CanvasText; }
+  mark.text { background: Mark; color: MarkText; }
+}

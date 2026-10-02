@@ -19,11 +19,20 @@ export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      /* Two entry points. Blocks ship from their own (`@crystal-ui/react/blocks`),
+      /* Three entry points. Blocks ship from their own (`@crystal-ui/react/blocks`),
          because a block is a starting point products are expected to fork, not
          a stable API (§4.2), and a product should be able to see which kind it
-         is importing. The main entry exports blocks too. */
-      entry: { index: resolve(here, 'src/index.ts'), blocks: resolve(here, 'src/blocks.ts') },
+         is importing. The main entry exports blocks too.
+
+         The editor ships from its own (`@crystal-ui/react/editor`) and the main
+         entry does not export it, because it binds TipTap, an optional peer
+         dependency: a product that never imports it never installs or bundles
+         an editor engine. */
+      entry: {
+        index: resolve(here, 'src/index.ts'),
+        blocks: resolve(here, 'src/blocks.ts'),
+        editor: resolve(here, 'src/editor.ts'),
+      },
       formats: ['es', 'cjs'],
       fileName: (format, name) => `${name}.${format === 'es' ? 'js' : 'cjs'}`,
     },
@@ -37,7 +46,7 @@ export default defineConfig({
          consumer installs once, and a copy inlined here would sit beside
          whatever else in the application already uses them. `check-bundle.mjs`
          fails when a dependency is missing from this list. */
-      external: (id) => /^(react|react-dom|react\/|react-dom\/|react-aria|react-aria-components|react-stately|@react-|@internationalized\/|@crystal-ui\/core|motion|motion-dom|motion-utils|qrcode\.react|react-imask|imask|d3-[a-z]+|internmap|delaunator|robust-predicates)/.test(id),
+      external: (id) => /^(react|react-dom|react\/|react-dom\/|react-aria|react-aria-components|react-stately|@react-|@internationalized\/|@crystal-ui\/core|motion|motion-dom|motion-utils|qrcode\.react|react-imask|imask|d3-[a-z]+|internmap|delaunator|robust-predicates|@tiptap\/|@floating-ui\/)/.test(id),
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',

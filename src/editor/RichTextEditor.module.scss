@@ -1,0 +1,76 @@
+@use '../styles/tokens' as *;
+
+/* RichTextEditor: what the TipTap binding adds to `RichTextSurface`. The frame,
+   the toolbar placement and the reading vocabulary are the surface's; this
+   file styles the engine's own pieces and the controls only the binding has. */
+
+.editor { display: grid; grid-template-columns: minmax(0, 1fr); min-inline-size: 0; }
+
+/* The engine's root fills the surface, so a tap anywhere below the last line
+   still places the caret in the document. */
+.content { min-block-size: 100%; }
+.content > [contenteditable] { min-block-size: calc(#{$cr-action-min-target} * 3); outline: none; }
+
+/* The block-type control: a quiet pill naming the current block, wide enough
+   that the toolbar does not shift as the caret moves from "Paragraph" to
+   "Minor heading". */
+.blockType { min-inline-size: calc(#{$cr-action-min-target} * 3); justify-content: space-between; gap: $cr-spacing-2xs; }
+.chevron { inline-size: $cr-icon-size; block-size: $cr-icon-size; flex: none; }
+
+/* Each block type previews itself in the menu, so the choice is made by look as
+   well as by name. Weight still marks the selected one: it is the row's. */
+.preview-heading-2 { font-size: var(--cr-text-subheading-size); }
+.preview-heading-3 { font-size: var(--cr-text-body-size); }
+.preview-heading-4 { font-size: var(--cr-text-caption-size); text-transform: uppercase; letter-spacing: 0.04em; }
+.preview-blockquote { padding-inline-start: $cr-spacing-xs; border-inline-start: $cr-indicator-line-width solid var(--cr-primary-soft); }
+.preview-code-block { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* The selection toolbar: Crystal's `.cr-frost.bar` (core, after 2.3.1), a
+   Frost overlay with a pill silhouette, worn as `.cr-frost` with this file
+   carrying the bar's geometry until the installed core publishes it. */
+.selection {
+  z-index: 3;
+  padding: $cr-spacing-2xs;
+  border-radius: $cr-action-radius;
+}
+
+.selectionBar { display: inline-flex; align-items: center; gap: 2px; }
+
+.link { display: grid; gap: $cr-spacing-sm; min-inline-size: min(80vw, calc(#{$cr-action-min-target} * 7)); }
+.linkActions { display: flex; justify-content: flex-end; gap: $cr-spacing-xs; }
+
+/* The pre-mount body holds the surface's height, so nothing moves when the
+   engine arrives. */
+.placeholderBody { min-block-size: calc(#{$cr-action-min-target} * 3); }
+
+/* ProseMirror's own nodes, inside the surface. */
+
+/* A checklist item, as TipTap writes it: a label holding the native checkbox
+   and an empty span the engine uses for custom drawing. The checkbox is
+   Crystal's selection control already; the span is not needed. */
+.content :global(li[data-type='taskItem']) > label > span { display: none; }
+.content :global(li[data-type='taskItem']) > label input { margin: 0; cursor: pointer; }
+
+/* The gap cursor: the caret between two blocks that are not text. A horizontal
+   bar in the caret's ink, so it reads as the caret lying down rather than as a
+   rule in the document.
+   ProseMirror shows and hides it (only while the editor has focus); this
+   restyles it, and stops the blink its default stylesheet loops forever,
+   because nothing in Crystal moves at rest (D-19 admits no blink). */
+.content :global(.ProseMirror-gapcursor)::after {
+  inset-block-start: calc(-1 * #{$cr-spacing-2xs});
+  inline-size: $cr-spacing-lg;
+  border-block-start: 2px solid var(--cr-primary);
+  animation: none;
+}
+
+/* A code block in the editor keeps its own line breaks and scrolls sideways. */
+.content :global(pre) { white-space: pre; }
+
+/* A link in the editor is not followed on click (that would leave the
+   document); the cursor says so. */
+.content :global(a) { cursor: text; }
+
+@media (forced-colors: active) {
+  .content :global(.ProseMirror-gapcursor)::after { border-block-start-color: CanvasText; }
+}

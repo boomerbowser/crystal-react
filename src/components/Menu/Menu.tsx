@@ -152,11 +152,36 @@ export interface MenuGroupProps {
   label?: ReactNode;
   children: ReactNode;
   className?: string;
+  /**
+   * `single` makes the group a set of radio items: React Aria renders each as
+   * `menuitemradio` with `aria-checked`. The chosen item is shown by label
+   * weight and the selected fill, never by a check mark, which in Crystal means
+   * validated. Use it for a choice of one, such as a playback speed.
+   */
+  selectionMode?: 'single';
+  selectedKey?: string | number | null;
+  onSelectionChange?: (key: string | number) => void;
 }
 
-export function MenuGroup({ label, children, className }: MenuGroupProps): React.JSX.Element {
+export function MenuGroup({
+  label, children, className, selectionMode, selectedKey, onSelectionChange,
+}: MenuGroupProps): React.JSX.Element {
   return (
-    <MenuSection className={cx(styles['section'], className)}>
+    <MenuSection
+      className={cx(styles['section'], className)}
+      {...(selectionMode ? {
+        selectionMode,
+        /* A choice of one is never empty, so the chosen item cannot be pressed
+           off: pressing it again keeps it. */
+        disallowEmptySelection: true,
+        selectedKeys: selectedKey === null || selectedKey === undefined ? [] : [selectedKey],
+        onSelectionChange: (keys: 'all' | Set<string | number>) => {
+          if (keys === 'all') return;
+          const [first] = [...keys];
+          if (first !== undefined) onSelectionChange?.(first);
+        },
+      } : {})}
+    >
       {label ? <Header className={cx(styles['heading'])}>{label}</Header> : null}
       {children}
     </MenuSection>

@@ -49,4 +49,20 @@ describe('AudioPlayer', () => {
     const { container } = renderWithCrystal(<AudioPlayer label="Episode 4" title="Episode 4" />);
     await expectNoAxeViolations(container);
   });
+
+  /* The catalogue specifies a Haze card holding the transport; until 2 October
+     2026 the player drew no surface and its pill sat flush with the page. */
+  it('is a Haze card unless it sits on one already', () => {
+    const { container, rerenderWithCrystal } = renderWithCrystal(<AudioPlayer label="Episode 4" title="Episode 4" subtitle="Harbour stories" />);
+    const player = () => container.querySelector('audio')!.parentElement!;
+    expect(player()).toHaveClass('cr-haze');
+    expect(screen.getByText('Harbour stories')).toBeInTheDocument();
+    rerenderWithCrystal(<AudioPlayer label="Episode 4" surface={false} />);
+    expect(player()).not.toHaveClass('cr-haze');
+  });
+
+  it('offers speed, where audio is listened to fastest', () => {
+    renderWithCrystal(<AudioPlayer label="Episode 4" />);
+    expect(screen.getByRole('button', { name: 'Settings' })).toBeInTheDocument();
+  });
 });

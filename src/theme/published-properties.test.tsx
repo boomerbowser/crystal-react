@@ -51,6 +51,14 @@ const LOCAL = new Set([
      one gradient draws every guide. It cannot be a Crystal token, because it
      records which row this is. */
   '--cr-tree-level', '--cr-toc-level',
+  /* The media stage's shape and fit, set inline by the players from their
+     props, and the transport height the caption cue clears. Crystal's `.cr-media`
+     recipe (core, after 2.3.1) publishes all three; they come off this list when
+     the installed core does (`src/media/coreRecipes.test.ts`). */
+  '--cr-media-aspect', '--cr-media-fit', '--cr-media-transport',
+  /* The on-screen keyboard's height, measured from the visual viewport and set
+     inline by the rich text surface while it has focus. */
+  '--cr-keyboard-inset',
 ]);
 
 /** Every stylesheet in the library, found rather than listed. */
