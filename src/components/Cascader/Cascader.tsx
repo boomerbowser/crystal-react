@@ -24,6 +24,7 @@ import {
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
 import { ArrivingPopover } from '../../overlays/ArrivingPopover.js';
+import { useFieldMotion } from '../FormField/useInvalidMotion.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './Cascader.module.scss';
 
@@ -103,6 +104,13 @@ export function Cascader({
   const [uncontrolled, setUncontrolled] = useState<readonly string[]>(defaultValue);
   const path = value ?? uncontrolled;
   const labelId = useId();
+  /* The trigger is the field's shell, so it plays the field recipes (R-A3):
+     field-focus when it takes focus, field-invalid and field-valid when the
+     error appears and goes. The cascader is invalid exactly when it is given
+     an error message; it is not a React Aria field, so there is no resolved
+     validity to read instead. */
+  const isInvalid = Boolean(errorMessage);
+  const [shellScope, playShell] = useFieldMotion(isInvalid);
 
   const set = (next: readonly string[]) => {
     if (value === undefined) setUncontrolled(next);
@@ -128,8 +136,11 @@ export function Cascader({
       <span id={labelId} className={cx(styles['label'])}>{label}</span>
       <DialogTrigger>
         <Button
+          ref={shellScope as never}
           aria-labelledby={labelId}
           isDisabled={isDisabled}
+          onFocus={() => { void playShell('field-focus'); }}
+          {...(isInvalid ? { 'data-invalid': true } : {})}
           className={cx(styles['shell'], 'cr-field-shell', styles['trigger'])}
         >
           <span className={cx(styles['value'], shown ? undefined : styles['placeholder'])}>

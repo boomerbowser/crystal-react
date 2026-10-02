@@ -15,6 +15,26 @@ const PLACES = [
 ];
 
 describe('Cascader', () => {
+  /* The trigger is the field's shell and plays the field recipes (R-A3). */
+  it('plays field-focus on its shell when focused', async () => {
+    const user = userEvent.setup();
+    renderWithCrystal(<Cascader label="Location" options={PLACES} />);
+    await user.tab();
+    const shell = screen.getByRole('button', { name: /Location/ });
+    expect(shell).toHaveFocus();
+    expect(shell.dataset['crMotionName']).toBe('field-focus');
+  });
+
+  it('plays field-invalid when an error arrives, and field-valid when it goes', () => {
+    const { rerenderWithCrystal } = renderWithCrystal(<Cascader label="Location" options={PLACES} />);
+    const shell = () => screen.getByRole('button', { name: /Location/ });
+    rerenderWithCrystal(<Cascader label="Location" options={PLACES} errorMessage="Choose a city." />);
+    expect(shell().dataset['crMotionName']).toBe('field-invalid');
+    expect(shell()).toHaveAttribute('data-invalid');
+    rerenderWithCrystal(<Cascader label="Location" options={PLACES} />);
+    expect(shell().dataset['crMotionName']).toBe('field-valid');
+  });
+
   /* A column is named after the option it hangs from, so its name gives its
      subject. "Top level", "Level 2" and "Level 3" gave only its position. */
   it('names each column after what it is a list of', async () => {
