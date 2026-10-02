@@ -2723,8 +2723,8 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 - [x] **R-M8** (P2) Real media fixtures for stories and gates. Every media story plays real media with no network.
 - [ ] **R-M9** (P1) Wear the published media recipes and delete the copies. VideoPlayer, AudioPlayer and MediaControls wear .cr-media, .cr-media-bar, .cr-resin.transport and .cr-media-caption. Waits on C-R1. Blocked.
 - [ ] **R-M10** (P1) Prove audio-track switching in Safari. The audio group appears and switches the track in an engine with audioTracks.
-- [ ] **R-M11** (P3) Draw the first cue before playback starts. A cue active at 0:00 shows without a time update.
-- [ ] **R-M12** (P2) Caption appearance settings (size and backing). A reader can enlarge captions and make the backing opaque, as broadcast caption rules require.
+- [x] **R-M11** (P3) Draw the first cue before playback starts. A cue active at 0:00 shows without a time update.
+- [x] **R-M12** (P2) Caption appearance settings (size and backing). A reader can enlarge captions and make the backing opaque, as broadcast caption rules require.
 
 **Text**
 
@@ -2733,17 +2733,17 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 - [x] **R-T3** (P1) RichTextEditor at @crystal-ui/react/editor. Headings, lists, checklists, every mark, indent and outdent, undo and redo, a selection toolbar, Alt+F10, Markdown input rules, form value.
 - [x] **R-T4** (P1) Text decorations and the edit elements. Text renders u, s, ins, del, mark, kbd, code, sub, sup and a meaning-free decoration.
 - [ ] **R-T5** (P1) Prove the touch toolbar on real devices. The toolbar stays above the keyboard on iOS Safari and Android Chrome.
-- [ ] **R-T6** (P2) Mentions popover wears .cr-frost. The suggestion popover's hand-written Frost goes.
-- [ ] **R-T7** (P2) EditorBlock offers the bound editor in a story. The editor block shown with RichTextEditor, save state and announcements together. Waits on D-30.
+- [x] **R-T6** (P2) Mentions popover wears .cr-frost. The suggestion popover's hand-written Frost goes.
+- [x] **R-T7** (P2) EditorBlock offers the bound editor in a story. The editor block shown with RichTextEditor, save state and announcements together. Waits on D-30.
 - [ ] **R-T8** (P3) Screen-reader pass on the editor. VoiceOver and NVDA read the toolbar state, the block type, the checklist and the announcements as designed.
 - [ ] **R-T9** (P1) Wear the published prose and editor recipes and delete the copies. Prose and RichTextSurface wear .cr-prose, .cr-editor and .cr-editor-toolbar; the selection toolbar wears .cr-frost.bar. Waits on C-R1. Blocked.
 
 **Motion**
 
 - [x] **R-A0** (P1) Motion catalogue story. Every recipe and preset playable on demand, on its own material.
-- [ ] **R-A3** (P2) Cascader plays the field recipes. field-focus, field-invalid and field-valid on the cascader's shell.
-- [ ] **R-A4** (P2) Product gallery and playlist block play their assigned motion. media-in on the product gallery; list-in and list-out on the playlist block.
-- [ ] **R-A5** (P3) Credit view-push-out to the view stack. The view stack names the recipe whose movement it makes.
+- [x] **R-A3** (P2) Cascader plays the field recipes. field-focus, field-invalid and field-valid on the cascader's shell.
+- [x] **R-A4** (P2) Product gallery and playlist block play their assigned motion. media-in on the product gallery; list-in and list-out on the playlist block.
+- [x] **R-A5** (P3) The view stack plays view-push-out. The view a push covers stays beneath the arrival and plays view-push-out before it unmounts; the stack had never made that movement, so crediting the recipe would have been false.
 - [ ] **R-A8** (P2) The travelling selection pill on strips (D-37). Tabs, the segmented control, the dock, bottom navigation and toggle button groups render one selection pill from styles/_strip.scss, measured against the selected segment and moved by the new recipe when a person changes the selection; instant under reduced motion; label weight unchanged. Waits on C-M3, C-R1. Blocked. By the ruling on D-37.
 
 **Materials**
