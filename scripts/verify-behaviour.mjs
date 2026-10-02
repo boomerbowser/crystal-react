@@ -720,6 +720,38 @@ for (const { edge, flush, square } of EDGES) {
     `the control reports aria-pressed=${after.pressed} and the announcement is "${after.said}". `
     + 'A reader who cannot see subtitles appear has nothing else to go on',
   );
+
+  /* R-M12: the reader's caption style. Larger captions and a solid backing,
+     chosen from the settings menu, change the cue, are said, and are still the
+     reader's after a reload. */
+  const cueStyle = () => page.evaluate(() => {
+    const cue = document.querySelector('#storybook-root [class*="captions"]:not([hidden]) > span');
+    return cue ? { size: parseFloat(getComputedStyle(cue).fontSize), backing: getComputedStyle(cue, '::before').filter } : null;
+  });
+  const plain = await cueStyle();
+  await page.getByRole('button', { name: 'Settings' }).click();
+  await page.getByRole('menuitem', { name: /^Caption style/ }).click();
+  await page.getByRole('menuitemradio', { name: 'Larger' }).click();
+  await page.getByRole('button', { name: 'Settings' }).click();
+  await page.getByRole('menuitem', { name: /^Caption style/ }).click();
+  await page.getByRole('menuitemradio', { name: 'Solid' }).click();
+  await page.waitForTimeout(300);
+  const styled = await cueStyle();
+  const saidStyle = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [role="status"]')].map((region) => region.textContent ?? '').join(' '));
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForFunction(() => (document.querySelector('#storybook-root video')?.readyState ?? 0) >= 1);
+  await page.getByRole('button', { name: 'Captions' }).click();
+  await page.waitForTimeout(500);
+  const kept = await cueStyle();
+  await page.evaluate(() => { localStorage.removeItem('crystal-caption-style'); });
+  record(
+    'a reader can enlarge captions and make their backing solid, and the choice is kept',
+    plain !== null && styled !== null && kept !== null
+      && styled.size >= plain.size * 1.45 && styled.backing === 'none' && plain.backing !== 'none'
+      && kept.size === styled.size && kept.backing === 'none' && /Caption backing Solid/.test(saidStyle),
+    `cue ${plain?.size}px with backing filter ${plain?.backing}; after Larger and Solid ${styled?.size}px and ${styled?.backing}; `
+    + `after a reload ${kept?.size}px and ${kept?.backing}; said "${saidStyle.trim()}"`,
+  );
 }
 
 /* ------------------------------------- the player's settings, aspect and transport */

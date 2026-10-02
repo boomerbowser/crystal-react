@@ -70,6 +70,39 @@ describe('MediaSettings', () => {
     expect(said).toEqual(['Subtitles Off']);
   });
 
+  /* R-M12. The caption style is a submenu of two radio groups, offered only
+     when the player draws its own captions; a choice is reported and said. */
+  it('offers a caption style submenu with a size and a backing, and says the choice', async () => {
+    const user = userEvent.setup();
+    const styles: unknown[] = [];
+    const said: string[] = [];
+    renderWithCrystal(
+      <MediaSettings
+        textTracks={tracks}
+        activeTextTrack="text-0"
+        onTextTrackChange={() => undefined}
+        captionStyle={{ size: 'normal', backing: 'feathered' }}
+        onCaptionStyleChange={(style) => styles.push(style)}
+        onAnnounce={(sentence) => said.push(sentence)}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Settings' }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Caption style, Normal, Feathered' }));
+    expect(await screen.findByRole('menuitemradio', { name: 'Normal' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByRole('menuitemradio', { name: 'Feathered' })).toHaveAttribute('aria-checked', 'true');
+    await user.click(screen.getByRole('menuitemradio', { name: 'Larger' }));
+    expect(styles).toEqual([{ size: 'larger', backing: 'feathered' }]);
+    expect(said).toEqual(['Caption size Larger']);
+  });
+
+  it('does not offer a caption style without a handler for it', async () => {
+    const user = userEvent.setup();
+    renderWithCrystal(<MediaSettings textTracks={tracks} activeTextTrack="text-0" onTextTrackChange={() => undefined} playbackRates={[1, 2]} onPlaybackRateChange={() => undefined} />);
+    await user.click(screen.getByRole('button', { name: 'Settings' }));
+    await screen.findAllByRole('menuitem');
+    expect(screen.queryByRole('menuitem', { name: /^Caption style/ })).toBeNull();
+  });
+
   it('has no axe violations when open', async () => {
     const user = userEvent.setup();
     renderWithCrystal(<MediaSettings playbackRates={[1, 2]} playbackRate={1} onPlaybackRateChange={() => undefined} />);

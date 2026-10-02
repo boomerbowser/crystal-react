@@ -16,6 +16,13 @@
  * one, so offering it would be a control that does nothing. When every group is
  * left out, the control itself is not rendered.
  *
+ * When the player draws its own captions it can also offer their style (R-M12):
+ * a "Caption style" submenu with two groups, the size and the backing, because
+ * a reader who cannot read the default size or cannot read through a feathered
+ * backing needs to change it, as broadcast caption rules require. A solid
+ * backing is the opaque surface Crystal already falls back to under reduced
+ * transparency, not a new colour.
+ *
  * Every change is reported through `onAnnounce` in words ("Speed 1.5 times",
  * "Subtitles French"), because a speed or a language changing is otherwise
  * silent to a reader who cannot see the menu close.
@@ -35,6 +42,17 @@ export interface MediaQuality {
   /** What the reader sees, such as "1080p" or "Auto (720p)". */
   label: string;
 }
+
+/** How large the player's own captions are drawn. */
+export type CaptionSize = 'normal' | 'large' | 'larger';
+/** What the player's own captions sit on: Stone's feathered backing, or the
+ *  opaque surface. */
+export type CaptionBacking = 'feathered' | 'solid';
+export interface CaptionStyle {
+  size: CaptionSize;
+  backing: CaptionBacking;
+}
+export const DEFAULT_CAPTION_STYLE: CaptionStyle = { size: 'normal', backing: 'feathered' };
 
 export interface MediaSettingsProps {
   /** What the control is called. */
@@ -58,6 +76,10 @@ export interface MediaSettingsProps {
   qualities?: readonly MediaQuality[];
   quality?: string | null;
   onQualityChange?: (id: string) => void;
+  /** The style of captions the player draws itself. Offered only with a
+   *  handler and at least one caption track. */
+  captionStyle?: CaptionStyle;
+  onCaptionStyleChange?: (style: CaptionStyle) => void;
   /** Called with a sentence describing each change, for a live region. */
   onAnnounce?: (sentence: string) => void;
   /** Words, so a product can translate them. */
@@ -71,6 +93,11 @@ export interface MediaSettingsWords {
   off: string;
   audio: string;
   quality: string;
+  captionStyle: string;
+  captionSize: string;
+  captionBacking: string;
+  captionSizes: Record<CaptionSize, string>;
+  captionBackings: Record<CaptionBacking, string>;
   /** How a speed is written, such as "1.5×". */
   rate: (rate: number) => string;
   /** How a speed is said, such as "1.5 times". */
@@ -84,6 +111,11 @@ const WORDS: MediaSettingsWords = {
   off: 'Off',
   audio: 'Audio',
   quality: 'Quality',
+  captionStyle: 'Caption style',
+  captionSize: 'Caption size',
+  captionBacking: 'Caption backing',
+  captionSizes: { normal: 'Normal', large: 'Large', larger: 'Larger' },
+  captionBackings: { feathered: 'Feathered', solid: 'Solid' },
   rate: (rate) => `${rate}×`,
   spokenRate: (rate) => `${rate} times`,
 };
@@ -107,6 +139,7 @@ export function MediaSettings({
   textTracks = [], activeTextTrack = null, onTextTrackChange,
   audioTracks = [], activeAudioTrack = null, onAudioTrackChange,
   qualities = [], quality = null, onQualityChange,
+  captionStyle = DEFAULT_CAPTION_STYLE, onCaptionStyleChange,
   onAnnounce, words: given,
 }: MediaSettingsProps): ReactNode {
   const words = { ...WORDS, ...given };
@@ -180,7 +213,8 @@ export function MediaSettings({
     });
   }
 
-  if (!choices.length) return null;
+  const captionChoice = onCaptionStyleChange && subtitles.length ? captionStyle : null;
+  if (!choices.length && !captionChoice) return null;
 
   /* A speed is written "1.5×" and said "1.5 times": screen readers read the
      multiplication sign differently ("times", "multiplied by", nothing), so the
@@ -201,7 +235,7 @@ export function MediaSettings({
      the menu stays a handful of rows over a short picture instead of a column
      taller than the stage. React Aria owns the submenus: right arrow enters,
      left arrow and Escape leave, and focus returns to the row. */
-  if (choices.length === 1) {
+  if (choices.length === 1 && !captionChoice) {
     const [only] = choices as [Choice];
     return (
       <MenuTrigger>
@@ -259,6 +293,50 @@ export function MediaSettings({
             </Submenu>
           );
         })}
+        {captionChoice ? (
+          <Submenu
+            key="caption-style"
+            textValue={`${words.captionStyle}, ${words.captionSizes[captionChoice.size]}, ${words.captionBackings[captionChoice.backing]}`}
+            label={(
+              <span className={styles['row']}>
+                <span>{words.captionStyle}</span>
+                <VisuallyHidden>{`, ${words.captionSizes[captionChoice.size]}, ${words.captionBackings[captionChoice.backing]}`}</VisuallyHidden>
+                <span className={styles['value']} aria-hidden="true">{words.captionSizes[captionChoice.size]}</span>
+              </span>
+            )}
+          >
+            <Menu label={words.captionStyle}>
+              <MenuGroup
+                label={words.captionSize}
+                selectionMode="single"
+                selectedKey={captionChoice.size}
+                onSelectionChange={(key) => {
+                  const size = String(key) as CaptionSize;
+                  onCaptionStyleChange?.({ ...captionChoice, size });
+                  onAnnounce?.(`${words.captionSize} ${words.captionSizes[size]}`);
+                }}
+              >
+                {(Object.keys(words.captionSizes) as CaptionSize[]).map((size) => (
+                  <MenuItem key={size} id={size}>{words.captionSizes[size]}</MenuItem>
+                ))}
+              </MenuGroup>
+              <MenuGroup
+                label={words.captionBacking}
+                selectionMode="single"
+                selectedKey={captionChoice.backing}
+                onSelectionChange={(key) => {
+                  const backing = String(key) as CaptionBacking;
+                  onCaptionStyleChange?.({ ...captionChoice, backing });
+                  onAnnounce?.(`${words.captionBacking} ${words.captionBackings[backing]}`);
+                }}
+              >
+                {(Object.keys(words.captionBackings) as CaptionBacking[]).map((backing) => (
+                  <MenuItem key={backing} id={backing}>{words.captionBackings[backing]}</MenuItem>
+                ))}
+              </MenuGroup>
+            </Menu>
+          </Submenu>
+        ) : null}
       </Menu>
     </MenuTrigger>
   );

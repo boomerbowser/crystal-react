@@ -86,8 +86,14 @@
   border-radius: $cr-spacing-xs;
   color: var(--cr-text);
   font-weight: 650;
-  font-size: clamp(var(--cr-text-body-size), 3.2cqi, var(--cr-text-title-size));
+  font-size: calc(clamp(var(--cr-text-body-size), 3.2cqi, var(--cr-text-title-size)) * var(--caption-scale, 1));
 }
+
+/* The reader's caption style (R-M12). A larger size scales the whole range, so
+   a cue still grows with the stage. A solid backing is the opaque surface the
+   recipe already falls back to under reduced transparency. */
+.captions[data-size='large'] > span { --caption-scale: 1.25; }
+.captions[data-size='larger'] > span { --caption-scale: 1.5; }
 
 /* The feathered Stone fill, on its own layer so the cue's text stays crisp. */
 .captions > span::before {
@@ -124,6 +130,7 @@
 }
 
 :global([data-effects='opaque']) .captions > span::before { background: var(--cr-surface); filter: none; }
+.captions[data-backing='solid'] > span::before { background: var(--cr-surface); filter: none; }
 
 @media (prefers-reduced-transparency: reduce) {
   .captions > span::before { background: var(--cr-surface); filter: none; }

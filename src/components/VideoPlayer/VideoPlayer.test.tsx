@@ -129,6 +129,32 @@ describe('VideoPlayer', () => {
     expect(video.playbackRate).toBe(1);
   });
 
+  /* R-M12. The reader's caption style is theirs, so it is kept for this
+     browser and the next player starts from it. */
+  it('draws captions in the caption style the reader saved', () => {
+    localStorage.setItem('crystal-caption-style', JSON.stringify({ size: 'larger', backing: 'solid' }));
+    try {
+      const { container } = renderWithCrystal(<VideoPlayer label="Harbour" />);
+      const cues = container.querySelector('[class*="captions"]');
+      expect(cues).toHaveAttribute('data-size', 'larger');
+      expect(cues).toHaveAttribute('data-backing', 'solid');
+    } finally {
+      localStorage.removeItem('crystal-caption-style');
+    }
+  });
+
+  it('ignores a saved caption style it does not recognise', () => {
+    localStorage.setItem('crystal-caption-style', '{"size":"huge","backing":"neon"}');
+    try {
+      const { container } = renderWithCrystal(<VideoPlayer label="Harbour" />);
+      const cues = container.querySelector('[class*="captions"]');
+      expect(cues).toHaveAttribute('data-size', 'normal');
+      expect(cues).toHaveAttribute('data-backing', 'feathered');
+    } finally {
+      localStorage.removeItem('crystal-caption-style');
+    }
+  });
+
   it('leaves speed out when the product passes no speeds', () => {
     renderWithCrystal(<VideoPlayer label="The tour" playbackRates={[]} />);
     expect(screen.queryByRole('button', { name: 'Settings' })).toBeNull();
