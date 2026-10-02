@@ -1,8 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 import { expectNoAxeViolations } from '../../test/axe.js';
 import { renderWithCrystal, screen, userEvent, waitFor } from '../../test/render.js';
+import { act } from '@testing-library/react';
 import { EditorBlock, type EditorState } from './EditorBlock.js';
+import { RichTextEditor, type RichTextEditorHandle } from '../../editor/RichTextEditor.js';
 
 const B = <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h6a4 4 0 010 8H7zM7 13h7a4 4 0 010 8H7z" /></svg>;
 const I = <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5h8M6 19h8M14 5l-4 14" /></svg>;
@@ -107,5 +109,33 @@ describe('EditorBlock', () => {
   it.each(['at-rest', 'dirty', 'saving', 'saved'] satisfies EditorState[])('has no axe violations %s', async (state) => {
     const { container } = renderWithCrystal(<Harness state={state} />);
     await expectNoAxeViolations(container);
+  });
+
+  /* R-T7. The bound editor brings its own surface and toolbar, so the block
+     hosts it as it is: one toolbar, and the block's save state beside it. A
+     change in the editor makes the document dirty, and Save then saves. */
+  it('hosts the bound editor with one toolbar, and saves what it changed', async () => {
+    const onSave = vi.fn();
+    const handle = createRef<RichTextEditorHandle>();
+    function WithEditor() {
+      const [state, setState] = useState<EditorState>('at-rest');
+      return (
+        <EditorBlock
+          label="Notes"
+          state={state}
+          onSave={() => { onSave(); setState('saved'); }}
+          editor={<RichTextEditor ref={handle} label="Notes" defaultValue="<p>Due Wednesday.</p>" onChange={() => { setState('dirty'); }} />}
+        />
+      );
+    }
+    renderWithCrystal(<WithEditor />);
+    expect(await screen.findAllByRole('toolbar', { name: 'Formatting for Notes' })).toHaveLength(1);
+    const save = screen.getByRole('button', { name: 'Save' });
+    expect(save).toBeDisabled();
+    /* An edit, made through the engine, since jsdom cannot type into it. */
+    act(() => { handle.current?.editor?.commands.insertContent(' Bring the figures.'); });
+    await waitFor(() => { expect(screen.getAllByText('Unsaved changes').length).toBeGreaterThan(0); });
+    await userEvent.click(save);
+    expect(onSave).toHaveBeenCalledOnce();
   });
 });

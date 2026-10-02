@@ -154,4 +154,19 @@ describe('RichTextEditor', () => {
     const { container } = await mount();
     await expectNoAxeViolations(container);
   });
+
+  /* Editability is not an edit. TipTap reports a change of it as an update,
+     which made onChange fire on mount with the document untouched. */
+  it('does not report a change on mount, or when it becomes read-only', async () => {
+    const changes: string[] = [];
+    const { rerenderWithCrystal } = renderWithCrystal(
+      <RichTextEditor label="Notes" defaultValue="<p>Due Wednesday.</p>" onChange={(value) => { changes.push(value.html); }} />,
+    );
+    await screen.findByRole('toolbar', { name: 'Formatting for Notes' });
+    rerenderWithCrystal(
+      <RichTextEditor label="Notes" isReadOnly defaultValue="<p>Due Wednesday.</p>" onChange={(value) => { changes.push(value.html); }} />,
+    );
+    await new Promise((resolve) => { setTimeout(resolve, 50); });
+    expect(changes).toEqual([]);
+  });
 });

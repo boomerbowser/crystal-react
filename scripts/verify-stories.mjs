@@ -111,7 +111,10 @@ function renderOnlySingleSubject(source, name) {
   const meta = /^ {2}component: ([A-Za-z0-9_]+),/m.exec(source)?.[1];
   if (!meta) return [];
   const found = [];
-  for (const story of source.matchAll(/export const ([A-Za-z0-9_]+): Story = \{([\s\S]*?)\n\};/g)) {
+  /* A body stops at the next export. `AtRest: Story = {};` closes on its own
+     line, and a lazy match to the next newline-and-`};` ran on through the
+     stories after it, reporting one of theirs under its name. */
+  for (const story of source.matchAll(/export const ([A-Za-z0-9_]+): Story = \{((?:(?!\nexport const )[\s\S])*?)\n\};/g)) {
     const [, id, body] = story;
     if (!/render: \(\) =>/.test(body)) continue;
     /* Exactly one instance. Zero means the component is context rather than

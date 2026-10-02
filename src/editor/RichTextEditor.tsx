@@ -289,10 +289,15 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         return false;
       },
     },
-    onUpdate: ({ editor: current }) => {
+    onUpdate: ({ editor: current, transaction }) => {
       const value = { html: current.getHTML(), json: current.getJSON(), text: current.getText() };
       setHtml(value.html);
-      onChange?.(value);
+      /* TipTap also emits an update when editability is set, which happens on
+         mount, with a transaction that changes nothing. Reporting it made
+         `onChange` say the document was edited before anyone typed, so a
+         product marking it dirty showed "Unsaved changes" on load. Only a
+         change to the document is reported. */
+      if (transaction.docChanged) onChange?.(value);
     },
     onCreate: ({ editor: current }) => setHtml(current.getHTML()),
   });

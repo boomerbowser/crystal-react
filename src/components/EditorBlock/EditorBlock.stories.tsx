@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { EditorBlock, type EditorState } from './EditorBlock.js';
 import type { FormatAction } from '../RichTextSurface/RichTextSurface.js';
+import { RichTextEditor } from '../../editor/RichTextEditor.js';
 
 const Bold = (
   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M7 5h6a3.5 3.5 0 0 1 0 7H7zm0 7h7a3.5 3.5 0 0 1 0 7H7z" /></svg>
@@ -76,3 +77,27 @@ export const AtRest: Story = {};
 export const Dirty: Story = { render: () => <Working initial="dirty" /> };
 export const Saving: Story = { render: () => <Working initial="saving" /> };
 export const Saved: Story = { render: () => <Working initial="saved" /> };
+
+/** The editor block with Crystal's bound editor, `RichTextEditor` from
+ *  `@crystal-ui/react/editor`, given as `editor`: its own toolbar, selection
+ *  toolbar and announcements, with the block's frame and save state around
+ *  them. An edit makes the document dirty; Save, or Ctrl+S or Cmd+S, saves it. */
+export const WithTheBoundEditor: Story = {
+  render: function WithTheBoundEditorStory() {
+    const [state, setState] = useState<EditorState>('at-rest');
+    return (
+      <EditorBlock
+        label="Board notes"
+        state={state}
+        onSave={() => { setState('saving'); setTimeout(() => { setState('saved'); }, 600); }}
+        editor={(
+          <RichTextEditor
+            label="Board notes"
+            defaultValue="<h2>Harbour board, October</h2><p>Figures are due the <strong>Wednesday</strong> before the board meets.</p>"
+            onChange={() => { setState('dirty'); }}
+          />
+        )}
+      />
+    );
+  },
+};

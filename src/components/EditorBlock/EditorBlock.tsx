@@ -26,6 +26,11 @@
  *
  * "Haze surface in a Frost frame": the block is the Frost frame, and the surface
  * is `RichTextSurface`'s Haze, under its toolbar.
+ *
+ * A complete editor, such as `RichTextEditor` from `@crystal-ui/react/editor`,
+ * brings its own surface, toolbar and announcements, so it is given as `editor`
+ * and the block hosts it as it is, adding only the frame and the save state
+ * (R-T7). Wrapped in a second surface it would draw two toolbars.
  */
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { RichTextSurface, type FormatAction } from '../RichTextSurface/RichTextSurface.js';
@@ -42,8 +47,14 @@ export interface EditorBlockProps {
   label: string;
   /** The formatting controls, each reporting whether the selection has it. */
   actions?: readonly FormatAction[];
-  /** The editor. It owns the document; it should be named by `label`. */
-  children: ReactNode;
+  /** The editable region, which the block puts on its own surface under the
+   *  toolbar `actions` describe. It owns the document; it should be named by
+   *  `label`. */
+  children?: ReactNode;
+  /** A complete editor with its own surface and toolbar, such as
+   *  `RichTextEditor`, hosted as it is. Given instead of `children` and
+   *  `actions`. */
+  editor?: ReactNode;
   state?: EditorState;
   onSave?: () => void;
   unsavedLabel?: string;
@@ -55,7 +66,7 @@ export interface EditorBlockProps {
 const isMac = (): boolean => typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
 
 export function EditorBlock({
-  label, actions = [], children, state = 'at-rest', onSave,
+  label, actions = [], children, editor, state = 'at-rest', onSave,
   unsavedLabel = 'Unsaved changes', savingLabel = 'Saving', savedLabel = 'Saved', className,
 }: EditorBlockProps): React.JSX.Element {
   const frame = useRef<HTMLDivElement>(null);
@@ -102,9 +113,13 @@ export function EditorBlock({
       aria-busy={state === 'saving' || undefined}
       className={cx(styles['editor'], 'cr-frost', className)}
     >
-      <RichTextSurface label={label} actions={actions} className={cx(styles['surface'])}>
-        {children}
-      </RichTextSurface>
+      {editor === undefined ? (
+        <RichTextSurface label={label} actions={actions} className={cx(styles['surface'])}>
+          {children}
+        </RichTextSurface>
+      ) : (
+        <div className={cx(styles['surface'])}>{editor}</div>
+      )}
       <div className={cx(styles['bar'])}>
         <span className={cx(styles['state'])}>{words}</span>
         {onSave ? (
