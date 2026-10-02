@@ -3,10 +3,12 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Three entries are open**, R-27 to R-29, from the media and text work of
+**Two entries are open**, R-27 and R-28, from the media and text work of
 2 October 2026 ([`proposals/2026-10-02-media-text-and-recipe-parity.md`](proposals/2026-10-02-media-text-and-recipe-parity.md)).
-Its tasks are Slice R in the implementation plan. R-26, the adoption of
-Crystal 2.3.0, closed on 29 September 2026 with 2.3.0 on the registry.
+Its tasks are Slice R in the implementation plan. R-29, the flaky virtualizer
+check, closed on 2 October 2026; the record is in `closed-issues.md`. R-26, the
+adoption of Crystal 2.3.0, closed on 29 September 2026 with 2.3.0 on the
+registry.
 
 ## R-27 · Copies of recipes Crystal has not published yet
 
@@ -42,18 +44,6 @@ the media controls and the video player wear or mirror their surfaces.
 **Closing it.** Task R-A1: each directory either wears a surface, measured by
 `verify:materials`, or is filed upstream as a composition the vocabulary
 lacks; the audit's counts fall to what is filed.
-
-## R-29 · A flaky virtualizer check under the dev server
-
-**What.** On 2 October 2026 `verify:behaviour` failed once on "a virtualizer
-keeps the focused row when scrolling would recycle it" (the last row not
-rendered after scrolling to the end), run against `pnpm storybook` rather than
-`storybook-static`. The rerun under the same server passed all 114 checks. The
-virtualizer was not touched.
-
-**Closing it.** Run the check against `storybook-static`, as CI does, several
-times; if it never fails there, record it as a dev-server timing artefact and
-close; if it does, the wait for the scroll to settle is too short.
 
 **R-17 and R-25 closed on 29 September 2026**, by Meridian's rulings of that day
 (Crystal's `proposals/2026-09-29-rulings.md`): the compiler-checked

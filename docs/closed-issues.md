@@ -18,6 +18,30 @@ The live tracker is [`open-issues.md`](open-issues.md).
 
 ---
 
+
+## R-29 · A flaky virtualizer check under the dev server
+
+**What.** On 2 October 2026 `verify:behaviour` failed once on "a virtualizer
+keeps the focused row when scrolling would recycle it" (the last row not
+rendered after scrolling to the end), run against `pnpm storybook` rather than
+`storybook-static`. The rerun under the same server passed all 114 checks. The
+virtualizer was not touched.
+
+**Closing it.** Run the check against `storybook-static`, as CI does, several
+times; if it never fails there, record it as a dev-server timing artefact and
+close; if it does, the wait for the scroll to settle is too short.
+
+**Closed** on 2 October 2026. Run five times against `storybook-static`, as the
+entry asked, the check failed twice, so it was not a dev-server artefact: the
+scroll and the re-render after it are not done in the fixed 400ms it waited.
+It now waits for the last row to render, up to five seconds, and fails as
+before if the row never comes. The same runs failed the caption-cue check five
+times in five, for an unrelated reason the dev server had hidden: Python's
+`http.server`, which served the built stories here and in CI, answers a Range
+request with the whole file, so the fixture video was not seekable.
+`scripts/serve-static.mjs` serves them with ranges, and CI uses it. Five runs
+against it, with every check of the time (117), passed each time.
+
 ## R-24 · Crystal 2.2.0 publishes the recipes this library restates, and the sweep's second half is due when it lands
 
 *(Opened 28 September 2026, with the proposal in
