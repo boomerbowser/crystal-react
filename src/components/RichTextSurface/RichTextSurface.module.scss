@@ -118,6 +118,10 @@
    highlight already wears, so a highlighted word that is then selected still
    looks selected. */
 .surface ::selection { background: color-mix(in srgb, var(--cr-primary) 28%, transparent); }
+/* A highlighted word that is then selected takes the action pair, as Crystal's
+   `.cr-editor :where(mark)::selection` does (D-39): the tint over the
+   highlight fell to 3.74:1 in Harbor. */
+.surface :where(mark)::selection, .surface :where(mark) ::selection { background: var(--cr-primary); color: var(--cr-on-primary); }
 
 /* An empty block's prompt, from `data-placeholder`, as ProseMirror-based
    engines mark it (`.is-empty`, `.is-editor-empty`). */
@@ -175,9 +179,6 @@
   backdrop-filter: none;
 }
 
-@media (prefers-reduced-transparency: reduce) {
-  .popover { background: var(--cr-surface); backdrop-filter: none; }
-}
 
 @media (forced-colors: active) {
   .popover { background: Canvas; border-color: CanvasText; backdrop-filter: none; }

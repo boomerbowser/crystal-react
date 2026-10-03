@@ -2709,7 +2709,7 @@ surface and `Prose` the anatomy the catalogue now specifies, makes every motion
 recipe visible, credits motion a child plays, and measures the library against
 the catalogue so the remaining material work can be counted.
 
-Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-02; D-33 (a), 2026-10-02; D-34 (a), 2026-10-02; D-35 (a), 2026-10-02; D-37 (a), 2026-10-02. The record is `crystal-design-system/proposals/2026-10-02-rulings.md`.
+Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-02; D-33 (a), 2026-10-02; D-34 (a), 2026-10-02; D-35 (a), 2026-10-02; D-37 (a), 2026-10-02; D-39 (a), 2026-10-03. The record is `crystal-design-system/proposals/2026-10-02-rulings.md`.
 
 **Media**
 
