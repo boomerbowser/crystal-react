@@ -2721,7 +2721,7 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 - [x] **R-M6** (P1) MediaControls: transport padding, readouts on Haze, sliders inset by half a thumb. The .cr-resin.transport recipe.
 - [x] **R-M7** (P2) PlayerShell uses the player's own full screen. One full-screen control, announced however full screen is left.
 - [x] **R-M8** (P2) Real media fixtures for stories and gates. Every media story plays real media with no network.
-- [ ] **R-M9** (P1) Wear the published media recipes and delete the copies. VideoPlayer, AudioPlayer and MediaControls wear .cr-media, .cr-media-bar, .cr-resin.transport and .cr-media-caption. Waits on C-R1. Blocked.
+- [ ] **R-M9** (P1) Wear the published media recipes and delete the copies. VideoPlayer, AudioPlayer and MediaControls wear .cr-media, .cr-media-bar, .cr-resin.transport and .cr-media-caption. Waits on C-R1.
 - [ ] **R-M10** (P1) Prove audio-track switching in Safari. The audio group appears and switches the track in an engine with audioTracks.
 - [x] **R-M11** (P3) Draw the first cue before playback starts. A cue active at 0:00 shows without a time update.
 - [x] **R-M12** (P2) Caption appearance settings (size and backing). A reader can enlarge captions and make the backing opaque, as broadcast caption rules require.
@@ -2736,7 +2736,7 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 - [x] **R-T6** (P2) Mentions popover wears .cr-frost. The suggestion popover's hand-written Frost goes.
 - [x] **R-T7** (P2) EditorBlock offers the bound editor in a story. The editor block shown with RichTextEditor, save state and announcements together. Waits on D-30.
 - [ ] **R-T8** (P3) Screen-reader pass on the editor. VoiceOver and NVDA read the toolbar state, the block type, the checklist and the announcements as designed.
-- [ ] **R-T9** (P1) Wear the published prose and editor recipes and delete the copies. Prose and RichTextSurface wear .cr-prose, .cr-editor and .cr-editor-toolbar; the selection toolbar wears .cr-frost.bar. Waits on C-R1. Blocked.
+- [ ] **R-T9** (P1) Wear the published prose and editor recipes and delete the copies. Prose and RichTextSurface wear .cr-prose, .cr-editor and .cr-editor-toolbar; the selection toolbar wears .cr-frost.bar. Waits on C-R1.
 
 **Motion**
 
@@ -2753,7 +2753,7 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 
 **Audit**
 
-- [ ] **R-A9** (P2) The Haze reading fill in the popover, the pop-confirm and the menu. Popover and Popconfirm content, and Menu rows, sit on the Haze reading fill their catalogue entries specify inside the Frost panel, measured against the .cr-haze recipe; core then assigns the haze surface and removes the three from UNMEASURED in build-catalogue.cjs.
+- [x] **R-A9** (P2) The Haze reading fill in the popover, the pop-confirm and the menu. Popover and Popconfirm content, and Menu rows, sit on the Haze reading fill their catalogue entries specify inside the Frost panel, measured against the .cr-haze recipe; core then assigns the haze surface and removes the three from UNMEASURED in build-catalogue.cjs.
 - [ ] **R-A10** (P2) The Resin thumb on the colour area, slider and wheel. The colour controls draw the Resin thumb their catalogue entries specify (today the thumb is the picked colour), measured against the .cr-resin recipe; core then assigns the resin surface and removes the three from UNMEASURED.
 
 **Docs**
