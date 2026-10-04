@@ -1,6 +1,11 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/overlay' as overlay;
+@use '../../styles/material';
 
 .popover { @include overlay.surface; padding: var(--cr-space); max-inline-size: min(92vw, #{$cr-overlay-max-width}); }
 .popover[data-cr-overlay='haze'] { padding: $cr-spacing-md; }
+/* "Frost panel with Haze reading fill (R15e)": on the page the content reads on
+   a Haze fill inside the Frost panel, on `::after`, because `.cr-frost` paints
+   its grain on `::before` (R-A9). Recessed into Haze, it is already Haze. */
+.popover[data-cr-overlay='frost'] { @include material.haze-fill($layer: '::after'); }
 

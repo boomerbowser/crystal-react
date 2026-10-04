@@ -85,7 +85,11 @@
  * mark feathered at 1.95px is blurred by a fifth of its own radius and stops
  * reading as a mark. Every other caller should take the default.
  */
-@mixin haze-fill($inset: var(--cr-haze-inset), $feather: var(--cr-haze-feather)) {
+/* `$layer` is `::after` on a Frost panel. `.cr-frost` paints its grain on
+ * `::before` at `--cr-grain-opacity`, so a Haze fill written there replaced the
+ * grain and was drawn at the grain's 4.5% opacity: the toast's and the
+ * notification's reading fill was invisible (found on 3 October 2026). */
+@mixin haze-fill($inset: var(--cr-haze-inset), $feather: var(--cr-haze-feather), $layer: '::before') {
   /* Both are required, and the mixin sets them instead of relying on the host.
      `z-index: -1` alone puts the fill behind the element, not behind its label.
      On a Resin control, whose own background is a translucent fill, the layer
@@ -95,7 +99,7 @@
   position: relative;
   isolation: isolate;
 
-  &::before {
+  &#{$layer} {
     content: '';
     position: absolute;
     inset: $inset;
@@ -110,6 +114,6 @@
      translucent fill over them only adds noise. Crystal's own rule also hides
      it. */
   @media (forced-colors: active) {
-    &::before { display: none; }
+    &#{$layer} { display: none; }
   }
 }
