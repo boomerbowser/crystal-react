@@ -2,8 +2,15 @@
   "name": "@crystal-ui/react",
   "version": "0.1.0-alpha.1",
   "description": "React components for the Crystal design system, built on React Aria.",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boomerbowser/crystal-react.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
   "type": "module",
   "sideEffects": [
     "**/*.css",
