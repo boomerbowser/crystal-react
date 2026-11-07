@@ -4,21 +4,13 @@
 /* Prose: one reading rhythm for content the product did not lay out.
  *
  * This is the component for rendered Markdown, a CMS body, anything arriving as
- * HTML rather than as Crystal components. A heading, a list, a quotation, a
- * table, a code block and an image all sit on the same rhythm without the
- * author of the content knowing Crystal exists.
- *
- * Space between blocks comes from the reading leading, so a paragraph gap is
- * one blank line. The rest of the spacing follows from that.
+ * HTML rather than as Crystal components. It wears Crystal's `.cr-prose`, which
+ * sets the column, the type and the vocabulary; this rule adds what the
+ * vocabulary does not cover (`styles/_prose.scss`).
  */
 
 .prose {
-  color: var(--cr-text);
-  font-size: var(--cr-text-body-size);
-  line-height: var(--cr-text-body-leading);
-  max-inline-size: 68ch;
-
-  @include prose.vocabulary;
+  @include prose.extras;
 }
 
 /* The standalone `Blockquote` component takes the same treatment through its

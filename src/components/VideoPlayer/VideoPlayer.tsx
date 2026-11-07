@@ -4,7 +4,7 @@
  *
  * "Native video element underneath. Controls are real buttons, **captions are
  * supported and their state is announced**, and **keyboard shortcuts do not trap
- * focus**." The catalogue (core, after 2.3.1) adds the anatomy a product needs
+ * focus**." The catalogue (core 2.4.0) adds the anatomy a product needs
  * to ship one: a stage at a set aspect ratio, caption cues above the transport,
  * and a settings menu for speed, subtitles, the audio track and quality, with
  * picture in picture and full screen.
@@ -167,7 +167,7 @@ function CaptionCues({ cues, captionStyle }: { cues: TextTrackCue[]; captionStyl
     <div
       ref={host}
       aria-hidden="true"
-      className={styles['captions']}
+      className={cx('cr-media-caption', styles['captions'])}
       data-size={captionStyle.size}
       data-backing={captionStyle.backing}
       hidden={cues.length === 0}
@@ -340,19 +340,18 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
       data-paused={media.isPlaying ? undefined : ''}
     >
       <PortalProvider getContainer={portalContainer}>
-      <div className={styles['surface']} style={stage}>
+      <div className={cx('cr-media', styles['surface'])} style={stage}>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption -- the caption `<track>` is the product's to supply through `children`; the control for it is below */}
         <video
           {...props}
           ref={mergeRefs(ref, own, mediaRef, arrival as never)}
           aria-label={label}
-          className={styles['video']}
           onClick={media.toggle}
         >
           {children}
         </video>
         {nativeCaptions ? null : <CaptionCues cues={tracks.activeCues} captionStyle={captionStyle} />}
-        <div className={styles['bar']}>
+        <div className={cx('cr-media-bar', styles['bar'])}>
           <MediaControls
             mediaLabel={label}
             isPlaying={media.isPlaying}

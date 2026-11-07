@@ -136,7 +136,7 @@ export function RichTextSurface({
         {...(invalid ? { 'data-invalid': true } : {})}
       >
         {hasToolbar ? (
-          <Toolbar aria-label={`Formatting for ${typeof label === 'string' ? label : 'the editor'}`} className={cx(styles['toolbar'])}>
+          <Toolbar aria-label={`Formatting for ${typeof label === 'string' ? label : 'the editor'}`} className={cx('cr-editor-toolbar', toolbarPlacement === 'bottom' ? 'below' : undefined, styles['toolbar'])}>
             {actions.map((action) => (
               /* aria-pressed, not a class. A bold button that looks pressed but
                  announces as an ordinary button leaves a reader unable to tell
@@ -158,7 +158,7 @@ export function RichTextSurface({
           </Toolbar>
         ) : null}
         <div
-          className={cx(styles['surface'], 'cr-scroll-frost', surfaceClassName)}
+          className={cx('cr-editor', styles['surface'], 'cr-scroll-frost', surfaceClassName)}
           {...(isReadOnly ? { 'data-readonly': true } : {})}
         >
           {children}

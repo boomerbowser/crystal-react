@@ -105,7 +105,7 @@ export const MediaControls = forwardRef<HTMLDivElement, MediaControlsProps>(
     const known = Number.isFinite(duration) && duration > 0;
 
     return (
-      <div {...props} ref={ref} className={cx(styles['controls'], 'cr-resin', className)} data-buffering={isBuffering ? '' : undefined}>
+      <div {...props} ref={ref} className={cx('cr-resin', 'transport', className)} data-buffering={isBuffering ? '' : undefined}>
         {onSkip ? (
           <IconButton
             label={`Back ${skipBy} seconds`}
@@ -132,7 +132,7 @@ export const MediaControls = forwardRef<HTMLDivElement, MediaControlsProps>(
           />
         ) : null}
 
-        <span className={styles['time']}>{formatTime(currentTime)}</span>
+        <span className="time">{formatTime(currentTime)}</span>
 
         <Slider
           className={styles['scrubber'] ?? ''}
@@ -149,7 +149,7 @@ export const MediaControls = forwardRef<HTMLDivElement, MediaControlsProps>(
           valueText={(at) => speakPosition(at, known ? duration : 0)}
         />
 
-        <span className={styles['time']}>{known ? formatTime(duration) : '--:--'}</span>
+        <span className="time">{known ? formatTime(duration) : '--:--'}</span>
 
         {onMuteToggle ? (
           <IconButton

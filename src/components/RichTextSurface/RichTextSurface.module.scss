@@ -13,124 +13,89 @@
 .field { @include field.field; min-inline-size: 0; }
 .label { @include field.label; }
 
-/* The frame is Crystal's `.cr-field-shell`, worn in the markup: the Resin
-   surround with the 8px-inset Haze well. The shell is an inline control by
-   default, so the frame makes it a column at the content radius, and pads it by
-   the well's own inset so the toolbar and the text sit on the well. It is not
-   `overflow: hidden`, because that would stop the toolbar sticking above a
-   touch keyboard; the surface scrolls on its own. */
-.frame {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  inline-size: 100%;
-  min-inline-size: 0;
-  max-inline-size: 100%;
-  box-sizing: border-box;
-  padding: var(--cr-haze-inset);
-  border-radius: var(--cr-radius);
-}
-
+/* The frame is Crystal's `.cr-field-shell` holding a `.cr-editor`, worn in
+   the markup: the Resin surround, the Haze well, and the column at the content
+   radius padded by the well's inset are the recipe's
+   (`.cr-field-shell:has(> .cr-editor)`). It is not `overflow: hidden`, because
+   that would stop the toolbar sticking above a touch keyboard; the surface
+   scrolls on its own. */
+.frame { max-inline-size: 100%; }
 .frame:focus-within { @include field.focus-ring; }
 .frame[data-invalid] { border-color: var(--cr-danger-ink); }
 
+/* The toolbar is Crystal's `.cr-editor-toolbar`: the row, its padding, the
+   separators, and the move below the text on a touch screen or with `.below`
+   are the recipe's.
+
+   Above the text it stays in the flow rather than sticking to the top of the
+   viewport, as the recipe has it: the recipe gives the bar no backing, so a
+   document scrolled under it would show through (filed upstream). */
 .toolbar {
   position: relative;
-  z-index: 1;
+  /* The recipe's 2px gap, handed to the `Toolbar` component through its own
+     property: its stylesheet sets the action gap unlayered, which would beat
+     the recipe's layered `gap`. */
+  --cr-toolbar-gap: 2px;
   /* A row that scrolls must not set the frame's width: without this its
      one-line width props the field open past a phone's screen. */
   min-inline-size: 0;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 2px;
-  padding: $cr-spacing-2xs;
-  border-block-end: 1px solid var(--cr-edge);
 }
 
-/* A separator between toolbar groups (block type, marks, lists, history). */
-.toolbar > [role='separator'] {
-  align-self: stretch;
-  inline-size: 1px;
-  margin: $cr-spacing-xs $cr-spacing-2xs;
-  background: var(--cr-edge);
-}
-
-/* On a touch screen the toolbar moves below the text and sticks above the
-   on-screen keyboard, in reach of a thumb. It scrolls sideways rather than
-   wrapping, so it stays one row tall over a short visible area. The inset is
-   the larger of the VirtualKeyboard API's and the one `useKeyboardInset`
-   measures from the visual viewport, because iOS reports only the second. */
+/* Below the text it sticks, and sits on the Haze fill so the document scrolled
+   under it does not show through. The inset is the larger of the
+   VirtualKeyboard API's, which the recipe reads, and the one
+   `useKeyboardInset` measures from the visual viewport, because iOS reports
+   only the second. */
 @mixin toolbar-below {
   .toolbar {
-    order: 2;
     position: sticky;
     inset-block-end: max(env(keyboard-inset-height, 0px), var(--cr-keyboard-inset, 0px));
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: none;
-    border-block-end: 0;
-    border-block-start: 1px solid var(--cr-edge);
     border-radius: 0 0 calc(var(--cr-radius) - var(--cr-haze-inset)) calc(var(--cr-radius) - var(--cr-haze-inset));
     background: var(--cr-haze-fill);
   }
-
-  .toolbar > * { flex: none; touch-action: manipulation; }
 }
 
 .frame[data-toolbar='bottom'] { @include toolbar-below; }
 
 @media (pointer: coarse) {
   .frame[data-toolbar='auto'] { @include toolbar-below; }
+
+  /* `toolbarPlacement="top"` asks for the fine-pointer placement on any
+     pointer. The recipe has `.below` for the opposite request and nothing for
+     this one, so its touch rule is undone here (filed upstream). */
+  .frame[data-toolbar='top'] .toolbar {
+    order: 0;
+    inset-block-end: auto;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    border-block-start: 0;
+    border-block-end: 1px solid var(--cr-edge);
+  }
 }
 
-/* The surface is the document. It sits on the shell's Haze well, so it paints
-   no fill of its own, and it carries Crystal's reading vocabulary so a heading,
-   a checklist or an underline looks here as it will when published. */
+/* The surface is the document, and wears `.cr-editor`: the type, the reading
+   vocabulary, the caret, the padding, the selection tint (and the action pair
+   on a selected highlight, D-39) and the empty block's prompt are the
+   recipe's. It sits on the shell's Haze well, so it paints no fill of its own;
+   it scrolls on its own past half the viewport. */
 .surface {
-  @include prose.vocabulary;
-
+  /* The recipe's `min-height: calc(var(--cr-text-body-leading) * 4)` multiplies
+     a unitless leading (1.5) and is invalid at computed-value time, so it draws
+     no floor at all; this keeps the surface's reviewed three-target floor until
+     the recipe is corrected (filed upstream). */
   min-block-size: calc(#{$cr-action-min-target} * 3);
   max-block-size: 50vh;
-  padding: var(--cr-space);
-  color: var(--cr-text);
-  font-size: var(--cr-text-body-size);
-  line-height: var(--cr-text-body-leading);
-  caret-color: var(--cr-primary);
-  outline: none;
   overflow-y: auto;
-  overflow-wrap: anywhere;
 }
 
 /* The engine's editable element fills the surface and draws no ring of its
-   own: the shell draws the ring for the whole field. An engine usually wraps
-   the document's blocks in its own root (ProseMirror, Lexical), one level below
-   the surface, so the vocabulary's block rhythm is applied there as well. */
+   own: the shell draws the ring for the whole field. The blocks are its
+   children, so the vocabulary's block rhythm is restated there. */
 .surface [contenteditable] {
-  @include prose.vocabulary;
+  @include prose.engine-rhythm;
 
   outline: none;
   min-block-size: 100%;
-}
-
-/* A 28% primary tint under unchanged text. Not the primary-soft pair, which a
-   highlight already wears, so a highlighted word that is then selected still
-   looks selected. */
-.surface ::selection { background: color-mix(in srgb, var(--cr-primary) 28%, transparent); }
-/* A highlighted word that is then selected takes the action pair, as Crystal's
-   `.cr-editor :where(mark)::selection` does (D-39): the tint over the
-   highlight fell to 3.74:1 in Harbor. */
-.surface :where(mark)::selection, .surface :where(mark) ::selection { background: var(--cr-primary); color: var(--cr-on-primary); }
-
-/* An empty block's prompt, from `data-placeholder`, as ProseMirror-based
-   engines mark it (`.is-empty`, `.is-editor-empty`). */
-.surface :is(.is-empty, .is-editor-empty)[data-placeholder]::before {
-  content: attr(data-placeholder);
-  float: inline-start;
-  block-size: 0;
-  pointer-events: none;
-  color: var(--cr-muted);
 }
 
 .surface[data-readonly] { background: var(--cr-surface-alt); border-radius: calc(var(--cr-radius) - var(--cr-haze-inset)); }
@@ -182,6 +147,5 @@
 
 @media (forced-colors: active) {
   .popover { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
-  .surface ::selection { background: Highlight; color: HighlightText; }
   .token { background: Canvas; outline: 1px solid CanvasText; }
 }

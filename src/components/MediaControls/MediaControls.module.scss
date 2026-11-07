@@ -1,40 +1,10 @@
 @use '../../styles/tokens' as *;
 
-/* The transport: Crystal's `.cr-resin.transport` recipe (core, after 2.3.1).
-   The plane is `.cr-resin`, worn in the markup; this file carries the
-   transport's geometry until the installed core publishes the class, and
-   `src/media/coreRecipes.test.ts` fails on the day it does, so the copy is removed and the
-   class worn instead.
-
-   4px block and 12px inline padding around the 48px action targets makes a
-   56px pill inside its 1px rim. The 12px keeps the first
-   and last controls' focus halos inside the pill's curve:
-   with 4px a focused end control drew its ring across the rim. */
-.controls {
-  display: flex;
-  align-items: center;
-  gap: $cr-spacing-2xs;
-  min-block-size: calc(#{$cr-action-min-target} + #{$cr-spacing-2xs} * 2);
-  box-sizing: border-box;
-  padding: $cr-spacing-2xs $cr-spacing-sm;
-  color: var(--cr-text);
-}
-
-/* The readouts are labels read over moving pictures through a 20% fill, so
-   each sits on its own Haze pill: the "Haze fills behind readable labels" the
-   catalogue names. Text ink, not muted, because the ground under the pill is a
-   picture nobody chose. */
-.time {
-  flex: none;
-  padding: 2px $cr-spacing-xs;
-  border-radius: $cr-action-radius;
-  background: var(--cr-haze-fill);
-  font-size: var(--cr-text-caption-size);
-  font-weight: 650;
-  line-height: var(--cr-text-caption-leading);
-  font-variant-numeric: tabular-nums;
-  color: var(--cr-text);
-}
+/* The transport is Crystal's `.cr-resin.transport`, worn in the markup: the
+   Resin pill, its 4px and 12px padding around the 48px targets, the readouts'
+   Haze pills (`.time`), the narrow-player wrap and the forced-colours branch
+   are all the recipe's. This file holds only what the recipe leaves to the
+   controls inside it. */
 
 /* The scrubber takes the free space. Its own label and output are hidden, so
    only the track shows. Both sliders are inset by half a thumb (26px / 2), so
@@ -47,10 +17,9 @@
    the scale. */
 .volume { flex: none; inline-size: calc(#{$cr-spacing-2xl} * 2); padding-inline: calc(#{$cr-slider-thumb-size} / 2); box-sizing: content-box; }
 
-/* A narrow player wraps its trailing controls onto a second row rather than
-   crushing the scrubber to nothing, as the recipe's container query does. */
+/* When the recipe wraps a narrow player's bar, the scrubber takes the second
+   row to itself rather than sharing it with the trailing controls. */
 @container (max-width: 420px) { // crystal-allow-literal: the breakpoint of Crystal's `.cr-resin.transport` recipe
-  .controls { flex-wrap: wrap; padding-inline: $cr-spacing-xs; border-radius: calc(var(--cr-radius) - #{$cr-spacing-2xs}); }
   .scrubber { order: 1; flex-basis: 100%; }
 }
 
@@ -61,9 +30,4 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
-}
-
-@media (forced-colors: active) {
-  .controls { background: Canvas; border: 1px solid CanvasText; box-shadow: none; }
-  .time { color: CanvasText; background: Canvas; }
 }

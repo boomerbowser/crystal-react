@@ -19,6 +19,59 @@ The live tracker is [`open-issues.md`](open-issues.md).
 ---
 
 
+## R-27 · Copies of recipes Crystal has not published yet
+
+**What.** The media and text recipes (`.cr-media`, `.cr-media-bar`,
+`.cr-resin.transport`, `.cr-media-caption`, `.cr-media.audio`, `.cr-prose`,
+`.cr-editor`, `.cr-editor-toolbar`, `.cr-frost.bar`) are in Crystal's
+`crystal.css` after 2.3.1 and in no published core. `VideoPlayer`,
+`AudioPlayer`, `MediaControls`, `RichTextSurface`, `RichTextEditor` and `Prose`
+carry their values in their own stylesheets, and three of the properties they
+set (`--cr-media-aspect`, `--cr-media-fit`, `--cr-media-transport`) are on the
+published-properties test's local list.
+
+**Why it matters.** A copy drifts. This is the position R-20 was in before
+2.2.0.
+
+**Closing it.** `src/media/coreRecipes.test.ts` fails on the day the installed
+core publishes the classes. Then wear them, delete the copies and the three
+local properties, and delete the test (tasks R-M9 and R-T9, after Crystal's
+C-R1).
+
+**Closed** on 7 November 2026, with `@crystal-ui/core` 2.4.0 installed (tasks
+R-M9 and R-T9). The players wear `.cr-media`, `.cr-media-bar`,
+`.cr-media-caption`, `.cr-haze.cr-media.audio` and `.cr-resin.transport`;
+`Prose` wears `.cr-prose`; `RichTextSurface` wears `.cr-editor` and
+`.cr-editor-toolbar` (with `.below` for `toolbarPlacement="bottom"`); the
+selection toolbar wears `.cr-frost.bar`. The copies, the guard test and the
+three local properties are gone, and `formats.tsx` draws all its glyphs from
+the icon set (C-I1's last criterion). `verify:appearance` (120),
+`verify:behaviour` (119), `verify:targets` (107), `verify:materials` (22) and
+`verify:theme` pass on the built stories.
+
+What stays local, and why: the bar's show-and-hide, full screen on the player
+(the settings popover is portalled into it), multi-line cues stacking, and the
+reader's caption size and backing, which the recipe gains with C-S5;
+`_prose.scss` keeps only what the vocabulary does not cover (media, tables,
+`abbr`, a quotation's attribution, forced-colours edges on code) and restates
+the block rhythm under an engine's own `[contenteditable]` root. Three local
+rules work around the editor recipe and are filed in Crystal's tracker as
+D-40: the surface keeps its 144px floor because `.cr-editor`'s `min-height`
+multiplies a unitless leading and is invalid; the toolbar above the text stays
+in the flow, because the recipe makes it sticky with no backing; and
+`toolbarPlacement="top"` undoes the recipe's touch rule, which has `.below`
+but no counterpart.
+
+Compared with the 2.3.1 build, computed style by computed style, in light and
+dark: Resin is drawn with its blur in built stories again (D-38, 2.4.0); the
+transport is 58px with its rim, as the recipe says, not 56px; the caption's
+range is the recipe's 15–28px, not 16–24px; the audio card reads at
+`--cr-leading` (1.5) where it inherited the body's 1.6; checklist boxes are
+26px rather than stretched to the field's 44px; prose blocks take no trailing
+margin; underline and strike are 1.5px; and the bottom toolbar wraps on a fine
+pointer instead of hiding its last controls off the edge.
+
+
 ## R-29 · A flaky virtualizer check under the dev server
 
 **What.** On 2 October 2026 `verify:behaviour` failed once on "a virtualizer

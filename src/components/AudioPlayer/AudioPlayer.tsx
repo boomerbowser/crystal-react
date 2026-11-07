@@ -78,7 +78,7 @@ export const AudioPlayer = forwardRef<HTMLAudioElement, AudioPlayerProps>(functi
   const [said, setSaid] = useState('');
 
   return (
-    <div ref={arrival as never} className={cx(styles['player'], surface ? 'cr-haze' : undefined, surface ? styles['card'] : undefined, className)}>
+    <div ref={arrival as never} className={cx(styles['player'], surface ? 'cr-haze' : undefined, 'cr-media', 'audio', surface ? undefined : styles['bare'], className)}>
       {title || subtitle ? (
         <div className={styles['heading']}>
           {title ? <p className={styles['title']}>{title}</p> : null}

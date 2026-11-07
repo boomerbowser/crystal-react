@@ -469,7 +469,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       {selectionToolbar && !isReadOnly ? (
         <BubbleMenu
           editor={editor}
-          className={cx(styles['selection'], 'cr-frost')}
+          className={cx(styles['selection'], 'cr-frost', 'bar')}
           options={{ placement: 'top', offset: 8, flip: true, shift: { padding: 8 } }}
           shouldShow={({ editor: current, from, to }) => from !== to && !current.isActive('codeBlock') && current.isFocused}
         >

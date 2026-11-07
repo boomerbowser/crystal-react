@@ -9,13 +9,18 @@
  * `mark-in`. These recipes exist only from 2.2.0. On anything older `useMotion`
  * throws for an unknown recipe, so a dependency range that let 2.1 back in would
  * ship components that crash as soon as something starts loading. The
- * dependency says `^2.3.0`. This test checks the installed version, because the
+ * dependency says `^2.4.0`. This test checks the installed version, because the
  * range is only what was requested.
  *
  * The floor is 2.3, because the location dot, the count badge, the group, the
  * dialog body and the recessed overlay this library wears exist only from 2.3.0.
  * Crystal 2.3.0 draws the navigation entry's location dot on `.cr-nav-item`, and
  * `NavLink` no longer draws its own (R-26).
+ *
+ * The floor is 2.4 since 7 November 2026: the players, the transport, `Prose`,
+ * the rich text surface and the selection toolbar wear the media, prose and
+ * editor recipes, which exist only from 2.4.0. On 2.3 they would render with no
+ * stage, no transport geometry and no reading vocabulary (R-27, R-M9, R-T9).
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -34,8 +39,16 @@ const [major = 0, minor = 0] = installed.version.split('.').map(Number);
 const PLAYED_FROM_2_2 = ['activity-turn', 'activity-travel', 'skeleton-sweep', 'mark-in'];
 
 describe('the installed @crystal-ui/core', () => {
-  it('is 2.3.0 or later', () => {
-    expect(major > 2 || (major === 2 && minor >= 3), `@crystal-ui/core ${installed.version} is installed; this library wears recipes that exist only from 2.3.0 — the location dot, the count, the group, the dialog body, the recessed overlay`).toBe(true);
+  it('is 2.4.0 or later', () => {
+    expect(major > 2 || (major === 2 && minor >= 4), `@crystal-ui/core ${installed.version} is installed; this library wears recipes that exist only from 2.4.0 — the media stage, the transport, the caption, the prose and editor vocabulary, the Frost bar`).toBe(true);
+  });
+
+  /* The version could move without the classes, so the stylesheet is read too. */
+  it('publishes every media, prose and editor class this library wears', () => {
+    const css = readFileSync(stylesheetPath, 'utf8');
+    for (const selector of ['.cr-media {', '.cr-media-bar {', '.cr-media-caption {', '.cr-media.audio {', ').transport {', '.cr-editor {', '.cr-editor-toolbar {', ').bar {', ':is(.cr-prose,.cr-editor) {']) {
+      expect(css.includes(selector), `${selector} is worn here and not published by the installed core`).toBe(true);
+    }
   });
 
   /* The version could move without the recipes, so both halves are checked. */

@@ -1,20 +1,16 @@
 @use '../../styles/tokens' as *;
 
-/* The audio player is Crystal's `.cr-haze.cr-media.audio` (core, after 2.3.1):
-   a Haze card holding the title and a Resin transport. The card is `.cr-haze`,
-   worn in the markup; the padding and the gap are the recipe's, carried here
-   until the installed core publishes it (`src/media/coreRecipes.test.ts`). */
-.player {
-  display: grid;
-  gap: $cr-spacing-sm;
-  inline-size: 100%;
-  min-inline-size: 0;
-  container-type: inline-size;
-}
+/* The audio player is Crystal's `.cr-haze.cr-media.audio`, worn in the markup:
+   a Haze card holding the title and a Resin transport, with the card padding
+   and the gap the recipe sets. */
 
-/* The card padding every other Haze card has, so the transport's pill and the
-   title both stand clear of the card's edge. */
-.card { padding: var(--cr-space); }
+/* It fills its column and may shrink inside a flex or grid parent. */
+.player { inline-size: 100%; min-inline-size: 0; }
+
+/* Without the card (`surface={false}`) the player sits on a reading surface
+   that already pads its content, so it keeps the recipe's column and drops
+   the padding. */
+.bare { padding: 0; }
 
 .heading { display: grid; gap: 2px; min-inline-size: 0; }
 

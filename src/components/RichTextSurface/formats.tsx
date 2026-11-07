@@ -7,11 +7,10 @@
  * names, shortcuts and icons from here, so every editor built on Crystal offers
  * the same formats in the same order with the same words.
  *
- * The glyphs are Crystal's icon set where it has one (bold, italic, underline,
- * strikethrough, code, highlighter, superscript, checklist, indent, outdent,
- * code block, paragraph). Six it does not have (link, the two lists,
- * subscript, quotation, undo and redo) are drawn here on the same 24px grid and
- * stroke, until the set carries them (core task C-I1).
+ * Every glyph is from Crystal's icon set (`@crystal-ui/core/icons/*`), copied
+ * path for path so the vocabulary stays a plain module with no asset import.
+ * The set gained link, list, list-ordered, subscript, quote, undo and redo in
+ * 2.4.0 (core task C-I1); until then those seven were drawn here.
  */
 import type { ReactNode } from 'react';
 
@@ -46,7 +45,6 @@ const glyph = (...children: ReactNode[]): ReactNode => (
 );
 
 export const FORMAT_ICONS: Record<Exclude<FormatId, 'heading-2' | 'heading-3' | 'heading-4'>, ReactNode> = {
-  /* Crystal's icon set. */
   bold: glyph(<path key="a" d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8" />),
   italic: glyph(<path key="a" d="M19 4h-9M14 20H5M15 4 9 20" />),
   underline: glyph(<path key="a" d="M6 4v6a6 6 0 0 0 12 0V4M4 20h16" />),
@@ -59,14 +57,13 @@ export const FORMAT_ICONS: Record<Exclude<FormatId, 'heading-2' | 'heading-3' | 
   outdent: glyph(<path key="a" d="M21 5H11M21 12H11M21 19H11M7 8l-4 4 4 4" />),
   'code-block': glyph(<path key="a" d="m10 9-3 3 3 3M14 15l3-3-3-3" />, <rect key="b" x="3" y="3" width="18" height="18" rx="2" />),
   paragraph: glyph(<path key="a" d="M13 4v16M17 4v16M19 4H9.5a4.5 4.5 0 0 0 0 9H13" />),
-  /* Drawn here on the same grid and stroke (C-I1). */
-  link: glyph(<path key="a" d="M10 14a4.5 4.5 0 0 0 6.36 0l3.18-3.18a4.5 4.5 0 0 0-6.36-6.36L11.6 6.04M14 10a4.5 4.5 0 0 0-6.36 0l-3.18 3.18a4.5 4.5 0 0 0 6.36 6.36l1.58-1.58" />),
-  'bullet-list': glyph(<path key="a" d="M9 6h12M9 12h12M9 18h12" />, <circle key="b" cx="4" cy="6" r="1" />, <circle key="c" cx="4" cy="12" r="1" />, <circle key="d" cx="4" cy="18" r="1" />),
-  'ordered-list': glyph(<path key="a" d="M10 6h11M10 12h11M10 18h11M4 4v4M3 4h1M3 14h2.5L3 17.5h2.5" />),
-  subscript: glyph(<path key="a" d="m4 5 8 8M12 5l-8 8M20 19h-4c0-1.5.44-2 1.5-2.5S20 15.33 20 14c0-.47-.17-.93-.48-1.29a2.1 2.1 0 0 0-2.62-.44c-.42.24-.74.61-.9 1.06" />),
-  blockquote: glyph(<path key="a" d="M4 11h4v6H4zM4 11c0-3 1.5-5 4-6M14 11h4v6h-4zM14 11c0-3 1.5-5 4-6" />),
-  undo: glyph(<path key="a" d="M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />),
-  redo: glyph(<path key="a" d="m15 14 5-5-5-5M20 9H9.5a5.5 5.5 0 0 0 0 11H13" />),
+  link: glyph(<path key="a" d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />, <path key="b" d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />),
+  'bullet-list': glyph(<path key="a" d="M3 5h.01M3 12h.01M3 19h.01M8 5h13M8 12h13M8 19h13" />),
+  'ordered-list': glyph(<path key="a" d="M11 5h10M11 12h10M11 19h10M4 4h1v5M4 9h2M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />),
+  subscript: glyph(<path key="a" d="m4 5 8 8M12 5l-8 8M20 19h-4c0-1.5.44-2 1.5-2.5S20 15.33 20 14c0-.47-.17-.93-.48-1.29a2.11 2.11 0 0 0-2.62-.44c-.42.24-.74.62-.9 1.07" />),
+  blockquote: glyph(<path key="a" d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" />, <path key="b" d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" />),
+  undo: glyph(<path key="a" d="M3 7v6h6M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />),
+  redo: glyph(<path key="a" d="M21 7v6h-6M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7" />),
 };
 
 /** The block types, in the order the block-type menu lists them. Headings stop

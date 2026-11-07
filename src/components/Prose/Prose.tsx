@@ -32,7 +32,7 @@ export const Prose = forwardRef<HTMLDivElement, ProseProps>(function Prose(
   ref,
 ) {
   return (
-    <div {...props} ref={ref} className={cx(styles['prose'], className)}>
+    <div {...props} ref={ref} className={cx('cr-prose', styles['prose'], className)}>
       {children}
     </div>
   );

@@ -3,10 +3,11 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Three entries are open**: R-30, found preparing the first publish, and R-27
-and R-28, from the media and text work of
+**Two entries are open**: R-30, found preparing the first publish, and R-28,
+from the media and text work of
 2 October 2026 ([`proposals/2026-10-02-media-text-and-recipe-parity.md`](proposals/2026-10-02-media-text-and-recipe-parity.md)).
-Its tasks are Slice R in the implementation plan. R-29, the flaky virtualizer
+Its tasks are Slice R in the implementation plan. R-27, the recipe copies,
+closed on 7 November 2026 with core 2.4.0 installed. R-29, the flaky virtualizer
 check, closed on 2 October 2026; the record is in `closed-issues.md`. R-26, the
 adoption of Crystal 2.3.0, closed on 29 September 2026 with 2.3.0 on the
 registry.
@@ -28,25 +29,6 @@ the library.
 the library build keeps the attribute on external imports, then import the
 packed tarball in plain Node as a gate. Published as it stands in
 0.1.0-alpha.1, as Meridian directed; the README says a bundler is required.
-
-## R-27 · Copies of recipes Crystal has not published yet
-
-**What.** The media and text recipes (`.cr-media`, `.cr-media-bar`,
-`.cr-resin.transport`, `.cr-media-caption`, `.cr-media.audio`, `.cr-prose`,
-`.cr-editor`, `.cr-editor-toolbar`, `.cr-frost.bar`) are in Crystal's
-`crystal.css` after 2.3.1 and in no published core. `VideoPlayer`,
-`AudioPlayer`, `MediaControls`, `RichTextSurface`, `RichTextEditor` and `Prose`
-carry their values in their own stylesheets, and three of the properties they
-set (`--cr-media-aspect`, `--cr-media-fit`, `--cr-media-transport`) are on the
-published-properties test's local list.
-
-**Why it matters.** A copy drifts. This is the position R-20 was in before
-2.2.0.
-
-**Closing it.** `src/media/coreRecipes.test.ts` fails on the day the installed
-core publishes the classes. Then wear them, delete the copies and the three
-local properties, and delete the test (tasks R-M9 and R-T9, after Crystal's
-C-R1).
 
 ## R-28 · Hand-written material across 29 directories
 

@@ -25,14 +25,10 @@
 .preview-blockquote { padding-inline-start: $cr-spacing-xs; border-inline-start: $cr-indicator-line-width solid var(--cr-primary-soft); }
 .preview-code-block { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
-/* The selection toolbar: Crystal's `.cr-frost.bar` (core, after 2.3.1), a
-   Frost overlay with a pill silhouette, worn as `.cr-frost` with this file
-   carrying the bar's geometry until the installed core publishes it. */
-.selection {
-  z-index: 3;
-  padding: $cr-spacing-2xs;
-  border-radius: $cr-action-radius;
-}
+/* The selection toolbar is Crystal's `.cr-frost.bar`, worn in the markup: a
+   Frost overlay with the pill silhouette and the dock's spacing. It floats over
+   the text, so it stacks above the surface and its toolbar. */
+.selection { z-index: 3; }
 
 .selectionBar { display: inline-flex; align-items: center; gap: 2px; }
 

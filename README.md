@@ -18,8 +18,7 @@ npm install @crystal-ui/react@alpha @crystal-ui/core
 ```
 
 **It is an alpha, published as it stands.** Its API can change between alphas
-without notice, and it depends on `@crystal-ui/core` 2.3.1 until it adopts 2.4.0
-(tasks R-M9 and R-T9). Any breaking change in Crystal 2.x, in this library or in
+without notice, and it depends on `@crystal-ui/core` 2.4.0. Any breaking change in Crystal 2.x, in this library or in
 the core it follows, will be fixed in Crystal 3.0 rather than in a 2.x release.
 
 It needs a bundler (Vite, webpack, Next.js, esbuild). Plain Node ESM cannot
@@ -69,7 +68,7 @@ See `docs/proposals/2026-10-02-media-text-and-recipe-parity.md`.
 
 ## How it consumes Crystal
 
-`@crystal-ui/core` is a dependency, installed from npm at `^2.3.1`.
+`@crystal-ui/core` is a dependency, installed from npm at `^2.4.0`.
 
 Design values enter the library in one place. `scripts/build-tokens.mjs` reads
 Crystal's generated export and writes `src/styles/_tokens.scss` and
