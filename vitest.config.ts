@@ -40,6 +40,14 @@ export default defineConfig({
       },
       {
         plugins: [storybookTest({ configDir: '.storybook' })],
+        /* React Aria's virtualizer stops windowing when NODE_ENV is "test",
+           which Vitest sets, unless VIRT_ON is set too: it assumes jsdom,
+           where nothing has a size. Here the browser is real, so without
+           this the two-thousand-row story rendered every row, and axe
+           checked all two thousand. That took seconds and sometimes went
+           past the timeout in CI. With it, the story is tested windowing,
+           as a reader sees it. */
+        define: { 'process.env.VIRT_ON': JSON.stringify('1') },
         /* Declared up front so Vite does not discover TipTap while the first
            editor story is loading and reload the page under the test runner,
            which fails every story file loaded at that moment. */

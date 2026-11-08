@@ -19,6 +19,24 @@ The live tracker is [`open-issues.md`](open-issues.md).
 ---
 
 
+## R-32 · The two-thousand-row story timing out in CI
+
+**What.** On 8 November 2026 the storybook test project timed out (15 seconds)
+on the virtual scroller's one story, in CI on two pull requests in a row. A
+rerun passed each time. It is not R-29: that was a gate's scroll wait, and this
+is the story's own render and accessibility check.
+
+**Why.** React Aria's virtualizer stops windowing when `NODE_ENV` is `test`,
+unless `VIRT_ON` is set: it expects jsdom, where nothing has a size. Vitest sets
+`NODE_ENV` for its browser project too, so under the test runner the story
+rendered all 2,000 rows, where the built stories render 25 to 31, and axe
+checked every one. That took 2.6 seconds on this Mac and went past 15 seconds
+on a busy runner. It also meant the test was not testing windowing at all.
+
+**Closed** the day it was found. The storybook project defines
+`process.env.VIRT_ON`, so the story renders 31 rows under the runner, as in the
+built stories, and its test takes about a second.
+
 ## R-31 · Colour swatches that showed no colour
 
 **What.** Found while measuring the Resin thumb (R-A10) on the built stories, 7
