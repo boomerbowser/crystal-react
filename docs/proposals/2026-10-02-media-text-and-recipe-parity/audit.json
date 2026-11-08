@@ -1,17 +1,17 @@
 {
-  "generated": "2026-10-02",
+  "generated": "2026-11-08",
   "summary": {
     "core": "local checkout (crystal-design-system/core)",
     "components": 284,
     "implemented": 282,
     "motion": {
-      "assigned": 338,
-      "played": 278,
-      "playedByChild": 40,
-      "unplayed": 20,
-      "entriesWithUnplayed": 15,
+      "assigned": 331,
+      "played": 281,
+      "playedByChild": 41,
+      "unplayed": 9,
+      "entriesWithUnplayed": 7,
       "recipesPlayedByNoComponent": [
-        "view-push-out",
+        "selection-travel",
         "resin-confluence",
         "frost-unfold",
         "plastic-settle",
@@ -26,64 +26,72 @@
       ]
     },
     "materials": {
-      "directories": 237,
+      "directories": 241,
       "directoriesWithHandWrittenBackdropFilter": 29,
-      "backdropFilterLines": 79,
-      "directoriesUsingMaterialMixins": 49,
+      "backdropFilterLines": 77,
+      "directoriesUsingMaterialMixins": 53,
       "mixinUses": {
-        "field.shell": 15,
+        "field.shell": 17,
         "frost": 8,
-        "haze-fill": 25,
+        "haze-fill": 27,
         "resin": 3
       },
-      "entriesWithASurfaceNotWornInMarkup": 105
+      "entriesWithASurfaceNotWornInMarkup": 108,
+      "surfacesNotWornInMarkup": {
+        "painted by a mixin (R-A1)": 33,
+        "unresolved": 75,
+        "worn by a child": 13,
+        "worn once opened": 5
+      },
+      "surfacesMeasured": "2026-11-08"
     }
   },
   "recipeUse": {
-    "press": 52,
-    "hover": 36,
-    "selection": 54,
+    "press": 58,
+    "hover": 40,
+    "selection": 55,
+    "selection-travel": 0,
     "switch-on": 1,
     "switch-off": 1,
-    "check": 7,
-    "slider-step": 7,
-    "icon-turn": 14,
+    "check": 9,
+    "slider-step": 11,
+    "icon-turn": 19,
     "copy-confirm": 3,
-    "field-focus": 48,
-    "field-invalid": 48,
-    "field-valid": 48,
+    "field-focus": 52,
+    "field-invalid": 52,
+    "field-valid": 52,
     "hint-in": 4,
     "hint-out": 4,
     "tab-in": 1,
     "page-in": 17,
     "page-out": 6,
     "view-push-in": 1,
-    "view-push-out": 0,
+    "view-push-out": 1,
     "breadcrumb": 1,
     "drawer-in": 3,
     "drawer-out": 3,
-    "menu-in": 32,
-    "menu-out": 32,
-    "tooltip-in": 8,
-    "tooltip-out": 8,
-    "popover-in": 22,
-    "popover-out": 22,
+    "menu-in": 35,
+    "menu-out": 35,
+    "tooltip-in": 9,
+    "tooltip-out": 9,
+    "popover-in": 24,
+    "popover-out": 24,
     "accordion-in": 8,
     "accordion-out": 2,
-    "list-in": 31,
-    "list-out": 26,
+    "list-in": 33,
+    "list-out": 28,
     "reorder": 3,
     "highlight": 13,
     "message-in": 2,
     "toast-in": 4,
     "toast-out": 4,
-    "success": 22,
-    "attention": 24,
+    "success": 23,
+    "attention": 25,
     "progress-change": 10,
     "skeleton-resolve": 2,
     "empty-in": 8,
-    "media-in": 8,
-    "caption-in": 3,
+    "media-in": 10,
+    "caption-in": 5,
     "carousel-next": 1,
     "carousel-previous": 1,
     "drag-pickup": 8,
@@ -94,7 +102,7 @@
     "plastic-settle": 0,
     "haze-tide": 0,
     "stone-contour": 0,
-    "check-off": 7,
+    "check-off": 9,
     "activity-turn": 8,
     "activity-travel": 2,
     "skeleton-sweep": 2,
@@ -139,7 +147,16 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "application-shell--shell",
+            "application-shell--resizing"
+          ]
+        }
+      }
     },
     {
       "id": "container",
@@ -386,7 +403,12 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "masonry",
@@ -433,7 +455,12 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "anchor",
@@ -516,7 +543,12 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "painted by this library's frost mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "dock",
@@ -525,13 +557,13 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "selection"
+          "selection-travel"
         ],
-        "played": [
-          "selection"
-        ],
+        "played": [],
         "playedByChild": [],
-        "unplayed": []
+        "unplayed": [
+          "selection-travel"
+        ]
       },
       "surfaces": [
         "dock"
@@ -580,13 +612,16 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "tab-in"
+          "tab-in",
+          "selection-travel"
         ],
         "played": [
           "tab-in"
         ],
         "playedByChild": [],
-        "unplayed": []
+        "unplayed": [
+          "selection-travel"
+        ]
       },
       "surfaces": [
         "dock"
@@ -659,7 +694,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "burger",
@@ -723,7 +763,27 @@
       "surfaceNotWorn": [
         "mirage",
         "dialog"
-      ]
+      ],
+      "surfaceReasons": {
+        "mirage": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "overlays-command-palette--palette",
+            "overlays-command-palette--palette-keyboard",
+            "overlays-command-palette--empty",
+            "overlays-command-palette--loading"
+          ]
+        },
+        "dialog": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "overlays-command-palette--palette",
+            "overlays-command-palette--palette-keyboard",
+            "overlays-command-palette--empty",
+            "overlays-command-palette--loading"
+          ]
+        }
+      }
     },
     {
       "id": "tree-view",
@@ -732,16 +792,13 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "accordion-in",
-          "accordion-out"
+          "accordion-in"
         ],
         "played": [
           "accordion-in"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "accordion-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "haze"
@@ -756,7 +813,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "navigation-hierarchies--files",
+            "navigation-hierarchies--keyboard",
+            "navigation-hierarchies--expanding-is-motion",
+            "navigation-hierarchies--scroll-spy"
+          ]
+        }
+      }
     },
     {
       "id": "affix",
@@ -782,7 +850,12 @@
       },
       "surfaceNotWorn": [
         "resin"
-      ]
+      ],
+      "surfaceReasons": {
+        "resin": {
+          "reason": "painted by this library's resin mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "bottom-navigation",
@@ -791,13 +864,13 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "selection"
+          "selection-travel"
         ],
-        "played": [
-          "selection"
-        ],
+        "played": [],
         "playedByChild": [],
-        "unplayed": []
+        "unplayed": [
+          "selection-travel"
+        ]
       },
       "surfaces": [
         "dock"
@@ -845,7 +918,12 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "painted by this library's frost mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "table-of-contents",
@@ -873,7 +951,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "menubar",
@@ -904,7 +987,17 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "navigation-menu-bars--bar",
+            "navigation-menu-bars--sections",
+            "navigation-menu-bars--disclosure"
+          ]
+        }
+      }
     },
     {
       "id": "submenu",
@@ -932,11 +1025,21 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": []
+        "mixins": [
+          "haze-fill"
+        ]
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "worn once opened",
+          "story": "overlays-anchored-surfaces--on-the-page",
+          "trigger": "Actions",
+          "element": "div cr-frost (popover)"
+        }
+      }
     },
     {
       "id": "button",
@@ -1003,13 +1106,16 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "press"
+          "press",
+          "selection-travel"
         ],
         "played": [],
         "playedByChild": [
           "press"
         ],
-        "unplayed": []
+        "unplayed": [
+          "selection-travel"
+        ]
       },
       "surfaces": [
         "group"
@@ -1162,7 +1268,12 @@
       },
       "surfaceNotWorn": [
         "dock"
-      ]
+      ],
+      "surfaceReasons": {
+        "dock": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "speed-dial",
@@ -1248,7 +1359,17 @@
       "surfaces": [
         "field"
       ],
-      "directory": null
+      "directory": "src/components/Textarea",
+      "classesWorn": [
+        "cr-field-shell"
+      ],
+      "handWritten": {
+        "backdropFilter": 0,
+        "mixins": [
+          "field.shell"
+        ]
+      },
+      "surfaceNotWorn": []
     },
     {
       "id": "number-input",
@@ -1404,23 +1525,33 @@
       "motion": {
         "assigned": [
           "popover-in",
-          "popover-out",
-          "list-in"
+          "popover-out"
         ],
         "played": [
           "popover-in",
           "popover-out"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "list-in"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "field",
         "frost"
       ],
-      "directory": null
+      "directory": "src/components/Combobox",
+      "classesWorn": [
+        "cr-bare",
+        "cr-field-shell",
+        "cr-frost",
+        "cr-scroll-frost"
+      ],
+      "handWritten": {
+        "backdropFilter": 0,
+        "mixins": [
+          "field.shell"
+        ]
+      },
+      "surfaceNotWorn": []
     },
     {
       "id": "multi-select",
@@ -1470,7 +1601,12 @@
       },
       "surfaceNotWorn": [
         "compact"
-      ]
+      ],
+      "surfaceReasons": {
+        "compact": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "checkbox",
@@ -1659,13 +1795,13 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "selection"
+          "selection-travel"
         ],
-        "played": [
-          "selection"
-        ],
+        "played": [],
         "playedByChild": [],
-        "unplayed": []
+        "unplayed": [
+          "selection-travel"
+        ]
       },
       "surfaces": [
         "dock"
@@ -1779,7 +1915,12 @@
       },
       "surfaceNotWorn": [
         "compact"
-      ]
+      ],
+      "surfaceReasons": {
+        "compact": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "chip",
@@ -1835,7 +1976,8 @@
       ],
       "directory": "src/components/ColorPicker",
       "classesWorn": [
-        "cr-field-shell"
+        "cr-field-shell",
+        "cr-resin"
       ],
       "handWritten": {
         "backdropFilter": 0,
@@ -1927,7 +2069,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-temporal-colour-and-files--temporal",
+            "inputs-temporal-colour-and-files--colour",
+            "inputs-temporal-colour-and-files--files",
+            "inputs-temporal-colour-and-files--dropping-files"
+          ]
+        }
+      }
     },
     {
       "id": "date-range-picker",
@@ -1975,7 +2128,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-temporal-colour-and-files--temporal",
+            "inputs-temporal-colour-and-files--colour",
+            "inputs-temporal-colour-and-files--files",
+            "inputs-temporal-colour-and-files--dropping-files"
+          ]
+        }
+      }
     },
     {
       "id": "time-input",
@@ -2046,7 +2210,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "dropzone",
@@ -2114,7 +2283,17 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-text-and-choice--text-family",
+            "inputs-text-and-choice--choice-family",
+            "inputs-text-and-choice--around-anything"
+          ]
+        }
+      }
     },
     {
       "id": "transfer",
@@ -2123,16 +2302,13 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "list-in",
-          "list-out"
+          "list-in"
         ],
         "played": [
           "list-in"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "list-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "haze",
@@ -2148,7 +2324,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "cascader",
@@ -2164,15 +2345,14 @@
           "menu-out"
         ],
         "played": [
+          "field-focus",
+          "field-invalid",
+          "field-valid",
           "menu-in",
           "menu-out"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "field-focus",
-          "field-invalid",
-          "field-valid"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "field",
@@ -2193,7 +2373,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "mentions",
@@ -2218,17 +2403,30 @@
       ],
       "directory": "src/components/RichTextSurface",
       "classesWorn": [
+        "cr-editor",
+        "cr-editor-toolbar",
         "cr-field-shell",
+        "cr-frost",
         "cr-scroll-frost"
       ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 2,
         "mixins": []
       },
       "surfaceNotWorn": [
-        "frost",
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-richtextsurface--default",
+            "inputs-richtextsurface--read-only",
+            "inputs-richtextsurface--invalid",
+            "inputs-richtextsurface--with-mentions"
+          ]
+        }
+      }
     },
     {
       "id": "rich-text-surface",
@@ -2259,16 +2457,17 @@
       ],
       "directory": "src/components/RichTextSurface",
       "classesWorn": [
+        "cr-editor",
+        "cr-editor-toolbar",
         "cr-field-shell",
+        "cr-frost",
         "cr-scroll-frost"
       ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 2,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "frost"
-      ]
+      "surfaceNotWorn": []
     },
     {
       "id": "helper-text",
@@ -2460,7 +2659,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-temporal-colour-and-files--temporal",
+            "inputs-temporal-colour-and-files--colour",
+            "inputs-temporal-colour-and-files--files",
+            "inputs-temporal-colour-and-files--dropping-files"
+          ]
+        }
+      }
     },
     {
       "id": "year-picker",
@@ -2497,7 +2707,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-temporal-colour-and-files--temporal",
+            "inputs-temporal-colour-and-files--colour",
+            "inputs-temporal-colour-and-files--files",
+            "inputs-temporal-colour-and-files--dropping-files"
+          ]
+        }
+      }
     },
     {
       "id": "digital-clock",
@@ -2532,7 +2753,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-temporal-colour-and-files--temporal",
+            "inputs-temporal-colour-and-files--colour",
+            "inputs-temporal-colour-and-files--files",
+            "inputs-temporal-colour-and-files--dropping-files"
+          ]
+        }
+      }
     },
     {
       "id": "angle-slider",
@@ -2550,7 +2782,7 @@
         "unplayed": []
       },
       "surfaces": [
-        "none"
+        "resin"
       ],
       "directory": "src/components/AngleSlider",
       "classesWorn": [],
@@ -2558,7 +2790,14 @@
         "backdropFilter": 3,
         "mixins": []
       },
-      "surfaceNotWorn": []
+      "surfaceNotWorn": [
+        "resin"
+      ],
+      "surfaceReasons": {
+        "resin": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "knob",
@@ -2576,7 +2815,7 @@
         "unplayed": []
       },
       "surfaces": [
-        "none"
+        "resin"
       ],
       "directory": "src/components/AngleSlider",
       "classesWorn": [],
@@ -2584,7 +2823,14 @@
         "backdropFilter": 3,
         "mixins": []
       },
-      "surfaceNotWorn": []
+      "surfaceNotWorn": [
+        "resin"
+      ],
+      "surfaceReasons": {
+        "resin": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "mask-input",
@@ -2648,7 +2894,12 @@
       },
       "surfaceNotWorn": [
         "field"
-      ]
+      ],
+      "surfaceReasons": {
+        "field": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "color-area",
@@ -2662,11 +2913,12 @@
         "unplayed": []
       },
       "surfaces": [
-        "none"
+        "resin"
       ],
       "directory": "src/components/ColorPicker",
       "classesWorn": [
-        "cr-field-shell"
+        "cr-field-shell",
+        "cr-resin"
       ],
       "handWritten": {
         "backdropFilter": 0,
@@ -2688,11 +2940,12 @@
         "unplayed": []
       },
       "surfaces": [
-        "none"
+        "resin"
       ],
       "directory": "src/components/ColorPicker",
       "classesWorn": [
-        "cr-field-shell"
+        "cr-field-shell",
+        "cr-resin"
       ],
       "handWritten": {
         "backdropFilter": 0,
@@ -2714,11 +2967,12 @@
         "unplayed": []
       },
       "surfaces": [
-        "none"
+        "resin"
       ],
       "directory": "src/components/ColorPicker",
       "classesWorn": [
-        "cr-field-shell"
+        "cr-field-shell",
+        "cr-resin"
       ],
       "handWritten": {
         "backdropFilter": 0,
@@ -2748,7 +3002,8 @@
       ],
       "directory": "src/components/ColorPicker",
       "classesWorn": [
-        "cr-field-shell"
+        "cr-field-shell",
+        "cr-resin"
       ],
       "handWritten": {
         "backdropFilter": 0,
@@ -2778,7 +3033,8 @@
       ],
       "directory": "src/components/ColorPicker",
       "classesWorn": [
-        "cr-field-shell"
+        "cr-field-shell",
+        "cr-resin"
       ],
       "handWritten": {
         "backdropFilter": 0,
@@ -2827,7 +3083,12 @@
       },
       "surfaceNotWorn": [
         "compact"
-      ]
+      ],
+      "surfaceReasons": {
+        "compact": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "upload",
@@ -2862,7 +3123,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "upload-zone",
@@ -2894,7 +3160,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "card",
@@ -2967,7 +3238,6 @@
       "motion": {
         "assigned": [
           "list-in",
-          "list-out",
           "highlight"
         ],
         "played": [
@@ -2975,9 +3245,7 @@
           "highlight"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "list-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "table"
@@ -3022,7 +3290,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "data-display-list--default",
+            "data-display-list--with-leading-and-trailing",
+            "data-display-list--selected",
+            "data-display-list--empty"
+          ]
+        }
+      }
     },
     {
       "id": "description-list",
@@ -3046,7 +3325,17 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "data-display-description-list--default",
+            "data-display-description-list--stacked",
+            "data-display-description-list--empty"
+          ]
+        }
+      }
     },
     {
       "id": "avatar",
@@ -3202,7 +3491,17 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "data-display-image--default",
+            "data-display-image--square-and-unrounded",
+            "data-display-image--decorative"
+          ]
+        }
+      }
     },
     {
       "id": "timeline",
@@ -3234,7 +3533,23 @@
       "surfaceNotWorn": [
         "indicator",
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "indicator": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "data-display-timeline--default",
+            "data-display-timeline--with-an-error"
+          ]
+        },
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "data-display-timeline--default",
+            "data-display-timeline--with-an-error"
+          ]
+        }
+      }
     },
     {
       "id": "accordion",
@@ -3266,7 +3581,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "data-display-accordion--default",
+            "data-display-accordion--one-open-to-start",
+            "data-display-accordion--several-open",
+            "data-display-accordion--with-a-disabled-row"
+          ]
+        }
+      }
     },
     {
       "id": "collapse",
@@ -3303,16 +3629,13 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "accordion-in",
-          "accordion-out"
+          "accordion-in"
         ],
         "played": [
           "accordion-in"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "accordion-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "none"
@@ -3360,7 +3683,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "statistic",
@@ -3388,7 +3716,17 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "data-display-statistic--default",
+            "data-display-statistic--trends",
+            "data-display-statistic--loading"
+          ]
+        }
+      }
     },
     {
       "id": "code",
@@ -3550,7 +3888,21 @@
       "surfaceNotWorn": [
         "frost",
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "painted by this library's frost mixin, not worn (R-A1)"
+        },
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "data-display-calendar--default",
+            "data-display-calendar--today-and-selected",
+            "data-display-calendar--with-unavailable-days",
+            "data-display-calendar--a-range"
+          ]
+        }
+      }
     },
     {
       "id": "data-view",
@@ -3582,7 +3934,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "image-list",
@@ -3612,7 +3969,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "organization-chart",
@@ -3621,16 +3983,13 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "accordion-in",
-          "accordion-out"
+          "accordion-in"
         ],
         "played": [
           "accordion-in"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "accordion-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "haze"
@@ -3647,7 +4006,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "rolling-number",
@@ -3758,16 +4122,13 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "accordion-in",
-          "accordion-out"
+          "accordion-in"
         ],
         "played": [
           "accordion-in"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "accordion-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "haze"
@@ -3784,7 +4145,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "resizable-table",
@@ -3794,7 +4160,6 @@
       "motion": {
         "assigned": [
           "list-in",
-          "list-out",
           "highlight",
           "resize-settle"
         ],
@@ -3804,9 +4169,7 @@
           "highlight",
           "resize-settle"
         ],
-        "unplayed": [
-          "list-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "table"
@@ -3819,7 +4182,14 @@
       },
       "surfaceNotWorn": [
         "table"
-      ]
+      ],
+      "surfaceReasons": {
+        "table": {
+          "reason": "worn by a child",
+          "story": "data-display-resizable-table--default",
+          "element": "div cr-table-scroll (scroller)"
+        }
+      }
     },
     {
       "id": "stat-card",
@@ -3847,7 +4217,14 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "worn by a child",
+          "story": "data-display-stat-card--default",
+          "element": "div cr-haze (card)"
+        }
+      }
     },
     {
       "id": "kpi-tile",
@@ -3875,7 +4252,14 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "worn by a child",
+          "story": "data-display-kpi-tile--on-target",
+          "element": "div cr-haze (card)"
+        }
+      }
     },
     {
       "id": "trend-indicator",
@@ -3961,7 +4345,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "toast",
@@ -3981,7 +4370,8 @@
         "unplayed": []
       },
       "surfaces": [
-        "frost"
+        "frost",
+        "haze"
       ],
       "directory": "src/components/Toast",
       "classesWorn": [
@@ -3994,7 +4384,14 @@
           "haze-fill"
         ]
       },
-      "surfaceNotWorn": []
+      "surfaceNotWorn": [
+        "haze"
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "notification",
@@ -4014,7 +4411,8 @@
         "unplayed": []
       },
       "surfaces": [
-        "frost"
+        "frost",
+        "haze"
       ],
       "directory": "src/components/Notification",
       "classesWorn": [
@@ -4140,7 +4538,17 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "feedback-skeleton--loading",
+            "feedback-skeleton--resolved",
+            "feedback-skeleton--shapes"
+          ]
+        }
+      }
     },
     {
       "id": "loading-overlay",
@@ -4164,7 +4572,16 @@
       },
       "surfaceNotWorn": [
         "mirage"
-      ]
+      ],
+      "surfaceReasons": {
+        "mirage": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "feedback-loading-overlay--blocked",
+            "feedback-loading-overlay--clear"
+          ]
+        }
+      }
     },
     {
       "id": "empty-state",
@@ -4194,7 +4611,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "result",
@@ -4224,7 +4646,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "popconfirm",
@@ -4244,7 +4671,8 @@
         "unplayed": []
       },
       "surfaces": [
-        "frost"
+        "frost",
+        "haze"
       ],
       "directory": "src/components/Popconfirm",
       "classesWorn": [],
@@ -4253,8 +4681,25 @@
         "mixins": []
       },
       "surfaceNotWorn": [
-        "frost"
-      ]
+        "frost",
+        "haze"
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "worn once opened",
+          "story": "feedback-inline-confirm--destructive",
+          "trigger": "Delete project",
+          "element": "div cr-frost (popover)"
+        },
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "feedback-inline-confirm--destructive",
+            "feedback-inline-confirm--ordinary",
+            "feedback-inline-confirm--in-flight"
+          ]
+        }
+      }
     },
     {
       "id": "tour",
@@ -4288,7 +4733,18 @@
       "surfaceNotWorn": [
         "frost",
         "mirage"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "painted by this library's frost mixin, not worn (R-A1)"
+        },
+        "mirage": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "feedback-tour--a-guided-sequence"
+          ]
+        }
+      }
     },
     {
       "id": "semi-circle-progress",
@@ -4376,7 +4832,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "dialog",
@@ -4443,7 +4904,27 @@
       "surfaceNotWorn": [
         "frost",
         "mirage"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "overlays-drawer--modal",
+            "overlays-drawer--modal-focus",
+            "overlays-drawer--every-edge",
+            "overlays-drawer--not-modal"
+          ]
+        },
+        "mirage": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "overlays-drawer--modal",
+            "overlays-drawer--modal-focus",
+            "overlays-drawer--every-edge",
+            "overlays-drawer--not-modal"
+          ]
+        }
+      }
     },
     {
       "id": "menu",
@@ -4463,7 +4944,8 @@
         "unplayed": []
       },
       "surfaces": [
-        "frost"
+        "frost",
+        "haze"
       ],
       "directory": "src/components/Menu",
       "classesWorn": [
@@ -4471,11 +4953,25 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": []
+        "mixins": [
+          "haze-fill"
+        ]
       },
       "surfaceNotWorn": [
-        "frost"
-      ]
+        "frost",
+        "haze"
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "worn once opened",
+          "story": "overlays-anchored-surfaces--on-the-page",
+          "trigger": "Actions",
+          "element": "div cr-frost (popover)"
+        },
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "context-menu",
@@ -4503,11 +4999,21 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": []
+        "mixins": [
+          "haze-fill"
+        ]
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "worn once opened",
+          "story": "overlays-anchored-surfaces--on-the-page",
+          "trigger": "Actions",
+          "element": "div cr-frost (popover)"
+        }
+      }
     },
     {
       "id": "popover",
@@ -4527,17 +5033,32 @@
         "unplayed": []
       },
       "surfaces": [
-        "frost"
+        "frost",
+        "haze"
       ],
       "directory": "src/components/Popover",
       "classesWorn": [],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": []
+        "mixins": [
+          "haze-fill"
+        ]
       },
       "surfaceNotWorn": [
-        "frost"
-      ]
+        "frost",
+        "haze"
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "worn once opened",
+          "story": "overlays-overlayarrow--on-a-popover",
+          "trigger": "Details",
+          "element": "div cr-frost (popover)"
+        },
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "hover-card",
@@ -4567,7 +5088,15 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "overlays-floating-surfaces--preview"
+          ]
+        }
+      }
     },
     {
       "id": "tooltip",
@@ -4627,7 +5156,16 @@
       },
       "surfaceNotWorn": [
         "mirage"
-      ]
+      ],
+      "surfaceReasons": {
+        "mirage": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "overlays-scrim--centred",
+            "overlays-scrim--not-centred"
+          ]
+        }
+      }
     },
     {
       "id": "portal",
@@ -4763,14 +5301,21 @@
         "haze"
       ],
       "directory": "src/components/Prose",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-prose"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "mark",
@@ -4813,7 +5358,9 @@
         "none"
       ],
       "directory": "src/components/Prose",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-prose"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
@@ -4846,7 +5393,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "number-formatter",
@@ -4976,7 +5528,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "truncate",
@@ -5126,7 +5683,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "focus-trap",
@@ -5258,7 +5820,12 @@
       },
       "surfaceNotWorn": [
         "resin"
-      ]
+      ],
+      "surfaceReasons": {
+        "resin": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "watermark",
@@ -5296,7 +5863,20 @@
       "surfaces": [
         "haze"
       ],
-      "directory": null
+      "directory": "src/components/QrCode",
+      "classesWorn": [],
+      "handWritten": {
+        "backdropFilter": 0,
+        "mixins": []
+      },
+      "surfaceNotWorn": [
+        "haze"
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: no story shows it"
+        }
+      }
     },
     {
       "id": "click-away",
@@ -5515,7 +6095,17 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "utilities-dropindicator--active",
+            "utilities-dropindicator--invalid",
+            "utilities-dropindicator--at-rest"
+          ]
+        }
+      }
     },
     {
       "id": "virtualizer",
@@ -5615,7 +6205,13 @@
       "surfaces": [
         "none"
       ],
-      "directory": null
+      "directory": "src/components/SsrProvider",
+      "classesWorn": [],
+      "handWritten": {
+        "backdropFilter": 0,
+        "mixins": []
+      },
+      "surfaceNotWorn": []
     },
     {
       "id": "chart-surface",
@@ -5641,7 +6237,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "bar-chart",
@@ -5927,7 +6528,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "chart-tooltip",
@@ -6206,7 +6812,11 @@
         "frost"
       ],
       "directory": "src/components/VideoPlayer",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-media",
+        "cr-media-bar",
+        "cr-media-caption"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
@@ -6214,9 +6824,33 @@
       "surfaceNotWorn": [
         "resin",
         "haze",
-        "stone",
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "resin": {
+          "reason": "worn by a child",
+          "story": "media-video-player--default",
+          "element": "div cr-resin"
+        },
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "media-video-player--default",
+            "media-video-player--with-captions",
+            "media-video-player--with-settings",
+            "media-video-player--aspect-ratios"
+          ]
+        },
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "media-video-player--default",
+            "media-video-player--with-captions",
+            "media-video-player--with-settings",
+            "media-video-player--aspect-ratios"
+          ]
+        }
+      }
     },
     {
       "id": "audio-player",
@@ -6245,7 +6879,8 @@
       ],
       "directory": "src/components/AudioPlayer",
       "classesWorn": [
-        "cr-haze"
+        "cr-haze",
+        "cr-media"
       ],
       "handWritten": {
         "backdropFilter": 0,
@@ -6254,7 +6889,23 @@
       "surfaceNotWorn": [
         "resin",
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "resin": {
+          "reason": "worn by a child",
+          "story": "media-audio-player--default",
+          "element": "div cr-resin"
+        },
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "media-audio-player--default",
+            "media-audio-player--with-a-title",
+            "media-audio-player--with-skip-controls",
+            "media-audio-player--without-the-card"
+          ]
+        }
+      }
     },
     {
       "id": "media-controls",
@@ -6281,7 +6932,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "media-media-controls--paused",
+            "media-media-controls--playing",
+            "media-media-controls--buffering",
+            "media-media-controls--before-the-length-is-known"
+          ]
+        }
+      }
     },
     {
       "id": "gallery",
@@ -6318,7 +6980,19 @@
       "surfaceNotWorn": [
         "haze",
         "mirage"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        },
+        "mirage": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "media-gallery--a-set",
+            "media-gallery--a-set-of-one"
+          ]
+        }
+      }
     },
     {
       "id": "lightbox",
@@ -6348,7 +7022,15 @@
       },
       "surfaceNotWorn": [
         "mirage"
-      ]
+      ],
+      "surfaceReasons": {
+        "mirage": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "media-lightbox--from-a-thumbnail"
+          ]
+        }
+      }
     },
     {
       "id": "price",
@@ -6481,7 +7163,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "stock-indicator",
@@ -6535,7 +7222,14 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "worn by a child",
+          "story": "commerce-product-card--reduced",
+          "element": "span cr-haze (discount)"
+        }
+      }
     },
     {
       "id": "product-gallery",
@@ -6549,11 +7243,10 @@
         ],
         "played": [],
         "playedByChild": [
+          "media-in",
           "selection"
         ],
-        "unplayed": [
-          "media-in"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "haze",
@@ -6568,7 +7261,21 @@
       "surfaceNotWorn": [
         "haze",
         "mirage"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "commerce-product-gallery--default"
+          ]
+        },
+        "mirage": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "commerce-product-gallery--default"
+          ]
+        }
+      }
     },
     {
       "id": "cart-item",
@@ -6600,7 +7307,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "cart-summary",
@@ -6626,7 +7338,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "coupon-input",
@@ -6658,7 +7375,14 @@
       },
       "surfaceNotWorn": [
         "field"
-      ]
+      ],
+      "surfaceReasons": {
+        "field": {
+          "reason": "worn by a child",
+          "story": "commerce-coupon-input--default",
+          "element": "div cr-field-shell (shell)"
+        }
+      }
     },
     {
       "id": "checkout-steps",
@@ -6686,7 +7410,17 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "commerce-checkout-steps--default",
+            "commerce-checkout-steps--with-a-step-to-go-back-to",
+            "commerce-checkout-steps--vertical"
+          ]
+        }
+      }
     },
     {
       "id": "payment-method",
@@ -6714,7 +7448,16 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "commerce-payment-method--default",
+            "commerce-payment-method--with-a-provider-element"
+          ]
+        }
+      }
     },
     {
       "id": "address-form",
@@ -6746,7 +7489,14 @@
       },
       "surfaceNotWorn": [
         "field"
-      ]
+      ],
+      "surfaceReasons": {
+        "field": {
+          "reason": "worn by a child",
+          "story": "commerce-address-form--default",
+          "element": "button cr-field-shell (shell)"
+        }
+      }
     },
     {
       "id": "order-summary",
@@ -6772,7 +7522,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "shipping-selector",
@@ -6800,7 +7555,16 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "commerce-shipping-selector--default",
+            "commerce-shipping-selector--not-chosen-yet"
+          ]
+        }
+      }
     },
     {
       "id": "delivery-estimate",
@@ -6883,7 +7647,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "rating-summary",
@@ -6909,7 +7678,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "filter-panel",
@@ -6937,7 +7711,19 @@
       "surfaceNotWorn": [
         "frost",
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "painted by this library's frost mixin, not worn (R-A1)"
+        },
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "commerce-filter-panel--default",
+            "commerce-filter-panel--nothing-applied"
+          ]
+        }
+      }
     },
     {
       "id": "sort-select",
@@ -6973,7 +7759,14 @@
       },
       "surfaceNotWorn": [
         "field"
-      ]
+      ],
+      "surfaceReasons": {
+        "field": {
+          "reason": "worn by a child",
+          "story": "commerce-sort-select--default",
+          "element": "button cr-field-shell (shell)"
+        }
+      }
     },
     {
       "id": "compare-table",
@@ -6997,7 +7790,14 @@
       },
       "surfaceNotWorn": [
         "table"
-      ]
+      ],
+      "surfaceReasons": {
+        "table": {
+          "reason": "worn by a child",
+          "story": "commerce-compare-table--default",
+          "element": "div cr-table-scroll (shell)"
+        }
+      }
     },
     {
       "id": "recently-viewed",
@@ -7048,7 +7848,15 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "screens-screen--default"
+          ]
+        }
+      }
     },
     {
       "id": "page-header",
@@ -7074,7 +7882,12 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "painted by this library's frost mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "view-stack",
@@ -7087,12 +7900,11 @@
           "view-push-out"
         ],
         "played": [
-          "view-push-in"
+          "view-push-in",
+          "view-push-out"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "view-push-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "none"
@@ -7112,16 +7924,13 @@
       "status": "implemented",
       "motion": {
         "assigned": [
-          "page-in",
-          "page-out"
+          "page-in"
         ],
         "played": [
           "page-in"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "page-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "frost",
@@ -7139,7 +7948,15 @@
       "surfaceNotWorn": [
         "frost",
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "painted by this library's frost mixin, not worn (R-A1)"
+        },
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "split-view",
@@ -7189,7 +8006,14 @@
       },
       "surfaceNotWorn": [
         "dock"
-      ]
+      ],
+      "surfaceReasons": {
+        "dock": {
+          "reason": "worn by a child",
+          "story": "screens-commandbar--default",
+          "element": "div cr-dock (toolbar)"
+        }
+      }
     },
     {
       "id": "status-bar",
@@ -7240,7 +8064,12 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "painted by this library's frost mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "focus-mode",
@@ -7296,7 +8125,16 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "screens-emptyscreen--default",
+            "screens-emptyscreen--no-results"
+          ]
+        }
+      }
     },
     {
       "id": "error-screen",
@@ -7324,7 +8162,16 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "screens-errorscreen--default",
+            "screens-errorscreen--with-a-reference"
+          ]
+        }
+      }
     },
     {
       "id": "loading-screen",
@@ -7378,7 +8225,16 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "screens-offlinescreen--default",
+            "screens-offlinescreen--reconnecting"
+          ]
+        }
+      }
     },
     {
       "id": "not-found-screen",
@@ -7406,7 +8262,15 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "screens-notfoundscreen--default"
+          ]
+        }
+      }
     },
     {
       "id": "permission-screen",
@@ -7434,7 +8298,17 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "screens-permissionscreen--denied",
+            "screens-permissionscreen--requesting",
+            "screens-permissionscreen--nothing-the-reader-can-do"
+          ]
+        }
+      }
     },
     {
       "id": "dashboard-shell",
@@ -7460,7 +8334,15 @@
       },
       "surfaceNotWorn": [
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "blocks-dashboardshell--default"
+          ]
+        }
+      }
     },
     {
       "id": "metrics-row",
@@ -7508,7 +8390,12 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+        }
+      }
     },
     {
       "id": "data-table-block",
@@ -7534,7 +8421,23 @@
       "surfaceNotWorn": [
         "table",
         "frost"
-      ]
+      ],
+      "surfaceReasons": {
+        "table": {
+          "reason": "worn by a child",
+          "story": "blocks-datatableblock--default",
+          "element": "div cr-table-scroll (scroller)"
+        },
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "blocks-datatableblock--default",
+            "blocks-datatableblock--selecting",
+            "blocks-datatableblock--loading",
+            "blocks-datatableblock--empty"
+          ]
+        }
+      }
     },
     {
       "id": "crud-form-block",
@@ -7728,7 +8631,14 @@
       },
       "surfaceNotWorn": [
         "resin"
-      ]
+      ],
+      "surfaceReasons": {
+        "resin": {
+          "reason": "worn by a child",
+          "story": "blocks-playershell--video",
+          "element": "div cr-resin"
+        }
+      }
     },
     {
       "id": "playlist-block",
@@ -7742,13 +8652,12 @@
           "reorder"
         ],
         "played": [
+          "list-in",
+          "list-out",
           "reorder"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "list-in",
-          "list-out"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "haze"
@@ -7865,7 +8774,27 @@
       "surfaceNotWorn": [
         "frost",
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "blocks-cartdrawer--open",
+            "blocks-cartdrawer--updating",
+            "blocks-cartdrawer--empty",
+            "blocks-cartdrawer--a-working-basket"
+          ]
+        },
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "blocks-cartdrawer--open",
+            "blocks-cartdrawer--updating",
+            "blocks-cartdrawer--empty",
+            "blocks-cartdrawer--a-working-basket"
+          ]
+        }
+      }
     },
     {
       "id": "pricing-block",
@@ -7921,7 +8850,23 @@
       "surfaceNotWorn": [
         "frost",
         "mirage"
-      ]
+      ],
+      "surfaceReasons": {
+        "frost": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "blocks-onboardingblock--at-rest",
+            "blocks-onboardingblock--active"
+          ]
+        },
+        "mirage": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "blocks-onboardingblock--at-rest",
+            "blocks-onboardingblock--active"
+          ]
+        }
+      }
     },
     {
       "id": "search-block",
@@ -7989,7 +8934,18 @@
       },
       "surfaceNotWorn": [
         "haze"
-      ]
+      ],
+      "surfaceReasons": {
+        "haze": {
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "blocks-editorblock--at-rest",
+            "blocks-editorblock--dirty",
+            "blocks-editorblock--saving",
+            "blocks-editorblock--saved"
+          ]
+        }
+      }
     }
   ]
 }

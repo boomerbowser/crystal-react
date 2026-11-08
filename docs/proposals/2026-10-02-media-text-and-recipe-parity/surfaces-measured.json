@@ -1,0 +1,1088 @@
+{
+  "$description": "Where each surface that audit-recipes.mjs did not find in a component's own markup is worn, measured in the built stories by scripts/measure-surfaces.mjs. \"child\": worn by an element the component renders; \"opened\": worn once the story's trigger is pressed; \"not-found\" and \"no-story\": not seen.",
+  "measured": "2026-11-08",
+  "storybook": "http://localhost:6006",
+  "entries": {
+    "app-shell": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "application-shell--shell",
+          "application-shell--resizing"
+        ]
+      }
+    },
+    "app-bar": {
+      "frost": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "overflow-list": {
+      "frost": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "nav-rail": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "navigation-rails-and-bars--rail",
+          "navigation-rails-and-bars--collapsed",
+          "navigation-rails-and-bars--with-a-footer",
+          "navigation-rails-and-bars--dock-bar"
+        ]
+      }
+    },
+    "stepper": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "navigation-pagination-and-steps--steps",
+          "navigation-pagination-and-steps--steps-vertical",
+          "navigation-pagination-and-steps--steps-as-status-only",
+          "commerce-quantity-stepper--default"
+        ]
+      }
+    },
+    "command-palette": {
+      "mirage": {
+        "how": "not-found",
+        "stories": [
+          "overlays-command-palette--palette",
+          "overlays-command-palette--palette-keyboard",
+          "overlays-command-palette--empty",
+          "overlays-command-palette--loading"
+        ]
+      },
+      "dialog": {
+        "how": "not-found",
+        "stories": [
+          "overlays-command-palette--palette",
+          "overlays-command-palette--palette-keyboard",
+          "overlays-command-palette--empty",
+          "overlays-command-palette--loading"
+        ]
+      }
+    },
+    "tree-view": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "navigation-hierarchies--files",
+          "navigation-hierarchies--keyboard",
+          "navigation-hierarchies--expanding-is-motion",
+          "navigation-hierarchies--scroll-spy"
+        ]
+      }
+    },
+    "affix": {
+      "resin": {
+        "how": "not-found",
+        "stories": [
+          "utilities-positioning--pinned",
+          "utilities-positioning--reports-when-it-pins",
+          "utilities-positioning--escaping-a-clipping-ancestor"
+        ]
+      }
+    },
+    "navigation-menu": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "navigation-menu-bars--sections"
+        ]
+      }
+    },
+    "table-of-contents": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "menubar": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "navigation-menu-bars--bar",
+          "navigation-menu-bars--sections",
+          "navigation-menu-bars--disclosure"
+        ]
+      }
+    },
+    "submenu": {
+      "frost": {
+        "how": "opened",
+        "story": "overlays-anchored-surfaces--on-the-page",
+        "trigger": "Actions",
+        "element": "div cr-frost (popover)"
+      }
+    },
+    "action-bar": {
+      "dock": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "multi-select": {
+      "compact": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "tags-input": {
+      "compact": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "date-picker": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "inputs-temporal-colour-and-files--temporal",
+          "inputs-temporal-colour-and-files--colour",
+          "inputs-temporal-colour-and-files--files",
+          "inputs-temporal-colour-and-files--dropping-files"
+        ]
+      }
+    },
+    "date-range-picker": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "inputs-temporal-colour-and-files--temporal",
+          "inputs-temporal-colour-and-files--colour",
+          "inputs-temporal-colour-and-files--files",
+          "inputs-temporal-colour-and-files--dropping-files"
+        ]
+      }
+    },
+    "file-input": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "fieldset": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "inputs-text-and-choice--text-family",
+          "inputs-text-and-choice--choice-family",
+          "inputs-text-and-choice--around-anything"
+        ]
+      }
+    },
+    "transfer": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "cascader": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "mentions": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "inputs-richtextsurface--default",
+          "inputs-richtextsurface--read-only",
+          "inputs-richtextsurface--invalid",
+          "inputs-richtextsurface--with-mentions"
+        ]
+      }
+    },
+    "month-picker": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "inputs-temporal-colour-and-files--temporal",
+          "inputs-temporal-colour-and-files--colour",
+          "inputs-temporal-colour-and-files--files",
+          "inputs-temporal-colour-and-files--dropping-files"
+        ]
+      }
+    },
+    "year-picker": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "inputs-temporal-colour-and-files--temporal",
+          "inputs-temporal-colour-and-files--colour",
+          "inputs-temporal-colour-and-files--files",
+          "inputs-temporal-colour-and-files--dropping-files"
+        ]
+      }
+    },
+    "digital-clock": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "inputs-temporal-colour-and-files--temporal",
+          "inputs-temporal-colour-and-files--colour",
+          "inputs-temporal-colour-and-files--files",
+          "inputs-temporal-colour-and-files--dropping-files"
+        ]
+      }
+    },
+    "angle-slider": {
+      "resin": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "knob": {
+      "resin": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "json-input": {
+      "field": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "token-field": {
+      "compact": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "upload": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "upload-zone": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "list": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-list--default",
+          "data-display-list--with-leading-and-trailing",
+          "data-display-list--selected",
+          "data-display-list--empty"
+        ]
+      }
+    },
+    "description-list": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-description-list--default",
+          "data-display-description-list--stacked",
+          "data-display-description-list--empty"
+        ]
+      }
+    },
+    "image": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-image--default",
+          "data-display-image--square-and-unrounded",
+          "data-display-image--decorative"
+        ]
+      }
+    },
+    "timeline": {
+      "indicator": {
+        "how": "not-found",
+        "stories": [
+          "data-display-timeline--default",
+          "data-display-timeline--with-an-error"
+        ]
+      },
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-timeline--default",
+          "data-display-timeline--with-an-error"
+        ]
+      }
+    },
+    "accordion": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-accordion--default",
+          "data-display-accordion--one-open-to-start",
+          "data-display-accordion--several-open",
+          "data-display-accordion--with-a-disabled-row"
+        ]
+      }
+    },
+    "carousel": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-carousel--default",
+          "data-display-carousel--at-the-ends",
+          "data-display-carousel--single-slide"
+        ]
+      }
+    },
+    "statistic": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-statistic--default",
+          "data-display-statistic--trends",
+          "data-display-statistic--loading"
+        ]
+      }
+    },
+    "calendar": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "data-display-calendar--default",
+          "data-display-calendar--today-and-selected",
+          "data-display-calendar--with-unavailable-days",
+          "data-display-calendar--a-range"
+        ]
+      },
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-calendar--default",
+          "data-display-calendar--today-and-selected",
+          "data-display-calendar--with-unavailable-days",
+          "data-display-calendar--a-range"
+        ]
+      }
+    },
+    "data-view": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-data-view--a-grid",
+          "data-display-data-view--a-list",
+          "data-display-data-view--with-paging",
+          "data-display-data-view--in-a-narrow-container"
+        ]
+      }
+    },
+    "image-list": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-image-list--default",
+          "data-display-image-list--without-captions",
+          "data-display-image-list--linked"
+        ]
+      }
+    },
+    "organization-chart": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "data-display-organization-chart--default",
+          "data-display-organization-chart--collapsed",
+          "data-display-organization-chart--selectable"
+        ]
+      }
+    },
+    "navigation-tree": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "navigation-navigation-tree--default",
+          "navigation-navigation-tree--on-a-current-page",
+          "navigation-navigation-tree--current-inside-a-collapsed-branch"
+        ]
+      }
+    },
+    "resizable-table": {
+      "table": {
+        "how": "child",
+        "story": "data-display-resizable-table--default",
+        "element": "div cr-table-scroll (scroller)"
+      }
+    },
+    "stat-card": {
+      "haze": {
+        "how": "child",
+        "story": "data-display-stat-card--default",
+        "element": "div cr-haze (card)"
+      }
+    },
+    "kpi-tile": {
+      "haze": {
+        "how": "child",
+        "story": "data-display-kpi-tile--on-target",
+        "element": "div cr-haze (card)"
+      }
+    },
+    "alert": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "feedback-alert--danger",
+          "feedback-alert--success",
+          "feedback-alert--attention",
+          "feedback-alert--info"
+        ]
+      }
+    },
+    "toast": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "feedback-toast--success",
+          "feedback-toast--with-description",
+          "feedback-toast--carrying-the-only-undo",
+          "feedback-toast--urgent"
+        ]
+      }
+    },
+    "skeleton": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "feedback-skeleton--loading",
+          "feedback-skeleton--resolved",
+          "feedback-skeleton--shapes"
+        ]
+      }
+    },
+    "loading-overlay": {
+      "mirage": {
+        "how": "not-found",
+        "stories": [
+          "feedback-loading-overlay--blocked",
+          "feedback-loading-overlay--clear"
+        ]
+      }
+    },
+    "empty-state": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "feedback-empty-state--truly-empty",
+          "feedback-empty-state--no-results",
+          "feedback-empty-state--error",
+          "feedback-empty-state--unauthorised"
+        ]
+      }
+    },
+    "result": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "feedback-result--success",
+          "feedback-result--error",
+          "feedback-result--warning",
+          "feedback-result--not-found"
+        ]
+      }
+    },
+    "popconfirm": {
+      "frost": {
+        "how": "opened",
+        "story": "feedback-inline-confirm--destructive",
+        "trigger": "Delete project",
+        "element": "div cr-frost (popover)"
+      },
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "feedback-inline-confirm--destructive",
+          "feedback-inline-confirm--ordinary",
+          "feedback-inline-confirm--in-flight"
+        ]
+      }
+    },
+    "tour": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "feedback-tour--a-guided-sequence"
+        ]
+      },
+      "mirage": {
+        "how": "not-found",
+        "stories": [
+          "feedback-tour--a-guided-sequence"
+        ]
+      }
+    },
+    "banner": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "feedback-banner--info",
+          "feedback-banner--attention",
+          "feedback-banner--urgent",
+          "feedback-banner--with-an-action"
+        ]
+      }
+    },
+    "drawer": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "overlays-drawer--modal",
+          "overlays-drawer--modal-focus",
+          "overlays-drawer--every-edge",
+          "overlays-drawer--not-modal"
+        ]
+      },
+      "mirage": {
+        "how": "not-found",
+        "stories": [
+          "overlays-drawer--modal",
+          "overlays-drawer--modal-focus",
+          "overlays-drawer--every-edge",
+          "overlays-drawer--not-modal"
+        ]
+      }
+    },
+    "menu": {
+      "frost": {
+        "how": "opened",
+        "story": "overlays-anchored-surfaces--on-the-page",
+        "trigger": "Actions",
+        "element": "div cr-frost (popover)"
+      },
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "overlays-anchored-surfaces--on-the-page",
+          "overlays-anchored-surfaces--inside-a-dialog",
+          "overlays-anchored-surfaces--on-right-click"
+        ]
+      }
+    },
+    "context-menu": {
+      "frost": {
+        "how": "opened",
+        "story": "overlays-anchored-surfaces--on-the-page",
+        "trigger": "Actions",
+        "element": "div cr-frost (popover)"
+      }
+    },
+    "popover": {
+      "frost": {
+        "how": "opened",
+        "story": "overlays-overlayarrow--on-a-popover",
+        "trigger": "Details",
+        "element": "div cr-frost (popover)"
+      },
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "overlays-overlayarrow--on-a-popover"
+        ]
+      }
+    },
+    "hover-card": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "overlays-floating-surfaces--preview"
+        ]
+      }
+    },
+    "scrim": {
+      "mirage": {
+        "how": "not-found",
+        "stories": [
+          "overlays-scrim--centred",
+          "overlays-scrim--not-centred"
+        ]
+      }
+    },
+    "blockquote": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "highlight": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "code-block": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "skip-link": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "resizable": {
+      "resin": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "qr-code": {
+      "haze": {
+        "how": "no-story",
+        "stories": []
+      }
+    },
+    "drop-indicator": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "utilities-dropindicator--active",
+          "utilities-dropindicator--invalid",
+          "utilities-dropindicator--at-rest"
+        ]
+      }
+    },
+    "chart-surface": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "charts-chart-surface--default",
+          "charts-chart-surface--empty",
+          "charts-chart-surface--loading"
+        ]
+      }
+    },
+    "chart-legend": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "charts-chart-legend--a-key",
+          "charts-chart-legend--toggling",
+          "charts-chart-legend--for-lines",
+          "charts-chart-legend--for-points"
+        ]
+      }
+    },
+    "video-player": {
+      "resin": {
+        "how": "child",
+        "story": "media-video-player--default",
+        "element": "div cr-resin"
+      },
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "media-video-player--default",
+          "media-video-player--with-captions",
+          "media-video-player--with-settings",
+          "media-video-player--aspect-ratios"
+        ]
+      },
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "media-video-player--default",
+          "media-video-player--with-captions",
+          "media-video-player--with-settings",
+          "media-video-player--aspect-ratios"
+        ]
+      }
+    },
+    "audio-player": {
+      "resin": {
+        "how": "child",
+        "story": "media-audio-player--default",
+        "element": "div cr-resin"
+      },
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "media-audio-player--default",
+          "media-audio-player--with-a-title",
+          "media-audio-player--with-skip-controls",
+          "media-audio-player--without-the-card"
+        ]
+      }
+    },
+    "media-controls": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "media-media-controls--paused",
+          "media-media-controls--playing",
+          "media-media-controls--buffering",
+          "media-media-controls--before-the-length-is-known"
+        ]
+      }
+    },
+    "gallery": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "media-gallery--a-set",
+          "media-gallery--a-set-of-one"
+        ]
+      },
+      "mirage": {
+        "how": "not-found",
+        "stories": [
+          "media-gallery--a-set",
+          "media-gallery--a-set-of-one"
+        ]
+      }
+    },
+    "lightbox": {
+      "mirage": {
+        "how": "not-found",
+        "stories": [
+          "media-lightbox--from-a-thumbnail"
+        ]
+      }
+    },
+    "variant-selector": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-variant-selector--default",
+          "commerce-variant-selector--swatches",
+          "commerce-variant-selector--swatches-that-fight-their-pad"
+        ]
+      }
+    },
+    "product-card": {
+      "haze": {
+        "how": "child",
+        "story": "commerce-product-card--reduced",
+        "element": "span cr-haze (discount)"
+      }
+    },
+    "product-gallery": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-product-gallery--default"
+        ]
+      },
+      "mirage": {
+        "how": "not-found",
+        "stories": [
+          "commerce-product-gallery--default"
+        ]
+      }
+    },
+    "cart-item": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-cart-item--default",
+          "commerce-cart-item--removable",
+          "commerce-cart-item--updating"
+        ]
+      }
+    },
+    "cart-summary": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-cart-summary--default",
+          "commerce-cart-summary--updating",
+          "commerce-cart-summary--empty"
+        ]
+      }
+    },
+    "coupon-input": {
+      "field": {
+        "how": "child",
+        "story": "commerce-coupon-input--default",
+        "element": "div cr-field-shell (shell)"
+      }
+    },
+    "checkout-steps": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-checkout-steps--default",
+          "commerce-checkout-steps--with-a-step-to-go-back-to",
+          "commerce-checkout-steps--vertical"
+        ]
+      }
+    },
+    "payment-method": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-payment-method--default",
+          "commerce-payment-method--with-a-provider-element"
+        ]
+      }
+    },
+    "address-form": {
+      "field": {
+        "how": "child",
+        "story": "commerce-address-form--default",
+        "element": "button cr-field-shell (shell)"
+      }
+    },
+    "order-summary": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-order-summary--default",
+          "commerce-order-summary--every-state",
+          "commerce-order-summary--with-its-totals"
+        ]
+      }
+    },
+    "shipping-selector": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-shipping-selector--default",
+          "commerce-shipping-selector--not-chosen-yet"
+        ]
+      }
+    },
+    "review": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-review--default",
+          "commerce-review--collapsible"
+        ]
+      }
+    },
+    "rating-summary": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-rating-summary--default",
+          "commerce-rating-summary--nothing-rated-yet",
+          "commerce-rating-summary--one-rating"
+        ]
+      }
+    },
+    "filter-panel": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "commerce-filter-panel--default",
+          "commerce-filter-panel--nothing-applied"
+        ]
+      },
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "commerce-filter-panel--default",
+          "commerce-filter-panel--nothing-applied"
+        ]
+      }
+    },
+    "sort-select": {
+      "field": {
+        "how": "child",
+        "story": "commerce-sort-select--default",
+        "element": "button cr-field-shell (shell)"
+      }
+    },
+    "compare-table": {
+      "table": {
+        "how": "child",
+        "story": "commerce-compare-table--default",
+        "element": "div cr-table-scroll (shell)"
+      }
+    },
+    "screen": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "screens-screen--default"
+        ]
+      }
+    },
+    "page-header": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "screens-pageheader--default",
+          "screens-pageheader--condensed"
+        ]
+      }
+    },
+    "master-detail": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "screens-masterdetail--default",
+          "screens-masterdetail--nothing-chosen"
+        ]
+      },
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "screens-masterdetail--default",
+          "screens-masterdetail--nothing-chosen"
+        ]
+      }
+    },
+    "command-bar": {
+      "dock": {
+        "how": "child",
+        "story": "screens-commandbar--default",
+        "element": "div cr-dock (toolbar)"
+      }
+    },
+    "workspace": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "screens-workspace--default",
+          "screens-workspace--focus-mode"
+        ]
+      }
+    },
+    "empty-screen": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "screens-emptyscreen--default",
+          "screens-emptyscreen--no-results"
+        ]
+      }
+    },
+    "error-screen": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "screens-errorscreen--default",
+          "screens-errorscreen--with-a-reference"
+        ]
+      }
+    },
+    "offline-screen": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "screens-offlinescreen--default",
+          "screens-offlinescreen--reconnecting"
+        ]
+      }
+    },
+    "not-found-screen": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "screens-notfoundscreen--default"
+        ]
+      }
+    },
+    "permission-screen": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "screens-permissionscreen--denied",
+          "screens-permissionscreen--requesting",
+          "screens-permissionscreen--nothing-the-reader-can-do"
+        ]
+      }
+    },
+    "dashboard-shell": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "blocks-dashboardshell--default"
+        ]
+      }
+    },
+    "analytics-panel": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "blocks-analyticspanel--default",
+          "blocks-analyticspanel--loading",
+          "blocks-analyticspanel--nothing-to-chart",
+          "blocks-analyticspanel--failed"
+        ]
+      }
+    },
+    "data-table-block": {
+      "table": {
+        "how": "child",
+        "story": "blocks-datatableblock--default",
+        "element": "div cr-table-scroll (scroller)"
+      },
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "blocks-datatableblock--default",
+          "blocks-datatableblock--selecting",
+          "blocks-datatableblock--loading",
+          "blocks-datatableblock--empty"
+        ]
+      }
+    },
+    "player-shell": {
+      "resin": {
+        "how": "child",
+        "story": "blocks-playershell--video",
+        "element": "div cr-resin"
+      }
+    },
+    "cart-drawer": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "blocks-cartdrawer--open",
+          "blocks-cartdrawer--updating",
+          "blocks-cartdrawer--empty",
+          "blocks-cartdrawer--a-working-basket"
+        ]
+      },
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "blocks-cartdrawer--open",
+          "blocks-cartdrawer--updating",
+          "blocks-cartdrawer--empty",
+          "blocks-cartdrawer--a-working-basket"
+        ]
+      }
+    },
+    "onboarding-block": {
+      "frost": {
+        "how": "not-found",
+        "stories": [
+          "blocks-onboardingblock--at-rest",
+          "blocks-onboardingblock--active"
+        ]
+      },
+      "mirage": {
+        "how": "not-found",
+        "stories": [
+          "blocks-onboardingblock--at-rest",
+          "blocks-onboardingblock--active"
+        ]
+      }
+    },
+    "editor-block": {
+      "haze": {
+        "how": "not-found",
+        "stories": [
+          "blocks-editorblock--at-rest",
+          "blocks-editorblock--dirty",
+          "blocks-editorblock--saving",
+          "blocks-editorblock--saved"
+        ]
+      }
+    }
+  }
+}

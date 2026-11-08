@@ -53,6 +53,16 @@ const recipes = JSON.parse(readFileSync(join(CORE, 'tokens/motion-recipes.json')
 const surfaces = JSON.parse(readFileSync(join(CORE, 'tokens/surfaces.json'), 'utf8')).surfaces;
 const PRESETS = ['plastic', 'frost', 'resin', 'haze', 'stone', 'mirage', 'mirage-out', 'dismiss'];
 
+/* Where the surfaces this reading cannot find are worn, measured in the built
+   stories by `measure-surfaces.mjs` (R-A2). Absent, every such surface is
+   reported without a reason, as before. */
+const measuredPath = join(ROOT, 'docs/proposals/2026-10-02-media-text-and-recipe-parity/surfaces-measured.json');
+const measured = existsSync(measuredPath) ? JSON.parse(readFileSync(measuredPath, 'utf8')) : null;
+/* The mixin of this library's that paints a surface's material by hand. A
+   surface not seen in the stories, in a directory that includes its mixin, is
+   painted rather than worn: R-A1's list. */
+const MIXIN_FOR = { haze: 'haze-fill', frost: 'frost', resin: 'resin', stone: 'stone', plastic: 'plastic', field: 'field.shell' };
+
 /* The directory that exports a component, found the way the manifest finds it:
    a directory named after it with a barrel, or the neighbour whose barrel
    exports it (Radio lives in Checkbox's directory). */
@@ -122,6 +132,17 @@ for (const entry of manifest.components) {
        cannot follow, so it is reported as "unverified" rather than as missing). */
     record.surfaceNotWorn = record.surfaces.filter((id) => !WORN_BY_ELEMENT.has(id)
       && !(surfaceClasses[id] ?? []).some((cls) => worn.has(cls)));
+    if (measured && record.surfaceNotWorn.length) {
+      record.surfaceReasons = Object.fromEntries(record.surfaceNotWorn.map((id) => {
+        const seen = measured.entries[entry.id]?.[id];
+        if (seen?.how === 'child') return [id, { reason: 'worn by a child', story: seen.story, element: seen.element }];
+        if (seen?.how === 'opened') return [id, { reason: 'worn once opened', story: seen.story, trigger: seen.trigger, element: seen.element }];
+        if (MIXIN_FOR[id] && record.handWritten.mixins.includes(MIXIN_FOR[id])) {
+          return [id, { reason: `painted by this library's ${MIXIN_FOR[id]} mixin, not worn (R-A1)` }];
+        }
+        return [id, { reason: seen ? `unresolved: ${seen.how === 'no-story' ? 'no story shows it' : 'not seen in its stories'}` : 'unmeasured', ...(seen?.stories?.length ? { stories: seen.stories } : {}) }];
+      }));
+    }
   }
   components.push(record);
 }
@@ -165,6 +186,12 @@ const summary = {
     mixinUses: Object.fromEntries(Object.entries(byDirectory.flatMap((c) => c.handWritten?.mixins ?? [])
       .reduce((acc, m) => ({ ...acc, [m]: (acc[m] ?? 0) + 1 }), {})).sort()),
     entriesWithASurfaceNotWornInMarkup: implemented.filter((c) => c.surfaceNotWorn?.length).length,
+    ...(measured ? {
+      surfacesNotWornInMarkup: Object.fromEntries(Object.entries(implemented.flatMap((c) => Object.values(c.surfaceReasons ?? {}))
+        .map(({ reason }) => reason.replace(/^painted by .*/, 'painted by a mixin (R-A1)').replace(/^unresolved: .*/, 'unresolved'))
+        .reduce((acc, reason) => ({ ...acc, [reason]: (acc[reason] ?? 0) + 1 }), {})).sort()),
+      surfacesMeasured: measured.measured,
+    } : {}),
   },
 };
 

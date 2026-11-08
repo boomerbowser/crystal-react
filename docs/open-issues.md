@@ -42,6 +42,19 @@ wear and compositions to propose (its recommendation 6). This change sorted
 four: the rich text surface now wears `.cr-field-shell`, and the audio player,
 the media controls and the video player wear or mirror their surfaces.
 
+**Measured on 8 November 2026 (R-A2).** `scripts/measure-surfaces.mjs` asks
+the built stories where each of those surfaces is worn: it opens the
+component's stories, looks for the surface's class, and presses the story's
+first trigger and looks again, across the document, for an overlay.
+`audit.json` now gives every entry its reason. Of 126 surfaces not in their
+component's own markup (108 entries): 13 are worn by a child, 5 once opened,
+33 are painted by this library's own mixin (R-A1's list), and 75 are
+unresolved. The unresolved are mostly Haze painted with
+`var(--cr-haze-fill)` and no mixin (43), and overlays whose trigger is not the
+story's first button (drawer, command palette, lightbox, tour). Each needs
+its component read and, where it should wear the class, a before-and-after
+measurement; R-A2 stays open for them.
+
 **Closing it.** Task R-A1: each directory either wears a surface, measured by
 `verify:materials`, or is filed upstream as a composition the vocabulary
 lacks; the audit's counts fall to what is filed.
