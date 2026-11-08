@@ -136,7 +136,7 @@ export function RichTextSurface({
         {...(invalid ? { 'data-invalid': true } : {})}
       >
         {hasToolbar ? (
-          <Toolbar aria-label={`Formatting for ${typeof label === 'string' ? label : 'the editor'}`} className={cx('cr-editor-toolbar', toolbarPlacement === 'bottom' ? 'below' : undefined, styles['toolbar'])}>
+          <Toolbar aria-label={`Formatting for ${typeof label === 'string' ? label : 'the editor'}`} className={cx('cr-editor-toolbar', { bottom: 'below', top: 'above', auto: undefined }[toolbarPlacement], styles['toolbar'])}>
             {actions.map((action) => (
               /* aria-pressed, not a class. A bold button that looks pressed but
                  announces as an ordinary button leaves a reader unable to tell

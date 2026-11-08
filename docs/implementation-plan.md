@@ -2713,7 +2713,7 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 
 **Text**
 
-- [ ] **R-T10** (P1) Wear the 2.5.0 editor and caption recipes and drop the workarounds. RichTextSurface drops its D-40 workarounds (the 144px floor, the in-flow top toolbar and the coarse-pointer undo) and wears .above for toolbarPlacement="top"; VideoPlayer's captions wear .large, .larger and .solid in place of its local caption-style rules. Waits on C-R4. Blocked.
+- [x] **R-T10** (P1) Wear the 2.5.0 editor and caption recipes and drop the workarounds. RichTextSurface drops its D-40 workarounds (the 144px floor, the in-flow top toolbar and the coarse-pointer undo) and wears .above for toolbarPlacement="top"; VideoPlayer's captions wear .large, .larger and .solid in place of its local caption-style rules. Waits on C-R4.
 - [x] **R-T1** (P1) RichTextSurface wears .cr-field-shell, carries the vocabulary, places the toolbar by pointer. The rich-text-surface anatomy, engine-agnostic.
 - [x] **R-T2** (P1) The format vocabulary, exported from the main entry. A product binding any engine reads names, shortcuts and glyphs from one list.
 - [x] **R-T3** (P1) RichTextEditor at @crystal-ui/react/editor. Headings, lists, checklists, every mark, indent and outdent, undo and redo, a selection toolbar, Alt+F10, Markdown input rules, form value.

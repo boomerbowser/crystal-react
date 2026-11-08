@@ -167,9 +167,15 @@ function CaptionCues({ cues, captionStyle }: { cues: TextTrackCue[]; captionStyl
     <div
       ref={host}
       aria-hidden="true"
-      className={cx('cr-media-caption', styles['captions'])}
-      data-size={captionStyle.size}
-      data-backing={captionStyle.backing}
+      /* The reader's caption style is the recipe's (2.5.0, C-S5): `.large` and
+         `.larger` scale the cue's whole range, `.solid` puts it on the opaque
+         surface. */
+      className={cx(
+        'cr-media-caption',
+        captionStyle.size === 'normal' ? undefined : captionStyle.size,
+        captionStyle.backing === 'solid' ? 'solid' : undefined,
+        styles['captions'],
+      )}
       hidden={cues.length === 0}
     />
   );

@@ -726,7 +726,14 @@ for (const { edge, flush, square } of EDGES) {
      reader's after a reload. */
   const cueStyle = () => page.evaluate(() => {
     const cue = document.querySelector('#storybook-root [class*="captions"]:not([hidden]) > span');
-    return cue ? { size: parseFloat(getComputedStyle(cue).fontSize), backing: getComputedStyle(cue, '::before').filter } : null;
+    if (!cue) return null;
+    const before = getComputedStyle(cue, '::before');
+    /* No feather is a filter of `none` or a zero blur: the recipe's `.solid`
+       (2.5.0) sets the feather to 0px rather than removing the filter. Solid
+       is also an opaque fill, which the filter alone does not show. */
+    const feathered = !/^(none|blur\(0px\))$/.test(before.filter);
+    const alpha = Number(before.backgroundColor.match(/[\d.]+/g)?.[3] ?? 1);
+    return { size: parseFloat(getComputedStyle(cue).fontSize), feathered, opaque: !feathered && alpha === 1, backing: `${before.backgroundColor} ${before.filter}` };
   });
   const plain = await cueStyle();
   await page.getByRole('button', { name: 'Settings' }).click();
@@ -747,9 +754,9 @@ for (const { edge, flush, square } of EDGES) {
   record(
     'a reader can enlarge captions and make their backing solid, and the choice is kept',
     plain !== null && styled !== null && kept !== null
-      && styled.size >= plain.size * 1.45 && styled.backing === 'none' && plain.backing !== 'none'
-      && kept.size === styled.size && kept.backing === 'none' && /Caption backing Solid/.test(saidStyle),
-    `cue ${plain?.size}px with backing filter ${plain?.backing}; after Larger and Solid ${styled?.size}px and ${styled?.backing}; `
+      && styled.size >= plain.size * 1.45 && styled.opaque && plain.feathered
+      && kept.size === styled.size && kept.opaque && /Caption backing Solid/.test(saidStyle),
+    `cue ${plain?.size}px with backing ${plain?.backing}; after Larger and Solid ${styled?.size}px and ${styled?.backing}; `
     + `after a reload ${kept?.size}px and ${kept?.backing}; said "${saidStyle.trim()}"`,
   );
 }

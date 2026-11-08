@@ -23,15 +23,12 @@
 .frame:focus-within { @include field.focus-ring; }
 .frame[data-invalid] { border-color: var(--cr-danger-ink); }
 
-/* The toolbar is Crystal's `.cr-editor-toolbar`: the row, its padding, the
-   separators, and the move below the text on a touch screen or with `.below`
-   are the recipe's.
-
-   Above the text it stays in the flow rather than sticking to the top of the
-   viewport, as the recipe has it: the recipe gives the bar no backing, so a
-   document scrolled under it would show through (filed upstream). */
+/* The toolbar is Crystal's `.cr-editor-toolbar`, worn in the markup: the row,
+   its padding and separators, the Haze backing rounded to the well, sticking
+   above the text on a fine pointer and below it on a touch screen, and the
+   `.below` and `.above` placements for `toolbarPlacement` are the recipe's
+   (since 2.5.0, D-40). */
 .toolbar {
-  position: relative;
   /* The recipe's 2px gap, handed to the `Toolbar` component through its own
      property: its stylesheet sets the action gap unlayered, which would beat
      the recipe's layered `gap`. */
@@ -41,17 +38,12 @@
   min-inline-size: 0;
 }
 
-/* Below the text it sticks, and sits on the Haze fill so the document scrolled
-   under it does not show through. The inset is the larger of the
-   VirtualKeyboard API's, which the recipe reads, and the one
-   `useKeyboardInset` measures from the visual viewport, because iOS reports
-   only the second. */
+/* Below the text, the recipe sticks it above the keyboard the VirtualKeyboard
+   API reports. iOS reports none, so the inset is the larger of that and the
+   one `useKeyboardInset` measures from the visual viewport. */
 @mixin toolbar-below {
   .toolbar {
-    position: sticky;
     inset-block-end: max(env(keyboard-inset-height, 0px), var(--cr-keyboard-inset, 0px));
-    border-radius: 0 0 calc(var(--cr-radius) - var(--cr-haze-inset)) calc(var(--cr-radius) - var(--cr-haze-inset));
-    background: var(--cr-haze-fill);
   }
 }
 
@@ -59,18 +51,6 @@
 
 @media (pointer: coarse) {
   .frame[data-toolbar='auto'] { @include toolbar-below; }
-
-  /* `toolbarPlacement="top"` asks for the fine-pointer placement on any
-     pointer. The recipe has `.below` for the opposite request and nothing for
-     this one, so its touch rule is undone here (filed upstream). */
-  .frame[data-toolbar='top'] .toolbar {
-    order: 0;
-    inset-block-end: auto;
-    flex-wrap: wrap;
-    overflow-x: visible;
-    border-block-start: 0;
-    border-block-end: 1px solid var(--cr-edge);
-  }
 }
 
 /* The surface is the document, and wears `.cr-editor`: the type, the reading
@@ -79,11 +59,7 @@
    recipe's. It sits on the shell's Haze well, so it paints no fill of its own;
    it scrolls on its own past half the viewport. */
 .surface {
-  /* The recipe's `min-height: calc(var(--cr-text-body-leading) * 4)` multiplies
-     a unitless leading (1.5) and is invalid at computed-value time, so it draws
-     no floor at all; this keeps the surface's reviewed three-target floor until
-     the recipe is corrected (filed upstream). */
-  min-block-size: calc(#{$cr-action-min-target} * 3);
+  /* The floor is the recipe's, four lines inside its padding (D-40). */
   max-block-size: 50vh;
   overflow-y: auto;
 }
