@@ -2039,10 +2039,11 @@ for (const [id, trigger, surface] of [
  * show the new one as current when the menu reopens.
  *
  * Required on macOS, where Playwright's WebKit decodes the clip's H.264 and AAC
- * with the system's media stack, as Safari does (measured on 8 November 2026:
- * `audioTracks` reports `eng` and `fra`). Elsewhere WebKit may not decode the
- * clip at all, so the leg runs if it can and reports itself skipped, with the
- * reason, if it cannot. `VERIFY_WEBKIT=1` makes it required anywhere.
+ * with the system's media stack, as Safari does, and in CI, which sets
+ * `VERIFY_WEBKIT=1`: measured on 8 November 2026, WebKit on both reads the two
+ * tracks and switches them (macOS reports `eng` and `fra`, Linux `en` and
+ * `fr`). Anywhere else the leg runs if WebKit can decode the clip and reports
+ * itself skipped, with the reason, if it cannot.
  */
 const skipped = [];
 {
@@ -2064,7 +2065,9 @@ const skipped = [];
       return {
         has: 'audioTracks' in HTMLMediaElement.prototype,
         ready: video.readyState,
-        list: video.audioTracks ? [...video.audioTracks].map((track) => `${track.language}:${track.enabled ? 'on' : 'off'}`) : [],
+        /* The language's first two letters: WebKit on macOS reports the
+           clip's tracks as `eng` and `fra`, and on Linux as `en` and `fr`. */
+        list: video.audioTracks ? [...video.audioTracks].map((track) => `${track.language.slice(0, 2)}:${track.enabled ? 'on' : 'off'}`) : [],
         said: [...document.querySelectorAll('#storybook-root [role="status"]')].map((region) => region.textContent ?? '').join(' ').trim(),
       };
     });
@@ -2075,7 +2078,7 @@ const skipped = [];
     } else {
       record(
         'WebKit reads the harbour clip\'s two audio tracks, English playing',
-        able && before.list[0] === 'eng:on' && before.list[1] === 'fra:off',
+        able && before.list[0] === 'en:on' && before.list[1] === 'fr:off',
         `audioTracks ${before.has ? 'exists' : 'is missing'}; readyState ${before.ready}; tracks ${JSON.stringify(before.list)}`,
       );
       await wk.getByRole('button', { name: 'Settings' }).click();
@@ -2093,7 +2096,7 @@ const skipped = [];
         const after = await tracks();
         record(
           'in WebKit choosing French switches the element\'s own audio track and says so',
-          options.join('|') === 'English|French' && after.list.join(' ') === 'eng:off fra:on' && /Audio French/.test(after.said),
+          options.join('|') === 'English|French' && after.list.join(' ') === 'en:off fr:on' && /Audio French/.test(after.said),
           `options ${JSON.stringify(options)}; tracks ${JSON.stringify(after.list)}; announced "${after.said}"`,
         );
         await wk.getByRole('button', { name: 'Settings' }).click();
