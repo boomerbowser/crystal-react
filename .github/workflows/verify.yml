@@ -103,8 +103,10 @@ jobs:
       # Both projects: unit in jsdom, and every story mounted in a real Chromium
       # with its play function and its accessibility checks. The second needs a
       # browser, so Playwright is installed here rather than with the gates
-      # below.
-      - run: npx playwright install --with-deps chromium
+      # below. WebKit is for verify:behaviour's audio-track leg (R-M10), which
+      # runs if this WebKit can decode the clip and reports itself skipped,
+      # with the reason, if it cannot. On macOS it is required.
+      - run: npx playwright install --with-deps chromium webkit
       - run: pnpm run test
       - run: pnpm run test:jest
 
