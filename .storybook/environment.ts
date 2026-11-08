@@ -171,8 +171,8 @@ export const ENVIRONMENT_KEYS = Object.keys(environmentArgs) as (keyof typeof en
  * Called explicitly in each render rather than hidden in a decorator, because a
  * decorator cannot change what a story's own render receives.
  */
-export function only<T extends object>(args: T): T {
+export function only<T extends object>(args: T, own: readonly string[] = []): T {
   const out = { ...args } as Record<string, unknown>;
-  for (const key of ENVIRONMENT_KEYS) delete out[key];
+  for (const key of ENVIRONMENT_KEYS) if (!own.includes(key)) delete out[key];
   return out as T;
 }

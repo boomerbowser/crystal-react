@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AudioPlayer } from './AudioPlayer.js';
 import { episodeAudio } from '../../../.storybook/fixtures/index.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Media/Audio player',
@@ -32,7 +33,7 @@ type Story = StoryObj<typeof meta>;
 /* A real file, generated locally (`.storybook/fixtures`), so the transport has a
    duration to show and the scrubber something to move. */
 const withAudio = (args: Parameters<typeof AudioPlayer>[0]) => (
-  <AudioPlayer {...args}><source src={episodeAudio} type="audio/mp4" /></AudioPlayer>
+  <AudioPlayer {...only(args)}><source src={episodeAudio} type="audio/mp4" /></AudioPlayer>
 );
 
 export const Default: Story = { render: withAudio };

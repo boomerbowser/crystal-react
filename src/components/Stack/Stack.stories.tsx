@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Stack, Group } from './Stack.js';
 import { Card } from '../Card/Card.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Layout/Stack and Group',
@@ -29,7 +30,7 @@ type Story = StoryObj<typeof meta>;
 export const Vertical: Story = {
   args: { gap: 'lg' },
   render: (args) => (
-    <Stack {...args}>
+    <Stack {...only(args)}>
       <Card aria-label="One">First</Card>
       <Card aria-label="Two">Second</Card>
       <Card aria-label="Three">Third</Card>

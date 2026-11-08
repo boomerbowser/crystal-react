@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SparkLine } from './SparkLine.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Charts/Spark line',
@@ -38,7 +39,7 @@ export const InASentence: Story = {
   render: (args) => (
     <p style={{ maxWidth: '38em' }}>{/* crystal-allow-literal: a measure in the reader's own text */}
       {'Sessions have grown steadily since the pricing change '}
-      <SparkLine {...args} />
+      <SparkLine {...only(args)} />
       {' and the trend has held through two releases.'}
     </p>
   ),

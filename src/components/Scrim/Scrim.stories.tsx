@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Scrim } from './Scrim.js';
 import { Card } from '../Card/Card.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Overlays/Scrim',
@@ -21,7 +22,7 @@ const meta = {
   args: { isCentred: true },
   render: (args) => (
     <div style={{ position: 'relative', blockSize: 360 }}>
-      <Scrim {...args}>
+      <Scrim {...only(args)}>
         <Card>A surface above the wash.</Card>
       </Scrim>
     </div>

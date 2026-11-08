@@ -153,6 +153,17 @@ for (const file of files) {
     );
   }
 
+  /* A render that spreads its args raw hands the component the fourteen
+     environment args too, and a component that forwards unknown props puts
+     them on the DOM (`palette`, `atmosphere`, `motionspeed` as attributes).
+     `preview.ts`'s default render strips them for a story with no render of
+     its own; a story that writes one spreads `only(args)`. Swept in Chromium
+     on 8 November 2026: 104 of 180 story files leaked before, none after. */
+  for (const match of source.matchAll(/\{\.\.\.args\}/g)) {
+    const line = source.slice(0, match.index).split('\n').length;
+    failures.push(`${name}:${line} spreads \`{...args}\`, which puts the environment args on the component. Spread \`only(args)\`.`);
+  }
+
   if (/^ {2}args: \{/m.test(source)) counts.filesWithArgs += 1;
   if (/^ {2}argTypes: \{/m.test(source)) counts.filesWithArgTypes += 1;
   counts.storiesWithPlay += (source.match(/^ {2}play: /gm) ?? []).length;

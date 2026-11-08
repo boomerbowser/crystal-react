@@ -4,6 +4,7 @@ import type { DialogProps } from './Dialog.js';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Dialog } from './Dialog.js';
 import { Button } from '../Button/Button.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Overlays/Dialog',
@@ -44,7 +45,7 @@ export const Default: Story = {
     return (
       <>
         <Button onPress={() => setOpen(true)}>Open dialog</Button>
-        <Dialog {...args} isOpen={open} onOpenChange={setOpen}>
+        <Dialog {...only(args)} isOpen={open} onOpenChange={setOpen}>
           <p style={{ margin: '0 0 var(--cr-space)' }}>
             Your edits will be lost. This cannot be undone.
           </p>
@@ -65,7 +66,7 @@ export const NotDismissable: Story = {
     return (
       <>
         <Button onPress={() => setOpen(true)}>Open</Button>
-        <Dialog {...args} isOpen={open} onOpenChange={setOpen} isDismissable={false}>
+        <Dialog {...only(args)} isOpen={open} onOpenChange={setOpen} isDismissable={false}>
           <p style={{ margin: '0 0 var(--cr-space)' }}>Escape still closes this.</p>
           <Button onPress={() => setOpen(false)}>Close</Button>
         </Dialog>

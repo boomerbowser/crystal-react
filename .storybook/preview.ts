@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react-vite';
 import { withCrystal, crystalGlobalTypes } from './withCrystal.js';
-import { environmentArgs, environmentArgTypes } from './environment.js';
+import { createElement, type ComponentType } from 'react';
+import { environmentArgs, environmentArgTypes, only } from './environment.js';
 
 /* Crystal's reset, materials and scrollbars, and the resolved theme. A story
    renders against the same CSS an application would.
@@ -29,6 +30,24 @@ const preview: Preview = {
      initial value, so their presence does not disable the toolbar. */
   args: environmentArgs,
   argTypes: environmentArgTypes,
+  /* Storybook's own default render spreads every arg onto the component, the
+     fourteen environment args with them, and a component that forwards what it
+     does not know put them on the DOM: `palette`, `atmosphere` and the rest as
+     attributes on a badge's span or a player's video, and React's warning for
+     the three camelCase ones, in 104 of 180 story files (swept in Chromium on
+     8 November 2026). This is that render with `only()` applied, so a story
+     with no render of its own hands its component only its own args. A story
+     that writes its own render still calls `only()` itself.
+
+     A component whose own prop shares a name with an environment control
+     (`AuthBlock`'s and `TextBalance`'s `mode`, `TrendIndicator`'s
+     `direction`) names it in `parameters.ownArgs`, and keeps it. */
+  render: (args, context) => {
+    const component = context.component as ComponentType<Record<string, unknown>> | undefined;
+    if (!component) throw new Error(`${context.id} has no component and no render`);
+    const own = (context.parameters['ownArgs'] as readonly string[] | undefined) ?? [];
+    return createElement(component, only(args, own));
+  },
   parameters:  {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     a11y: {

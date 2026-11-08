@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { ActivityFeed, type ActivityEvent } from './ActivityFeed.js';
 import { Button } from '../Button/Button.js';
+import { only } from '../../../.storybook/environment.js';
 
 const event = (id: string, actor: string, action: string, timestamp: string): ActivityEvent => ({
   id, actor, action, dateTime: '2026-09-28T09:00:00Z', timestamp,
@@ -46,7 +47,7 @@ export const Arriving: Story = {
         <Button onPress={() => { setList((all) => [event(`n${all.length}`, 'Dara Byrne', 'shared Hiring plan', 'Just now'), ...all]); }}>
           Something happens
         </Button>
-        <ActivityFeed {...args} events={list} isLive />
+        <ActivityFeed {...only(args)} events={list} isLive />
       </div>
     );
   },

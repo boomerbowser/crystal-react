@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ScrollArea } from './ScrollArea.js';
 import { Card } from '../Card/Card.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Layout/Scroll area',
@@ -49,7 +50,7 @@ export const Frost: Story = {
   args: { 'aria-label': 'Material notes' },
   render: (args) => (
     <Card aria-label="Materials">
-      <ScrollArea {...args} style={{ maxHeight: '220px' }} /* crystal-allow-literal: story bound, so the area actually scrolls */>
+      <ScrollArea {...only(args)} style={{ maxHeight: '220px' }} /* crystal-allow-literal: story bound, so the area actually scrolls */>
         {paragraphs.map((text) => (
           <p key={text} style={{ marginBlock: '0 var(--cr-space)' }}>{text}</p>
         ))}
@@ -66,7 +67,7 @@ export const Resin: Story = {
       className="cr-resin"
       style={{ borderRadius: 'var(--cr-radius)', padding: 'var(--cr-space)', maxWidth: '260px' }} /* crystal-allow-literal: story bound, a menu-width control plane */
     >
-      <ScrollArea {...args} style={{ maxHeight: '180px' }} /* crystal-allow-literal: story bound, so the area actually scrolls */>
+      <ScrollArea {...only(args)} style={{ maxHeight: '180px' }} /* crystal-allow-literal: story bound, so the area actually scrolls */>
         {paragraphs.map((text) => (
           <p key={text} style={{ marginBlock: '0 var(--cr-space)' }}>{text.split('.')[0]}</p>
         ))}
@@ -80,7 +81,7 @@ export const Resin: Story = {
 export const Horizontal: Story = {
   args: { axis: 'x', variant: 'resin', 'aria-label': 'Palettes' },
   render: (args) => (
-    <ScrollArea {...args}>
+    <ScrollArea {...only(args)}>
       <div style={{ display: 'flex', gap: 'var(--cr-space)', width: 'max-content' }}>
         {['Prism', 'Bloom', 'Harbor', 'Ion', 'Ember', 'Moss'].map((name) => (
           <Card key={name} aria-label={name} style={{ minWidth: '160px' }} /* crystal-allow-literal: story bound, so the row overflows */>{name}</Card>
@@ -95,7 +96,7 @@ export const Horizontal: Story = {
 export const AlreadyReachable: Story = {
   args: { 'aria-label': 'Actions' },
   render: (args) => (
-    <ScrollArea {...args} style={{ maxHeight: '160px' }} /* crystal-allow-literal: story bound, so the area actually scrolls */>
+    <ScrollArea {...only(args)} style={{ maxHeight: '160px' }} /* crystal-allow-literal: story bound, so the area actually scrolls */>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--cr-space)' }}>
         {paragraphs.map((text) => (
           <button key={text} type="button" className="cr-control">{text.split(' ')[0]}</button>

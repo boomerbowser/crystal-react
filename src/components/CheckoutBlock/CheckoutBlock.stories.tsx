@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { fn } from 'storybook/test';
 import { CheckoutBlock, type CheckoutStep } from './CheckoutBlock.js';
 import type { AddressDescriptor, AddressValue } from '../../commerce/address.js';
+import { only } from '../../../.storybook/environment.js';
 
 const gbp = (amount: number) => ({ amount, currency: 'GBP' });
 const countries: AddressDescriptor[] = [{
@@ -85,7 +86,7 @@ export const AWorkingCheckout: Story = {
     const [errors, setErrors] = useState<Record<string, string>>({});
     return (
       <CheckoutBlock
-        {...args}
+        {...only(args)}
         step={step}
         onStepChange={(next) => { setErrors({}); setStep(next); }}
         address={{ countries, country: 'GB', onCountryChange: () => {}, value, onChange: setValue }}

@@ -1,11 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { AuthBlock, type AuthMode, type AuthState } from './AuthBlock.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Blocks/AuthBlock',
   component: AuthBlock,
   parameters: {
+    /* `mode` is this component's own prop as well as an environment control,
+       so the default render keeps it (see `preview.ts`). */
+    ownArgs: ['mode'],
     layout: 'fullscreen',
     docs: {
       description: {
@@ -42,7 +46,7 @@ export const AWorkingFlow: Story = {
     const [notice, setNotice] = useState<string | null>(null);
     return (
       <AuthBlock
-        {...args}
+        {...only(args)}
         mode={mode}
         state={state}
         {...(notice ? { notice } : {})}

@@ -19,6 +19,34 @@ The live tracker is [`open-issues.md`](open-issues.md).
 ---
 
 
+## R-34 · Storybook's environment controls written onto the DOM
+
+**What.** Found on 8 November 2026 while checking audio-track switching in
+WebKit (R-M10), which printed "React does not recognize the `motionSpeed` prop
+on a DOM element". Every story carries the fourteen environment args (palette,
+mode, atmosphere and the rest) so the Controls panel can offer them, and
+`only(args)` strips them before a render hands args to a component. Storybook's
+default render, used by every story without a render of its own, spreads args
+raw, and so did 22 story files' own renders. A component that forwards unknown
+props then wrote them onto its element: a badge's `<span>` and a player's
+`<video>` carried `palette`, `atmosphere`, `motionspeed` and eleven more as
+attributes. Swept in Chromium over all 599 stories: 104 of the 180 story files
+leaked. React warned only for the three camelCase names; the eleven lowercase
+ones were written silently.
+
+**Why it matters.** The reviewed DOM was not the DOM a product renders, and a
+story's accessibility check ran over attributes no product has.
+
+**Closed** the day it was found. `preview.ts` sets a project-level render that
+applies `only()` before rendering the story's component, and every render that
+spread `{...args}` spreads `only(args)`. The same sweep finds no leak in any
+story. `verify:stories` fails a story file that spreads `{...args}` (planted
+and seen red). Three components own a prop named like an environment control,
+`AuthBlock`'s and `TextBalance`'s `mode` and `TrendIndicator`'s
+`direction`; their stories name it in `parameters.ownArgs` and the render
+keeps it. Stripping it emptied AuthBlock's submit button, which its stories'
+accessibility check caught.
+
 ## R-32 · The two-thousand-row story timing out in CI
 
 **What.** On 8 November 2026 the storybook test project timed out (15 seconds)

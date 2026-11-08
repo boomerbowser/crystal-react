@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { CrudFormBlock, type CrudFormBlockProps, type CrudFormState } from './CrudFormBlock.js';
 import { TextInput } from '../TextInput/TextInput.js';
 import { TextArea } from '../TextArea/TextArea.js';
+import { only } from '../../../.storybook/environment.js';
 
 const sections: CrudFormBlockProps['sections'] = [
   {
@@ -57,7 +58,7 @@ export const RoundTrip: Story = {
     const [found, setFound] = useState<Record<string, string>>({});
     return (
       <CrudFormBlock
-        {...args}
+        {...only(args)}
         state={state}
         errors={found}
         onSubmit={(values) => {

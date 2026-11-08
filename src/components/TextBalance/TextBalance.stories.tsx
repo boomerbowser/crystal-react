@@ -5,6 +5,9 @@ const meta = {
   title: 'Typography/TextBalance',
   component: TextBalance,
   parameters: {
+    /* `mode` is this component's own prop as well as an environment control,
+       so the default render keeps it (see `preview.ts`). */
+    ownArgs: ['mode'],
     docs: {
       description: {
         component:

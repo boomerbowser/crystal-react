@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { VideoPlayer } from './VideoPlayer.js';
 import { harbourVideo, harbourCaptionsEnglish, harbourCaptionsFrench } from '../../../.storybook/fixtures/index.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Media/Video player',
@@ -43,7 +44,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => (
-    <VideoPlayer {...args}>
+    <VideoPlayer {...only(args)}>
       <source src={harbourVideo} type="video/mp4" />
     </VideoPlayer>
   ),
@@ -51,7 +52,7 @@ export const Default: Story = {
 
 export const WithCaptions: Story = {
   render: (args) => (
-    <VideoPlayer {...args}>
+    <VideoPlayer {...only(args)}>
       <source src={harbourVideo} type="video/mp4" />
       <track kind="captions" srcLang="en" label="English" src={harbourCaptionsEnglish} />
       <track kind="subtitles" srcLang="fr" label="Français" src={harbourCaptionsFrench} />
@@ -76,7 +77,7 @@ export const WithSettings: Story = {
   render: function Render(args) {
     const [quality, setQuality] = useState<string | null>(args.quality ?? null);
     return (
-      <VideoPlayer {...args} quality={quality} onQualityChange={setQuality}>
+      <VideoPlayer {...only(args)} quality={quality} onQualityChange={setQuality}>
         <source src={harbourVideo} type="video/mp4" />
         <track kind="captions" srcLang="en" label="English" src={harbourCaptionsEnglish} default />
         <track kind="subtitles" srcLang="fr" label="Français" src={harbourCaptionsFrench} />
@@ -91,7 +92,7 @@ export const AspectRatios: Story = {
   render: (args) => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, alignItems: 'start' }}> {/* crystal-allow-literal: the story's own grid, four players side by side */}
       {(['16 / 9', '4 / 3', '1 / 1', '9 / 16'] as const).map((ratio) => (
-        <VideoPlayer key={ratio} {...args} label={`${args.label}, ${ratio}`} aspectRatio={ratio} fit={ratio === '9 / 16' ? 'cover' : 'contain'}>
+        <VideoPlayer key={ratio} {...only(args)} label={`${args.label}, ${ratio}`} aspectRatio={ratio} fit={ratio === '9 / 16' ? 'cover' : 'contain'}>
           <source src={harbourVideo} type="video/mp4" />
         </VideoPlayer>
       ))}

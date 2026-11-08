@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { PlayerShell } from './PlayerShell.js';
 import type { PlaylistTrack } from '../PlaylistBlock/PlaylistBlock.js';
+import { only } from '../../../.storybook/environment.js';
 
 /* A tiny inline file, as VideoPlayer's stories use. These stories show the
    transport, the full screen, the queue and the metadata, so the picture does
@@ -39,7 +40,7 @@ const meta = {
     const [playing, setPlaying] = useState('e1');
     return (
       <PlayerShell
-        {...args}
+        {...only(args)}
         queue={{
           label: 'Up next',
           tracks: order,

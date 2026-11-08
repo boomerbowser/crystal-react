@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
 import { SearchBlock, type SearchResult, type SearchState, type SearchSuggestion } from './SearchBlock.js';
+import { only } from '../../../.storybook/environment.js';
 
 const catalogue: SearchSuggestion[] = [
   { id: 'harbour', label: 'harbour', description: 'Projects and documents' },
@@ -61,7 +62,7 @@ export const AWorkingSearch: Story = {
       : [];
     return (
       <SearchBlock
-        {...args}
+        {...only(args)}
         query={query}
         onQueryChange={setQuery}
         suggestions={suggestions}

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { fn } from 'storybook/test';
 import { CartDrawer, type CartDrawerLine } from './CartDrawer.js';
 import { Button } from '../Button/Button.js';
+import { only } from '../../../.storybook/environment.js';
 
 const gbp = (amount: number) => ({ amount, currency: 'GBP' });
 const lines: CartDrawerLine[] = [
@@ -64,7 +65,7 @@ export const AWorkingBasket: Story = {
       <>
         <Button onPress={() => { setOpen(true); }}>Basket</Button>
         <CartDrawer
-          {...args}
+          {...only(args)}
           isOpen={open}
           onOpenChange={setOpen}
           lines={held}

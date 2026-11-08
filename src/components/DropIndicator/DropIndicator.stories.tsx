@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DropIndicator } from './DropIndicator.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Utilities/DropIndicator',
@@ -23,7 +24,7 @@ const meta = {
   render: (args) => (
     <div role="listbox" aria-label="Documents" style={{ display: 'grid', gap: 8, maxInlineSize: 320 }}>
       <div role="option" aria-selected={false}>Quarterly figures</div>
-      <DropIndicator {...args} />
+      <DropIndicator {...only(args)} />
       <div role="option" aria-selected={false}>Board minutes</div>
     </div>
   ),

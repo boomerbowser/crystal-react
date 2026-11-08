@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { ProfileBlock, type ProfileState } from './ProfileBlock.js';
 import { TextInput } from '../TextInput/TextInput.js';
+import { only } from '../../../.storybook/environment.js';
 
 const editor = (
   <>
@@ -61,7 +62,7 @@ export const AWorkingProfile: Story = {
     const [name, setName] = useState('Ada Fern');
     return (
       <ProfileBlock
-        {...args}
+        {...only(args)}
         name={name}
         state={state}
         onEdit={() => { setState('editing'); }}

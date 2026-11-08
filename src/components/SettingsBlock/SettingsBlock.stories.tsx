@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { SettingsBlock, type SettingsBlockProps, type SettingsState } from './SettingsBlock.js';
 import { Switch } from '../Switch/Switch.js';
 import { Button } from '../Button/Button.js';
+import { only } from '../../../.storybook/environment.js';
 
 const groups = (onChange?: () => void): SettingsBlockProps['groups'] => [
   {
@@ -72,7 +73,7 @@ export const AWorkingPage: Story = {
           Go to Home
         </Button>
         <SettingsBlock
-          {...args}
+          {...only(args)}
           groups={groups(() => { setState('dirty'); })}
           state={state}
           onSave={() => { save(); }}

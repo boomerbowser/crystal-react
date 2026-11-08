@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { fn } from 'storybook/test';
 import { RichTextSurface, Mentions, type FormatAction } from './RichTextSurface.js';
+import { only } from '../../../.storybook/environment.js';
 
 const Bold = (
   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M7 5h6a3.5 3.5 0 0 1 0 7H7zm0 7h7a3.5 3.5 0 0 1 0 7H7z" /></svg>
@@ -51,7 +52,7 @@ const meta = {
     ];
     return (
       <div style={{ maxInlineSize: 520 }}>
-        <RichTextSurface {...args} actions={args.isReadOnly ? [] : actions} />
+        <RichTextSurface {...only(args)} actions={args.isReadOnly ? [] : actions} />
       </div>
     );
   },

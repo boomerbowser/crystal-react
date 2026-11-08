@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { fn } from 'storybook/test';
 import { StorefrontBlock, type StorefrontProduct } from './StorefrontBlock.js';
 import { Checkbox, CheckboxGroup } from '../Checkbox/Checkbox.js';
+import { only } from '../../../.storybook/environment.js';
 
 const gbp = (amount: number) => ({ amount, currency: 'GBP' });
 const picture = (colour: string) => (
@@ -57,7 +58,7 @@ export const FilteringForReal: Story = {
     const shown = inStock ? products.filter((product) => product.availability !== 'out-of-stock') : products;
     return (
       <StorefrontBlock
-        {...args}
+        {...only(args)}
         products={shown}
         resultCount={shown.length}
         applied={inStock ? [{ id: 'stock', label: 'In stock' }] : []}

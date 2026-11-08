@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { fn } from 'storybook/test';
 import { NotificationCentre, type CentreNotification } from './NotificationCentre.js';
+import { only } from '../../../.storybook/environment.js';
 
 const seed: CentreNotification[] = [
   { id: 'a', group: 'Today', title: 'Ada commented on Quarterly figures', unread: true, dateTime: '2026-09-28T09:00:00Z', timestamp: '9:00' },
@@ -43,7 +44,7 @@ export const MarkingAndUndoing: Story = {
     return (
       <div style={{ maxInlineSize: 560 }}>
         <NotificationCentre
-          {...args}
+          {...only(args)}
           notifications={items}
           onMarkRead={(ids) => { set(ids, false); }}
           onMarkUnread={(ids) => { set(ids, true); }}

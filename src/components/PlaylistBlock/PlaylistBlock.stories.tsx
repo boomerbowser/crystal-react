@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { fn } from 'storybook/test';
 import { PlaylistBlock, type PlaylistTrack } from './PlaylistBlock.js';
+import { only } from '../../../.storybook/environment.js';
 
 const tracks: PlaylistTrack[] = [
   { id: 'a', title: 'Harbour Lights', titleText: 'Harbour Lights', artist: 'The Tides', duration: '3:41' },
@@ -34,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 export const Playing: Story = {};
 /** Nothing playing: no row is current. */
 export const AtRest: Story = {
-  render: function AtRestStory({ nowPlaying: _, ...args }) { return <PlaylistBlock {...args} />; },
+  render: function AtRestStory({ nowPlaying: _, ...args }) { return <PlaylistBlock {...only(args)} />; },
 };
 
 /** Reordering for real, by pointer or by keyboard from a row's handle. */
@@ -45,7 +46,7 @@ export const Reordering: Story = {
     return (
       <div style={{ maxInlineSize: 520 }}>
         <PlaylistBlock
-          {...args}
+          {...only(args)}
           tracks={order.map((id) => tracks.find((track) => track.id === id)!)}
           nowPlaying={playing}
           onReorder={setOrder}
@@ -73,7 +74,7 @@ export const AddingAndRemoving: Story = {
             Remove the first track
           </button>
         </div>
-        <PlaylistBlock {...args} tracks={queue} {...(queue[0] ? { nowPlaying: queue[0].id } : {})} onReorder={(ids) => { setQueue(ids.map((id) => queue.find((track) => track.id === id)!)); }} />
+        <PlaylistBlock {...only(args)} tracks={queue} {...(queue[0] ? { nowPlaying: queue[0].id } : {})} onReorder={(ids) => { setQueue(ids.map((id) => queue.find((track) => track.id === id)!)); }} />
       </div>
     );
   },
