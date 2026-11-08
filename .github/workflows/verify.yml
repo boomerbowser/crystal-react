@@ -104,8 +104,8 @@ jobs:
       # with its play function and its accessibility checks. The second needs a
       # browser, so Playwright is installed here rather than with the gates
       # below. WebKit is for verify:behaviour's audio-track leg (R-M10), which
-      # runs if this WebKit can decode the clip and reports itself skipped,
-      # with the reason, if it cannot. On macOS it is required.
+      # this runner's WebKit decodes and switches, so the gate's step requires
+      # it (VERIFY_WEBKIT=1) rather than letting it skip.
       - run: npx playwright install --with-deps chromium webkit
       - run: pnpm run test
       - run: pnpm run test:jest
@@ -179,6 +179,8 @@ jobs:
           npm run build
 
       - name: Measure and drive the built stories
+        env:
+          VERIFY_WEBKIT: '1'
         run: |
           node scripts/serve-static.mjs storybook-static 6006 &
           for _ in $(seq 1 40); do
