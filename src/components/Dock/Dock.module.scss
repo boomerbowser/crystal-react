@@ -22,7 +22,9 @@
    the label. This rule adds only the icon's gap. */
 .item { gap: $cr-action-gap; }
 
-.item[aria-current] .icon { color: var(--cr-on-primary); }
+/* The link's own ink, which is the fill's on-primary at rest and crosses with
+   the label while the pill travels (D-37). */
+.item[aria-current] .icon { color: inherit; }
 
 .icon { display: inline-flex; flex: none; color: var(--cr-muted); }
 .icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }

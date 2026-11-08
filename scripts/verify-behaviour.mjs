@@ -1270,7 +1270,6 @@ for (const { edge, flush, square } of EDGES) {
  */
 {
   const ROWS = [
-    ['navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', '[role=radiogroup] label', 'selection'],
     ['data-display-calendar--today-and-selected', '[class*="_cell_"]:not([data-outside-month]):not([data-disabled]):not([data-unavailable])', 'selection'],
     ['navigation-pagination-and-steps--pages', 'button[class*="_page_"]', 'selection'],
     ['commerce-variant-selector--default', '[role=radiogroup] label:not([data-disabled])', 'selection'],
@@ -1312,10 +1311,11 @@ for (const { edge, flush, square } of EDGES) {
 }
 
 /* A destination becoming current from outside: a client-side route change, which
-   in a story is its args changing. The bar does not remount, so the new current
+   in a story is its args changing. The rail does not remount, so the new current
    destination plays `selection`, and the page load that rendered the first one
-   current played nothing. */
-for (const id of ['navigation-rails-and-bars--dock-bar', 'navigation-rails-and-bars--bottom-bar', 'navigation-rails-and-bars--rail']) {
+   current played nothing. The dock and bottom navigation draw their current
+   destination with the travelling pill since R-A8, checked below. */
+for (const id of ['navigation-rails-and-bars--rail']) {
   await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
   const played = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root a')]
@@ -1332,6 +1332,137 @@ for (const id of ['navigation-rails-and-bars--dock-bar', 'navigation-rails-and-b
     atRest.length === 0 && after.length === 1 && current !== undefined && after[0] === current,
     `played on load ${JSON.stringify(atRest)}; after currentId changed ${JSON.stringify(after)}, current is ${JSON.stringify(current)}`,
   );
+}
+
+/* ------------------------------------- the selection pill travels (R-A8, D-37)
+ *
+ * Tabs, the segmented control, the dock and bottom navigation draw their
+ * selection as Crystal's one `.cr-indicator.pill` behind the selected segment,
+ * and move it with `selection-travel` when a person changes the selection. Per
+ * strip and per text direction: on load the pill is under the selected segment
+ * and nothing moved; a click travels it, never past its destination (the recipe
+ * is critically damped), and it ends under the new segment with the segment's
+ * own fill handed to it; the arrow keys do the same in tabs and the segmented
+ * control; a change with no person behind it (the story's args, as a route
+ * change would be) places it without travelling; and under reduced motion a
+ * click places it at once. The pill is measured against the segment, so a
+ * pill drawn in the wrong place fails here whatever the stylesheet says.
+ */
+{
+  const STRIPS = [
+    // [name, story, the plane, the segments, the selected segment, arrow keys move it]
+    ['tabs', 'navigation-tabs-and-breadcrumbs--tab-strip', '[role=tablist]', '[role=tab]', '[role=tab][aria-selected=true]', true],
+    ['segmented control', 'navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', '[role=radiogroup] .cr-dock', 'label', 'label[data-selected]', true],
+    ['dock', 'navigation-rails-and-bars--the-selection-travels', 'nav[aria-label=Dock] ul.cr-dock-inner', 'a', 'a[aria-current]', false],
+    ['bottom navigation', 'navigation-rails-and-bars--the-selection-travels', 'nav[aria-label="Bottom bar"]', 'a', 'a[aria-current]', false],
+  ];
+  const measure = (plane, selected) => page.evaluate(([plane, selected]) => {
+    const strip = document.querySelector(`#storybook-root ${plane}`);
+    const pill = strip?.querySelector(':scope > .cr-indicator.pill');
+    const target = strip?.querySelector(selected);
+    if (!pill || !target) return { missing: pill ? 'the selected segment' : 'the pill' };
+    const a = pill.getBoundingClientRect(), b = target.getBoundingClientRect();
+    return {
+      label: target.textContent.trim(),
+      off: Math.max(Math.abs(a.left - b.left), Math.abs(a.top - b.top), Math.abs(a.width - b.width), Math.abs(a.height - b.height)),
+      placed: pill.hasAttribute('data-placed'),
+      state: pill.dataset.crMotionState ?? null,
+      fill: getComputedStyle(pill).backgroundColor,
+      segmentFill: getComputedStyle(target).backgroundColor,
+      count: strip.querySelectorAll(':scope > .cr-indicator.pill').length,
+    };
+  }, [plane, selected]);
+  /* Samples the pill's position every frame from now until it has been still
+     for a while, so a travel is seen whole. */
+  const watch = (plane) => page.evaluate((plane) => new Promise((resolve) => {
+    const strip = document.querySelector(`#storybook-root ${plane}`);
+    const pill = strip.querySelector(':scope > .cr-indicator.pill');
+    const samples = [];
+    const start = performance.now();
+    const tick = () => {
+      const r = pill.getBoundingClientRect();
+      samples.push(r.left - strip.getBoundingClientRect().left);
+      if (performance.now() - start < 900) requestAnimationFrame(tick);
+      else resolve(samples);
+    };
+    requestAnimationFrame(tick);
+  }), plane);
+  const at = (one) => (one.missing ? `no ${one.missing}` : `${one.label}: ${one.off.toFixed(2)}px off, placed ${one.placed}, ${one.state}, pill ${one.fill}, segment ${one.segmentFill}`);
+
+  for (const dir of ['ltr', 'rtl']) {
+    for (const [name, id, plane, segments, selected, arrows] of STRIPS) {
+      await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story&globals=direction:${dir}`, { waitUntil: 'networkidle' });
+      await page.waitForTimeout(400);
+      const load = await measure(plane, selected);
+      record(
+        `the pill in the ${name} (${dir}): one pill, under the selected segment on load, placed without moving, holding the segment's fill`,
+        !load.missing && load.count === 1 && load.off < 0.5 && load.placed && load.state === 'instant'
+          && load.fill !== 'rgba(0, 0, 0, 0)' && load.segmentFill === 'rgba(0, 0, 0, 0)',
+        at(load),
+      );
+
+      const all = page.locator(`#storybook-root ${plane} ${segments}`);
+      const last = (await all.count()) - 1;
+      const trace = watch(plane);
+      await all.nth(last).click();
+      const samples = await trace;
+      const clicked = await measure(plane, selected);
+      const end = samples.at(-1);
+      const toward = Math.sign(end - samples[0]);
+      const passed = samples.some((x) => (toward > 0 ? x > end + 0.5 : x < end - 0.5));
+      const moving = new Set(samples.map((x) => x.toFixed(1))).size;
+      record(
+        `the pill in the ${name} (${dir}): a click travels it, never past the segment, and it ends under it`,
+        !clicked.missing && moving > 3 && !passed && clicked.off < 0.5 && clicked.state === 'finished',
+        `${moving} positions seen, ${passed ? 'passed its destination' : 'never passed it'}; ${at(clicked)}`,
+      );
+
+      if (arrows) {
+        await page.keyboard.press(dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft');
+        await page.waitForTimeout(700);
+        const keyed = await measure(plane, selected);
+        record(
+          `the pill in the ${name} (${dir}): an arrow key travels it to the segment it chose`,
+          !keyed.missing && keyed.label !== clicked.label && keyed.off < 0.5 && keyed.state === 'finished',
+          at(keyed),
+        );
+      }
+    }
+  }
+
+  /* No person behind the change: the story's args move the current
+     destination, as a product's router would. */
+  await page.goto(`${ORIGIN}/iframe.html?id=navigation-rails-and-bars--the-selection-travels&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const quiet = watch('nav[aria-label=Dock] ul.cr-dock-inner');
+  await page.evaluate(() => {
+    window.__STORYBOOK_PREVIEW__.channel.emit('updateStoryArgs', {
+      storyId: 'navigation-rails-and-bars--the-selection-travels', updatedArgs: { currentId: 'settings' },
+    });
+  });
+  const quietSamples = await quiet;
+  const routed = await measure('nav[aria-label=Dock] ul.cr-dock-inner', 'a[aria-current]');
+  record(
+    'the dock\'s pill: a current destination changed with no person behind it is placed there, not travelled',
+    !routed.missing && routed.label === 'Settings' && routed.off < 0.5 && routed.state === 'instant'
+      && new Set(quietSamples.map((x) => x.toFixed(1))).size <= 2,
+    `${new Set(quietSamples.map((x) => x.toFixed(1))).size} positions seen; ${at(routed)}`,
+  );
+
+  /* Reduced motion removes the travel and keeps the change. */
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto(`${ORIGIN}/iframe.html?id=navigation-tabs-and-breadcrumbs--tab-strip&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const still = watch('[role=tablist]');
+  await page.locator('#storybook-root [role=tablist] [role=tab]').last().click();
+  const stillSamples = await still;
+  const reduced = await measure('[role=tablist]', '[role=tab][aria-selected=true]');
+  record(
+    'the tabs\' pill under reduced motion: a click places it under the new tab at once',
+    !reduced.missing && reduced.off < 0.5 && reduced.state === 'instant' && new Set(stillSamples.map((x) => x.toFixed(1))).size <= 2,
+    `${new Set(stillSamples.map((x) => x.toFixed(1))).size} positions seen; ${at(reduced)}`,
+  );
+  await page.emulateMedia({ reducedMotion: null });
 }
 
 /* `field-focus` marks focus arriving at a field: on its shell, once, when a

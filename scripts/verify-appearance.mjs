@@ -1320,11 +1320,15 @@ for (const [id, selector, what] of DISABLED) {
     ['utility-toolbar-and-transition--floating', '[role=toolbar][class*="_resin_"]', 'bare'],
     ['screens-commandbar--default', '[role=toolbar]', 'bare'],
     ['navigation-rails-and-bars--dock-bar', 'nav[class*="_dock_"]', 'a'],
-    ['navigation-rails-and-bars--bottom-bar', 'nav[class*="_bar_"]', null],
+    /* Bottom navigation lays its destinations out as icon over label, at its
+       own weight and padding, so only what selection paints is compared: the
+       fill (on the pill) and its ink. Until R-33 the ink was not compared, and
+       the current destination's was `--cr-text` on the primary fill. */
+    ['navigation-rails-and-bars--bottom-bar', 'nav[class*="_bar_"]', 'a', ['color']],
   ];
-  for (const [id, selector, labels] of DOCKS) {
+  for (const [id, selector, labels, only] of DOCKS) {
     await open(id, '#storybook-root');
-    const seen = await page.evaluate(([selector, labels]) => {
+    const seen = await page.evaluate(([selector, labels, only]) => {
       const strips = [...document.querySelectorAll(`#storybook-root ${selector}`)];
       const out = [];
       for (const strip of strips) {
@@ -1353,19 +1357,40 @@ for (const [id, selector, what] of DISABLED) {
           const items = [...strip.querySelectorAll(labels)];
           const current = items.find((el) => el.matches('[data-selected], [aria-selected=true], [aria-current]:not([aria-current=false])'));
           const other = items.find((el) => el !== current);
+          /* Since R-A8 the selected segment's fill and contact shadow are
+             Crystal's pill behind it (D-37), and the segment paints neither. So
+             the pill is compared with the planted selected button for those,
+             and must sit exactly under the segment; the segment for the rest. */
+          /* In the plane: the strip itself, or the dock's inner row. */
+          const pill = strip.querySelector(':scope > .cr-indicator.pill[data-placed], :scope > .cr-dock-inner > .cr-indicator.pill[data-placed]');
+          const PAINT = ['backgroundColor', 'boxShadow'];
           for (const [mine, crystal, state] of [[current, planted.children[0], 'selected'], [other, planted.children[1], 'unselected']]) {
             if (!mine) { differs.push(`no ${state} label found`); continue; }
             const m = getComputedStyle(mine), c = getComputedStyle(crystal);
-            for (const k of ['backgroundColor', 'color', 'fontWeight', 'paddingTop', 'paddingLeft', 'minHeight', 'height', 'borderTopLeftRadius', 'boxShadow']) {
+            const keys = only ?? ['backgroundColor', 'color', 'fontWeight', 'paddingTop', 'paddingLeft', 'minHeight', 'height', 'borderTopLeftRadius', 'boxShadow'];
+            for (const k of new Set([...keys, ...(state === 'selected' ? PAINT : [])])) {
+              if (state === 'selected' && PAINT.includes(k)) {
+                if (!pill) { differs.push('no placed pill behind the selected label'); break; }
+                const p = getComputedStyle(pill);
+                if (p[k] !== c[k]) differs.push(`pill ${k} ${p[k]} (Crystal ${c[k]})`);
+                const bare = k === 'backgroundColor' ? 'rgba(0, 0, 0, 0)' : 'none';
+                if (m[k] !== bare) differs.push(`selected ${k} ${m[k]} over the pill (Crystal ${bare})`);
+                continue;
+              }
               if (m[k] !== c[k]) differs.push(`${state} ${k} ${m[k]} (Crystal ${c[k]})`);
             }
+          }
+          if (pill && current) {
+            const a = pill.getBoundingClientRect(), b = current.getBoundingClientRect();
+            const off = Math.max(Math.abs(a.left - b.left), Math.abs(a.top - b.top), Math.abs(a.width - b.width), Math.abs(a.height - b.height));
+            if (off >= 0.5) differs.push(`the pill is ${off.toFixed(2)}px off the selected label`);
           }
         }
         planted.remove();
         out.push(differs);
       }
       return out;
-    }, [selector, labels]);
+    }, [selector, labels, only]);
     record(`${id}: a dock-surface strip was found`, seen.length > 0, `nothing matched ${selector}`);
     const wrong = seen.filter((differs) => differs.length > 0);
     record(`${id}: the strip is Crystal's dock`, wrong.length === 0, wrong.map((differs) => differs.join(', ')).join(' | '));

@@ -43,8 +43,14 @@
   cursor: pointer;
 }
 
-.item[aria-current] { font-weight: 800; }
-.item[aria-current] .icon { color: var(--cr-primary); }
+/* The current destination sits on Crystal's primary fill (`.cr-dock` since
+   2.3.0, the travelling pill since 2.6.0), so its ink is the fill's own ink.
+   Until R-33 this rule kept `--cr-text` and tinted the icon primary, both
+   written for a bar with no fill: dark ink on the primary measured 2.7:1 and
+   the icon disappeared into the fill. The icon inherits the link's ink, so it
+   crosses with the label while the pill travels. */
+.item[aria-current] { font-weight: 800; color: var(--cr-on-primary); }
+.item[aria-current] .icon { color: inherit; }
 
 .icon { display: inline-flex; flex: none; color: var(--cr-muted); }
 .icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
@@ -57,7 +63,9 @@
   max-inline-size: 100%;
 }
 
-.item:hover { background: var(--cr-surface-alt); }
+/* Not the current destination: this module is unlayered, so a hover here would
+   paint over the pill under it. */
+.item:hover:not([aria-current]) { background: var(--cr-surface-alt); }
 
 .item:focus-visible {
   outline: $cr-focus-core-width solid var(--cr-focus-core);
