@@ -106,7 +106,7 @@
     }
   },
   "dependencies": {
-    "@crystal-ui/core": "file:/private/tmp/claude-501/-Users-princess-Development-crystal/283b5242-b92a-4905-aa84-f3775dc1219e/scratchpad/crystal-ui-core-2.5.0.tgz",
+    "@crystal-ui/core": "^2.5.0",
     "@internationalized/date": "^3.12.4",
     "@internationalized/number": "^3.6.8",
     "d3-geo": "^3.1.1",
