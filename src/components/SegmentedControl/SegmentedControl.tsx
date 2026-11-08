@@ -13,12 +13,12 @@
  * screen. In forced colours the fill goes and a ring takes its place, because
  * Chromium's text backplate erases a filled label.
  */
-import { useContext, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import {
-  RadioGroup, Radio, Label, Text, FieldError, RadioGroupStateContext, type RadioGroupProps,
+  RadioGroup, Radio, Label, Text, FieldError, type RadioGroupProps,
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
-import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
+import { useTravelMotion } from '../../motion/useTravelMotion.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import styles from './SegmentedControl.module.scss';
 
@@ -46,6 +46,10 @@ export function SegmentedControl({
      `aria-label`, so a rich label is rendered visually hidden instead. Dropping
      it would leave the group unnamed. */
   const hiddenStringLabel = labelHidden && typeof label === 'string' ? label : undefined;
+  /* The selection is Crystal's pill behind the chosen segment, and it travels
+     when a person chooses another (D-37). React Aria marks the chosen
+     segment's label `data-selected`. */
+  const { planeRef } = useTravelMotion('selection-travel', 'label[data-selected]');
 
   return (
     /* A radio group, not a tablist. The options are mutually exclusive values,
@@ -58,7 +62,7 @@ export function SegmentedControl({
       {labelHidden
         ? (hiddenStringLabel ? null : <VisuallyHidden as="span"><Label>{label}</Label></VisuallyHidden>)
         : <Label className={cx(styles['legend'])}>{label}</Label>}
-      <div className={cx(styles['strip'], 'cr-dock')}>
+      <div ref={planeRef} className={cx(styles['strip'], 'cr-dock')}>
         {options.map((option) => <Segment key={option.value} option={option} />)}
       </div>
       {description ? (
@@ -69,16 +73,12 @@ export function SegmentedControl({
   );
 }
 
-/* One segment. It plays `selection` when it becomes the chosen one, by a click,
-   an arrow key or a value set from outside, and not when the control mounts
-   with it already chosen. The group's state is React Aria's, read from its
-   context, so the segment moves on the value React Aria resolved. */
+/* One segment. Its selection is drawn by the strip's pill, which moves to it;
+   the segment itself does not move (D-37 replaced `selection`'s squash here
+   with `selection-travel`). */
 function Segment({ option }: { option: SegmentedOption }): React.JSX.Element {
-  const state = useContext(RadioGroupStateContext);
-  const scope = useChangeMotion(state?.selectedValue === option.value, entered('selection'));
   return (
     <Radio
-      ref={scope as never}
       value={option.value}
       isDisabled={option.isDisabled ?? false}
       className={cx(styles['segment'])}

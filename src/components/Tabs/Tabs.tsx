@@ -30,6 +30,7 @@ import {
 } from 'react-aria-components';
 import { cx } from '../../styles/cx.js';
 import { useMotion } from '../../motion/useMotion.js';
+import { useTravelMotion } from '../../motion/useTravelMotion.js';
 import styles from './Tabs.module.scss';
 
 export interface TabItem {
@@ -65,11 +66,16 @@ export function Tabs({
      dropped silently and leave the list unnamed, so it is shown instead. */
   const nameable = typeof label === 'string' ? label : undefined;
   const visible = labelVisible || nameable === undefined;
+  /* The selected tab's fill is Crystal's pill, which travels to the tab a
+     person chooses (D-37). The hook puts it in the list itself, `aria-hidden`,
+     outside React Aria's collection. */
+  const { planeRef } = useTravelMotion('selection-travel', '[role=tab][aria-selected=true]');
 
   return (
     <AriaTabs {...props} className={cx(styles['tabs'], className)}>
       {visible ? <span id={labelId} className={cx(styles['label'])}>{label}</span> : null}
       <TabList
+        ref={planeRef as never}
         className={cx(styles['strip'], 'cr-dock')}
         items={items}
         {...(visible ? { 'aria-labelledby': labelId } : { 'aria-label': nameable })}

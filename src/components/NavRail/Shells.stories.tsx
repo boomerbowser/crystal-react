@@ -110,6 +110,33 @@ export const BottomBar: Story = {
   ),
 };
 
+/* Client-side navigation, as a product's router does it: a press on a
+   destination makes it the current one, and the pill travels to it (D-37,
+   R-A8). The links' default is prevented because a story has no routes. The
+   Controls panel's \`currentId\` also moves the current destination, with no
+   person behind it, and the pill is placed there without travelling.
+   `verify:behaviour` drives this story. */
+export const TheSelectionTravels: Story = {
+  render: function Render(args) {
+    const [current, setCurrent] = useState(args.currentId ?? 'library');
+    const [seen, setSeen] = useState(args.currentId);
+    if (args.currentId !== seen) { setSeen(args.currentId); setCurrent(args.currentId ?? 'library'); }
+    const go = (event: React.MouseEvent) => {
+      const link = (event.target as Element).closest('a');
+      if (!link) return;
+      event.preventDefault();
+      const id = destinations.find((one) => one.href === link.getAttribute('href'))?.id;
+      if (id) setCurrent(id);
+    };
+    return (
+      <Stack gap="lg">
+        <div onClickCapture={go}><Dock items={destinations} currentId={current} aria-label="Dock" /></div>
+        <div onClickCapture={go}><BottomNavigation items={destinations} currentId={current} aria-label="Bottom bar" /></div>
+      </Stack>
+    );
+  },
+};
+
 /* The three side by side. No gate uses this story. A reviewer opens it to check
    that the same destinations read as the same destinations. */
 export const TheSameDestinationsInThreeShells: Story = {

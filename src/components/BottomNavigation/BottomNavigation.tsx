@@ -24,7 +24,7 @@
  */
 import { useCallback, useState, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
-import { CurrentLink } from '../NavLink/CurrentLink.js';
+import { useTravelMotion } from '../../motion/useTravelMotion.js';
 import styles from './BottomNavigation.module.scss';
 
 export interface BottomNavigationItem {
@@ -50,9 +50,13 @@ export function BottomNavigation({
   const [height, setHeight] = useState<number | null>(null);
   /* Measured, not declared. A height written into a token becomes wrong, without
      warning, when somebody adds a second line to a label. */
+  /* The primary fill is Crystal's pill behind the current destination, and it
+     travels to the one a person goes to (D-37). */
+  const { planeRef } = useTravelMotion('selection-travel', 'a[aria-current]:not([aria-current=false])');
   const measure = useCallback((node: HTMLElement | null) => {
+    planeRef(node);
     if (node) setHeight(node.getBoundingClientRect().height);
-  }, []);
+  }, [planeRef]);
 
   return (
     <nav
@@ -66,8 +70,7 @@ export function BottomNavigation({
           const isCurrent = item.id === currentId;
           return (
             <li key={item.id} className={cx(styles['slot'])}>
-              <CurrentLink
-                isCurrent={isCurrent}
+              <a
                 href={item.href}
                 {...(isCurrent ? { 'aria-current': 'page' as const } : {})}
                 className={cx(styles['item'])}
@@ -76,7 +79,7 @@ export function BottomNavigation({
                   <span className={cx(styles['icon'])} aria-hidden="true">{item.icon}</span>
                 ) : null}
                 <span className={cx(styles['label'])}>{item.label}</span>
-              </CurrentLink>
+              </a>
             </li>
           );
         })}

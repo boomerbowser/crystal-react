@@ -9,7 +9,7 @@
  * `mark-in`. These recipes exist only from 2.2.0. On anything older `useMotion`
  * throws for an unknown recipe, so a dependency range that let 2.1 back in would
  * ship components that crash as soon as something starts loading. The
- * dependency says `^2.5.0`. This test checks the installed version, because the
+ * dependency says `^2.6.0`. This test checks the installed version, because the
  * range is only what was requested.
  *
  * The floor is 2.3, because the location dot, the count badge, the group, the
@@ -27,6 +27,11 @@
  * video player its caption style (R-T10). On 2.4 the editor would collapse to
  * its padding, a document would show through the toolbar, and a reader's
  * caption style would do nothing.
+ *
+ * The floor is 2.6 since 16 November 2026: tabs, the segmented control, the dock
+ * and bottom navigation draw their selection as Crystal's travelling pill
+ * (R-A8, D-37). On 2.5 the pill has no styles, and the segment it took the
+ * fill from would show none at all.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -42,17 +47,17 @@ const installed = JSON.parse(readFileSync(join(dirname(stylesheetPath), '..', 'p
 const [major = 0, minor = 0] = installed.version.split('.').map(Number);
 
 /* Every recipe this library plays that an older Crystal does not have. */
-const PLAYED_FROM_2_2 = ['activity-turn', 'activity-travel', 'skeleton-sweep', 'mark-in'];
+const PLAYED_FROM_2_2 = ['activity-turn', 'activity-travel', 'skeleton-sweep', 'mark-in', 'selection-travel'];
 
 describe('the installed @crystal-ui/core', () => {
-  it('is 2.5.0 or later', () => {
-    expect(major > 2 || (major === 2 && minor >= 5), `@crystal-ui/core ${installed.version} is installed; this library wears recipes that exist only from 2.5.0 — the media stage, the transport, the caption and its style, the prose and editor vocabulary, the editor's toolbar placements, the Frost bar`).toBe(true);
+  it('is 2.6.0 or later', () => {
+    expect(major > 2 || (major === 2 && minor >= 6), `@crystal-ui/core ${installed.version} is installed; this library wears recipes that exist only from 2.6.0 — the travelling selection pill, the media stage, the transport, the caption and its style, the prose and editor vocabulary, the editor's toolbar placements, the Frost bar`).toBe(true);
   });
 
   /* The version could move without the classes, so the stylesheet is read too. */
   it('publishes every media, prose and editor class this library wears', () => {
     const css = readFileSync(stylesheetPath, 'utf8');
-    for (const selector of ['.cr-media {', '.cr-media-bar {', '.cr-media-caption {', '.cr-media.audio {', ').transport {', '.cr-editor {', '.cr-editor-toolbar {', '.cr-editor-toolbar:not(.above) {', '.cr-media-caption.large {', '.cr-media-caption.larger {', '.cr-media-caption.solid {', ').bar {', ':is(.cr-prose,.cr-editor) {']) {
+    for (const selector of ['.cr-media {', '.cr-media-bar {', '.cr-media-caption {', '.cr-media.audio {', ').transport {', '.cr-editor {', '.cr-editor-toolbar {', '.cr-editor-toolbar:not(.above) {', '.cr-media-caption.large {', '.cr-media-caption.larger {', '.cr-media-caption.solid {', '.cr-indicator.pill[data-placed] {', ').bar {', ':is(.cr-prose,.cr-editor) {']) {
       expect(css.includes(selector), `${selector} is worn here and not published by the installed core`).toBe(true);
     }
   });
