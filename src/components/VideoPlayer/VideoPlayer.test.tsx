@@ -135,9 +135,10 @@ describe('VideoPlayer', () => {
     localStorage.setItem('crystal-caption-style', JSON.stringify({ size: 'larger', backing: 'solid' }));
     try {
       const { container } = renderWithCrystal(<VideoPlayer label="Harbour" />);
-      const cues = container.querySelector('[class*="captions"]');
-      expect(cues).toHaveAttribute('data-size', 'larger');
-      expect(cues).toHaveAttribute('data-backing', 'solid');
+      /* The recipe's classes (2.5.0, C-S5). */
+      const cues = container.querySelector('.cr-media-caption');
+      expect(cues).toHaveClass('larger');
+      expect(cues).toHaveClass('solid');
     } finally {
       localStorage.removeItem('crystal-caption-style');
     }
@@ -152,8 +153,10 @@ describe('VideoPlayer', () => {
     localStorage.setItem('crystal-caption-style', JSON.stringify({ size: 'larger', backing: 'solid' }));
     try {
       const html = renderToString(<CrystalProvider><VideoPlayer label="Harbour" /></CrystalProvider>);
-      expect(html).toMatch(/data-size="normal"/);
-      expect(html).toMatch(/data-backing="feathered"/);
+      const cue = /class="(cr-media-caption[^"]*)"/.exec(html)?.[1] ?? '';
+      expect(cue).toBeTruthy();
+      expect(cue.split(' ')).not.toContain('larger');
+      expect(cue.split(' ')).not.toContain('solid');
     } finally {
       localStorage.removeItem('crystal-caption-style');
     }
@@ -163,9 +166,9 @@ describe('VideoPlayer', () => {
     localStorage.setItem('crystal-caption-style', '{"size":"huge","backing":"neon"}');
     try {
       const { container } = renderWithCrystal(<VideoPlayer label="Harbour" />);
-      const cues = container.querySelector('[class*="captions"]');
-      expect(cues).toHaveAttribute('data-size', 'normal');
-      expect(cues).toHaveAttribute('data-backing', 'feathered');
+      const cues = container.querySelector('.cr-media-caption')!;
+      expect(cues).not.toBeNull();
+      for (const style of ['large', 'larger', 'solid', 'huge', 'neon']) expect(cues).not.toHaveClass(style);
     } finally {
       localStorage.removeItem('crystal-caption-style');
     }

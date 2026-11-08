@@ -64,8 +64,6 @@
     "sync:slice-r": "node scripts/sync-slice-r.mjs"
   },
   "peerDependencies": {
-    "react": "^18.2.0 || ^19.0.0",
-    "react-dom": "^18.2.0 || ^19.0.0",
     "@tiptap/core": "^3.31.4",
     "@tiptap/extension-highlight": "^3.31.4",
     "@tiptap/extension-list": "^3.31.4",
@@ -74,7 +72,9 @@
     "@tiptap/extensions": "^3.31.4",
     "@tiptap/pm": "^3.31.4",
     "@tiptap/react": "^3.31.4",
-    "@tiptap/starter-kit": "^3.31.4"
+    "@tiptap/starter-kit": "^3.31.4",
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
     "@tiptap/core": {
@@ -106,7 +106,7 @@
     }
   },
   "dependencies": {
-    "@crystal-ui/core": "^2.4.0",
+    "@crystal-ui/core": "^2.5.0",
     "@internationalized/date": "^3.12.4",
     "@internationalized/number": "^3.6.8",
     "d3-geo": "^3.1.1",

@@ -40,14 +40,6 @@
   gap: 2px;
 }
 
-/* The reader's caption style (R-M12), until the recipe publishes it (core task
-   C-S5). A larger size scales the recipe's whole range, so a cue still grows
-   with the stage. A solid backing is the opaque surface the recipe already
-   falls back to under reduced transparency. */
-.captions[data-size='large'] > span { font-size: calc(clamp(15px, 3.2cqi, 28px) * 1.25); } // crystal-allow-literal: `.cr-media-caption`'s range, scaled
-.captions[data-size='larger'] > span { font-size: calc(clamp(15px, 3.2cqi, 28px) * 1.5); } // crystal-allow-literal: `.cr-media-caption`'s range, scaled
-.captions[data-backing='solid'] > span::before { background: var(--cr-surface); filter: none; }
-
 /* Full screen is the player, not the stage, so the settings popover (portalled
    into the player) stays visible; the recipe's `.cr-media:fullscreen` rules
    are restated for that element. The stage fills the screen and centres the
