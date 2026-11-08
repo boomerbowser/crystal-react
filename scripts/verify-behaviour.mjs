@@ -25,7 +25,7 @@
  * It starts no server. Point it at a running `pnpm storybook`, or, as CI does,
  * at `storybook-static` served over HTTP.
  */
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
 
 const ORIGIN = process.env['STORYBOOK_ORIGIN'] ?? 'http://127.0.0.1:6006';
 
@@ -2029,9 +2029,89 @@ for (const [id, trigger, surface] of [
   }
 }
 
+/* ------------------------------------------- the audio track, in WebKit (R-M10)
+ *
+ * The settings menu offers the audio track only where the engine has
+ * `audioTracks`, which Chromium does not, so the Chromium run above can prove
+ * only the group's absence. WebKit has it: the harbour clip carries two audio
+ * tracks, English and French, and here the group must appear, name the track
+ * playing, switch the element's own track when another is chosen, say so, and
+ * show the new one as current when the menu reopens.
+ *
+ * Required on macOS, where Playwright's WebKit decodes the clip's H.264 and AAC
+ * with the system's media stack, as Safari does (measured on 8 November 2026:
+ * `audioTracks` reports `eng` and `fra`). Elsewhere WebKit may not decode the
+ * clip at all, so the leg runs if it can and reports itself skipped, with the
+ * reason, if it cannot. `VERIFY_WEBKIT=1` makes it required anywhere.
+ */
+const skipped = [];
+{
+  const required = process.platform === 'darwin' || process.env['VERIFY_WEBKIT'] === '1';
+  let engine = null;
+  try {
+    engine = await webkit.launch();
+  } catch (error) {
+    if (required) record('WebKit launches for the audio-track leg', false, `${error.message.split('\n')[0]}; run \`npx playwright install webkit\``);
+    else skipped.push(`audio track in WebKit: WebKit is not installed (${error.message.split('\n')[0]})`);
+  }
+  if (engine) {
+    const wk = await engine.newPage({ viewport: { width: 1280, height: 900 } });
+    await wk.goto(`${ORIGIN}/iframe.html?id=media-video-player--with-settings&viewMode=story`, { waitUntil: 'networkidle' });
+    await wk.waitForSelector('#storybook-root video');
+    await wk.waitForFunction(() => (document.querySelector('#storybook-root video')?.readyState ?? 0) >= 1, undefined, { timeout: 15000 }).catch(() => {});
+    const tracks = () => wk.evaluate(() => {
+      const video = document.querySelector('#storybook-root video');
+      return {
+        has: 'audioTracks' in HTMLMediaElement.prototype,
+        ready: video.readyState,
+        list: video.audioTracks ? [...video.audioTracks].map((track) => `${track.language}:${track.enabled ? 'on' : 'off'}`) : [],
+        said: [...document.querySelectorAll('#storybook-root [role="status"]')].map((region) => region.textContent ?? '').join(' ').trim(),
+      };
+    });
+    const before = await tracks();
+    const able = before.has && before.ready >= 1 && before.list.length === 2;
+    if (!able && !required) {
+      skipped.push(`audio track in WebKit: this WebKit ${before.has ? 'has' : 'has no'} audioTracks and found ${before.list.length} in the clip (readyState ${before.ready})`);
+    } else {
+      record(
+        'WebKit reads the harbour clip\'s two audio tracks, English playing',
+        able && before.list[0] === 'eng:on' && before.list[1] === 'fra:off',
+        `audioTracks ${before.has ? 'exists' : 'is missing'}; readyState ${before.ready}; tracks ${JSON.stringify(before.list)}`,
+      );
+      await wk.getByRole('button', { name: 'Settings' }).click();
+      const rows = await wk.getByRole('menuitem').allTextContents();
+      record(
+        'in WebKit the settings menu offers the audio track, naming the one playing',
+        rows.some((row) => /^Audio, English/.test(row)),
+        `rows: ${rows.join(' | ')}`,
+      );
+      if (rows.some((row) => row.startsWith('Audio'))) {
+        await wk.getByRole('menuitem', { name: /^Audio/ }).click();
+        const options = await wk.getByRole('menuitemradio').allTextContents();
+        await wk.getByRole('menuitemradio', { name: 'French' }).click();
+        await wk.waitForTimeout(400);
+        const after = await tracks();
+        record(
+          'in WebKit choosing French switches the element\'s own audio track and says so',
+          options.join('|') === 'English|French' && after.list.join(' ') === 'eng:off fra:on' && /Audio French/.test(after.said),
+          `options ${JSON.stringify(options)}; tracks ${JSON.stringify(after.list)}; announced "${after.said}"`,
+        );
+        await wk.getByRole('button', { name: 'Settings' }).click();
+        const reopened = await wk.getByRole('menuitem').allTextContents();
+        record(
+          'in WebKit the menu shows the chosen track when it reopens',
+          reopened.some((row) => /^Audio, French/.test(row)),
+          `rows: ${reopened.join(' | ')}`,
+        );
+      }
+    }
+    await engine.close();
+  }
+}
+
 await browser.close();
 
-console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, failures }, null, 2));
+console.log(JSON.stringify({ suite: 'browser behaviour', checks: checks.length, ...(skipped.length ? { skipped } : {}), failures }, null, 2));
 if (failures.length) {
   console.error('\nA component behaved differently in a browser than its unit tests can see.');
   process.exit(1);
