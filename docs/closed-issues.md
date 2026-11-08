@@ -19,6 +19,29 @@ The live tracker is [`open-issues.md`](open-issues.md).
 ---
 
 
+## R-31 · Colour swatches that showed no colour
+
+**What.** Found while measuring the Resin thumb (R-A10) on the built stories, 7
+November 2026. Three of the colour family's swatches drew no colour, or only
+half of it:
+
+- Every swatch painted its chequerboard as background images over the colour,
+  which React Aria sets as the background colour. Images paint above the
+  colour, so an opaque value showed through only the chequerboard's gaps.
+- `ColorInput`'s swatch had no colour at all: a colour field, unlike a colour
+  picker, gives its swatch none, so it was transparent beside every hex.
+- `ColorSwatchPicker`'s options rendered their swatch with no size, so the
+  palette was a row of empty outlines.
+
+**Why it matters.** The swatch is the one place the value is shown as a
+colour. Nothing caught it, because the unit tests read names and the browser
+gates measure surfaces, not swatch fills.
+
+**Closed** the day it was found. React Aria's colour moves to `--cr-swatch`,
+the top layer of the swatch's background, above the chequerboard; `ColorInput`
+hands its swatch the field's committed value; the option's swatch fills the
+option. Unit tests now read each swatch's colour, and fail on the old code.
+
 ## R-27 · Copies of recipes Crystal has not published yet
 
 **What.** The media and text recipes (`.cr-media`, `.cr-media-bar`,

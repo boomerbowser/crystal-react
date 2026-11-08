@@ -47,6 +47,9 @@ const LOCAL = new Set([
   '--cr-title-size', '--cr-title-leading', '--cr-title-tracking',
   '--cr-watermark-image', '--cr-watermark-opacity', '--cr-watermark-size',
   '--cr-scroll-fade-start', '--cr-scroll-fade-end',
+  /* A colour control's value, handed from React Aria's inline background to the
+     layer that draws it: the Resin thumb's disc and a swatch's top layer. */
+  '--cr-picked', '--cr-swatch',
   /* Depth, written per row as a number so one CSS rule indents every level and
      one gradient draws every guide. It cannot be a Crystal token, because it
      records which row this is. */

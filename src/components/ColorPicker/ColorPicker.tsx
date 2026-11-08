@@ -9,12 +9,14 @@
  * of these components has a colour as its whole subject, so none of them may
  * rely on colour alone.
  *
- * The thumb is the other shared concern. It sits on an arbitrary colour, so a
- * single-colour border disappears against part of the gamut. Crystal's thumb is
- * two rings, white inside dark, which keeps an edge against anything. The two
- * colours are the one place besides the QR code where a literal is correct. They
- * provide contrast and are not palette colours, so theming them would defeat
- * their purpose.
+ * The thumb is the other shared concern. The catalogue gives the area, the
+ * slider and the wheel a Resin thumb (R-A10): the thumb wears `.cr-resin`, a
+ * floating plane over the gradient, and holds the picked colour as a disc
+ * inside its rim, so the value stays visible in the thumb that sets it. React
+ * Aria paints that colour on the thumb itself, as an inline background, which
+ * would cover the Resin fill; it is handed to the disc instead, as
+ * `--cr-picked`. Resin's rim, its float shadow and the disc's own edge keep the
+ * thumb visible against any colour beneath it.
  *
  * React Aria supplies the parsing, the channel arithmetic, the two linked sliders
  * inside a colour area and the announcements. What Crystal adds is the material
@@ -36,6 +38,36 @@ import { cx } from '../../styles/cx.js';
 import { FieldGroupShell } from '../FormField/FieldShell.js';
 import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
 import styles from './ColorPicker.module.scss';
+
+function toColour(colour: string | Color | undefined): Color | null {
+  if (colour === undefined) return null;
+  if (typeof colour !== 'string') return colour;
+  try { return parseColor(colour); } catch { return null; }
+}
+
+/* The Resin thumb (R-A10). React Aria's default style paints the picked colour
+   as the thumb's background; it moves to `--cr-picked`, which the disc inside
+   reads, and the thumb keeps the Resin fill. */
+function pickedColour({ defaultStyle }: { defaultStyle: React.CSSProperties }): React.CSSProperties {
+  /* React Aria spreads this over its default style, so the background is
+     cleared here rather than left out. */
+  return { backgroundColor: undefined, ['--cr-picked' as string]: defaultStyle.backgroundColor } as React.CSSProperties;
+}
+
+/* A swatch's colour is drawn over the chequerboard, not under it: React Aria
+   paints it as the background colour, which every background image covers, so
+   it moves to `--cr-swatch`, the top layer of the swatch's background. */
+function swatchColour({ defaultStyle }: { defaultStyle: React.CSSProperties }): React.CSSProperties {
+  return { backgroundColor: undefined, ['--cr-swatch' as string]: defaultStyle.backgroundColor } as React.CSSProperties;
+}
+
+function ResinThumb(): React.JSX.Element {
+  return (
+    <ColorThumb className={cx('cr-resin', styles['thumb'])} style={pickedColour}>
+      <span className={cx(styles['picked'])} aria-hidden="true" />
+    </ColorThumb>
+  );
+}
 
 /* Crystal's own signature colour, read from the tokens and not typed in. A
    picker has to open on something, and a hex literal here would stop tracking
@@ -65,11 +97,15 @@ export interface ColorInputProps {
 export function ColorInput({
   label, description, errorMessage, value, defaultValue, onChange, isDisabled = false, className,
 }: ColorInputProps): React.JSX.Element {
+  /* A colour field gives its swatch no colour (only a colour picker does), so
+     the swatch is handed the field's committed value. */
+  const [uncontrolled, setUncontrolled] = useState<Color | null>(() => toColour(defaultValue));
+  const shown = value !== undefined ? toColour(value) : uncontrolled;
   return (
     <ColorField
       {...(value !== undefined ? { value } : {})}
       {...(defaultValue !== undefined ? { defaultValue } : {})}
-      {...(onChange ? { onChange } : {})}
+      onChange={(next) => { setUncontrolled(next); onChange?.(next); }}
       isDisabled={isDisabled}
       className={cx(styles['field'], className)}
     >
@@ -77,7 +113,7 @@ export function ColorInput({
       <>
       <Label className={cx(styles['label'])}>{label}</Label>
       <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
-        <AriaColorSwatch className={cx(styles['swatch'])} />
+        <AriaColorSwatch {...(shown ? { color: shown } : {})} className={cx(styles['swatch'])} style={swatchColour} />
         <Input className={cx(styles['control'])} />
       </FieldGroupShell>
       {description ? (
@@ -128,7 +164,7 @@ export function ColorArea({
       {...(onChange ? { onChange } : {})}
       className={cx(styles['area'], className)}
     >
-      <ColorThumb className={cx(styles['thumb'])} />
+      <ResinThumb />
     </AriaColorArea>
   );
 }
@@ -179,7 +215,7 @@ export function ColorSlider({
     >
       {label ? <Label className={cx(styles['label'])}>{label}</Label> : null}
       <SliderTrack className={cx(styles['track'])}>
-        <ColorThumb className={cx(styles['thumb'])} />
+        <ResinThumb />
       </SliderTrack>
     </AriaColorSlider>
   );
@@ -205,7 +241,7 @@ export function ColorWheel({
       className={cx(styles['wheel'], className)}
     >
       <ColorWheelTrack />
-      <ColorThumb className={cx(styles['thumb'])} />
+      <ResinThumb />
     </AriaColorWheel>
   );
 }
@@ -221,7 +257,7 @@ export interface ColorSwatchProps {
 export function ColorSwatch({ color, name, className }: ColorSwatchProps): React.JSX.Element {
   return (
     <span className={className}>
-      <AriaColorSwatch color={color} className={cx(styles['swatch'])} />
+      <AriaColorSwatch color={color} className={cx(styles['swatch'])} style={swatchColour} />
       {/* The name is content, not a tooltip or a title. */}
       <span className={cx(styles['name'])}>{name}</span>
     </span>
@@ -312,7 +348,7 @@ export function ColorPicker({
         <ColorField className={cx(styles['field'])} aria-label="Hexadecimal value">
           {({ isInvalid }) => (
             <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
-              <AriaColorSwatch className={cx(styles['swatch'])} />
+              <AriaColorSwatch className={cx(styles['swatch'])} style={swatchColour} />
               <Input className={cx(styles['control'])} />
             </FieldGroupShell>
           )}
@@ -328,5 +364,5 @@ export function ColorPicker({
    so the motion is on the swatch and not on the option around it. */
 function PickedSwatch({ isSelected }: { isSelected: boolean }): React.JSX.Element {
   const scope = useChangeMotion(isSelected, entered('selection'));
-  return <AriaColorSwatch ref={scope as never} />;
+  return <AriaColorSwatch ref={scope as never} className={cx(styles['optionFill'])} style={swatchColour} />;
 }
