@@ -19,6 +19,30 @@ The live tracker is [`open-issues.md`](open-issues.md).
 ---
 
 
+## R-33 · The bottom bar's current destination in dark ink on the primary fill
+
+**What.** Found on 8 November 2026 while building R-A8. Since Crystal 2.3.0,
+`.cr-dock` paints a destination link carrying `aria-current` with the primary
+fill and its on-primary ink (D-26). `BottomNavigation`'s module, written for a
+bar whose selection was label weight alone, kept `color: var(--cr-text)` on
+every destination and tinted the current one's icon `--cr-primary`. The module
+is unlayered, so its ink won over Crystal's. Measured in Chromium: `#171130`
+on `#7338EF` in light, 3.05:1, and `#f7f3fe` on `#c8b1f9` in dark, 1.73:1,
+against the 4.5:1 text minimum, with the icon the colour of the fill it sat
+on. Hovering the current destination also replaced the fill
+with `--cr-surface-alt`.
+
+**Why it went unseen.** `verify:appearance` compares every dock-surface strip's
+labels with a planted `.cr-dock button`, and the bottom bar's row compared no
+labels at all, because its layout (icon over label, its own weight and padding)
+differs from the dock's by design.
+
+**Closed** the day it was found, with R-A8. The current destination takes
+`--cr-on-primary` (5.93:1 in light, 9.68:1 in dark) and its icon inherits it;
+hover no longer repaints the current destination. The appearance gate now
+compares the bottom bar's selected ink with Crystal's, and fails when the old
+rule is put back (planted and seen red).
+
 ## R-32 · The two-thousand-row story timing out in CI
 
 **What.** On 8 November 2026 the storybook test project timed out (15 seconds)

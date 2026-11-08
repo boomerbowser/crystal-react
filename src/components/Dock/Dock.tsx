@@ -25,7 +25,7 @@
  */
 import type { ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
-import { CurrentLink } from '../NavLink/CurrentLink.js';
+import { useTravelMotion } from '../../motion/useTravelMotion.js';
 import styles from './Dock.module.scss';
 
 export interface DockItem {
@@ -46,15 +46,18 @@ export interface DockProps {
 }
 
 export function Dock({ items, currentId, className, ...props }: DockProps): React.JSX.Element {
+  /* The primary fill is Crystal's pill behind the current destination, and it
+     travels to the one a person goes to (D-37). It replaces `selection`'s
+     squash on the link. */
+  const { planeRef } = useTravelMotion('selection-travel', 'a[aria-current]:not([aria-current=false])');
   return (
     <nav aria-label={props['aria-label'] ?? 'Destinations'} className={cx(styles['dock'], 'cr-dock', className)}>
-      <ul className={cx(styles['group'], 'cr-dock-inner')}>
+      <ul ref={planeRef} className={cx(styles['group'], 'cr-dock-inner')}>
         {items.map((item) => {
           const isCurrent = item.id === currentId;
           return (
             <li key={item.id}>
-              <CurrentLink
-                isCurrent={isCurrent}
+              <a
                 href={item.href}
                 {...(isCurrent ? { 'aria-current': 'page' as const } : {})}
                 className={cx(styles['item'])}
@@ -63,7 +66,7 @@ export function Dock({ items, currentId, className, ...props }: DockProps): Reac
                   <span className={cx(styles['icon'])} aria-hidden="true">{item.icon}</span>
                 ) : null}
                 <span className={cx(styles['label'])}>{item.label}</span>
-              </CurrentLink>
+              </a>
             </li>
           );
         })}
