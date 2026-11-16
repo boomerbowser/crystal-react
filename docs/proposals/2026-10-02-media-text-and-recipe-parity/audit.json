@@ -1,17 +1,16 @@
 {
-  "generated": "2026-11-08",
+  "generated": "2026-11-16",
   "summary": {
     "core": "local checkout (crystal-design-system/core)",
     "components": 284,
     "implemented": 282,
     "motion": {
       "assigned": 331,
-      "played": 281,
+      "played": 285,
       "playedByChild": 41,
-      "unplayed": 9,
-      "entriesWithUnplayed": 7,
+      "unplayed": 5,
+      "entriesWithUnplayed": 3,
       "recipesPlayedByNoComponent": [
-        "selection-travel",
         "resin-confluence",
         "frost-unfold",
         "plastic-settle",
@@ -49,8 +48,8 @@
   "recipeUse": {
     "press": 58,
     "hover": 40,
-    "selection": 55,
-    "selection-travel": 0,
+    "selection": 51,
+    "selection-travel": 5,
     "switch-on": 1,
     "switch-off": 1,
     "check": 9,
@@ -559,11 +558,11 @@
         "assigned": [
           "selection-travel"
         ],
-        "played": [],
-        "playedByChild": [],
-        "unplayed": [
+        "played": [
           "selection-travel"
-        ]
+        ],
+        "playedByChild": [],
+        "unplayed": []
       },
       "surfaces": [
         "dock"
@@ -616,12 +615,11 @@
           "selection-travel"
         ],
         "played": [
-          "tab-in"
+          "tab-in",
+          "selection-travel"
         ],
         "playedByChild": [],
-        "unplayed": [
-          "selection-travel"
-        ]
+        "unplayed": []
       },
       "surfaces": [
         "dock"
@@ -866,11 +864,11 @@
         "assigned": [
           "selection-travel"
         ],
-        "played": [],
-        "playedByChild": [],
-        "unplayed": [
+        "played": [
           "selection-travel"
-        ]
+        ],
+        "playedByChild": [],
+        "unplayed": []
       },
       "surfaces": [
         "dock"
@@ -1797,11 +1795,11 @@
         "assigned": [
           "selection-travel"
         ],
-        "played": [],
-        "playedByChild": [],
-        "unplayed": [
+        "played": [
           "selection-travel"
-        ]
+        ],
+        "playedByChild": [],
+        "unplayed": []
       },
       "surfaces": [
         "dock"

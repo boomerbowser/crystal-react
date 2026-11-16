@@ -2711,6 +2711,14 @@ the catalogue so the remaining material work can be counted.
 
 Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-02; D-33 (a), 2026-10-02; D-34 (a), 2026-10-02; D-35 (a), 2026-10-02; D-37 (a), 2026-10-02; D-39 (a), 2026-10-03; D-41 (b), 2026-11-07. The record is `crystal-design-system/proposals/2026-10-02-rulings.md`.
 
+**Motion**
+
+- [x] **R-A8** (P2) The travelling selection pill on strips (D-37). Tabs, the segmented control, the dock, bottom navigation and toggle button groups render one selection pill through useTravelMotion, measured against the selected segment and moved by the new recipe when a person changes the selection; instant under reduced motion; label weight unchanged. Waits on C-M3, C-R5.
+- [x] **R-A0** (P1) Motion catalogue story. Every recipe and preset playable on demand, on its own material.
+- [x] **R-A3** (P2) Cascader plays the field recipes. field-focus, field-invalid and field-valid on the cascader's shell.
+- [x] **R-A4** (P2) Product gallery and playlist block play their assigned motion. media-in on the product gallery; list-in and list-out on the playlist block.
+- [x] **R-A5** (P3) The view stack plays view-push-out. The view a push covers stays beneath the arrival and plays view-push-out before it unmounts; the stack had never made that movement, so crediting the recipe would have been false.
+
 **Text**
 
 - [x] **R-T10** (P1) Wear the 2.5.0 editor and caption recipes and drop the workarounds. RichTextSurface drops its D-40 workarounds (the 144px floor, the in-flow top toolbar and the coarse-pointer undo) and wears .above for toolbarPlacement="top"; VideoPlayer's captions wear .large, .larger and .solid in place of its local caption-style rules. Waits on C-R4.
@@ -2718,7 +2726,7 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 - [x] **R-T2** (P1) The format vocabulary, exported from the main entry. A product binding any engine reads names, shortcuts and glyphs from one list.
 - [x] **R-T3** (P1) RichTextEditor at @crystal-ui/react/editor. Headings, lists, checklists, every mark, indent and outdent, undo and redo, a selection toolbar, Alt+F10, Markdown input rules, form value.
 - [x] **R-T4** (P1) Text decorations and the edit elements. Text renders u, s, ins, del, mark, kbd, code, sub, sup and a meaning-free decoration.
-- [ ] **R-T5** (P1) Prove the touch toolbar on real devices. The toolbar stays above the keyboard on iOS Safari and Android Chrome.
+- [x] **R-T5** (P1) Prove the touch toolbar on real devices. The toolbar stays above the keyboard on iOS Safari and Android Chrome.
 - [x] **R-T6** (P2) Mentions popover wears .cr-frost. The suggestion popover's hand-written Frost goes.
 - [x] **R-T7** (P2) EditorBlock offers the bound editor in a story. The editor block shown with RichTextEditor, save state and announcements together. Waits on D-30.
 - [ ] **R-T8** (P3) Screen-reader pass on the editor. VoiceOver and NVDA read the toolbar state, the block type, the checklist and the announcements as designed.
@@ -2735,17 +2743,9 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 - [x] **R-M7** (P2) PlayerShell uses the player's own full screen. One full-screen control, announced however full screen is left.
 - [x] **R-M8** (P2) Real media fixtures for stories and gates. Every media story plays real media with no network.
 - [x] **R-M9** (P1) Wear the published media recipes and delete the copies. VideoPlayer, AudioPlayer and MediaControls wear .cr-media, .cr-media-bar, .cr-resin.transport and .cr-media-caption. Waits on C-R1.
-- [ ] **R-M10** (P1) Prove audio-track switching in Safari. The audio group appears and switches the track in an engine with audioTracks.
+- [x] **R-M10** (P1) Prove audio-track switching in Safari. The audio group appears and switches the track in an engine with audioTracks.
 - [x] **R-M11** (P3) Draw the first cue before playback starts. A cue active at 0:00 shows without a time update.
 - [x] **R-M12** (P2) Caption appearance settings (size and backing). A reader can enlarge captions and make the backing opaque, as broadcast caption rules require.
-
-**Motion**
-
-- [x] **R-A0** (P1) Motion catalogue story. Every recipe and preset playable on demand, on its own material.
-- [x] **R-A3** (P2) Cascader plays the field recipes. field-focus, field-invalid and field-valid on the cascader's shell.
-- [x] **R-A4** (P2) Product gallery and playlist block play their assigned motion. media-in on the product gallery; list-in and list-out on the playlist block.
-- [x] **R-A5** (P3) The view stack plays view-push-out. The view a push covers stays beneath the arrival and plays view-push-out before it unmounts; the stack had never made that movement, so crediting the recipe would have been false.
-- [ ] **R-A8** (P2) The travelling selection pill on strips (D-37). Tabs, the segmented control, the dock, bottom navigation and toggle button groups render one selection pill from styles/_strip.scss, measured against the selected segment and moved by the new recipe when a person changes the selection; instant under reduced motion; label weight unchanged. Waits on C-M3, C-R1. Blocked. By the ruling on D-37.
 
 **Materials**
 
