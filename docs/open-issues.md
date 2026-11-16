@@ -3,32 +3,15 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**Two entries are open**: R-30, found preparing the first publish, and R-28,
-from the media and text work of
+**One entry is open**: R-28, ruled by Meridian on 16 November 2026, from the
+media and text work of
 2 October 2026 ([`proposals/2026-10-02-media-text-and-recipe-parity.md`](proposals/2026-10-02-media-text-and-recipe-parity.md)).
-Its tasks are Slice R in the implementation plan. R-27, the recipe copies,
+Its tasks are Slice R in the implementation plan. R-30, the bundler question,
+closed on 16 November 2026 by Meridian's ruling. R-27, the recipe copies,
 closed on 7 November 2026 with core 2.4.0 installed. R-29, the flaky virtualizer
 check, closed on 2 October 2026; the record is in `closed-issues.md`. R-26, the
 adoption of Crystal 2.3.0, closed on 29 September 2026 with 2.3.0 on the
 registry.
-
-## R-30 · The built package needs a bundler to import core's JSON
-
-**What.** `dist/` imports `@crystal-ui/core/flat` and
-`@crystal-ui/core/motion-recipes`, which are JSON, without an import
-attribute. Every bundler (Vite, webpack, Next.js, esbuild) accepts that. Plain
-Node ESM refuses it: `import '@crystal-ui/react'` in Node 26 fails with
-`ERR_IMPORT_ATTRIBUTE_MISSING`, found on 3 October 2026 installing the packed
-tarball in an empty project.
-
-**Why it matters.** A product that renders on the server without bundling its
-dependencies, or a test runner that loads the package natively, cannot import
-the library.
-
-**Closing it.** Write the imports with `with { type: 'json' }` and check that
-the library build keeps the attribute on external imports, then import the
-packed tarball in plain Node as a gate. Published as it stands in
-0.1.0-alpha.1, as Meridian directed; the README says a bundler is required.
 
 ## R-28 · Hand-written material across 29 directories
 

@@ -147,6 +147,9 @@ importers:
       babel-jest:
         specifier: ^30.5.1
         version: 30.5.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1)
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
       identity-obj-proxy:
         specifier: ^3.0.0
         version: 3.0.0

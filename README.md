@@ -18,12 +18,22 @@ npm install @crystal-ui/react@alpha @crystal-ui/core
 ```
 
 **It is an alpha, published as it stands.** Its API can change between alphas
-without notice, and it depends on `@crystal-ui/core` 2.4.0. Any breaking change in Crystal 2.x, in this library or in
+without notice, and it depends on `@crystal-ui/core` 2.6.0. Any breaking change in Crystal 2.x, in this library or in
 the core it follows, will be fixed in Crystal 3.0 rather than in a 2.x release.
 
-It needs a bundler (Vite, webpack, Next.js, esbuild). Plain Node ESM cannot
-import it yet, because it imports Crystal's JSON without an import attribute
-(R-30 in `docs/open-issues.md`).
+It is published for a bundler. Next.js, Vite and Remix bring their own. Where
+nothing provides one (a Node server that renders without bundling, a script, a
+test runner that loads packages natively), bundle with webpack or esbuild:
+plain Node ESM refuses the package, because it imports Crystal's JSON without
+an import attribute, and any bundler inlines it. For a server entry:
+
+```bash
+esbuild server.jsx --bundle --platform=node --format=esm --jsx=automatic \
+  --loader:.css=empty --outfile=server.mjs
+```
+
+The stylesheets are the page's, so a server bundle leaves them out;
+`pnpm run verify:bundled` checks this path on every change.
 
 282 of the 284 components in Crystal's catalogue are implemented. The other two,
 `terminal` and `border-beam`, are recorded as not applicable, with the reasons in

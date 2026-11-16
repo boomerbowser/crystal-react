@@ -19,6 +19,34 @@ The live tracker is [`open-issues.md`](open-issues.md).
 ---
 
 
+## R-30 · The built package needs a bundler to import core's JSON
+
+**What.** `dist/` imports `@crystal-ui/core/flat` and
+`@crystal-ui/core/motion-recipes`, which are JSON, without an import
+attribute. Every bundler (Vite, webpack, Next.js, esbuild) accepts that. Plain
+Node ESM refuses it: `import '@crystal-ui/react'` in Node 26 fails with
+`ERR_IMPORT_ATTRIBUTE_MISSING`, found on 3 October 2026 installing the packed
+tarball in an empty project.
+
+**Why it matters.** A product that renders on the server without bundling its
+dependencies, or a test runner that loads the package natively, cannot import
+the library.
+
+**Closing it.** Write the imports with `with { type: 'json' }` and check that
+the library build keeps the attribute on external imports, then import the
+packed tarball in plain Node as a gate. Published as it stands in
+0.1.0-alpha.1, as Meridian directed; the README says a bundler is required.
+
+**Closed** on 16 November 2026 by Meridian's ruling: the package stays published
+for a bundler. Next.js, the documentation site's framework (§3.10), brings its
+own, and wherever no bundler is provided the consumer uses webpack or esbuild.
+The README says so and shows the esbuild command for a server entry.
+`scripts/verify-bundled-consumer.mjs` (`pnpm run verify:bundled`, in CI after
+the build) bundles a server-rendering consumer of the built package with
+esbuild, runs it in plain Node, and checks the rendered HTML; it also records
+plain Node's refusal (`ERR_IMPORT_ATTRIBUTE_MISSING`), so the day that changes
+it shows. Planted red: a consumer that renders no button fails it.
+
 ## R-34 · Storybook's environment controls written onto the DOM
 
 **What.** Found on 8 November 2026 while checking audio-track switching in

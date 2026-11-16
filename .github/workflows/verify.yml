@@ -114,6 +114,10 @@ jobs:
       # parity manifest.
       - run: pnpm run build
 
+      # A consumer with no bundler of its own (R-30): esbuild bundles a
+      # server-rendering consumer of the built package, and plain Node runs it.
+      - run: pnpm run verify:bundled
+
       - name: Generated files match their source
         run: |
           git diff --exit-code || {
