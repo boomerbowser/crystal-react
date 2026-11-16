@@ -347,7 +347,19 @@ versioning. Peer range React 18.2 and 19.
 A documentation site at the standard set by MUI, Mantine, PrimeReact and
 Blueprint: every component gets a page with an explanation, isolated visual
 examples, the code for each, a generated props table, and its accessibility and
-material notes.
+surface notes.
+
+**It follows Crystal's current specification, and keeps following it.** The
+design below was brought up to `@crystal-ui/core` 2.6.0 on 16 November 2026, at
+Meridian's direction: components are described by the closed surface vocabulary
+(2.2.0) and its recipes, page text is set in the prose vocabulary (2.4.0), the
+demo frame offers every axis of Crystal's environment, and selection, motion and
+reading leading are 2.6.0's. Parity is structural rather than a review: every
+fact the site states about Crystal is read from the installed package at build
+time, the site depends on the same core range as the library, and its build
+fails when a page names a surface, recipe or catalogue entry the installed core
+does not publish. Each Crystal release that changes the vocabulary is followed
+by a revision of this section in the same change that adopts it.
 
 **Separate from `crystal-preview`.** That is Crystal's site: it documents the design
 system, it installs `@crystal-ui/core`, and it renders the specification that
@@ -375,8 +387,12 @@ example in a code fence, so an example cannot drift from what it renders, and a
 demo that stops compiling breaks the build.
 
 Each example is isolated: it is rendered inside its own `CrystalProvider` scope
-with per-demo controls for palette, mode, density, direction and reduced effects,
-the same axes the design system's visual gate uses. Because the provider scopes
+with per-demo controls for every axis of Crystal's environment, the fourteen
+Storybook already offers: palette, mode, atmosphere, Frost tint, elevation,
+corner radius, density, font, animation speed, reduced motion, effects (full,
+reduced, opaque), reduced transparency, direction and ground. They are read from
+the same definitions as Storybook's (`.storybook/environment.ts`), so the two
+review surfaces cannot offer different axes. Because the provider scopes
 to an element and not to a document (§3.3), a demo can be dark on a light page
 with no iframe and no portal workaround.
 
@@ -388,21 +404,38 @@ argument CONTRACT §1 makes for values.
 Every component page carries:
 
 - what it is, and when to use it in place of its neighbours;
-- anatomy, states, and which Crystal materials it uses;
+- anatomy, states, and the Crystal surfaces it wears (from the catalogue's
+  `surface` field), each linked to its surface page;
 - isolated examples, each with its source and a copy button;
 - a generated props table, plus the React Aria props it passes through;
 - accessibility notes: roles, keyboard map, and what the component does not do;
-- the motion recipes it plays, and what each marks;
-- its parity claim: the Mantine, MUI, Ant Design and PrimeReact components it
-  corresponds to, drawn from the catalogue and not retyped.
+- the motion recipes it plays, what each marks, and its fitted spring, from the
+  component manifest (the travelling selection pill, `selection-travel`, is
+  shown moving between segments rather than described);
+- its parity claim: the Mantine, MUI and Ant Design components it corresponds
+  to, drawn from the catalogue's `parity` field and not retyped. PrimeReact is
+  a benchmark for the site's own quality, not a parity claim the catalogue
+  makes.
 
-Page content is MDX. The component index, the parity claims and the material and
-motion notes come from `@crystal-ui/core`'s catalogue, so a component added to the
-catalogue appears in the documentation with no further step.
+**One page per surface** (R-Q1). Each of the 23 surfaces in
+`@crystal-ui/core/surfaces` gets a page with its recipe values from
+`surface-recipes.json` (fill, diffusion, rim, shadow and paint layers, light and
+dark, with the reduced-transparency, opaque and forced-colours routes), a live
+specimen wearing the class, and every component made of it, from the manifest.
 
-Beyond the component pages: getting started per framework, theming and the token
-reference, the material hierarchy, motion, accessibility, forms, and a migration
-note for each benchmark library. Search is local, over a generated index.
+**Page text is Crystal's prose.** MDX renders inside `Prose` (`.cr-prose`), so
+headings, lists, quotations, code and tables take the reading vocabulary, at
+the 1.6 body leading of 2.5.0, rather than a docs theme's.
+
+Page content is MDX. The component index, the parity claims and the surface and
+motion notes come from `@crystal-ui/core`'s catalogue, surfaces and recipes, so a
+component added to the catalogue appears in the documentation with no further
+step.
+
+Beyond the component pages: getting started per framework (including the
+bundler a consumer without one uses, webpack or esbuild, by the R-30 ruling),
+theming and the token reference, the material hierarchy and the surfaces, motion,
+accessibility, forms, and a migration note for each benchmark library. Search is local, over a generated index.
 `llms.txt` and the component manifest (§3.7) are served from the site, so the
 documentation is machine-readable at the same URL a person reads.
 
@@ -2686,10 +2719,13 @@ separate project nobody finishes.
 - [ ] `apps/docs` as a pnpm workspace package; Next.js App Router; library by `workspace:*`
 - [ ] Vercel project rooted at `apps/docs`, preview deployment per pull request
 - [ ] The demo registry: source read from disk at build time, so the code shown is the code that runs
-- [ ] The isolated demo frame, with palette, mode, density, direction and reduced-effects controls
+- [ ] The isolated demo frame, with the fourteen environment controls read from `.storybook/environment.ts`
 - [ ] Generated props tables from the TypeScript types
-- [ ] The component page template, fed from the catalogue
-- [ ] Guides: getting started per framework, theming, tokens, materials, motion, accessibility, forms
+- [ ] The component page template, fed from the catalogue, the surfaces and the manifest
+- [ ] One page per surface from `surface-recipes.json` (R-Q1)
+- [ ] MDX set in `Prose`
+- [ ] A build check that fails on a surface, recipe or catalogue entry the installed core does not publish
+- [ ] Guides: getting started per framework (webpack or esbuild where there is no bundler), theming, tokens, materials and surfaces, motion, accessibility, forms
 - [ ] Migration notes from Mantine, MUI, Ant Design and PrimeReact
 - [ ] Local search; `llms.txt` and the component manifest served from the site
 
