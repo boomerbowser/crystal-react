@@ -57,6 +57,7 @@
     "verify:stories": "node scripts/verify-stories.mjs",
     "verify:targets": "node scripts/verify-targets.mjs",
     "verify:behaviour": "node scripts/verify-behaviour.mjs",
+    "verify:keyboard:device": "node scripts/verify-keyboard-device.mjs",
     "verify:theme": "node scripts/verify-theme.mjs",
     "verify:materials": "node scripts/verify-materials.mjs",
     "verify:appearance": "node scripts/verify-appearance.mjs",
