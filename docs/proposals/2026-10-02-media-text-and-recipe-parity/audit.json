@@ -28,9 +28,8 @@
       "directories": 241,
       "directoriesWithHandWrittenBackdropFilter": 29,
       "backdropFilterLines": 77,
-      "directoriesUsingMaterialMixins": 53,
+      "directoriesUsingMaterialMixins": 36,
       "mixinUses": {
-        "field.shell": 17,
         "frost": 8,
         "haze-fill": 27,
         "resin": 3
@@ -754,9 +753,7 @@
       ],
       "handWritten": {
         "backdropFilter": 4,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "mirage",
@@ -1333,9 +1330,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1363,9 +1358,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1398,9 +1391,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1433,9 +1424,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1468,9 +1457,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1509,9 +1496,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1545,9 +1530,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1593,9 +1576,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "compact"
@@ -1868,9 +1849,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1907,9 +1886,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "compact"
@@ -1979,9 +1956,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -2015,9 +1990,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -2061,9 +2034,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "haze"
@@ -2120,9 +2091,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "haze"
@@ -2169,9 +2138,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -2365,9 +2332,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "haze"
@@ -2531,9 +2496,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -2571,9 +2534,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -2616,9 +2577,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -2651,9 +2610,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "haze"
@@ -2699,9 +2656,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "haze"
@@ -2745,9 +2700,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "haze"
@@ -2920,9 +2873,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -2947,9 +2898,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -2974,9 +2923,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -3005,9 +2952,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -3036,9 +2981,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -3075,9 +3018,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "compact"
@@ -7127,9 +7068,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -8901,9 +8840,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "field.shell"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },

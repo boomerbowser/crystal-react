@@ -61,7 +61,7 @@ const measured = existsSync(measuredPath) ? JSON.parse(readFileSync(measuredPath
 /* The mixin of this library's that paints a surface's material by hand. A
    surface not seen in the stories, in a directory that includes its mixin, is
    painted rather than worn: R-A1's list. */
-const MIXIN_FOR = { haze: 'haze-fill', frost: 'frost', resin: 'resin', stone: 'stone', plastic: 'plastic', field: 'field.shell' };
+const MIXIN_FOR = { haze: 'haze-fill', frost: 'frost', resin: 'resin', stone: 'stone', plastic: 'plastic' };
 
 /* The directory that exports a component, found the way the manifest finds it:
    a directory named after it with a barrel, or the neighbour whose barrel
@@ -97,7 +97,10 @@ const surfaceClasses = Object.fromEntries(surfaces.map((surface) => [
 
 /* The hand-written material a stylesheet paints: the mixins this library
    defines for each material, and raw `backdrop-filter` lines. */
-const MIXINS = /@include\s+(?:material\.)?(resin|frost|haze-fill|stone|plastic|field\.shell)\b/g;
+/* `field.shell` is not here: it paints nothing. It makes a shell fill its row
+   and sets the origin the field motion deforms around, layout the R-28 ruling
+   carries into `.cr-field-shell` (16 November 2026). */
+const MIXINS = /@include\s+(?:material\.)?(resin|frost|haze-fill|stone|plastic)\b/g;
 
 const components = [];
 for (const entry of manifest.components) {

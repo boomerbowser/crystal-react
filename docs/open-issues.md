@@ -38,6 +38,17 @@ story's first button (drawer, command palette, lightbox, tour). Each needs
 its component read and, where it should wear the class, a before-and-after
 measurement; R-A2 stays open for them.
 
+**Ruled by Meridian on 16 November 2026:** each directory wears its surface,
+and the hand-written material is not an add-on but a correction or enhancement
+Crystal's standard should include, merged and migrated fully. The plan and its
+measurement are Crystal's `proposals/2026-11-16-library-material-upstream.md`:
+of 95 distinct hand-painted elements, measured against a twin wearing the
+catalogue's surface, 4 duplicate a class they already wear, 8 match a class they
+do not wear, 17 are the `field.shell` mixin, which paints no material at all
+(the audit no longer counts it), 59 differ and become named variants in core
+2.7.0, and 7 are measured by hand. The library's rendering does not change: each
+element must measure identical after it wears its surface and variant.
+
 **Closing it.** Task R-A1: each directory either wears a surface, measured by
 `verify:materials`, or is filed upstream as a composition the vocabulary
 lacks; the audit's counts fall to what is filed.
