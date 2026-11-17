@@ -10,7 +10,7 @@ export default function Home() {
         section documents the {surfaces.length} surfaces of @crystal-ui/core {coreVersion}, the closed
         set of material compositions every component is made of.
       </p>
-      <p><a href="/surfaces/">Surfaces</a></p>
+      <p><a href="/surfaces/">Surfaces</a> · <a href="/libraries/">Component libraries</a></p>
     </Prose>
   );
 }

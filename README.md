@@ -18,7 +18,7 @@ npm install @crystal-ui/react@alpha @crystal-ui/core
 ```
 
 **It is an alpha, published as it stands.** Its API can change between alphas
-without notice, and it depends on `@crystal-ui/core` 2.8.1. Any breaking change in Crystal 2.x, in this library or in
+without notice, and it depends on `@crystal-ui/core` 2.9.0, and follows each new release on its own (`.github/workflows/follow-crystal.yml`). Any breaking change in Crystal 2.x, in this library or in
 the core it follows, will be fixed in Crystal 3.0 rather than in a 2.x release.
 
 It is published for a bundler. Next.js, Vite and Remix bring their own. Where
@@ -42,8 +42,9 @@ the catalogue. Per-component status is in the generated
 `libraries/status/web.json`.
 
 The documentation website, slice Q of the plan, is begun in `apps/docs`: a
-Next.js site whose first section is one page per Crystal surface, generated
-from the installed core (`pnpm --filter @crystal-ui/docs dev`). It is not
+Next.js site with one page per Crystal surface and the list of Crystal's
+component libraries with the version each has published, generated from the
+installed core (`pnpm --filter @crystal-ui/docs dev`). It is not
 deployed yet. Storybook is the review surface for components until their pages
 exist.
 

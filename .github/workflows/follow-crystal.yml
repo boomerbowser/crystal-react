@@ -1,0 +1,105 @@
+# Follow Crystal: adopt every @crystal-ui/core release, in the library and in
+# its documentation site, and keep the versions the site lists current, without
+# waiting for a person. The same workflow crystal-preview runs.
+#
+# On a release (Crystal's publish workflow sends `crystal-published` when it has
+# a token to send it with) and otherwise every hour, this compares what is
+# installed with what npm has published. When something is newer it installs
+# it in the library and in apps/docs, regenerates every committed file the
+# build writes, commits to a branch, runs this repository's own Verify workflow
+# there, and fast-forwards main only if every gate passes, the documentation
+# site's build and its check that no page names what core does not publish
+# included. A release that breaks a gate stops here, red, with the branch left
+# for a person.
+name: Follow Crystal
+
+on:
+  repository_dispatch:
+    types: [crystal-published]
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: follow-crystal
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  follow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Adopt what npm has published
+        id: adopt
+        run: |
+          set -euo pipefail
+          latest=$(npm view @crystal-ui/core version)
+          installed=$(node -p "require('./node_modules/@crystal-ui/core/package.json').version")
+          if [ "$latest" != "$installed" ]; then
+            pnpm add "@crystal-ui/core@^$latest"
+            pnpm --filter @crystal-ui/docs add "@crystal-ui/core@^$latest"
+          fi
+          node apps/docs/scripts/library-versions.mjs
+          if git diff --quiet; then
+            echo "Built against @crystal-ui/core $installed, the latest; every listed version is current."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "version=$latest" >> "$GITHUB_OUTPUT"
+
+      - name: Regenerate and commit to a branch
+        if: steps.adopt.outputs.changed == 'true'
+        id: branch
+        run: |
+          set -euo pipefail
+          # What Verify regenerates and then requires to match the commit.
+          pnpm run tokens
+          pnpm run build
+          branch="follow-crystal/${{ steps.adopt.outputs.version }}-${{ github.run_id }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -A
+          git commit -m "Follow Crystal: @crystal-ui/core ${{ steps.adopt.outputs.version }} and the published library versions" \
+            -m "Adopted by follow-crystal.yml (run ${{ github.run_id }}), which merges only when Verify passes on this branch."
+          git push origin "$branch"
+          echo "name=$branch" >> "$GITHUB_OUTPUT"
+
+      - name: Verify the branch, then fast-forward main
+        if: steps.adopt.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.branch.outputs.name }}
+        run: |
+          set -euo pipefail
+          gh workflow run verify.yml --ref "$BRANCH"
+          run=''
+          for _ in $(seq 1 30); do
+            run=$(gh run list --workflow verify.yml --branch "$BRANCH" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+            [ -n "$run" ] && break
+            sleep 5
+          done
+          [ -n "$run" ] || { echo "::error::Verify did not start on $BRANCH"; exit 1; }
+          if ! gh run watch "$run" --exit-status; then
+            echo "::error::Verify failed on $BRANCH, so main is unchanged. Fix it on the branch and merge it by hand."
+            exit 1
+          fi
+          git push origin "HEAD:main"
+          git push origin --delete "$BRANCH"

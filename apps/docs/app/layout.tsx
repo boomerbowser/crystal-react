@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <a href="/" className="site-name">Crystal React</a>
             <nav aria-label="Site">
               <a className="cr-nav-item" href="/surfaces/">Surfaces</a>
+              <a className="cr-nav-item" href="/libraries/">Libraries</a>
             </nav>
           </header>
           <main id="main" className="site-main">{children}</main>

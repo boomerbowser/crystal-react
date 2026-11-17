@@ -9,7 +9,7 @@
  * `mark-in`. These recipes exist only from 2.2.0. On anything older `useMotion`
  * throws for an unknown recipe, so a dependency range that let 2.1 back in would
  * ship components that crash as soon as something starts loading. The
- * dependency says `^2.8.0`. This test checks the installed version, because the
+ * dependency says `^2.9.0`. This test checks the installed version, because the
  * range is only what was requested.
  *
  * The floor is 2.3, because the location dot, the count badge, the group, the

@@ -5,6 +5,8 @@
 import surfaceRecipes from '@crystal-ui/core/surface-recipes';
 import surfaceVocabulary from '@crystal-ui/core/surfaces';
 import catalogue from '@crystal-ui/core/catalogue';
+import libraryRegistry from '@crystal-ui/core/libraries';
+import libraryVersions from './library-versions.json';
 
 export interface Branch {
   declarations?: Record<string, string>;
@@ -94,3 +96,20 @@ export function describeBranch(branch: Branch | null | undefined): string {
   }
   return parts.join('; ') || 'Unchanged';
 }
+
+export interface Library {
+  platform: string;
+  name: string | null;
+  framework: string;
+  status: 'built' | 'planned';
+  stage: string | null;
+  package: string | null;
+  registry: string | null;
+  repository: string | null;
+  documentation: string | null;
+}
+
+/* Crystal's component libraries, from the installed registry, each with the
+   version its package has published (scripts/library-versions.mjs). */
+export const libraries = (libraryRegistry as unknown as { libraries: Library[] }).libraries;
+export const publishedVersions = (libraryVersions as { packages: Record<string, string | null> }).packages;
