@@ -77,7 +77,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
         /* Nothing for `resin`: Crystal paints every `<button>` as a Resin
            control already, so the variant is the absence of a class. `quiet`
            takes that coat off. */
-        variant === 'resin' ? undefined : styles['quiet'],
+        variant === 'resin' ? undefined : cx('cr-bare', styles['quiet']),
         circle ? styles['circle'] : undefined,
         className,
       )}

@@ -171,14 +171,14 @@ function ModalDrawer({
         <MotionOverlay
           {...props}
           isOpen
-          className={cx(styles['scrim'])}
+          className={cx('cr-mirage', styles['scrim'])}
           {...wash}
         >
           <Modal className={cx(styles['modalHolder'], styles[placement])}>
             <AriaDialog
               ref={scope as never}
               aria-labelledby={titleId}
-              className={cx(styles['panel'], styles[placement], className)}
+              className={cx('cr-frost sheet flat', styles['panel'], styles[placement], className)}
             >
               {/* The render prop supplies `close`. With children passed directly,
                   the close control cannot reach the overlay's state, so it
@@ -259,7 +259,7 @@ function InlinePanel({
     <aside
       ref={scope as never}
       aria-labelledby={titleId}
-      className={cx(styles['panel'], styles['inline'], styles[placement], className)}
+      className={cx('cr-frost sheet flat', styles['panel'], styles['inline'], styles[placement], className)}
     >
       <Sweep play={play} />
       <PresenceExit play={play} recipe="drawer-out" />

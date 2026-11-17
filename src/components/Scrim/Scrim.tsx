@@ -40,7 +40,7 @@ export function Scrim({ isCentred = true, children, className }: ScrimProps): Re
          hiding the wrapper hides the dialog inside it, which would make every
          modal in the library invisible to a screen reader. It needs no hiding:
          a div with no role and nothing focusable has nothing to announce. */
-      className={cx(styles['scrim'], isCentred ? styles['centred'] : undefined, className)}
+      className={cx('cr-mirage', styles['scrim'], isCentred ? styles['centred'] : undefined, className)}
     >
       {children}
     </motion.div>

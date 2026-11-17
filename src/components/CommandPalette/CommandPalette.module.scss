@@ -27,9 +27,10 @@
 
 .holder { display: contents; }
 
+/* The palette wears Crystal's `.cr-haze.raised` (2.7.0): the feathered Haze
+   fill behind the content, with the float shadow, because it opens over
+   everything. The `--cr-edge` boundary is the palette's own. */
 .palette {
-  position: relative;
-  isolation: isolate;
   display: flex;
   flex-direction: column;
   inline-size: 100%;
@@ -38,24 +39,8 @@
   padding: $cr-spacing-xs;
   border: 1px solid var(--cr-edge);
   border-radius: var(--cr-radius);
-  background: transparent;
-  color: var(--cr-text);
   outline: none;
   transform-origin: top center;
-}
-
-/* Haze is feathered, so it is a layer behind the content. Feathering an
-   element that contains text blurs the text. */
-.palette::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  background: var(--cr-haze-fill);
-  filter: blur(var(--cr-haze-feather));
-  box-shadow: var(--cr-shadow-float);
 }
 
 /* The field is Resin. The styles go on the shell, so the focus ring traces the
@@ -162,6 +147,5 @@
 @media (forced-colors: active) {
   .scrim { background: Canvas; backdrop-filter: none; }
   .palette { border-color: CanvasText; }
-  .palette::before { content: none; background: Canvas; }
   .shortcut { border-color: CanvasText; color: CanvasText; }
 }

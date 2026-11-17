@@ -35,14 +35,16 @@
    because it is about the view and not part of it. */
 .footer { grid-area: footer; min-width: 0; }
 
+/* The sidebar wears Crystal's `.cr-frost.docked.flat` (2.7.0): the Frost fill
+   and blur, docked to the window's edge with no rim, radius, shadow or grain,
+   and Crystal's opaque, reduced-transparency and forced-colours routes. The
+   side it shares with the content is drawn here. */
 .sidebar {
   grid-area: sidebar;
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  background: var(--cr-frost-fill);
   border-inline-end: 1px solid var(--cr-edge);
-  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
   /* A sidebar pinned to the left of a phone in landscape sits under the notch
      without the safe-area inset. */
   padding-inline-start: env(safe-area-inset-left);
@@ -80,22 +82,6 @@
   max-width: calc(100% - var(--cr-space) * 2);
 }
 
-:global([data-effects='opaque']) .sidebar {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .sidebar {
-    background: var(--cr-surface);
-    backdrop-filter: none;
-  }
-}
-
 @media (forced-colors: active) {
-  .sidebar {
-    background: Canvas;
-    border-color: CanvasText;
-    backdrop-filter: none;
-  }
+  .sidebar { border-color: CanvasText; }
 }

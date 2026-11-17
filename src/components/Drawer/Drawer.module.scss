@@ -10,11 +10,10 @@
  * to imply it.
  */
 
+/* The scrim wears Crystal's `.cr-mirage`, with its fallbacks. */
 .scrim {
   position: fixed;
   inset: 0;
-  background: var(--cr-mirage-fill);
-  backdrop-filter: blur(var(--cr-mirage-blur)) saturate(var(--cr-mirage-saturation)) brightness(var(--cr-mirage-brightness));
 }
 
 /* The holder pins the panel to its edge. The panel itself knows nothing about
@@ -42,16 +41,13 @@
 .modalHolder.top { align-items: flex-start; }
 .modalHolder.bottom { align-items: flex-end; }
 
+/* The panel wears Crystal's `.cr-frost.sheet.flat` (2.7.0): the Frost fill and
+   blur, the `--cr-edge` rim, the float shadow and no grain, with Crystal's
+   fallbacks. Which corners square off against the edge is set below. */
 .panel {
-  position: relative;
-  isolation: isolate;
   display: flex;
   flex-direction: column;
   padding: var(--cr-space);
-  border: 1px solid var(--cr-edge);
-  background: var(--cr-frost-fill);
-  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
-  box-shadow: var(--cr-shadow-float);
   color: var(--cr-text);
   /* The sweep is a 3D transform, so the panel needs its own stacking context and
      a stable origin for the rotation not to pivot about the page. */
@@ -137,22 +133,6 @@
   min-block-size: 0;
 }
 
-:global([data-effects='opaque']) .panel {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-:global([data-effects='opaque']) .scrim {
-  background: var(--cr-mirage-fallback-fill);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .panel { background: var(--cr-surface); backdrop-filter: none; }
-  .scrim { background: var(--cr-mirage-fallback-fill); backdrop-filter: none; }
-}
-
 @media (forced-colors: active) {
-  .panel { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
-  .scrim { background: Canvas; backdrop-filter: none; }
+  .scrim { background: Canvas; }
 }

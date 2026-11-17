@@ -30,6 +30,10 @@
 
 .separated .item + .item { border-block-start: 1px solid var(--cr-edge); }
 
+/* The row wears Crystal's `.cr-haze.flat` (2.7.0): the Haze fill on the
+   element itself, with no feather, because a row is drawn edge to edge
+   against its neighbours. Crystal gives it the surface in opaque mode and
+   under reduced transparency, and system colours in forced colours. */
 .row {
   display: flex;
   flex: 1 1 auto;
@@ -38,9 +42,7 @@
   min-block-size: $cr-action-min-target;
   box-sizing: border-box;
   padding: $cr-spacing-xs $cr-spacing-sm;
-  border: 0;
   border-radius: var(--cr-radius);
-  background: var(--cr-haze-fill);
   color: var(--cr-text);
   font: inherit;
   text-align: start;
@@ -50,6 +52,14 @@
 /* A pressable row is a control and says so. A static one is not, and must not
    grow a cursor that promises something will happen. */
 a.row, button.row { cursor: pointer; }
+
+/* A `<button>` row is coated by Crystal, and the coat's reading pad is its
+   `::before`. `.cr-haze.flat` has no layer and hides it, but the button rows
+   have always shown it while the link rows, which have no coat, never have.
+   Kept as it renders until that difference is settled (R-28, phase 2). */
+@media not (forced-colors: active) {
+  button.row::before { display: block; }
+}
 
 a.row:hover, button.row:hover { background: var(--cr-surface-alt); }
 
@@ -77,14 +87,7 @@ a.row:focus-visible, button.row:focus-visible {
   text-align: center;
 }
 
-:global([data-effects='opaque']) .row { background: var(--cr-surface); }
-
-@media (prefers-reduced-transparency: reduce) {
-  .row { background: var(--cr-surface); }
-}
-
 @media (forced-colors: active) {
-  .row { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
   .row[aria-current='true'], .row[aria-pressed='true'], .row[data-selected] {
     background: Canvas;
     color: CanvasText;

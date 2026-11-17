@@ -1,16 +1,15 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
-/* A Frost panel, as the catalogue puts it. The rail belongs to the page's
-   structure, and its destinations are Crystal's navigation entries. */
+/* A Frost panel, as the catalogue puts it: Crystal's `.cr-frost.pane.flat`
+   (2.7.0), the content radius and no grain behind a column of entries. The
+   rail belongs to the page's structure, and its destinations are Crystal's
+   navigation entries. */
 
 .rail {
-  @include material.frost;
   display: flex;
   flex-direction: column;
   gap: $cr-spacing-sm;
   padding: $cr-spacing-sm;
-  border-radius: $cr-shape-content-radius;
   /* The shell's sidebar width, because a rail is what a shell's sidebar
      holds, and one column needs one number. Overridable for a rail that is not
      in a shell. */
@@ -84,9 +83,6 @@
   border-block-start: 1px solid var(--cr-rim);
 }
 
-@include material.opaque-fallback('.rail');
-
-@media (forced-colors: active) {
-  .rail { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
-  /* The current entry's Highlight ring is Crystal's, on `.cr-nav-item`. */
-}
+/* Opaque, reduced transparency and forced colours are Crystal's routes for
+   the Frost panel. The current entry's Highlight ring is Crystal's, on
+   `.cr-nav-item`. */

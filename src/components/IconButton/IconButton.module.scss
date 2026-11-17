@@ -32,27 +32,12 @@
 
 .circle { border-radius: 50%; }
 
-/* Quiet: the whole coat comes off, the fill included.
- *
- * The rim, the shadow and the blur are Crystal's `:is(button, …)` rule, and both
- * feathered layers are its `::before` and `::after`. A quiet control sits on the
- * surface it is on, so it takes none of them. */
-.quiet {
-  border-color: transparent;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-}
-
-.quiet::before,
-.quiet::after {
-  display: none;
-}
-
-/* A quiet control has no material to lift, so hover is a fill. Crystal's hover
-   returns a Resin control to the Resin fill, and a quiet control has no Resin
-   fill to return to. The resin variant is left to Crystal's own hover. */
-.quiet:hover:not(:disabled) { background: var(--cr-surface-alt); }
+/* Quiet: the whole coat comes off, the fill included. The control wears
+ * Crystal's `.cr-bare`, which removes the rim, the shadow, the blur and both
+ * feathered layers, keeps the target and the focus ring, and makes hover a
+ * fill. A quiet control sits on the surface it is on. The colour is the text
+ * colour, as on every control, not the surrounding ink. */
+.quiet { color: var(--cr-text); }
 
 /* A toggle that is on.
  *
@@ -63,16 +48,6 @@
 .quiet[aria-pressed='true'] {
   background: var(--cr-primary-soft);
   color: var(--cr-on-primary-soft);
-}
-
-/* Reduced transparency. Crystal flattens its material containers under this
-   query and carries no rule for a control, so removing diffusion from the
-   control itself is this library's. Quiet has none to remove. */
-@media (prefers-reduced-transparency: reduce) {
-  .iconButton:not(.quiet) {
-    background: var(--cr-surface);
-    backdrop-filter: none;
-  }
 }
 
 @media (forced-colors: active) {

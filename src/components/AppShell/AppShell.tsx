@@ -94,7 +94,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
     >
       {header ? <div className={cx(styles['header'])}>{header}</div> : null}
       {sidebar ? (
-        <nav aria-label={sidebarLabel} className={cx(styles['sidebar'], 'cr-scroll-frost')} hidden={isCollapsed}>
+        <nav aria-label={sidebarLabel} className={cx('cr-frost docked flat', styles['sidebar'], 'cr-scroll-frost')} hidden={isCollapsed}>
           {sidebar}
         </nav>
       ) : null}

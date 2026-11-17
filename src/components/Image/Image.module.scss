@@ -10,15 +10,15 @@
  * rectangle on Crystal's coloured atmosphere reads as a hole in the page.
  */
 
+/* The box wears Crystal's `.cr-haze.flat.sunken` (2.7.0): the fill on the
+   element with no feather, because the paint layer here is the placeholder
+   alone and the picture above it must stay exact. Where translucency gives
+   way it becomes the alternate surface, so it still reads as a well. The
+   corners are square unless the image is `rounded`. */
 .image {
-  position: relative;
   display: block;
   overflow: hidden;
-  isolation: isolate;
-  background: var(--cr-haze-fill);
-  /* The feather belongs to the paint layer, and here the paint layer is the
-     placeholder alone: the picture above it must stay exact. */
-  filter: none;
+  border-radius: 0;
 }
 
 .rounded { border-radius: var(--cr-radius); }
@@ -43,13 +43,6 @@
   text-align: center;
 }
 
-:global([data-effects='opaque']) .image { background: var(--cr-surface-alt); }
-
-@media (prefers-reduced-transparency: reduce) {
-  .image { background: var(--cr-surface-alt); }
-}
-
 @media (forced-colors: active) {
-  .image { background: Canvas; border: 1px solid CanvasText; }
   .fallback { background: Canvas; color: CanvasText; }
 }

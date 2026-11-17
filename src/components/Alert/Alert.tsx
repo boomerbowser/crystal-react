@@ -80,7 +80,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert({
       role={urgent ? 'alert' : 'region'}
       aria-labelledby={`${id}-title`}
       data-status={status}
-      className={cx(styles['alert'], className)}
+      className={cx('cr-haze inset', styles['alert'], className)}
     >
       <span aria-hidden="true" className={styles['well']}>{STATUS_SYMBOL[status]}</span>
       <div className={styles['content']}>

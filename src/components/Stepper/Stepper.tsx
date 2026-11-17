@@ -98,7 +98,7 @@ export function Stepper({
 
         const body = (
           <>
-            <span className={cx(styles['marker'])} aria-hidden="true">
+            <span className={cx(shape === 'marker' && 'cr-resin flat', styles['marker'])} aria-hidden="true">
               {state === 'complete' ? '✓' : state === 'error' ? '!' : index + 1}
             </span>
             <span className={cx(styles['text'])}>
@@ -117,13 +117,13 @@ export function Stepper({
             className={cx(styles['step'])}
           >
             {isNavigable ? (
-              <Button aria-label={name} onPress={() => onNavigate?.(step.id)} className={cx(styles['control'], shape === 'marker' && 'cr-bare')}>
+              <Button aria-label={name} onPress={() => onNavigate?.(step.id)} className={cx(styles['control'], shape === 'marker' ? 'cr-bare' : 'cr-haze flush')}>
                 {body}
               </Button>
             ) : (
               /* Not focusable. A control that takes focus and does nothing is
                  worse than one that is plainly inert. */
-              <span className={cx(styles['control'])} aria-label={name} role="text">{body}</span>
+              <span className={cx(styles['control'], shape === 'pill' && 'cr-haze flush')} aria-label={name} role="text">{body}</span>
             )}
           </StepItem>
         );

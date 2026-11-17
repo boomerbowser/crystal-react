@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* Resin step markers on a Haze track, as the catalogue's material line says. The
    track is the connector between the steps, and it is Haze because it sits
@@ -62,9 +61,10 @@
 
 button.control { cursor: pointer; }
 
-/* Resin markers. */
+/* Resin markers: the marker shape's marker wears Crystal's `.cr-resin.flat`
+   (2.7.0), a Resin plane that is a mark rather than a control, so it has no
+   sheen. The circle is its geometry. */
 .marker {
-  @include material.resin;
   display: inline-flex;
   flex: none;
   align-items: center;
@@ -98,10 +98,7 @@ button.control[data-focus-visible] {
   box-shadow: var(--cr-focus-ring);
 }
 
-@include material.opaque-fallback('.marker');
-
 @media (forced-colors: active) {
-  .marker { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
   .step[data-state='current'] .marker { outline: 2px solid Highlight; }
   .step:not(:last-child)::after { background: CanvasText; }
 }
@@ -117,14 +114,11 @@ button.control[data-focus-visible] {
  * Resin disc and becomes the leading glyph inside the pill. A pill with a
  * floating disc in it is two materials deep, and Resin never contains Resin.
  */
-/* A pill step is a Haze pill, so it does not wear `cr-bare`. The marker shape's
-   steps do. The bare recipe removes both pseudo-elements, and this fill is the
-   `::before`. A bare-control rule on `.control` would also hide the fill through
-   its `display: none`, because the fill never sets `display`. So the bare class
-   goes on the marker shape's controls only. */
+/* A pill step is a Haze pill, Crystal's `.cr-haze.flush` (2.7.0), so it does
+   not wear `cr-bare`. The marker shape's steps do. The bare recipe removes both
+   pseudo-elements, and this fill is the `::before`. So the bare class goes on
+   the marker shape's controls only, and the Haze classes on the pill shape's. */
 .stepper[data-shape='pill'] .control {
-  @include material.haze-fill(0);
-
   display: inline-flex;
   align-items: center;
   gap: $cr-spacing-2xs;
@@ -136,14 +130,10 @@ button.control[data-focus-visible] {
   color: inherit;
 }
 
+/* The pill's marker is a glyph, not a disc: it wears no Resin. */
 .stepper[data-shape='pill'] .marker {
-  background: none;
-  backdrop-filter: none;
-  box-shadow: none;
-  border: 0;
   inline-size: auto;
   block-size: auto;
-  filter: none;
 }
 
 /* "Connectors are hairlines", against the marker shape's 2px track. */

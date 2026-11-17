@@ -18,13 +18,13 @@
 
 .region { min-width: 0; min-height: 0; overflow: hidden; }
 
+/* The handle wears Crystal's `.cr-resin.divider` (2.7.0): the Resin fill and
+   blur with no rim, shadow or sheen, the outline colour where translucency
+   gives way and CanvasText in forced colours. It is a line, so it is square. */
 .handle {
-  position: relative;
   flex: none;
-  border: 0;
   padding: 0;
-  background: var(--cr-resin-fill);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
+  border-radius: 0;
   touch-action: none;
 }
 
@@ -32,8 +32,12 @@
 .vertical > .handle { block-size: $cr-spacing-2xs; cursor: row-resize; }
 
 /* The target. Transparent, centred on the visible handle, and 44px across, so
-   a 4px grip has a 44px place to press. */
+   a 4px grip has a 44px place to press. `display` and `box-shadow` are
+   restated because this layer is Resin's `::after`, the optical rims, which the
+   divider hides; the target takes neither. */
 .handle::after {
+  display: block;
+  box-shadow: none;
   content: '';
   position: absolute;
   inset: 50% auto auto 50%;
@@ -48,11 +52,4 @@
 .handle[data-cr-state='at-min'], .handle[data-cr-state='at-max'] { background: var(--cr-edge); }
 .handle:disabled { opacity: $cr-action-disabled-opacity; cursor: default; }
 
-:global([data-effects='opaque']) .handle {
-  background: var(--cr-outline);
-  backdrop-filter: none;
-}
 
-@media (forced-colors: active) {
-  .handle { background: CanvasText; backdrop-filter: none; }
-}

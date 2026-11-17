@@ -62,7 +62,7 @@ export function NavRail({
     <nav
       aria-label={props['aria-label'] ?? 'Main'}
       data-collapsed={isCollapsed || undefined}
-      className={cx(styles['rail'], className)}
+      className={cx('cr-frost pane flat', styles['rail'], className)}
     >
       <ul className={cx(styles['list'])}>
         {items.map((item) => {

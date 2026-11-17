@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* Timeline: "Resin markers on a Haze connector", 2px.
  *
@@ -41,9 +40,10 @@
   background: var(--cr-haze-fill);
 }
 
+/* The marker wears Crystal's `.cr-resin.flat` (2.7.0): a Resin plane that is a
+   mark rather than a control, so it has no sheen, with Crystal's fallbacks.
+   The circle is its geometry. */
 .marker {
-  @include material.resin;
-
   display: inline-grid;
   place-items: center;
   box-sizing: border-box;
@@ -54,8 +54,6 @@
   font-size: var(--cr-text-caption-size);
   font-weight: 800;
 }
-
-@include material.opaque-fallback('.marker');
 
 .event[data-status='complete'] .marker { background: var(--cr-success-surface); color: var(--cr-success-ink); }
 .event[data-status='current'] .marker { background: var(--cr-primary); color: var(--cr-on-primary); }
@@ -75,7 +73,6 @@
 }
 
 @media (forced-colors: active) {
-  .marker { background: Canvas; color: CanvasText; border: 1px solid CanvasText; box-shadow: none; }
   .event[data-status='current'] .marker { outline: 2px solid Highlight; }
   .event:not(:last-child)::before { background: CanvasText; }
 }

@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 @use '../../styles/status';
 
 /* The stack. Fixed to the region's end corner, newest nearest the edge. It is a
@@ -27,12 +26,10 @@
    takes Frost. Meridian moved it to Frost with the others, and the catalogue
    says so as of Crystal 2.2.0. */
 .toast {
-  /* The Frost panel is Crystal's `.cr-frost`, which the element wears. The Haze
-     reading fill under the text is the catalogue's "Frost panel with Haze
-     reading fill", and it is needed because Frost has no pad of its own. It is
-     on `::after`, because `.cr-frost` paints its grain on `::before`. */
-  @include material.haze-fill($layer: '::after');
-
+  /* The element wears Crystal's `.cr-frost.reading` (2.7.0): the Frost panel
+     with the Haze reading fill under the text, the catalogue's "Frost panel
+     with Haze reading fill", needed because Frost has no pad of its own. The
+     fill is on `::after`, because `.cr-frost` paints its grain on `::before`. */
   display: flex;
   align-items: flex-start;
   gap: $cr-spacing-sm;

@@ -11,7 +11,8 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-.shell { @include field.shell; }
+/* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a
+   block that fills its row. */
 .input { @include field.control; }
 
 .input:focus { outline: none; }

@@ -147,7 +147,7 @@ export function CommandPalette({
             <AriaDialog
               ref={scope as never}
               aria-label={label}
-              className={cx(styles['palette'], className)}
+              className={cx('cr-haze raised', styles['palette'], className)}
             >
               <Sweep play={play} />
               {/* And `menu-out` as it closes: the palette is inside

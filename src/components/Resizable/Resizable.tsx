@@ -115,7 +115,7 @@ export const Resizable = forwardRef<HTMLDivElement, ResizableProps>(function Res
         aria-valuemax={maxSize}
         aria-disabled={isDisabled || undefined}
         data-cr-state={atMin ? 'at-min' : atMax ? 'at-max' : 'idle'}
-        className={cx(styles['handle'])}
+        className={cx('cr-resin divider', styles['handle'])}
       />
       <div className={cx(styles['region'])} style={{ flex: '1 1 0' }}>{secondary}</div>
     </div>
