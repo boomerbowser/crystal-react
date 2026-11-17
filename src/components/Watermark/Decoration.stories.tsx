@@ -8,6 +8,7 @@ import { AnimateOnScroll } from '../AnimateOnScroll/AnimateOnScroll.js';
 import { Card } from '../Card/Card.js';
 import { Stack } from '../Stack/Stack.js';
 import { Button } from '../Button/Button.js';
+import { Menu, MenuItem, MenuTrigger } from '../Menu/Menu.js';
 
 const meta = {
   title: 'Utility/Marks and lists',
@@ -86,6 +87,30 @@ export const Overflowing: Story = {
         <Button key={label} variant="quiet">{label}</Button>
       ))}
     </OverflowList>
+  ),
+};
+
+/** The overflow as the catalogue draws it: what does not fit goes into a Frost
+    menu. The container is narrow, so the menu always has something in it. */
+export const IntoAMenu: Story = {
+  render: () => (
+    <div style={{ maxInlineSize: 'calc(var(--cr-layout-sidebar-width, 280px) * 1.4)' /* crystal-allow-literal: the token's own fallback */ }}>
+      <OverflowList
+        gap="sm"
+        renderOverflow={(hidden, count) => (
+          count > 0 ? (
+            <MenuTrigger>
+              <Button variant="quiet">{count} more</Button>
+              <Menu label="More sections">
+                {hidden.map((item, index) => <MenuItem key={index} id={String(index)}>{item}</MenuItem>)}
+              </Menu>
+            </MenuTrigger>
+          ) : null
+        )}
+      >
+        {['Overview', 'Materials', 'Components', 'Catalogue', 'Icons', 'Tokens', 'Motion'].map((label) => label)}
+      </OverflowList>
+    </div>
   ),
 };
 

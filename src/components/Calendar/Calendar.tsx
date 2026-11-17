@@ -50,7 +50,7 @@ export function Calendar<T extends DateValue>(
     <AriaCalendar
       {...props}
       {...(label === undefined ? {} : { 'aria-label': label })}
-      className={cx('cr-frost flat', styles['panel'], className)}
+      className={cx('cr-frost flat reading', styles['panel'], className)}
     >
       <CalendarBody />
     </AriaCalendar>
@@ -72,7 +72,7 @@ export function RangeCalendar<T extends DateValue>(
     <AriaRangeCalendar
       {...props}
       {...(label === undefined ? {} : { 'aria-label': label })}
-      className={cx('cr-frost flat', styles['panel'], className)}
+      className={cx('cr-frost flat reading', styles['panel'], className)}
     >
       <CalendarBody />
     </AriaRangeCalendar>

@@ -30,13 +30,14 @@
       "backdropFilterLines": 0,
       "directoriesUsingMaterialMixins": 0,
       "mixinUses": {},
-      "entriesWithASurfaceNotWornInMarkup": 62,
+      "entriesWithASurfaceNotWornInMarkup": 59,
       "surfacesNotWornInMarkup": {
-        "unresolved": 56,
-        "worn by a child": 12,
-        "worn once opened": 5
+        "optional in the catalogue": 3,
+        "unresolved": 4,
+        "worn by a child": 32,
+        "worn once opened": 29
       },
-      "surfacesMeasured": "2026-11-08"
+      "surfacesMeasured": "2026-11-17"
     }
   },
   "recipeUse": {
@@ -436,7 +437,10 @@
       ],
       "surfaceReasons": {
         "frost": {
-          "reason": "unresolved: no story shows it"
+          "reason": "worn once opened",
+          "story": "utility-marks-and-lists--into-a-menu",
+          "trigger": "#storybook-root button[aria-haspopup]",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -726,13 +730,10 @@
       ],
       "surfaceReasons": {
         "dialog": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "overlays-command-palette--palette",
-            "overlays-command-palette--palette-keyboard",
-            "overlays-command-palette--empty",
-            "overlays-command-palette--loading"
-          ]
+          "reason": "worn once opened",
+          "story": "overlays-command-palette--palette",
+          "trigger": "Open the palette",
+          "element": "section cr-haze (palette)"
         }
       }
     },
@@ -767,13 +768,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "navigation-hierarchies--files",
-            "navigation-hierarchies--keyboard",
-            "navigation-hierarchies--expanding-is-motion",
-            "navigation-hierarchies--scroll-spy"
-          ]
+          "reason": "worn by a child",
+          "story": "navigation-hierarchies--scroll-spy",
+          "element": "nav cr-haze (toc)"
         }
       }
     },
@@ -921,12 +918,9 @@
       ],
       "surfaceReasons": {
         "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "navigation-menu-bars--bar",
-            "navigation-menu-bars--sections",
-            "navigation-menu-bars--disclosure"
-          ]
+          "reason": "worn by a child",
+          "story": "navigation-menu-bars--sections",
+          "element": "div cr-frost (panel)"
         }
       }
     },
@@ -1200,7 +1194,10 @@
       ],
       "surfaceReasons": {
         "dock": {
-          "reason": "unresolved: no story shows it"
+          "reason": "worn once opened",
+          "story": "actions-icon-group-and-floating--floating",
+          "trigger": "Select one more",
+          "element": "div cr-dock (toolbar)"
         }
       }
     },
@@ -1515,7 +1512,12 @@
       ],
       "surfaceReasons": {
         "compact": {
-          "reason": "unresolved: no story shows it"
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-text-and-choice--text-family",
+            "inputs-text-and-choice--choice-family",
+            "inputs-text-and-choice--around-anything"
+          ]
         }
       }
     },
@@ -1839,7 +1841,13 @@
       ],
       "surfaceReasons": {
         "compact": {
-          "reason": "unresolved: no story shows it"
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-composite--filtering",
+            "inputs-composite--tokens",
+            "inputs-composite--two-lists",
+            "inputs-composite--hierarchy"
+          ]
         }
       }
     },
@@ -1987,13 +1995,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "inputs-temporal-colour-and-files--temporal",
-            "inputs-temporal-colour-and-files--colour",
-            "inputs-temporal-colour-and-files--files",
-            "inputs-temporal-colour-and-files--dropping-files"
-          ]
+          "reason": "worn once opened",
+          "story": "inputs-temporal-colour-and-files--temporal",
+          "trigger": "Calendar",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -2044,13 +2049,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "inputs-temporal-colour-and-files--temporal",
-            "inputs-temporal-colour-and-files--colour",
-            "inputs-temporal-colour-and-files--files",
-            "inputs-temporal-colour-and-files--dropping-files"
-          ]
+          "reason": "worn once opened",
+          "story": "inputs-temporal-colour-and-files--temporal",
+          "trigger": "Calendar",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -2124,7 +2126,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: no story shows it"
+          "reason": "worn once opened",
+          "story": "inputs-temporal-colour-and-files--temporal",
+          "trigger": "Calendar",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -2197,12 +2202,8 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "inputs-text-and-choice--text-family",
-            "inputs-text-and-choice--choice-family",
-            "inputs-text-and-choice--around-anything"
-          ]
+          "reason": "optional in the catalogue",
+          "note": "the catalogue makes the panel optional; a product that groups it wears a card"
         }
       }
     },
@@ -2238,7 +2239,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: no story shows it"
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-composite--two-lists"
+          ]
         }
       }
     },
@@ -2285,7 +2289,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: no story shows it"
+          "reason": "worn once opened",
+          "story": "inputs-composite--hierarchy",
+          "trigger": "United Kingdom / Scotland",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -2327,13 +2334,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "inputs-richtextsurface--default",
-            "inputs-richtextsurface--read-only",
-            "inputs-richtextsurface--invalid",
-            "inputs-richtextsurface--with-mentions"
-          ]
+          "reason": "worn by a child",
+          "story": "inputs-richtextsurface--with-mentions",
+          "element": "div cr-frost cr-scroll-frost (popover)"
         }
       }
     },
@@ -2563,13 +2566,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "inputs-temporal-colour-and-files--temporal",
-            "inputs-temporal-colour-and-files--colour",
-            "inputs-temporal-colour-and-files--files",
-            "inputs-temporal-colour-and-files--dropping-files"
-          ]
+          "reason": "worn once opened",
+          "story": "inputs-temporal-colour-and-files--temporal",
+          "trigger": "Calendar",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -2609,13 +2609,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "inputs-temporal-colour-and-files--temporal",
-            "inputs-temporal-colour-and-files--colour",
-            "inputs-temporal-colour-and-files--files",
-            "inputs-temporal-colour-and-files--dropping-files"
-          ]
+          "reason": "worn once opened",
+          "story": "inputs-temporal-colour-and-files--temporal",
+          "trigger": "Calendar",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -2653,13 +2650,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "inputs-temporal-colour-and-files--temporal",
-            "inputs-temporal-colour-and-files--colour",
-            "inputs-temporal-colour-and-files--files",
-            "inputs-temporal-colour-and-files--dropping-files"
-          ]
+          "reason": "worn once opened",
+          "story": "inputs-temporal-colour-and-files--temporal",
+          "trigger": "Calendar",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -2784,7 +2778,9 @@
       ],
       "surfaceReasons": {
         "field": {
-          "reason": "unresolved: no story shows it"
+          "reason": "worn by a child",
+          "story": "inputs-text-and-choice--text-family",
+          "element": "div cr-field-shell (shell)"
         }
       }
     },
@@ -2961,7 +2957,13 @@
       ],
       "surfaceReasons": {
         "compact": {
-          "reason": "unresolved: no story shows it"
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "inputs-composite--filtering",
+            "inputs-composite--tokens",
+            "inputs-composite--two-lists",
+            "inputs-composite--hierarchy"
+          ]
         }
       }
     },
@@ -3001,7 +3003,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: no story shows it"
+          "reason": "worn once opened",
+          "story": "inputs-temporal-colour-and-files--temporal",
+          "trigger": "Calendar",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -3038,7 +3043,10 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: no story shows it"
+          "reason": "worn once opened",
+          "story": "inputs-temporal-colour-and-files--temporal",
+          "trigger": "Calendar",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -3193,12 +3201,8 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "data-display-description-list--default",
-            "data-display-description-list--stacked",
-            "data-display-description-list--empty"
-          ]
+          "reason": "optional in the catalogue",
+          "note": "the catalogue makes the panel optional; a product that groups it wears a card"
         }
       }
     },
@@ -3374,8 +3378,7 @@
         "unplayed": []
       },
       "surfaces": [
-        "indicator",
-        "haze"
+        "resin"
       ],
       "directory": "src/components/Timeline",
       "classesWorn": [
@@ -3385,26 +3388,7 @@
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "indicator",
-        "haze"
-      ],
-      "surfaceReasons": {
-        "indicator": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "data-display-timeline--default",
-            "data-display-timeline--with-an-error"
-          ]
-        },
-        "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "data-display-timeline--default",
-            "data-display-timeline--with-an-error"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "accordion",
@@ -3714,13 +3698,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "data-display-calendar--default",
-            "data-display-calendar--today-and-selected",
-            "data-display-calendar--with-unavailable-days",
-            "data-display-calendar--a-range"
-          ]
+          "reason": "worn by a child",
+          "story": "data-display-calendar--default",
+          "element": "div cr-frost (panel)"
         }
       }
     },
@@ -4169,13 +4149,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "feedback-toast--success",
-            "feedback-toast--with-description",
-            "feedback-toast--carrying-the-only-undo",
-            "feedback-toast--urgent"
-          ]
+          "reason": "worn by a child",
+          "story": "feedback-toast--success",
+          "element": "li cr-frost (toast)"
         }
       }
     },
@@ -4312,7 +4288,7 @@
         "unplayed": []
       },
       "surfaces": [
-        "haze"
+        "none"
       ],
       "directory": "src/components/Skeleton",
       "classesWorn": [],
@@ -4320,19 +4296,7 @@
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "feedback-skeleton--loading",
-            "feedback-skeleton--resolved",
-            "feedback-skeleton--shapes"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "loading-overlay",
@@ -4453,12 +4417,10 @@
           "element": "div cr-frost (popover)"
         },
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "feedback-inline-confirm--destructive",
-            "feedback-inline-confirm--ordinary",
-            "feedback-inline-confirm--in-flight"
-          ]
+          "reason": "worn once opened",
+          "story": "feedback-inline-confirm--destructive",
+          "trigger": "Delete project",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -4687,12 +4649,10 @@
           "element": "div cr-frost (popover)"
         },
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "overlays-anchored-surfaces--on-the-page",
-            "overlays-anchored-surfaces--inside-a-dialog",
-            "overlays-anchored-surfaces--on-right-click"
-          ]
+          "reason": "worn once opened",
+          "story": "overlays-anchored-surfaces--on-the-page",
+          "trigger": "Actions",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -4775,10 +4735,10 @@
           "element": "div cr-frost (popover)"
         },
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "overlays-overlayarrow--on-a-popover"
-          ]
+          "reason": "worn once opened",
+          "story": "overlays-overlayarrow--on-a-popover",
+          "trigger": "Details",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -4813,10 +4773,10 @@
       ],
       "surfaceReasons": {
         "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "overlays-floating-surfaces--preview"
-          ]
+          "reason": "worn once opened",
+          "story": "overlays-floating-surfaces--preview",
+          "trigger": "hover",
+          "element": "div cr-frost (card)"
         }
       }
     },
@@ -5029,7 +4989,8 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: no story shows it"
+          "reason": "optional in the catalogue",
+          "note": "the catalogue makes the panel optional; a product that groups it wears a card"
         }
       }
     },
@@ -5393,7 +5354,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: no story shows it"
+          "reason": "worn by a child",
+          "story": "utility-behaviour--hidden",
+          "element": "section cr-haze (card)"
         }
       }
     },
@@ -5782,7 +5745,7 @@
         "unplayed": []
       },
       "surfaces": [
-        "haze"
+        "none"
       ],
       "directory": "src/components/DropIndicator",
       "classesWorn": [],
@@ -5790,19 +5753,7 @@
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "utilities-dropindicator--active",
-            "utilities-dropindicator--invalid",
-            "utilities-dropindicator--at-rest"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "virtualizer",
@@ -6515,22 +6466,15 @@
           "element": "div cr-resin"
         },
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "media-video-player--default",
-            "media-video-player--with-captions",
-            "media-video-player--with-settings",
-            "media-video-player--aspect-ratios"
-          ]
+          "reason": "worn by a child",
+          "story": "media-video-player--default",
+          "element": "div cr-resin"
         },
         "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "media-video-player--default",
-            "media-video-player--with-captions",
-            "media-video-player--with-settings",
-            "media-video-player--aspect-ratios"
-          ]
+          "reason": "worn once opened",
+          "story": "media-video-player--default",
+          "trigger": "#storybook-root button[aria-label=\"Settings\"]",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -6579,13 +6523,10 @@
           "element": "div cr-resin"
         },
         "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "media-audio-player--default",
-            "media-audio-player--with-a-title",
-            "media-audio-player--with-skip-controls",
-            "media-audio-player--without-the-card"
-          ]
+          "reason": "worn once opened",
+          "story": "media-audio-player--default",
+          "trigger": "#storybook-root button[aria-label=\"Settings\"]",
+          "element": "div cr-frost (popover)"
         }
       }
     },
@@ -6617,13 +6558,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "media-media-controls--paused",
-            "media-media-controls--playing",
-            "media-media-controls--buffering",
-            "media-media-controls--before-the-length-is-known"
-          ]
+          "reason": "worn by a child",
+          "story": "media-media-controls--paused",
+          "element": "div cr-resin"
         }
       }
     },
@@ -6664,11 +6601,10 @@
       ],
       "surfaceReasons": {
         "mirage": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "media-gallery--a-set",
-            "media-gallery--a-set-of-one"
-          ]
+          "reason": "worn once opened",
+          "story": "media-gallery--a-set",
+          "trigger": "#storybook-root [role=option]",
+          "element": "div cr-mirage (scrim)"
         }
       }
     },
@@ -6916,16 +6852,15 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "commerce-product-gallery--default"
-          ]
+          "reason": "worn by a child",
+          "story": "commerce-product-gallery--default",
+          "element": "div cr-haze (thumb)"
         },
         "mirage": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "commerce-product-gallery--default"
-          ]
+          "reason": "worn once opened",
+          "story": "commerce-product-gallery--default",
+          "trigger": "#storybook-root [role=option], #storybook-root button",
+          "element": "div cr-mirage (scrim)"
         }
       }
     },
@@ -7051,12 +6986,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "commerce-checkout-steps--default",
-            "commerce-checkout-steps--with-a-step-to-go-back-to",
-            "commerce-checkout-steps--vertical"
-          ]
+          "reason": "worn by a child",
+          "story": "commerce-checkout-steps--default",
+          "element": "span cr-haze (control)"
         }
       }
     },
@@ -7312,11 +7244,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "commerce-filter-panel--default",
-            "commerce-filter-panel--nothing-applied"
-          ]
+          "reason": "worn by a child",
+          "story": "commerce-filter-panel--default",
+          "element": "section cr-frost (panel)"
         }
       }
     },
@@ -7446,10 +7376,9 @@
       ],
       "surfaceReasons": {
         "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "screens-screen--default"
-          ]
+          "reason": "worn by a child",
+          "story": "screens-screen--default",
+          "element": "header cr-frost (header)"
         }
       }
     },
@@ -7698,11 +7627,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "screens-emptyscreen--default",
-            "screens-emptyscreen--no-results"
-          ]
+          "reason": "worn by a child",
+          "story": "screens-emptyscreen--default",
+          "element": "div cr-haze (empty)"
         }
       }
     },
@@ -7735,11 +7662,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "screens-errorscreen--default",
-            "screens-errorscreen--with-a-reference"
-          ]
+          "reason": "worn by a child",
+          "story": "screens-errorscreen--default",
+          "element": "div cr-haze (result)"
         }
       }
     },
@@ -7798,11 +7723,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "screens-offlinescreen--default",
-            "screens-offlinescreen--reconnecting"
-          ]
+          "reason": "worn by a child",
+          "story": "screens-offlinescreen--default",
+          "element": "div cr-haze (result)"
         }
       }
     },
@@ -7835,10 +7758,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "screens-notfoundscreen--default"
-          ]
+          "reason": "worn by a child",
+          "story": "screens-notfoundscreen--default",
+          "element": "div cr-haze (result)"
         }
       }
     },
@@ -7871,12 +7793,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "screens-permissionscreen--denied",
-            "screens-permissionscreen--requesting",
-            "screens-permissionscreen--nothing-the-reader-can-do"
-          ]
+          "reason": "worn by a child",
+          "story": "screens-permissionscreen--denied",
+          "element": "div cr-haze (result)"
         }
       }
     },
@@ -7907,10 +7826,9 @@
       ],
       "surfaceReasons": {
         "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "blocks-dashboardshell--default"
-          ]
+          "reason": "worn by a child",
+          "story": "blocks-dashboardshell--default",
+          "element": "nav cr-frost cr-scroll-frost (sidebar)"
         }
       }
     },
@@ -7972,8 +7890,7 @@
         "unplayed": []
       },
       "surfaces": [
-        "table",
-        "frost"
+        "table"
       ],
       "directory": "src/components/DataTableBlock",
       "classesWorn": [],
@@ -7982,23 +7899,13 @@
         "mixins": []
       },
       "surfaceNotWorn": [
-        "table",
-        "frost"
+        "table"
       ],
       "surfaceReasons": {
         "table": {
           "reason": "worn by a child",
           "story": "blocks-datatableblock--default",
           "element": "div cr-table-scroll (scroller)"
-        },
-        "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "blocks-datatableblock--default",
-            "blocks-datatableblock--selecting",
-            "blocks-datatableblock--loading",
-            "blocks-datatableblock--empty"
-          ]
         }
       }
     },
@@ -8340,22 +8247,16 @@
       ],
       "surfaceReasons": {
         "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "blocks-cartdrawer--open",
-            "blocks-cartdrawer--updating",
-            "blocks-cartdrawer--empty",
-            "blocks-cartdrawer--a-working-basket"
-          ]
+          "reason": "worn once opened",
+          "story": "blocks-cartdrawer--a-working-basket",
+          "trigger": "Basket",
+          "element": "section cr-frost (panel)"
         },
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "blocks-cartdrawer--open",
-            "blocks-cartdrawer--updating",
-            "blocks-cartdrawer--empty",
-            "blocks-cartdrawer--a-working-basket"
-          ]
+          "reason": "worn once opened",
+          "story": "blocks-cartdrawer--a-working-basket",
+          "trigger": "Basket",
+          "element": "article cr-haze (item)"
         }
       }
     },
@@ -8416,18 +8317,16 @@
       ],
       "surfaceReasons": {
         "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "blocks-onboardingblock--at-rest",
-            "blocks-onboardingblock--active"
-          ]
+          "reason": "worn once opened",
+          "story": "blocks-onboardingblock--at-rest",
+          "trigger": "Show me around",
+          "element": "div cr-frost (panel)"
         },
         "mirage": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "blocks-onboardingblock--at-rest",
-            "blocks-onboardingblock--active"
-          ]
+          "reason": "worn once opened",
+          "story": "blocks-onboardingblock--at-rest",
+          "trigger": "Show me around",
+          "element": "div cr-mirage (scrim)"
         }
       }
     },
@@ -8498,13 +8397,9 @@
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "blocks-editorblock--at-rest",
-            "blocks-editorblock--dirty",
-            "blocks-editorblock--saving",
-            "blocks-editorblock--saved"
-          ]
+          "reason": "worn by a child",
+          "story": "blocks-editorblock--at-rest",
+          "element": "div cr-field-shell (frame)"
         }
       }
     }

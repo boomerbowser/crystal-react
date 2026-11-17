@@ -5,19 +5,18 @@
   "entries": {
     "overflow-list": {
       "frost": {
-        "how": "no-story",
-        "stories": []
+        "how": "opened",
+        "story": "utility-marks-and-lists--into-a-menu",
+        "trigger": "#storybook-root button[aria-haspopup]",
+        "element": "div cr-frost (popover)"
       }
     },
     "command-palette": {
       "dialog": {
-        "how": "not-found",
-        "stories": [
-          "overlays-command-palette--palette",
-          "overlays-command-palette--palette-keyboard",
-          "overlays-command-palette--empty",
-          "overlays-command-palette--loading"
-        ]
+        "how": "opened",
+        "story": "overlays-command-palette--palette",
+        "trigger": "Open the palette",
+        "element": "section cr-haze (palette)"
       }
     },
     "tree-view": {
@@ -44,52 +43,14 @@
     },
     "action-bar": {
       "dock": {
-        "how": "no-story",
-        "stories": []
+        "how": "opened",
+        "story": "actions-icon-group-and-floating--floating",
+        "trigger": "Select one more",
+        "element": "div cr-dock (toolbar)"
       }
     },
     "multi-select": {
       "compact": {
-        "how": "no-story",
-        "stories": []
-      }
-    },
-    "tags-input": {
-      "compact": {
-        "how": "no-story",
-        "stories": []
-      }
-    },
-    "date-picker": {
-      "haze": {
-        "how": "not-found",
-        "stories": [
-          "inputs-temporal-colour-and-files--temporal",
-          "inputs-temporal-colour-and-files--colour",
-          "inputs-temporal-colour-and-files--files",
-          "inputs-temporal-colour-and-files--dropping-files"
-        ]
-      }
-    },
-    "date-range-picker": {
-      "haze": {
-        "how": "not-found",
-        "stories": [
-          "inputs-temporal-colour-and-files--temporal",
-          "inputs-temporal-colour-and-files--colour",
-          "inputs-temporal-colour-and-files--files",
-          "inputs-temporal-colour-and-files--dropping-files"
-        ]
-      }
-    },
-    "file-input": {
-      "haze": {
-        "how": "no-story",
-        "stories": []
-      }
-    },
-    "fieldset": {
-      "haze": {
         "how": "not-found",
         "stories": [
           "inputs-text-and-choice--text-family",
@@ -98,121 +59,139 @@
         ]
       }
     },
+    "tags-input": {
+      "compact": {
+        "how": "not-found",
+        "stories": [
+          "inputs-composite--filtering",
+          "inputs-composite--tokens",
+          "inputs-composite--two-lists",
+          "inputs-composite--hierarchy"
+        ]
+      }
+    },
+    "date-picker": {
+      "haze": {
+        "how": "opened",
+        "story": "inputs-temporal-colour-and-files--temporal",
+        "trigger": "Calendar",
+        "element": "div cr-frost (popover)"
+      }
+    },
+    "date-range-picker": {
+      "haze": {
+        "how": "opened",
+        "story": "inputs-temporal-colour-and-files--temporal",
+        "trigger": "Calendar",
+        "element": "div cr-frost (popover)"
+      }
+    },
+    "file-input": {
+      "haze": {
+        "how": "opened",
+        "story": "inputs-temporal-colour-and-files--temporal",
+        "trigger": "Calendar",
+        "element": "div cr-frost (popover)"
+      }
+    },
+    "fieldset": {
+      "haze": {
+        "how": "optional",
+        "note": "the catalogue makes the panel optional; a product that groups it wears a card"
+      }
+    },
     "transfer": {
       "haze": {
-        "how": "no-story",
-        "stories": []
+        "how": "not-found",
+        "stories": [
+          "inputs-composite--two-lists"
+        ]
       }
     },
     "cascader": {
       "haze": {
-        "how": "no-story",
-        "stories": []
+        "how": "opened",
+        "story": "inputs-composite--hierarchy",
+        "trigger": "United Kingdom / Scotland",
+        "element": "div cr-frost (popover)"
       }
     },
     "mentions": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "inputs-richtextsurface--default",
-          "inputs-richtextsurface--read-only",
-          "inputs-richtextsurface--invalid",
-          "inputs-richtextsurface--with-mentions"
-        ]
+        "how": "child",
+        "story": "inputs-richtextsurface--with-mentions",
+        "element": "div cr-frost cr-scroll-frost (popover)"
       }
     },
     "month-picker": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "inputs-temporal-colour-and-files--temporal",
-          "inputs-temporal-colour-and-files--colour",
-          "inputs-temporal-colour-and-files--files",
-          "inputs-temporal-colour-and-files--dropping-files"
-        ]
+        "how": "opened",
+        "story": "inputs-temporal-colour-and-files--temporal",
+        "trigger": "Calendar",
+        "element": "div cr-frost (popover)"
       }
     },
     "year-picker": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "inputs-temporal-colour-and-files--temporal",
-          "inputs-temporal-colour-and-files--colour",
-          "inputs-temporal-colour-and-files--files",
-          "inputs-temporal-colour-and-files--dropping-files"
-        ]
+        "how": "opened",
+        "story": "inputs-temporal-colour-and-files--temporal",
+        "trigger": "Calendar",
+        "element": "div cr-frost (popover)"
       }
     },
     "digital-clock": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "inputs-temporal-colour-and-files--temporal",
-          "inputs-temporal-colour-and-files--colour",
-          "inputs-temporal-colour-and-files--files",
-          "inputs-temporal-colour-and-files--dropping-files"
-        ]
+        "how": "opened",
+        "story": "inputs-temporal-colour-and-files--temporal",
+        "trigger": "Calendar",
+        "element": "div cr-frost (popover)"
       }
     },
     "json-input": {
       "field": {
-        "how": "no-story",
-        "stories": []
+        "how": "child",
+        "story": "inputs-text-and-choice--text-family",
+        "element": "div cr-field-shell (shell)"
       }
     },
     "token-field": {
       "compact": {
-        "how": "no-story",
-        "stories": []
+        "how": "not-found",
+        "stories": [
+          "inputs-composite--filtering",
+          "inputs-composite--tokens",
+          "inputs-composite--two-lists",
+          "inputs-composite--hierarchy"
+        ]
       }
     },
     "upload": {
       "haze": {
-        "how": "no-story",
-        "stories": []
+        "how": "opened",
+        "story": "inputs-temporal-colour-and-files--temporal",
+        "trigger": "Calendar",
+        "element": "div cr-frost (popover)"
       }
     },
     "upload-zone": {
       "haze": {
-        "how": "no-story",
-        "stories": []
+        "how": "opened",
+        "story": "inputs-temporal-colour-and-files--temporal",
+        "trigger": "Calendar",
+        "element": "div cr-frost (popover)"
       }
     },
     "description-list": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "data-display-description-list--default",
-          "data-display-description-list--stacked",
-          "data-display-description-list--empty"
-        ]
-      }
-    },
-    "timeline": {
-      "indicator": {
-        "how": "not-found",
-        "stories": [
-          "data-display-timeline--default",
-          "data-display-timeline--with-an-error"
-        ]
-      },
-      "haze": {
-        "how": "not-found",
-        "stories": [
-          "data-display-timeline--default",
-          "data-display-timeline--with-an-error"
-        ]
+        "how": "optional",
+        "note": "the catalogue makes the panel optional; a product that groups it wears a card"
       }
     },
     "calendar": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "data-display-calendar--default",
-          "data-display-calendar--today-and-selected",
-          "data-display-calendar--with-unavailable-days",
-          "data-display-calendar--a-range"
-        ]
+        "how": "child",
+        "story": "data-display-calendar--default",
+        "element": "div cr-frost (panel)"
       }
     },
     "resizable-table": {
@@ -238,23 +217,9 @@
     },
     "toast": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "feedback-toast--success",
-          "feedback-toast--with-description",
-          "feedback-toast--carrying-the-only-undo",
-          "feedback-toast--urgent"
-        ]
-      }
-    },
-    "skeleton": {
-      "haze": {
-        "how": "not-found",
-        "stories": [
-          "feedback-skeleton--loading",
-          "feedback-skeleton--resolved",
-          "feedback-skeleton--shapes"
-        ]
+        "how": "child",
+        "story": "feedback-toast--success",
+        "element": "li cr-frost (toast)"
       }
     },
     "popconfirm": {
@@ -265,12 +230,10 @@
         "element": "div cr-frost (popover)"
       },
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "feedback-inline-confirm--destructive",
-          "feedback-inline-confirm--ordinary",
-          "feedback-inline-confirm--in-flight"
-        ]
+        "how": "opened",
+        "story": "feedback-inline-confirm--destructive",
+        "trigger": "Delete project",
+        "element": "div cr-frost (popover)"
       }
     },
     "menu": {
@@ -281,12 +244,10 @@
         "element": "div cr-frost (popover)"
       },
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "overlays-anchored-surfaces--on-the-page",
-          "overlays-anchored-surfaces--inside-a-dialog",
-          "overlays-anchored-surfaces--on-right-click"
-        ]
+        "how": "opened",
+        "story": "overlays-anchored-surfaces--on-the-page",
+        "trigger": "Actions",
+        "element": "div cr-frost (popover)"
       }
     },
     "context-menu": {
@@ -305,40 +266,31 @@
         "element": "div cr-frost (popover)"
       },
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "overlays-overlayarrow--on-a-popover"
-        ]
+        "how": "opened",
+        "story": "overlays-overlayarrow--on-a-popover",
+        "trigger": "Details",
+        "element": "div cr-frost (popover)"
       }
     },
     "hover-card": {
       "frost": {
-        "how": "not-found",
-        "stories": [
-          "overlays-floating-surfaces--preview"
-        ]
+        "how": "opened",
+        "story": "overlays-floating-surfaces--preview",
+        "trigger": "hover",
+        "element": "div cr-frost (card)"
       }
     },
     "blockquote": {
       "haze": {
-        "how": "no-story",
-        "stories": []
+        "how": "optional",
+        "note": "the catalogue makes the panel optional; a product that groups it wears a card"
       }
     },
     "skip-link": {
       "haze": {
-        "how": "no-story",
-        "stories": []
-      }
-    },
-    "drop-indicator": {
-      "haze": {
-        "how": "not-found",
-        "stories": [
-          "utilities-dropindicator--active",
-          "utilities-dropindicator--invalid",
-          "utilities-dropindicator--at-rest"
-        ]
+        "how": "child",
+        "story": "utility-behaviour--hidden",
+        "element": "section cr-haze (card)"
       }
     },
     "video-player": {
@@ -348,22 +300,15 @@
         "element": "div cr-resin"
       },
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "media-video-player--default",
-          "media-video-player--with-captions",
-          "media-video-player--with-settings",
-          "media-video-player--aspect-ratios"
-        ]
+        "how": "child",
+        "story": "media-video-player--default",
+        "element": "div cr-resin"
       },
       "frost": {
-        "how": "not-found",
-        "stories": [
-          "media-video-player--default",
-          "media-video-player--with-captions",
-          "media-video-player--with-settings",
-          "media-video-player--aspect-ratios"
-        ]
+        "how": "opened",
+        "story": "media-video-player--default",
+        "trigger": "#storybook-root button[aria-label=\"Settings\"]",
+        "element": "div cr-frost (popover)"
       }
     },
     "audio-player": {
@@ -373,33 +318,25 @@
         "element": "div cr-resin"
       },
       "frost": {
-        "how": "not-found",
-        "stories": [
-          "media-audio-player--default",
-          "media-audio-player--with-a-title",
-          "media-audio-player--with-skip-controls",
-          "media-audio-player--without-the-card"
-        ]
+        "how": "opened",
+        "story": "media-audio-player--default",
+        "trigger": "#storybook-root button[aria-label=\"Settings\"]",
+        "element": "div cr-frost (popover)"
       }
     },
     "media-controls": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "media-media-controls--paused",
-          "media-media-controls--playing",
-          "media-media-controls--buffering",
-          "media-media-controls--before-the-length-is-known"
-        ]
+        "how": "child",
+        "story": "media-media-controls--paused",
+        "element": "div cr-resin"
       }
     },
     "gallery": {
       "mirage": {
-        "how": "not-found",
-        "stories": [
-          "media-gallery--a-set",
-          "media-gallery--a-set-of-one"
-        ]
+        "how": "opened",
+        "story": "media-gallery--a-set",
+        "trigger": "#storybook-root [role=option]",
+        "element": "div cr-mirage (scrim)"
       }
     },
     "product-gallery": {
@@ -409,10 +346,10 @@
         "element": "div cr-haze (thumb)"
       },
       "mirage": {
-        "how": "not-found",
-        "stories": [
-          "commerce-product-gallery--default"
-        ]
+        "how": "opened",
+        "story": "commerce-product-gallery--default",
+        "trigger": "#storybook-root [role=option], #storybook-root button",
+        "element": "div cr-mirage (scrim)"
       }
     },
     "coupon-input": {
@@ -438,11 +375,9 @@
     },
     "filter-panel": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "commerce-filter-panel--default",
-          "commerce-filter-panel--nothing-applied"
-        ]
+        "how": "child",
+        "story": "commerce-filter-panel--default",
+        "element": "section cr-frost (panel)"
       }
     },
     "sort-select": {
@@ -520,15 +455,6 @@
         "how": "child",
         "story": "blocks-datatableblock--default",
         "element": "div cr-table-scroll (scroller)"
-      },
-      "frost": {
-        "how": "not-found",
-        "stories": [
-          "blocks-datatableblock--default",
-          "blocks-datatableblock--selecting",
-          "blocks-datatableblock--loading",
-          "blocks-datatableblock--empty"
-        ]
       }
     },
     "player-shell": {
@@ -568,13 +494,9 @@
     },
     "editor-block": {
       "haze": {
-        "how": "not-found",
-        "stories": [
-          "blocks-editorblock--at-rest",
-          "blocks-editorblock--dirty",
-          "blocks-editorblock--saving",
-          "blocks-editorblock--saved"
-        ]
+        "how": "child",
+        "story": "blocks-editorblock--at-rest",
+        "element": "div cr-field-shell (frame)"
       }
     }
   }

@@ -93,6 +93,9 @@
      does. */
   min-inline-size: calc(#{$cr-action-min-target} * 4);
   max-block-size: 30vh;
+  /* The suggestions read on the Haze reading fill (`.cr-frost.reading`, the
+     catalogue's "Haze rows"), inset by this 4px padding, as the menu's are. */
+  --cr-frost-reading-inset: #{$cr-spacing-2xs};
   padding: $cr-spacing-2xs;
   border-radius: var(--cr-radius);
   overflow: auto;

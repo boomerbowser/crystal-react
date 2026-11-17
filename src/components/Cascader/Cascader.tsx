@@ -148,7 +148,7 @@ export function Cascader({
           </span>
           <span className={cx(styles['disclosure'])} aria-hidden="true">{DownIcon}</span>
         </Button>
-        <ArrivingPopover recipe="menu-in" exit="menu-out" className={cx(styles['popover'], 'cr-frost')}>
+        <ArrivingPopover recipe="menu-in" exit="menu-out" className={cx(styles['popover'], 'cr-frost reading')}>
           <Dialog aria-labelledby={labelId}>
             {columns.map((column, depth) => (
               <ListBox

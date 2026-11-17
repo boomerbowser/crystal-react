@@ -47,6 +47,42 @@ const selectorFor = Object.fromEntries(surfaces.map((s) => [s.id, [...new Set(
   [s.class, ...(s.also ?? [])].filter((x) => x?.startsWith('.')).map((x) => `.${x.slice(1).split(/[.:\s[]/)[0]}`),
 )].join(', ')]));
 
+/* A surface worn under another name (R-A2, 17 November 2026). Each is the
+   surface's material in a published form the class list above does not name:
+   a Haze reading fill inside Frost is `.cr-frost.reading` (core 2.7.0), and a
+   dialog's decision surface over a scrim is raised Haze, the dialog's own
+   `::before`. `PER_ENTRY` is the same for one component, where the form is
+   that component's alone: a player's time readouts are painted on Haze by
+   `.cr-resin.transport`, and an editor's writing surface is the Haze well of
+   its `.cr-field-shell`. */
+const EQUIVALENT = { haze: ['.cr-frost.reading'], dialog: ['.cr-haze.raised'] };
+const PER_ENTRY = {
+  'media-controls': { haze: ['.cr-resin.transport'] },
+  'video-player': { haze: ['.cr-resin.transport'] },
+  'editor-block': { haze: ['.cr-field-shell'] },
+};
+/* What a reader does to open the surface, where it is not the story's first
+   control: a hover card opens on hover, a gallery's viewer from a thumbnail, a
+   player's Frost menu from its settings button, the mention list on "@". */
+const OPEN = {
+  'hover-card': { story: 'overlays-floating-surfaces--preview', hover: '#storybook-root a' },
+  gallery: { press: '#storybook-root [role=option]' },
+  'product-gallery': { press: '#storybook-root [role=option], #storybook-root button' },
+  'video-player': { press: '#storybook-root button[aria-label="Settings"]' },
+  'audio-player': { press: '#storybook-root button[aria-label="Settings"]' },
+  mentions: { story: 'inputs-richtextsurface--with-mentions', type: ['#storybook-root [contenteditable=true]', ' @'] },
+  'overflow-list': { story: 'utility-marks-and-lists--into-a-menu', press: '#storybook-root button[aria-haspopup]' },
+  /* Shown in a story with the cascader, whose popover would otherwise be
+     found and credited to the transfer. */
+  transfer: { story: 'inputs-composite--two-lists', only: true },
+  cascader: { story: 'inputs-composite--hierarchy', only: true },
+};
+/* The catalogue says the panel is optional ("Optional Haze panel", "Haze
+   panel when grouped", "Haze panel when set apart"): the component has no
+   panel of its own, and a product that groups it puts it in a card. Recorded,
+   not counted as missing. */
+const OPTIONAL = new Set(['fieldset', 'description-list', 'blockquote']);
+
 const index = await (await fetch(`${ORIGIN}/index.json`)).json();
 const stories = Object.values(index.entries).filter((e) => e.type === 'story');
 const todo = audit.components.filter((c) => c.status === 'implemented' && c.surfaceNotWorn?.length);
@@ -68,16 +104,37 @@ for (const component of todo) {
      popover among the overlays), the stories named after it. */
   const own = stories.filter((s) => s.componentPath?.replace('./', '').startsWith(`${component.directory}/`));
   const named = new RegExp(`\\b${component.name.replace(/[^A-Za-z0-9 ]/g, '')}\\b`, 'i');
-  const mine = (own.length ? own : stories.filter((s) => named.test(s.name) || named.test(s.title.split('/').at(-1)))).slice(0, 4);
+  /* And, for a component shown only inside a grouped story, the story files
+     that import it. */
+  const dir = component.directory.split('/').at(-1);
+  const importRe = new RegExp(`from '(\\.\\./${dir}/|\\./)[A-Za-z]+\\.js'`);
+  const importers = own.length ? [] : stories.filter((s) => s.importPath.includes(`/${dir}/`) || (existsSync(join(ROOT, s.importPath)) && importRe.test(readFileSync(join(ROOT, s.importPath), 'utf8')) && readFileSync(join(ROOT, s.importPath), 'utf8').includes(`/${dir}/`)));
+  const byName = stories.filter((s) => named.test(s.name) || named.test(s.title.split('/').at(-1)));
+  const mine = OPEN[component.id]?.only ? [{ id: OPEN[component.id].story }] : [...(OPEN[component.id]?.story ? [{ id: OPEN[component.id].story }] : []), ...(own.length ? own : [...byName, ...importers])]
+    .filter((s, i, a) => a.findIndex((x) => x.id === s.id) === i).slice(0, 4);
   entries[component.id] = {};
   for (const surface of component.surfaceNotWorn) {
-    const selector = selectorFor[surface];
+    const selector = [selectorFor[surface], ...(EQUIVALENT[surface] ?? []), ...(PER_ENTRY[component.id]?.[surface] ?? [])].filter(Boolean).join(', ');
+    if (OPTIONAL.has(component.id)) { entries[component.id][surface] = { how: 'optional', note: 'the catalogue makes the panel optional; a product that groups it wears a card' }; continue; }
     let found = { how: mine.length ? 'not-found' : 'no-story', stories: mine.map((s) => s.id) };
     for (const story of selector ? mine : []) {
       await page.goto(`${ORIGIN}/iframe.html?id=${story.id}&viewMode=story`, { waitUntil: 'load' }).catch(() => {});
       await page.waitForTimeout(500);
       const atRest = await describe(selector, false);
       if (atRest) { found = { how: 'child', story: story.id, element: atRest }; break; }
+      const open = OPEN[component.id];
+      if (open && (open.hover || open.press || open.type)) {
+        const target = page.locator(open.hover ?? open.press ?? open.type[0]).first();
+        if (await target.count()) {
+          if (open.hover) await target.hover({ timeout: 2000 }).catch(() => {});
+          else if (open.press) await target.click({ timeout: 2000 }).catch(() => {});
+          else { await target.click({ timeout: 2000 }).catch(() => {}); await page.keyboard.type(open.type[1]); }
+          await page.waitForTimeout(900);
+          const opened = await describe(selector, true);
+          if (opened) { found = { how: 'opened', story: story.id, trigger: open.hover ? 'hover' : open.press ?? `typed "${open.type[1].trim()}"`, element: opened }; break; }
+        }
+        continue;
+      }
       const trigger = page.locator('#storybook-root [aria-haspopup]:not([aria-disabled=true]), #storybook-root button:not([disabled])').first();
       if (await trigger.count()) {
         const name = ((await trigger.getAttribute('aria-label')) ?? (await trigger.textContent()) ?? '').trim().slice(0, 40);

@@ -140,6 +140,7 @@ for (const entry of manifest.components) {
         const seen = measured.entries[entry.id]?.[id];
         if (seen?.how === 'child') return [id, { reason: 'worn by a child', story: seen.story, element: seen.element }];
         if (seen?.how === 'opened') return [id, { reason: 'worn once opened', story: seen.story, trigger: seen.trigger, element: seen.element }];
+        if (seen?.how === 'optional') return [id, { reason: 'optional in the catalogue', note: seen.note }];
         if (MIXIN_FOR[id] && record.handWritten.mixins.includes(MIXIN_FOR[id])) {
           return [id, { reason: `painted by this library's ${MIXIN_FOR[id]} mixin, not worn (R-A1)` }];
         }

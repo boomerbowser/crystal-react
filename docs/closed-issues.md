@@ -102,11 +102,9 @@ Left, and recorded where they live:
   until it is ruled on.
 - **The stepper's 2px connector** keeps the Haze colour token: a line on a
   pseudo-element, which cannot wear a class and has no fill to feather.
-- **R-A2**, confirming where the remaining catalogue surfaces are worn, stays a
-  task in the plan. Re-measured on 17 November 2026: 23 surfaces are worn by a
-  child and 9 once opened; 13 have no story and 28 were not found. Several of
-  the 28 are false negatives the measurement cannot yet see, such as a Haze
-  reading fill worn as `.cr-frost.reading`.
+- **R-A2**, confirming where the remaining catalogue surfaces are worn, was
+  taken up the same day: 32 surfaces are worn by a child, 29 once opened and 3
+  are optional in the catalogue. The four left are R-35.
 
 ## R-30 · The built package needs a bundler to import core's JSON
 
