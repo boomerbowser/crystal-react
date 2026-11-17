@@ -50,8 +50,8 @@ const [major = 0, minor = 0] = installed.version.split('.').map(Number);
 const PLAYED_FROM_2_2 = ['activity-turn', 'activity-travel', 'skeleton-sweep', 'mark-in', 'selection-travel'];
 
 describe('the installed @crystal-ui/core', () => {
-  it('is 2.8.0 or later', () => {
-    expect(major > 2 || (major === 2 && minor >= 8), `@crystal-ui/core ${installed.version} is installed; this library wears recipes that exist only from 2.8.0 — the choice box (.cr-choice, .outline, .radio), the material variants (.cr-haze.inset, .flush, .flat, .raised; .cr-frost.pane, .flat, .docked, .sheet, .reading; .cr-resin.flat, .divider; .cr-field-shell.block), the travelling selection pill, the media stage, the transport, the caption and its style, the prose and editor vocabulary, the editor's toolbar placements, the Frost bar`).toBe(true);
+  it('is 2.10.0 or later', () => {
+    expect(major > 2 || (major === 2 && minor >= 10), `@crystal-ui/core ${installed.version} is installed; this library wears recipes that exist only from 2.10.0 — the input modality (core/modality, focus rings only for the keyboard), the choice box (.cr-choice, .outline, .radio), the material variants (.cr-haze.inset, .flush, .flat, .raised; .cr-frost.pane, .flat, .docked, .sheet, .reading; .cr-resin.flat, .divider; .cr-field-shell.block), the travelling selection pill, the media stage, the transport, the caption and its style, the prose and editor vocabulary, the editor's toolbar placements, the Frost bar`).toBe(true);
   });
 
   /* The version could move without the classes, so the stylesheet is read too. */

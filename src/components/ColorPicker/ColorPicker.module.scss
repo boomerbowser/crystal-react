@@ -15,7 +15,7 @@
 .control { @include field.control; font-variant-numeric: tabular-nums; }
 
 .control:focus { outline: none; }
-.shell:focus-within { @include field.focus-ring; }
+.shell { @include field.keyboard-focus-within; }
 .shell[data-invalid] { border-color: var(--cr-danger-ink); }
 
 /* A swatch over a chequerboard, so a translucent colour reads as translucent

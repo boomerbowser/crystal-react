@@ -9,7 +9,7 @@
 .control { @include field.control; }
 
 .control:focus { outline: none; }
-.shell:focus-within { @include field.focus-ring; }
+.shell { @include field.keyboard-focus-within; }
 
 .leadingIcon { @include field.leading-icon; }
 .leadingIcon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }

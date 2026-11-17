@@ -34,7 +34,7 @@
 }
 
 .segment[data-focused] { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
-.shell:focus-within { @include field.focus-ring; }
+.shell { @include field.keyboard-focus-within; }
 /* Two selectors for one state. The shell carries `data-invalid` when this
    component set it. The field wrapper carries it when React Aria worked it out,
    from a native constraint or an error a `Form` distributed from a server.

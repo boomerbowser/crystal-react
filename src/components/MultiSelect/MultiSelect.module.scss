@@ -21,7 +21,7 @@
 }
 
 .shell[data-invalid] { border-color: var(--cr-danger-ink); }
-.shell:focus-within { @include field.focus-ring; }
+.shell { @include field.keyboard-focus-within; }
 
 /* The opener fills what the chips leave, so the whole empty part of the shell
    opens the list, not only the chevron. It is a sibling of the chips, not their
@@ -77,7 +77,7 @@
   color: var(--cr-text);
   font: inherit;
 }
-.searchInput:focus-visible { @include field.focus-ring; }
+.searchInput { @include field.keyboard-focus-within; }
 
 /* Announced when it appears, because reaching the limit is the reason the
    remaining options have just stopped responding. */

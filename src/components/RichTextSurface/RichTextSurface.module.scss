@@ -20,7 +20,7 @@
    that would stop the toolbar sticking above a touch keyboard; the surface
    scrolls on its own. */
 .frame { max-inline-size: 100%; }
-.frame:focus-within { @include field.focus-ring; }
+.frame { @include field.keyboard-focus-within; }
 .frame[data-invalid] { border-color: var(--cr-danger-ink); }
 
 /* The toolbar is Crystal's `.cr-editor-toolbar`, worn in the markup: the row,

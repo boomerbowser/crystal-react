@@ -100,6 +100,14 @@ $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* c
 
 /* The ring belongs to the shell, so it traces the control and not the bare
    input inside it. */
+/* The field's ring, drawn while focus is anywhere inside the shell, and only
+   when the person is moving with the keyboard: Crystal's modality attribute
+   (core 2.9.0) is `pointer` after a click, and a field clicked into does not
+   grow a ring. Use on the shell itself: `.shell { @include field.keyboard-focus-within; }`. */
+@mixin keyboard-focus-within {
+  :global(:root:not([data-crystal-modality='pointer'])) &:focus-within { @include focus-ring; }
+}
+
 @mixin focus-ring {
   outline: $cr-focus-core-width solid var(--cr-focus-core);
   outline-offset: $cr-focus-core-offset;

@@ -16,7 +16,7 @@
 .input { @include field.control; }
 
 .input:focus { outline: none; }
-.shell:focus-within { @include field.focus-ring; }
+.shell { @include field.keyboard-focus-within; }
 
 /* Invalid is carried by the outline and by the message, never by colour alone. */
 /* Two selectors for one state. The shell carries `data-invalid` when this

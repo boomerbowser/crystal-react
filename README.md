@@ -18,7 +18,7 @@ npm install @crystal-ui/react@alpha @crystal-ui/core
 ```
 
 **It is an alpha, published as it stands.** Its API can change between alphas
-without notice, and it depends on `@crystal-ui/core` 2.9.0, and follows each new release on its own (`.github/workflows/follow-crystal.yml`). Any breaking change in Crystal 2.x, in this library or in
+without notice, and it depends on `@crystal-ui/core` 2.10.0, and follows each new release on its own (`.github/workflows/follow-crystal.yml`). Any breaking change in Crystal 2.x, in this library or in
 the core it follows, will be fixed in Crystal 3.0 rather than in a 2.x release.
 
 It is published for a bundler. Next.js, Vite and Remix bring their own. Where

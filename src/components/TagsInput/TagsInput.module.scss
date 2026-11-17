@@ -12,7 +12,7 @@
   gap: $cr-spacing-2xs;
 }
 
-.shell:focus-within { @include field.focus-ring; }
+.shell { @include field.keyboard-focus-within; }
 .shell[data-invalid] { border-color: var(--cr-danger-ink); }
 
 .tags { display: contents; }

@@ -29,7 +29,7 @@
 }
 
 .cell:focus { outline: none; }
-.well:focus-within { @include field.focus-ring; }
+.well { @include field.keyboard-focus-within; }
 .well[data-invalid] { border-color: var(--cr-danger-ink); }
 
 .description, .error { @include field.message; }

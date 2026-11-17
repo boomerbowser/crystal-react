@@ -24,6 +24,7 @@ import {
 import { I18nProvider } from 'react-aria-components';
 import { UNSAFE_PortalProvider } from 'react-aria';
 import preferences from '@crystal-ui/core/core/preferences';
+import modality from '@crystal-ui/core/core/modality';
 import resolver from '@crystal-ui/core/resolver';
 import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
 import type {
@@ -208,6 +209,12 @@ function useThemedPortal(
      the count of containers is the count of live scopes. By decision it does not
      depend on the theme: re-theming rewrites this element, because replacing it
      would tear down every open overlay inside it. */
+  /* Focus rings only when they are needed: Crystal draws none while the
+     document's modality is `pointer` (core 2.9.0). Every provider watches; the
+     attribute is the document's, so a portalled overlay reads it too, and a
+     second watcher writes the same value. */
+  useEffect(() => (typeof document === 'undefined' ? undefined : modality.watch(document)), []);
+
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;
     const element = document.createElement('div');

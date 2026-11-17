@@ -886,6 +886,42 @@ for (const { edge, flush, square } of EDGES) {
   await phone.close();
 }
 
+/* ------------------------------------ focus rings only when they are needed
+ *
+ * Ruled 17 November 2026: a ring is for someone moving with the keyboard, and
+ * drawn after a click it is noise. A field clicked into and typed in, and a
+ * list a click opened, show no ring; the same field reached with Tab, and the
+ * list moved through with an arrow, do. Crystal's modality attribute
+ * (core 2.10.0) decides, written by every CrystalProvider. */
+{
+  const ringed = () => page.evaluate(() => [...document.querySelectorAll('*')].filter((e) => {
+    const c = getComputedStyle(e);
+    return e.getClientRects().length && c.outlineStyle !== 'none' && parseFloat(c.outlineWidth) > 0;
+  }).length);
+  const field = 'inputs-text-and-choice--text-family';
+  await page.goto(`${ORIGIN}/iframe.html?id=${field}&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.locator('#storybook-root input').first().click();
+  await page.keyboard.type('hello');
+  const afterClick = await ringed();
+  await page.goto(`${ORIGIN}/iframe.html?id=${field}&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.locator('body').click({ position: { x: 5, y: 5 } });
+  await page.keyboard.press('Tab');
+  const afterTab = await ringed();
+  record('a field clicked into shows no focus ring; reached with Tab it shows one', afterClick === 0 && afterTab > 0,
+    `rings after a click and typing: ${afterClick}; after Tab: ${afterTab}`);
+
+  const choice = 'inputs-text-and-choice--choice-family';
+  await page.goto(`${ORIGIN}/iframe.html?id=${choice}&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.locator('#storybook-root [aria-haspopup="listbox"]').first().click();
+  await page.waitForTimeout(500);
+  const listAfterClick = await ringed();
+  await page.keyboard.press('ArrowDown');
+  await page.waitForTimeout(200);
+  const listAfterArrow = await ringed();
+  record('a list a click opened shows no focus ring until an arrow moves through it', listAfterClick === 0 && listAfterArrow > 0,
+    `rings after the click: ${listAfterClick}; after ArrowDown: ${listAfterArrow}`);
+}
+
 /* --------------------------------- into the editor's toolbar and back again
  *
  * Alt+F10 goes from the text to the formatting toolbar and Escape comes back

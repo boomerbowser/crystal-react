@@ -8,7 +8,7 @@
 /* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 .trigger { @include field.trigger; }
 
-.shell:focus-within { @include field.focus-ring; }
+.shell { @include field.keyboard-focus-within; }
 .value { @include field.trigger-content; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .placeholder { color: var(--cr-muted); }
 .disclosure { @include field.trigger-content; display: flex; align-items: center; color: var(--cr-muted); pointer-events: none; }

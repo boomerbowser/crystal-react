@@ -50,9 +50,7 @@
   gap: $cr-spacing-xs;
 }
 
-.field:focus-within {
-  @include field.focus-ring;
-}
+.field { @include field.keyboard-focus-within; }
 
 /* This padding sits inside the shell's own 8px inset and positions the glyph. */
 .searchIcon { display: inline-flex; flex: none; padding-inline-start: $cr-spacing-2xs; color: var(--cr-muted); }

@@ -15,7 +15,7 @@
   inline-size: fit-content;
 }
 
-.shell:focus-within { @include field.focus-ring; }
+.shell { @include field.keyboard-focus-within; }
 
 /* The label is still the control's accessible name when it is not shown. This
    is `VisuallyHidden`'s own recipe; `display: none` would remove the name with
