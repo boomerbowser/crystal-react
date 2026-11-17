@@ -184,6 +184,35 @@ says it is done. The ones that block nothing in this change but finish it:
   propose.
 - **R-M10, R-T5, R-T8**, the engines and devices not yet checked.
 
+## Appendix: the VoiceOver pass (R-T8)
+
+VoiceOver on macOS, driven through its AppleScript interface against the
+`RichTextEditor` stories in Safari, 16 November 2026. NVDA is not available
+on the machines this work has (a MacBook and a Pixel 6 Pro), so its half of
+R-T8 is skipped, not passed.
+
+What VoiceOver read correctly: the toolbar's name, each toggle's pressed state,
+the block-type button's current type, and a mark typed with a shortcut ("Bold
+on"). Three findings, fixed on 17 November 2026:
+
+1. **Cmd+Up and Cmd+Down announced a format.** Out of a bulleted list,
+   VoiceOver said "Bulleted list off": the editor treated any keystroke with
+   the modifier held as a typed format and announced the state difference the
+   caret's move produced. It now announces only when the keystroke changed the
+   document or the marks the next character takes. Unit test.
+2. **No way back from the main toolbar.** Alt+F10 reached it, and Escape did
+   nothing; only the selection toolbar handled it. Escape from the formatting
+   toolbar now returns to the text, where the selection still is. Unit test,
+   and the round trip in `verify:behaviour`.
+3. **A checklist item's state was silent while editing.** In the text a screen
+   reader reads the item's words, not its checkbox. The caret entering an item,
+   the editor gaining focus inside one, or the item's state changing while the
+   caret is in it, now says "Checklist item, checked" or "not checked". Unit
+   test.
+
+Not finished: the checkbox toggle was not tested with VoiceOver, and the three
+fixes have not yet been heard by it. R-T8 stays open for that pass.
+
 ## Appendix A: the fixtures
 
 `.storybook/fixtures/` was generated with ffmpeg 7 on 2 October 2026, so the

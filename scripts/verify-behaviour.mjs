@@ -886,6 +886,27 @@ for (const { edge, flush, square } of EDGES) {
   await phone.close();
 }
 
+/* --------------------------------- into the editor's toolbar and back again
+ *
+ * Alt+F10 goes from the text to the formatting toolbar and Escape comes back
+ * to the text (R-T8: VoiceOver found the main toolbar had no way back). jsdom
+ * cannot deliver Alt+F10 to the engine, so the round trip is driven here. */
+{
+  await page.goto(`${ORIGIN}/iframe.html?id=inputs-richtexteditor--every-format&viewMode=story`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#storybook-root [role="toolbar"]');
+  await page.locator('#storybook-root [contenteditable="true"]').first().click();
+  await page.keyboard.press('Alt+F10');
+  const inToolbar = await page.evaluate(() => Boolean(document.activeElement?.closest('[role="toolbar"]')));
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(150);
+  const backInText = await page.evaluate(() => document.activeElement?.getAttribute('contenteditable') === 'true');
+  record(
+    'Alt+F10 reaches the editor\'s toolbar and Escape returns to the text',
+    inToolbar && backInText,
+    `in the toolbar after Alt+F10: ${inToolbar}; back in the text after Escape: ${backInText}`,
+  );
+}
+
 /* ------------------------------------------ a gallery hands focus back correctly
  *
  * The claim is that closing returns focus to the thumbnail the reader ended on,

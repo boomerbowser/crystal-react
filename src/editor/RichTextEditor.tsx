@@ -170,6 +170,17 @@ function listItemType(editor: Editor): 'listItem' | 'taskItem' | null {
   return null;
 }
 
+/* The checklist item the caret is in, if any: where it starts, which tells one
+   item from the next, and whether it is checked. */
+function taskAt(editor: Editor): { at: number; checked: boolean } | null {
+  const { $from } = editor.state.selection;
+  for (let depth = $from.depth; depth > 0; depth -= 1) {
+    const node = $from.node(depth);
+    if (node.type.name === 'taskItem') return { at: $from.before(depth), checked: node.attrs['checked'] === true };
+  }
+  return null;
+}
+
 /* The words a shortcut-made change is announced in. */
 const SPOKEN: Record<string, string> = Object.fromEntries(
   [...MARKS, ...LISTS].map((format) => [format.id, format.label]),
@@ -243,6 +254,11 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
   /* Whether the last change came from the keyboard inside the text, which is
      when it has to be announced: the toolbar showing it is out of reach. */
   const typedFormat = useRef(false);
+  /* Whether that keystroke changed the format: the document, or the marks the
+     next character will take. Cmd+Up and Cmd+Down hold the modifier and only
+     move the caret, and moving it out of a list is not "Bulleted list off"
+     (R-T8, VoiceOver, 16 November 2026). */
+  const formatChanged = useRef(false);
 
   const editor = useEditor({
     extensions: [
@@ -286,6 +302,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
           return true;
         }
         typedFormat.current = event.metaKey || event.ctrlKey;
+        formatChanged.current = false;
         return false;
       },
     },
@@ -298,6 +315,9 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
          product marking it dirty showed "Unsaved changes" on load. Only a
          change to the document is reported. */
       if (transaction.docChanged) onChange?.(value);
+    },
+    onTransaction: ({ transaction }) => {
+      if (transaction.docChanged || transaction.storedMarksSet) formatChanged.current = true;
     },
     onCreate: ({ editor: current }) => setHtml(current.getHTML()),
   });
@@ -320,23 +340,43 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         block: blockTypeOf(current),
         canIndent: item ? current.can().sinkListItem(item) : false,
         canOutdent: item ? current.can().liftListItem(item) : false,
+        task: taskAt(current),
+        focused: current.isFocused,
         canUndo: current.can().undo(),
         canRedo: current.can().redo(),
       };
     },
   });
 
-  /* Announce a format a shortcut changed while focus was in the text. */
+  /* Announce a format a shortcut changed while focus was in the text, and the
+     state of a checklist item the caret enters, or whose state changes while
+     the caret is in it. In the text a screen reader reads the item's words and
+     not its checkbox, which is outside the editable text (R-T8: VoiceOver said
+     nothing of whether an item was done). */
   const previous = useRef<Record<string, boolean> | null>(null);
+  const previousTask = useRef<{ at: number; checked: boolean; focused: boolean } | null>(null);
   useEffect(() => {
     if (!state) return;
     const before = previous.current;
     previous.current = state.active;
-    if (!before || !typedFormat.current) return;
-    typedFormat.current = false;
-    const changes = Object.keys(state.active)
-      .filter((id) => before[id] !== state.active[id] && SPOKEN[id])
-      .map((id) => `${SPOKEN[id]} ${state.active[id] ? 'on' : 'off'}`);
+    const taskBefore = previousTask.current;
+    previousTask.current = state.task ? { ...state.task, focused: state.focused } : null;
+    const changes: string[] = [];
+    if (before && typedFormat.current) {
+      typedFormat.current = false;
+      if (formatChanged.current) {
+        formatChanged.current = false;
+        changes.push(...Object.keys(state.active)
+          .filter((id) => before[id] !== state.active[id] && SPOKEN[id])
+          .map((id) => `${SPOKEN[id]} ${state.active[id] ? 'on' : 'off'}`));
+      }
+    }
+    const task = state.task;
+    const madeChecklist = before !== null && before['checklist'] !== state.active['checklist'];
+    if (task && state.focused && !madeChecklist
+      && (!taskBefore || !taskBefore.focused || taskBefore.at !== task.at || taskBefore.checked !== task.checked)) {
+      changes.push(`Checklist item, ${task.checked ? 'checked' : 'not checked'}`);
+    }
     if (changes.length) setSaid(changes.join(', '));
   }, [state]);
 
@@ -451,8 +491,23 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
      person reaches for with text already selected. */
   const quick = marks.slice(0, 4);
 
+  /* Escape from the formatting toolbar returns to the text, where the
+     selection still is: Alt+F10 goes there and Escape comes back, as in every
+     word processor (R-T8; VoiceOver found the main toolbar had no way back).
+     Only for a key pressed in the toolbar itself. A menu or the link control
+     opened from it is portalled outside this element and closes on Escape on
+     its own, and a key pressed there is not inside it in the document. */
+  const leaveToolbar = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== 'Escape' || event.defaultPrevented) return;
+    const target = event.target as HTMLElement;
+    if (!event.currentTarget.contains(target) || !target.closest('[role="toolbar"]')) return;
+    event.preventDefault();
+    editor.commands.focus();
+  };
+
   return (
-    <div className={cx(styles['editor'], className)}>
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- the keys belong to the toolbar inside; this only returns focus from it
+    <div className={cx(styles['editor'], className)} onKeyDown={leaveToolbar}>
       <RichTextSurface
         label={label}
         {...(description ? { description } : {})}

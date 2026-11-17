@@ -54,6 +54,54 @@ describe('RichTextEditor', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: 'Underline' })).toHaveAttribute('aria-pressed', 'true'));
   });
 
+  /* R-T8: a shortcut typed in the text is announced, because the toolbar that
+     shows it is out of reach; a modified key that only moves the caret is not.
+     VoiceOver heard "Bulleted list off" on Cmd+Down out of a list. */
+  it('announces a format a shortcut changes, and not a caret a shortcut moves', async () => {
+    const user = userEvent.setup();
+    const { editor } = await mount({ defaultValue: '<ul><li><p>One</p></li></ul><p>Two</p>' });
+    const status = () => screen.getByRole('status').textContent;
+    act(() => { editor().commands.focus(); editor().commands.setTextSelection(2); });
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Bulleted list' })).toHaveAttribute('aria-pressed', 'true'));
+    await user.keyboard('{Control>}');
+    act(() => { editor().commands.setTextSelection(editor().state.doc.content.size - 1); });
+    await user.keyboard('{/Control}');
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Bulleted list' })).toHaveAttribute('aria-pressed', 'false'));
+    expect(status()).toBe('');
+    await user.keyboard('{Control>}b{/Control}');
+    await waitFor(() => expect(status()).toBe('Bold on'));
+  });
+
+  /* R-T8: Alt+F10 goes to the toolbar and Escape comes back to the text. */
+  it('returns to the text on Escape from the formatting toolbar', async () => {
+    const user = userEvent.setup();
+    const { editor } = await mount();
+    act(() => { screen.getByRole('button', { name: 'Bold' }).focus(); });
+    expect(document.activeElement?.closest('[role="toolbar"]')).not.toBeNull();
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(editor().isFocused).toBe(true));
+    expect(document.activeElement?.closest('[role="toolbar"]')).toBeNull();
+  });
+
+  /* R-T8: in the text a screen reader reads a checklist item's words, not its
+     checkbox, so the item's state is said when the caret enters it. */
+  it('says whether the checklist item the caret enters is checked', async () => {
+    const { editor } = await mount({ defaultValue: '<ul data-type="taskList"><li data-type="taskItem" data-checked="true"><p>Done</p></li><li data-type="taskItem" data-checked="false"><p>Todo</p></li></ul><p>After</p>' });
+    const status = () => screen.getByRole('status').textContent;
+    const inside = (word: string) => {
+      let at = 0;
+      editor().state.doc.descendants((node, pos) => { if (node.isText && node.text === word) at = pos + 1; });
+      return at;
+    };
+    act(() => { editor().view.dom.focus(); editor().commands.setTextSelection(inside('Done')); });
+    await waitFor(() => expect(status()).toBe('Checklist item, checked'));
+    act(() => { editor().commands.setTextSelection(inside('Todo')); });
+    await waitFor(() => expect(status()).toBe('Checklist item, not checked'));
+    act(() => { editor().commands.setTextSelection(inside('After')); });
+    await new Promise((resolve) => { setTimeout(resolve, 50); });
+    expect(status()).toBe('Checklist item, not checked');
+  });
+
   it('writes strikethrough, highlight, subscript and superscript as their own elements', async () => {
     const { editor } = await mount();
     act(() => { editor().chain().selectAll().toggleStrike().toggleHighlight().run(); });
