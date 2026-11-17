@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 
 .wrap {
   display: grid;
@@ -12,15 +11,12 @@
    beside the content. The detail is the content, so it takes the protective
    fill a reading surface gives its text, with no material of its own. */
 .list {
-  @include material.frost;
-
+  /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
   min-inline-size: 0;
-  border-radius: $cr-shape-content-radius;
 }
 
 .detail {
-  @include material.haze-fill;
-
+  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
   min-inline-size: 0;
   padding: $cr-spacing-lg;
   border-radius: $cr-shape-content-radius;
@@ -31,8 +27,3 @@
    which is a page. */
 .stacked { grid-template-columns: minmax(0, 1fr); }
 
-@include material.opaque-fallback('.list');
-
-@media (forced-colors: active) {
-  .list, .detail { border: 1px solid CanvasText; }
-}

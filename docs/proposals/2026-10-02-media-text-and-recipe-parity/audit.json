@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-16",
+  "generated": "2026-11-17",
   "summary": {
     "core": "local checkout (crystal-design-system/core)",
     "components": 284,
@@ -26,19 +26,14 @@
     },
     "materials": {
       "directories": 241,
-      "directoriesWithHandWrittenBackdropFilter": 29,
-      "backdropFilterLines": 77,
-      "directoriesUsingMaterialMixins": 36,
-      "mixinUses": {
-        "frost": 8,
-        "haze-fill": 27,
-        "resin": 3
-      },
-      "entriesWithASurfaceNotWornInMarkup": 108,
+      "directoriesWithHandWrittenBackdropFilter": 0,
+      "backdropFilterLines": 0,
+      "directoriesUsingMaterialMixins": 0,
+      "mixinUses": {},
+      "entriesWithASurfaceNotWornInMarkup": 62,
       "surfacesNotWornInMarkup": {
-        "painted by a mixin (R-A1)": 33,
-        "unresolved": 75,
-        "worn by a child": 13,
+        "unresolved": 56,
+        "worn by a child": 12,
         "worn once opened": 5
       },
       "surfacesMeasured": "2026-11-08"
@@ -136,25 +131,15 @@
       "directory": "src/components/AppShell",
       "classesWorn": [
         "cr-dock",
+        "cr-frost",
         "cr-plastic",
         "cr-scroll-frost"
       ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "frost"
-      ],
-      "surfaceReasons": {
-        "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "application-shell--shell",
-            "application-shell--resizing"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "container",
@@ -394,19 +379,14 @@
         "frost"
       ],
       "directory": "src/components/AppBar",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-frost"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "frost"
-      ],
-      "surfaceReasons": {
-        "frost": {
-          "reason": "unresolved: no story shows it"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "masonry",
@@ -531,22 +511,14 @@
       ],
       "directory": "src/components/NavRail",
       "classesWorn": [
+        "cr-frost",
         "cr-nav-item"
       ],
       "handWritten": {
-        "backdropFilter": 1,
-        "mixins": [
-          "frost"
-        ]
+        "backdropFilter": 0,
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "frost"
-      ],
-      "surfaceReasons": {
-        "frost": {
-          "reason": "painted by this library's frost mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "dock",
@@ -654,7 +626,7 @@
       "directory": "src/components/Pagination",
       "classesWorn": [],
       "handWritten": {
-        "backdropFilter": 1,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -680,23 +652,15 @@
       ],
       "directory": "src/components/Stepper",
       "classesWorn": [
-        "cr-bare"
+        "cr-bare",
+        "cr-haze",
+        "cr-resin"
       ],
       "handWritten": {
-        "backdropFilter": 2,
-        "mixins": [
-          "resin",
-          "haze-fill"
-        ]
+        "backdropFilter": 0,
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "burger",
@@ -719,7 +683,7 @@
       "directory": "src/components/Burger",
       "classesWorn": [],
       "handWritten": {
-        "backdropFilter": 1,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -749,26 +713,18 @@
       "directory": "src/components/CommandPalette",
       "classesWorn": [
         "cr-field-shell",
+        "cr-haze",
+        "cr-mirage",
         "cr-scroll-resin"
       ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": [
-        "mirage",
         "dialog"
       ],
       "surfaceReasons": {
-        "mirage": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "overlays-command-palette--palette",
-            "overlays-command-palette--palette-keyboard",
-            "overlays-command-palette--empty",
-            "overlays-command-palette--loading"
-          ]
-        },
         "dialog": {
           "reason": "unresolved: not seen in its stories",
           "stories": [
@@ -836,21 +792,14 @@
         "resin"
       ],
       "directory": "src/components/Affix",
-      "classesWorn": [],
-      "handWritten": {
-        "backdropFilter": 1,
-        "mixins": [
-          "resin"
-        ]
-      },
-      "surfaceNotWorn": [
-        "resin"
+      "classesWorn": [
+        "cr-resin"
       ],
-      "surfaceReasons": {
-        "resin": {
-          "reason": "painted by this library's resin mixin, not worn (R-A1)"
-        }
-      }
+      "handWritten": {
+        "backdropFilter": 0,
+        "mixins": []
+      },
+      "surfaceNotWorn": []
     },
     {
       "id": "bottom-navigation",
@@ -903,22 +852,14 @@
       ],
       "directory": "src/components/NavigationMenu",
       "classesWorn": [
-        "cr-bare"
+        "cr-bare",
+        "cr-frost"
       ],
       "handWritten": {
-        "backdropFilter": 1,
-        "mixins": [
-          "frost"
-        ]
+        "backdropFilter": 0,
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "frost"
-      ],
-      "surfaceReasons": {
-        "frost": {
-          "reason": "painted by this library's frost mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "table-of-contents",
@@ -939,19 +880,14 @@
         "haze"
       ],
       "directory": "src/components/TableOfContents",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: no story shows it"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "menubar",
@@ -1020,9 +956,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "frost"
@@ -1061,7 +995,7 @@
         "cr-button"
       ],
       "handWritten": {
-        "backdropFilter": 2,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -1087,9 +1021,11 @@
         "control"
       ],
       "directory": "src/components/IconButton",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-bare"
+      ],
       "handWritten": {
-        "backdropFilter": 2,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -1176,10 +1112,8 @@
       "directory": "src/components/FloatingAction",
       "classesWorn": [],
       "handWritten": {
-        "backdropFilter": 4,
-        "mixins": [
-          "haze-fill"
-        ]
+        "backdropFilter": 0,
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1228,9 +1162,11 @@
         "control"
       ],
       "directory": "src/components/IconButton",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-bare"
+      ],
       "handWritten": {
-        "backdropFilter": 2,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -1256,10 +1192,8 @@
       "directory": "src/components/FloatingAction",
       "classesWorn": [],
       "handWritten": {
-        "backdropFilter": 4,
-        "mixins": [
-          "haze-fill"
-        ]
+        "backdropFilter": 0,
+        "mixins": []
       },
       "surfaceNotWorn": [
         "dock"
@@ -1295,10 +1229,8 @@
       "directory": "src/components/FloatingAction",
       "classesWorn": [],
       "handWritten": {
-        "backdropFilter": 4,
-        "mixins": [
-          "haze-fill"
-        ]
+        "backdropFilter": 0,
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -1608,9 +1540,11 @@
         "choice"
       ],
       "directory": "src/components/Checkbox",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-choice"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -1630,9 +1564,11 @@
         "none"
       ],
       "directory": "src/components/Checkbox",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-choice"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -1658,9 +1594,11 @@
         "choice"
       ],
       "directory": "src/components/Checkbox",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-choice"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -1680,9 +1618,11 @@
         "none"
       ],
       "directory": "src/components/Checkbox",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-choice"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -1708,9 +1648,11 @@
         "choice"
       ],
       "directory": "src/components/Switch",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-choice"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -1734,9 +1676,11 @@
         "choice"
       ],
       "directory": "src/components/Slider",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-resin"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -1760,9 +1704,11 @@
         "choice"
       ],
       "directory": "src/components/Slider",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-resin"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -2373,7 +2319,7 @@
         "cr-scroll-frost"
       ],
       "handWritten": {
-        "backdropFilter": 2,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": [
@@ -2427,7 +2373,7 @@
         "cr-scroll-frost"
       ],
       "handWritten": {
-        "backdropFilter": 2,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -2736,19 +2682,14 @@
         "resin"
       ],
       "directory": "src/components/AngleSlider",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-resin"
+      ],
       "handWritten": {
-        "backdropFilter": 3,
+        "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "resin"
-      ],
-      "surfaceReasons": {
-        "resin": {
-          "reason": "unresolved: no story shows it"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "knob",
@@ -2769,19 +2710,14 @@
         "resin"
       ],
       "directory": "src/components/AngleSlider",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-resin"
+      ],
       "handWritten": {
-        "backdropFilter": 3,
+        "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "resin"
-      ],
-      "surfaceReasons": {
-        "resin": {
-          "reason": "unresolved: no story shows it"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "mask-input",
@@ -3161,10 +3097,11 @@
       "directory": "src/components/Table",
       "classesWorn": [
         "cr-bare",
+        "cr-haze",
         "cr-table-scroll"
       ],
       "handWritten": {
-        "backdropFilter": 1,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -3194,7 +3131,7 @@
         "cr-table-scroll"
       ],
       "handWritten": {
-        "backdropFilter": 1,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -3222,25 +3159,14 @@
         "haze"
       ],
       "directory": "src/components/List",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "data-display-list--default",
-            "data-display-list--with-leading-and-trailing",
-            "data-display-list--selected",
-            "data-display-list--empty"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "description-list",
@@ -3423,24 +3349,14 @@
         "haze"
       ],
       "directory": "src/components/Image",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "data-display-image--default",
-            "data-display-image--square-and-unrounded",
-            "data-display-image--decorative"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "timeline",
@@ -3462,12 +3378,12 @@
         "haze"
       ],
       "directory": "src/components/Timeline",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-resin"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "resin"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "indicator",
@@ -3512,26 +3428,14 @@
       ],
       "directory": "src/components/Accordion",
       "classesWorn": [
-        "cr-bare"
+        "cr-bare",
+        "cr-haze"
       ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "data-display-accordion--default",
-            "data-display-accordion--one-open-to-start",
-            "data-display-accordion--several-open",
-            "data-display-accordion--with-a-disabled-row"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "collapse",
@@ -3612,22 +3516,14 @@
       "classesWorn": [
         "cr-bare",
         "cr-button",
+        "cr-haze",
         "cr-scroll-resin"
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "statistic",
@@ -3648,24 +3544,14 @@
         "haze"
       ],
       "directory": "src/components/Statistic",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "data-display-statistic--default",
-            "data-display-statistic--trends",
-            "data-display-statistic--loading"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "code",
@@ -3816,22 +3702,17 @@
       ],
       "directory": "src/components/Calendar",
       "classesWorn": [
-        "cr-bare"
+        "cr-bare",
+        "cr-frost"
       ],
       "handWritten": {
-        "backdropFilter": 1,
-        "mixins": [
-          "frost"
-        ]
+        "backdropFilter": 0,
+        "mixins": []
       },
       "surfaceNotWorn": [
-        "frost",
         "haze"
       ],
       "surfaceReasons": {
-        "frost": {
-          "reason": "painted by this library's frost mixin, not worn (R-A1)"
-        },
         "haze": {
           "reason": "unresolved: not seen in its stories",
           "stories": [
@@ -3864,21 +3745,14 @@
         "haze"
       ],
       "directory": "src/components/DataView",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "image-list",
@@ -3899,21 +3773,14 @@
         "haze"
       ],
       "directory": "src/components/ImageList",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "organization-chart",
@@ -3935,22 +3802,14 @@
       ],
       "directory": "src/components/OrganizationChart",
       "classesWorn": [
-        "cr-bare"
+        "cr-bare",
+        "cr-haze"
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "rolling-number",
@@ -4074,22 +3933,14 @@
       ],
       "directory": "src/components/NavigationTree",
       "classesWorn": [
-        "cr-bare"
+        "cr-bare",
+        "cr-haze"
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "resizable-table",
@@ -4274,22 +4125,14 @@
       ],
       "directory": "src/components/Alert",
       "classesWorn": [
-        "cr-bare"
+        "cr-bare",
+        "cr-haze"
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "toast",
@@ -4319,16 +4162,20 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "haze"
       ],
       "surfaceReasons": {
         "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "feedback-toast--success",
+            "feedback-toast--with-description",
+            "feedback-toast--carrying-the-only-undo",
+            "feedback-toast--urgent"
+          ]
         }
       }
     },
@@ -4361,9 +4208,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": []
     },
@@ -4504,23 +4349,14 @@
         "mirage"
       ],
       "directory": "src/components/LoadingOverlay",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-mirage"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "mirage"
-      ],
-      "surfaceReasons": {
-        "mirage": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "feedback-loading-overlay--blocked",
-            "feedback-loading-overlay--clear"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "empty-state",
@@ -4541,21 +4377,14 @@
         "haze"
       ],
       "directory": "src/components/EmptyState",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "result",
@@ -4576,21 +4405,14 @@
         "haze"
       ],
       "directory": "src/components/Result",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "popconfirm",
@@ -4662,28 +4484,15 @@
         "mirage"
       ],
       "directory": "src/components/Tour",
-      "classesWorn": [],
-      "handWritten": {
-        "backdropFilter": 2,
-        "mixins": [
-          "frost"
-        ]
-      },
-      "surfaceNotWorn": [
-        "frost",
-        "mirage"
+      "classesWorn": [
+        "cr-frost",
+        "cr-mirage"
       ],
-      "surfaceReasons": {
-        "frost": {
-          "reason": "painted by this library's frost mixin, not worn (R-A1)"
-        },
-        "mirage": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "feedback-tour--a-guided-sequence"
-          ]
-        }
-      }
+      "handWritten": {
+        "backdropFilter": 0,
+        "mixins": []
+      },
+      "surfaceNotWorn": []
     },
     {
       "id": "semi-circle-progress",
@@ -4761,22 +4570,14 @@
       ],
       "directory": "src/components/Banner",
       "classesWorn": [
-        "cr-bare"
+        "cr-bare",
+        "cr-haze"
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "dialog",
@@ -4835,35 +4636,15 @@
         "mirage"
       ],
       "directory": "src/components/Drawer",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-frost",
+        "cr-mirage"
+      ],
       "handWritten": {
-        "backdropFilter": 8,
+        "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "frost",
-        "mirage"
-      ],
-      "surfaceReasons": {
-        "frost": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "overlays-drawer--modal",
-            "overlays-drawer--modal-focus",
-            "overlays-drawer--every-edge",
-            "overlays-drawer--not-modal"
-          ]
-        },
-        "mirage": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "overlays-drawer--modal",
-            "overlays-drawer--modal-focus",
-            "overlays-drawer--every-edge",
-            "overlays-drawer--not-modal"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "menu",
@@ -4892,9 +4673,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "frost",
@@ -4908,7 +4687,12 @@
           "element": "div cr-frost (popover)"
         },
         "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "overlays-anchored-surfaces--on-the-page",
+            "overlays-anchored-surfaces--inside-a-dialog",
+            "overlays-anchored-surfaces--on-right-click"
+          ]
         }
       }
     },
@@ -4938,9 +4722,7 @@
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "frost"
@@ -4979,9 +4761,7 @@
       "classesWorn": [],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
         "frost",
@@ -4995,7 +4775,10 @@
           "element": "div cr-frost (popover)"
         },
         "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
+          "reason": "unresolved: not seen in its stories",
+          "stories": [
+            "overlays-overlayarrow--on-a-popover"
+          ]
         }
       }
     },
@@ -5088,23 +4871,14 @@
         "mirage"
       ],
       "directory": "src/components/Scrim",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-mirage"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "mirage"
-      ],
-      "surfaceReasons": {
-        "mirage": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "overlays-scrim--centred",
-            "overlays-scrim--not-centred"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "portal",
@@ -5154,7 +4928,7 @@
         "cr-resin"
       ],
       "handWritten": {
-        "backdropFilter": 1,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -5174,9 +4948,12 @@
         "none"
       ],
       "directory": "src/components/OverlayArrow",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-frost",
+        "cr-haze"
+      ],
       "handWritten": {
-        "backdropFilter": 3,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -5275,7 +5052,9 @@
         "none"
       ],
       "directory": "src/components/Highlight",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
@@ -5325,19 +5104,14 @@
         "haze"
       ],
       "directory": "src/components/Highlight",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: no story shows it"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "number-formatter",
@@ -5459,20 +5233,14 @@
       ],
       "directory": "src/components/CodeBlock",
       "classesWorn": [
+        "cr-haze",
         "cr-scroll-resin"
       ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: no story shows it"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "truncate",
@@ -5752,19 +5520,14 @@
         "resin"
       ],
       "directory": "src/components/Resizable",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-resin"
+      ],
       "handWritten": {
-        "backdropFilter": 3,
+        "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "resin"
-      ],
-      "surfaceReasons": {
-        "resin": {
-          "reason": "unresolved: no story shows it"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "watermark",
@@ -5803,19 +5566,14 @@
         "haze"
       ],
       "directory": "src/components/QrCode",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: no story shows it"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "click-away",
@@ -6167,21 +5925,14 @@
         "haze"
       ],
       "directory": "src/components/ChartSurface",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "bar-chart",
@@ -6457,22 +6208,14 @@
       ],
       "directory": "src/components/ChartLegend",
       "classesWorn": [
-        "cr-bare"
+        "cr-bare",
+        "cr-haze"
       ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "chart-tooltip",
@@ -6499,7 +6242,7 @@
         "cr-frost"
       ],
       "handWritten": {
-        "backdropFilter": 1,
+        "backdropFilter": 0,
         "mixins": []
       },
       "surfaceNotWorn": []
@@ -6909,21 +6652,17 @@
         "mirage"
       ],
       "directory": "src/components/Gallery",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
-        "haze",
         "mirage"
       ],
       "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        },
         "mirage": {
           "reason": "unresolved: not seen in its stories",
           "stories": [
@@ -6954,22 +6693,14 @@
         "mirage"
       ],
       "directory": "src/components/Lightbox",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-mirage"
+      ],
       "handWritten": {
-        "backdropFilter": 4,
+        "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "mirage"
-      ],
-      "surfaceReasons": {
-        "mirage": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "media-lightbox--from-a-thumbnail"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "price",
@@ -7091,21 +6822,14 @@
         "haze"
       ],
       "directory": "src/components/VariantSelector",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "stock-indicator",
@@ -7150,23 +6874,14 @@
         "haze"
       ],
       "directory": "src/components/ProductCard",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "worn by a child",
-          "story": "commerce-product-card--reduced",
-          "element": "span cr-haze (discount)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "product-gallery",
@@ -7235,21 +6950,14 @@
         "haze"
       ],
       "directory": "src/components/CartItem",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "cart-summary",
@@ -7266,21 +6974,14 @@
         "haze"
       ],
       "directory": "src/components/CartSummary",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "coupon-input",
@@ -7378,23 +7079,14 @@
         "haze"
       ],
       "directory": "src/components/PaymentMethod",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "commerce-payment-method--default",
-            "commerce-payment-method--with-a-provider-element"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "address-form",
@@ -7450,21 +7142,14 @@
         "haze"
       ],
       "directory": "src/components/OrderSummary",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "shipping-selector",
@@ -7485,23 +7170,14 @@
         "haze"
       ],
       "directory": "src/components/ShippingSelector",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
         "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "unresolved: not seen in its stories",
-          "stories": [
-            "commerce-shipping-selector--default",
-            "commerce-shipping-selector--not-chosen-yet"
-          ]
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "delivery-estimate",
@@ -7575,21 +7251,14 @@
         "haze"
       ],
       "directory": "src/components/Review",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "rating-summary",
@@ -7606,21 +7275,14 @@
         "haze"
       ],
       "directory": "src/components/RatingSummary",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "filter-panel",
@@ -7638,21 +7300,17 @@
         "haze"
       ],
       "directory": "src/components/FilterPanel",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-frost"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "frost"
-        ]
+        "mixins": []
       },
       "surfaceNotWorn": [
-        "frost",
         "haze"
       ],
       "surfaceReasons": {
-        "frost": {
-          "reason": "painted by this library's frost mixin, not worn (R-A1)"
-        },
         "haze": {
           "reason": "unresolved: not seen in its stories",
           "stories": [
@@ -7810,21 +7468,14 @@
         "frost"
       ],
       "directory": "src/components/PageHeader",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-frost"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "frost"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "frost"
-      ],
-      "surfaceReasons": {
-        "frost": {
-          "reason": "painted by this library's frost mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "view-stack",
@@ -7874,26 +7525,15 @@
         "haze"
       ],
       "directory": "src/components/MasterDetail",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-frost",
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "frost",
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "frost",
-        "haze"
-      ],
-      "surfaceReasons": {
-        "frost": {
-          "reason": "painted by this library's frost mixin, not worn (R-A1)"
-        },
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "split-view",
@@ -7992,21 +7632,14 @@
         "frost"
       ],
       "directory": "src/components/Workspace",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-frost"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "frost"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "frost"
-      ],
-      "surfaceReasons": {
-        "frost": {
-          "reason": "painted by this library's frost mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "focus-mode",
@@ -8318,21 +7951,14 @@
         "haze"
       ],
       "directory": "src/components/AnalyticsPanel",
-      "classesWorn": [],
+      "classesWorn": [
+        "cr-haze"
+      ],
       "handWritten": {
         "backdropFilter": 0,
-        "mixins": [
-          "haze-fill"
-        ]
+        "mixins": []
       },
-      "surfaceNotWorn": [
-        "haze"
-      ],
-      "surfaceReasons": {
-        "haze": {
-          "reason": "painted by this library's haze-fill mixin, not worn (R-A1)"
-        }
-      }
+      "surfaceNotWorn": []
     },
     {
       "id": "data-table-block",

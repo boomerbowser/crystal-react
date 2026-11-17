@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 
 /* "Frost band or inherits." Frost is the default because a page header is chrome
    above a reading surface. `isPlain` selects `inherits`, for a header inside a
@@ -14,7 +13,11 @@
   transition: padding-block $cr-motion-duration-state #{$cr-motion-easing-settle};
 }
 
-.banded { @include material.frost; }
+.banded {
+  /* Crystal's `.cr-frost.flat` (2.7.0): a band of Frost without grain, square,
+     because it spans the page. */
+  border-radius: 0;
+}
 
 .top {
   display: flex;

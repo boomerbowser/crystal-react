@@ -10,24 +10,14 @@
  */
 
 .qrCode {
-  position: relative;
-  isolation: isolate;
+  /* The quiet zone wears Crystal's `.cr-haze.flush` (2.7.0): the feathered
+     Haze fill to the code's own edge, with Crystal's fallbacks. */
   display: inline-grid;
   place-items: center;
   /* Four modules of quiet zone is the specification's minimum. */
   padding: $cr-spacing-md;
   border-radius: var(--cr-radius);
   color: var(--cr-text);
-}
-
-.qrCode::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: var(--cr-haze-fill);
-  filter: blur(var(--cr-haze-feather));
 }
 
 .caption {
@@ -39,13 +29,3 @@
 
 .expired { opacity: 0.4; }
 
-:global([data-effects='opaque']) .qrCode::before { background: var(--cr-surface); filter: none; }
-
-@media (prefers-reduced-transparency: reduce) {
-  .qrCode::before { background: var(--cr-surface); filter: none; }
-}
-
-@media (forced-colors: active) {
-  .qrCode { background: Canvas; }
-  .qrCode::before { display: none; }
-}

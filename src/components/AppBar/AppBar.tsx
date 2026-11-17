@@ -68,6 +68,7 @@ export const AppBar = forwardRef<HTMLElement, AppBarProps>(function AppBar(
         ref={ref}
         data-cr-state={scrolled ? 'scrolled' : 'at-rest'}
         className={cx(
+          'cr-frost docked flat',
           styles['appBar'],
           scrolled ? styles['scrolled'] : undefined,
           isCondensed ? styles['condensed'] : undefined,

@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* Carousel: "Resin controls floating over Haze slides".
  *
@@ -47,8 +46,7 @@
 }
 
 .slide {
-  @include material.haze-fill(0);
-
+  /* The element wears Crystal's `.cr-haze.flush` (2.7.0): the Haze fill to its own edge, with Crystal's opaque, reduced-transparency and forced-colours routes. */
   flex: 0 0 100%;
   box-sizing: border-box;
   scroll-snap-align: start;
@@ -129,15 +127,7 @@
   opacity: 1;
 }
 
-:global([data-effects='opaque']) .slide::before { background: var(--cr-surface); filter: none; }
-
-@media (prefers-reduced-transparency: reduce) {
-  .slide::before { background: var(--cr-surface); filter: none; }
-}
-
 @media (forced-colors: active) {
-  .slide { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
-  .slide::before { display: none; }
   .step { background: ButtonFace; color: ButtonText; border: 1px solid ButtonText; box-shadow: none; }
   .dot { background: CanvasText; opacity: 1; }
   .indicator[aria-current] .dot { background: Highlight; }

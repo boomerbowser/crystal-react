@@ -162,7 +162,7 @@ export function MultiSelect({
             (shellScope as unknown as { current: HTMLDivElement | null }).current = node;
             shellRef.current = node;
           }}
-          className={cx(styles['shell'], 'cr-field-shell')}
+          className={cx(styles['shell'], 'cr-field-shell block')}
           {...(invalid ? { 'data-invalid': true } : {})}
         >
           <ListPresence>

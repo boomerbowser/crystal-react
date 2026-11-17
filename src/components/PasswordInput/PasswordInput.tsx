@@ -88,7 +88,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
       {/* The validity React Aria resolved, which can differ from the one the
           caller declared, so a server's rejection moves the field exactly as a
           local rule would. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
         <Input
           ref={forwardedRef}
           className={cx(styles['control'])}

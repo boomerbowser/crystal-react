@@ -140,7 +140,7 @@ export function CommandPalette({
         <MotionOverlay
           {...props}
           isOpen
-          className={cx(styles['scrim'])}
+          className={cx('cr-mirage', styles['scrim'])}
           {...wash}
         >
           <Modal className={cx(styles['holder'])}>
@@ -158,7 +158,7 @@ export function CommandPalette({
                     never both. The two compose into `aria-labelledby` pointing
                     at the input and the label, which gives the field the wrong
                     name. A label element is also the one a click can focus. */}
-                <SearchField className={cx(styles['field'], 'cr-field-shell')} autoFocus>
+                <SearchField className={cx(styles['field'], 'cr-field-shell block')} autoFocus>
                   <VisuallyHidden as="span"><Label>{label}</Label></VisuallyHidden>
                   <span className={cx(styles['searchIcon'])} aria-hidden="true">{SearchIcon}</span>
                   <Input placeholder={placeholder} className={cx(styles['input'])} />

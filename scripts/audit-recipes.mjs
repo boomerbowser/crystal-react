@@ -127,7 +127,7 @@ for (const entry of manifest.components) {
     const worn = new Set([...tsx.matchAll(/['"`\s](cr-[a-z-]+)['"`\s]/g)].map((m) => m[1]));
     record.classesWorn = [...worn].sort();
     record.handWritten = {
-      backdropFilter: (scss.match(/backdrop-filter\s*:\s*(?!none)/g) ?? []).length,
+      backdropFilter: (scss.match(/backdrop-filter\s*:(?!\s*none\b)/g) ?? []).length,
       mixins: [...scss.matchAll(MIXINS)].map((m) => m[1]),
     };
     /* A surface counts as worn when its class is in the markup, or when the

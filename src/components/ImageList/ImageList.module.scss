@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* ImageList. "Haze caption bars over the image; caption bars keep the content
  * radius at the bottom corners."
@@ -45,14 +44,16 @@
 .media { border-radius: 0; }
 
 .caption {
-  @include material.haze-fill(0);
-
+  /* The element wears Crystal's `.cr-haze.flush` (2.7.0): the Haze fill to its own edge, with Crystal's opaque, reduced-transparency and forced-colours routes. */
   position: absolute;
   inset-inline: 0;
   inset-block-end: 0;
   display: block;
   padding: $cr-spacing-xs $cr-spacing-sm;
-  /* The tile's radius, on the two corners the bar actually meets. */
+  /* The tile's radius, on the two corners the bar actually meets, and square
+     where it meets the picture. */
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
   border-end-start-radius: var(--cr-radius);
   border-end-end-radius: var(--cr-radius);
   color: var(--cr-text);
@@ -60,13 +61,6 @@
   line-height: var(--cr-text-caption-leading);
 }
 
-:global([data-effects='opaque']) .caption::before { background: var(--cr-surface); filter: none; }
-
-@media (prefers-reduced-transparency: reduce) {
-  .caption::before { background: var(--cr-surface); filter: none; }
-}
-
 @media (forced-colors: active) {
-  .caption { background: Canvas; color: CanvasText; border-block-start: 1px solid CanvasText; }
-  .caption::before { display: none; }
+  .caption { border: 0; border-block-start: 1px solid CanvasText; }
 }

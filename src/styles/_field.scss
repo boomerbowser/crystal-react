@@ -1,5 +1,4 @@
 @use 'tokens' as *;
-@use 'material' as material;
 
 /* The field anatomy, once.
  *
@@ -35,21 +34,6 @@
  * standard property, and Chromium does not understand the WebKit alias, so every
  * Frost and Resin surface renders as a flat translucent fill with no diffusion.
  * Autoprefixer adds the prefix for Safari itself. Write the property once. */
-@mixin shell {
-  /* The shell is Crystal's `.cr-field-shell` (2.2.0), which every caller wears:
-     the Resin surround, the Haze well, the rim, the 20px radius, the 8px inset and
-     the sheen, as written. Meridian ruled on 28 September 2026 (D-24) that the
-     library adopts it, rim included. Crystal's accessibility chapter records how
-     the rim is treated.
-
-     This mixin keeps only what Crystal does not decide for a React field: a shell
-     that fills its row instead of sitting inline, and the origin the field
-     motion deforms around. */
-  display: flex;
-  align-items: center;
-  transform-origin: center;
-}
-
 /* The control that sits inside a shell: an input, a textarea, the button half
    of a field. It takes the shell's radius by inheritance, which keeps a focus
    ring and a background from squaring off inside a rounded well. Do not

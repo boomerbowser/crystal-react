@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 .burger {
   /* A burger is a `<button>`, and Crystal paints every `<button>` as a Resin
@@ -58,7 +57,7 @@
 
 .burger[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 
-@include material.opaque-fallback('.burger');
+/* Opaque and reduced transparency are Crystal's routes for a `<button>`. */
 
 @media (forced-colors: active) {
   .burger { background: Canvas; border-color: CanvasText; backdrop-filter: none; }

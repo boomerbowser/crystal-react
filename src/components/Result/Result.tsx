@@ -67,7 +67,7 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result({
       ref={merged as never}
       data-outcome={outcome}
       data-status={status}
-      className={cx(styles['result'], className)}
+      className={cx('cr-haze inset', styles['result'], className)}
     >
       {outcome === 'success' ? <Arrival play={play} recipe="success" /> : null}
       <span aria-hidden="true" className={styles['well']}>{STATUS_SYMBOL[status]}</span>

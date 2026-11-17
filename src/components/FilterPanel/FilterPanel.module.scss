@@ -1,14 +1,11 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* "Frost panel with Haze groups." The panel is Frost because it is a reading
    surface that holds controls. It is not itself a control plane. */
 .panel {
-  @include material.frost;
-
+  /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
   display: grid;
   gap: $cr-spacing-md;
-  border-radius: $cr-shape-content-radius;
   padding: $cr-spacing-md;
   color: var(--cr-text);
 }
@@ -41,6 +38,3 @@
   white-space: nowrap;
 }
 
-@media (forced-colors: active) {
-  .panel { border: 1px solid CanvasText; }
-}

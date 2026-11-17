@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* Accordion: Haze rows, with the expanded content on the row's own surface.
  *
@@ -20,8 +19,10 @@
 }
 
 .row {
+  /* Crystal's `.cr-haze.flat` (2.7.0): the fill on the row itself, with the
+     surface in opaque mode and under reduced transparency, and system colours
+     in forced colours. */
   border-radius: var(--cr-radius);
-  background: var(--cr-haze-fill);
   color: var(--cr-text);
   overflow: hidden;
 }
@@ -75,12 +76,3 @@
   color: var(--cr-text);
 }
 
-:global([data-effects='opaque']) .row { background: var(--cr-surface); }
-
-@media (prefers-reduced-transparency: reduce) {
-  .row { background: var(--cr-surface); }
-}
-
-@media (forced-colors: active) {
-  .row { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
-}

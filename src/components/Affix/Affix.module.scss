@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* The holder never leaves the flow. Its height is held open by the component so
    the page does not jump, and so unpinning cannot restore a height that scrolls
@@ -9,20 +8,11 @@
 .content { inline-size: 100%; }
 
 /* Resin only once pinned. Inline it is part of the page, and a floating
-   material would say it is not. */
+   material would say it is not. Pinned, the element wears Crystal's
+   `.cr-resin.flat` (2.7.0): the Resin plane without the sheen, with Crystal's
+   fallbacks, at the content radius. */
 .content[data-pinned] {
-  @include material.resin;
   position: fixed;
   z-index: 2;
   border-radius: $cr-shape-content-radius;
-}
-
-@include material.opaque-fallback('.content[data-pinned]');
-
-@media (forced-colors: active) {
-  .content[data-pinned] {
-    background: Canvas;
-    border-color: CanvasText;
-    backdrop-filter: none;
-  }
 }

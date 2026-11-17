@@ -100,7 +100,7 @@ export function ChartSurface({
 
       {legend ? <div className={styles['legend']}>{legend}</div> : null}
 
-      <div className={styles['plot']} ref={ref}>
+      <div className={cx('cr-haze inset', styles['plot'])} ref={ref}>
         {/* `group`, not `img`. `img` is a leaf, so everything inside it,
             including the marks a keyboard moves between, stops being reachable.
             `group` takes the chart's name and lets its children keep theirs, so

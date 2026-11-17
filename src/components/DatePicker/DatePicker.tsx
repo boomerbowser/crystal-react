@@ -85,7 +85,7 @@ export function DateInput({
       <Label className={cx(styles['label'])}>{label}</Label>
       {/* The validity React Aria resolved, not the one the caller declared, so a
           server's rejection moves the field exactly as a local rule would. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
         {segments}
       </FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
@@ -118,7 +118,7 @@ export function TimeInput({
       <Label className={cx(styles['label'])}>{label}</Label>
       {/* The validity React Aria resolved, so the field marks itself and moves
           whatever the source of the error. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>{segments}</FieldGroupShell>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>{segments}</FieldGroupShell>
       {description ? <Text slot="description" className={cx(styles['description'])}>{description}</Text> : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
       </>
@@ -144,7 +144,7 @@ export function DatePicker({
       <Label className={cx(styles['label'])}>{label}</Label>
       {/* The validity React Aria resolved, not the one the caller declared, so a
           server's rejection moves the field exactly as a local rule would. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
         {segments}
         <Button className={cx(styles['trigger'], 'cr-bare')}>{CalendarIcon}</Button>
       </FieldGroupShell>
@@ -193,7 +193,7 @@ export function DateRangePicker({
       <Label className={cx(styles['label'])}>{label}</Label>
       {/* The validity React Aria resolved, not the one the caller declared, so a
           server's rejection moves the field exactly as a local rule would. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
         <AriaDateInput slot="start" className={cx(styles['segments'])}>
           {(segment) => <DateSegment segment={segment} className={cx(styles['segment'])} />}
         </AriaDateInput>

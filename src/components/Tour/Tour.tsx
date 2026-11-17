@@ -49,6 +49,7 @@ import { mergeRefs } from '../../utils/mergeRefs.js';
 import { Portal } from '../Portal/Portal.js';
 import { FocusTrap } from '../FocusTrap/FocusTrap.js';
 import { Button } from '../Button/Button.js';
+import { cx } from '../../styles/cx.js';
 import styles from './Tour.module.scss';
 
 export interface TourStep {
@@ -194,7 +195,7 @@ export function Tour({
                 tests still pass because jsdom measures nothing and has no box to
                 cut. */}
             <div
-              className={styles['scrim']}
+              className={cx('cr-mirage', styles['scrim'])}
               /* A stable hook for the gate that checks the hole. The gate must not
                  find the scrim by DOM position, because `FocusTrap` sits between
                  the scrim and the dialog, so the scrim is not the dialog's
@@ -211,7 +212,7 @@ export function Tour({
               tabIndex={-1}
               aria-labelledby={`${id}-title`}
               aria-describedby={`${id}-body`}
-              className={styles['panel']}
+              className={cx('cr-frost pane flat', styles['panel'])}
               data-anchored={box ? '' : undefined}
               style={box ? {
                 '--panel-top': `${box.top + box.height}px`,

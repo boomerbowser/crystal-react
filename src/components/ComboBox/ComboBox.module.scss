@@ -10,7 +10,7 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-.shell { @include field.shell; }
+/* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 .control { @include field.control; }
 
 .control:focus { outline: none; }
@@ -73,9 +73,6 @@
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-
-@media (prefers-reduced-transparency: reduce) {
-}
 
 @media (forced-colors: active) {
   .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }

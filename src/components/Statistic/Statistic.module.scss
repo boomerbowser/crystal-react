@@ -48,9 +48,8 @@
   inline-size: $cr-spacing-2xl;
   block-size: 1em;  /* crystal-allow-literal: relative to the text, not a design value */
   border-radius: var(--cr-radius);
-  background: var(--cr-haze-fill);
+  /* Crystal's `.cr-haze.flat.sunken` (2.7.0): the fill on the element, and the
+     alternate surface where translucency gives way, so the placeholder stays
+     visible on the surface it waits on. */
 }
 
-@media (forced-colors: active) {
-  .placeholder { background: Canvas; border: 1px solid CanvasText; }
-}

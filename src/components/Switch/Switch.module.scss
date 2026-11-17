@@ -19,9 +19,10 @@
 
 /* The track and thumb are Crystal's native switch, `input[type=checkbox][role=switch]`
    (2.2.0), drawn here on React Aria's own elements because React Aria keeps its
-   input visually hidden and the recipe is keyed on that input. So this restates
-   Crystal's values rather than wearing a class, and `verify:appearance` holds the
-   restatement to a native switch planted beside it, in both states.
+   input visually hidden and the recipe is keyed on that input. The track wears
+   the same box as a class, `.cr-choice` (2.8.0); the thumb restates the native
+   thumb, which is opaque paint rather than material, and `verify:appearance`
+   holds both to a native switch planted beside them, in both states.
 
    On, Crystal's switch takes primary-soft for the track, keeps the rim, and
    carries a 22px primary thumb with a contact shadow. This matches the
@@ -31,15 +32,12 @@ $switch-thumb-inset: 2px; /* crystal-allow-literal: core's native switch thumb i
 $switch-thumb-gap: 6px;   /* crystal-allow-literal: core's native switch, thumb = track height - 6px */
 
 .track {
-  position: relative;
-  flex: none;
+  /* The track wears Crystal's `.cr-choice` (2.8.0), the native switch's box on
+     any element, with its fallbacks. Its size and the pill are the track's. */
+  display: block;
   inline-size: $cr-switch-track-width;
   block-size: $cr-switch-track-height;
-  border: 1px solid var(--cr-rim);
   border-radius: $cr-action-radius;
-  background: linear-gradient(135deg, var(--cr-control-light), var(--cr-control-color)), var(--cr-resin-fill);
-  backdrop-filter: blur(var(--cr-resin-blur));
-  box-shadow: inset 0 2px 2px var(--cr-rim), 0 2px 3px var(--cr-control-edge), 0 5px 10px var(--cr-shadow-contact); /* crystal-allow-literal: core's choice-input shadow, published only as a rule */
 }
 
 .thumb {
@@ -82,17 +80,7 @@ $switch-thumb-gap: 6px;   /* crystal-allow-literal: core's native switch, thumb 
   .track, .thumb { transition: none; }
 }
 
-:global([data-effects='opaque']) .track {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .track { background: var(--cr-surface); backdrop-filter: none; }
-}
-
 @media (forced-colors: active) {
-  .track { background: Field; border-color: FieldText; backdrop-filter: none; }
   .switch[data-selected] .track { background: Highlight; border-color: Highlight; }
   .thumb { background: FieldText; }
   .switch[data-selected] .thumb { background: HighlightText; }

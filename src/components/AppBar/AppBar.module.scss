@@ -21,10 +21,12 @@
      the safe-area inset. */
   padding-inline-start: max(var(--cr-space), env(safe-area-inset-left));
   padding-inline-end: max(var(--cr-space), env(safe-area-inset-right));
-  background: var(--cr-frost-fill);
+  /* Crystal's `.cr-frost.docked.flat` (2.7.0): the Frost fill and blur, docked
+     to the top of the window with no rim, radius, shadow or grain, and
+     Crystal's fallbacks. The edge and the panel shadow it takes once the page
+     scrolls under it are its own. */
   color: var(--cr-text);
   border-block-end: 1px solid transparent;
-  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
   transition: box-shadow var(--cr-state), border-color var(--cr-state);
 }
 
@@ -49,15 +51,6 @@
 
 .actions { margin-inline-start: auto; display: flex; align-items: center; gap: $cr-action-gap; }
 
-:global([data-effects='opaque']) .appBar {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .appBar { background: var(--cr-surface); backdrop-filter: none; }
-}
-
 @media (forced-colors: active) {
-  .appBar { background: Canvas; border-block-end: 1px solid CanvasText; backdrop-filter: none; }
+  .appBar { border-block-end: 1px solid CanvasText; }
 }

@@ -119,13 +119,13 @@ export const DataView = forwardRef<HTMLElement, DataViewProps>(function DataView
       ) : (
         <ul className={styles['items']}>
           {loading ? (
-            <li aria-hidden="true" className={cx(styles['item'], styles['placeholder'])} />
+            <li aria-hidden="true" className={cx('cr-haze flush', styles['item'], styles['placeholder'])} />
           ) : (
             /* An item added after the view first rendered arrives with `list-in`.
                One removed leaves with `list-out`. */
             <ListPresence>
               {items.map((item) => (
-                <PresenceItem key={item.id} className={styles['item']}>{item.content}</PresenceItem>
+                <PresenceItem key={item.id} className={cx('cr-haze flush', styles['item'])}>{item.content}</PresenceItem>
               ))}
             </ListPresence>
           )}

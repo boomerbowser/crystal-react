@@ -9,7 +9,7 @@
  * `mark-in`. These recipes exist only from 2.2.0. On anything older `useMotion`
  * throws for an unknown recipe, so a dependency range that let 2.1 back in would
  * ship components that crash as soon as something starts loading. The
- * dependency says `^2.7.0`. This test checks the installed version, because the
+ * dependency says `^2.8.0`. This test checks the installed version, because the
  * range is only what was requested.
  *
  * The floor is 2.3, because the location dot, the count badge, the group, the
@@ -50,8 +50,8 @@ const [major = 0, minor = 0] = installed.version.split('.').map(Number);
 const PLAYED_FROM_2_2 = ['activity-turn', 'activity-travel', 'skeleton-sweep', 'mark-in', 'selection-travel'];
 
 describe('the installed @crystal-ui/core', () => {
-  it('is 2.7.0 or later', () => {
-    expect(major > 2 || (major === 2 && minor >= 7), `@crystal-ui/core ${installed.version} is installed; this library wears recipes that exist only from 2.7.0 — the material variants (.cr-haze.inset, .flush, .flat, .raised; .cr-frost.pane, .flat, .docked, .sheet, .reading; .cr-resin.flat, .divider; .cr-field-shell.block), the travelling selection pill, the media stage, the transport, the caption and its style, the prose and editor vocabulary, the editor's toolbar placements, the Frost bar`).toBe(true);
+  it('is 2.8.0 or later', () => {
+    expect(major > 2 || (major === 2 && minor >= 8), `@crystal-ui/core ${installed.version} is installed; this library wears recipes that exist only from 2.8.0 — the choice box (.cr-choice, .outline, .radio), the material variants (.cr-haze.inset, .flush, .flat, .raised; .cr-frost.pane, .flat, .docked, .sheet, .reading; .cr-resin.flat, .divider; .cr-field-shell.block), the travelling selection pill, the media stage, the transport, the caption and its style, the prose and editor vocabulary, the editor's toolbar placements, the Frost bar`).toBe(true);
   });
 
   /* The version could move without the classes, so the stylesheet is read too. */

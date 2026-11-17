@@ -1,6 +1,5 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/overlay' as overlay;
-@use '../../styles/material';
 
 /* A menu narrower than its trigger looks like a mistake, and one narrower than
    its own shortcuts wraps them. `min-content` means "as wide as the widest row"
@@ -12,11 +11,12 @@
   max-inline-size: min(92vw, #{$cr-overlay-max-width});
 }
 /* "Frost panel with Haze rows (R15e)": on the page the rows read on a Haze fill
-   inside the Frost panel (R-A9). It is on `::after`, because `.cr-frost` paints
-   its grain on `::before`, and inset by the menu's own 4px padding rather than
-   the 8px pad inset, so every row sits wholly on it. Recessed into Haze, the
+   inside the Frost panel (R-A9), Crystal's `.cr-frost.reading` (2.7.0), inset
+   by the menu's own 4px padding rather than the 8px pad inset, so every row
+   sits wholly on it. The inset is the reading fill's own property, never
+   `--cr-haze-inset`, which the rows' controls read. Recessed into Haze, the
    panel is already Haze. */
-.popover[data-cr-overlay='frost'] { @include material.haze-fill($inset: $cr-spacing-2xs, $layer: '::after'); }
+.popover[data-cr-overlay='frost'] { --cr-frost-reading-inset: #{$cr-spacing-2xs}; }
 .menu { @include overlay.composite-focus; display: grid; gap: 1px; max-block-size: 60vh; overflow: auto; }
 
 .item {
@@ -58,7 +58,6 @@
    invisible and never a focus target, and exists only so the popover has
    something to measure against. */
 .pointAnchor { position: fixed; inline-size: 1px; block-size: 1px; pointer-events: none; }
-
 
 @media (forced-colors: active) {
   .separator { background: CanvasText; }

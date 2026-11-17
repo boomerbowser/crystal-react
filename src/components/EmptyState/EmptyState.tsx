@@ -62,7 +62,7 @@ export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(function E
       role="region"
       aria-labelledby={`${id}-title`}
       data-state={state}
-      className={cx(styles['empty'], className)}
+      className={cx('cr-haze inset', styles['empty'], className)}
     >
       {illustration ? (
         <div aria-hidden="true" className={styles['illustration']}>{illustration}</div>

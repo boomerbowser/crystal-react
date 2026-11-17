@@ -1,10 +1,8 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* "Haze content fill on the surrounding material; content radius." */
 .item {
-  @include material.haze-fill;
-
+  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
   /* Flex instead of a five-column grid, and no container query. The line wraps
      on its own when the space runs out, so it behaves the same at any width
      with no breakpoint to maintain. */

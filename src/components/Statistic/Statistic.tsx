@@ -50,7 +50,7 @@ export const Statistic = forwardRef<HTMLElement, StatisticProps>(function Statis
         {/* The figure is replaced by a placeholder rather than removed. A box
             that empties while it loads changes height, and a row of statistics
             would reflow. */}
-        {loading ? <span aria-hidden="true" className={styles['placeholder']} /> : value}
+        {loading ? <span aria-hidden="true" className={cx('cr-haze flat sunken', styles['placeholder'])} /> : value}
         {/* \`highlight\` plays when the figure is replaced by a new one. It does
             not play when the figure first arrives or when loading ends, which is
             also arrival. */}

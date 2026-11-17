@@ -82,7 +82,7 @@ export function ChartLegend({
                   {content}
                 </Toggle>
               ) : (
-                <span className={styles['entry']}>{content}</span>
+                <span className={cx('cr-haze inset', styles['entry'])}>{content}</span>
               )}
             </li>
           );

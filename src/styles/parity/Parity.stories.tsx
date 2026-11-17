@@ -39,9 +39,10 @@ type Story = StoryObj<typeof meta>;
 
 export const EveryMaterial: Story = {
   render: () => (
+    <>
     <div className={styles.row}>
-      <div className={styles.frost} data-material="frost">Frost</div>
-      <div className={styles.resin} data-material="resin">Resin</div>
+      <div className={`cr-frost ${styles.frost}`} data-material="frost">Frost</div>
+      <div className={`cr-resin ${styles.resin}`} data-material="resin">Resin</div>
       <div className={styles.haze} data-material="haze">Haze</div>
       {/* A real control instead of a bare div, because the Haze content fill is
           part of the control recipe and not of the Resin primitive. Crystal
@@ -50,5 +51,26 @@ export const EveryMaterial: Story = {
           cannot detect a missing fill. */}
       <span data-material="resin-control"><Button>Resin control</Button></span>
     </div>
+    {/* The material variants (Crystal 2.7.0 and 2.8.0), one specimen each, matched to
+        the `data-variant` specimens on Crystal's playground. */}
+    <div className={styles.row} style={{ flexWrap: 'wrap' }}>
+      <div className={`cr-haze inset ${styles.variant}`} data-material="haze-inset">haze-inset</div>
+      <div className={`cr-haze flush ${styles.variant}`} data-material="haze-flush">haze-flush</div>
+      <div className={`cr-haze flat ${styles.variant}`} data-material="haze-flat">haze-flat</div>
+      <div className={`cr-haze flat sunken ${styles.variant}`} data-material="haze-flat-sunken">haze-flat-sunken</div>
+      <div className={`cr-haze raised ${styles.variant}`} data-material="haze-raised">haze-raised</div>
+      <div className={`cr-frost pane ${styles.variant}`} data-material="frost-pane">frost-pane</div>
+      <div className={`cr-frost flat ${styles.variant}`} data-material="frost-flat">frost-flat</div>
+      <div className={`cr-frost docked flat ${styles.variant}`} data-material="frost-docked">frost-docked</div>
+      <div className={`cr-frost sheet flat ${styles.variant}`} data-material="frost-sheet">frost-sheet</div>
+      <div className={`cr-frost reading ${styles.variant}`} data-material="frost-reading">frost-reading</div>
+      <div className={`cr-resin flat ${styles.variant}`} data-material="resin-flat">resin-flat</div>
+      <div className={`cr-resin divider ${styles.variant}`} data-material="resin-divider">resin-divider</div>
+      <span className="cr-choice" data-material="choice" />
+      <span className="cr-choice outline" data-material="choice-outline" />
+      <span className="cr-choice radio" data-material="choice-radio" />
+      <span className="cr-field-shell block" data-material="field-block"><input className="cr-input" aria-label="Variant field" defaultValue="Fills the row" /></span>
+    </div>
+    </>
   ),
 };

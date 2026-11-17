@@ -1,6 +1,5 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* MultiSelect: a field shell whose value is a set of chips.
  *
@@ -14,7 +13,7 @@
 .label { @include field.label; }
 
 .shell {
-  @include field.shell;
+  /* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
   flex-wrap: wrap;
   align-items: center;
   gap: $cr-spacing-2xs;

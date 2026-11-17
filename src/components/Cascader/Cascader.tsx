@@ -141,7 +141,7 @@ export function Cascader({
           isDisabled={isDisabled}
           onFocus={() => { void playShell('field-focus'); }}
           {...(isInvalid ? { 'data-invalid': true } : {})}
-          className={cx(styles['shell'], 'cr-field-shell', styles['trigger'])}
+          className={cx(styles['shell'], 'cr-field-shell block', styles['trigger'])}
         >
           <span className={cx(styles['value'], shown ? undefined : styles['placeholder'])}>
             {shown || placeholder}

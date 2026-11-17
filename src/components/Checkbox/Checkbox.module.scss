@@ -22,18 +22,16 @@
 }
 
 .box {
-  position: relative;
+  /* The box wears Crystal's `.cr-choice.outline` (2.8.0): the Resin box with
+     the outline boundary and a single inset rim, with Crystal's opaque,
+     reduced-transparency and forced-colours routes. A radio's adds `.radio`.
+     The mark, and the primary fill a selected box takes, are drawn here. */
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: none;
   inline-size: $cr-choice-box-size;
   block-size: $cr-choice-box-size;
-  border: 1px solid var(--cr-outline);
   border-radius: $cr-choice-box-radius;
-  background: var(--cr-resin-fill);
-  box-shadow: inset 0 2px 1px var(--cr-rim);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
   color: var(--cr-on-primary);
 }
 
@@ -83,17 +81,8 @@
 .description { color: var(--cr-muted); }
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
-:global([data-effects='opaque']) .box {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .box { background: var(--cr-surface); backdrop-filter: none; }
-}
-
 @media (forced-colors: active) {
-  .box { background: Field; border-color: FieldText; backdrop-filter: none; color: Highlight; }
+  .box { color: Highlight; }
   .choice[data-selected] .box, .choice[data-indeterminate] .box { background: Field; border-color: Highlight; }
   .choice[data-focus-visible] .box { outline-color: Highlight; }
 }

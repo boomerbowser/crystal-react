@@ -58,7 +58,7 @@ export function ShippingSelector({
           key={option.value}
           value={option.value}
           isDisabled={option.unavailable !== undefined}
-          className={cx(styles['option'])}
+          className={cx('cr-haze flush', styles['option'])}
         >
           {/* No `aria-label`. The card's own text is its name, and it already
               holds all three facts in one place, as "states price and estimate

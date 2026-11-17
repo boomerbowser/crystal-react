@@ -54,7 +54,7 @@ export const RatingSummary = forwardRef<HTMLElement, RatingSummaryProps>(
     /* No reviews is the absence of an average, not an average of zero. */
     if (average === undefined || count === 0) {
       return (
-        <section {...props} ref={ref} aria-label={label} className={cx(styles['summary'], className)}>
+        <section {...props} ref={ref} aria-label={label} className={cx('cr-haze inset', styles['summary'], className)}>
           <p className={styles['empty']}>{empty}</p>
         </section>
       );
@@ -68,7 +68,7 @@ export const RatingSummary = forwardRef<HTMLElement, RatingSummaryProps>(
     const bar = describeBar ?? ((rating, votes) => `${rating} star${rating === 1 ? '' : 's'}, ${votes}`);
 
     return (
-      <section {...props} ref={ref} aria-label={label} className={cx(styles['summary'], className)}>
+      <section {...props} ref={ref} aria-label={label} className={cx('cr-haze inset', styles['summary'], className)}>
         {/* The average and the count, in one sentence, as text. */}
         <p className={styles['headline']}>{said}</p>
         {stars ? <div aria-hidden="true" className={styles['stars']}>{stars}</div> : null}

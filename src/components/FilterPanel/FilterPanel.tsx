@@ -77,7 +77,7 @@ export const FilterPanel = forwardRef<HTMLElement, FilterPanelProps>(function Fi
       ref={ref}
       aria-label={label}
       {...(isLoading ? { 'data-loading': '' } : {})}
-      className={cx(styles['panel'], className)}
+      className={cx('cr-frost pane flat', styles['panel'], className)}
     >
       {applied.length > 0 ? (
         <div className={styles['applied']}>

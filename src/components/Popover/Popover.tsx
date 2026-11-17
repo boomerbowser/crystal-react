@@ -46,7 +46,7 @@ export function Popover({
   const [scope, play] = useMotion();
 
   return (
-    <AriaPopover {...props} ref={scope as never} className={cx(styles['popover'], overlayMaterialClass(material), className)} {...overlayMaterialProps(material)}>
+    <AriaPopover {...props} ref={scope as never} className={cx(styles['popover'], overlayMaterialClass(material), material === 'frost' && 'reading', className)} {...overlayMaterialProps(material)}>
       {({ isExiting }) => (
         <>
           <Arrival play={play} recipe="popover-in" />

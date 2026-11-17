@@ -152,7 +152,7 @@ export function Lightbox({
   }, [change, onKeyShortcut]);
 
   return (
-    <ModalOverlay {...props} isOpen={isOpen} className={cx(styles['scrim'])}>
+    <ModalOverlay {...props} isOpen={isOpen} className={cx('cr-mirage', styles['scrim'])}>
       <Modal className={cx(styles['modal'])}>
         <AriaDialog
           aria-labelledby={`${id}-label`}

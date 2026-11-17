@@ -84,7 +84,7 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(function Che
     <AriaCheckbox {...props} ref={ref} className={cx(styles['choice'], className)}>
       {({ isIndeterminate, isSelected }) => (
         <>
-          <span ref={scope as never} className={cx(styles['box'])}>
+          <span ref={scope as never} className={cx('cr-choice outline', styles['box'])}>
             {/* Driven by React Aria's state and not by a class, so the drawn
                 mark and the announced one cannot disagree. */}
             {isIndeterminate ? DashMark : CheckMark}
@@ -111,7 +111,7 @@ export const Radio = forwardRef<HTMLLabelElement, RadioProps>(function Radio(
     <AriaRadio {...props} ref={ref} className={cx(styles['choice'], className)}>
       {({ isSelected }) => (
         <>
-          <span ref={scope as never} className={cx(styles['box'], styles['circle'])}>
+          <span ref={scope as never} className={cx('cr-choice outline radio', styles['box'], styles['circle'])}>
             <span className={cx(styles['dot'])} />
           </span>
           <span>{children}</span>

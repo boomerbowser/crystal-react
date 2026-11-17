@@ -28,18 +28,12 @@
    against the page. A 14px square with the fill and the rim and no shadow is
    invisible on a pale page. */
 /* Frost, like the surface it points from. A transient overlay is Frost (Crystal
-   R15e), so the arrow takes the Frost fill, blur and panel shadow. */
-.arrow[data-cr-overlay='frost'] {
-  background: var(--cr-frost-fill);
-  backdrop-filter: blur(var(--cr-frost-blur)) saturate(var(--cr-frost-saturation));
-  box-shadow: var(--cr-shadow-panel);
-}
-
-.arrow[data-cr-overlay='haze'] {
-  background: var(--cr-haze-fill);
-  border-color: var(--cr-edge);
-  box-shadow: var(--cr-shadow-content);
-}
+   R15e), so the arrow wears Crystal's `.cr-frost.flat` (2.7.0): the Frost fill,
+   blur and panel shadow, and no grain, which a 14px square cannot show. Recessed
+   into Haze, it wears `.cr-haze.overlay`, the recessed overlay's flat fill,
+   `--cr-edge` rim and content shadow. Both bring Crystal's fallbacks, so the
+   arrow matches its overlay "including under reduced effects". The square and
+   its 3px corners are the arrow's own. */
 
 /* React Aria positions the wrapper itself, with inline styles: `bottom: 100%`
    and a `left` that keeps the arrow over the trigger. Positioning it here as
@@ -62,16 +56,6 @@
 .arrow[data-placement='top'] { translate: 0 calc(#{$cr-overlay-arrow-size} / -2); border-block-start-color: transparent; border-inline-start-color: transparent; }
 .arrow[data-placement='right'] { translate: calc(#{$cr-overlay-arrow-size} / 2) 0; border-block-start-color: transparent; border-inline-end-color: transparent; }
 .arrow[data-placement='left'] { translate: calc(#{$cr-overlay-arrow-size} / -2) 0; border-block-end-color: transparent; border-inline-start-color: transparent; }
-
-:global([data-effects='opaque']) .arrow,
-:global([data-crystal-overlays][data-effects='opaque']) .arrow {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .arrow { background: var(--cr-surface); backdrop-filter: none; }
-}
 
 @media (forced-colors: active) {
   .wrap { display: none; }

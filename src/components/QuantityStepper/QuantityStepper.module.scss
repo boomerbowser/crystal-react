@@ -1,6 +1,5 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/field' as field;
-@use '../../styles/material' as material;
 
 /* "Resin shell with a Haze well" and "Pill". The field shell is already the
    first, so this adds the pill and the horizontal arrangement. */
@@ -8,7 +7,7 @@
 .label { @include field.label; }
 
 .shell {
-  @include field.shell;
+  /* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 
   /* A pill, because the catalogue makes this an action control. Half the
      target height keeps it a pill at every size. */

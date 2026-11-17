@@ -71,7 +71,7 @@ export function PageHeader({
       data-cr-state={condensed ? 'condensed' : 'at-rest'}
       className={cx(
         styles['header'],
-        isPlain ? undefined : styles['banded'],
+        isPlain ? undefined : cx('cr-frost flat', styles['banded']),
         condensed ? styles['condensed'] : undefined,
         className,
       )}

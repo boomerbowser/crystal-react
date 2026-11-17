@@ -112,7 +112,7 @@ export const CartItem = forwardRef<HTMLElement, CartItemProps>(function CartItem
       ref={merged as never}
       aria-label={nameText}
       {...(isUpdating ? { 'data-updating': '' } : {})}
-      className={cx(styles['item'], className)}
+      className={cx('cr-haze inset', styles['item'], className)}
     >
       {media ? <div aria-hidden="true" className={styles['media']}>{media}</div> : null}
 

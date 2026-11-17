@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 @use '../../charts/svg' as chart;
 
 /* ChartSurface. "Haze plot fill on the surrounding material", and the plot area
@@ -47,7 +46,7 @@
   position: relative;
   inline-size: 100%;
   border-radius: var(--cr-radius);
-  @include material.haze-fill;
+  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
 }
 
 .canvas {

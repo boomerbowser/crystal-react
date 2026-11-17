@@ -55,7 +55,7 @@ export const LoadingOverlay = forwardRef<HTMLDivElement, LoadingOverlayProps>(
           {children}
         </div>
         {loading ? (
-          <div className={styles['scrim']}>
+          <div className={cx('cr-mirage', styles['scrim'])}>
             <Loader label={label} size={size} hideLabel={hideLabel} />
           </div>
         ) : null}

@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* FloatingAction, SpeedDial and ActionBar, the surfaces that float above content.
  *
@@ -11,8 +10,10 @@
  */
 
 .floating {
-  /* A floating action is a button over whatever content scrolls beneath it, which is the case the fill is for. */
-  @include material.haze-fill;
+  /* A floating action is a `<button>`, so it is Crystal's Resin control: the
+     rim, the Resin fill and blur, the float shadow, the Haze reading pad over
+     whatever content scrolls beneath it, and Crystal's fallbacks. The circle
+     and the pill are its geometry. */
   position: fixed;
   inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
   inset-inline-end: max(var(--cr-space), env(safe-area-inset-right));
@@ -24,12 +25,8 @@
   min-inline-size: $cr-action-min-target;
   min-block-size: $cr-action-min-target;
   padding: 0;
-  border: 1px solid var(--cr-rim);
   border-radius: 50%;
-  background: var(--cr-resin-fill);
   color: var(--cr-text);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
   cursor: pointer;
 }
 
@@ -73,15 +70,6 @@
 
 .count { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
 
-:global([data-effects='opaque']) .floating {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .floating { background: var(--cr-surface); backdrop-filter: none; }
-}
-
 @media (forced-colors: active) {
-  .floating { background: ButtonFace; border-color: ButtonText; backdrop-filter: none; }
+  .floating { background: ButtonFace; border-color: ButtonText; }
 }

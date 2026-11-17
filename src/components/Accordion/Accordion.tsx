@@ -99,7 +99,7 @@ function Row({ item }: { item: AccordionItem }): ReactNode {
     <Disclosure
       id={item.id}
       {...(item.isDisabled === undefined ? {} : { isDisabled: item.isDisabled })}
-      className={cx(styles['row'])}
+      className={cx('cr-haze flat', styles['row'])}
     >
       {({ isExpanded }) => (
         <>

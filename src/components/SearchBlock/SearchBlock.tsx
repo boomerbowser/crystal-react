@@ -142,7 +142,7 @@ export function SearchBlock({
           className={cx(styles['field'])}
         >
           <Label className={cx(styles['label'])}>{label}</Label>
-          <FieldGroupShell isInvalid={false} className={cx(styles['shell'], 'cr-field-shell')}>
+          <FieldGroupShell isInvalid={false} className={cx(styles['shell'], 'cr-field-shell block')}>
             <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" className={cx(styles['glass'])}>
               <circle cx="11" cy="11" r="6" /><path d="M20 20l-4.5-4.5" />
             </svg>

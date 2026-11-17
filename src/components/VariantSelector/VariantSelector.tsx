@@ -69,7 +69,7 @@ export function VariantSelector({
           isDisabled={variant.unavailable !== undefined}
           className={cx(
             styles['variant'],
-            shape === 'swatch' ? styles['swatch'] : styles['pill'],
+            shape === 'swatch' ? cx('cr-haze flush', styles['swatch']) : cx('cr-haze flush', styles['pill']),
           )}
           /* The swatch's name, because its own content is a colour with no text.
              The pill needs none, because its content is its name. */

@@ -63,7 +63,7 @@ export const Notification = forwardRef<HTMLLIElement, NotificationProps>(functio
     <li
       {...props}
       ref={merged as never}
-      className={cx(styles['notification'], material === 'frost' ? 'cr-frost' : 'cr-haze', className)}
+      className={cx(styles['notification'], material === 'frost' ? 'cr-frost reading' : 'cr-haze', className)}
       data-status={status}
       data-unread={unread ? '' : undefined}
       aria-labelledby={`${id}-title`}

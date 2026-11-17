@@ -64,7 +64,7 @@ export function Menu<T extends object>({
     <Popover
       {...(triggerRef ? { triggerRef } : {})}
       ref={scope as never}
-      className={cx(styles['popover'], overlayMaterialClass(material))}
+      className={cx(styles['popover'], overlayMaterialClass(material), material === 'frost' && 'reading')}
       {...overlayMaterialProps(material)}
     >
       {({ isExiting }) => (

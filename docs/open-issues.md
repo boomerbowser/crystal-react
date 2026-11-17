@@ -3,55 +3,16 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**One entry is open**: R-28, ruled by Meridian on 16 November 2026, from the
-media and text work of
-2 October 2026 ([`proposals/2026-10-02-media-text-and-recipe-parity.md`](proposals/2026-10-02-media-text-and-recipe-parity.md)).
-Its tasks are Slice R in the implementation plan. R-30, the bundler question,
+**No entry is open.** R-28, the hand-written material, closed on 17 November
+2026: every directory wears Crystal's material, on core 2.8.0. The tasks left
+from the media and text work of 2 October 2026
+([`proposals/2026-10-02-media-text-and-recipe-parity.md`](proposals/2026-10-02-media-text-and-recipe-parity.md))
+are Slice R in the implementation plan. R-30, the bundler question,
 closed on 16 November 2026 by Meridian's ruling. R-27, the recipe copies,
 closed on 7 November 2026 with core 2.4.0 installed. R-29, the flaky virtualizer
 check, closed on 2 October 2026; the record is in `closed-issues.md`. R-26, the
 adoption of Crystal 2.3.0, closed on 29 September 2026 with 2.3.0 on the
 registry.
-
-## R-28 · Hand-written material across 29 directories
-
-**What.** `scripts/audit-recipes.mjs` finds 29 of 237 component directories
-painting `backdrop-filter` by hand (79 declarations) and 49 using this
-library's material mixins (`haze-fill` 25, `field.shell` 15, `frost` 8,
-`resin` 3), and 105 entries whose catalogue surface their own markup does not
-wear (some through a child, which the static reading cannot follow). The
-re-evaluation of 29 September asked for these to be sorted into surfaces to
-wear and compositions to propose (its recommendation 6). This change sorted
-four: the rich text surface now wears `.cr-field-shell`, and the audio player,
-the media controls and the video player wear or mirror their surfaces.
-
-**Measured on 8 November 2026 (R-A2).** `scripts/measure-surfaces.mjs` asks
-the built stories where each of those surfaces is worn: it opens the
-component's stories, looks for the surface's class, and presses the story's
-first trigger and looks again, across the document, for an overlay.
-`audit.json` now gives every entry its reason. Of 126 surfaces not in their
-component's own markup (108 entries): 13 are worn by a child, 5 once opened,
-33 are painted by this library's own mixin (R-A1's list), and 75 are
-unresolved. The unresolved are mostly Haze painted with
-`var(--cr-haze-fill)` and no mixin (43), and overlays whose trigger is not the
-story's first button (drawer, command palette, lightbox, tour). Each needs
-its component read and, where it should wear the class, a before-and-after
-measurement; R-A2 stays open for them.
-
-**Ruled by Meridian on 16 November 2026:** each directory wears its surface,
-and the hand-written material is not an add-on but a correction or enhancement
-Crystal's standard should include, merged and migrated fully. The plan and its
-measurement are Crystal's `proposals/2026-11-16-library-material-upstream.md`:
-of 95 distinct hand-painted elements, measured against a twin wearing the
-catalogue's surface, 4 duplicate a class they already wear, 8 match a class they
-do not wear, 17 are the `field.shell` mixin, which paints no material at all
-(the audit no longer counts it), 59 differ and become named variants in core
-2.7.0, and 7 are measured by hand. The library's rendering does not change: each
-element must measure identical after it wears its surface and variant.
-
-**Closing it.** Task R-A1: each directory either wears a surface, measured by
-`verify:materials`, or is filed upstream as a composition the vocabulary
-lacks; the audit's counts fall to what is filed.
 
 **R-17 and R-25 closed on 29 September 2026**, by Meridian's rulings of that day
 (Crystal's `proposals/2026-09-29-rulings.md`): the compiler-checked

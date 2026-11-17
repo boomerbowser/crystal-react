@@ -2785,7 +2785,7 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 
 **Materials**
 
-- [ ] **R-A1** (P1) Sort the hand-written material (re-evaluation rec. 6). Each of the 29 directories with hand-written backdrop-filter and the 49 using material mixins either wears a surface or is filed upstream as a composition the vocabulary lacks.
+- [x] **R-A1** (P1) Sort the hand-written material (re-evaluation rec. 6). Each of the 29 directories with hand-written backdrop-filter and the 49 using material mixins either wears a surface or is filed upstream as a composition the vocabulary lacks.
 - [ ] **R-A2** (P2) Confirm the 105 entries whose surface is not worn in their own markup. Each is either worn through a child (recorded) or fixed.
 
 **Audit**

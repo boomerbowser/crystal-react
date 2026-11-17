@@ -125,7 +125,7 @@ function Panel({ id, label, isOpen, children }: {
       aria-label={label}
       hidden={!isOpen && !leaving}
       {...(leaving ? { inert: true } : {})}
-      className={cx(styles['panel'])}
+      className={cx('cr-frost pane flat', styles['panel'])}
     >
       {children}
     </div>

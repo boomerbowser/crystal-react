@@ -1,19 +1,19 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 @use '../../styles/status';
 
 /* Full-bleed: the region's width and the region's corners. A radius here would
    make it look like a card floating inside its container, and a card is not
    pinned. */
 .banner {
-  @include material.haze-fill;
-
+  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
   display: flex;
   align-items: center;
   gap: $cr-spacing-sm;
   inline-size: 100%;
   padding: $cr-spacing-sm $cr-spacing-md;
   color: var(--cr-text);
+  /* A banner spans the page, so it is square. */
+  border-radius: 0;
 }
 
 @include status.status-pairs('.banner');
@@ -54,7 +54,7 @@
 .dismiss:hover { color: var(--cr-text); }
 
 @media (forced-colors: active) {
-  .banner { background: Canvas; border-block-end: 1px solid CanvasText; }
+  .banner { border: 0; border-block-end: 1px solid CanvasText; }
   .banner::after { background: CanvasText; }
   .dismiss { color: ButtonText; }
 }

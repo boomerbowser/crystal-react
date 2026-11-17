@@ -112,7 +112,7 @@ function Dial({
              unit, which for an angle or a gain is not enough to act on. */
           aria-valuetext={text}
           aria-disabled={isDisabled || undefined}
-          className={cx(styles['dial'])}
+          className={cx('cr-resin flat', styles['dial'])}
         >
           <span
             className={cx(styles['arc'])}

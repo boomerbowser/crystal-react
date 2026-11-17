@@ -163,7 +163,7 @@ function RowContent(
   return (
     <div
       ref={scope as never}
-      className={cx(styles['row'])}
+      className={cx('cr-haze flush', styles['row'])}
       /* The depth as a number, so one rule indents every level. CSS cannot read
          `aria-level`. */
       style={{ '--cr-tree-level': level - 1 } as CSSProperties}

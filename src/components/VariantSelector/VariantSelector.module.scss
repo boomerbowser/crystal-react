@@ -1,6 +1,5 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/option' as option;
-@use '../../styles/material' as material;
 
 /* Variants wrap: a size run is eight of them and a colour run can be twenty. */
 .group > * { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; }
@@ -31,8 +30,7 @@
  * ring around it. An outline at an offset is how Crystal draws focus, and an
  * option with one keeps looking focused after focus has left. */
 .swatch {
-  @include material.haze-fill(0);
-
+  /* The element wears Crystal's `.cr-haze.flush` (2.7.0): the Haze fill to its own edge, with Crystal's opaque, reduced-transparency and forced-colours routes. */
   position: relative;
   display: inline-flex;
   align-items: center;

@@ -79,6 +79,22 @@ const PAIRS = [
   },
 ];
 
+/* The material variants (Crystal 2.7.0 and 2.8.0, R-28). The preview shows one
+   specimen of each, marked `data-variant`, and the parity story renders the
+   same variant marked `data-material`. Each is compared on the element, and a
+   variant whose material is a paint layer is compared on that layer as well.
+   `any` takes the first match, because a Haze variant's element paints nothing
+   itself and the filter for a painted element would skip it. */
+const VARIANTS = [
+  ['haze-inset', '::before'], ['haze-flush', '::before'], ['haze-flat'], ['haze-flat-sunken'], ['haze-raised', '::before'],
+  ['frost-pane'], ['frost-flat'], ['frost-docked'], ['frost-sheet'], ['frost-reading', '::after'],
+  ['resin-flat'], ['resin-divider'], ['choice'], ['choice-outline'], ['choice-radio'], ['field-block'],
+];
+for (const [name, layer] of VARIANTS) {
+  PAIRS.push({ material: name, crystal: `[data-variant="${name}"]`, react: `[data-material="${name}"]`, any: true });
+  if (layer) PAIRS.push({ material: `${name} ${layer}`, crystal: `[data-variant="${name}"]`, react: `[data-material="${name}"]`, any: true, pseudo: layer, props: HAZE_LAYER });
+}
+
 /* Haze has no pair.
  *
  * Crystal's preview has no bare Haze specimen to compare against: every
@@ -120,6 +136,7 @@ const measure = async (url, ready, pairs, side) => {
          classes on bare wrappers that carry the name and no fill, and comparing
          against one of those reports a mismatched specimen as drift. */
       const element = [...document.querySelectorAll(pair[which])].find((candidate) => {
+        if (pair.any) return true;
         const style = getComputedStyle(candidate);
         return style.backgroundColor !== 'rgba(0, 0, 0, 0)' || style.backdropFilter !== 'none';
       });

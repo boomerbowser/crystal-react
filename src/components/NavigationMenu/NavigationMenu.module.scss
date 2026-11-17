@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* The bar inherits, and the panel is Frost, because a panel of links is a
    reading surface that appears in the page, not a control plane floating over
@@ -44,7 +43,7 @@
 }
 
 .panel {
-  @include material.frost;
+  /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
   position: absolute;
   inset-block-start: 100%;
   inset-inline-start: 0;
@@ -52,12 +51,8 @@
   min-inline-size: $cr-layout-sidebar-width;
   margin-block-start: $cr-spacing-2xs;
   padding: $cr-spacing-md;
-  border-radius: $cr-shape-content-radius;
 }
 
-@include material.opaque-fallback('.panel');
-
 @media (forced-colors: active) {
-  .panel { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
   .trigger[aria-expanded='true'] { outline: 2px solid Highlight; }
 }

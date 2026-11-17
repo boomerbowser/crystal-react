@@ -19,6 +19,95 @@ The live tracker is [`open-issues.md`](open-issues.md).
 ---
 
 
+## R-28 · Hand-written material across 29 directories
+
+**What.** `scripts/audit-recipes.mjs` finds 29 of 237 component directories
+painting `backdrop-filter` by hand (79 declarations) and 49 using this
+library's material mixins (`haze-fill` 25, `field.shell` 15, `frost` 8,
+`resin` 3), and 105 entries whose catalogue surface their own markup does not
+wear (some through a child, which the static reading cannot follow). The
+re-evaluation of 29 September asked for these to be sorted into surfaces to
+wear and compositions to propose (its recommendation 6). This change sorted
+four: the rich text surface now wears `.cr-field-shell`, and the audio player,
+the media controls and the video player wear or mirror their surfaces.
+
+**Measured on 8 November 2026 (R-A2).** `scripts/measure-surfaces.mjs` asks
+the built stories where each of those surfaces is worn: it opens the
+component's stories, looks for the surface's class, and presses the story's
+first trigger and looks again, across the document, for an overlay.
+`audit.json` now gives every entry its reason. Of 126 surfaces not in their
+component's own markup (108 entries): 13 are worn by a child, 5 once opened,
+33 are painted by this library's own mixin (R-A1's list), and 75 are
+unresolved. The unresolved are mostly Haze painted with
+`var(--cr-haze-fill)` and no mixin (43), and overlays whose trigger is not the
+story's first button (drawer, command palette, lightbox, tour). Each needs
+its component read and, where it should wear the class, a before-and-after
+measurement; R-A2 stays open for them.
+
+**Ruled by Meridian on 16 November 2026:** each directory wears its surface,
+and the hand-written material is not an add-on but a correction or enhancement
+Crystal's standard should include, merged and migrated fully. The plan and its
+measurement are Crystal's `proposals/2026-11-16-library-material-upstream.md`:
+of 95 distinct hand-painted elements, measured against a twin wearing the
+catalogue's surface, 4 duplicate a class they already wear, 8 match a class they
+do not wear, 17 are the `field.shell` mixin, which paints no material at all
+(the audit no longer counts it), 59 differ and become named variants in core
+2.7.0, and 7 are measured by hand. The library's rendering does not change: each
+element must measure identical after it wears its surface and variant.
+
+**Closing it.** Task R-A1: each directory either wears a surface, measured by
+`verify:materials`, or is filed upstream as a composition the vocabulary
+lacks; the audit's counts fall to what is filed.
+
+**Closed on 17 November 2026.** Every directory wears Crystal's material.
+`scripts/audit-recipes.mjs` reports no hand-written backdrop filter and no
+material mixin in any of 241 directories, `styles/_material.scss` is deleted,
+and `src/styles/handWrittenMaterial.test.ts` holds both counts at zero. (The
+audit had counted `backdrop-filter: none` as material: a fallback that turns
+diffusion off. Its pattern and the inventory's were corrected first, so the
+zero is not a lower bar.)
+
+What it took from Crystal, in order:
+
+- **Core 2.7.0**, the variants: Haze `.inset`, `.flush`, `.flat`,
+  `.flat.sunken`, `.raised`; Frost `.pane`, `.flat`, `.docked`, `.sheet`,
+  `.reading`; Resin `.flat`, `.divider`; `.cr-field-shell.block`. Where this
+  library's surface had drifted from the base recipe (Frost without grain, Resin
+  without sheen), the drift was published as the variant, by the ruling given
+  with phase 1. Two corrections came with it: Mirage gives way in opaque mode,
+  and the coat's opaque route stopped reaching `.cr-bare`, `.cr-nav-item` and
+  `.cr-drag-handle` (a white pill behind a quiet icon button, a drag handle with
+  no grip).
+- **Core 2.8.0**, the choice box as a class, `.cr-choice` with `.radio` and
+  `.outline`: React Aria draws the checkbox, radio and switch box on its own
+  element, which could not wear the element recipe. The native box gained the
+  opaque and reduced-transparency routes it had never had.
+
+The gate was a snapshot of every converted element's computed material, before
+and after, in light, dark, opaque, reduced transparency and forced colours
+(`scripts/snapshot-material.mjs`, 88 elements across both passes). Light and
+dark did not change, apart from layout-neutral `position: relative` and
+`isolation: isolate`. The fallback modes changed only where a component had
+lacked a route Crystal has. `verify:appearance` gained a row per variant (146
+checks) and `verify:materials` a pair per variant against the specimens in
+Crystal's playground (130 comparisons). Each change was made, measured, and
+corrected where it moved something: a radius the base surface brought, a 2px
+box-sizing difference on the choice box, Resin's optical rims on a resize
+handle's transparent hit target.
+
+Left, and recorded where they live:
+
+- **List's button rows** keep the coat's reading pad, which its link rows have
+  never had. The difference predates this work; the rows render as before
+  until it is ruled on.
+- **The stepper's 2px connector** keeps the Haze colour token: a line on a
+  pseudo-element, which cannot wear a class and has no fill to feather.
+- **R-A2**, confirming where the remaining catalogue surfaces are worn, stays a
+  task in the plan. Re-measured on 17 November 2026: 23 surfaces are worn by a
+  child and 9 once opened; 13 have no story and 28 were not found. Several of
+  the 28 are false negatives the measurement cannot yet see, such as a Haze
+  reading fill worn as `.cr-frost.reading`.
+
 ## R-30 · The built package needs a bundler to import core's JSON
 
 **What.** `dist/` imports `@crystal-ui/core/flat` and

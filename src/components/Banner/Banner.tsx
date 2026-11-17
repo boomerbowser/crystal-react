@@ -70,7 +70,7 @@ export const Banner = forwardRef<HTMLDivElement, BannerProps>(function Banner({
       ref={merged as never}
       role={urgent ? 'alert' : 'status'}
       data-status={status}
-      className={cx(styles['banner'], className)}
+      className={cx('cr-haze inset', styles['banner'], className)}
     >
       <span aria-hidden="true" className={styles['well']}>{STATUS_SYMBOL[status]}</span>
       <p className={styles['message']} id={`${id}-message`}>{children}</p>

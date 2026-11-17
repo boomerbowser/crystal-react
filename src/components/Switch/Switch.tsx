@@ -40,7 +40,7 @@ export const Switch = forwardRef<HTMLLabelElement, SwitchProps>(function Switch(
       {({ isSelected }) => (
         <>
           <SwitchMotion isSelected={isSelected} play={play} />
-          <span className={cx(styles['track'])}>
+          <span className={cx('cr-choice', styles['track'])}>
             <span className={cx(styles['thumb'])} />
           </span>
           <span>{children}</span>

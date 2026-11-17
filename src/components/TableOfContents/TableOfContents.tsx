@@ -55,7 +55,7 @@ export function TableOfContents({
   const base = entries.length ? Math.min(...entries.map((entry) => entry.level)) : 1;
 
   return (
-    <nav aria-label={label} className={cx(styles['toc'], className)}>
+    <nav aria-label={label} className={cx('cr-haze', styles['toc'], className)}>
       <ol className={cx(styles['list'])}>
         {entries.map((entry) => (
           <li key={entry.id}>

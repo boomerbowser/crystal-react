@@ -1437,6 +1437,21 @@ for (const [id, selector, what] of DISABLED) {
     ['bare', 'data-display-accordion--default', 'button[class*="_trigger_"]', 'cr-bare'],
     ['drag-handle', 'utilities-draghandle--default', 'button.cr-drag-handle', 'cr-bare cr-drag-handle'],
     ['native', 'inputs-text-and-choice--choice-family', 'select[class*="_native_"]', ''],
+    /* The material variants (core 2.7.0 and 2.8.0, R-28): one component for each,
+       wearing the variant in place of the rule it used to write by hand. */
+    ['haze inset', 'feedback-empty-state--truly-empty', '[class*="_empty_"]', 'cr-haze inset'],
+    ['haze flush', 'media-gallery--a-set', '[class*="_thumb_"]:not([aria-selected="true"])', 'cr-haze flush'],
+    ['haze flat', 'data-display-accordion--default', '[class*="_row_"]', 'cr-haze flat'],
+    ['haze flat sunken', 'data-display-image--default', '[class*="_image_"]', 'cr-haze flat sunken'],
+    ['haze raised', 'overlays-command-palette--palette', '[class*="_palette_"]', 'cr-haze raised', 'button'],
+    ['frost pane flat', 'navigation-rails-and-bars--rail', '[class*="_rail_"]', 'cr-frost pane flat'],
+    ['frost docked flat', 'application-shell--shell', '[class*="_appBar_"]', 'cr-frost docked flat'],
+    ['frost sheet flat', 'overlays-drawer--modal-focus', '[class*="_panel_"]', 'cr-frost sheet flat', 'button:has-text("Open the end drawer")'],
+    ['frost reading', 'feedback-toast--success', '[class*="_toast_"]', 'cr-frost reading'],
+    ['resin flat', 'inputs-choice-and-range--ranges', '[class*="_dial_"]', 'cr-resin flat'],
+    ['resin divider', 'application-shell--resizing', '[class*="_handle_"]', 'cr-resin divider'],
+    ['choice outline', 'inputs-choice-and-range--choices', '[class*="_choice_"]:not([data-selected]) [class*="_box_"]', 'cr-choice outline'],
+    ['field block', 'inputs-text-and-choice--text-family', '[class*="_shell_"].block', 'cr-field-shell block'],
   ];
   /* Differences that are decisions, each with where it is recorded. Anything not
      named here fails. */
@@ -1444,6 +1459,12 @@ for (const [id, selector, what] of DISABLED) {
     bare: {
       borderTopColor: 'a bare control that had `border: 0` keeps it (R-24 §3.2)',
       borderTopWidth: 'as above',
+    },
+    'resin divider': {
+      '::after': 'the handle\'s transparent 44px hit target, not a paint layer (R-28)',
+    },
+    'haze raised': {
+      borderTopColor: 'the palette\'s own `--cr-edge` boundary, outside the Haze recipe (R-28)',
     },
   };
   const PROPS = ['backgroundColor', 'backgroundImage', 'backdropFilter', 'borderTopColor', 'borderTopWidth', 'boxShadow'];

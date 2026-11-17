@@ -68,15 +68,17 @@
   inset-block-start: 50%;
   inline-size: $cr-slider-thumb-size;
   block-size: $cr-slider-thumb-size;
-  border: 1px solid var(--cr-rim);
+  /* The thumb wears Crystal's `.cr-resin.flat` (2.7.0): the Resin plane, its
+     rim, blur and float shadow, without the sheen, with Crystal's fallbacks. */
   border-radius: 50%;
-  background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
 }
 
-/* The target, not the picture. */
+/* The target, not the picture. `display` and `box-shadow` are restated
+   because this layer is Resin's `::after`, the optical rims, which `.flat`
+   hides; the target takes neither. */
 .thumb::after {
+  display: block;
+  box-shadow: none;
   content: '';
   position: absolute;
   inset: 50% auto auto 50%;
@@ -107,18 +109,8 @@
 
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; }
 
-:global([data-effects='opaque']) .thumb {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .thumb { background: var(--cr-surface); backdrop-filter: none; }
-}
-
 @media (forced-colors: active) {
   .track::before { background: Canvas; border: 1px solid CanvasText; }
   .fill { background: Highlight; }
-  .thumb { background: ButtonFace; border-color: ButtonText; backdrop-filter: none; }
   .thumb[data-focus-visible] { outline-color: Highlight; }
 }

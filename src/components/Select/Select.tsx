@@ -63,7 +63,7 @@ export function Select({
       <Label className={cx(styles['label'])}>{label}</Label>
       {/* The validity React Aria resolved, not the one the caller declared, so a
           server's rejection moves the field exactly as a local rule would. */}
-      <FieldButtonShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell', styles['trigger'])}>
+      <FieldButtonShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block', styles['trigger'])}>
         <SelectValue className={cx(styles['value'])}>
           {({ selectedText, isPlaceholder }) => (
             <span className={cx(isPlaceholder ? styles['placeholder'] : undefined)}>
@@ -119,7 +119,7 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(fun
   return (
     <div className={cx(styles['field'], className)}>
       <label htmlFor={id} className={cx(styles['label'])}>{label}</label>
-      <div className={cx(styles['shell'], 'cr-field-shell')} {...(invalid ? { 'data-invalid': true } : {})}>
+      <div className={cx(styles['shell'], 'cr-field-shell block')} {...(invalid ? { 'data-invalid': true } : {})}>
         {/* `appearance: auto` keeps the platform's own disclosure, and the
             trailing padding leaves room for it so nothing is drawn over it. */}
         <select

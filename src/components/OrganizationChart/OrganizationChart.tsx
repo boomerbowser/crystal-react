@@ -135,7 +135,7 @@ function NodeBox(
       ) : (
         <span aria-hidden="true" className={cx(styles['chevron'], styles['chevronEmpty'])} />
       )}
-      <div className={cx(styles['node'])}>
+      <div className={cx('cr-haze flush', styles['node'])}>
         {node.leading ? <span className={styles['leading']}>{node.leading}</span> : null}
         <span className={styles['names']}>
           <span className={styles['name']}>{node.name}</span>

@@ -13,7 +13,7 @@
    Crystal's 44px floor, so the well is as tall as every other field and as wide
    as it is tall. */
 .well {
-  @include field.shell;
+  /* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
   inline-size: field.$field-height;
   justify-content: center;
 }

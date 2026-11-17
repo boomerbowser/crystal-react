@@ -47,7 +47,7 @@ export function Mark({ className, children, arriving = false, ...props }: MarkPr
 function ArrivingCue(): React.JSX.Element {
   const [scope, play] = useMotion();
   return (
-    <span ref={scope as never} aria-hidden="true" className={cx(styles['cue'])}>
+    <span ref={scope as never} aria-hidden="true" className={cx('cr-haze flush', styles['cue'])}>
       <Arrival play={play} recipe="highlight" />
     </span>
   );

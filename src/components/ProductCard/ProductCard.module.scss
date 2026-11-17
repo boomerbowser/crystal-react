@@ -1,10 +1,8 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* "Haze content fill on the surrounding material; content radius." */
 .card {
-  @include material.haze-fill;
-
+  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
   position: relative;
   display: grid;
   grid-template-rows: auto 1fr auto;

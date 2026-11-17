@@ -58,7 +58,7 @@ export const ImageList = forwardRef<HTMLElement, ImageListProps>(function ImageL
           <>
             <Image src={item.src} alt={item.alt} ratio={ratio} className={styles['media']} />
             {item.caption === undefined ? null : (
-              <span className={styles['caption']}>{item.caption}</span>
+              <span className={cx('cr-haze flush', styles['caption'])}>{item.caption}</span>
             )}
           </>
         );

@@ -1,20 +1,18 @@
-@use '../material' as material;
 @use '../tokens' as *;
 
-/* Nothing here but the material. Radius and size are the specimen's own and are
-   not compared, because Crystal's preview and this story are different
-   compositions. */
+/* Nothing here but the material, which the specimens wear as Crystal's classes,
+   `.cr-frost` and `.cr-resin`, as every component in this library now does
+   (R-28). Radius and size are the specimen's own and are not compared, because
+   Crystal's preview and this story are different compositions. */
 
 .row { display: flex; gap: $cr-spacing-lg; align-items: center; padding: $cr-spacing-xl; }
 
 .frost {
-  @include material.frost;
   padding: $cr-spacing-lg;
   border-radius: calc(var(--cr-radius) + 6px); /* crystal-allow-literal: the specimen's own geometry, which this gate does not compare */
 }
 
 .resin {
-  @include material.resin;
   padding: $cr-spacing-md $cr-spacing-lg;
   border-radius: $cr-action-radius;
 }
@@ -30,3 +28,5 @@
   box-shadow: var(--cr-shadow-content);
   padding: $cr-spacing-lg;
 }
+
+.variant { padding: $cr-spacing-md $cr-spacing-lg; min-inline-size: calc(#{$cr-action-min-target} * 4); }

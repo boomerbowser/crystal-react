@@ -55,7 +55,12 @@ const cdp = await page.context().newCDPSession(page);
 const out = {};
 for (const t of targets) {
   const dir = 'src/components/' + t.dir + '/';
-  const mine = stories.filter((s) => (s.componentPath ?? s.importPath ?? '').replace('./', '').startsWith(dir));
+  /* A component shown only inside a grouped story is found by the story files
+     that import it, as `measure-material.mjs` finds them. */
+  const importRe = new RegExp("from '(\\.\\./" + t.dir + "/|\\./)" + t.dir + "\\.js'");
+  const importers = new Set([...new Set(stories.map((s) => s.importPath))].filter((file) => importRe.test(readFileSync(file, 'utf8'))));
+  const mine = [...stories.filter((s) => (s.componentPath ?? s.importPath ?? '').replace('./', '').startsWith(dir)), ...stories.filter((s) => importers.has(s.importPath))]
+    .filter((s, i, a) => a.findIndex((x) => x.id === s.id) === i).slice(0, 8);
   if (t.story) mine.unshift({ id: t.story });
   let found = false;
   for (const [mode, m] of Object.entries(MODES)) {

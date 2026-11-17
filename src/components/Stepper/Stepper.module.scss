@@ -22,7 +22,10 @@
 }
 
 /* The connector. It is drawn from each step to the next, never after the last,
-   because a line leading out of the final step says there is more. */
+   because a line leading out of the final step says there is more. It is a
+   2px line in the Haze colour on the step's own `::after`, not a surface: a
+   pseudo-element cannot wear a class, and a line has no fill to feather. So it
+   keeps the token (R-28). */
 .step:not(:last-child)::after {
   content: '';
   position: absolute;

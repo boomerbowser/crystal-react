@@ -16,21 +16,10 @@
   display: grid;
   place-items: center;
   border-radius: inherit;
-  background: var(--cr-mirage-fill);
-  backdrop-filter: blur(var(--cr-mirage-blur))
-    saturate(var(--cr-mirage-saturation))
-    brightness(var(--cr-mirage-brightness));
-}
-
-:global([data-effects='opaque']) .scrim {
-  background: var(--cr-mirage-fallback-fill);
-  backdrop-filter: none;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .scrim { background: var(--cr-mirage-fallback-fill); backdrop-filter: none; }
+  /* The element wears Crystal's `.cr-mirage`, with its opaque, reduced-transparency
+     and no-backdrop routes. */
 }
 
 @media (forced-colors: active) {
-  .scrim { background: Canvas; backdrop-filter: none; border: 1px solid CanvasText; }
+  .scrim { background: Canvas; border: 1px solid CanvasText; }
 }

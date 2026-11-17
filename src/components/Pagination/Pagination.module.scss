@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 .pagination {
   display: flex;
@@ -68,8 +67,7 @@
   cursor: not-allowed;
 }
 
-@include material.opaque-fallback('.page');
-@include material.opaque-fallback('.arrow');
+/* Opaque and reduced transparency are Crystal's routes for a `<button>`. */
 
 @media (forced-colors: active) {
   .page, .arrow {

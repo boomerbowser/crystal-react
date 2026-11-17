@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 @use '../../styles/overlay' as overlay;
 
 /* NavigationTree: Haze rows, and the current destination marked by weight.
@@ -35,8 +34,8 @@
 }
 
 .row {
-  @include material.haze-fill(0);
-
+  /* The row wears Crystal's `.cr-haze.flush` (2.7.0): the feathered Haze fill
+     to the row's edge, with Crystal's fallbacks. */
   position: relative;
   display: flex;
   align-items: center;
@@ -89,15 +88,8 @@
 
 .label { min-inline-size: 0; }
 
-:global([data-effects='opaque']) .row::before { background: var(--cr-surface); filter: none; }
-
-@media (prefers-reduced-transparency: reduce) {
-  .row::before { background: var(--cr-surface); filter: none; }
-}
-
 @media (forced-colors: active) {
   .row { background: Canvas; color: CanvasText; }
-  .row::before { display: none; }
   /* Selection is a Highlight ring, never a fill: Chromium's text backplate
      erases the words of a filled row. */
   .item[data-current] .row { background: Canvas; color: CanvasText; outline: 2px solid Highlight; }

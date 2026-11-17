@@ -78,7 +78,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
       {/* The field shell plays Crystal's field motion: \`field-focus\` as focus
           arrives, \`field-invalid\` and \`field-valid\` on the validity React Aria
           resolved. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
         {/* Decoration: hidden from assistive technology, and not pressable. */}
         <span className={cx(styles['leadingIcon'])} aria-hidden="true">{SearchIcon}</span>
         <Input

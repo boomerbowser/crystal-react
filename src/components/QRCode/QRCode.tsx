@@ -50,7 +50,7 @@ export function QRCode({
   const labelId = useId();
 
   return (
-    <div className={cx(styles['qrCode'], isExpired ? styles['expired'] : undefined, className)} {...props}>
+    <div className={cx('cr-haze flush', styles['qrCode'], isExpired ? styles['expired'] : undefined, className)} {...props}>
       <div role="img" aria-labelledby={labelId}>
         <QRCodeSVG
           value={value}

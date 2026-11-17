@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 
 /* "Plastic foundation with Frost panels." The foundation belongs to the page. A
    workspace inside a shell that paints Plastic would add a second foundation
@@ -14,19 +13,12 @@
 
 /* "Panels keep panel radius." */
 .pane {
-  @include material.frost;
-
+  /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
   min-inline-size: 0;
   min-block-size: 0;
-  border-radius: $cr-shape-content-radius;
 }
 
 /* Focus mode: the other panes are removed instead of shrunk. A pane squeezed
    to nothing is still in the tab order. */
 .focused { grid-auto-flow: row; }
 
-@include material.opaque-fallback('.pane');
-
-@media (forced-colors: active) {
-  .pane { border: 1px solid CanvasText; }
-}

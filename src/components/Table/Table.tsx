@@ -135,7 +135,7 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(function Table(
           {isEmpty || loading ? (
             <tr>
               <td colSpan={columns.length} className={styles['notice']}>
-                {loading ? <span aria-hidden="true" className={styles['placeholder']} /> : empty}
+                {loading ? <span aria-hidden="true" className={cx('cr-haze flat sunken', styles['placeholder'])} /> : empty}
               </td>
             </tr>
           ) : (

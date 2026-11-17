@@ -114,7 +114,7 @@ export function Slider({
               className={cx(styles['fill'])}
               style={{ '--cr-fill-size': `${state.getThumbPercent(0) * 100}%` } as React.CSSProperties}
             />
-            <SliderThumb className={cx(styles['thumb'])} {...(valueText ? { inputRef: input } : {})} />
+            <SliderThumb className={cx('cr-resin flat', styles['thumb'])} {...(valueText ? { inputRef: input } : {})} />
             {valueText ? <ValueText input={input} text={valueText(state.getThumbValue(0))} /> : null}
           </>
         )}
@@ -166,8 +166,8 @@ export function RangeSlider({
             />
             {/* Two names, so a reader moving the lower bound is not told the
                 upper one. */}
-            <SliderThumb index={0} aria-label={startLabel} className={cx(styles['thumb'])} />
-            <SliderThumb index={1} aria-label={endLabel} className={cx(styles['thumb'])} />
+            <SliderThumb index={0} aria-label={startLabel} className={cx('cr-resin flat', styles['thumb'])} />
+            <SliderThumb index={1} aria-label={endLabel} className={cx('cr-resin flat', styles['thumb'])} />
           </>
         )}
       </SliderTrack>

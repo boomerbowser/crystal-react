@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 @use '../../styles/overlay' as overlay;
 
 /* OrganizationChart: "Haze nodes on the surrounding material; connectors use
@@ -90,8 +89,7 @@ $chart-connector: 1px;
 .chevronEmpty { cursor: default; }
 
 .node {
-  @include material.haze-fill(0);
-
+  /* The element wears Crystal's `.cr-haze.flush` (2.7.0): the Haze fill to its own edge, with Crystal's opaque, reduced-transparency and forced-colours routes. */
   display: flex;
   align-items: center;
   gap: $cr-spacing-xs;
@@ -122,15 +120,7 @@ $chart-connector: 1px;
 
 .item[data-hovered] .node { background: var(--cr-label-fill); }
 
-:global([data-effects='opaque']) .node::before { background: var(--cr-surface); filter: none; }
-
-@media (prefers-reduced-transparency: reduce) {
-  .node::before { background: var(--cr-surface); filter: none; }
-}
-
 @media (forced-colors: active) {
-  .node { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
-  .node::before { display: none; }
   .row::before, .row::after { background: CanvasText; }
   /* Selection is a Highlight ring, never a fill. */
   .item[data-selected] .node { background: Canvas; color: CanvasText; outline: 2px solid Highlight; }

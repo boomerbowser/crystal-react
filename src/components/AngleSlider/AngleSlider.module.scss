@@ -12,14 +12,11 @@
 .row { display: flex; align-items: center; gap: var(--cr-space); }
 
 .dial {
-  position: relative;
+  /* The dial wears Crystal's `.cr-resin.flat` (2.7.0): the Resin plane, its rim,
+     blur and float shadow, without the sheen, with Crystal's fallbacks. */
   inline-size: calc(#{$cr-action-min-target} * 2);
   block-size: calc(#{$cr-action-min-target} * 2);
   border-radius: 50%;
-  border: 1px solid var(--cr-rim);
-  background: var(--cr-resin-fill);
-  box-shadow: var(--cr-shadow-float);
-  backdrop-filter: blur(var(--cr-resin-blur)) saturate(var(--cr-resin-saturation));
   touch-action: none;
   cursor: grab;
 }
@@ -82,13 +79,8 @@
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; }
 .field[data-disabled] .dial { cursor: not-allowed; }
 
-:global([data-effects='opaque']) .dial {
-  background: var(--cr-surface);
-  backdrop-filter: none;
-}
-
 @media (forced-colors: active) {
-  .dial { background: ButtonFace; border-color: ButtonText; backdrop-filter: none; }
+  .dial { border-color: ButtonText; }
   .arc { background: Highlight; }
   .thumb { background: ButtonFace; border-color: ButtonText; }
   .dial[data-focus-visible] { outline-color: Highlight; }

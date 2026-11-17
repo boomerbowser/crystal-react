@@ -99,7 +99,7 @@ export function Workspace({
           aria-label={pane.label}
           /* Focusable only as the target of the move above, never a tab stop. */
           tabIndex={-1}
-          className={cx(styles['pane'])}
+          className={cx('cr-frost pane flat', styles['pane'])}
         >
           {pane.children}
         </section>

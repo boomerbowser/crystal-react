@@ -1,16 +1,13 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 @use '../../styles/status';
 
 /* "Frost panel with Haze reading fill (R15e)." Like the toast, it is a transient
    panel over content, and Resin is for controls. */
 .notification {
-  /* The Frost panel is Crystal's `.cr-frost`, which the element wears. The Haze
-     reading fill under the text is the catalogue's "Frost panel with Haze
-     reading fill", and it stays: Frost has no pad of its own. It is on
-     `::after`, because `.cr-frost` paints its grain on `::before`. Inside a
-     pane the notification wears `.cr-haze`, which is its own reading fill. */
-  &:global(.cr-frost) { @include material.haze-fill($layer: '::after'); }
+  /* The Frost panel is Crystal's `.cr-frost.reading` (2.7.0), which the element
+     wears: the catalogue's "Frost panel with Haze reading fill", because Frost
+     has no pad of its own. Inside a pane the notification wears `.cr-haze`,
+     which is its own reading fill. */
 
   display: flex;
   align-items: flex-start;

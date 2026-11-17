@@ -87,7 +87,7 @@ export function PaymentMethod({
           key={method.value}
           value={method.value}
           isDisabled={method.unavailable !== undefined}
-          className={cx(styles['option'])}
+          className={cx('cr-haze flush', styles['option'])}
         >
           {method.mark ? (
             <span aria-hidden="true" className={styles['mark']}>{method.mark}</span>
@@ -101,7 +101,7 @@ export function PaymentMethod({
 
       {provider ? (
         <div className={styles['new']}>
-          <SelectedRadio value={newMethodValue} className={cx(styles['option'])}>
+          <SelectedRadio value={newMethodValue} className={cx('cr-haze flush', styles['option'])}>
             <span className={styles['name']}>{newMethodLabel}</span>
           </SelectedRadio>
           {/* Mounted only while it is chosen. A provider's element is an iframe

@@ -1,10 +1,8 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 
 /* "Content radius; centred within its region." */
 .empty {
-  @include material.haze-fill;
-
+  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
   display: flex;
   flex-direction: column;
   align-items: center;

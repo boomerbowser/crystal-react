@@ -12,7 +12,7 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-.shell { @include field.shell; }
+/* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 /* This button is both the trigger and the shell. It carries the shell's classes,
    which give it the shell's radius and fill, and `field.trigger` for its height,
    font and cursor. `field.control` must not be used here. Its
@@ -88,9 +88,6 @@
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
 .field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-
-@media (prefers-reduced-transparency: reduce) {
-}
 
 @media (forced-colors: active) {
   .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }

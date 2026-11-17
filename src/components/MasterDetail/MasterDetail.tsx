@@ -93,7 +93,7 @@ export function MasterDetail({
       {/* Stacked, one pane is displayed at a time: a stack showing both would be
           the list and the detail in sequence, which is a page. */}
       {stacked && !nothingChosen ? null : (
-        <section aria-label={listLabel} className={cx(styles['list'])}>{list}</section>
+        <section aria-label={listLabel} className={cx('cr-frost pane flat', styles['list'])}>{list}</section>
       )}
       {stacked && nothingChosen ? null : (
         <section
@@ -103,7 +103,7 @@ export function MasterDetail({
              stop, because a keyboard stop on this region would announce
              nothing. */
           tabIndex={-1}
-          className={cx(styles['detail'])}
+          className={cx('cr-haze inset', styles['detail'])}
         >
           {nothingChosen ? emptySelection : children}
         </section>

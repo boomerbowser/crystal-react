@@ -39,7 +39,7 @@ export const CodeBlock = forwardRef<HTMLDivElement, CodeBlockProps>(function Cod
   const described = label ?? (language ? `${language} code` : 'Code sample');
 
   return (
-    <div {...props} ref={ref} className={cx(styles['codeBlock'], className)}>
+    <div {...props} ref={ref} className={cx('cr-haze flat sunken', styles['codeBlock'], className)}>
       <div className={cx(styles['head'])}>
         <span id={labelId}>{described}</span>
         {copyable ? <CopyButton value={children} label={`Copy the ${language ?? 'code'} sample`} /> : null}

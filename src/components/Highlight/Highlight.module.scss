@@ -30,14 +30,15 @@
 }
 
 /* The cue Crystal's `highlight` plays on: a feathered Haze wash under the text
-   of a mark that has just arrived, invisible at rest. */
+   of a mark that has just arrived, invisible at rest. It wears Crystal's
+   `.cr-haze.flush` (2.7.0), the feathered fill to its own edge, with Crystal's
+   fallbacks. */
 .cue {
   position: absolute;
   inset: 0;
   z-index: -1;
+  border: 0;
   border-radius: inherit;
-  background: var(--cr-haze-fill);
-  filter: blur(var(--cr-haze-feather));
   opacity: 0;
   pointer-events: none;
 }

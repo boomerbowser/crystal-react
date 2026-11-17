@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 @use '../../charts/svg' as chart;
 
 /* "Entries are pills and reach 44px." Both are Crystal's action geometry, so
@@ -45,7 +44,7 @@
   color: var(--cr-text);
   font: inherit;
   font-size: var(--cr-text-caption-size);
-  @include material.haze-fill;
+  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
 }
 
 .toggle {

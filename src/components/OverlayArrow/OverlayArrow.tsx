@@ -28,7 +28,7 @@ export function OverlayArrow({ className }: OverlayArrowProps): React.JSX.Elemen
        the wrapper where the document flow puts it, at the bottom corner of the
        surface. */
     <AriaOverlayArrow className={cx(styles['wrap'], className)}>
-      <div aria-hidden="true" {...overlayMaterialProps(material)} className={cx(styles['arrow'])} />
+      <div aria-hidden="true" {...overlayMaterialProps(material)} className={cx(material === 'frost' ? 'cr-frost flat' : 'cr-haze overlay', styles['arrow'])} />
     </AriaOverlayArrow>
   );
 }

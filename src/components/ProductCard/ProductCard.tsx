@@ -70,7 +70,7 @@ export const ProductCard = forwardRef<HTMLElement, ProductCardProps>(function Pr
   const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
   const Heading = `h${headingLevel}` as 'h3';
   return (
-    <article {...props} ref={merged as never} className={cx(styles['card'], className)}>
+    <article {...props} ref={merged as never} className={cx('cr-haze inset', styles['card'], className)}>
       {media ? (
         <div aria-hidden="true" className={styles['media']}>{media}</div>
       ) : null}

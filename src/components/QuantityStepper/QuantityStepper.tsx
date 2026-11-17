@@ -113,7 +113,7 @@ export const QuantityStepper = forwardRef<HTMLInputElement, QuantityStepperProps
         </Label>
         {/* A `Group` carries React Aria's field context to the three controls
             inside it. */}
-        <Group className={cx(styles['shell'], 'cr-field-shell')}>
+        <Group className={cx(styles['shell'], 'cr-field-shell block')}>
           {/* React Aria names these from the field's own label, so a page with
               four steppers does not have four buttons called "One more". */}
           <Button slot="decrement" aria-label={decrementLabel} className={cx(styles['step'], 'cr-bare')}>

@@ -1,9 +1,7 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 .summary {
-  @include material.haze-fill;
-
+  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
   display: grid;
   gap: $cr-spacing-sm;
   border-radius: $cr-shape-content-radius;

@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material' as material;
 
 /* Calendar: a Frost panel with Haze day cells.
  *
@@ -14,15 +13,12 @@
  */
 
 .panel {
-  @include material.frost;
-
+  /* The panel wears Crystal's `.cr-frost.flat` (2.7.0): Frost without grain, with Crystal's fallbacks. Its radius is the content radius plus the cell inset, so the cells nest. */
   display: inline-block;
   padding: var(--cr-space);
   border-radius: calc(var(--cr-radius) + #{$cr-spacing-2xs});
   color: var(--cr-text);
 }
-
-@include material.opaque-fallback('.panel');
 
 .header {
   display: flex;
@@ -100,7 +96,6 @@
 .cell[data-selected][data-selection-end] { border-start-start-radius: 0; border-end-start-radius: 0; }
 
 @media (forced-colors: active) {
-  .panel { background: Canvas; color: CanvasText; border: 1px solid CanvasText; backdrop-filter: none; }
   /* Selection is a Highlight ring, never a fill: Chromium's text backplate
      erases a filled day's number. */
   .cell[data-selected] { background: Canvas; color: CanvasText; outline: 2px solid Highlight; }

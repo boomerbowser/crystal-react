@@ -12,7 +12,8 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-.shell { @include field.shell; align-items: stretch; }
+/* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
+.shell { align-items: stretch; }
 /* Block padding so the first and last line clear the well's 12px corners. A
    single-line input centres its text away from them instead. */
 .control { @include field.control; padding-block: $cr-spacing-xs; resize: vertical; }

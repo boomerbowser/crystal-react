@@ -17,11 +17,11 @@
  * alone. That is why Crystal chose it.
  */
 @use 'tokens' as *;
-@use 'material';
 
+/* The element an option is drawn on wears Crystal's `.cr-haze.flush` (2.7.0):
+   the feathered Haze fill to its own edge, with Crystal's fallbacks. This mixin
+   is the option's geometry and its outline boundary. */
 @mixin option {
-  @include material.haze-fill(0);
-
   position: relative;
   display: flex;
   align-items: center;

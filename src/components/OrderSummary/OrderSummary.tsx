@@ -77,7 +77,7 @@ export const OrderSummary = forwardRef<HTMLElement, OrderSummaryProps>(
         ref={ref}
         aria-label={referenceText}
         data-state={state}
-        className={cx(styles['order'], className)}
+        className={cx('cr-haze inset', styles['order'], className)}
       >
         <header className={styles['header']}>
           <div className={styles['who']}>

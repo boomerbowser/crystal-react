@@ -1,5 +1,4 @@
 @use '../../styles/tokens' as *;
-@use '../../styles/material';
 
 /* The tour covers the page. `aria-modal` says the rest of the interface is not
    available, so the target must not be pressable through the spotlight. The
@@ -12,10 +11,8 @@
 .scrim {
   position: absolute;
   inset: 0;
-  background: var(--cr-mirage-fill);
-  backdrop-filter: blur(var(--cr-mirage-blur))
-    saturate(var(--cr-mirage-saturation))
-    brightness(var(--cr-mirage-brightness));
+  /* The element wears Crystal's `.cr-mirage`, with its opaque, reduced-transparency
+     and no-backdrop routes. */
 }
 
 /* The cut is a `clip-path: path(evenodd, …)` written by the component, because
@@ -32,19 +29,15 @@
 
 /* "Frost step panel over a Mirage scrim." */
 .panel {
-  @include material.frost;
-
+  /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
   translate: -50% -50%;
   inline-size: min(92vw, 40ch);
   padding: $cr-spacing-md;
-  border-radius: $cr-shape-content-radius;
   color: var(--cr-text);
 }
-
-@include material.opaque-fallback('.panel');
 
 /* Anchored under its target, once there is one to anchor to. */
 .panel[data-anchored] {
@@ -88,7 +81,6 @@
 .spacer { flex: 1; }
 
 @media (forced-colors: active) {
-  .scrim { background: Canvas; backdrop-filter: none; }
-  .panel { background: Canvas; border: 1px solid CanvasText; box-shadow: none; }
+  .scrim { background: Canvas; }
   .body, .position { color: CanvasText; }
 }

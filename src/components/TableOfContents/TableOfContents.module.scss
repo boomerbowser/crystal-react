@@ -8,22 +8,11 @@
  */
 
 .toc {
-  position: relative;
-  isolation: isolate;
+  /* The nav wears Crystal's `.cr-haze`, with its fallbacks. It has no border
+     box. */
   padding: var(--cr-space);
+  border: 0;
   border-radius: var(--cr-radius);
-}
-
-.toc::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  background: var(--cr-haze-fill);
-  filter: blur(var(--cr-haze-feather));
-  box-shadow: var(--cr-shadow-content);
 }
 
 .list {

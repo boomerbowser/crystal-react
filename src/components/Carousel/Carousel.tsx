@@ -69,7 +69,7 @@ function Slide(
   return (
     <li
       ref={scope as never}
-      className={styles['slide']}
+      className={cx('cr-haze flush', styles['slide'])}
       aria-label={slide.label}
       aria-setsize={count}
       aria-posinset={index + 1}

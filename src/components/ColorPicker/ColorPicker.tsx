@@ -112,7 +112,7 @@ export function ColorInput({
       {({ isInvalid }) => (
       <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
         <AriaColorSwatch {...(shown ? { color: shown } : {})} className={cx(styles['swatch'])} style={swatchColour} />
         <Input className={cx(styles['control'])} />
       </FieldGroupShell>
@@ -347,7 +347,7 @@ export function ColorPicker({
             the listener nothing new. */}
         <ColorField className={cx(styles['field'])} aria-label="Hexadecimal value">
           {({ isInvalid }) => (
-            <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell')}>
+            <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
               <AriaColorSwatch className={cx(styles['swatch'])} style={swatchColour} />
               <Input className={cx(styles['control'])} />
             </FieldGroupShell>

@@ -19,7 +19,7 @@ for (const [dir, entries] of byDir) {
     while ((m = re.exec(src))) {
       const body = m[2], sel = m[1].trim().split('\n').pop().trim();
       const hits = [];
-      if (/backdrop-filter\s*:\s*(?!none)/.test(body)) hits.push('backdrop-filter');
+      if (/backdrop-filter\s*:(?!\s*none\b)/.test(body)) hits.push('backdrop-filter');
       for (const x of body.matchAll(/@include\s+(?:material\.)?(resin|frost|haze-fill|stone|plastic|field\.shell)\b[^;]*/g)) hits.push(x[0].replace('@include ', ''));
       if (/var\(--cr-(haze|stone|frost|resin)-fill\)/.test(body) && !hits.length) hits.push('fill:' + body.match(/var\(--cr-(haze|stone|frost|resin)-fill\)/)[1]);
       if (hits.length) rules.push({ file, selector: sel.slice(0, 80), hits });

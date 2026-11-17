@@ -132,7 +132,9 @@ $table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewpor
   inline-size: 40%;
   block-size: 1em; /* crystal-allow-literal: one line box, relative to the text */
   border-radius: var(--cr-radius);
-  background: var(--cr-haze-fill);
+  /* Crystal's `.cr-haze.flat.sunken` (2.7.0): the fill on the element, and the
+     alternate surface where translucency gives way, so the placeholder stays
+     visible on the surface it waits on. */
 }
 
 @media (max-width: $cr-breakpoint-sm) {
