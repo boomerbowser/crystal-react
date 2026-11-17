@@ -1,0 +1,30 @@
+/* The site's own layout. Every value is a Crystal token; colour and material
+   come from the classes the pages wear. */
+html, body { margin: 0; }
+.site { min-block-size: 100dvh; display: flex; flex-direction: column; }
+.site-header {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--cr-space);
+  padding: var(--cr-space) var(--cr-layout-gutter, 16px);
+  border-block-end: 1px solid var(--cr-edge);
+}
+.site-name { color: var(--cr-text); font-weight: 800; text-decoration: none; font-size: 18px; }
+.site-main { flex: 1; inline-size: min(100% - 32px, 960px); margin-inline: auto; padding-block: 32px 64px; }
+.site-footer { padding: var(--cr-space); text-align: center; color: var(--cr-muted); font-size: var(--cr-text-caption-size); border-block-start: 1px solid var(--cr-edge); }
+.surface-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: var(--cr-space); padding: 0; list-style: none; }
+.surface-card { display: grid; gap: 6px; padding: 20px; color: var(--cr-text); text-decoration: none; }
+.surface-card strong { font-size: 16px; }
+.surface-card code, .surface-card span { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+.specimen-stage {
+  position: relative; isolation: isolate; overflow: hidden; display: flex; flex-wrap: wrap; gap: var(--cr-space);
+  padding: 28px; border-radius: var(--cr-radius); background: var(--cr-canvas); margin-block: var(--cr-space);
+}
+.specimen-stage::before {
+  content: ''; position: absolute; z-index: -1; inset: 30% -10% auto -10%; block-size: 140px; rotate: -12deg;
+  border-radius: 999px; background: linear-gradient(45deg, var(--cr-decorative), var(--cr-companion));
+}
+.specimen { display: grid; place-items: center; min-inline-size: 140px; min-block-size: 72px; padding: 16px 20px; font-size: var(--cr-text-caption-size); font-weight: 700; color: var(--cr-text); }
+.table-scroll { overflow-x: auto; }
+.recipe { inline-size: 100%; border-collapse: collapse; font-size: var(--cr-text-caption-size); }
+.recipe th, .recipe td { text-align: start; vertical-align: top; padding: 8px 10px; border-block-end: 1px solid var(--cr-edge); }
+.recipe td code { overflow-wrap: anywhere; }
+@media (forced-colors: active) { .specimen-stage::before { display: none; } }

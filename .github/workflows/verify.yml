@@ -118,6 +118,14 @@ jobs:
       # server-rendering consumer of the built package, and plain Node runs it.
       - run: pnpm run verify:bundled
 
+      # The documentation site (slice Q, R-Q1): Next.js server-renders every
+      # page against the built package, which is also the Next.js consumer
+      # check (§3.6). It fails on a class or surface the installed core does
+      # not publish before Next builds anything.
+      - run: pnpm --filter @crystal-ui/docs build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+
       - name: Generated files match their source
         run: |
           git diff --exit-code || {

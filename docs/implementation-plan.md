@@ -2716,15 +2716,15 @@ The site is built alongside the slices rather than after them. A component is
 not done until its page exists, which keeps the documentation from becoming a
 separate project nobody finishes.
 
-- [ ] `apps/docs` as a pnpm workspace package; Next.js App Router; library by `workspace:*`
+- [x] `apps/docs` as a pnpm workspace package; Next.js App Router; library by `workspace:*` (17 November 2026; static export, built in CI after the library)
 - [ ] Vercel project rooted at `apps/docs`, preview deployment per pull request
 - [ ] The demo registry: source read from disk at build time, so the code shown is the code that runs
 - [ ] The isolated demo frame, with the fourteen environment controls read from `.storybook/environment.ts`
 - [ ] Generated props tables from the TypeScript types
 - [ ] The component page template, fed from the catalogue, the surfaces and the manifest
-- [ ] One page per surface from `surface-recipes.json` (R-Q1)
+- [x] One page per surface from `surface-recipes.json` (R-Q1): the use, a specimen of every wearable selector, the recipe and its four fallbacks, each variant, and every catalogue entry made of it
 - [ ] MDX set in `Prose`
-- [ ] A build check that fails on a surface, recipe or catalogue entry the installed core does not publish
+- [x] A build check that fails on a surface, recipe or catalogue entry the installed core does not publish (`apps/docs/scripts/check-names.mjs`: every `cr-` class a page names, every surface id, every catalogue surface)
 - [ ] Guides: getting started per framework (webpack or esbuild where there is no bundler), theming, tokens, materials and surfaces, motion, accessibility, forms
 - [ ] Migration notes from Mantine, MUI, Ant Design and PrimeReact
 - [ ] Local search; `llms.txt` and the component manifest served from the site
@@ -2795,7 +2795,7 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 
 **Docs**
 
-- [ ] **R-Q1** (P2) Documentation site from the surfaces (re-evaluation rec. 7, Slice Q). One page per surface with its recipe values and every component made of it. Waits on C-R1.
+- [x] **R-Q1** (P2) Documentation site from the surfaces (re-evaluation rec. 7, Slice Q). One page per surface with its recipe values and every component made of it. Waits on C-R1.
 <!-- slice-r:end -->
 
 ---
