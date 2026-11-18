@@ -4,7 +4,7 @@ Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
 **One entry is open**: R-35, three surfaces this library draws differently from
-the catalogue, each waiting on a decision about which is right. R-28, the
+the catalogue, ruled on 18 November 2026 and waiting to be built. R-28, the
 hand-written material, closed on 17 November 2026: every directory wears
 Crystal's material, on core 2.8.0. The tasks left
 from the media and text work of 2 October 2026
@@ -41,10 +41,14 @@ catalogue's surface changes how three components look; correcting the
 catalogue publishes the alternate surface as what a chip and a transfer panel
 are.
 
-**Closing it.** A ruling on each. Then either the component wears the
-surface (measured before and after, as R-28 was) or core's catalogue entry is
-corrected (as 2.8.1 did for the timeline, the skeleton, the drop indicator and
-the data table block), and `measure-surfaces.mjs` reports no surface missing.
+**Ruled 18 November 2026: the library follows the catalogue in all three.**
+Chips wear `.cr-tag`. Transfer's panels wear Haze. List rows are flat for both
+elements: a `<button>` row loses the coat it kept, so it looks like an `<a>`
+row. Core is unchanged.
+
+**Closing it.** Each component wears its surface, measured before and after
+with the material gate as R-28 was, and `measure-surfaces.mjs` reports no
+surface missing.
 
 **R-17 and R-25 closed on 29 September 2026**, by Meridian's rulings of that day
 (Crystal's `proposals/2026-09-29-rulings.md`): the compiler-checked

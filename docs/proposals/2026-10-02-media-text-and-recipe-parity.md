@@ -210,8 +210,26 @@ on"). Three findings, fixed on 17 November 2026:
    caret is in it, now says "Checklist item, checked" or "not checked". Unit
    test.
 
-Not finished: the checkbox toggle was not tested with VoiceOver, and the three
-fixes have not yet been heard by it. R-T8 stays open for that pass.
+**The confirmation pass, 18 November 2026** (VoiceOver, Safari, keyboard
+only). Heard working: Escape out of the formatting toolbar; the caret entering
+a checklist item from other text ("Checklist item, checked"); moving from a
+checked item to an unchecked one and back. The checkbox itself reads as "Task
+item checkbox for Send the minutes, checked checkbox", and Control-Option-Space
+toggles it, with VoiceOver saying "unchecked". Two findings, not yet fixed:
+
+4. **Two items in a row with the same state are silent.** Moving from "Confirm
+   the venue" to "Ask finance for Q3 figures" (both not checked) says nothing,
+   because the live region is given the same words it already holds, and
+   that's no change to announce. The second item needs the words spoken
+   again, for example by clearing the region before it is set.
+5. **Toggling another item's checkbox announces the caret's item.** With the
+   caret in "Send the minutes" (not checked), toggling "Confirm the venue" to
+   checked made VoiceOver say "Checklist item, not checked". The editor took
+   focus back from the checkbox, counted that as gaining focus inside an item,
+   and spoke the state of the caret's item over VoiceOver's own "checked".
+   Focus returning from a checkbox inside the editor should not be announced.
+
+R-T8 stays open for findings 4 and 5.
 
 ## Appendix A: the fixtures
 
