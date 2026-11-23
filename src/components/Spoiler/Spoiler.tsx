@@ -13,10 +13,14 @@
  * collapsed", and pressing it reveals nothing the reader could not already
  * read. This is the reverse of a disclosure, and it is correct.
  */
-import { useId, useState, type HTMLAttributes, type ReactNode } from 'react';
+import {
+  useId, useLayoutEffect, useRef, useState,
+  type HTMLAttributes, type ReactNode, type TransitionEvent,
+} from 'react';
 import { Button } from '../Button/Button.js';
 import { cx } from '../../styles/cx.js';
-import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
+import { useCrystalTheme } from '../../theme/CrystalProvider.js';
+import { crystalTokens } from '../../theme/tokens.generated.js';
 import styles from './Spoiler.module.scss';
 
 export interface SpoilerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -31,6 +35,9 @@ export interface SpoilerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chil
   defaultExpanded?: boolean;
 }
 
+/** Crystal's duration for a spatial change, in milliseconds. */
+const REVEAL_MS = Number.parseFloat(crystalTokens['motion.duration.spatial']);
+
 export function Spoiler({
   /* A height in lines of the reader's own text. Eight ems is about five lines at
      Crystal's reading rhythm, and it follows the font if that changes. */
@@ -39,20 +46,52 @@ export function Spoiler({
 }: SpoilerProps): ReactNode {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const id = useId();
-  /* `accordion-in` plays as the rest of the content is revealed, never on the
-     render that shows it already expanded. Collapsing cuts the content back to
-     its preview without hiding it. `accordion-out` ends with the content gone,
-     so it does not fit collapsing and is not played. */
-  const reveal = useChangeMotion(expanded, entered('accordion-in'));
+  /* Opening grows the cut edge down until the rest of the text is showing,
+     and closing draws it back up. Nothing already visible moves or repaints:
+     the text that was showing stays put, and only the edge travels. (It used to
+     play `accordion-in`, a clip-and-fade over the whole block, which wiped the
+     visible text away and back in and testers found disorienting.)
+     The travel runs between two measured heights, because `max-block-size`
+     cannot transition to `none`. When it ends the limit is removed, so content
+     that changes size afterwards is never cut. */
+  const { resolveDuration } = useCrystalTheme();
+  const content = useRef<HTMLDivElement>(null);
+  const [limit, setLimit] = useState<string | undefined>(defaultExpanded ? undefined : maxHeight);
+  const first = useRef(true);
+  useLayoutEffect(() => {
+    if (first.current) { first.current = false; return undefined; }
+    const element = content.current;
+    if (!element) return undefined;
+    if (expanded) {
+      setLimit(`${element.scrollHeight}px`);
+      /* With motion off there is no transition to end, so the limit is removed
+         on a timer as well, one travel later. */
+      const timer = setTimeout(() => { setLimit(undefined); }, resolveDuration(REVEAL_MS) + 50);
+      return () => { clearTimeout(timer); };
+    } else {
+      /* From the open height to the preview: pin the current height first, so
+         there is a start for the transition, then set the end next frame. */
+      setLimit(`${element.scrollHeight}px`);
+      const frame = requestAnimationFrame(() => { setLimit(maxHeight); });
+      return () => { cancelAnimationFrame(frame); };
+    }
+    return undefined;
+  }, [expanded, maxHeight, resolveDuration]);
+
+  const settle = (event: TransitionEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget && expanded) setLimit(undefined);
+  };
 
   return (
     <div {...props} className={cx(styles['spoiler'], className)}>
       <div
-        ref={reveal as never}
+        ref={content}
         id={id}
         className={styles['content']}
         data-expanded={expanded ? '' : undefined}
-        style={expanded ? undefined : { maxBlockSize: maxHeight }}
+        data-settled={expanded && limit === undefined ? '' : undefined}
+        style={limit === undefined ? undefined : { maxBlockSize: limit }}
+        onTransitionEnd={settle}
       >
         {children}
       </div>

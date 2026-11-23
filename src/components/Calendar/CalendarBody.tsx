@@ -76,7 +76,10 @@ function MonthGrid({ children }: { children: React.ReactElement[] }): React.JSX.
   const state = useCalendarState();
   const month = state ? state.visibleRange.start.toString() : '';
   const scope = useChangeMotion(month, () => 'page-in');
-  return <CalendarGrid ref={scope as never} className={cx(styles['grid'])}>{children}</CalendarGrid>;
+  /* A range calendar draws its selection as one bar, so its cells square off
+     where they meet. A single date is a circle. */
+  const isRange = useContext(RangeCalendarStateContext) !== null;
+  return <CalendarGrid ref={scope as never} className={cx(styles['grid'], isRange && styles['range'])}>{children}</CalendarGrid>;
 }
 
 function Day({ date }: { date: CalendarDate }): React.JSX.Element {

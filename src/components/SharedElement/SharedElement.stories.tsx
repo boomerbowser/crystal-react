@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { SharedElement } from './SharedElement.js';
+import { SharedElement, SharedElementReveal } from './SharedElement.js';
+import { photos } from '../../../.storybook/fixtures/index.js';
 import { Button } from '../Button/Button.js';
 import { only } from '../../../.storybook/environment.js';
 
@@ -22,16 +23,26 @@ const meta = {
   args: { id: 'harbour' },
   render: function SharedElementStory(args) {
     const [open, setOpen] = useState(false);
-    const picture = { background: 'var(--cr-primary-soft)', borderRadius: 'var(--cr-radius)' };
+    /* A real photograph as the element's own background, so it scales with the
+       box without distorting: both sizes are 16:9. */
+    const picture = {
+      backgroundColor: 'var(--cr-primary-soft)',
+      backgroundImage: `url(${photos.mooredBoat})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      borderRadius: 'var(--cr-radius)',
+    };
     return (
       <div style={{ display: 'grid', gap: 16, justifyItems: 'start' }}>
         {open ? (
           <section aria-labelledby="harbour-heading" style={{ display: 'grid', gap: 12 }}>
-            <h2 id="harbour-heading" style={{ margin: 0 }}>Harbour at dusk</h2>
-            <SharedElement {...only(args)} style={{ ...picture, inlineSize: 480, blockSize: 270 }} />
+            <SharedElementReveal>
+              <h2 id="harbour-heading" style={{ margin: 0 }}>A moored boat on still water</h2>
+            </SharedElementReveal>
+            <SharedElement {...only(args)} role="img" aria-label="A moored boat on still water" style={{ ...picture, inlineSize: 480, blockSize: 270 }} />
           </section>
         ) : (
-          <SharedElement {...only(args)} style={{ ...picture, inlineSize: 120, blockSize: 68 }} />
+          <SharedElement {...only(args)} role="img" aria-label="A moored boat on still water" style={{ ...picture, inlineSize: 120, blockSize: 68 }} />
         )}
         <Button onPress={() => { setOpen((shown) => !shown); }}>{open ? 'Back to the grid' : 'Open the photograph'}</Button>
       </div>

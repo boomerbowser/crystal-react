@@ -4,7 +4,7 @@
    material the feed sits on; the feed itself paints nothing. */
 .feed {
   display: grid;
-  gap: $cr-spacing-md;
+  gap: var(--cr-block-gap, $cr-spacing-md);
   min-inline-size: 0;
 }
 

@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import { fn } from 'storybook/test';
-import { RichTextEditor } from './RichTextEditor.js';
+import { only } from '../../.storybook/environment.js';
+import { RichTextEditor, type RichTextEditorVariant } from './RichTextEditor.js';
+import { SegmentedControl } from '../components/SegmentedControl/SegmentedControl.js';
 
 /* A document that uses every part of the vocabulary, so a reviewer sees each
    block type and mark rendered by the surface the way `Prose` publishes it. */
@@ -84,4 +87,63 @@ export const ReadOnly: Story = { args: { isReadOnly: true, defaultValue: DOCUMEN
 
 export const Invalid: Story = {
   args: { isInvalid: true, errorMessage: 'The notes need a heading before they are sent.', defaultValue: '<p>Draft</p>' },
+};
+
+/* The same notes, written as Markdown. */
+const MARKDOWN = `## Harbour board, October
+
+Figures are due the **Wednesday** before the board meets. The *pilot boat* budget is ==under review==, and the old mooring fees are ~~£40~~ £45.
+
+### Before the meeting
+
+- [x] Send the minutes
+- [ ] Confirm the venue
+- [ ] Ask finance for Q3 figures
+
+> Shared with everyone on the harbour board.
+`;
+
+/** A page in the manner of Notion: no fixed toolbar. Type "/" at the start of
+ *  a line, or after a space, for a menu of blocks; keep typing to filter it
+ *  ("/head"), arrows to move, Enter to apply, Escape to leave the "/" as
+ *  typed. Select text for the selection toolbar. Written in Markdown. */
+export const Document: Story = {
+  args: { variant: 'document', contentFormat: 'markdown', defaultValue: MARKDOWN },
+};
+
+/** Markdown in and out: the document starts as Markdown, and every change is
+ *  shown below as the Markdown it would save. Underline, subscript and
+ *  superscript are not offered, because Markdown cannot write them. */
+export const MarkdownInAndOut: Story = {
+  args: { contentFormat: 'markdown', defaultValue: MARKDOWN },
+  render: function MarkdownStory(args) {
+    const [markdown, setMarkdown] = useState(MARKDOWN);
+    return (
+      <div style={{ display: 'grid', gap: 'var(--cr-spacing-md)' }}>
+        <RichTextEditor {...only(args)} onChange={(value) => { setMarkdown(value.markdown); }} />
+        <pre aria-label="The Markdown it saves" style={{ margin: 0, padding: 'var(--cr-spacing-md)', whiteSpace: 'pre-wrap', fontSize: 'var(--cr-text-caption-size)' }} className="cr-haze">{markdown}</pre>
+      </div>
+    );
+  },
+};
+
+/** The layout can change while the editor is open; the document stays as it
+ *  is. A product can offer the plain toolbar to some people and the page to
+ *  others, or switch when the editor is given more room. */
+export const SwitchingLayouts: Story = {
+  args: { contentFormat: 'markdown', defaultValue: MARKDOWN },
+  render: function SwitchingStory(args) {
+    const [variant, setVariant] = useState<RichTextEditorVariant>('toolbar');
+    return (
+      <div style={{ display: 'grid', gap: 'var(--cr-spacing-md)' }}>
+        <SegmentedControl
+          label="Layout"
+          value={variant}
+          onChange={(value) => { setVariant(value as RichTextEditorVariant); }}
+          options={[{ value: 'toolbar', label: 'Toolbar' }, { value: 'document', label: 'Document' }]}
+        />
+        <RichTextEditor {...only(args)} variant={variant} />
+      </div>
+    );
+  },
 };

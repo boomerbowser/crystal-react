@@ -5,7 +5,7 @@
    that painted a pad behind a table would put the table two materials deep. */
 .block {
   display: grid;
-  gap: $cr-spacing-md;
+  gap: var(--cr-block-gap, $cr-spacing-md);
   min-inline-size: 0;
 }
 

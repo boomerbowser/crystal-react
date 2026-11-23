@@ -101,3 +101,29 @@ export const WithTheBoundEditor: Story = {
     );
   },
 };
+
+/** The same block as a page in the manner of Notion, kept in Markdown: the
+ *  bound editor's `document` variant, with "/" for blocks and the selection
+ *  toolbar for marks, and `contentFormat="markdown"`, so what Save would store
+ *  is Markdown. */
+export const AsAMarkdownDocument: Story = {
+  render: function AsAMarkdownDocumentStory() {
+    const [state, setState] = useState<EditorState>('at-rest');
+    return (
+      <EditorBlock
+        label="Board notes"
+        state={state}
+        onSave={() => { setState('saving'); setTimeout(() => { setState('saved'); }, 600); }}
+        editor={(
+          <RichTextEditor
+            label="Board notes"
+            variant="document"
+            contentFormat="markdown"
+            defaultValue={'## Harbour board, October\n\nFigures are due the **Wednesday** before the board meets.\n\n- [ ] Confirm the venue\n'}
+            onChange={() => { setState('dirty'); }}
+          />
+        )}
+      />
+    );
+  },
+};

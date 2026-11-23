@@ -1,6 +1,17 @@
 @use '../../styles/tokens' as *;
 
+/* Loader. The shapes are drawn here, at `--loader-size` (set by the component
+   from the named size), in the primary ink over its soft tint. Each animation
+   runs at its own natural pace divided by the reader's motion-speed setting,
+   and stops in a resting state under reduced motion: `[data-still]` is the
+   provider's answer, which folds in a product's own setting, and the media
+   query covers the moment before hydration. */
+
 .loader {
+  --loader-ink: var(--cr-primary);
+  --loader-tint: var(--cr-primary-soft);
+  --loader-speed: var(--cr-motion-speed, 1);
+
   display: inline-flex;
   align-items: center;
   gap: $cr-spacing-xs;
@@ -15,4 +26,144 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* crystal.css gives every svg an icon's 20px box, fill and stroke; the marks
+   set their own. */
+.spinner, .infinity { display: block; flex: none; fill: none; stroke: none; }
+.spinner { inline-size: var(--loader-size); block-size: var(--loader-size); }
+.infinity { inline-size: calc(var(--loader-size) * 2); block-size: var(--loader-size); }
+
+/* Spinner: the whole mark turns while the arc lengthens and draws back, so its
+   leading end runs ahead and its tail catches up. The turn is Crystal's one
+   period for pending work, `motion.duration.flow`, infinite and linear, as
+   every continuous indicator's is (D-19). The circle is r=20, so its
+   length is about 126 units. */
+.spinner { animation: loader-turn calc(#{$cr-motion-duration-flow} / var(--loader-speed)) linear infinite; }
+.spinnerTrack { fill: none; stroke: var(--loader-tint); stroke-width: 4.5; }
+.spinnerArc {
+  fill: none;
+  stroke: var(--loader-ink);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1 200;
+  stroke-dashoffset: 0;
+  animation: loader-dash calc(1.4s / var(--loader-speed)) ease-in-out infinite;
+}
+
+@keyframes loader-turn { to { rotate: 360deg; } }
+@keyframes loader-dash {
+  0% { stroke-dasharray: 1 200; stroke-dashoffset: 0; }
+  50% { stroke-dasharray: 90 200; stroke-dashoffset: -35; }
+  100% { stroke-dasharray: 90 200; stroke-dashoffset: -124; }
+}
+
+/* Dots: three dots rising in turn. */
+.dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--loader-size) * 0.12);
+  inline-size: var(--loader-size);
+  block-size: var(--loader-size);
+}
+.dots > span {
+  inline-size: calc(var(--loader-size) * 0.22);
+  block-size: calc(var(--loader-size) * 0.22);
+  border-radius: 50%;
+  background: var(--loader-ink);
+  animation: loader-dot calc(1.2s / var(--loader-speed)) ease-in-out infinite;
+}
+.dots > span:nth-child(2) { animation-delay: calc(0.15s / var(--loader-speed)); }
+.dots > span:nth-child(3) { animation-delay: calc(0.3s / var(--loader-speed)); }
+@keyframes loader-dot {
+  0%, 60%, 100% { translate: 0 0; opacity: 0.35; }
+  30% { translate: 0 -40%; opacity: 1; }
+}
+
+/* Bars: four bars rising and falling in turn, like a level meter. */
+.bars {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--loader-size) * 0.1);
+  inline-size: var(--loader-size);
+  block-size: var(--loader-size);
+}
+.bars > span {
+  inline-size: calc(var(--loader-size) * 0.14);
+  block-size: 70%;
+  border-radius: 999px; /* crystal-allow-literal: a pill end, not a design radius */
+  background: var(--loader-ink);
+  transform-origin: center;
+  animation: loader-bar calc(1s / var(--loader-speed)) ease-in-out infinite;
+}
+.bars > span:nth-child(2) { animation-delay: calc(0.12s / var(--loader-speed)); }
+.bars > span:nth-child(3) { animation-delay: calc(0.24s / var(--loader-speed)); }
+.bars > span:nth-child(4) { animation-delay: calc(0.36s / var(--loader-speed)); }
+@keyframes loader-bar {
+  0%, 100% { scale: 1 0.35; opacity: 0.45; }
+  50% { scale: 1 1; opacity: 1; }
+}
+
+/* Pulse: a dot breathing out into a ring that fades. */
+.pulse {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--loader-size);
+  block-size: var(--loader-size);
+}
+.pulse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--loader-ink);
+  opacity: 0;
+  animation: loader-ripple calc(1.4s / var(--loader-speed)) cubic-bezier(0.22, 0.65, 0.22, 1) infinite;
+}
+.pulse > span {
+  inline-size: 45%;
+  block-size: 45%;
+  border-radius: 50%;
+  background: var(--loader-ink);
+}
+@keyframes loader-ripple {
+  0% { scale: 0.4; opacity: 0.5; }
+  100% { scale: 1; opacity: 0; }
+}
+
+/* Infinity: a run of ink travelling round the figure of eight. */
+.infinityTrack { fill: none; stroke: var(--loader-tint); stroke-width: 3.5; }
+.infinityRun {
+  fill: none;
+  stroke: var(--loader-ink);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-dasharray: 22 78;
+  animation: loader-run calc(1.6s / var(--loader-speed)) linear infinite;
+}
+@keyframes loader-run { to { stroke-dashoffset: -100; } }
+
+/* Still: the shapes rest in a legible state that reads as busy, not as a
+   measurement or a position. */
+@mixin still {
+  .spinner, .spinnerArc, .dots > span, .bars > span, .pulse::before, .infinityRun { animation: none; }
+  .spinnerArc { stroke-dasharray: none; opacity: 0.45; }
+  .dots > span { opacity: 0.6; }
+  .bars > span { scale: 1 0.6; opacity: 0.6; }
+  .bars > span:nth-child(2), .bars > span:nth-child(3) { scale: 1 1; }
+  .pulse::before { display: none; }
+  .infinityRun { stroke-dasharray: none; opacity: 0.45; }
+}
+
+.loader[data-still] { @include still; }
+@media (prefers-reduced-motion: reduce) {
+  .loader { @include still; }
+}
+
+@media (forced-colors: active) {
+  .loader { --loader-ink: CanvasText; --loader-tint: Canvas; }
+  .spinnerTrack, .infinityTrack { stroke: GrayText; }
 }

@@ -57,6 +57,9 @@ const LOCAL = new Set([
   /* The on-screen keyboard's height, measured from the visual viewport and set
      inline by the rich text surface while it has focus. */
   '--cr-keyboard-inset',
+  /* Spacing a product sets: on a carousel through its `gap` and `padding`
+     props, and on every block and commerce card through `BlockSpacing`. */
+  '--cr-carousel-gap', '--cr-carousel-padding', '--cr-block-gap', '--cr-block-padding',
 ]);
 
 /** Every stylesheet in the library, found rather than listed. */

@@ -1450,7 +1450,8 @@ for (const [id, selector, what] of DISABLED) {
     ['frost reading', 'feedback-toast--success', '[class*="_toast_"]', 'cr-frost reading'],
     ['resin flat', 'inputs-choice-and-range--ranges', '[class*="_dial_"]', 'cr-resin flat'],
     ['resin divider', 'application-shell--resizing', '[class*="_handle_"]', 'cr-resin divider'],
-    ['choice outline', 'inputs-choice-and-range--choices', '[class*="_choice_"]:not([data-selected]) [class*="_box_"]', 'cr-choice outline'],
+    /* Crystal 2.0's box, not the outlined platform box (R-36, 22 November 2026). */
+    ['choice', 'inputs-choice-and-range--choices', '[class*="_choice_"]:not([data-selected]) [class*="_box_"]', 'cr-choice'],
     ['field block', 'inputs-text-and-choice--text-family', '[class*="_shell_"].block', 'cr-field-shell block'],
   ];
   /* Differences that are decisions, each with where it is recorded. Anything not

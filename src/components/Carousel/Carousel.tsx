@@ -16,17 +16,22 @@
  * container with nothing focusable inside cannot be reached without a pointer.
  * `Code`'s blocks and `Table`'s shell follow the same contract.
  *
- * The movement between slides is Crystal's, and it is on the arriving slide,
- * not on the track. `carousel-next` and `carousel-previous` are a 3D swing-in,
- * so animating the track as well would move the same thing twice. The scroll
- * itself is instant for that reason.
+ * The movement between slides is the track gliding to the next slide, the same
+ * movement a swipe makes, so the controls and the hand move the slides the same
+ * way. It used to be an instant jump followed by a 3D swing-in on the arriving
+ * slide (`carousel-next`), which testers found juddery and disorienting: the
+ * content jumped, then turned. A reader who asks for reduced motion gets the
+ * jump alone.
+ *
+ * Spacing is the product's to set: `gap` between slides, `padding` inside each,
+ * from Crystal's spacing scale.
  */
 import {
   forwardRef, useCallback, useEffect, useRef, useState,
-  type HTMLAttributes, type ReactNode,
+  type CSSProperties, type HTMLAttributes, type ReactNode,
 } from 'react';
-import { useMotion } from '../../motion/useMotion.js';
 import { cx } from '../../styles/cx.js';
+import { spacingValue, type CrystalSpacing } from '../../styles/spacing.js';
 import styles from './Carousel.module.scss';
 
 export interface CarouselSlide {
@@ -44,31 +49,18 @@ export interface CarouselProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
   /** What the previous control says. */
   previousLabel?: string;
   nextLabel?: string;
+  /** Space between slides, from Crystal's scale. Defaults to `md`. */
+  gap?: CrystalSpacing;
+  /** Space inside each slide, from Crystal's scale. Defaults to `lg`. */
+  padding?: CrystalSpacing;
 }
 
-/** Which way the reader went, so the arriving slide plays the right recipe. */
-type Direction = 'next' | 'previous';
-
 function Slide(
-  { slide, isCurrent, direction, index, count }:
-  { slide: CarouselSlide; isCurrent: boolean; direction: Direction | null; index: number; count: number },
+  { slide, isCurrent, index, count }:
+  { slide: CarouselSlide; isCurrent: boolean; index: number; count: number },
 ): ReactNode {
-  const [scope, play] = useMotion();
-  const was = useRef(isCurrent);
-
-  useEffect(() => {
-    const arrived = isCurrent && !was.current;
-    was.current = isCurrent;
-    /* On arrival only, and only when somebody navigated: the slide that is
-       showing when the page loads has not arrived, and nothing moves at rest. */
-    if (arrived && direction !== null) {
-      void play(direction === 'next' ? 'carousel-next' : 'carousel-previous');
-    }
-  }, [isCurrent, direction, play]);
-
   return (
     <li
-      ref={scope as never}
       className={cx('cr-haze flush', styles['slide'])}
       aria-label={slide.label}
       aria-setsize={count}
@@ -80,32 +72,38 @@ function Slide(
   );
 }
 
+const prefersReducedMotion = (): boolean =>
+  typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carousel(
-  { slides, label, previousLabel = 'Previous slide', nextLabel = 'Next slide', className, ...props },
+  {
+    slides, label, previousLabel = 'Previous slide', nextLabel = 'Next slide',
+    gap, padding, className, style, ...props
+  },
   ref,
 ) {
   const track = useRef<HTMLUListElement>(null);
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState<Direction | null>(null);
 
   const count = slides.length;
   const atStart = index === 0;
   const atEnd = index >= count - 1;
 
-  const goTo = useCallback((next: number, how: Direction | null) => {
+  const goTo = useCallback((next: number) => {
     const clamped = Math.min(count - 1, Math.max(0, next));
-    setDirection(how);
     setIndex(clamped);
-    const element = track.current?.children[clamped];
-    /* `scrollIntoView` instead of arithmetic on `scrollLeft`: in a right-to-left
-       locale `scrollLeft` is negative in some engines and zero-at-the-right in
-       others, so arithmetic on it is wrong in one of them. Instant, because the
-       movement is the recipe's.
-     *
-     * Called optionally because jsdom, which has no layout to scroll, does not
-     * implement it. The index still changes, and that is what a unit test can
-     * see. */
-    element?.scrollIntoView?.({ behavior: 'auto', inline: 'start', block: 'nearest' });
+    const element = track.current;
+    const target = element?.children[clamped] as HTMLElement | undefined;
+    if (!element || !target) return;
+    /* The distance is measured on screen, between the slide's edge and the
+       track's, instead of in `scrollLeft` arithmetic: in a right-to-left locale
+       `scrollLeft` runs negative, and a visual distance is right in both
+       directions. `scrollBy` moves only the track, never the page around it,
+       which `scrollIntoView` would. jsdom has no layout, so it is optional. */
+    const delta = target.getBoundingClientRect().left - element.getBoundingClientRect().left
+      - (parseFloat(getComputedStyle(element).paddingInlineStart) || 0);
+    element.scrollBy?.({ left: delta, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   }, [count]);
 
   /* The reader can also swipe, so the index follows the scroll position as well
@@ -140,6 +138,11 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       aria-roledescription="carousel"
       aria-label={label}
       className={cx(styles['carousel'], className)}
+      style={{
+        ...(gap !== undefined ? { '--cr-carousel-gap': spacingValue(gap) } : {}),
+        ...(padding !== undefined ? { '--cr-carousel-padding': spacingValue(padding) } : {}),
+        ...style,
+      } as CSSProperties}
     >
       <ul
         ref={track}
@@ -154,7 +157,6 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
             index={position}
             count={count}
             isCurrent={position === index}
-            direction={direction}
           />
         ))}
       </ul>
@@ -164,7 +166,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
           type="button"
           className="cr-button"
           disabled={atStart}
-          onClick={() => { goTo(index - 1, 'previous'); }}
+          onClick={() => { goTo(index - 1); }}
         >
           <span aria-hidden="true">←</span>
           <span className={styles['stepLabel']}>{previousLabel}</span>
@@ -181,7 +183,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
                 className={cx(styles['indicator'], 'cr-bare')}
                 aria-label={slide.label}
                 aria-current={position === index ? 'true' : undefined}
-                onClick={() => { goTo(position, position > index ? 'next' : 'previous'); }}
+                onClick={() => { goTo(position); }}
               >
                 <span aria-hidden="true" className={styles['dot']} />
               </button>
@@ -193,7 +195,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
           type="button"
           className="cr-button"
           disabled={atEnd}
-          onClick={() => { goTo(index + 1, 'next'); }}
+          onClick={() => { goTo(index + 1); }}
         >
           <span className={styles['stepLabel']}>{nextLabel}</span>
           <span aria-hidden="true">→</span>

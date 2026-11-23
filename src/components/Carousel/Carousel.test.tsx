@@ -56,17 +56,22 @@ describe('Carousel', () => {
     expect(items[1]).toHaveAttribute('aria-setsize', '3');
   });
 
-  /* Nothing moves at rest: the slide showing when the page loads has not
-     arrived. Crystal's own note on the recipe is "explicit next/previous
-     navigation; never autoplay". */
-  it('plays nothing until somebody navigates', async () => {
+  /* The movement is the track's own scroll, not a recipe on the slide, so no
+     slide carries a motion and a slide never turns in place. */
+  it('moves the track and never animates a slide', async () => {
     const { container } = renderWithCrystal(<Carousel slides={slides} label="Crystal materials" />);
-    const first = container.querySelector('li');
-    expect(first?.dataset['crMotionName'] ?? first?.dataset['crMotionState']).toBeUndefined();
-
     await userEvent.click(screen.getByRole('button', { name: /Next slide/ }));
-    const second = [...container.querySelectorAll('li')][1];
-    expect(second?.dataset['crMotionName'] ?? second?.dataset['crMotionState']).toBeDefined();
+    for (const item of container.querySelectorAll('li')) {
+      expect(item.dataset['crMotionName'] ?? item.dataset['crMotionState']).toBeUndefined();
+    }
+    expect(screen.getByRole('button', { name: slides[1]!.label })).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('takes its spacing from the gap and padding props', () => {
+    renderWithCrystal(<Carousel slides={slides} label="Crystal materials" gap="xl" padding="none" />);
+    const group = screen.getByRole('group', { name: 'Crystal materials' });
+    expect(group.style.getPropertyValue('--cr-carousel-gap')).toBe('var(--cr-spacing-xl)');
+    expect(group.style.getPropertyValue('--cr-carousel-padding')).toBe('0');
   });
 
   it('has no accessibility violations', async () => {

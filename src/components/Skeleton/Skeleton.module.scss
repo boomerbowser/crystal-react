@@ -4,6 +4,16 @@
 
 .shapes { display: flex; flex-direction: column; gap: $cr-spacing-xs; }
 
+/* A placeholder written as plain elements, not `SkeletonBox`es, is still drawn
+   as boxes at whatever size it states. Left unstyled, a plain `div` is
+   transparent and the whole loading view shows nothing at all. */
+.shapes > :where(div, span):not([data-shape]) {
+  display: block;
+  min-block-size: calc(var(--cr-text-body-leading) * var(--cr-text-body-size));
+  border-radius: $cr-choice-box-radius;
+  background: var(--cr-surface-alt);
+}
+
 /* Visually hidden. The words are the announcement, not a caption. */
 .announcement {
   position: absolute;
@@ -25,8 +35,12 @@
   background: var(--cr-surface-alt);
 }
 
-.box[data-shape='text'] { block-size: var(--cr-text-body-leading); }
-.box[data-shape='title'] { block-size: var(--cr-text-heading-leading); }
+/* A line is as tall as a line of the text it stands for. The leading tokens are
+   unitless ratios (1.6), so they are multiplied by the size; used bare as a
+   length they are invalid, and every text and title placeholder was zero
+   pixels tall, which left loading views blank. */
+.box[data-shape='text'] { block-size: calc(var(--cr-text-body-leading) * var(--cr-text-body-size)); }
+.box[data-shape='title'] { block-size: calc(var(--cr-text-heading-leading) * var(--cr-text-heading-size)); }
 .box[data-shape='block'] { block-size: $cr-spacing-2xl; border-radius: $cr-shape-content-radius; }
 .box[data-shape='circle'] { inline-size: $cr-spacing-2xl; block-size: $cr-spacing-2xl; border-radius: 50%; }
 

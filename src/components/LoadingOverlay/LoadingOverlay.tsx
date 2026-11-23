@@ -55,9 +55,18 @@ export const LoadingOverlay = forwardRef<HTMLDivElement, LoadingOverlayProps>(
           {children}
         </div>
         {loading ? (
-          <div className={cx('cr-mirage', styles['scrim'])}>
-            <Loader label={label} size={size} hideLabel={hideLabel} />
-          </div>
+          <>
+            <div className={cx('cr-mirage', styles['scrim'])} />
+            {/* The loader sits on a Resin card, so it stands clear of the
+                wash. The card is the wash's sibling, not its child: a backdrop
+                filter inside another one sees only its parent's empty layer,
+                so a nested Resin would blur nothing and show its fill as grey. */}
+            <div className={styles['centre']}>
+              <div className={cx('cr-resin-haze', styles['card'])}>
+                <Loader label={label} size={size} hideLabel={hideLabel} />
+              </div>
+            </div>
+          </>
         ) : null}
       </div>
     );

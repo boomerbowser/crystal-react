@@ -46,6 +46,20 @@ describe('Alert', () => {
     expect(onDismiss).toHaveBeenCalledOnce();
   });
 
+  it('removes itself when dismissed, with or without a handler', async () => {
+    renderWithCrystal(<Alert title="Saved" dismissible />);
+    await userEvent.click(screen.getByRole('button', { name: 'Dismiss: Saved' }));
+    expect(screen.queryByRole('region', { name: 'Saved' })).toBeNull();
+  });
+
+  it('stays while a controlled alert is not dismissed', async () => {
+    const onDismiss = vi.fn();
+    renderWithCrystal(<Alert title="Saved" onDismiss={onDismiss} dismissed={false} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Dismiss: Saved' }));
+    expect(onDismiss).toHaveBeenCalledOnce();
+    expect(screen.getByRole('region', { name: 'Saved' })).toBeInTheDocument();
+  });
+
   it('has no dismiss control when nothing would happen', () => {
     renderWithCrystal(<Alert title="Saved" />);
     expect(screen.queryByRole('button')).toBeNull();

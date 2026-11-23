@@ -8,7 +8,7 @@
      query cannot style its own container. */
   container-type: inline-size;
   display: grid;
-  gap: $cr-spacing-lg;
+  gap: var(--cr-block-gap, $cr-spacing-lg);
   min-inline-size: 0;
 }
 

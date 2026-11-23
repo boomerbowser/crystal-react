@@ -1,20 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { crystalTokens } from '../../theme/tokens.generated.js';
 import { Caption } from './Caption.js';
+import { photos } from '../../../.storybook/fixtures/index.js';
 
-/* A drawn stand-in instead of a fetched photograph, because a story that
-   depends on a network image sometimes shows a broken image icon. */
+/* A real photograph from the story fixtures, served locally, so the caption is
+   judged against a picture, light sky and dark rock both, with no network.
+   The figure fills its column, as it would in an article, and the column here
+   is 560px wide. */
 const Media = () => (
-  <svg viewBox="0 0 480 280" role="img" aria-label="A harbour at first light" style={{ display: 'block', inlineSize: '100%' }}>
-    <defs>
-      <linearGradient id="cr-caption-sky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="var(--cr-primary)" />
-        <stop offset="100%" stopColor="var(--cr-surface-alt)" />
-      </linearGradient>
-    </defs>
-    <rect width="480" height="280" fill="url(#cr-caption-sky)" />
-    <circle cx="380" cy="80" r="34" fill="var(--cr-surface)" opacity="0.8" />
-  </svg>
+  <img
+    src={photos.rockyShore}
+    alt="A rocky shore at low tide"
+    width={560}
+    height={373}
+    style={{ display: 'block', inlineSize: '100%', blockSize: 'auto' }}
+  />
 );
 
 const meta = {
@@ -33,7 +33,8 @@ const meta = {
       },
     },
   },
-  args: { caption: 'Sunrise over the harbour, 5:40am', children: <Media /> },
+  args: { caption: 'Low tide on the east shore, 5:40am', children: <Media /> },
+  decorators: [(Story) => <div style={{ inlineSize: 'min(560px, 100%)' /* crystal-allow-literal: a story's column width */ }}><Story /></div>],
 } satisfies Meta<typeof Caption>;
 
 export default meta;

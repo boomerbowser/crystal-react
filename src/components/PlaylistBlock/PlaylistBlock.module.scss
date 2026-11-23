@@ -4,7 +4,7 @@
    nothing of its own. */
 .playlist {
   display: grid;
-  gap: $cr-spacing-xs;
+  gap: var(--cr-block-gap, $cr-spacing-xs);
   min-inline-size: 0;
   outline: none;
 }

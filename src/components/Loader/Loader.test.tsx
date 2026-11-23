@@ -35,6 +35,14 @@ describe('Loader', () => {
     expect(container.querySelector('svg')).toHaveAttribute('width', '40');
   });
 
+  it('draws the shape it was asked for', () => {
+    const { container, rerender } = renderWithCrystal(<Loader label="Loading" />);
+    expect(container.querySelector('[role=status]')).toHaveAttribute('data-variant', 'spinner');
+    rerender(<Loader label="Loading" variant="dots" />);
+    expect(container.querySelector('[role=status]')).toHaveAttribute('data-variant', 'dots');
+    expect(container.querySelectorAll('[aria-hidden=true] > span')).toHaveLength(3);
+  });
+
   it('has no axe violations', async () => {
     const { container } = renderWithCrystal(<Loader label="Loading invoices" />);
     await expectNoAxeViolations(container);

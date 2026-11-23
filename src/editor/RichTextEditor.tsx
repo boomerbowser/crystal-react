@@ -36,8 +36,19 @@
  *   - Touch: the surface puts the toolbar below the text and above the
  *     on-screen keyboard; indent, outdent, undo and redo are on it because a
  *     phone keyboard has none of their keys.
- *   - `name` writes the document as HTML to a hidden input, so the editor
- *     submits with its form like any other field.
+ *   - `name` writes the document to a hidden input, as HTML or as Markdown,
+ *     so the editor submits with its form like any other field.
+ *   - Markdown, optionally (`contentFormat="markdown"`): the starting document
+ *     is read as Markdown, every change reports it as Markdown as well as HTML,
+ *     and the form submits Markdown. Underline, subscript and superscript have
+ *     no Markdown, so a Markdown editor leaves them out unless `formats` asks
+ *     for them by name.
+ *   - Two layouts (`variant`). `toolbar` is the field with its formatting
+ *     toolbar. `document` is a page in the manner of Notion: no fixed toolbar;
+ *     "/" opens a menu of block types under the caret (`SlashCommands.tsx`),
+ *     selecting text brings up the selection toolbar, and an empty line says
+ *     what to do. The variant can change while the editor is open, and the
+ *     document stays as it is.
  */
 import {
   forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState,
@@ -54,6 +65,10 @@ import { Highlight } from '@tiptap/extension-highlight';
 import { Subscript } from '@tiptap/extension-subscript';
 import { Superscript } from '@tiptap/extension-superscript';
 import { Placeholder } from '@tiptap/extensions';
+import { Markdown } from '@tiptap/markdown';
+import {
+  SLASH_COMMANDS, SlashMenu, createSlashStore, slashCommandsExtension,
+} from './SlashCommands.js';
 import { RichTextSurface } from '../components/RichTextSurface/RichTextSurface.js';
 import {
   BLOCK_TYPES, HISTORY, LISTS, MARKS, STRUCTURE, displayShortcut,
@@ -70,9 +85,15 @@ import styles from './RichTextEditor.module.scss';
 
 export interface RichTextEditorValue {
   html: string;
+  /** The document as Markdown. Formats Markdown cannot write (underline,
+   *  subscript, superscript) are left as plain text. */
+  markdown: string;
   json: ReturnType<Editor['getJSON']>;
   text: string;
 }
+
+/** How the editor is laid out. */
+export type RichTextEditorVariant = 'toolbar' | 'document';
 
 export interface RichTextEditorProps {
   /** The field's visible label. */
@@ -81,9 +102,24 @@ export interface RichTextEditorProps {
   errorMessage?: ReactNode;
   isInvalid?: boolean;
   isReadOnly?: boolean;
-  /** The document to start from: HTML, or TipTap JSON. Uncontrolled. */
+  /** The document to start from: HTML, Markdown (with `contentFormat="markdown"`)
+   *  or TipTap JSON. Uncontrolled. */
   defaultValue?: Content;
-  /** Called after every change, with the document in three forms. */
+  /**
+   * The format the document is written in: what `defaultValue` is read as and
+   * what `name` submits. `markdown` needs `@tiptap/markdown`. HTML by default.
+   */
+  contentFormat?: 'html' | 'markdown';
+  /**
+   * `toolbar`, the field with its formatting toolbar (the default), or
+   * `document`, a page with no fixed toolbar where "/" opens a block menu and
+   * selected text brings up the selection toolbar.
+   */
+  variant?: RichTextEditorVariant;
+  /** Whether "/" opens the block menu. On in the `document` variant, off in
+   *  `toolbar`, unless set. Needs `@tiptap/suggestion`. */
+  slashCommands?: boolean;
+  /** Called after every change, with the document in four forms. */
   onChange?: (value: RichTextEditorValue) => void;
   /** Submits the document as HTML under this name, like any other field. */
   name?: string;
@@ -118,6 +154,9 @@ function blockTypeOf(editor: Editor): BlockType {
   if (editor.isActive('blockquote')) return 'blockquote';
   return 'paragraph';
 }
+
+/* The marks Markdown has no syntax for. */
+const NOT_MARKDOWN = new Set<FormatId>(['underline', 'subscript', 'superscript']);
 
 const MARK_NAME: Record<string, string> = {
   bold: 'bold', italic: 'italic', underline: 'underline', strike: 'strike', code: 'code',
@@ -241,11 +280,19 @@ function LinkControl({ editor, isActive, isOpen, onOpenChange }: {
 export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorProps>(function RichTextEditor({
   label, description, errorMessage, isInvalid, isReadOnly = false, defaultValue = '', onChange, name,
   placeholder, formats, selectionToolbar = true, toolbarPlacement = 'auto', extensions = [],
-  autoFocus = false, className,
+  autoFocus = false, className, contentFormat = 'html', variant = 'toolbar', slashCommands,
 }, ref): ReactNode {
   const offered = useMemo(() => new Set<FormatId>(formats ?? [
     ...BLOCK_TYPES, ...MARKS, ...LISTS, ...STRUCTURE, ...HISTORY,
-  ].map((format) => format.id)), [formats]);
+  ].map((format) => format.id).filter((id) => contentFormat !== 'markdown' || !NOT_MARKDOWN.has(id))), [formats, contentFormat]);
+
+  /* Read by the engine's extensions at each keystroke, so the variant and the
+     slash menu can change while the editor is open. */
+  const isDocument = variant === 'document';
+  const slashOn = slashCommands ?? isDocument;
+  const live = useRef({ isDocument, slashOn, placeholder, offered });
+  live.current = { isDocument, slashOn, placeholder, offered };
+  const [slash] = useState(() => createSlashStore(() => live.current.slashOn));
   const offer = (list: readonly FormatDefinition[]): FormatDefinition[] => list.filter((format) => offered.has(format.id));
 
   const [html, setHtml] = useState('');
@@ -272,10 +319,22 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       Highlight,
       Subscript,
       Superscript,
-      Placeholder.configure({ placeholder: placeholder ?? '' }),
+      Placeholder.configure({
+        /* In a document, every empty line the caret is on says how to make
+           it something else, and an empty heading says which heading it is. */
+        placeholder: ({ editor: current, node }) => {
+          const { isDocument: asDocument, placeholder: prompt } = live.current;
+          if (node.type.name === 'heading') return asDocument ? `Heading ${String(node.attrs['level'])}` : '';
+          if (!asDocument) return prompt ?? '';
+          return current.isEmpty && prompt ? prompt : 'Write, or type \u201c/\u201d for blocks';
+        },
+      }),
+      Markdown,
+      slashCommandsExtension(slash, () => SLASH_COMMANDS.filter((command) => !command.format || live.current.offered.has(command.format))),
       ...extensions,
     ],
     content: defaultValue,
+    contentType: contentFormat === 'markdown' ? 'markdown' : 'html',
     editable: !isReadOnly,
     autofocus: autoFocus,
     /* Rendered on the client after mount, so the server and the first client
@@ -307,8 +366,10 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       },
     },
     onUpdate: ({ editor: current, transaction }) => {
-      const value = { html: current.getHTML(), json: current.getJSON(), text: current.getText() };
-      setHtml(value.html);
+      const value = {
+        html: current.getHTML(), markdown: current.getMarkdown(), json: current.getJSON(), text: current.getText(),
+      };
+      setHtml(contentFormat === 'markdown' ? value.markdown : value.html);
       /* TipTap also emits an update when editability is set, which happens on
          mount, with a transaction that changes nothing. Reporting it made
          `onChange` say the document was edited before anyone typed, so a
@@ -319,7 +380,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
     onTransaction: ({ transaction }) => {
       if (transaction.docChanged || transaction.storedMarksSet) formatChanged.current = true;
     },
-    onCreate: ({ editor: current }) => setHtml(current.getHTML()),
+    onCreate: ({ editor: current }) => setHtml(contentFormat === 'markdown' ? current.getMarkdown() : current.getHTML()),
   });
 
   useImperativeHandle(ref, () => ({ editor }), [editor]);
@@ -409,7 +470,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
   const structure = offer(STRUCTURE);
   const history = offer(HISTORY);
 
-  const toolbar = isReadOnly ? undefined : (
+  const toolbar = isReadOnly || isDocument ? undefined : (
     <>
       {blockTypes.length > 1 ? (
         <MenuTrigger>
@@ -507,7 +568,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- the keys belong to the toolbar inside; this only returns focus from it
-    <div className={cx(styles['editor'], className)} onKeyDown={leaveToolbar}>
+    <div className={cx(styles['editor'], className)} data-variant={variant} onKeyDown={leaveToolbar}>
       <RichTextSurface
         label={label}
         {...(description ? { description } : {})}
@@ -556,6 +617,8 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
           </div>
         </BubbleMenu>
       ) : null}
+
+      {!isReadOnly ? <SlashMenu store={slash} editor={editor} /> : null}
 
       {name ? <input type="hidden" name={name} value={html} /> : null}
       <VisuallyHidden role="status" aria-live="polite">{said}</VisuallyHidden>

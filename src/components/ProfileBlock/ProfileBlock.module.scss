@@ -4,8 +4,8 @@
    worn as `.cr-haze`, on whatever the page gives it. */
 .profile {
   display: grid;
-  gap: $cr-spacing-md;
-  padding: var(--cr-space);
+  gap: var(--cr-block-gap, $cr-spacing-md);
+  padding: var(--cr-block-padding, var(--cr-space));
   border-radius: var(--cr-radius);
   min-inline-size: 0;
 }

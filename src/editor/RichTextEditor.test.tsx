@@ -217,4 +217,66 @@ describe('RichTextEditor', () => {
     await new Promise((resolve) => { setTimeout(resolve, 50); });
     expect(changes).toEqual([]);
   });
+
+  it('reads and writes Markdown when asked to', async () => {
+    const changes: string[] = [];
+    const { editor } = await mount({
+      contentFormat: 'markdown',
+      defaultValue: '## Minutes\n\n- [x] Sent\n',
+      onChange: (value) => { changes.push(value.markdown); },
+    });
+    expect(editor().getHTML()).toContain('<h2>Minutes</h2>');
+    expect(editor().getHTML()).toContain('data-checked="true"');
+    act(() => { editor().chain().focus('end').insertContent(' today').run(); });
+    expect(changes.at(-1)).toContain('## Minutes');
+    expect(changes.at(-1)).toContain('- [x] Sent today');
+  });
+
+  /* Markdown has no underline, subscript or superscript, so a Markdown editor
+     does not offer what it could not save. */
+  it('offers only what Markdown can write', async () => {
+    await mount({ contentFormat: 'markdown', defaultValue: 'Harbour notes' });
+    expect(screen.getByRole('button', { name: 'Bold' })).toBeInTheDocument();
+    for (const name of ['Underline', 'Subscript', 'Superscript']) {
+      expect(screen.queryByRole('button', { name })).toBeNull();
+    }
+  });
+
+  it('submits Markdown when the document is Markdown', async () => {
+    const { container } = await mount({ contentFormat: 'markdown', defaultValue: '**Harbour** notes', name: 'notes' });
+    await waitFor(() => {
+      expect(container.querySelector<HTMLInputElement>('input[name="notes"]')?.value).toBe('**Harbour** notes');
+    });
+  });
+
+  /* The document variant has no fixed toolbar: "/" is how a block changes. */
+  it('lays out as a page with no toolbar in the document variant', async () => {
+    const ref = createRef<RichTextEditorHandle>();
+    renderWithCrystal(<RichTextEditor ref={ref} label="Notes" variant="document" defaultValue="<p>Harbour notes</p>" />);
+    await waitFor(() => expect(ref.current?.editor).toBeTruthy());
+    expect(screen.queryByRole('toolbar', { name: 'Formatting for Notes' })).toBeNull();
+  });
+
+  it('turns a line into a heading from the slash menu', async () => {
+    const ref = createRef<RichTextEditorHandle>();
+    renderWithCrystal(<RichTextEditor ref={ref} label="Notes" variant="document" defaultValue="<p></p>" />);
+    await waitFor(() => expect(ref.current?.editor).toBeTruthy());
+    const editor = ref.current!.editor!;
+    act(() => { (editor.view.dom as HTMLElement).focus(); editor.commands.focus('end'); });
+    act(() => { editor.commands.insertContent('/sub'); });
+    const option = await screen.findByRole('option', { name: 'Subheading' });
+    expect(option).toHaveAttribute('aria-selected', 'true');
+    expect(editor.view.dom).toHaveAttribute('aria-activedescendant', option.id);
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => { expect(editor.getHTML()).toMatch(/^<h3><\/h3>/); });
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
+
+  it('leaves a slash in the toolbar variant as a slash', async () => {
+    const { editor } = await mount({ defaultValue: '<p></p>' });
+    act(() => { editor().commands.focus('end'); editor().commands.insertContent('/head'); });
+    await new Promise((resolve) => { setTimeout(resolve, 30); });
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
 });
+

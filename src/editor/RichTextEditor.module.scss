@@ -70,3 +70,69 @@
 @media (forced-colors: active) {
   .content :global(.ProseMirror-gapcursor)::after { border-block-start-color: CanvasText; }
 }
+
+/* The prompt on an empty line, from TipTap's placeholder extension, which marks
+   the line `is-empty` and writes the words to `data-placeholder`. It is a
+   picture of a prompt, muted and not selectable; the field's label and
+   description are what a screen reader is given. */
+.content :global(.is-empty)::before {
+  content: attr(data-placeholder);
+  float: inline-start;
+  block-size: 0;
+  color: var(--cr-muted);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The document variant: no toolbar, so the text starts at the top of the
+   surface; the page is a little taller, as a page is. */
+.editor[data-variant='document'] .content > [contenteditable] { min-block-size: calc(#{$cr-action-min-target} * 6); }
+
+/* The block menu that "/" opens: Frost, as every surface that opens over
+   content is. Fixed, at the caret, above the page. */
+.slash {
+  position: fixed;
+  z-index: 5;
+  min-inline-size: calc(#{$cr-action-min-target} * 5);
+  max-block-size: min(calc(#{$cr-action-min-target} * 8), 50vh);
+  overflow-y: auto;
+  padding: $cr-spacing-2xs;
+  border-radius: var(--cr-radius);
+}
+
+.slashList { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+
+.slashOption {
+  display: flex;
+  align-items: center;
+  gap: $cr-spacing-sm;
+  min-block-size: $cr-action-min-target;
+  padding-inline: $cr-spacing-sm;
+  border-radius: calc(var(--cr-radius) - #{$cr-spacing-2xs});
+  font-weight: 600;
+  color: var(--cr-text);
+  cursor: pointer;
+}
+
+/* The option the arrows have reached: the soft primary fill, as a menu marks
+   its active item. Shown for the keyboard and the pointer alike, because it is
+   what Enter will apply, not a focus ring. */
+.slashOption[data-active] { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+
+.slashIcon {
+  display: inline-grid;
+  place-items: center;
+  inline-size: $cr-action-min-target;
+  block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-xs});
+  border-radius: calc(var(--cr-radius) / 2);
+  background: var(--cr-surface);
+}
+
+.slashIcon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+
+.slashEmpty { margin: 0; padding: $cr-spacing-sm; color: var(--cr-muted); }
+
+@media (forced-colors: active) {
+  .slash { border: 1px solid CanvasText; background: Canvas; }
+  .slashOption[data-active] { background: Highlight; color: HighlightText; }
+}

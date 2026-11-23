@@ -63,14 +63,22 @@ export const RollingNumber = forwardRef<HTMLSpanElement, RollingNumberProps>(fun
       <span aria-hidden="true" className={styles['digits']}>
         {[...text].map((character, index) => {
           const digit = DIGITS.indexOf(character as typeof DIGITS[number]);
-          const key = `${index}-${character}`;
+          /* Keyed by place from the right (units, tens, …), so a column stays
+             mounted while its digit changes and the strip can roll. Keyed by the
+             character, every change would mount a new column already at rest.
+             A separator keeps its character in the key, so a column never turns
+             into a comma. */
+          const place = text.length - index;
+          const key = digit < 0 ? `${place}-${character}` : `${place}`;
           if (digit < 0) return <span key={key} className={styles['fixed']}>{character}</span>;
           return (
             <span key={key} className={styles['column']}>
-              {/* The whole strip, translated. Rendering ten glyphs per digit makes
+              {/* The whole strip, translated. A percentage translate is of the
+                  strip's own height, which is ten glyphs, so one digit is 10%.
+                  Rendering ten glyphs per digit makes
                   the roll a CSS transition rather than a scripted animation, and
                   `prefers-reduced-motion` can switch a CSS translate off. */}
-              <span className={styles['strip']} style={{ translate: `0 ${-digit * 100}%` }}>
+              <span className={styles['strip']} style={{ translate: `0 ${-digit * 10}%` }}>
                 {DIGITS.map((d) => <span key={d} className={styles['glyph']}>{d}</span>)}
               </span>
             </span>

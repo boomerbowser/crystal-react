@@ -22,45 +22,71 @@
 }
 
 .box {
-  /* The box wears Crystal's `.cr-choice.outline` (2.8.0): the Resin box with
-     the outline boundary and a single inset rim, with Crystal's opaque,
-     reduced-transparency and forced-colours routes. A radio's adds `.radio`.
-     The mark, and the primary fill a selected box takes, are drawn here. */
+  /* The box wears Crystal's `.cr-choice` (2.8.0), the Resin box of Crystal 2.0
+     with the control light, the rim, the blur and the three-part shadow, and
+     Crystal's opaque, reduced-transparency and forced-colours routes. A
+     radio's adds `.radio`. It used to wear `.cr-choice.outline`, the flat
+     outlined box of the platform libraries, which testers read as the style
+     from before Crystal 2.0. The well inside is drawn here, as core draws it
+     on a native input's `::after`. */
   display: flex;
   align-items: center;
   justify-content: center;
   inline-size: $cr-choice-box-size;
   block-size: $cr-choice-box-size;
   border-radius: $cr-choice-box-radius;
-  color: var(--cr-on-primary);
 }
 
 .circle { border-radius: 50%; }
 
-.choice[data-selected] .box,
-.choice[data-indeterminate] .box {
+/* The well: core's 14px square, a 2px primary line on the surface, which
+   grows to an 18px primary fill carrying the mark once it is checked. The
+   sizes are core's native recipe, stated in proportion to the box. */
+.well {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: calc(#{$cr-choice-box-size} * 0.54);
+  block-size: calc(#{$cr-choice-box-size} * 0.54);
+  border: 2px solid var(--cr-primary);
+  border-radius: 4px; /* crystal-allow-literal: core's native checkbox well radius */
+  background: var(--cr-surface);
+  color: var(--cr-on-primary);
+  transition: inline-size #{$cr-motion-duration-press} ease-out, block-size #{$cr-motion-duration-press} ease-out, background-color #{$cr-motion-duration-press} ease-out;
+}
+
+.round { border-radius: 50%; }
+
+.choice:is([data-selected], [data-indeterminate]) .well {
+  inline-size: calc(#{$cr-choice-box-size} * 0.69);
+  block-size: calc(#{$cr-choice-box-size} * 0.69);
+  border: 0;
   background: var(--cr-primary);
-  border-color: var(--cr-primary);
+}
+
+/* A selected radio is core's: the primary disc inside a ring of the surface. */
+.choice[data-selected] .round {
+  inline-size: calc(#{$cr-choice-box-size} * 0.54);
+  block-size: calc(#{$cr-choice-box-size} * 0.54);
+  box-shadow: inset 0 0 0 3px var(--cr-surface); /* crystal-allow-literal: core's native radio ring */
 }
 
 .mark {
-  inline-size: calc(#{$cr-choice-box-size} * 0.62);
-  block-size: calc(#{$cr-choice-box-size} * 0.62);
+  inline-size: 80%;
+  block-size: 80%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   opacity: 0;
 }
 
-.choice[data-selected] .mark, .choice[data-indeterminate] .mark { opacity: 1; }
+.choice:is([data-selected], [data-indeterminate]) .mark { opacity: 1; }
 
-/* A radio's centre is a dot instead of a glyph, contained the same way. */
-.dot {
-  inline-size: calc(#{$cr-choice-box-size} * 0.42);
-  block-size: calc(#{$cr-choice-box-size} * 0.42);
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0;
+@media (prefers-reduced-motion: reduce) {
+  .well { transition: none; }
 }
-
-.choice[data-selected] .dot { opacity: 1; }
 
 .choice[data-focus-visible] .box {
   outline: $cr-focus-core-width solid var(--cr-focus-core);
@@ -70,6 +96,7 @@
 
 .choice[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 .choice[data-invalid] .box { border-color: var(--cr-danger-ink); }
+.choice[data-invalid]:not([data-selected], [data-indeterminate]) .well { border-color: var(--cr-danger-ink); }
 
 /* A group is a fieldset with spacing and no panel. */
 .group { @include field.field; }
@@ -82,7 +109,8 @@
 .error { color: var(--cr-danger-ink); font-weight: 700; }
 
 @media (forced-colors: active) {
-  .box { color: Highlight; }
-  .choice[data-selected] .box, .choice[data-indeterminate] .box { background: Field; border-color: Highlight; }
+  .well { border-color: CanvasText; background: Field; }
+  .choice:is([data-selected], [data-indeterminate]) .well { background: Highlight; color: HighlightText; }
+  .choice[data-selected] .round { box-shadow: inset 0 0 0 3px Field; /* crystal-allow-literal: core's native radio ring */ }
   .choice[data-focus-visible] .box { outline-color: Highlight; }
 }

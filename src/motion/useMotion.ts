@@ -151,6 +151,61 @@ export function reorientRecipe(recipe: CrystalRecipe, how: Reorientation): Cryst
   };
 }
 
+/** Whether a recipe's last value for a property is the element's resting
+ *  state, one that draws nothing a stylesheet would not. */
+export function isRestingValue(property: string, value: unknown): boolean {
+  if (value === null || value === undefined) return false;
+  const text = String(value).trim();
+  if (property === 'opacity') return Number(text) === 1;
+  if (property === 'clipPath') {
+    /* An inset of nothing on every side, at any radius, or a circle wide
+       enough to cover the box. */
+    const inset = /^inset\(([^)]*?)(?:\s+round\s+[^)]*)?\)$/.exec(text);
+    if (inset) return (inset[1] ?? '').split(/\s+/).every((part) => /^0(%|px)?$/.test(part));
+    const circle = /^circle\((\d+(?:\.\d+)?)%/.exec(text);
+    return circle !== null && Number(circle[1]) >= 75;
+  }
+  if (property === 'transform') {
+    /* Strip every function that is the identity; whatever is left moves it. */
+    const left = text
+      .replace(/perspective\([^)]*\)/g, '')
+      .replace(/(translate[XYZ]?|rotate[XYZ]?|skew[XY]?)\(\s*-?0(?:px|%|deg|turn|rad)?\s*(?:,\s*-?0(?:px|%|deg)?\s*)*\)/g, '')
+      .replace(/scale[XYZ]?\(\s*1\s*(?:,\s*1\s*)*\)/g, '')
+      .trim();
+    return left === '' || left === 'none';
+  }
+  if (property === 'filter') return text === 'none' || /^blur\(0(px)?\)$/.test(text);
+  return false;
+}
+
+const kebab = (name: string): string => name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+
+/**
+ * Hand an element back to its stylesheet once a recipe has finished, for every
+ * property the recipe left at its resting value. Motion leaves the last frame
+ * as an inline style, and a resting value is not harmless: a `clip-path:
+ * inset(0%)` clips to the border box with square corners, which cuts a soft
+ * shadow off in a hard rectangle (the "rectangular backing" testers saw behind
+ * toasts, dialog button groups and drawer contents), and a leftover
+ * `perspective()` transform makes the element a containing block for fixed
+ * descendants. A value that is not at rest (an exit that ends hidden) is kept.
+ */
+export function releaseRestingStyles(element: HTMLElement, values: Record<string, unknown>): void {
+  release(element, values);
+  /* Motion commits the last frame to the inline style as its animation
+     settles, which can land after the promise this runs from, so it is done
+     again on the next frame as well. */
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => { release(element, values); });
+}
+
+function release(element: HTMLElement, values: Record<string, unknown>): void {
+  for (const [property, frames] of Object.entries(values)) {
+    const list = Array.isArray(frames) ? frames : [frames];
+    const last = [...list].reverse().find((frame) => frame !== null && frame !== undefined);
+    if (isRestingValue(property, last)) element.style.removeProperty(kebab(property));
+  }
+}
+
 /**
  * Turn a recipe's keyframes into Motion's per-property arrays.
  *
@@ -292,6 +347,7 @@ export function useMotion(
     current.current = controls;
     await controls
       .then(() => {
+        releaseRestingStyles(element, values as Record<string, unknown>);
         if (running.current === name) element.dataset['crMotionState'] = 'finished';
       })
       /* A cancelled animation is not an error. It happens whenever a component

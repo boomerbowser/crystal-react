@@ -54,6 +54,8 @@
 }
 
 .grid { border-collapse: collapse; }
+/* No padding round the cells, so a range's days meet and the bar is unbroken. */
+.grid td { padding: 0; }
 
 .weekday {
   padding: $cr-spacing-2xs;
@@ -62,14 +64,19 @@
   font-weight: 700;
 }
 
+/* React Aria puts the class on a `div` inside the `td`, so the cell centres its
+   own number. `vertical-align` on a `div` does nothing. */
 .cell {
+  position: relative;
+  display: grid;
+  place-items: center;
   inline-size: $cr-action-min-target;
   block-size: $cr-action-min-target;
-  text-align: center;
-  vertical-align: middle;
   border-radius: $cr-action-radius;
   font-weight: 550;
+  font-variant-numeric: tabular-nums;
   cursor: pointer;
+  transition: background-color #{$cr-motion-duration-state} #{$cr-motion-easing-enter}, border-radius #{$cr-motion-duration-state} #{$cr-motion-easing-enter};
 }
 
 /* Selection is label weight and a soft fill, as everywhere. */
@@ -79,25 +86,60 @@
 .cell[data-unavailable] { color: var(--cr-muted); text-decoration: line-through; cursor: not-allowed; }
 .cell[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 
-/* Today is marked with a rule beneath instead of a fill, so it cannot be
-   mistaken for the selected day. With two fills, a reader would have to tell
-   them apart by shade. */
-.cell[data-today]:not([data-selected]) { box-shadow: inset 0 -2px 0 var(--cr-primary); }
+/* Today is marked with a dot beneath the number instead of a fill, so it
+   cannot be mistaken for the selected day. With two fills, a reader would have
+   to tell them apart by shade. The dot is centred under the number. */
+.cell[data-today]::after {
+  content: '';
+  position: absolute;
+  inset-block-end: 6px; /* crystal-allow-literal: the dot's place under the number */
+  inset-inline-start: 50%;
+  inline-size: $cr-spacing-2xs;
+  block-size: $cr-spacing-2xs;
+  margin-inline-start: calc(#{$cr-spacing-2xs} / -2);
+  border-radius: 50%;
+  background: var(--cr-primary);
+}
 
 .cell[data-focus-visible] {
   outline: $cr-focus-core-width solid var(--cr-focus-core);
   outline-offset: calc(-1 * #{$cr-focus-core-offset});
 }
 
-/* The span between two dates in a range, drawn behind the days instead of on
-   them so the numbers keep their contrast. */
-.cell[data-selection-start], .cell[data-selection-end] { font-weight: 800; }
-.cell[data-selected][data-selection-start] { border-start-end-radius: 0; border-end-end-radius: 0; }
-.cell[data-selected][data-selection-end] { border-start-start-radius: 0; border-end-start-radius: 0; }
+/* A range is one continuous bar: the days inside it are square and meet, and
+   only the two ends and the ends of each week are rounded. The bar grows and
+   shrinks with a short fade as the range is drawn, held still for a reader who
+   asks for reduced motion. */
+.range .cell[data-selected] { border-radius: 0; }
+.range .cell[data-selection-start],
+.range td:first-child .cell[data-selected] {
+  border-start-start-radius: $cr-action-radius;
+  border-end-start-radius: $cr-action-radius;
+}
+.range .cell[data-selection-end],
+.range td:last-child .cell[data-selected] {
+  border-start-end-radius: $cr-action-radius;
+  border-end-end-radius: $cr-action-radius;
+}
+.range .cell[data-selection-start], .range .cell[data-selection-end] { font-weight: 800; }
+/* The two ends carry a full-strength disc over the bar, so where the range
+   starts and stops reads at a glance. */
+.range .cell[data-selection-start],
+.range .cell[data-selection-end] {
+  background:
+    radial-gradient(circle closest-side, var(--cr-primary) calc(100% - 1px), transparent 100%),
+    var(--cr-primary-soft);
+  color: var(--cr-on-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell { transition: none; }
+}
 
 @media (forced-colors: active) {
   /* Selection is a Highlight ring, never a fill: Chromium's text backplate
      erases a filled day's number. */
   .cell[data-selected] { background: Canvas; color: CanvasText; outline: 2px solid Highlight; }
-  .cell[data-today]:not([data-selected]) { box-shadow: inset 0 -2px 0 CanvasText; }
+  .cell[data-today]::after { background: CanvasText; }
+  .range .cell[data-selection-start], .range .cell[data-selection-end] { background: Canvas; color: CanvasText; }
 }

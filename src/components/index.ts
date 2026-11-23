@@ -45,6 +45,7 @@ export * from './AppBar/index.js';
 export * from './AppShell/index.js';
 export * from './Resizable/index.js';
 export * from './SharedElement/index.js';
+export * from './BlockSpacing/index.js';
 export * from './DragHandle/index.js';
 export * from './DropIndicator/index.js';
 export * from './Virtualizer/index.js';

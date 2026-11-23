@@ -29,6 +29,7 @@ import { useMotion } from '../../motion/useMotion.js';
 import { usePlayOnChange } from '../../motion/useChangeMotion.js';
 import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './Banner.module.scss';
+import { DismissGlyph } from '../../feedback/DismissGlyph.js';
 
 export interface BannerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   status?: FeedbackStatus;
@@ -88,7 +89,7 @@ export const Banner = forwardRef<HTMLDivElement, BannerProps>(function Banner({
             returnFocusTo?.current?.focus();
           }}
         >
-          <span aria-hidden="true">{'×'}</span>
+          <DismissGlyph />
         </button>
       ) : null}
     </div>

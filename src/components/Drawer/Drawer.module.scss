@@ -131,6 +131,11 @@
 .body {
   flex: 1;
   min-block-size: 0;
+  /* Out to the panel's edges and padded back in, so the scroll area's clip
+     falls where the panel ends instead of cutting the float shadows of the
+     fields and buttons inside it off in a hard line. */
+  margin: 0 calc(var(--cr-space) * -1) calc(var(--cr-space) * -1);
+  padding: $cr-spacing-xs var(--cr-space) var(--cr-space);
 }
 
 @media (forced-colors: active) {

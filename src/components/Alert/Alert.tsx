@@ -27,13 +27,15 @@
  * none for the others.
  */
 import {
-  forwardRef, useEffect, useId, useRef, type HTMLAttributes, type ReactNode,
+  forwardRef, useEffect, useId, useRef, useState,
+  type HTMLAttributes, type ReactNode, type RefObject,
 } from 'react';
 import { STATUS_RECIPE, STATUS_SYMBOL, type FeedbackStatus } from '../../feedback/status.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Alert.module.scss';
+import { DismissGlyph } from '../../feedback/DismissGlyph.js';
 
 export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   status?: FeedbackStatus;
@@ -49,16 +51,35 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
    * to end). Not for anything that was already on the page.
    */
   urgent?: boolean;
-  /** Called when the dismiss control is pressed. Without it there is none. */
+  /**
+   * Show a dismiss control. Pressing it removes the alert, and it stays gone
+   * until the component is mounted again or `dismissed` is set back. On by
+   * default when `onDismiss` is given.
+   */
+  dismissible?: boolean;
+  /** Called when the dismiss control is pressed, after the alert removes itself. */
   onDismiss?: () => void;
+  /**
+   * Controlled: whether the alert has been dismissed. Leave it out and the
+   * alert keeps its own state, so a dismiss control works with no handler.
+   */
+  dismissed?: boolean;
+  /**
+   * Where focus goes once the alert has removed itself. Without it, focus that
+   * was on the dismiss control falls to the document body.
+   */
+  returnFocusTo?: RefObject<HTMLElement | null>;
   /** What the dismiss control is called. Named for what it dismisses. */
   dismissLabel?: string;
 }
 
 export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert({
   status = 'info', title, children, actions, urgent = false,
-  onDismiss, dismissLabel, className, ...props
+  dismissible, onDismiss, dismissed, returnFocusTo, dismissLabel, className, ...props
 }, ref): ReactNode {
+  const [ownDismissed, setOwnDismissed] = useState(false);
+  const isDismissed = dismissed ?? ownDismissed;
+  const canDismiss = dismissible ?? onDismiss !== undefined;
   const id = useId();
   const [scope, play] = useMotion();
   const previous = useRef<FeedbackStatus>(status);
@@ -70,6 +91,8 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert({
     const recipe = STATUS_RECIPE[status];
     if (recipe) play(recipe);
   }, [status, play]);
+
+  if (isDismissed) return null;
 
   return (
     <div
@@ -88,16 +111,23 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert({
         {children ? <div className={styles['body']}>{children}</div> : null}
         {actions ? <div className={styles['actions']}>{actions}</div> : null}
       </div>
-      {onDismiss ? (
+      {canDismiss ? (
         <button
           type="button"
           className={cx(styles['dismiss'], 'cr-bare')}
           /* Named for what it dismisses rather than "Close": a page with three
              alerts otherwise offers a reader three identical buttons. */
           aria-label={dismissLabel ?? (typeof title === 'string' ? `Dismiss: ${title}` : 'Dismiss')}
-          onClick={onDismiss}
+          onClick={() => {
+            setOwnDismissed(true);
+            onDismiss?.();
+            /* After the alert is gone the control is gone with it, so focus is
+               handed on before the next paint. */
+            const target = returnFocusTo?.current;
+            if (target) requestAnimationFrame(() => { target.focus(); });
+          }}
         >
-          <span aria-hidden="true">{'×'}</span>
+          <DismissGlyph />
         </button>
       ) : null}
     </div>

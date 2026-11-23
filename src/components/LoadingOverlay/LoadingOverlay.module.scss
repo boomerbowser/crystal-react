@@ -20,6 +20,25 @@
      and no-backdrop routes. */
 }
 
+/* Over the wash, centring the card. No material of its own. */
+.centre {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+}
+
+/* The card under the loader: Crystal's Resin plane, at the content radius,
+   padded so the mark and its words sit well inside it. */
+.card {
+  display: inline-flex;
+  align-items: center;
+  padding: $cr-spacing-md $cr-spacing-lg;
+  border-radius: var(--cr-radius);
+}
+
 @media (forced-colors: active) {
+  .card { border: 1px solid CanvasText; background: Canvas; }
   .scrim { background: Canvas; border: 1px solid CanvasText; }
 }

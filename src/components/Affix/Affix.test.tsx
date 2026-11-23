@@ -28,7 +28,9 @@ afterEach(() => { Element.prototype.getBoundingClientRect = original; });
 
 const scroll = (to: number): void => {
   top = to;
-  act(() => { window.dispatchEvent(new Event('scroll')); });
+  /* A page scroll is fired at the document, and a panel's at the panel; the
+     component listens on the document in capture, so it hears both. */
+  act(() => { document.dispatchEvent(new Event('scroll')); });
 };
 
 describe('Affix', () => {

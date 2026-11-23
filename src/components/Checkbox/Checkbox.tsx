@@ -84,10 +84,12 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(function Che
     <AriaCheckbox {...props} ref={ref} className={cx(styles['choice'], className)}>
       {({ isIndeterminate, isSelected }) => (
         <>
-          <span ref={scope as never} className={cx('cr-choice outline', styles['box'])}>
-            {/* Driven by React Aria's state and not by a class, so the drawn
-                mark and the announced one cannot disagree. */}
-            {isIndeterminate ? DashMark : CheckMark}
+          <span ref={scope as never} className={cx('cr-choice', styles['box'])}>
+            {/* Crystal's own checkbox: the Resin box with a well inside it,
+                outlined in the primary until it is checked, then filled with
+                the mark. Driven by React Aria's state and not by a class, so
+                the drawn mark and the announced one cannot disagree. */}
+            <span className={styles['well']}>{isIndeterminate ? DashMark : CheckMark}</span>
           </span>
           <span>{children}</span>
           <ChoiceMotion isSelected={isSelected} play={play} />
@@ -111,8 +113,8 @@ export const Radio = forwardRef<HTMLLabelElement, RadioProps>(function Radio(
     <AriaRadio {...props} ref={ref} className={cx(styles['choice'], className)}>
       {({ isSelected }) => (
         <>
-          <span ref={scope as never} className={cx('cr-choice outline radio', styles['box'], styles['circle'])}>
-            <span className={cx(styles['dot'])} />
+          <span ref={scope as never} className={cx('cr-choice radio', styles['box'], styles['circle'])}>
+            <span className={cx(styles['well'], styles['round'])} />
           </span>
           <span>{children}</span>
           <ChoiceMotion isSelected={isSelected} play={play} />

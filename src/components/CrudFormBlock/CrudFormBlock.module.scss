@@ -5,8 +5,8 @@
    worn as `.cr-haze`. */
 .form {
   display: grid;
-  gap: $cr-spacing-md;
-  padding: var(--cr-space);
+  gap: var(--cr-block-gap, $cr-spacing-md);
+  padding: var(--cr-block-padding, var(--cr-space));
   min-inline-size: 0;
 }
 

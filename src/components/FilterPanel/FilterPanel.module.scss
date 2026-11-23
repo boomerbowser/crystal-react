@@ -5,8 +5,8 @@
 .panel {
   /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
   display: grid;
-  gap: $cr-spacing-md;
-  padding: $cr-spacing-md;
+  gap: var(--cr-block-gap, $cr-spacing-md);
+  padding: var(--cr-block-padding, $cr-spacing-md);
   color: var(--cr-text);
 }
 

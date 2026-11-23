@@ -1,3 +1,4 @@
+@use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
 /* "Inherits from its cards and panels." The cards and the filter panel carry
@@ -7,7 +8,7 @@
      narrow whatever the window is. */
   container-type: inline-size;
   display: grid;
-  gap: $cr-spacing-lg;
+  gap: var(--cr-block-gap, $cr-spacing-lg);
   min-inline-size: 0;
 }
 
@@ -39,7 +40,15 @@
   flex-wrap: wrap;
 }
 
-.count { margin: 0; font-weight: 800; }
+.count {
+  /* As tall as the sort field beside it and centred in that height, so the
+     count lines up with the field and not with the field's label. */
+  display: flex;
+  align-items: center;
+  min-block-size: field.$field-height;
+  margin: 0;
+  font-weight: 800;
+}
 
 /* "Grid gap from the scale; reflows by container width." Cards take whatever
    column count fits at their own minimum. */

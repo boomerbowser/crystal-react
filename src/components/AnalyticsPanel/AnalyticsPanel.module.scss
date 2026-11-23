@@ -6,8 +6,8 @@
 .panel {
   /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
   display: grid;
-  gap: $cr-spacing-md;
-  padding: $cr-spacing-lg;
+  gap: var(--cr-block-gap, $cr-spacing-md);
+  padding: calc(var(--cr-haze-inset) + var(--cr-block-padding, $cr-spacing-lg));
   border-radius: $cr-shape-content-radius;
   min-inline-size: 0;
 }

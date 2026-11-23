@@ -6,14 +6,23 @@
   position: relative;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: $cr-spacing-sm;
+  gap: var(--cr-block-gap, $cr-spacing-sm);
   border-radius: $cr-shape-content-radius;
-  padding: $cr-spacing-md;
+  padding: calc(var(--cr-haze-inset) + var(--cr-block-padding, $cr-spacing-md));
   color: var(--cr-text);
 }
 
-.media { display: block; }
-.media img { inline-size: 100%; block-size: auto; border-radius: $cr-shape-content-radius; display: block; }
+.media {
+  display: block;
+  /* Whatever the media is (a photograph, or a drawn tile) it takes the content
+     radius less the card's padding, so its corners sit concentric inside the
+     card's instead of square against a rounded fill. On the wrapper, clipping,
+     so media that inherits its radius gets it too. */
+  border-radius: calc(#{$cr-shape-content-radius} - var(--cr-block-padding, #{$cr-spacing-md}) + #{$cr-spacing-2xs});
+  overflow: hidden;
+}
+.media > *, .media img { display: block; inline-size: 100%; border-radius: inherit; }
+.media img { block-size: auto; }
 
 /* Over the media, and outside the link. A control inside an anchor is invalid
    markup; `z-index` is what keeps it above the name's stretched hit area. */

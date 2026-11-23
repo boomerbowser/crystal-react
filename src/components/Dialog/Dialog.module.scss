@@ -53,6 +53,29 @@
 
 .dialog:focus { outline: none; }
 
+/* The body reaches out to the dialog's edges, padded back in by the same
+   amount. A scroll area clips what it holds at its own edge, so a button's float
+   shadow inside a body the width of the content was cut off in a hard line;
+   reaching to the card's edge moves that clip to where the card itself ends and
+   the shadow has faded. */
+.body {
+  margin-inline: calc(var(--cr-space) * -1);
+  padding-inline: var(--cr-space);
+  margin-block-end: calc(var(--cr-space) * -1);
+  padding-block-end: var(--cr-space);
+}
+
+.body:not(:last-child) { margin-block-end: 0; padding-block-end: $cr-spacing-xs; }
+
+/* The footer the buttons sit in, outside the scroll area. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: $cr-spacing-sm;
+  margin-block-start: $cr-spacing-md;
+}
+
 .title {
   margin: 0 0 var(--cr-space);
   font-size: var(--cr-text-heading-size);

@@ -5,8 +5,8 @@
    Haze fill too, as reading content inside the panel. */
 .centre {
   display: grid;
-  gap: $cr-spacing-md;
-  padding: var(--cr-space);
+  gap: var(--cr-block-gap, $cr-spacing-md);
+  padding: var(--cr-block-padding, var(--cr-space));
   min-inline-size: 0;
 }
 

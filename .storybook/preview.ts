@@ -50,6 +50,14 @@ const preview: Preview = {
   },
   parameters:  {
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
+    /* The story's own code, not a snippet Storybook writes by walking the
+       rendered JSX after every render. That walk pretty-prints every prop it
+       meets, and a story holding a large or self-referencing prop (a settings
+       page's groups of fields) kept it running forever: the tab froze before
+       the story painted, which looked like a component that never appears. It
+       also read `element.ref`, which React 19 warns about on every story that
+       passes a ref. */
+    docs: { source: { type: 'code' } },
     a11y: {
       /* Accessibility findings fail the story instead of only appearing in the
          panel. */

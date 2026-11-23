@@ -11,11 +11,9 @@
  * The platform does the snapping, so momentum, rubber-banding and the
  * trackpad's own feel stay intact, as the scroll contract requires.
  *
- * `perspective` on the track is functional. Crystal's `carousel-next` and
- * `carousel-previous` are `perspective(900px) rotateY(...)` on the arriving
- * slide, and a rotateY with no perspective ancestor renders as a flat
- * horizontal squash. The recipe carries its own perspective in the transform,
- * so this is a backstop for a consumer who composes it differently.
+ * Spacing reads two custom properties the component sets from its `gap` and
+ * `padding` props, so a product can open the slides up or pack them tight
+ * without overriding the stylesheet.
  */
 
 .carousel {
@@ -26,7 +24,7 @@
 
 .track {
   display: flex;
-  gap: $cr-spacing-sm;
+  gap: var(--cr-carousel-gap, #{$cr-spacing-md});
   margin: 0;
   padding: 0;
   list-style: none;
@@ -46,16 +44,12 @@
 }
 
 .slide {
-  /* The element wears Crystal's `.cr-haze.flush` (2.7.0): the Haze fill to its own edge, with Crystal's opaque, reduced-transparency and forced-colours routes. */
   flex: 0 0 100%;
   box-sizing: border-box;
   scroll-snap-align: start;
-  padding: var(--cr-space);
+  padding: var(--cr-carousel-padding, #{$cr-spacing-lg});
   border-radius: var(--cr-radius);
   color: var(--cr-text);
-  /* The recipes are a 3D swing-in, and a rotateY with no depth reads as a
-     horizontal squash. */
-  transform-style: preserve-3d;
 }
 
 .controls {

@@ -51,7 +51,8 @@
   font-size: var(--cr-text-body-size);
 }
 
-.dismiss:hover { color: var(--cr-text); }
+.dismiss:hover { color: var(--cr-text); background: var(--cr-surface-alt); }
+.dismiss svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
 
 @media (forced-colors: active) {
   .alert { border: 1px solid CanvasText; background: Canvas; }

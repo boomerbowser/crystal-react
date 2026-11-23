@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { LoadingScreen } from './LoadingScreen.js';
+import { SkeletonBox } from '../Skeleton/Skeleton.js';
 
 const meta = {
   title: 'Screens/LoadingScreen',
@@ -31,10 +32,11 @@ export const Default: Story = {
   args: {
     placeholder: (
       <>
-        <div style={{ blockSize: 32, inlineSize: '40%' }} />
-        <div style={{ blockSize: 16 }} />
-        <div style={{ blockSize: 16 }} />
-        <div style={{ blockSize: 16, inlineSize: '70%' }} />
+        <SkeletonBox shape="title" width="40%" />
+        <SkeletonBox />
+        <SkeletonBox />
+        <SkeletonBox width="70%" />
+        <SkeletonBox shape="block" height="var(--cr-spacing-2xl)" />
       </>
     ),
   },

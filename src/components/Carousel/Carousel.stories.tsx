@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { only } from '../../../.storybook/environment.js';
 import { crystalTokens } from '../../theme/tokens.generated.js';
 import { Carousel } from './Carousel.js';
+import { photos } from '../../../.storybook/fixtures/index.js';
 
 const materials = [
   ['Plastic', 'The foundation. A coloured atmosphere behind everything else, with its own glow.'],
@@ -36,9 +37,9 @@ const meta = {
           + 'The track is a real scroll container with snapping, so a swipe, a flick and the '
           + 'platform\'s own momentum all work. It is a tab stop, because a scroll container '
           + 'with nothing focusable inside cannot be reached without a pointer. The movement '
-          + 'between slides is on the arriving slide, not the track: `carousel-next` and '
-          + '`carousel-previous` are a 3D swing-in, so animating the track as well would move '
-          + 'the same thing twice. That is why the scroll itself is instant.',
+          + 'between slides is the track gliding, the same movement a swipe makes. A reader who '
+          + 'asks for reduced motion gets the jump alone. `gap` sets the space between slides '
+          + 'and `padding` the space inside each, both from Crystal\'s spacing scale.',
       },
     },
   },
@@ -61,4 +62,32 @@ export const AtTheEnds: Story = {
  *  and the indicator row has one entry, which shows there is nowhere to go. */
 export const SingleSlide: Story = {
   render: (args) => <Carousel {...only(args)} slides={slides.slice(0, 1)} />,
+};
+
+const shots = [
+  ['bay', photos.bay, 'A calm bay below a clear sky'],
+  ['pier', photos.pier, 'A pier on a grey morning'],
+  ['boat', photos.mooredBoat, 'A moored boat on still water'],
+  ['lighthouse', photos.lighthouse, 'A lighthouse above the rocks'],
+] as const;
+
+/** Photographs, with the spacing opened up: `gap="xl"` between slides and
+ *  `padding="sm"` inside each, so the picture nearly fills its slide. */
+export const PhotographsWithSpacing: Story = {
+  args: {
+    label: 'The east shore',
+    gap: 'xl',
+    padding: 'sm',
+    slides: shots.map(([id, src, alt]) => ({
+      id,
+      label: alt,
+      content: (
+        <img
+          src={src}
+          alt={alt}
+          style={{ display: 'block', inlineSize: '100%', aspectRatio: '3 / 2', objectFit: 'cover', borderRadius: 'calc(var(--cr-radius) - var(--cr-spacing-sm))' }}
+        />
+      ),
+    })),
+  },
 };

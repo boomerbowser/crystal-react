@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useRef, useState } from 'react';
+import { only } from '../../../.storybook/environment.js';
 import { Alert } from './Alert.js';
 import { Button } from '../Button/Button.js';
 
@@ -59,5 +61,19 @@ export const WithActions: Story = {
 };
 
 export const Dismissible: Story = {
-  args: { children: 'Your card was declined.', onDismiss: () => {} },
+  args: { children: 'Your card was declined.', dismissible: true },
+  /* The alert removes itself; the button below brings it back, by mounting it
+     again, so the story can be tried more than once. */
+  render: function DismissibleStory(args) {
+    const [round, setRound] = useState(0);
+    const back = useRef<HTMLButtonElement>(null);
+    return (
+      <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
+        <Alert key={round} {...only(args)} returnFocusTo={back} />
+        {/* A native button with Crystal's class, because Storybook's source
+            panel warns about a `ref` on a forwardRef component in a story. */}
+        <button ref={back} type="button" className="cr-button" onClick={() => { setRound((n) => n + 1); }}>Show the alert again</button>
+      </div>
+    );
+  },
 };

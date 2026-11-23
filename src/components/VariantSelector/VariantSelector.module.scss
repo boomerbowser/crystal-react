@@ -39,7 +39,7 @@
   inline-size: $cr-action-min-target;
   block-size: $cr-action-min-target;
   padding: $cr-spacing-2xs;
-  border: 1px solid var(--cr-outline);
+  border: 1px solid var(--cr-rim);
   border-radius: 50%;
   cursor: pointer;
 }

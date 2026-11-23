@@ -61,7 +61,7 @@ mark.text { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft)
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.9em;
 }
-kbd.text { border: 1px solid var(--cr-outline); border-block-end-width: 2px; }
+kbd.text { border: 1px solid var(--cr-edge); border-block-end-width: 2px; }
 :is(sub, sup).text { font-size: 0.75em; line-height: 0; }
 
 @media (forced-colors: active) {

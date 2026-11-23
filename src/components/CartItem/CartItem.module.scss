@@ -9,9 +9,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: $cr-spacing-md;
+  gap: var(--cr-block-gap, $cr-spacing-md);
   border-radius: $cr-shape-content-radius;
-  padding: $cr-spacing-md;
+  padding: calc(var(--cr-haze-inset) + var(--cr-block-padding, $cr-spacing-md));
   color: var(--cr-text);
 }
 

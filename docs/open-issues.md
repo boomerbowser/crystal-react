@@ -3,7 +3,7 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**One entry is open**: R-35, three surfaces this library draws differently from
+**Two entries are open**: R-37, a modal Drawer's Frost that blurs nothing (filed 22 November 2026), and R-35, three surfaces this library draws differently from
 the catalogue, ruled on 18 November 2026 and waiting to be built. R-28, the
 hand-written material, closed on 17 November 2026: every directory wears
 Crystal's material, on core 2.8.0. The tasks left
@@ -15,6 +15,22 @@ closed on 7 November 2026 with core 2.4.0 installed. R-29, the flaky virtualizer
 check, closed on 2 October 2026; the record is in `closed-issues.md`. R-26, the
 adoption of Crystal 2.3.0, closed on 29 September 2026 with 2.3.0 on the
 registry.
+
+## R-37 · A modal Drawer's Frost blurs nothing
+
+**What.** Found while checking the testers' Drawer finding (R-36), 22 November
+2026. A modal `Drawer`'s panel is a child of its Mirage overlay, because React
+Aria's `Modal` sits inside its `ModalOverlay`. A backdrop filter inside an
+element that has one sees only that element's own layer, so the panel's Frost
+has nothing to blur, and the page shows through it sharp: the story's text
+reads clearly behind the panel. `LoadingOverlay` had the same fault and was
+fixed by making its card the wash's sibling.
+
+**Closing it.** Draw the Mirage wash on a layer inside the overlay, beside
+`Modal`, rather than on the overlay itself, and move the wash's entrance and
+exit (`usePresetMotion('mirage', 'mirage-out')`) to that layer without losing
+the exit `AnimatePresence` plays. Check `Dialog`, `Lightbox` and `CartDrawer`
+for the same structure. Measured with the material gate before and after.
 
 ## R-35 · Three surfaces drawn differently from the catalogue
 

@@ -1,15 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ImageList } from './ImageList.js';
+import { photos } from '../../../.storybook/fixtures/index.js';
 
-/* The sources are chosen not to resolve, because a story that depends on the
-   network sometimes shows a broken image icon. What shows is the
-   reserved box, the Haze placeholder and the caption bar, which is the
-   composition this component is about. */
+/* Real photographs from the story fixtures, served locally, so the caption
+   bar is judged against a picture and the story needs no network. */
 const items = [
-  { id: 'a', src: '/harbour-1.jpg', alt: 'A harbour at first light', caption: 'Sunrise, 5:40am' },
-  { id: 'b', src: '/harbour-2.jpg', alt: 'A jetty in fog', caption: 'Fog, 7:10am' },
-  { id: 'c', src: '/harbour-3.jpg', alt: 'Masts against a grey sky', caption: 'Overcast, 11:20am' },
-  { id: 'd', src: '/harbour-4.jpg', alt: 'The same jetty at dusk', caption: 'Dusk, 8:05pm' },
+  { id: 'a', src: photos.bay, alt: 'A calm bay below a clear sky', caption: 'Sunrise, 5:40am' },
+  { id: 'b', src: photos.pier, alt: 'A pier on a grey morning', caption: 'Fog, 7:10am' },
+  { id: 'c', src: photos.mooredBoat, alt: 'A moored boat on still water', caption: 'Overcast, 11:20am' },
+  { id: 'd', src: photos.lighthouse, alt: 'A lighthouse above the rocks', caption: 'Dusk, 8:05pm' },
 ];
 
 const meta = {

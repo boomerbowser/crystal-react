@@ -45,14 +45,20 @@ export const Default: Story = {
     return (
       <>
         <Button onPress={() => setOpen(true)}>Open dialog</Button>
-        <Dialog {...only(args)} isOpen={open} onOpenChange={setOpen}>
-          <p style={{ margin: '0 0 var(--cr-space)' }}>
+        <Dialog
+          {...only(args)}
+          isOpen={open}
+          onOpenChange={setOpen}
+          actions={(
+            <>
+              <Button variant="quiet" onPress={() => setOpen(false)}>Keep editing</Button>
+              <Button variant="primary" onPress={() => setOpen(false)}>Discard</Button>
+            </>
+          )}
+        >
+          <p style={{ margin: 0 }}>
             Your edits will be lost. This cannot be undone.
           </p>
-          <div style={{ display: 'flex', gap: 'var(--cr-space)', justifyContent: 'flex-end' }}>
-            <Button variant="quiet" onPress={() => setOpen(false)}>Keep editing</Button>
-            <Button variant="primary" onPress={() => setOpen(false)}>Discard</Button>
-          </div>
         </Dialog>
       </>
     );

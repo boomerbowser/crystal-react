@@ -5,7 +5,7 @@
 .ground {
   display: grid;
   place-items: center;
-  padding: var(--cr-space);
+  padding: var(--cr-block-padding, var(--cr-space));
   min-block-size: 100%;
 }
 

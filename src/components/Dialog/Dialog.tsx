@@ -41,6 +41,12 @@ export interface DialogProps extends Omit<ModalOverlayProps,
   /** The dialog's accessible name, rendered as its heading. */
   title: ReactNode;
   children?: ReactNode;
+  /**
+   * The dialog's buttons. Rendered in a footer below the body and outside its
+   * scroll area, so they stay in view when the body scrolls and their shadows
+   * are never cut off by the scroll area's edge.
+   */
+  actions?: ReactNode;
   className?: string;
   /**
    * Whether the scrim dismisses on click. Defaults to React Aria's behaviour.
@@ -69,7 +75,7 @@ const MotionDialog = motion.create(
   AriaDialog as React.ForwardRefExoticComponent<SurfaceProps & React.RefAttributes<HTMLElement>>,
 );
 
-export function Dialog({ title, children, className, role = 'dialog', ...props }: DialogProps): React.JSX.Element {
+export function Dialog({ title, children, actions, className, role = 'dialog', ...props }: DialogProps): React.JSX.Element {
   const titleId = useId();
   /* The catalogue gives a dialog three movements. `mirage` and `mirage-out` are
      the scrim's wash, the chromatic diffusion revealing from an edge and
@@ -102,13 +108,18 @@ export function Dialog({ title, children, className, role = 'dialog', ...props }
               {/* A dialog is a reading surface, so its scrollbar is the Frost one.
                   It is on the body and not the surface, because the surface
                   carries the material. */}
-              <ScrollArea variant="frost" className="cr-dialog-body">
+              <ScrollArea variant="frost" className={cx('cr-dialog-body', styles['body'])}>
                 {/* A dialog is Haze, so anything opened from inside it opens on
                     top of Haze and recesses instead of floating. Resin never
                     contains Resin. The DOM cannot express this, because an
                     overlay is portalled to `body` and loses its nesting. */}
                 <SurfaceProvider surface="haze">{children}</SurfaceProvider>
               </ScrollArea>
+              {actions ? (
+                <footer className={cx(styles['actions'])}>
+                  <SurfaceProvider surface="haze">{actions}</SurfaceProvider>
+                </footer>
+              ) : null}
             </MotionDialog>
           </Modal>
         </MotionOverlay>

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Image } from './Image.js';
+import { photos } from '../../../.storybook/fixtures/index.js';
 
 const meta = {
   title: 'Data display/Image',
@@ -17,21 +18,26 @@ const meta = {
       },
     },
   },
-  args: { src: 'https://example.invalid/harbour.jpg', alt: 'A harbour at first light', ratio: 16 / 9 },
+  args: { src: photos.bay, alt: 'A calm bay below a clear sky', ratio: 16 / 9 },
 } satisfies Meta<typeof Image>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The source does not resolve, so this is the reserved box with its placeholder
- *  and then its fallback. Review this state, because it is the one users hit. */
+/** A real photograph, served from the story fixtures, in its reserved box. */
 export const Default: Story = {
   args: { fallback: 'Photograph unavailable' },
 };
 
+/** The source does not resolve, so this is the reserved box with its placeholder
+ *  and then its fallback. Review this state, because it is the one users hit. */
+export const Unavailable: Story = {
+  args: { src: '/this-photograph-does-not-exist.jpg', fallback: 'Photograph unavailable' },
+};
+
 /** Square, and unclipped. */
 export const SquareAndUnrounded: Story = {
-  args: { ratio: 1, rounded: false, fallback: 'Photograph unavailable' },
+  args: { src: photos.lighthouse, alt: 'A lighthouse above the rocks', ratio: 1, rounded: false, fallback: 'Photograph unavailable' },
 };
 
 /** Empty alt: decorative, and stated as such by the author. */

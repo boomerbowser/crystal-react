@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ImageCompare } from './ImageCompare.js';
+import { photos } from '../../../.storybook/fixtures/index.js';
 
 const meta = {
   title: 'Data display/Image compare',
@@ -21,9 +22,9 @@ const meta = {
     },
   },
   args: {
-    before: { src: '/facade-before.jpg', alt: 'The façade before cleaning' },
-    after: { src: '/facade-after.jpg', alt: 'The façade after cleaning' },
-    label: 'Before and after cleaning',
+    before: { src: photos.hillTownGrey, alt: 'A white hill town over the sea, in greyscale' },
+    after: { src: photos.hillTown, alt: 'The same hill town, in colour' },
+    label: 'Greyscale and colour',
     defaultValue: 50,
     ratio: 16 / 9,
   },

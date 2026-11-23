@@ -5,7 +5,7 @@
    `.cr-haze`; the queue is `PlaylistBlock`'s Haze rows. */
 .shell {
   display: grid;
-  gap: $cr-spacing-md;
+  gap: var(--cr-block-gap, $cr-spacing-md);
   min-inline-size: 0;
 }
 

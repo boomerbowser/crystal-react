@@ -7,9 +7,9 @@
 .plans {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));  /* crystal-allow-literal: a plan card's narrowest readable width */
-  gap: $cr-spacing-md;
+  gap: var(--cr-block-gap, $cr-spacing-md);
   margin: 0;
-  padding: 0;
+  padding: var(--cr-block-padding, 0);
   list-style: none;
 }
 

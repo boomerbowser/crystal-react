@@ -18,6 +18,116 @@ The live tracker is [`open-issues.md`](open-issues.md).
 
 ---
 
+## R-36 · The testers' fix list of 22 November 2026
+
+**What.** Meridian's testers reviewed the Storybook and sent a list of faults
+and requests, to be dealt with before the plan continues. Each was reproduced
+in a browser, fixed at its cause, and looked at again. Where a fault was one
+instance of something wider, the wider thing was fixed.
+
+**Data display.**
+- *Calendar.* A cell's number sat at the top of its box, because React Aria
+  puts the class on a `div` inside the `td` and `vertical-align` does nothing
+  on a `div`; the cell is now a centred grid. A range is one continuous bar
+  (no padding between cells, square inside, round at the ends and at each
+  week's edge), its two ends are full-strength discs, and the bar fades as it
+  grows. Today is a dot under the number.
+- *Caption, Image, ImageList, ImageCompare, Carousel, SharedElement.* The
+  stories used dummy addresses that never resolved. They now use real
+  photographs from Unsplash, kept as fixtures (`.storybook/fixtures/photos`,
+  credited in its README), so they need no network. `Image` keeps an
+  `Unavailable` story for the fallback.
+- *Carousel.* The movement was an instant jump followed by a 3D swing-in on
+  the arriving slide; it is now the track gliding, as a swipe does, measured
+  on screen so it lands square in either direction and moves only the track.
+  `gap` and `padding` props set the spacing; the default padding is larger.
+- *RollingNumber.* Did nothing: each strip was moved by a percentage of its
+  own ten-digit height, so every digit left the window, and the columns were
+  keyed by character, so none could roll. Both fixed.
+- *Spoiler.* Opening wiped the whole block away and back (`accordion-in`);
+  now only the cut edge travels down, and nothing already showing moves.
+
+**Utilities.**
+- *Positioning (Affix).* Listened only for the window scrolling, so it never
+  pinned inside a scrolling panel, and pinned it stretched to the viewport's
+  width. It now pins to its nearest scrolling ancestor at its own width, and
+  tells its caller outside React's render.
+- *SharedElement.* The destination's contents appeared at once while the
+  object was still in flight, and a `var()` radius warped during the travel.
+  `SharedElementReveal` fades the rest of the view in once the object lands,
+  the radius is resolved to pixels, and the travel takes Crystal's spatial
+  duration and ease.
+
+**Feedback.**
+- *Alert.* Could not dismiss itself: it only called `onDismiss`. It now
+  removes itself (`dismissible`, with `dismissed` for a controlled alert and
+  `returnFocusTo`). The close control on Alert, Banner, Notification and
+  Toast is a drawn 20px cross instead of a "×" at body size.
+- *Loader.* Replaced with an arc that lengthens and draws back as it turns,
+  after Google's Material loader, and four more shapes after DaisyUI's:
+  `dots`, `bars`, `pulse`, `infinity`. Each rests in a legible still state
+  under reduced motion and follows the motion-speed setting.
+- *LoadingOverlay.* The loader sits on a Resin card with a Haze pad, beside
+  the Mirage wash and not inside it, because a backdrop filter nested in
+  another one blurs nothing.
+- *Toast, and every recipe.* The "rectangular backing shadow" was a
+  `clip-path: inset(0%)` that Motion left inline after an entrance: a square
+  clip that cut the soft shadow off in a hard rectangle. When a recipe ends at
+  a resting value (no clip, full opacity, an identity transform) the inline
+  style is now released, for every component, after the frame Motion commits
+  it in. A sweep of every story finds no rounded, shadowed element clipped
+  square.
+
+**Navigation.** The vertical tab strip was a capsule, because core's
+`.cr-dock` had a 999px radius; the selected tab poked out through its ends.
+Core 2.10.1 makes the dock's radius concentric with its pills, which is the
+same pill for one row.
+
+**Inputs.**
+- *Checkbox and Radio* wear Crystal 2.0's box (`.cr-choice`, with the well
+  inside it) instead of the outlined platform box (`.cr-choice.outline`), as
+  does DataTable's selection box.
+- *Black borders.* Every dark `--cr-outline` border left in the library (the
+  option cards, variant swatches, step pills, key caps, DataTable's box) is now
+  Crystal's light rim, or the primary where it marked a selection. The testers'
+  exact component was not identified; see the note below.
+- *Rich text.* `RichTextEditor` reads and writes Markdown
+  (`contentFormat="markdown"`; `onChange` reports Markdown alongside HTML), and
+  has a `document` variant in the manner of Notion: no fixed toolbar, "/" for
+  a filterable block menu at the caret (`SlashCommands.tsx`, owned by the text
+  field through `aria-activedescendant`), the selection toolbar for marks, and
+  prompts on empty lines. The variant can change while the editor is open.
+  `EditorBlock` has a story with it. The editor's placeholder had never shown,
+  for want of a rule; it does now.
+
+**Screens.** LoadingScreen showed nothing, for two reasons. Its story passed
+plain `div`s, which Skeleton did not draw (it now draws them as boxes), and
+`SkeletonBox`'s text and title lines were zero pixels tall in every component,
+because a unitless leading token was used as a length.
+
+**Overlays.** A scroll area clips its children's shadows at its edge, which cut
+off Dialog's buttons and the fields in a Drawer. Both bodies now reach the
+panel's edge and pad back in, and `Dialog` has an `actions` footer outside its
+scroll area.
+
+**Blocks and commerce.** Every block and commerce card reads its padding from
+`--cr-block-padding` and its internal gap from `--cr-block-gap`, with its own
+defaults; `BlockSpacing` sets both from Crystal's scale. The cards with an
+inset Haze fill had looked cramped because their padding was measured from the
+outer edge while the fill starts 8px in; they now add the inset. Product media
+takes a concentric radius, and the storefront's count lines up with its sort.
+
+**Storybook.** One story (`SettingsBlock`'s working page) froze its tab:
+Storybook's generated code snippet walks the rendered JSX after each render and
+never finished. Stories now show their own source instead, which also ends the
+React 19 `element.ref` warning.
+
+**Not reproduced.** The "black border" was not found in Chromium or WebKit, in
+light or dark, at rest, hovered or focused. If it persists, the component and
+the browser are wanted.
+
+---
+
 
 ## R-28 · Hand-written material across 29 directories
 

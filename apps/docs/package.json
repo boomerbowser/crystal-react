@@ -11,7 +11,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@crystal-ui/core": "^2.10.0",
+    "@crystal-ui/core": "^2.10.1",
     "@crystal-ui/react": "workspace:*",
     "next": "16.4.6",
     "react": "^19.3.0",

@@ -5,8 +5,8 @@
    toolbar, back to front, as the hierarchy runs. */
 .editor {
   display: grid;
-  gap: $cr-spacing-sm;
-  padding: var(--cr-space);
+  gap: var(--cr-block-gap, $cr-spacing-sm);
+  padding: var(--cr-block-padding, var(--cr-space));
   border-radius: var(--cr-radius);
   min-inline-size: 0;
 }

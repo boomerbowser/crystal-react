@@ -242,8 +242,8 @@ function SelectionBox({ slot, label }: { slot: 'selection'; label: string }): Re
   return (
     <Checkbox slot={slot} aria-label={label} className={cx(styles['checkbox'])}>
       {({ isIndeterminate }) => (
-        <span aria-hidden="true" className={styles['box']}>
-          {isIndeterminate ? DashIcon : CheckIcon}
+        <span aria-hidden="true" className={cx('cr-choice', styles['box'])}>
+          <span className={styles['well']}>{isIndeterminate ? DashIcon : CheckIcon}</span>
         </span>
       )}
     </Checkbox>

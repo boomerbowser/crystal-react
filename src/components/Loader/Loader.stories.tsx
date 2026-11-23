@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Loader } from './Loader.js';
+import { only } from '../../../.storybook/environment.js';
 
 const meta = {
   title: 'Feedback/Loader',
@@ -31,3 +32,15 @@ export const Medium: Story = {};
 export const Small: Story = { args: { size: 'small' } };
 export const Large: Story = { args: { size: 'large' } };
 export const WordsForScreenReadersOnly: Story = { args: { hideLabel: true } };
+
+/** Every shape, at the large size. `spinner` is the default; the others suit
+ *  places a ring does not, such as inside a line of text or a button. */
+export const Shapes: Story = {
+  render: (args) => (
+    <div style={{ display: 'grid', gap: 'var(--cr-spacing-md)' }}>
+      {(['spinner', 'dots', 'bars', 'pulse', 'infinity'] as const).map((variant) => (
+        <Loader key={variant} {...only(args)} size="large" variant={variant} label={`Loading (${variant})`} />
+      ))}
+    </div>
+  ),
+};

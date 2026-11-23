@@ -3,9 +3,9 @@
 .review {
   /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
   display: grid;
-  gap: $cr-spacing-xs;
+  gap: var(--cr-block-gap, $cr-spacing-xs);
   border-radius: $cr-shape-content-radius;
-  padding: $cr-spacing-md;
+  padding: calc(var(--cr-haze-inset) + var(--cr-block-padding, $cr-spacing-md));
   color: var(--cr-text);
 }
 

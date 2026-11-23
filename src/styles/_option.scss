@@ -28,7 +28,9 @@
   gap: $cr-spacing-sm;
   box-sizing: border-box;
   padding: $cr-spacing-sm $cr-spacing-md;
-  border: 1px solid var(--cr-outline);
+  /* Crystal's light rim, not the dark outline: on glass a dark line round
+     every card reads as a hard black border. */
+  border: 1px solid var(--cr-rim);
   border-radius: $cr-shape-content-radius;
   min-block-size: $cr-action-min-target;
   color: var(--cr-text);
@@ -80,7 +82,7 @@
 @mixin option-selected {
   &[data-selected] {
     font-weight: 800;
-    border-color: var(--cr-outline);
+    border-color: var(--cr-primary);
     border-width: 2px;
     padding: calc(#{$cr-spacing-sm} - 1px) calc(#{$cr-spacing-md} - 1px);
   }

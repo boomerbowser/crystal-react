@@ -26,6 +26,7 @@ import { useOverlayMaterial } from '../../overlays/surface.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { usePresenceMotion } from '../../motion/ListPresence.js';
 import styles from './Notification.module.scss';
+import { DismissGlyph } from '../../feedback/DismissGlyph.js';
 
 export interface NotificationProps extends Omit<HTMLAttributes<HTMLLIElement>, 'title'> {
   status?: FeedbackStatus;
@@ -89,7 +90,7 @@ export const Notification = forwardRef<HTMLLIElement, NotificationProps>(functio
           aria-label={dismissLabel ?? (typeof title === 'string' ? `Dismiss: ${title}` : 'Dismiss')}
           onClick={onDismiss}
         >
-          <span aria-hidden="true">{'×'}</span>
+          <DismissGlyph />
         </button>
       ) : null}
     </li>

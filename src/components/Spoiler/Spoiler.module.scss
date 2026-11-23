@@ -22,18 +22,31 @@
 .content {
   position: relative;
   overflow: hidden;
+  /* The edge travels on Crystal's spatial duration and entering ease, scaled
+     by the reader's motion speed and zero under reduced motion, as
+     `RollingNumber` does. */
+  transition-property: max-block-size;
+  transition-timing-function: #{$cr-motion-easing-enter};
+  transition-duration: calc(var(--cr-motion-enabled, 1) * #{$cr-motion-duration-spatial} / var(--cr-motion-speed, 1));
   /* The mask fades the content itself, so the material underneath shows through
      unchanged. It uses `to bottom` rather than a logical direction because the
      cut is at the bottom of a block of text in every writing mode. */
   mask-image: linear-gradient(to bottom, #000 calc(100% - #{$cr-scroll-area-fade-depth}), transparent 100%);  /* crystal-allow-literal: mask coverage, not a colour */
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .content { transition: none; }
+}
+
 /* Open: no cut, so no fade. Leaving the mask on would fade the last line of fully
    revealed content, which reads as a rendering fault. */
 .content[data-expanded] {
-  overflow: visible;
   mask-image: none;
 }
+
+/* Fully open and still: nothing to cut, so a focus ring on a link at the edge
+   is not clipped either. */
+.content[data-settled] { overflow: visible; }
 
 /* A mask is a visual effect with no forced-colours equivalent, and a faded edge
    over system colours reads as a broken paint. */

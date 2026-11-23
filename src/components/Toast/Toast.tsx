@@ -37,6 +37,7 @@ import { STATUS_SYMBOL, type FeedbackStatus } from '../../feedback/status.js';
 import { useMotion } from '../../motion/useMotion.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Toast.module.scss';
+import { DismissGlyph } from '../../feedback/DismissGlyph.js';
 
 interface ToastCommon {
   /** Supplied by the caller to replace an existing toast, or generated. */
@@ -218,7 +219,7 @@ export function Toast({
         aria-label={dismissLabel ?? (typeof title === 'string' ? `Dismiss: ${title}` : 'Dismiss')}
         onClick={leave}
       >
-        <span aria-hidden="true">{'×'}</span>
+        <DismissGlyph />
       </button>
     </li>
   );

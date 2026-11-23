@@ -20,6 +20,7 @@ import type { DOMKeyframesDefinition } from 'motion/react';
 import presets from '@crystal-ui/core/core/presets';
 import type { CrystalPresetName, CrystalFlowDirection } from '@crystal-ui/core/core/presets';
 import { useCrystalTheme } from '../theme/CrystalProvider.js';
+import { releaseRestingStyles } from './useMotion.js';
 
 /** Read a `--cr-*` length from the resolved theme, falling back to Crystal's own default. */
 function readLength(styles: CSSStyleDeclaration, token: string, fallback: number): number {
@@ -110,6 +111,7 @@ export function usePreset(
         duration: duration / 1000,
         ...(easing ? { ease: easing as never } : {}),
       });
+      releaseRestingStyles(element, values);
       element.dataset['crMotionState'] = 'finished';
     } catch {
       /* Cancelled. This happens whenever a component unmounts mid-motion. */
