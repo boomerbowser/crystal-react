@@ -10,14 +10,16 @@
   align-items: stretch;
 }
 
+/* Each list panel wears Crystal's Haze, the catalogue's "Haze list panels"
+   (R-35, ruled 18 November 2026): the feathered content fill and its shadow.
+   It used to be the solid alternate surface with an edge rim. Nothing clips
+   it, because `overflow: hidden` would cut the feather into a hard edge; the
+   list scrolls inside its own box. */
 .panel {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  border: 1px solid var(--cr-edge);
   border-radius: var(--cr-radius);
-  background: var(--cr-surface-alt);
-  overflow: hidden;
 }
 
 .panelHead {

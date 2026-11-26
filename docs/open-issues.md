@@ -3,9 +3,10 @@
 Things noticed while building this library that are not fixed. Each says what is
 wrong, why it matters, where it is, and what closing it would take.
 
-**One entry is open**: R-35, three surfaces this library draws differently from
-the catalogue, ruled on 18 November 2026 and waiting to be built. R-37, the
-modal overlays whose material blurred nothing, closed on 26 November 2026. R-28, the
+**No entries are open.** R-35, the three surfaces this library drew
+differently from the catalogue, was built to its rulings and closed on
+26 November 2026, as was R-37, the modal overlays whose material blurred
+nothing. R-28, the
 hand-written material, closed on 17 November 2026: every directory wears
 Crystal's material, on core 2.8.0. The tasks left
 from the media and text work of 2 October 2026
@@ -16,40 +17,6 @@ closed on 7 November 2026 with core 2.4.0 installed. R-29, the flaky virtualizer
 check, closed on 2 October 2026; the record is in `closed-issues.md`. R-26, the
 adoption of Crystal 2.3.0, closed on 29 September 2026 with 2.3.0 on the
 registry.
-
-## R-35 · Three surfaces drawn differently from the catalogue
-
-**What.** R-A2's measurement (17 November 2026) accounts for every catalogue
-surface but four, and R-28 left one finding. In each the library draws
-something deliberate-looking that the catalogue does not specify, and either
-side could be the correction:
-
-1. **Chips** (`Chip`, worn by `TagsInput`, `MultiSelect` and the token field)
-   are a pill on the solid alternate surface with an `--cr-edge` rim. The
-   catalogue says "Haze chips", the compact surface, which Crystal publishes as
-   `.cr-tag` (a Resin shell with an 8px-inset Haze pad, 18px radius). Three
-   entries.
-2. **Transfer's list panels** are the solid alternate surface with an
-   `--cr-edge` rim. The catalogue says "Haze list panels".
-3. **List's rows** differ by element: a `<button>` row keeps Crystal's coat
-   (the reading pad, the sheen and the float shadow) under its flat Haze fill,
-   and an `<a>` row has none of them. Both have rendered this way since before
-   R-28, which kept them as they were.
-
-**Why it matters.** Under R-28 a library's drawing is a correction the
-standard takes in, but these were never decided, only drawn. Wearing the
-catalogue's surface changes how three components look; correcting the
-catalogue publishes the alternate surface as what a chip and a transfer panel
-are.
-
-**Ruled 18 November 2026: the library follows the catalogue in all three.**
-Chips wear `.cr-tag`. Transfer's panels wear Haze. List rows are flat for both
-elements: a `<button>` row loses the coat it kept, so it looks like an `<a>`
-row. Core is unchanged.
-
-**Closing it.** Each component wears its surface, measured before and after
-with the material gate as R-28 was, and `measure-surfaces.mjs` reports no
-surface missing.
 
 **R-17 and R-25 closed on 29 September 2026**, by Meridian's rulings of that day
 (Crystal's `proposals/2026-09-29-rulings.md`): the compiler-checked

@@ -53,14 +53,6 @@
    grow a cursor that promises something will happen. */
 a.row, button.row { cursor: pointer; }
 
-/* A `<button>` row is coated by Crystal, and the coat's reading pad is its
-   `::before`. `.cr-haze.flat` has no layer and hides it, but the button rows
-   have always shown it while the link rows, which have no coat, never have.
-   Kept as it renders until that difference is settled (R-28, phase 2). */
-@media not (forced-colors: active) {
-  button.row::before { display: block; }
-}
-
 a.row:hover, button.row:hover { background: var(--cr-surface-alt); }
 
 a.row:focus-visible, button.row:focus-visible {

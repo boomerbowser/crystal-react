@@ -18,6 +18,58 @@ The live tracker is [`open-issues.md`](open-issues.md).
 
 ---
 
+## R-35 · Three surfaces drawn differently from the catalogue
+
+**What.** R-A2's measurement (17 November 2026) and R-28 left three surfaces
+the library drew in a way the catalogue does not specify: chips on the solid
+alternate surface with an edge rim, where the catalogue says "Haze chips";
+Transfer's list panels on the same, where it says "Haze list panels"; and
+List rows that differed by element, a `<button>` row keeping Crystal's coat
+(the reading pad, the sheen, the float shadow and a second blur) that an `<a>`
+row never had.
+
+**Ruled 18 November 2026: the library follows the catalogue in all three.**
+Core is unchanged. Built and closed on 26 November 2026.
+
+**Chips.** `Chip` wears Crystal's tag, `.cr-resin-haze` for the coat and
+`.cr-tag` for the geometry, in all three shapes. `TagsInput`, the token field,
+`MultiSelect` and `FilterPanel` wear it through `Chip`. A chip is 48px, the
+tag's floor, so it is its own target and the hit-target box it needed at
+32px is gone. Selection is label weight and the primary pad: Crystal fills a
+pressed button's pad itself, and the chip that is both selectable and
+removable, a container around two buttons, takes the same fill from its own
+rule.
+
+Two adjustments sit where the tag meets a field:
+- *Height.* Crystal's field shell is 62px, leaving 44px inside its padding
+  and rim, the floor it gives an input. A 48px tag made every field holding a
+  chip 78px and failed `verify:appearance`. In a field the chip is the tag at
+  that 44px floor, with the same coat and type, and the field stays 62px.
+- *Blur.* A field shell is Resin, and Crystal gives a control inside a Resin
+  plane no second blur. Its rule lists the Resin planes but not the field
+  shell, so a chip in a field takes the same treatment in `Chip.module.scss`.
+
+**Transfer.** Each list panel wears `.cr-haze`, the feathered content fill and
+its shadow. `overflow: hidden` is gone, because it cut the feather into a hard
+edge; the list scrolls inside its own box.
+
+**List.** A `<button>` row wears `.cr-bare` with `.cr-haze.flat`, Crystal's way
+to take the whole coat off a control, and the rule that kept its pad is gone.
+A button row and a link row now match on every computed property measured,
+including hover and selection.
+
+**Checked.**
+- *Material gate.* Before and after, in all five modes. Link rows show no
+  difference. Button rows lose only the coat: the pad, the sheen, the shadow
+  and the blur. Chips and Transfer panels change exactly as the ruling says.
+- *Surfaces.* `measure-surfaces.mjs` and `audit-recipes.mjs` report no surface
+  missing. Transfer's Haze is now found in its own markup, and the chips
+  report `cr-resin-haze cr-tag`.
+- *Gates.* Every gate passes, including `verify:appearance` (146 checks) and
+  `verify:materials`.
+
+---
+
 ## R-37 · A modal overlay's surface blurred nothing
 
 **What.** Found while checking the testers' Drawer finding (R-36) on 22 November

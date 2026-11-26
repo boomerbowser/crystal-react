@@ -20,10 +20,12 @@
  * inside it, never a button containing a button. Nesting them is invalid HTML
  * and unusable. A button inside a button is one control to the accessibility
  * tree and to the pointer, so the remove target and the select target fight
- * over every press, and a nested control renders 48px tall inside a 32px chip.
+ * over every press, and a nested control inside the chip fights the chip for its own height.
  *
- * Selection is label weight here as everywhere in Crystal. The soft fill is the
- * second signal, never the only one.
+ * Every shape wears Crystal's tag, `.cr-resin-haze` with `.cr-tag` (R-35).
+ *
+ * Selection is label weight here as everywhere in Crystal. The primary pad is
+ * the second signal, never the only one.
  */
 import { forwardRef, type ReactNode } from 'react';
 import { ToggleButton, Button, type ToggleButtonProps } from 'react-aria-components';
@@ -76,7 +78,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
     return (
       <div
         ref={ref}
-        className={cx(styles['chip'], onRemove ? styles['removable'] : undefined, className)}
+        className={cx('cr-resin-haze cr-tag', styles['chip'], onRemove ? styles['removable'] : undefined, className)}
       >
         <span>{children}</span>
         {remove}
@@ -86,7 +88,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
 
   if (!onRemove) {
     return (
-      <MovingToggle {...props} className={cx(styles['chip'], styles['pressable'], 'cr-bare', className)}>
+      <MovingToggle {...props} className={cx('cr-resin-haze cr-tag', styles['chip'], styles['pressable'], className)}>
         <span>{children}</span>
       </MovingToggle>
     );
@@ -98,7 +100,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
   return (
     <div
       ref={ref}
-      className={cx(styles['chip'], styles['removable'], className)}
+      className={cx('cr-resin-haze cr-tag', styles['chip'], styles['removable'], className)}
       {...(props.isSelected ? { 'data-selected': true } : {})}
     >
       <MovingToggle {...props} className={cx(styles['chipLabel'], styles['pressable'], 'cr-bare')}>

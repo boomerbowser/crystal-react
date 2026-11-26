@@ -1,6 +1,6 @@
 {
   "$description": "Where each surface that audit-recipes.mjs did not find in a component's own markup is worn, measured in the built stories by scripts/measure-surfaces.mjs. \"child\": worn by an element the component renders; \"opened\": worn once the story's trigger is pressed; \"not-found\" and \"no-story\": not seen.",
-  "measured": "2026-11-17",
+  "measured": "2026-11-26",
   "storybook": "http://127.0.0.1:6006",
   "entries": {
     "overflow-list": {
@@ -12,6 +12,12 @@
       }
     },
     "command-palette": {
+      "mirage": {
+        "how": "opened",
+        "story": "overlays-command-palette--palette",
+        "trigger": "Open the palette",
+        "element": "div cr-mirage (wash)"
+      },
       "dialog": {
         "how": "opened",
         "story": "overlays-command-palette--palette",
@@ -51,23 +57,16 @@
     },
     "multi-select": {
       "compact": {
-        "how": "not-found",
-        "stories": [
-          "inputs-text-and-choice--text-family",
-          "inputs-text-and-choice--choice-family",
-          "inputs-text-and-choice--around-anything"
-        ]
+        "how": "child",
+        "story": "inputs-text-and-choice--choice-family",
+        "element": "div cr-resin-haze cr-tag (chip)"
       }
     },
     "tags-input": {
       "compact": {
-        "how": "not-found",
-        "stories": [
-          "inputs-composite--filtering",
-          "inputs-composite--tokens",
-          "inputs-composite--two-lists",
-          "inputs-composite--hierarchy"
-        ]
+        "how": "child",
+        "story": "inputs-composite--tokens",
+        "element": "div cr-resin-haze cr-tag (chip)"
       }
     },
     "date-picker": {
@@ -98,14 +97,6 @@
       "haze": {
         "how": "optional",
         "note": "the catalogue makes the panel optional; a product that groups it wears a card"
-      }
-    },
-    "transfer": {
-      "haze": {
-        "how": "not-found",
-        "stories": [
-          "inputs-composite--two-lists"
-        ]
       }
     },
     "cascader": {
@@ -156,13 +147,9 @@
     },
     "token-field": {
       "compact": {
-        "how": "not-found",
-        "stories": [
-          "inputs-composite--filtering",
-          "inputs-composite--tokens",
-          "inputs-composite--two-lists",
-          "inputs-composite--hierarchy"
-        ]
+        "how": "child",
+        "story": "inputs-composite--tokens",
+        "element": "div cr-resin-haze cr-tag (chip)"
       }
     },
     "upload": {
@@ -234,6 +221,14 @@
         "story": "feedback-inline-confirm--destructive",
         "trigger": "Delete project",
         "element": "div cr-frost (popover)"
+      }
+    },
+    "drawer": {
+      "mirage": {
+        "how": "opened",
+        "story": "overlays-drawer--every-edge",
+        "trigger": "Open the start drawer",
+        "element": "div cr-mirage (wash)"
       }
     },
     "menu": {
@@ -336,7 +331,15 @@
         "how": "opened",
         "story": "media-gallery--a-set",
         "trigger": "#storybook-root [role=option]",
-        "element": "div cr-mirage (scrim)"
+        "element": "div cr-mirage (wash)"
+      }
+    },
+    "lightbox": {
+      "mirage": {
+        "how": "opened",
+        "story": "media-lightbox--from-a-thumbnail",
+        "trigger": "Open the photograph",
+        "element": "div cr-mirage (wash)"
       }
     },
     "product-gallery": {
@@ -349,7 +352,7 @@
         "how": "opened",
         "story": "commerce-product-gallery--default",
         "trigger": "#storybook-root [role=option], #storybook-root button",
-        "element": "div cr-mirage (scrim)"
+        "element": "div cr-mirage (wash)"
       }
     },
     "coupon-input": {

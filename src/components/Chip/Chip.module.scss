@@ -1,62 +1,42 @@
 @use '../../styles/tokens' as *;
+@use '../../styles/field' as field;
 
-/* Chip is a compact pill for a value, a filter or a selection.
+/* Chip is Crystal's tag (R-35, ruled 18 November 2026).
  *
- * It is 32px tall inside a 44px target. The pill is what is drawn and the row
- * around it is the place to press, the same split every compact control in
- * Crystal makes.
+ * The catalogue says "Haze chips", and Crystal publishes that surface as a
+ * pair: `.cr-resin-haze` carries the coat (the Resin shell, the Haze pad inset
+ * by `--cr-haze-inset`, the sheen and the float shadow) and `.cr-tag` the
+ * geometry (the pill, the 48px floor and the label type). The chip wears both.
+ * This file keeps only what a tag does not have: the gap, the remove control,
+ * the two-control layout and selection on a chip that is not itself a button.
+ *
+ * At 48px the chip is its own target, so it needs no hit-target box around it.
  *
  * A removable chip is two controls, the chip and its remove button, so the
  * remove control has its own target inside the chip's. That is why the chip's
- * own padding shrinks when it is removable, instead of the remove button being
+ * end padding shrinks when it is removable, instead of the remove button being
  * squeezed.
  */
 
 .chip {
-  display: inline-flex;
-  align-items: center;
   gap: $cr-spacing-2xs;
-  min-block-size: $cr-chip-height;
-  padding-inline: $cr-spacing-sm;
-  border: 1px solid var(--cr-edge);
-  border-radius: $cr-action-radius;
-  background: var(--cr-surface-alt);
-  color: var(--cr-text);
-  font-size: var(--cr-text-caption-size);
-  font-weight: 550;
   white-space: nowrap;
 }
 
-/* The target around the picture. Transparent, centred, and 44px tall. */
-.pressable {
- position: relative; cursor: pointer; }
+.pressable { cursor: pointer; }
 
-.pressable::after {
-  /* There is one `::after` per element, and Crystal's sheen is on it too.
-     Crystal's `.cr-bare` sets both pseudo-elements to `content: none`, so
-     switching this back on means undoing everything Crystal's rule sets on it,
-     not only `display`. Otherwise the gradient paints across the chip and
-     `pointer-events: none` leaves the box inert. This box is the hit target,
-     and Crystal's rule disables it from 2.1.0 unless it is undone here. */
-  display: block;
-  background: none;
-  pointer-events: auto;
-  z-index: 0;
-
-  content: '';
-  position: absolute;
-  inset-block: 50%;
-  inset-inline: 0;
-  translate: 0 -50%;
-  block-size: $cr-action-min-target;
-}
-
-/* Selection is label weight, here as everywhere. The fill is the second signal. */
+/* Selection is label weight, here as everywhere; the primary pad is the second
+   signal. A selectable chip is a button, and Crystal fills a pressed button's
+   pad with the primary itself. A chip that is both selectable and removable is
+   a container around two buttons, so it takes the same fill here. */
 .chip[data-selected] {
   font-weight: 800;
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
-  border-color: var(--cr-primary-soft);
+  color: var(--cr-on-primary);
+}
+
+.chip[data-selected]::before {
+  background: var(--cr-primary);
+  filter: none;
 }
 
 .chip[data-focus-visible] {
@@ -67,23 +47,34 @@
 
 .chip[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
 
-.removable { padding-inline-end: $cr-spacing-2xs; }
+.removable { padding-inline-end: $cr-spacing-sm; }
+
+/* A chip that is both: the label half fills the pill up to the remove control,
+   so the whole of it presses. The pill gives up its start and block padding,
+   and the label takes them back. */
+.removable:has(> .chipLabel) {
+  padding-block: 0;
+  padding-inline-start: 0;
+}
 
 /* The label half of a chip that is both selectable and removable. It carries the
    press behaviour, and the pill around it carries the material. */
 .chipLabel {
-
   display: flex;
   align-items: center;
-  min-block-size: 100%;
-  margin-inline: calc(-1 * #{$cr-spacing-sm});
-  padding-inline: $cr-spacing-sm;
+  align-self: stretch;
+  padding-inline: $cr-spacing-lg 0;
   border: 0;
   border-radius: inherit;
   background: transparent;
   font: inherit;
   color: inherit;
   cursor: pointer;
+}
+
+/* Crystal's tag narrows to 15px of inline padding on a phone. */
+@media (max-width: 600px) { /* crystal-allow-literal: Crystal's own tag breakpoint */
+  .chipLabel { padding-inline-start: 15px; } /* crystal-allow-literal: Crystal's tag padding on a phone */
 }
 
 .chipLabel[data-selected] { font-weight: 800; }
@@ -145,5 +136,28 @@
 
 @media (forced-colors: active) {
   .chip { background: ButtonFace; border-color: ButtonText; color: ButtonText; }
-  .chip[data-selected] { background: ButtonFace; outline: 2px solid Highlight; }
+  .chip[data-selected] { outline: 2px solid Highlight; }
+  .chip[data-selected]::before { background: ButtonFace; }
+}
+
+/* In a field. A field shell is Resin, and Crystal gives a control inside a
+   Resin plane no second blur: one diffusion is the plane's, and a blur
+   inside it only blurs that blur again. Crystal's rule lists the Resin planes
+   but not the field shell, so a chip in a field takes the same treatment here.
+   `isolation` keeps the coat's pad above the chip's fill, as Crystal's rule
+   explains. */
+:global(.cr-field-shell) .chip {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  isolation: isolate;
+}
+
+/* A field is 62px, Crystal's field shell, and its 8px padding and rim leave
+   44px inside, the floor Crystal gives a control in a field. A tag's 48px
+   floor would make every field that holds a chip taller than its neighbours,
+   so in a field the chip is the tag at that floor instead: the same coat and
+   type, 44px tall, as an input beside it is. */
+:global(.cr-field-shell) .chip {
+  min-block-size: field.$field-control-floor;
+  padding-block: 0;
 }
