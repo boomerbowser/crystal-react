@@ -36,6 +36,7 @@ import { IconButton, CloseButton } from '../IconButton/IconButton.js';
 import { cx } from '../../styles/cx.js';
 import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './Lightbox.module.scss';
+import { MirageWash, washHolder } from '../../overlays/MirageWash.js';
 
 /* Crystal's own step. Doubling is too coarse for reading a photograph and 10%
    is too many presses to get anywhere. */
@@ -152,7 +153,10 @@ export function Lightbox({
   }, [change, onKeyShortcut]);
 
   return (
-    <ModalOverlay {...props} isOpen={isOpen} className={cx('cr-mirage', styles['scrim'])}>
+    <ModalOverlay {...props} isOpen={isOpen} className={cx(washHolder, styles['scrim'])}>
+      {/* The wash is the viewer's sibling, not its parent, so any material in
+          the viewer reaches the page (R-37). */}
+      <MirageWash />
       <Modal className={cx(styles['modal'])}>
         <AriaDialog
           aria-labelledby={`${id}-label`}

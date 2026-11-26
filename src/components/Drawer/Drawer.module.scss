@@ -10,7 +10,7 @@
  * to imply it.
  */
 
-/* The scrim wears Crystal's `.cr-mirage`, with its fallbacks. */
+/* The scrim holds layout only. Its wash is `MirageWash`, a sibling of the panel that wears Crystal's `.cr-mirage` with its fallbacks (R-37). */
 .scrim {
   position: fixed;
   inset: 0;

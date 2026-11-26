@@ -1,0 +1,12 @@
+/* The wash fills the overlay beneath everything else in it. The overlay is a
+   stacking context, so `z-index: -1` paints the wash after the overlay's own
+   background and before every child, positioned or not. */
+.holder { isolation: isolate; }
+
+.wash {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  /* In forced colours it keeps Crystal's own fallback fill, as the overlay
+     did when it wore the material. */
+}

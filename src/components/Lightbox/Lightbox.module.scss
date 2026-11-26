@@ -9,7 +9,7 @@
   z-index: 1200;
   display: grid;
   place-items: stretch;
-  /* The element wears Crystal's `.cr-mirage`, with its opaque, reduced-transparency
+  /* The overlay holds layout only; its `MirageWash` layer wears Crystal's `.cr-mirage`, with its opaque, reduced-transparency
      and no-backdrop routes. */
 }
 

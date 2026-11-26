@@ -29,7 +29,7 @@
  * state is announced, because a spinner is not.
  */
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence } from 'motion/react';
 import {
   Modal,
   ModalOverlay,
@@ -54,6 +54,7 @@ import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { cx } from '../../styles/cx.js';
 import { PresenceExit } from '../../motion/PresenceExit.js';
 import styles from './CommandPalette.module.scss';
+import { MirageWash, washHolder } from '../../overlays/MirageWash.js';
 
 const SearchIcon = (
   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
@@ -94,10 +95,6 @@ export interface CommandPaletteProps extends Omit<ModalOverlayProps,
   className?: string;
 }
 
-type OverlayProps = Omit<ModalOverlayProps, 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'>;
-const MotionOverlay = motion.create(
-  ModalOverlay as React.ForwardRefExoticComponent<OverlayProps & React.RefAttributes<HTMLDivElement>>,
-);
 
 /** Groups in first-appearance order, ungrouped commands first. */
 export function groupCommands(commands: readonly Command[]): { section?: string; commands: Command[] }[] {
@@ -137,12 +134,14 @@ export function CommandPalette({
   return (
     <AnimatePresence>
       {props.isOpen ? (
-        <MotionOverlay
+        <ModalOverlay
           {...props}
           isOpen
-          className={cx('cr-mirage', styles['scrim'])}
-          {...wash}
+          className={cx(washHolder, styles['scrim'])}
         >
+          {/* The wash is the surface's sibling, not its parent, so the
+              surface's own backdrop filter reaches the page (R-37). */}
+          <MirageWash {...wash} />
           <Modal className={cx(styles['holder'])}>
             <AriaDialog
               ref={scope as never}
@@ -222,7 +221,7 @@ export function CommandPalette({
               </Autocomplete>
             </AriaDialog>
           </Modal>
-        </MotionOverlay>
+        </ModalOverlay>
       ) : null}
     </AnimatePresence>
   );

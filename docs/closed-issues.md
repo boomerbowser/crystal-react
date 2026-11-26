@@ -18,6 +18,44 @@ The live tracker is [`open-issues.md`](open-issues.md).
 
 ---
 
+## R-37 · A modal overlay's surface blurred nothing
+
+**What.** Found while checking the testers' Drawer finding (R-36) on 22 November
+2026, and closed on 26 November 2026. React Aria's `Modal` sits inside its
+`ModalOverlay`, and the overlay wore `.cr-mirage`. An element with a backdrop
+filter is a backdrop root, so a backdrop filter inside it sees only the
+overlay's own layer, never the page. A modal `Drawer`'s Frost, the
+`CommandPalette`'s Haze and anything with a material in `Dialog` or `Lightbox`
+had nothing to diffuse. In the Drawer story the page under the panel read
+through it sharp.
+
+**Fix.** `src/overlays/MirageWash.tsx`: the overlay now holds layout only and
+is a stacking context, and the wash is its own layer, the first child and the
+panel's sibling, at `z-index: -1`, so it paints under the panel whatever the
+panel's positioning. It wears `.cr-mirage` and carries the `mirage` and
+`mirage-out` preset motion. Motion's `AnimatePresence` waits for every
+descendant's exit, so the overlay still stays mounted until the wash has left.
+`Drawer`, `Dialog`, `CommandPalette` and `Lightbox` use it. `Tour` already drew
+its scrim as a sibling, and `LoadingOverlay` was fixed the same way in R-36.
+The theme gate reads the Mirage filter from the wash.
+
+**Checked.**
+- *Material gate.* Before and after, in light, dark, opaque, reduced
+  transparency and forced colours: every panel is unchanged. The wash carries
+  exactly the fill, gradient and filter the overlay had. The only overlay
+  differences are the material leaving it.
+- *Forced colours.* The wash keeps Crystal's fallback fill over the overlay's
+  Canvas, so `Dialog`, which has no Canvas rule of its own, keeps its wash.
+- *Exit.* Escape plays `mirage-out` on the wash and unmounts it with the panel.
+- *Browser.* Chromium renders both blurs.
+- *WebKit limitation.* Playwright's WebKit build skips a backdrop filter on a
+  layer that covers the whole viewport, even on a bare page with no Crystal
+  code. The page behind a full-screen wash therefore looks sharp in its
+  screenshots, before and after this change. Safari itself is checked by
+  hand.
+
+---
+
 ## R-36 · The testers' fix list of 22 November 2026
 
 **What.** Meridian's testers reviewed the Storybook and sent a list of faults

@@ -33,7 +33,7 @@
  * specifications.
  */
 import { useEffect, useId, useRef, type ReactNode } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence } from 'motion/react';
 import {
   Modal,
   ModalOverlay,
@@ -49,6 +49,7 @@ import { CloseButton } from '../IconButton/IconButton.js';
 import { SurfaceProvider } from '../../overlays/surface.js';
 import { cx } from '../../styles/cx.js';
 import { PresenceExit } from '../../motion/PresenceExit.js';
+import { MirageWash, washHolder } from '../../overlays/MirageWash.js';
 import styles from './Drawer.module.scss';
 
 /** Which edge the panel is anchored to. `start` and `end` follow the reading direction. */
@@ -83,9 +84,6 @@ export interface DrawerProps extends Omit<ModalOverlayProps,
    collide under `exactOptionalPropertyTypes`. As in the dialog, the DOM events
    are dropped, because an overlay has no use for CSS animation events. */
 type OverlayProps = Omit<ModalOverlayProps, 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'>;
-const MotionOverlay = motion.create(
-  ModalOverlay as React.ForwardRefExoticComponent<OverlayProps & React.RefAttributes<HTMLDivElement>>,
-);
 
 /** How the authored recipe is pointed for a given edge and reading direction. */
 export function reorientationFor(
@@ -168,12 +166,14 @@ function ModalDrawer({
   return (
     <AnimatePresence>
       {props.isOpen ? (
-        <MotionOverlay
+        <ModalOverlay
           {...props}
           isOpen
-          className={cx('cr-mirage', styles['scrim'])}
-          {...wash}
+          className={cx(washHolder, styles['scrim'])}
         >
+          {/* The wash is the panel's sibling, not its parent, so the panel's
+              Frost reaches the page (R-37). */}
+          <MirageWash {...wash} />
           <Modal className={cx(styles['modalHolder'], styles[placement])}>
             <AriaDialog
               ref={scope as never}
@@ -201,7 +201,7 @@ function ModalDrawer({
               )}
             </AriaDialog>
           </Modal>
-        </MotionOverlay>
+        </ModalOverlay>
       ) : null}
     </AnimatePresence>
   );

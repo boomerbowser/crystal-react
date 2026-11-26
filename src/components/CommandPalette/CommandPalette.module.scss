@@ -21,7 +21,7 @@
      and a list that grows and shrinks as you type would walk up and down the
      screen if it were pinned to the middle. */
   padding-block-start: 12vh;
-  /* The element wears Crystal's `.cr-mirage`, with its opaque, reduced-transparency
+  /* The overlay holds layout only; its `MirageWash` layer wears Crystal's `.cr-mirage`, with its opaque, reduced-transparency
      and no-backdrop routes. */
 }
 

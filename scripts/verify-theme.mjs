@@ -113,7 +113,8 @@ if (result.error) {
 const materials = await page.evaluate(() => {
   const palette = document.querySelector('[role="dialog"]');
   const field = palette?.querySelector('[class*="field"]');
-  const scrim = palette?.closest('[class*="scrim"]');
+  /* The wash is the palette's sibling, not its parent (R-37). */
+  const scrim = palette?.closest('[class*="scrim"]')?.querySelector(':scope > [data-cr-wash]');
   const filterOf = (el) => (el ? getComputedStyle(el).backdropFilter : 'no element');
   return {
     resin: filterOf(field),

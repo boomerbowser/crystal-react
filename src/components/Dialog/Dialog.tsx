@@ -35,6 +35,7 @@ import { ScrollArea } from '../ScrollArea/ScrollArea.js';
 import { cx } from '../../styles/cx.js';
 import { SurfaceProvider } from '../../overlays/surface.js';
 import styles from './Dialog.module.scss';
+import { MirageWash, washHolder } from '../../overlays/MirageWash.js';
 
 export interface DialogProps extends Omit<ModalOverlayProps,
   'className' | 'children' | 'style' | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'> {
@@ -66,10 +67,6 @@ export interface DialogProps extends Omit<ModalOverlayProps,
    same name collide, and under `exactOptionalPropertyTypes` the collision is a
    type error. The DOM events are dropped from the wrapped surface. An overlay has
    no use for CSS animation events, and a caller wants Motion's callback. */
-type OverlayProps = Omit<ModalOverlayProps, 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'>;
-const MotionOverlay = motion.create(
-  ModalOverlay as React.ForwardRefExoticComponent<OverlayProps & React.RefAttributes<HTMLDivElement>>,
-);
 type SurfaceProps = Omit<AriaDialogProps, 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'>;
 const MotionDialog = motion.create(
   AriaDialog as React.ForwardRefExoticComponent<SurfaceProps & React.RefAttributes<HTMLElement>>,
@@ -89,12 +86,14 @@ export function Dialog({ title, children, actions, className, role = 'dialog', .
   return (
     <AnimatePresence>
       {props.isOpen ? (
-        <MotionOverlay
+        <ModalOverlay
           {...props}
           isOpen
-          className={cx(styles['scrim'], 'cr-mirage')}
-          {...wash}
+          className={cx(washHolder, styles['scrim'])}
         >
+          {/* The wash is the surface's sibling, not its parent, so the
+              surface's own backdrop filter reaches the page (R-37). */}
+          <MirageWash {...wash} />
           <Modal className={cx(styles['modal'])}>
             <MotionDialog
               role={role}
@@ -122,7 +121,7 @@ export function Dialog({ title, children, actions, className, role = 'dialog', .
               ) : null}
             </MotionDialog>
           </Modal>
-        </MotionOverlay>
+        </ModalOverlay>
       ) : null}
     </AnimatePresence>
   );
