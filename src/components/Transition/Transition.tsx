@@ -2,9 +2,9 @@
 
 /* Transition.
  *
- * Entry and exit choreography bound to Crystal's timings, easings and travel
+ * Entry and exit choreography bound to Prismata's timings, easings and travel
  * limits. It is a thin component over `usePreset` and `AnimatePresence`.
- * Everything it could decide is already decided in `@crystal-ui/core`, and a
+ * Everything it could decide is already decided in `@prismata/core`, and a
  * transition component that carried its own durations would be a second motion
  * system.
  *
@@ -28,11 +28,11 @@
  */
 import { useEffect, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { usePreset, type CrystalPresetName } from '../../motion/usePreset.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { usePreset, type PrismataPresetName } from '../../motion/usePreset.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 
-/* Crystal's exit duration, read from the tokens. Motion takes seconds. */
-const EXIT_SECONDS = Number.parseFloat(crystalTokens['motion.duration.exit']) / 1000;
+/* Prismata's exit duration, read from the tokens. Motion takes seconds. */
+const EXIT_SECONDS = Number.parseFloat(prismataTokens['motion.duration.exit']) / 1000;
 
 export interface TransitionProps {
   /** Whether the content is present. Exit plays before it leaves the tree. */
@@ -41,7 +41,7 @@ export interface TransitionProps {
    * Which material's movement. `frost` comes toward the viewer, `plastic` rises,
    * `resin` flows in, `mirage` washes across. Defaults to `frost`.
    */
-  preset?: CrystalPresetName;
+  preset?: PrismataPresetName;
   /**
    * Anchored things fade on the way out and unanchored ones drop away. A panel
    * fixed to the page is anchored, and a floating control is not.

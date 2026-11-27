@@ -39,7 +39,7 @@ type Story = StoryObj<typeof meta>;
 /** Tab through it: two stops, the name and the action. */
 export const Default: Story = {
   render: (args) => (
-    <div style={{ maxWidth: 'var(--cr-layout-min-cell-width)' }}>
+    <div style={{ maxWidth: 'var(--pr-layout-min-cell-width)' }}>
       <ProductCard
         {...only(args)}
         rating={<Rating label="Rating" value={4.5} isReadOnly />}
@@ -54,7 +54,7 @@ export const Default: Story = {
  *  markup rather than only in the stylesheet. */
 export const Reduced: Story = {
   render: (args) => (
-    <div style={{ maxWidth: 'var(--cr-layout-min-cell-width)' }}>
+    <div style={{ maxWidth: 'var(--pr-layout-min-cell-width)' }}>
       <ProductCard
         {...only(args)}
         was={{ amount: 49.99, currency: 'GBP' }}
@@ -70,7 +70,7 @@ export const Reduced: Story = {
  *  because there is nothing to press. */
 export const OutOfStock: Story = {
   render: (args) => (
-    <div style={{ maxWidth: 'var(--cr-layout-min-cell-width)' }}>
+    <div style={{ maxWidth: 'var(--pr-layout-min-cell-width)' }}>
       <ProductCard
         {...only(args)}
         availability="out-of-stock"

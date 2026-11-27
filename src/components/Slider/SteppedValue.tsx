@@ -1,6 +1,6 @@
 'use client';
 
-/* A value readout that marks the value changing with Crystal's `slider-step`.
+/* A value readout that marks the value changing with Prismata's `slider-step`.
  *
  * The catalogue gives `slider-step` to every control whose value moves in steps
  * (a slider, a range, a dial, a colour channel, a quantity), and the recipe's

@@ -12,7 +12,7 @@ const meta = {
           'Media with the ratio reserved before anything loads. An image that arrives and pushes '
           + 'the paragraph below it down the page is the most common layout shift on the web, and '
           + 'a component with a reserved box does not cause it. The placeholder is Haze, because '
-          + 'a grey rectangle on Crystal\'s coloured atmosphere reads as a hole in the page. `alt` '
+          + 'a grey rectangle on Prismata\'s coloured atmosphere reads as a hole in the page. `alt` '
           + 'is required and may be empty. Empty means decorative, absent means announced as a '
           + 'filename, and the author has to say which.',
       },

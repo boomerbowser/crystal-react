@@ -4,7 +4,7 @@ import { Pagination } from '../Pagination/Pagination.js';
 import { DataView } from './DataView.js';
 
 /* Narrow enough to fire the container query, which this story demonstrates. */
-const NARROW = '360px'; // crystal-allow-literal: the story's frame, not a design value
+const NARROW = '360px'; // prismata-allow-literal: the story's frame, not a design value
 
 const workspaces = ['Gather', 'Atlas', 'Harbour', 'Prism', 'Ion', 'Cobalt'];
 
@@ -12,8 +12,8 @@ const items = workspaces.map((name) => ({
   id: name.toLowerCase(),
   content: (
     <>
-      <h3 style={{ margin: 0, fontSize: 'var(--cr-text-subheading-size)' }}>{name}</h3>
-      <p style={{ marginBlock: 'var(--cr-spacing-2xs) 0', color: 'var(--cr-muted)' }}>
+      <h3 style={{ margin: 0, fontSize: 'var(--pr-text-subheading-size)' }}>{name}</h3>
+      <p style={{ marginBlock: 'var(--pr-spacing-2xs) 0', color: 'var(--pr-muted)' }}>
         Team plan · 12 seats
       </p>
     </>
@@ -33,7 +33,7 @@ const meta = {
           + 'does not change what they were told.\n\n'
           + 'The catalogue asks for "a control with a pressed state, not a hidden toggle", and the '
           + 'switch here is a named radio group. Picking one of two arrangements is a choice, and '
-          + 'both Crystal and React Aria treat it that way: Crystal\'s `SegmentedControl` is a '
+          + 'both Prismata and React Aria treat it that way: Prismata\'s `SegmentedControl` is a '
           + 'radio group, and React Aria\'s `ToggleButtonGroup` renders `role="radiogroup"` when '
           + 'its selection is single. The clause rules out two unlabelled icons whose state is a '
           + 'colour, and a named group rules that out at least as firmly.\n\n'

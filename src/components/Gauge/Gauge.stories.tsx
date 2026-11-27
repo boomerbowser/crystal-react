@@ -15,7 +15,7 @@ const meta = {
           + '"Threshold colour from status tokens", and never colour alone. A gauge told which '
           + "band its value is in takes that band's status colour and states the band's name "
           + 'both on screen and inside the meter\'s own text.\n\n'
-          + 'The sweep and the stroke are Crystal\'s. The arc matches the ring progress stroke, '
+          + 'The sweep and the stroke are Prismata\'s. The arc matches the ring progress stroke, '
           + 'as the catalogue requires, through one token, so a gauge and a ring progress cannot '
           + 'drift apart.',
       },
@@ -29,7 +29,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** In a band that means something. The colour is Crystal's status token and the
+/** In a band that means something. The colour is Prismata's status token and the
  *  band is named, because colour is never the only signal. */
 export const NearlyFull: Story = {
   args: { value: 94, valueLabel: '94%', status: 'danger', statusLabel: 'Nearly full' },

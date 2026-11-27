@@ -21,7 +21,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Every text-shaped control in Crystal has the same anatomy: a label, a Haze well inside '
+          'Every text-shaped control in Prismata has the same anatomy: a label, a Haze well inside '
           + 'a Resin shell, and helper text or an error beneath. One stylesheet is shared through '
           + 'mixins, so the material is not copied ten times.\n\n'
           + '**Errors are text, never colour alone**, and they are announced as well as drawn. A '
@@ -44,7 +44,7 @@ export const TextFamily: Story = {
   render: function TextFamily() {
     const [strength, setStrength] = useState(0);
     return (
-      <Stack gap="lg" style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>
+      <Stack gap="lg" style={{ maxWidth: '420px' /* prismata-allow-literal: story column */ }}>
         <TextInput label="Workspace name" description="Visible to everyone you invite." />
         <TextInput label="Workspace name" errorMessage="That name is already taken." />
         <TextArea label="Description" description="A sentence or two." maxLength={80} />
@@ -69,7 +69,7 @@ export const TextFamily: Story = {
 
 export const ChoiceFamily: Story = {
   render: () => (
-    <Stack gap="lg" style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>
+    <Stack gap="lg" style={{ maxWidth: '420px' /* prismata-allow-literal: story column */ }}>
       <Select
         label="Palette"
         options={[
@@ -101,13 +101,13 @@ export const ChoiceFamily: Story = {
  *  wiring: label, both describedby targets, invalid and required. */
 export const AroundAnything: Story = {
   render: () => (
-    <Stack gap="lg" style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>
+    <Stack gap="lg" style={{ maxWidth: '420px' /* prismata-allow-literal: story column */ }}>
       <Fieldset legend="Billing" description="Where the invoice goes.">
         <FormField label="Account reference" description="Six characters." isRequired>
-          <input style={{ padding: 'var(--cr-spacing-sm)' }} />
+          <input style={{ padding: 'var(--pr-spacing-sm)' }} />
         </FormField>
         <FormField label="Purchase order" errorMessage="We could not find that order.">
-          <input style={{ padding: 'var(--cr-spacing-sm)' }} />
+          <input style={{ padding: 'var(--pr-spacing-sm)' }} />
         </FormField>
       </Fieldset>
       <JsonInput label="Configuration" defaultValue={'{ "seats": 5 }'} />

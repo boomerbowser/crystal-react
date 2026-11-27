@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { Gallery } from './Gallery.js';
 
 const items = [
@@ -16,14 +16,14 @@ describe('Gallery', () => {
      gallery and the control after it. The charts make the same argument about
      marks. */
   it('is one tab stop, not one per thumbnail', () => {
-    const { container } = renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    const { container } = renderWithPrismata(<Gallery items={items} label="Photographs" />);
     expect(container.querySelectorAll('[tabindex="0"]')).toHaveLength(1);
     expect(container.querySelectorAll('[tabindex="-1"]')).toHaveLength(2);
   });
 
   it('moves along the strip with the arrow keys', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    renderWithPrismata(<Gallery items={items} label="Photographs" />);
     await user.tab();
     expect(screen.getByRole('option', { name: 'Harbour at dusk' })).toHaveFocus();
     await user.keyboard('{ArrowRight}');
@@ -34,7 +34,7 @@ describe('Gallery', () => {
 
   it('opens the viewer on Enter', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    renderWithPrismata(<Gallery items={items} label="Photographs" />);
     await user.tab();
     await user.keyboard('{Enter}');
     expect(screen.getByRole('dialog', { name: /Harbour at dusk/ })).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('Gallery', () => {
      they are. */
   it('says where in the set the viewer is', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    renderWithPrismata(<Gallery items={items} label="Photographs" />);
     await user.tab();
     await user.keyboard('{Enter}');
     expect(screen.getByRole('dialog', { name: /Harbour at dusk\s*1 of 3/ })).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe('Gallery', () => {
      well as named. Asserting the name alone passes with nothing announced. */
   it('announces the item it moved to', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    renderWithPrismata(<Gallery items={items} label="Photographs" />);
     await user.tab();
     await user.keyboard('{Enter}');
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
@@ -72,7 +72,7 @@ describe('Gallery', () => {
      A picture they have since left is the wrong place to return them to. */
   it('returns focus to the item the reader ended on', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    renderWithPrismata(<Gallery items={items} label="Photographs" />);
     await user.tab();
     await user.keyboard('{Enter}');
     await user.click(screen.getByRole('button', { name: 'Next' }));
@@ -87,7 +87,7 @@ describe('Gallery', () => {
      announcement of changes made while they were not there. */
   it('arrives silent, however the reader got to the item', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    renderWithPrismata(<Gallery items={items} label="Photographs" />);
     await user.tab();
     await user.keyboard('{ArrowRight}{ArrowRight}');
     await user.keyboard('{Enter}');
@@ -100,7 +100,7 @@ describe('Gallery', () => {
      remember it. */
   it('opens fit to the frame however it was left', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    renderWithPrismata(<Gallery items={items} label="Photographs" />);
     await user.tab();
     await user.keyboard('{Enter}');
     await user.click(screen.getByRole('button', { name: 'Zoom in' }));
@@ -113,7 +113,7 @@ describe('Gallery', () => {
 
   it('does not offer a way past either end of the set', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    renderWithPrismata(<Gallery items={items} label="Photographs" />);
     await user.tab();
     await user.keyboard('{Enter}');
     expect(screen.getByRole('button', { name: 'Previous' })).toBeDisabled();
@@ -123,7 +123,7 @@ describe('Gallery', () => {
   /* A set of one needs no position and no way through it. */
   it('leaves the position and the arrows out of a set of one', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Gallery items={[items[0]!]} label="Photographs" />);
+    renderWithPrismata(<Gallery items={[items[0]!]} label="Photographs" />);
     await user.tab();
     await user.keyboard('{Enter}');
     expect(screen.getByRole('dialog', { name: 'Harbour at dusk' })).toBeInTheDocument();
@@ -131,7 +131,7 @@ describe('Gallery', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(<Gallery items={items} label="Photographs" />);
+    const { container } = renderWithPrismata(<Gallery items={items} label="Photographs" />);
     await expectNoAxeViolations(container);
   });
 });

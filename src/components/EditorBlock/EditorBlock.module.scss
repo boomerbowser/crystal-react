@@ -1,13 +1,13 @@
 @use '../../styles/tokens' as *;
 
-/* "Haze surface in a Frost frame." The block is Crystal's Frost panel, worn as
-   `.cr-frost`. The writing surface is `RichTextSurface`'s Haze under its Resin
+/* "Haze surface in a Frost frame." The block is Prismata's Frost panel, worn as
+   `.pr-frost`. The writing surface is `RichTextSurface`'s Haze under its Resin
    toolbar, back to front, as the hierarchy runs. */
 .editor {
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-sm);
-  padding: var(--cr-block-padding, var(--cr-space));
-  border-radius: var(--cr-radius);
+  gap: var(--pr-block-gap, $pr-spacing-sm);
+  padding: var(--pr-block-padding, var(--pr-space));
+  border-radius: var(--pr-radius);
   min-inline-size: 0;
 }
 
@@ -17,7 +17,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   flex-wrap: wrap;
 }
 
@@ -25,4 +25,4 @@
 .state { margin-inline-end: auto; font-weight: 800; }
 
 /* The shortcut, printed: it describes the Save button, so it is read with it. */
-.keys { display: inline-flex; gap: $cr-spacing-2xs; color: var(--cr-muted); }
+.keys { display: inline-flex; gap: $pr-spacing-2xs; color: var(--pr-muted); }

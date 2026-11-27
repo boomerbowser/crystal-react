@@ -7,7 +7,7 @@
  * panel instead of floating above one, and a Resin row inside a Resin sidebar
  * would be Resin containing Resin, which reads as neither pane.
  *
- * The current row is heavier. That is Crystal's rule everywhere for the item
+ * The current row is heavier. That is Prismata's rule everywhere for the item
  * you are on: selection is label weight alone, and nothing is drawn beside the
  * label. The soft fill is the second signal, never the only one.
  * `data-current-ancestor` gives a collapsed branch the same weight at lower
@@ -34,29 +34,29 @@
 }
 
 .row {
-  /* The row wears Crystal's `.cr-haze.flush` (2.7.0): the feathered Haze fill
-     to the row's edge, with Crystal's fallbacks. */
+  /* The row wears Prismata's `.pr-haze.flush` (2.7.0): the feathered Haze fill
+     to the row's edge, with Prismata's fallbacks. */
   position: relative;
   display: flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
-  min-block-size: $cr-action-min-target;
-  padding-inline-end: $cr-spacing-sm;
-  /* One rule for every level. `--cr-tree-level` is 0 at the root. */
-  padding-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step});
-  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
-  color: var(--cr-text);
+  gap: $pr-spacing-2xs;
+  min-block-size: $pr-action-min-target;
+  padding-inline-end: $pr-spacing-sm;
+  /* One rule for every level. `--pr-tree-level` is 0 at the root. */
+  padding-inline-start: calc(var(--pr-tree-level, 0) * #{$pr-tree-indent-step});
+  border-radius: calc(var(--pr-radius) - #{$pr-field-well-inset});
+  color: var(--pr-text);
   font-weight: 550;
   cursor: pointer;
 }
 
-.item[data-hovered] .row { background: var(--cr-label-fill); }
+.item[data-hovered] .row { background: var(--pr-label-fill); }
 
 /* The destination you are on. Weight first, and the fill is the second signal. */
 .item[data-current] .row {
   font-weight: 800;
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
+  background: var(--pr-primary-soft);
+  color: var(--pr-on-primary-soft);
 }
 
 /* The branch it is inside, so a collapsed branch still shows where you are. */
@@ -67,8 +67,8 @@
   display: inline-grid;
   place-items: center;
   flex: none;
-  inline-size: $cr-icon-action;
-  block-size: $cr-icon-action;
+  inline-size: $pr-icon-action;
+  block-size: $pr-icon-action;
   padding: 0;
   border: 0;
   background: transparent;
@@ -76,7 +76,7 @@
   cursor: pointer;
 }
 
-.chevron svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.chevron svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 /* The end state, in CSS, correct at rest whether or not anything animated.
    `Burger` and `Accordion` follow the same rule. */

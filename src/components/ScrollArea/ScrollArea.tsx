@@ -2,11 +2,11 @@
 
 /* Scroll area.
  *
- * Crystal's catalogue gives this component three obligations: the scrollbar's
+ * Prismata's catalogue gives this component three obligations: the scrollbar's
  * appearance, the edge fade, and reduced-motion behaviour. This file owns none of
- * their values. The scrollbar is `@crystal-ui/core`'s own `.cr-scroll-frost` or
- * `.cr-scroll-resin` class, and the fade is Crystal's CSS keyed on
- * `data-cr-scroll`. React adds what CSS cannot do on its own: knowing whether
+ * their values. The scrollbar is `@prismata/core`'s own `.pr-scroll-frost` or
+ * `.pr-scroll-resin` class, and the fade is Prismata's CSS keyed on
+ * `data-pr-scroll`. React adds what CSS cannot do on its own: knowing whether
  * there is content beyond each edge.
  *
  * The scrollbar follows the material hierarchy. Frost is the intermediate
@@ -21,17 +21,17 @@
  *     when it scrolls and holds nothing focusable, so it adds no unneeded stop. A
  *     named area becomes a `region`. An unnamed one does not, because a landmark
  *     without a name is noise in a screen reader's landmark list.
- *   - `data-cr-scroll` is removed, rather than set empty, when nothing overflows.
- *     Crystal's CSS fades only when the attribute is present, so a container that
+ *   - `data-pr-scroll` is removed, rather than set empty, when nothing overflows.
+ *     Prismata's CSS fades only when the attribute is present, so a container that
  *     cannot scroll stays unmasked instead of fading at both ends.
  *
  * The catalogue's three states are `at-start`, `scrolling` and `at-end`. The two
- * positional ones are `data-cr-scroll`. `scrolling` is not represented: Crystal
+ * positional ones are `data-pr-scroll`. `scrolling` is not represented: Prismata
  * specifies no appearance for it, and it would need an idle timer running on
  * every scroll frame.
  *
  * Reduced motion needs nothing here. This component animates nothing, and the
- * smooth scrolling a product may ask for is `scroll-behavior`, which Crystal's
+ * smooth scrolling a product may ask for is `scroll-behavior`, which Prismata's
  * reset already switches to `auto` under `prefers-reduced-motion`.
  *
  * React Aria ships no scroll-area primitive. Its one scrolling API,
@@ -58,7 +58,7 @@ export type ScrollAreaVariant = 'frost' | 'resin';
 /** Which way the area scrolls. `both` carries no edge fade. See `fade`. */
 export type ScrollAreaAxis = 'y' | 'x' | 'both';
 
-/** Where the viewport is within the content, as Crystal's CSS reads it. */
+/** Where the viewport is within the content, as Prismata's CSS reads it. */
 type ScrollEdges = 'start' | 'end' | 'both' | undefined;
 
 export interface ScrollAreaProps extends HTMLAttributes<HTMLDivElement> {
@@ -143,11 +143,11 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(function S
       className={cx(
         styles['area'],
         styles[axis === 'x' ? 'axisX' : axis === 'both' ? 'axisBoth' : 'axisY'],
-        variant === 'resin' ? 'cr-scroll-resin' : 'cr-scroll-frost',
+        variant === 'resin' ? 'pr-scroll-resin' : 'pr-scroll-frost',
         className,
       )}
       {...(fade && axis !== 'both'
-        ? { 'data-cr-scroll': edges, 'data-cr-scroll-axis': axis }
+        ? { 'data-pr-scroll': edges, 'data-pr-scroll-axis': axis }
         : {})}
       {...(needsTabStop ? { tabIndex: 0, ...(named ? { role: 'region' } : {}) } : {})}
     >

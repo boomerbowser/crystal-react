@@ -16,7 +16,7 @@
 
 .bar .fill {
   fill: var(--series-colour);
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
+  transition: opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 /* Emphasis lowers the opacity of every other bar and leaves this one alone. A

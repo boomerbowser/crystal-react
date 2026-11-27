@@ -22,12 +22,12 @@ const meta = {
           + 'scrolling. A shortcut never takes a key from the control the reader is on: '
           + 'Space on the play toggle is the button\'s Space.\n\n'
           + 'The control bar appears on hover, on focus and while paused, and is not on a timer. '
-          + 'Crystal\'s rule is that nothing moves at rest, so a bar that faded away while nobody '
+          + 'Prismata\'s rule is that nothing moves at rest, so a bar that faded away while nobody '
           + 'was doing anything would be movement nobody started.\n\n'
           + 'The settings menu holds speed, subtitles, the audio track and quality. Each is a '
           + 'group of radio items; the chosen one is shown by weight, never a check mark, and '
           + 'every change is said. A group the browser cannot act on is left out. Captions are '
-          + 'drawn by Crystal on Stone, above the transport, so the bar never covers them.',
+          + 'drawn by Prismata on Stone, above the transport, so the bar never covers them.',
       },
     },
   },
@@ -90,7 +90,7 @@ export const WithSettings: Story = {
    for archive footage, with `cover` filling the stage instead of letterboxing. */
 export const AspectRatios: Story = {
   render: (args) => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, alignItems: 'start' }}> {/* crystal-allow-literal: the story's own grid, four players side by side */}
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, alignItems: 'start' }}> {/* prismata-allow-literal: the story's own grid, four players side by side */}
       {(['16 / 9', '4 / 3', '1 / 1', '9 / 16'] as const).map((ratio) => (
         <VideoPlayer key={ratio} {...only(args)} label={`${args.label}, ${ratio}`} aspectRatio={ratio} fit={ratio === '9 / 16' ? 'cover' : 'contain'}>
           <source src={harbourVideo} type="video/mp4" />

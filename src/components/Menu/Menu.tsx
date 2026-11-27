@@ -3,10 +3,10 @@
 /* Menu.
  *
  * React Aria owns `role="menu"`, arrow-key movement, type-ahead, Escape, the
- * return of focus to the trigger and all submenu behaviour. Crystal owns the
+ * return of focus to the trigger and all submenu behaviour. Prismata owns the
  * surface, the rows and one semantic decision.
  *
- * A check mark in a menu means checked, and this is the only place in Crystal
+ * A check mark in a menu means checked, and this is the only place in Prismata
  * where a check mark means that. Everywhere else it means validated or
  * informational, and selection is carried by label weight, never by a mark
  * beside the label, which offsets it. A checkable menu item is a checkbox in a
@@ -76,7 +76,7 @@ export function Menu<T extends object>({
             <AriaMenu
               {...props}
               {...(label ? { 'aria-label': label } : {})}
-              className={cx(styles['menu'], 'cr-scroll-resin', className)}
+              className={cx(styles['menu'], 'pr-scroll-resin', className)}
             />
           </SurfaceProvider>
         </>
@@ -155,7 +155,7 @@ export interface MenuGroupProps {
   /**
    * `single` makes the group a set of radio items: React Aria renders each as
    * `menuitemradio` with `aria-checked`. The chosen item is shown by label
-   * weight and the selected fill, never by a check mark, which in Crystal means
+   * weight and the selected fill, never by a check mark, which in Prismata means
    * validated. Use it for a choice of one, such as a playback speed.
    */
   selectionMode?: 'single';

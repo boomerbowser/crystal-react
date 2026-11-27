@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { ScatterChart } from './ScatterChart.js';
 
 const series = [{
@@ -13,7 +13,7 @@ const series = [{
 
 describe('ScatterChart', () => {
   it('states both coordinates of every point', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <ScatterChart label="Usage" series={series} xLabel="Seats" yLabel="Sessions" />,
     );
     expect(screen.getByLabelText('Ash, Seats 2, Sessions 40, 1')).toBeInTheDocument();
@@ -23,7 +23,7 @@ describe('ScatterChart', () => {
      the amount of ink. Mapping the value onto the diameter makes the largest
      point three times the area it should be. */
   it('sizes a point by its area', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ScatterChart
         label="Usage"
         xLabel="Seats"
@@ -46,7 +46,7 @@ describe('ScatterChart', () => {
   /* A dense scatter needs its table most, and is the chart an author is most
      tempted to summarise instead. */
   it('puts every point in the table, not a summary', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <ScatterChart label="Usage" series={series} xLabel="Seats" yLabel="Sessions" />,
     );
     expect(screen.getByRole('rowheader', { name: 'Ash' })).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('ScatterChart', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ScatterChart label="Usage by account" series={series} xLabel="Seats" yLabel="Sessions" />,
     );
     await expectNoAxeViolations(container);

@@ -114,7 +114,7 @@ export const Default: Story = {
       const [country, setCountry] = useState('GB');
       const [value, setValue] = useState<AddressValue>({});
       return (
-        <div style={{ maxWidth: 'var(--cr-layout-sidebar-width)' }}>
+        <div style={{ maxWidth: 'var(--pr-layout-sidebar-width)' }}>
           <AddressForm
             {...only(args)}
             country={country}

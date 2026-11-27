@@ -13,24 +13,24 @@
 
 .day[data-empty] .fill {
   fill: none;
-  stroke: var(--cr-chart-grid);
-  stroke-width: var(--cr-chart-hairline);
+  stroke: var(--pr-chart-grid);
+  stroke-width: var(--pr-chart-hairline);
 }
 
 .day[data-missing] .fill { stroke-dasharray: 2 2; }
 
 .axisLabel {
-  fill: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
-  font-family: var(--cr-font);
+  fill: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
+  font-family: var(--pr-font);
 }
 
 .day:focus-visible { outline: none; }
 
 .day:hover .fill,
 .day[data-active] .fill {
-  stroke: var(--cr-text);
-  stroke-width: var(--cr-chart-stroke);
+  stroke: var(--pr-text);
+  stroke-width: var(--pr-chart-stroke);
 }
 
 /* As the heatmap: with one colour left, the intensity becomes the size of the

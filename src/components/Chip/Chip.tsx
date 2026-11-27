@@ -22,9 +22,9 @@
  * tree and to the pointer, so the remove target and the select target fight
  * over every press, and a nested control inside the chip fights the chip for its own height.
  *
- * Every shape wears Crystal's tag, `.cr-resin-haze` with `.cr-tag` (R-35).
+ * Every shape wears Prismata's tag, `.pr-resin-haze` with `.pr-tag` (R-35).
  *
- * Selection is label weight here as everywhere in Crystal. The primary pad is
+ * Selection is label weight here as everywhere in Prismata. The primary pad is
  * the second signal, never the only one.
  */
 import { forwardRef, type ReactNode } from 'react';
@@ -66,7 +66,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
     <Button
       aria-label={removeLabel ?? (typeof children === 'string' ? `Remove ${children}` : 'Remove')}
       onPress={onRemove}
-      className={cx(styles['remove'], 'cr-bare')}
+      className={cx(styles['remove'], 'pr-bare')}
     >
       {CrossIcon}
     </Button>
@@ -78,7 +78,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
     return (
       <div
         ref={ref}
-        className={cx('cr-resin-haze cr-tag', styles['chip'], onRemove ? styles['removable'] : undefined, className)}
+        className={cx('pr-resin-haze pr-tag', styles['chip'], onRemove ? styles['removable'] : undefined, className)}
       >
         <span>{children}</span>
         {remove}
@@ -88,7 +88,7 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
 
   if (!onRemove) {
     return (
-      <MovingToggle {...props} className={cx('cr-resin-haze cr-tag', styles['chip'], styles['pressable'], className)}>
+      <MovingToggle {...props} className={cx('pr-resin-haze pr-tag', styles['chip'], styles['pressable'], className)}>
         <span>{children}</span>
       </MovingToggle>
     );
@@ -100,10 +100,10 @@ export const Chip = forwardRef<HTMLDivElement, ChipProps>(function Chip(
   return (
     <div
       ref={ref}
-      className={cx('cr-resin-haze cr-tag', styles['chip'], styles['removable'], className)}
+      className={cx('pr-resin-haze pr-tag', styles['chip'], styles['removable'], className)}
       {...(props.isSelected ? { 'data-selected': true } : {})}
     >
-      <MovingToggle {...props} className={cx(styles['chipLabel'], styles['pressable'], 'cr-bare')}>
+      <MovingToggle {...props} className={cx(styles['chipLabel'], styles['pressable'], 'pr-bare')}>
         {children}
       </MovingToggle>
       {remove}

@@ -4,9 +4,9 @@
  *
  * An anchored surface holding arbitrary content. React Aria owns the positioning,
  * the flipping when there is no room, the dismissal and the focus behaviour.
- * Crystal owns which material it is made of.
+ * Prismata owns which material it is made of.
  *
- * A transient overlay is Frost (Crystal R15e). A popover opened from the page
+ * A transient overlay is Frost (Prismata R15e). A popover opened from the page
  * is a panel that opens over content, and it is Frost. The same popover opened
  * inside a dialog or a drawer opens over a surface that is already a pane, and
  * two stacked panes of diffused glass read as neither, so it recesses into Haze

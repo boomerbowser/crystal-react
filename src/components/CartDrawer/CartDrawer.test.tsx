@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor } from '../../test/render.js';
 import { CartDrawer, type CartDrawerProps } from './CartDrawer.js';
 
 const gbp = (amount: number) => ({ amount, currency: 'GBP' });
@@ -20,7 +20,7 @@ const props: CartDrawerProps = {
 
 describe('CartDrawer', () => {
   it('opens as a dialog named for the basket, with focus inside it', async () => {
-    renderWithCrystal(<CartDrawer {...props} />);
+    renderWithPrismata(<CartDrawer {...props} />);
     const dialog = await screen.findByRole('dialog', { name: 'Your basket' });
     await waitFor(() => { expect(dialog.contains(document.activeElement)).toBe(true); });
   });
@@ -28,33 +28,33 @@ describe('CartDrawer', () => {
   /* The settled total is said once, when it changes. It is not said on opening,
      or while it is still being recalculated. */
   it('announces the total when it settles on a new figure, and not before', async () => {
-    const { rerenderWithCrystal } = renderWithCrystal(<CartDrawer {...props} />);
+    const { rerenderWithPrismata } = renderWithPrismata(<CartDrawer {...props} />);
     expect(screen.queryByText(/Basket total now/)).toBeNull();
 
-    rerenderWithCrystal(<CartDrawer {...props} total={gbp(44)} isUpdating />);
+    rerenderWithPrismata(<CartDrawer {...props} total={gbp(44)} isUpdating />);
     expect(screen.queryByText(/Basket total now/)).toBeNull();
 
-    rerenderWithCrystal(<CartDrawer {...props} total={gbp(44)} />);
+    rerenderWithPrismata(<CartDrawer {...props} total={gbp(44)} />);
     await waitFor(() => { expect(screen.getByText(/Basket total now £44\.00/)).toBeInTheDocument(); });
     expect(screen.getByText(/Basket total now/).closest('[role=status]')).not.toBeNull();
   });
 
   it('holds checkout while the figures are being recalculated', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(<CartDrawer {...props} isUpdating />);
+    const { rerenderWithPrismata } = renderWithPrismata(<CartDrawer {...props} isUpdating />);
     expect(screen.getByRole('button', { name: 'Checkout' })).toBeDisabled();
-    rerenderWithCrystal(<CartDrawer {...props} />);
+    rerenderWithPrismata(<CartDrawer {...props} />);
     expect(screen.getByRole('button', { name: 'Checkout' })).toBeEnabled();
   });
 
   it('says it is empty and offers no checkout when there is nothing in it', () => {
-    renderWithCrystal(<CartDrawer {...props} lines={[]} />);
+    renderWithPrismata(<CartDrawer {...props} lines={[]} />);
     expect(screen.getByText('Your basket is empty')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Checkout' })).toBeNull();
   });
 
   it('removes the line it was asked to', async () => {
     const onRemove = vi.fn();
-    renderWithCrystal(<CartDrawer {...props} onRemove={onRemove} />);
+    renderWithPrismata(<CartDrawer {...props} onRemove={onRemove} />);
     await userEvent.click(screen.getByRole('button', { name: /Remove Loose tea/ }));
     expect(onRemove).toHaveBeenCalledWith('tea');
   });
@@ -64,7 +64,7 @@ describe('CartDrawer', () => {
     ['updating', { isUpdating: true }],
     ['empty', { lines: [] }],
   ])('has no axe violations %s', async (_, extra) => {
-    renderWithCrystal(<CartDrawer {...props} {...extra} />);
+    renderWithPrismata(<CartDrawer {...props} {...extra} />);
     await expectNoAxeViolations(await screen.findByRole('dialog'));
   });
 });

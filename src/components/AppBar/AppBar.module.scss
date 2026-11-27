@@ -11,37 +11,37 @@
 .appBar {
   position: sticky;
   inset-block-start: 0;
-  z-index: 10;  /* crystal-allow-literal: stacking order, not a design value */
+  z-index: 10;  /* prismata-allow-literal: stacking order, not a design value */
   display: flex;
   align-items: center;
-  gap: var(--cr-space);
-  min-block-size: $cr-action-min-target;
-  padding: $cr-spacing-sm var(--cr-space);
+  gap: var(--pr-space);
+  min-block-size: $pr-action-min-target;
+  padding: $pr-spacing-sm var(--pr-space);
   /* A bar pinned to the top of a phone viewport sits under the notch without
      the safe-area inset. */
-  padding-inline-start: max(var(--cr-space), env(safe-area-inset-left));
-  padding-inline-end: max(var(--cr-space), env(safe-area-inset-right));
-  /* Crystal's `.cr-frost.docked.flat` (2.7.0): the Frost fill and blur, docked
+  padding-inline-start: max(var(--pr-space), env(safe-area-inset-left));
+  padding-inline-end: max(var(--pr-space), env(safe-area-inset-right));
+  /* Prismata's `.pr-frost.docked.flat` (2.7.0): the Frost fill and blur, docked
      to the top of the window with no rim, radius, shadow or grain, and
-     Crystal's fallbacks. The edge and the panel shadow it takes once the page
+     Prismata's fallbacks. The edge and the panel shadow it takes once the page
      scrolls under it are its own. */
-  color: var(--cr-text);
+  color: var(--pr-text);
   border-block-end: 1px solid transparent;
-  transition: box-shadow var(--cr-state), border-color var(--cr-state);
+  transition: box-shadow var(--pr-state), border-color var(--pr-state);
 }
 
 .scrolled {
-  border-block-end-color: var(--cr-edge);
-  box-shadow: var(--cr-shadow-panel);
+  border-block-end-color: var(--pr-edge);
+  box-shadow: var(--pr-shadow-panel);
 }
 
-.condensed { min-block-size: auto; padding-block: $cr-spacing-2xs; }
+.condensed { min-block-size: auto; padding-block: $pr-spacing-2xs; }
 
 .title {
   margin: 0;
-  font-size: var(--cr-text-heading-size);
-  line-height: var(--cr-text-heading-leading);
-  letter-spacing: var(--cr-text-heading-tracking);
+  font-size: var(--pr-text-heading-size);
+  line-height: var(--pr-text-heading-leading);
+  letter-spacing: var(--pr-text-heading-tracking);
   font-weight: 750;
   min-width: 0;
   overflow: hidden;
@@ -49,7 +49,7 @@
   white-space: nowrap;
 }
 
-.actions { margin-inline-start: auto; display: flex; align-items: center; gap: $cr-action-gap; }
+.actions { margin-inline-start: auto; display: flex; align-items: center; gap: $pr-action-gap; }
 
 @media (forced-colors: active) {
   .appBar { border-block-end: 1px solid CanvasText; }

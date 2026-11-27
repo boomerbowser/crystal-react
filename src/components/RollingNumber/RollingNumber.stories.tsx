@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
 import { only } from '../../../.storybook/environment.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { RollingNumber } from './RollingNumber.js';
 
 const meta = {
@@ -11,11 +11,11 @@ const meta = {
     docs: {
       description: {
         component:
-          'A number that rolls digit by digit when it changes. Crystal assigns this component '
+          'A number that rolls digit by digit when it changes. Prismata assigns this component '
           + 'no motion recipe. A library must not invent motion the design system did not '
           + 'specify, and `Card` plays nothing for that reason. Here the movement is the '
-          + 'component, so the roll is built from Crystal\'s published motion tokens: the travel '
-          + `is one digit, the duration is \`motion.duration.state\` (${crystalTokens['motion.duration.state']}), and the easing is `
+          + 'component, so the roll is built from Prismata\'s published motion tokens: the travel '
+          + `is one digit, the duration is \`motion.duration.state\` (${prismataTokens['motion.duration.state']}), and the easing is `
           + '`motion.easing.settle`. This library chose none of the numbers.\n\n'
           + 'The digits are `aria-hidden` and a polite live region carries the settled value one '
           + 'roll later, because "the value is announced once it settles, not on every frame". '

@@ -112,17 +112,17 @@ function Dial({
              unit, which for an angle or a gain is not enough to act on. */
           aria-valuetext={text}
           aria-disabled={isDisabled || undefined}
-          className={cx('cr-resin flat', styles['dial'])}
+          className={cx('pr-resin flat', styles['dial'])}
         >
           <span
             className={cx(styles['arc'])}
-            style={{ '--cr-arc': `${angle}deg` } as CSSProperties}
+            style={{ '--pr-arc': `${angle}deg` } as CSSProperties}
           />
           {/* Only the angle comes from here. The rim radius is a token, so the
               placement stays in CSS instead of becoming a magic number. */}
           <span
             className={cx(styles['orbit'])}
-            style={{ '--cr-angle': `${angle}deg` } as CSSProperties}
+            style={{ '--pr-angle': `${angle}deg` } as CSSProperties}
           >
             <span className={cx(styles['thumb'])} />
           </span>

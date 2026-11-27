@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { MultiSelect } from './MultiSelect.js';
 
 /* The accessible name as a reader assembles it, not as a matcher summarises
@@ -30,7 +30,7 @@ describe('MultiSelect', () => {
      every option reads `aria-selected="false"` however many chips are on
      screen. These two assertions catch that. */
   it('announces itself as multi-selectable, and says which options are chosen', async () => {
-    renderWithCrystal(<MultiSelect label="Tags" options={TAGS} defaultValue={['design']} />);
+    renderWithPrismata(<MultiSelect label="Tags" options={TAGS} defaultValue={['design']} />);
     const list = await open();
 
     expect(list.getAttribute('aria-multiselectable')).toBe('true');
@@ -40,7 +40,7 @@ describe('MultiSelect', () => {
 
   it('toggles an option and reports the whole set', async () => {
     const onChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <MultiSelect label="Tags" options={TAGS} defaultValue={['design']} onChange={onChange} />,
     );
     await open();
@@ -52,7 +52,7 @@ describe('MultiSelect', () => {
      selection of the collection it can see, so a narrowed list would otherwise
      empty the field of everything the filter had scrolled past. */
   it('keeps selections that the filter has hidden', async () => {
-    renderWithCrystal(<MultiSelect label="Tags" options={TAGS} defaultValue={['design']} />);
+    renderWithPrismata(<MultiSelect label="Tags" options={TAGS} defaultValue={['design']} />);
     await open();
 
     await userEvent.type(screen.getByRole('searchbox', { name: /Filter/ }), 'writ');
@@ -65,7 +65,7 @@ describe('MultiSelect', () => {
   });
 
   it('says so when nothing matches', async () => {
-    renderWithCrystal(<MultiSelect label="Tags" options={TAGS} />);
+    renderWithPrismata(<MultiSelect label="Tags" options={TAGS} />);
     await open();
     await userEvent.type(screen.getByRole('searchbox', { name: /Filter/ }), 'zzz');
     expect(screen.getByText(/No options match/)).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('MultiSelect', () => {
   /* The catalogue's `at-limit` state. The options are disabled instead of
      removed, so the list does not change shape under the reader. */
   it('stops at the limit and says why', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <MultiSelect label="Tags" options={TAGS} defaultValue={['design']} maxSelected={1} />,
     );
     await open();
@@ -88,7 +88,7 @@ describe('MultiSelect', () => {
      the next field. The count therefore goes in the trigger's name, which a
      keyboard user does reach. */
   it('carries the selection in the trigger name', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <MultiSelect label="Tags" options={TAGS} defaultValue={['design', 'writing']} />,
     );
     const trigger = screen.getByRole('button', { name: /Tags/ });
@@ -100,7 +100,7 @@ describe('MultiSelect', () => {
 
   it('removes a chip from within the field', async () => {
     const onChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <MultiSelect label="Tags" options={TAGS} defaultValue={['design', 'writing']} onChange={onChange} />,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Remove Design' }));
@@ -109,7 +109,7 @@ describe('MultiSelect', () => {
 
   /* Down from the filter is the movement a filter field implies. */
   it('moves from the filter into the list with the down arrow', async () => {
-    renderWithCrystal(<MultiSelect label="Tags" options={TAGS} />);
+    renderWithPrismata(<MultiSelect label="Tags" options={TAGS} />);
     await open();
     screen.getByRole('searchbox', { name: /Filter/ }).focus();
     await userEvent.keyboard('{ArrowDown}');
@@ -117,7 +117,7 @@ describe('MultiSelect', () => {
   });
 
   it('has no axe violations, closed or open', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <MultiSelect
         label="Tags"
         options={TAGS}

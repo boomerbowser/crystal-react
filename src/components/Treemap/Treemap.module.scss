@@ -11,7 +11,7 @@
 
 .fill {
   fill: var(--series-colour);
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
+  transition: opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 .label { @include chart.chart-label; }
@@ -23,13 +23,13 @@
 .chart :global(svg) > g:hover .cell:not(:hover) .fill,
 .chart :global(svg) > g:focus-within .cell:not([data-active]) .fill { opacity: 0.55; }
 
-.breadcrumb { font-size: var(--cr-text-caption-size); }
+.breadcrumb { font-size: var(--pr-text-caption-size); }
 
 .crumbs {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -37,17 +37,17 @@
 
 .crumb + .crumb::before {
   content: '›';
-  margin-inline-end: $cr-spacing-2xs;
-  color: var(--cr-muted);
+  margin-inline-end: $pr-spacing-2xs;
+  color: var(--pr-muted);
 }
 
 .crumb button {
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-xs;
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-xs;
   border: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   background: transparent;
-  color: var(--cr-primary);
+  color: var(--pr-primary);
   font: inherit;
   cursor: pointer;
 }

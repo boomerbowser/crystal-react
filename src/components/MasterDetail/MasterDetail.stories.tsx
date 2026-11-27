@@ -17,7 +17,7 @@ const meta = {
           + 'goes to a control that is not there.\n\n'
           + 'The same action means two different things depending on a media query, which is '
           + 'why it is driven at two viewports in the behaviour gate. The breakpoint is '
-          + 'Crystal\'s `md`, taken from the generated token export rather than retyped.',
+          + 'Prismata\'s `md`, taken from the generated token export rather than retyped.',
       },
     },
   },

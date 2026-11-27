@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { useRef, useState } from 'react';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { CartItem } from './CartItem.js';
 
 function Harness({ onRemove }: { onRemove?: () => void } = {}) {
@@ -27,7 +27,7 @@ describe('CartItem', () => {
      reader does not have is what the change did to the money. */
   it('announces the new subtotal when the quantity changes', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await user.click(screen.getByRole('button', { name: /One more/ }));
     expect(screen.getByText('2 × Harbour print, £80.00')).toBeInTheDocument();
   });
@@ -35,7 +35,7 @@ describe('CartItem', () => {
   /* A line that renders showing two of something has not just been changed to
      two. Nothing speaks at rest. */
   it('says nothing about a quantity it started at', () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     expect(screen.queryByText(/× Harbour print/)).toBeNull();
   });
 
@@ -65,7 +65,7 @@ describe('CartItem', () => {
         </>
       );
     }
-    renderWithCrystal(<WithReturn />);
+    renderWithPrismata(<WithReturn />);
     await user.click(screen.getByRole('button', { name: 'Remove Harbour print' }));
     expect(screen.getByRole('button', { name: 'Checkout' })).toHaveFocus();
     expect(document.body).not.toHaveFocus();
@@ -74,14 +74,14 @@ describe('CartItem', () => {
   /* Without the name, a basket of thirty lines has thirty controls called
      "Remove". */
   it('names its remove control after what it removes', () => {
-    renderWithCrystal(<Harness onRemove={vi.fn()} />);
+    renderWithPrismata(<Harness onRemove={vi.fn()} />);
     expect(screen.getByRole('button', { name: 'Remove Harbour print' })).toBeInTheDocument();
   });
 
   /* The subtotal is given, never multiplied here: rounding, bundling and
      per-line discounts are the product's arithmetic. */
   it('shows the subtotal it was given', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CartItem
         name="Harbour print"
         nameText="Harbour print"
@@ -116,7 +116,7 @@ describe('CartItem', () => {
     }
 
     const user = userEvent.setup();
-    renderWithCrystal(<AtTheBound />);
+    renderWithPrismata(<AtTheBound />);
     await user.click(screen.getByRole('button', { name: /One more/ }));
 
     const spoken = screen.getAllByRole('status').map((one) => one.textContent ?? '');
@@ -128,7 +128,7 @@ describe('CartItem', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(<Harness onRemove={vi.fn()} />);
+    const { container } = renderWithPrismata(<Harness onRemove={vi.fn()} />);
     await expectNoAxeViolations(container);
   });
 });

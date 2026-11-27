@@ -13,7 +13,7 @@ const meta = {
           'Differs from `NumberInput` in one number. `NumberInput` keeps each chevron short '
           + 'so the pair reaches the field height together, which suits a form where the arrow '
           + 'keys are the primary route. The catalogue says of this one: "Pill; both controls '
-          + 'reach 44px." A stepper beside a price is pressed with a thumb, on a phone, next ' /* crystal-allow-literal: quoting the catalogue's own sentence */
+          + 'reach 44px." A stepper beside a price is pressed with a thumb, on a phone, next ' /* prismata-allow-literal: quoting the catalogue's own sentence */
           + 'to a Remove control it must not be mistaken for.\n\n'
           + 'React Aria strips the `spinbutton` role and all three value attributes ("we '
           + 'can\'t focus a spin button with VO"), which takes the bounds off the control. '

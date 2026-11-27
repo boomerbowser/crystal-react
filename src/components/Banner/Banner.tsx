@@ -56,7 +56,7 @@ export const Banner = forwardRef<HTMLDivElement, BannerProps>(function Banner({
   const id = useId();
   /* Inside `AnimatePresence`, a banner arrives with `toast-in` and leaves with
      `toast-out` once dismissed. Rendered plainly, it plays neither. It plays
-     `attention`, Crystal's status recipe, when its status becomes one that has
+     `attention`, Prismata's status recipe, when its status becomes one that has
      one, and never on the render that first shows it. There are two scopes,
      because both play on the one element and a status change must not cancel an
      arrival. */
@@ -71,7 +71,7 @@ export const Banner = forwardRef<HTMLDivElement, BannerProps>(function Banner({
       ref={merged as never}
       role={urgent ? 'alert' : 'status'}
       data-status={status}
-      className={cx('cr-haze inset', styles['banner'], className)}
+      className={cx('pr-haze inset', styles['banner'], className)}
     >
       <span aria-hidden="true" className={styles['well']}>{STATUS_SYMBOL[status]}</span>
       <p className={styles['message']} id={`${id}-message`}>{children}</p>
@@ -79,7 +79,7 @@ export const Banner = forwardRef<HTMLDivElement, BannerProps>(function Banner({
       {onDismiss ? (
         <button
           type="button"
-          className={cx(styles['dismiss'], 'cr-bare')}
+          className={cx(styles['dismiss'], 'pr-bare')}
           aria-label={dismissLabel}
           onClick={() => {
             onDismiss();

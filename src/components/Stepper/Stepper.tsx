@@ -6,7 +6,7 @@
  * glyph mean nothing to a reader who does not see them. Each step carries its
  * state as text in its accessible name, such as "Step 2 of 4: Details, current".
  * Without it the list would differ from step to step only in colour and a
- * symbol, which fails the same way Crystal's status colours would if they were
+ * symbol, which fails the same way Prismata's status colours would if they were
  * not paired with a label and a shape.
  *
  * The current step takes `aria-current="step"`, the value defined for this.
@@ -98,7 +98,7 @@ export function Stepper({
 
         const body = (
           <>
-            <span className={cx(shape === 'marker' && 'cr-resin flat', styles['marker'])} aria-hidden="true">
+            <span className={cx(shape === 'marker' && 'pr-resin flat', styles['marker'])} aria-hidden="true">
               {state === 'complete' ? '✓' : state === 'error' ? '!' : index + 1}
             </span>
             <span className={cx(styles['text'])}>
@@ -117,13 +117,13 @@ export function Stepper({
             className={cx(styles['step'])}
           >
             {isNavigable ? (
-              <Button aria-label={name} onPress={() => onNavigate?.(step.id)} className={cx(styles['control'], shape === 'marker' ? 'cr-bare' : 'cr-haze flush')}>
+              <Button aria-label={name} onPress={() => onNavigate?.(step.id)} className={cx(styles['control'], shape === 'marker' ? 'pr-bare' : 'pr-haze flush')}>
                 {body}
               </Button>
             ) : (
               /* Not focusable. A control that takes focus and does nothing is
                  worse than one that is plainly inert. */
-              <span className={cx(styles['control'], shape === 'pill' && 'cr-haze flush')} aria-label={name} role="text">{body}</span>
+              <span className={cx(styles['control'], shape === 'pill' && 'pr-haze flush')} aria-label={name} role="text">{body}</span>
             )}
           </StepItem>
         );

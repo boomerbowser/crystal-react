@@ -1,9 +1,9 @@
 @use '../../styles/tokens' as *;
 
-/* Crystal's dock, worn as `.cr-dock` around `.cr-dock-inner`: one Resin plane
+/* Prismata's dock, worn as `.pr-dock` around `.pr-dock-inner`: one Resin plane
    and one Stone label backing behind the whole row, as the catalogue specifies.
    The catalogue says "Resin plane, Stone label backing, primary fill on the
-   selected destination". `.cr-dock` also gives the plane its Haze fill.
+   selected destination". `.pr-dock` also gives the plane its Haze fill.
 
    There is one backing behind the row, not one per destination. Per-label
    backings would draw a box around each destination and turn this into a
@@ -16,16 +16,16 @@
   list-style: none;
 }
 
-/* A destination is a link, and `.cr-dock` reaches a link from 2.3.0 (D-26): the
+/* A destination is a link, and `.pr-dock` reaches a link from 2.3.0 (D-26): the
    dock control's 52px, its padding, and on `aria-current` the primary fill and
    weight. The destination itself changes material, and nothing is drawn beside
    the label. This rule adds only the icon's gap. */
-.item { gap: $cr-action-gap; }
+.item { gap: $pr-action-gap; }
 
 /* The link's own ink, which is the fill's on-primary at rest and crosses with
    the label while the pill travels (D-37). */
 .item[aria-current] .icon { color: inherit; }
 
-.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
-.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.icon { display: inline-flex; flex: none; color: var(--pr-muted); }
+.icon svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 

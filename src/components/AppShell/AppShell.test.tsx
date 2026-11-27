@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { AppShell } from './AppShell.js';
 import { AppBar } from '../AppBar/AppBar.js';
 
@@ -8,7 +8,7 @@ describe('AppShell', () => {
   /* The shell owns the landmarks, and "one main per view" is why the regions are
      props and not children a caller arranges. */
   it('lays out the landmarks, with exactly one main', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <AppShell
         header={<AppBar title="Workspace" titleAs="h1" />}
         sidebar={<a href="#x">Overview</a>}
@@ -28,7 +28,7 @@ describe('AppShell', () => {
      visually collapsed but still focusable sends a keyboard user into links they
      cannot see. */
   it('takes the sidebar out of reach when it is collapsed', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <AppShell sidebar={<a href="#x">Overview</a>} isCollapsed><p>Content</p></AppShell>,
     );
     expect(screen.queryByRole('navigation', { name: 'Sections' })).toBeNull();
@@ -37,7 +37,7 @@ describe('AppShell', () => {
      by landmark finds what is true of the view, such as saved, syncing or
      offline. */
   it('renders the contentinfo landmark it promises', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <AppShell footer={<p>All changes saved</p>}>
         <p>The view</p>
       </AppShell>,
@@ -48,7 +48,7 @@ describe('AppShell', () => {
   /* With no footer content there is no landmark. An empty landmark is an entry in
      the landmark list with nothing behind it. */
   it('renders no footer when there is nothing to put in it', () => {
-    renderWithCrystal(<AppShell><p>The view</p></AppShell>);
+    renderWithPrismata(<AppShell><p>The view</p></AppShell>);
     expect(screen.queryByRole('contentinfo')).toBeNull();
   });
 

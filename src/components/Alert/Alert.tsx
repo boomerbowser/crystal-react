@@ -18,12 +18,12 @@
  * "Haze surface with the semantic ink pair **on the symbol well**." The panel
  * stays Haze over whatever it sits on and the message is ordinary text; only the
  * circle is tinted. A danger-coloured panel would make the message decoration on
- * a coloured ground, and a danger-coloured perimeter is the shape Crystal uses
+ * a coloured ground, and a danger-coloured perimeter is the shape Prismata uses
  * for focus.
  *
  * Motion: `attention` on a status that arrives, not on mount. Nothing moves at
  * rest, and an alert that animated as the page loaded is ambient movement.
- * Crystal assigns a recipe to two of the four statuses and this library authors
+ * Prismata assigns a recipe to two of the four statuses and this library authors
  * none for the others.
  */
 import {
@@ -103,7 +103,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert({
       role={urgent ? 'alert' : 'region'}
       aria-labelledby={`${id}-title`}
       data-status={status}
-      className={cx('cr-haze inset', styles['alert'], className)}
+      className={cx('pr-haze inset', styles['alert'], className)}
     >
       <span aria-hidden="true" className={styles['well']}>{STATUS_SYMBOL[status]}</span>
       <div className={styles['content']}>
@@ -114,7 +114,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert({
       {canDismiss ? (
         <button
           type="button"
-          className={cx(styles['dismiss'], 'cr-bare')}
+          className={cx(styles['dismiss'], 'pr-bare')}
           /* Named for what it dismisses rather than "Close": a page with three
              alerts otherwise offers a reader three identical buttons. */
           aria-label={dismissLabel ?? (typeof title === 'string' ? `Dismiss: ${title}` : 'Dismiss')}

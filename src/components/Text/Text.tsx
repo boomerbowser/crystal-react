@@ -2,7 +2,7 @@
 
 /* Text.
  *
- * Body copy and the small runs of text around it, at a step of Crystal's scale.
+ * Body copy and the small runs of text around it, at a step of Prismata's scale.
  *
  * Two things it will not do, both from the catalogue:
  *
@@ -39,7 +39,7 @@ export type TextElement =
   | 'u' | 's' | 'ins' | 'del' | 'mark' | 'kbd' | 'code' | 'sub' | 'sup';
 
 export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, 'color'> {
-  /** A step of Crystal's scale. Defaults to `body`, the reading size exactly. */
+  /** A step of Prismata's scale. Defaults to `body`, the reading size exactly. */
   step?: TextStep;
   /** Colour role, not a colour. Defaults to the surface's ink. */
   tone?: TextTone;
@@ -83,9 +83,9 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
   const Element = as as ElementType;
   const toneClass = TONE[tone];
   const scale: CSSProperties = step === 'body' ? {} : {
-    '--cr-text-size': `var(--cr-text-${step}-size)`,
-    '--cr-text-leading': `var(--cr-text-${step}-leading)`,
-    '--cr-text-tracking': `var(--cr-text-${step}-tracking)`,
+    '--pr-text-size': `var(--pr-text-${step}-size)`,
+    '--pr-text-leading': `var(--pr-text-${step}-leading)`,
+    '--pr-text-tracking': `var(--pr-text-${step}-tracking)`,
   } as CSSProperties;
 
   /* Only when the children are a string: anything else cannot be turned into a

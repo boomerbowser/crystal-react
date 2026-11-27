@@ -15,7 +15,7 @@ const meta = {
           + 'hairline connectors for this) and one set of semantics. Writing the semantics twice '
           + 'would give `aria-current` and the state wording two places to drift, and the '
           + 'wording carries the meaning to anybody not looking at the markers.\n\n'
-          + 'This is the one place in Crystal the check mark glyph is right. It means validated, '
+          + 'This is the one place in Prismata the check mark glyph is right. It means validated, '
           + 'which is information display. It never means "selected".',
       },
     },

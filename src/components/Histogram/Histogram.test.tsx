@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { Histogram, binValues } from './Histogram.js';
 
 const values = [1, 2, 2, 3, 4, 4, 4, 5, 8, 9, 10];
@@ -8,7 +8,7 @@ const values = [1, 2, 2, 3, 4, 4, 4, 5, 8, 9, 10];
 describe('Histogram', () => {
   /* "Bin bounds and counts are text". The label states a bin's bounds and count. */
   it('states each bin by its bounds and its count', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Histogram label="Response times" values={values} bins={2} formatBin={(a, b) => `${a}–${b}`} />,
     );
     expect(screen.getByLabelText('1–5.5, 8')).toBeInTheDocument();
@@ -27,7 +27,7 @@ describe('Histogram', () => {
   it('draws bins that meet', () => {
     /* Every bin has something in it, because a bin with nothing in it draws no
        path at all and there is then no edge to compare. */
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Histogram label="Response times" values={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} bins={4} />,
     );
     const edges = Array.from(container.querySelectorAll('[role="graphics-symbol"] path'))
@@ -41,7 +41,7 @@ describe('Histogram', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<Histogram label="Response times" values={values} />);
+    const { container } = renderWithPrismata(<Histogram label="Response times" values={values} />);
     await expectNoAxeViolations(container);
   });
 });

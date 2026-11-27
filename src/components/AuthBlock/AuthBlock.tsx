@@ -103,8 +103,8 @@ export function AuthBlock({
   };
 
   return (
-    <div className={cx(styles['ground'], 'cr-plastic', className)} data-cr-state={state}>
-      <div className={cx(styles['card'], 'cr-haze')}>
+    <div className={cx(styles['ground'], 'pr-plastic', className)} data-pr-state={state}>
+      <div className={cx(styles['card'], 'pr-haze')}>
         {brand ? <div className={cx(styles['brand'])}>{brand}</div> : null}
         <Heading className={cx(styles['heading'])}>{HEADING[mode]}</Heading>
 

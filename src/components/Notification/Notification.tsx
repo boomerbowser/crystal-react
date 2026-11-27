@@ -7,7 +7,7 @@
  * notification is a record, it survives the session, and it has a read state.
  * It is a list item in something a reader comes back to.
  *
- * "Unread treatment" is Crystal's, and Crystal marks it with label weight
+ * "Unread treatment" is Prismata's, and Prismata marks it with label weight
  * alone. Nothing is drawn beside the title to mark it. A dot beside the title
  * offsets the title it points at, so the unread one stops lining up with the
  * others, and a check mark never means a state. Weight is typographic, so the
@@ -64,7 +64,7 @@ export const Notification = forwardRef<HTMLLIElement, NotificationProps>(functio
     <li
       {...props}
       ref={merged as never}
-      className={cx(styles['notification'], material === 'frost' ? 'cr-frost reading' : 'cr-haze', className)}
+      className={cx(styles['notification'], material === 'frost' ? 'pr-frost reading' : 'pr-haze', className)}
       data-status={status}
       data-unread={unread ? '' : undefined}
       aria-labelledby={`${id}-title`}
@@ -86,7 +86,7 @@ export const Notification = forwardRef<HTMLLIElement, NotificationProps>(functio
       {onDismiss ? (
         <button
           type="button"
-          className={cx(styles['dismiss'], 'cr-bare')}
+          className={cx(styles['dismiss'], 'pr-bare')}
           aria-label={dismissLabel ?? (typeof title === 'string' ? `Dismiss: ${title}` : 'Dismiss')}
           onClick={onDismiss}
         >

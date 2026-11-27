@@ -1,13 +1,13 @@
 import type { Decorator } from '@storybook/react-vite';
-import { CrystalProvider } from '../src/theme/CrystalProvider.js';
+import { PrismataProvider } from '../src/theme/PrismataProvider.js';
 import type {
-  CrystalDensity, CrystalDirection, CrystalEffects, CrystalModePreference,
-  CrystalPalette, CrystalTypeface,
+  PrismataDensity, PrismataDirection, PrismataEffects, PrismataModePreference,
+  PrismataPalette, PrismataTypeface,
 } from '../src/theme/types.js';
 
 /* The environment, as toolbar controls.
  *
- * Every adjustable value in Crystal's own "Make it yours" panel, in the same
+ * Every adjustable value in Prismata's own "Make it yours" panel, in the same
  * order and with the same defaults: palette, appearance, colour atmosphere,
  * Frost base tint, elevation, corner radius, density, direction, animation speed,
  * reduced motion and reduced effects, plus the ground the story stands on.
@@ -17,7 +17,7 @@ import type {
  * or a flat foundation without the story's author having offered it. Most
  * regressions in this system have been found on an axis nobody was looking at.
  */
-export const crystalGlobalTypes = {
+export const prismataGlobalTypes = {
   palette: {
     description: 'Brand palette',
     toolbar: {
@@ -27,7 +27,7 @@ export const crystalGlobalTypes = {
     },
   },
   mode: {
-    /* `system` is Crystal's Auto, the appearance setting most readers use, so
+    /* `system` is Prismata's Auto, the appearance setting most readers use, so
        the toolbar offers it for review. */
     description: 'Light, dark or auto',
     toolbar: { icon: 'mirror', items: ['light', 'dark', 'system'], dynamicTitle: true },
@@ -51,13 +51,13 @@ export const crystalGlobalTypes = {
   /* The adjustable scheme values, and the reason they belong in the toolbar
      rather than in a story's args.
      
-     Crystal's materials are defined by what is behind them. Frost diffuses the
+     Prismata's materials are defined by what is behind them. Frost diffuses the
      foundation, Resin transmits its colour and Haze fills over it. Against a
      flat canvas they all render as white, the hierarchy disappears, and every
      control looks like a plain rounded rectangle.
      
      Colour atmosphere sets how much colour that foundation carries. 90% is
-     Crystal's own default and the value the approved baseline was captured at.
+     Prismata's own default and the value the approved baseline was captured at.
      15% is the floor; taking a story down to it shows how much of a material's
      appearance comes from the foundation. */
   atmosphere: {
@@ -65,7 +65,7 @@ export const crystalGlobalTypes = {
     toolbar: {
       icon: 'sun',
       items: [
-        { value: '90', title: 'Atmosphere 90% (Crystal default)' },
+        { value: '90', title: 'Atmosphere 90% (Prismata default)' },
         { value: '60', title: 'Atmosphere 60%' },
         { value: '35', title: 'Atmosphere 35%' },
         { value: '15', title: 'Atmosphere 15% (floor)' },
@@ -78,7 +78,7 @@ export const crystalGlobalTypes = {
     toolbar: {
       icon: 'mirror',
       items: [
-        { value: '35', title: 'Frost tint 35% (Crystal default)' },
+        { value: '35', title: 'Frost tint 35% (Prismata default)' },
         { value: '60', title: 'Frost tint 60%' },
         { value: '85', title: 'Frost tint 85%' },
       ],
@@ -90,7 +90,7 @@ export const crystalGlobalTypes = {
     toolbar: {
       icon: 'box',
       items: [
-        { value: '125', title: 'Elevation 125% (Crystal default)' },
+        { value: '125', title: 'Elevation 125% (Prismata default)' },
         { value: '100', title: 'Elevation 100%' },
         { value: '60', title: 'Elevation 60% (floor)' },
         { value: '150', title: 'Elevation 150% (ceiling)' },
@@ -103,7 +103,7 @@ export const crystalGlobalTypes = {
     toolbar: {
       icon: 'component',
       items: [
-        { value: '28', title: 'Radius 28px (Crystal default)' },
+        { value: '28', title: 'Radius 28px (Prismata default)' },
         { value: '21', title: 'Radius 21px' },
         { value: '14', title: 'Radius 14px (floor)' },
       ],
@@ -115,7 +115,7 @@ export const crystalGlobalTypes = {
     toolbar: {
       icon: 'speed',
       items: [
-        { value: '1', title: 'Speed 1× (Crystal default)' },
+        { value: '1', title: 'Speed 1× (Prismata default)' },
         { value: '0.5', title: 'Speed 0.5×' },
         { value: '0.25', title: 'Speed 0.25× (floor)' },
         { value: '2', title: 'Speed 2× (ceiling)' },
@@ -128,7 +128,7 @@ export const crystalGlobalTypes = {
     toolbar: {
       icon: 'photo',
       items: [
-        { value: 'plastic', title: 'Plastic foundation (Crystal default)' },
+        { value: 'plastic', title: 'Plastic foundation (Prismata default)' },
         { value: 'canvas', title: 'Flat canvas' },
       ],
       dynamicTitle: true,
@@ -136,7 +136,7 @@ export const crystalGlobalTypes = {
   },
 };
 
-/* Crystal's own defaults, as numbers rather than as strings from a toolbar. */
+/* Prismata's own defaults, as numbers rather than as strings from a toolbar. */
 const NUMBER = (value: string | number | undefined, fallback: number): number => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -149,7 +149,7 @@ const NUMBER = (value: string | number | undefined, fallback: number): number =>
  * and tested, against a particular environment can pin one here.
  *
  *     export const OnAFlatGround: Story = {
- *       parameters: { crystal: { ground: 'canvas', atmosphere: 15 } },
+ *       parameters: { prismata: { ground: 'canvas', atmosphere: 15 } },
  *       render: () => <Button>Nothing to diffuse</Button>,
  *     };
  *
@@ -162,28 +162,28 @@ const NUMBER = (value: string | number | undefined, fallback: number): number =>
  * Anything a story does not pin still follows the toolbar, so pinning the ground
  * does not also freeze the palette.
  */
-export interface CrystalStoryEnvironment {
-  palette?: CrystalPalette;
-  mode?: CrystalModePreference;
-  density?: CrystalDensity;
-  direction?: CrystalDirection;
-  effects?: CrystalEffects;
+export interface PrismataStoryEnvironment {
+  palette?: PrismataPalette;
+  mode?: PrismataModePreference;
+  density?: PrismataDensity;
+  direction?: PrismataDirection;
+  effects?: PrismataEffects;
   reduceMotion?: boolean;
   atmosphere?: number;
   translucency?: number;
   elevation?: number;
   radius?: number;
   motionSpeed?: number;
-  font?: CrystalTypeface;
+  font?: PrismataTypeface;
   /** The viewer's preference, which overrides `effects` exactly as the real one does. */
   reduceTransparency?: boolean;
-  /** `plastic` is Crystal's foundation; `canvas` is a flat ground with no atmosphere. */
+  /** `plastic` is Prismata's foundation; `canvas` is a flat ground with no atmosphere. */
   ground?: 'plastic' | 'canvas';
 }
 
-export const withCrystal: Decorator = (Story, context) => {
+export const withPrismata: Decorator = (Story, context) => {
   const globals = context.globals as Record<string, string>;
-  const pinned = (context.parameters['crystal'] ?? {}) as CrystalStoryEnvironment;
+  const pinned = (context.parameters['prismata'] ?? {}) as PrismataStoryEnvironment;
   const args = context.args as Record<string, unknown>;
   const initial = context.initialArgs as Record<string, unknown>;
 
@@ -194,7 +194,7 @@ export const withCrystal: Decorator = (Story, context) => {
    *      environment.
    *   2. An environment arg the reviewer has moved.
    *   3. The toolbar.
-   *   4. Crystal's default.
+   *   4. Prismata's default.
    *
    * Step two compares against `initialArgs` instead of reading `args`. Every
    * story carries the full environment as args so the Controls panel has
@@ -205,8 +205,8 @@ export const withCrystal: Decorator = (Story, context) => {
   const moved = (key: string): unknown =>
     (key in args && args[key] !== initial[key] ? args[key] : undefined);
 
-  const pick = <K extends keyof CrystalStoryEnvironment>(key: K): CrystalStoryEnvironment[K] | string | undefined =>
-    (pinned[key] ?? (moved(key) as CrystalStoryEnvironment[K]) ?? globals[key]);
+  const pick = <K extends keyof PrismataStoryEnvironment>(key: K): PrismataStoryEnvironment[K] | string | undefined =>
+    (pinned[key] ?? (moved(key) as PrismataStoryEnvironment[K]) ?? globals[key]);
 
   const palette = pick('palette');
   const mode = pick('mode');
@@ -228,37 +228,37 @@ export const withCrystal: Decorator = (Story, context) => {
   const reduceTransparency = pick('reduceTransparency');
   const wantsOpaque = reduceTransparency === true || reduceTransparency === 'true';
 
-  /* `.cr-plastic` is Crystal's own foundation class, from the stylesheet this
+  /* `.pr-plastic` is Prismata's own foundation class, from the stylesheet this
      Storybook already loads: the three radial atmosphere washes over the canvas
-     colour. Painting `background: var(--cr-canvas)` instead throws all three
+     colour. Painting `background: var(--pr-canvas)` instead throws all three
      away and leaves every material with nothing to diffuse.
      
-     Crystal's playground marks its scene `class="stage cr-plastic"` for the same
+     Prismata's playground marks its scene `class="stage pr-plastic"` for the same
      reason. The class is the recipe, and nothing here restates it. */
   const onPlastic = (ground ?? 'plastic') !== 'canvas';
 
   return (
-    <CrystalProvider
-      palette={(palette as CrystalPalette) ?? 'prism'}
-      mode={(mode as CrystalModePreference) ?? 'light'}
-      density={(density as CrystalDensity) ?? 'comfortable'}
-      direction={(direction as CrystalDirection) ?? 'ltr'}
-      effects={wantsOpaque ? 'opaque' : ((effects as CrystalEffects) ?? 'full')}
-      font={(font as CrystalTypeface) ?? 'manrope'}
+    <PrismataProvider
+      palette={(palette as PrismataPalette) ?? 'prism'}
+      mode={(mode as PrismataModePreference) ?? 'light'}
+      density={(density as PrismataDensity) ?? 'comfortable'}
+      direction={(direction as PrismataDirection) ?? 'ltr'}
+      effects={wantsOpaque ? 'opaque' : ((effects as PrismataEffects) ?? 'full')}
+      font={(font as PrismataTypeface) ?? 'manrope'}
       reduceMotion={reduceMotion === true || reduceMotion === 'true'}
       atmosphere={NUMBER(atmosphere, 90)}
       translucency={NUMBER(translucency, 35)}
       elevation={NUMBER(elevation, 125)}
       radius={NUMBER(radius, 28)}
       motionSpeed={NUMBER(motionSpeed, 1)}
-      className={onPlastic ? 'cr-plastic' : undefined}
+      className={onPlastic ? 'pr-plastic' : undefined}
       style={{
-        padding: 'var(--cr-space)',
+        padding: 'var(--pr-space)',
         minHeight: '100vh',
-        ...(onPlastic ? {} : { background: 'var(--cr-canvas)' }),
+        ...(onPlastic ? {} : { background: 'var(--pr-canvas)' }),
       }}
     >
       <Story />
-    </CrystalProvider>
+    </PrismataProvider>
   );
 };

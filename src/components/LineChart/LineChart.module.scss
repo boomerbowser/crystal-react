@@ -7,7 +7,7 @@
  */
 
 .series {
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
+  transition: opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 .chart :global(svg) > g:hover .series:not(:hover),

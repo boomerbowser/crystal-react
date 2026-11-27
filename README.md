@@ -1,30 +1,34 @@
-# Crystal React
+# Prismata React
 
-React components for the [Crystal](https://github.com/boomerbowser/crystal) design
-system. The package name is `@crystal-ui/react`.
+React components for the [Prismata](https://github.com/boomerbowser/prismata) design
+system. The package name is `@prismata/react`.
 
-Crystal React implements Crystal for React. It takes every token, material and
-motion recipe from `@crystal-ui/core` and defines none of its own. The
+Prismata React implements Prismata for React. It takes every token, material and
+motion recipe from `@prismata/core` and defines none of its own. The
 requirements it is held to are in `libraries/CONTRACT.md` in the design system
 repository.
 
 ## Status
 
-Version `0.1.0-alpha.1`, published to npm under the `alpha` tag and licensed
+Version `0.2.0-alpha.1`, published to npm under the `alpha` tag and licensed
 under MIT (see `LICENSE`):
 
 ```bash
-npm install @crystal-ui/react@alpha @crystal-ui/core
+npm install @prismata/react@alpha @prismata/core
 ```
 
 **It is an alpha, published as it stands.** Its API can change between alphas
-without notice, and it depends on `@crystal-ui/core` 2.10.0, and follows each new release on its own (`.github/workflows/follow-crystal.yml`). Any breaking change in Crystal 2.x, in this library or in
-the core it follows, will be fixed in Crystal 3.0 rather than in a 2.x release.
+without notice, and it depends on `@prismata/core` 3.0.0, and follows each new release on its own (`.github/workflows/follow-prismata.yml`).
+
+Prismata was called Crystal until core 3.0.0, and this library was published as
+`@crystal-ui/react` until 0.2.0-alpha.1. Both old packages are deprecated. Records
+dated before the rename, such as `docs/closed-issues.md` and `docs/proposals/`,
+keep the old names.
 
 It is published for a bundler. Next.js, Vite and Remix bring their own. Where
 nothing provides one (a Node server that renders without bundling, a script, a
 test runner that loads packages natively), bundle with webpack or esbuild:
-plain Node ESM refuses the package, because it imports Crystal's JSON without
+plain Node ESM refuses the package, because it imports Prismata's JSON without
 an import attribute, and any bundler inlines it. For a server entry:
 
 ```bash
@@ -35,16 +39,16 @@ esbuild server.jsx --bundle --platform=node --format=esm --jsx=automatic \
 The stylesheets are the page's, so a server bundle leaves them out;
 `pnpm run verify:bundled` checks this path on every change.
 
-282 of the 284 components in Crystal's catalogue are implemented. The other two,
+282 of the 284 components in Prismata's catalogue are implemented. The other two,
 `terminal` and `border-beam`, are recorded as not applicable, with the reasons in
 the catalogue. Per-component status is in the generated
 `component-manifest.json`, and the design system records it in
 `libraries/status/web.json`.
 
 The documentation website, slice Q of the plan, is begun in `apps/docs`: a
-Next.js site with one page per Crystal surface and the list of Crystal's
+Next.js site with one page per Prismata surface and the list of Prismata's
 component libraries with the version each has published, generated from the
-installed core (`pnpm --filter @crystal-ui/docs dev`). It is not
+installed core (`pnpm --filter @prismata/docs dev`). It is not
 deployed yet. Storybook is the review surface for components until their pages
 exist.
 
@@ -53,39 +57,39 @@ issues are in [`docs/open-issues.md`](docs/open-issues.md).
 
 ## Using it
 
-Import Crystal's stylesheets once, before this library's, and wrap the
-application or any subtree in `CrystalProvider`.
+Import Prismata's stylesheets once, before this library's, and wrap the
+application or any subtree in `PrismataProvider`.
 
 ```tsx
-import '@crystal-ui/core/theme';
-import '@crystal-ui/core/css';
-import '@crystal-ui/react/styles.css';
-import { CrystalProvider, Button } from '@crystal-ui/react';
+import '@prismata/core/theme';
+import '@prismata/core/css';
+import '@prismata/react/styles.css';
+import { PrismataProvider, Button } from '@prismata/react';
 
-<CrystalProvider palette="prism" mode="light">
+<PrismataProvider palette="prism" mode="light">
   <Button variant="primary">Save</Button>
-</CrystalProvider>
+</PrismataProvider>
 ```
 
 The provider scopes the theme to its own element, so a dark region inside a light
-page needs no second root. `useCrystalTheme` throws outside a provider.
+page needs no second root. `usePrismataTheme` throws outside a provider.
 
-Crystal paints every `<button>` by element, so the core stylesheets are required.
+Prismata paints every `<button>` by element, so the core stylesheets are required.
 Without them a button renders with the browser's default appearance.
 
-Three entry points: `@crystal-ui/react` (every component), `@crystal-ui/react/blocks`
-(the blocks, which products are expected to fork) and `@crystal-ui/react/editor`
-(`RichTextEditor`, Crystal's rich text surface with TipTap bound to it). The editor's
+Three entry points: `@prismata/react` (every component), `@prismata/react/blocks`
+(the blocks, which products are expected to fork) and `@prismata/react/editor`
+(`RichTextEditor`, Prismata's rich text surface with TipTap bound to it). The editor's
 TipTap packages are optional peer dependencies, installed only if you import it; the
 engine-agnostic `RichTextSurface` and the format vocabulary stay in the main entry.
 See `docs/proposals/2026-10-02-media-text-and-recipe-parity.md`.
 
-## How it consumes Crystal
+## How it consumes Prismata
 
-`@crystal-ui/core` is a dependency, installed from npm at `^2.4.0`.
+`@prismata/core` is a dependency, installed from npm at `^2.4.0`.
 
 Design values enter the library in one place. `scripts/build-tokens.mjs` reads
-Crystal's generated export and writes `src/styles/_tokens.scss` and
+Prismata's generated export and writes `src/styles/_tokens.scss` and
 `src/theme/tokens.generated.ts`. Both files are gitignored. `pnpm lint:tokens`
 fails on a hard-coded colour or length anywhere else in the source.
 
@@ -100,14 +104,14 @@ exposes state as `data-*` attributes, which lets the styling be plain SCSS.
 variables, so the library needs no style runtime.
 
 **Motion.** The engines, springs, recipes and state derivation come from
-`@crystal-ui/core`. This library implements the React lifecycle around them:
+`@prismata/core`. This library implements the React lifecycle around them:
 refs, effects and cleanup.
 
 ## Scripts
 
 | Script | What it does |
 | --- | --- |
-| `pnpm tokens` | Regenerates the token files from Crystal. |
+| `pnpm tokens` | Regenerates the token files from Prismata. |
 | `pnpm build` | Builds the package, the type declarations and the component manifest. |
 | `pnpm typecheck` | Runs TypeScript in strict mode. |
 | `pnpm test` | Runs the unit tests with Vitest. |
@@ -118,5 +122,5 @@ refs, effects and cleanup.
 | `pnpm verify:targets` | Measures target sizes in a browser. |
 | `pnpm verify:behaviour` | Checks keyboard and motion behaviour in a browser. |
 | `pnpm verify:theme` | Checks the theme as rendered. |
-| `pnpm verify:materials` | Compares the rendered materials with Crystal's. |
+| `pnpm verify:materials` | Compares the rendered materials with Prismata's. |
 | `pnpm verify:appearance` | Checks rendered states that a DOM without layout cannot see. |

@@ -136,12 +136,12 @@ export function createSlashStore(enabled: () => boolean): SlashStore {
   };
 }
 
-const slashKey = new PluginKey('crystalSlashCommands');
+const slashKey = new PluginKey('prismataSlashCommands');
 
 /** The TipTap extension. `commands` is the set the menu offers. */
 export function slashCommandsExtension(store: SlashStore, commands: () => readonly SlashCommand[]) {
   return Extension.create({
-    name: 'crystalSlashCommands',
+    name: 'prismataSlashCommands',
     addProseMirrorPlugins() {
       const { editor } = this;
       return [
@@ -232,7 +232,7 @@ export function SlashMenu({ store, editor }: { store: SlashStore; editor: Editor
 
   return (
     <div
-      className={cx('cr-frost', styles['slash'])}
+      className={cx('pr-frost', styles['slash'])}
       style={{ insetBlockStart: `${state.rect.bottom + 6}px`, insetInlineStart: `${state.rect.left}px` }}
     >
       {state.items.length === 0 ? (

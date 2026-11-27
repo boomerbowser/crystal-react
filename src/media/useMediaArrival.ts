@@ -1,6 +1,6 @@
 'use client';
 
-/* Crystal's `media-in`: "after an image decodes or media becomes ready".
+/* Prismata's `media-in`: "after an image decodes or media becomes ready".
  *
  * Bound to the media element's `loadeddata` event (the first frame is
  * available), because a player mounts long before it has anything to show and

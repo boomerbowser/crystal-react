@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, waitFor } from '../../test/render.js';
 import { Menu, MenuItem, MenuGroup, MenuSeparator, MenuTrigger, Submenu, ContextMenu } from './Menu.js';
 import { Button } from '../Button/Button.js';
 import { Dialog } from '../Dialog/Dialog.js';
@@ -22,7 +22,7 @@ const Simple = (
 
 describe('Menu', () => {
   it('opens, names its groups and carries its shortcuts', async () => {
-    renderWithCrystal(Simple);
+    renderWithPrismata(Simple);
     await userEvent.click(screen.getByRole('button', { name: 'Actions' }));
 
     expect(screen.getByRole('menu', { name: 'Actions' })).toBeInTheDocument();
@@ -31,10 +31,10 @@ describe('Menu', () => {
     expect(screen.getByRole('menuitem', { name: /Cut/ }).textContent).toContain('⌘X');
   });
 
-  /* Crystal's one exception: a check mark in a menu means checked. Everywhere
+  /* Prismata's one exception: a check mark in a menu means checked. Everywhere
      else it means validated, and selection is label weight. */
   it('reports a checkable item as checked rather than selected', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <MenuTrigger>
         <Button>View</Button>
         <Menu label="View" selectionMode="multiple" selectedKeys={new Set(['grid'])}>
@@ -51,7 +51,7 @@ describe('Menu', () => {
 
   it('runs an item and closes', async () => {
     const onAction = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <MenuTrigger>
         <Button>Actions</Button>
         <Menu label="Actions"><MenuItem id="go" onAction={onAction}>Go</MenuItem></Menu>
@@ -64,7 +64,7 @@ describe('Menu', () => {
   });
 
   it('opens a submenu from the keyboard', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <MenuTrigger>
         <Button>Actions</Button>
         <Menu label="Actions">
@@ -86,7 +86,7 @@ describe('Menu', () => {
      second pane of the same glass. Every overlay is portalled to `body`, so the
      DOM cannot tell, and the decision travels by React context. */
   it('steps down to Haze inside a dialog', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <>
         {Simple}
         <Dialog title="Settings" isOpen>
@@ -100,20 +100,20 @@ describe('Menu', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Nested actions' }));
     const nested = screen.getByRole('menu', { name: 'Nested actions' })
-      .closest('[data-cr-overlay]');
-    expect(nested?.getAttribute('data-cr-overlay')).toBe('haze');
+      .closest('[data-pr-overlay]');
+    expect(nested?.getAttribute('data-pr-overlay')).toBe('haze');
   });
 
   it('is Frost on the page: a transient overlay is a panel, not a control (R15e)', async () => {
-    renderWithCrystal(Simple);
+    renderWithPrismata(Simple);
     await userEvent.click(screen.getByRole('button', { name: 'Actions' }));
     expect(
-      screen.getByRole('menu').closest('[data-cr-overlay]')?.getAttribute('data-cr-overlay'),
+      screen.getByRole('menu').closest('[data-pr-overlay]')?.getAttribute('data-pr-overlay'),
     ).toBe('frost');
   });
 
   it('has no axe violations when open', async () => {
-    renderWithCrystal(Simple);
+    renderWithPrismata(Simple);
     await userEvent.click(screen.getByRole('button', { name: 'Actions' }));
     await expectNoAxeViolations(document.body);
   });
@@ -132,7 +132,7 @@ describe('ContextMenu', () => {
   );
 
   it('opens on right-click at the pointer', async () => {
-    renderWithCrystal(subject);
+    renderWithPrismata(subject);
     await userEvent.pointer({ keys: '[MouseRight]', target: screen.getByRole('button', { name: 'Right-click me' }) });
     await waitFor(() => expect(screen.getByRole('menu', { name: 'File' })).toBeInTheDocument());
   });
@@ -143,14 +143,14 @@ describe('ContextMenu', () => {
      region by bubbling, so something inside has to be focusable. That is the
      documented requirement. */
   it('opens with Shift+F10', async () => {
-    renderWithCrystal(subject);
+    renderWithPrismata(subject);
     screen.getByRole('button', { name: 'Right-click me' }).focus();
     await userEvent.keyboard('{Shift>}{F10}{/Shift}');
     await waitFor(() => expect(screen.getByRole('menu', { name: 'File' })).toBeInTheDocument());
   });
 
   it('opens with the Menu key', async () => {
-    renderWithCrystal(subject);
+    renderWithPrismata(subject);
     screen.getByRole('button', { name: 'Right-click me' }).focus();
     await userEvent.keyboard('{ContextMenu}');
     await waitFor(() => expect(screen.getByRole('menu', { name: 'File' })).toBeInTheDocument());

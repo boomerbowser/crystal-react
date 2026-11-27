@@ -97,7 +97,7 @@ export function ProfileBlock({
   };
 
   return (
-    <section aria-labelledby={headingId} data-cr-state={state} className={cx(styles['profile'], 'cr-haze', className)}>
+    <section aria-labelledby={headingId} data-pr-state={state} className={cx(styles['profile'], 'pr-haze', className)}>
       <div className={cx(styles['identity'])}>
         <Avatar size="xl" name={name} {...(avatarSrc ? { src: avatarSrc } : {})} />
         <div className={cx(styles['who'])}>

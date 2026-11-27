@@ -10,16 +10,16 @@
  * rely on colour alone.
  *
  * The thumb is the other shared concern. The catalogue gives the area, the
- * slider and the wheel a Resin thumb (R-A10): the thumb wears `.cr-resin`, a
+ * slider and the wheel a Resin thumb (R-A10): the thumb wears `.pr-resin`, a
  * floating plane over the gradient, and holds the picked colour as a disc
  * inside its rim, so the value stays visible in the thumb that sets it. React
  * Aria paints that colour on the thumb itself, as an inline background, which
  * would cover the Resin fill; it is handed to the disc instead, as
- * `--cr-picked`. Resin's rim, its float shadow and the disc's own edge keep the
+ * `--pr-picked`. Resin's rim, its float shadow and the disc's own edge keep the
  * thumb visible against any colour beneath it.
  *
  * React Aria supplies the parsing, the channel arithmetic, the two linked sliders
- * inside a colour area and the announcements. What Crystal adds is the material
+ * inside a colour area and the announcements. What Prismata adds is the material
  * and the thumb.
  */
 import { useId, useState, type ReactNode } from 'react';
@@ -33,7 +33,7 @@ import {
   ColorThumb, SliderTrack, ColorWheelTrack, Label, Input, Text,
   parseColor, type Color,
 } from 'react-aria-components';
-import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
+import prismataFlat from '@prismata/core/flat' with { type: 'json' };
 import { cx } from '../../styles/cx.js';
 import { FieldGroupShell } from '../FormField/FieldShell.js';
 import { useChangeMotion, entered } from '../../motion/useChangeMotion.js';
@@ -46,33 +46,33 @@ function toColour(colour: string | Color | undefined): Color | null {
 }
 
 /* The Resin thumb (R-A10). React Aria's default style paints the picked colour
-   as the thumb's background; it moves to `--cr-picked`, which the disc inside
+   as the thumb's background; it moves to `--pr-picked`, which the disc inside
    reads, and the thumb keeps the Resin fill. */
 function pickedColour({ defaultStyle }: { defaultStyle: React.CSSProperties }): React.CSSProperties {
   /* React Aria spreads this over its default style, so the background is
      cleared here rather than left out. */
-  return { backgroundColor: undefined, ['--cr-picked' as string]: defaultStyle.backgroundColor } as React.CSSProperties;
+  return { backgroundColor: undefined, ['--pr-picked' as string]: defaultStyle.backgroundColor } as React.CSSProperties;
 }
 
 /* A swatch's colour is drawn over the chequerboard, not under it: React Aria
    paints it as the background colour, which every background image covers, so
-   it moves to `--cr-swatch`, the top layer of the swatch's background. */
+   it moves to `--pr-swatch`, the top layer of the swatch's background. */
 function swatchColour({ defaultStyle }: { defaultStyle: React.CSSProperties }): React.CSSProperties {
-  return { backgroundColor: undefined, ['--cr-swatch' as string]: defaultStyle.backgroundColor } as React.CSSProperties;
+  return { backgroundColor: undefined, ['--pr-swatch' as string]: defaultStyle.backgroundColor } as React.CSSProperties;
 }
 
 function ResinThumb(): React.JSX.Element {
   return (
-    <ColorThumb className={cx('cr-resin', styles['thumb'])} style={pickedColour}>
+    <ColorThumb className={cx('pr-resin', styles['thumb'])} style={pickedColour}>
       <span className={cx(styles['picked'])} aria-hidden="true" />
     </ColorThumb>
   );
 }
 
-/* Crystal's own signature colour, read from the tokens and not typed in. A
+/* Prismata's own signature colour, read from the tokens and not typed in. A
    picker has to open on something, and a hex literal here would stop tracking
    the palette it came from. */
-const flat = crystalFlat as unknown as {
+const flat = prismataFlat as unknown as {
   default: { palette: string };
   palettes: Record<string, { seed: string }>;
 };
@@ -112,7 +112,7 @@ export function ColorInput({
       {({ isInvalid }) => (
       <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'pr-field-shell block')}>
         <AriaColorSwatch {...(shown ? { color: shown } : {})} className={cx(styles['swatch'])} style={swatchColour} />
         <Input className={cx(styles['control'])} />
       </FieldGroupShell>
@@ -347,7 +347,7 @@ export function ColorPicker({
             the listener nothing new. */}
         <ColorField className={cx(styles['field'])} aria-label="Hexadecimal value">
           {({ isInvalid }) => (
-            <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
+            <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'pr-field-shell block')}>
               <AriaColorSwatch className={cx(styles['swatch'])} style={swatchColour} />
               <Input className={cx(styles['control'])} />
             </FieldGroupShell>

@@ -28,18 +28,18 @@ const meta = {
     docs: {
       description: {
         component:
-          'An action control, a pill in every variant. `shape="card"` is Crystal\'s one '
+          'An action control, a pill in every variant. `shape="card"` is Prismata\'s one '
           + 'documented exception and keeps the content radius. Press and hover motion bind to '
           + 'press state instead of click, so a keyboard user gets the same feedback a pointer '
           + 'user does.\n\n'
           + 'Only `primary` is tinted, which is what makes it read as primary. It paints its '
-          + 'Haze reading fill in `--cr-primary` with `--cr-on-primary` as the ink, inside the '
+          + 'Haze reading fill in `--pr-primary` with `--pr-on-primary` as the ink, inside the '
           + 'same glass rim every other control has. The colour is in the fill and not the '
           + 'perimeter, because a fill painted on the button itself sits behind the inset Haze '
           + 'layer and shows only as a ring. '
           + '`resin` is the default: the base surface with the neutral reading pad. `quiet` is '
           + 'the same shell with no pad at all, so the label sits directly on the material.\n\n'
-          + 'There is no `secondary`. It named a second action colour, and Crystal defines only '
+          + 'There is no `secondary`. It named a second action colour, and Prismata defines only '
           + 'one: the palettes publish a single action pair, and the companion and glow hues are '
           + 'expressive paint that is never assumed to be text-safe. Its old meaning is the '
           + 'default.',
@@ -56,7 +56,7 @@ export const Resin: Story = {
   args: { variant: 'resin' },
 };
 
-/** The Haze reading fill in `--cr-primary`, with `--cr-on-primary` as the ink:
+/** The Haze reading fill in `--pr-primary`, with `--pr-on-primary` as the ink:
  *  the palette's own tested pair, 4.74 to 10.31 against the rendered composite
  *  across all six palettes and both modes. */
 export const Primary: Story = {
@@ -67,7 +67,7 @@ export const Primary: Story = {
 /** The whole Resin shell (rim, float shadow, sheen) and no reading pad, which
  *  makes it the only variant that is glass all the way through. The label reads
  *  against the material instead of a protected ground. The contrast margin is
- *  wide on Crystal's own foundation, but not over artwork. */
+ *  wide on Prismata's own foundation, but not over artwork. */
 export const Quiet: Story = {
   args: { variant: 'quiet' },
 };
@@ -84,7 +84,7 @@ export const Disabled: Story = {
 /** Every variant together, so a geometry regression is visible. */
 export const AllVariants: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: 'var(--cr-space)', flexWrap: 'wrap', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-space)', flexWrap: 'wrap', alignItems: 'center' }}>
       <Button variant="primary">Primary</Button>
       <Button variant="resin">Resin</Button>
       <Button variant="quiet">Quiet</Button>

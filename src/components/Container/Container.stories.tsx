@@ -14,9 +14,9 @@ const meta = {
     docs: {
       description: {
         component:
-          'Container has two ceilings because Crystal has two: the shell, which is how wide the '
+          'Container has two ceilings because Prismata has two: the shell, which is how wide the '
           + 'page becomes, and the reading column, which is how wide a line of prose gets before '
-          + 'it stops being comfortable. Its gutters step down at Crystal\'s breakpoints. Narrow '
+          + 'it stops being comfortable. Its gutters step down at Prismata\'s breakpoints. Narrow '
           + 'the window to see it.\n\n'
           + 'It introduces no landmark, as the catalogue requires. A container that renders a '
           + '`main` adds a landmark for a decision about width, and a screen reader user then '
@@ -67,7 +67,7 @@ export const CentreSpaceAndRatio: Story = {
         Second line, an explicit gap below it
       </Card>
       <AspectRatio ratio="16 / 9" clip>
-        <div style={{ background: 'linear-gradient(135deg, var(--cr-decorative), var(--cr-companion))' }} />
+        <div style={{ background: 'linear-gradient(135deg, var(--pr-decorative), var(--pr-companion))' }} />
       </AspectRatio>
     </Stack>
   ),

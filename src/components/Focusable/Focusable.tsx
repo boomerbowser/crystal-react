@@ -2,10 +2,10 @@
 
 /* Focusable.
  *
- * Adds a tab stop to whatever it wraps, with Crystal's focus ring and without
+ * Adds a tab stop to whatever it wraps, with Prismata's focus ring and without
  * inventing a role. React Aria's `Focusable` supplies the behaviour, which is
  * the focus-visible bookkeeping that tells keyboard focus from pointer focus
- * and the `excludeFromTabOrder` option. Crystal supplies the appearance, which its
+ * and the `excludeFromTabOrder` option. Prismata supplies the appearance, which its
  * stylesheet gives to any `[tabindex]` as well as to the native controls.
  *
  * "Without inventing a role" needs care. A focusable div is announced as

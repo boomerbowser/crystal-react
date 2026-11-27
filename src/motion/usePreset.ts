@@ -1,6 +1,6 @@
 'use client';
 
-/* Crystal's motion presets, on Motion for React.
+/* Prismata's motion presets, on Motion for React.
  *
  * A preset is the movement a material makes entering or leaving: Plastic
  * rising, Frost coming toward the viewer, Resin flowing in, Mirage washing across
@@ -8,7 +8,7 @@
  * keyframes. Its geometry is computed from travel and depth tokens, so changing
  * a travel token moves every preset at once.
  *
- * The computation is `@crystal-ui/core/core/presets` and is not repeated here.
+ * The computation is `@prismata/core/core/presets` and is not repeated here.
  * CONTRACT §1 says two implementations of the same formula diverge. Here the
  * numbers are read from live custom properties, so a second implementation
  * would drift silently instead of failing. This file measures the environment,
@@ -17,14 +17,14 @@
 import { useCallback } from 'react';
 import { useAnimate } from 'motion/react';
 import type { DOMKeyframesDefinition } from 'motion/react';
-import presets from '@crystal-ui/core/core/presets';
-import type { CrystalPresetName, CrystalFlowDirection } from '@crystal-ui/core/core/presets';
-import { useCrystalTheme } from '../theme/CrystalProvider.js';
+import presets from '@prismata/core/core/presets';
+import type { PrismataPresetName, PrismataFlowDirection } from '@prismata/core/core/presets';
+import { usePrismataTheme } from '../theme/PrismataProvider.js';
 import { releaseRestingStyles } from './useMotion.js';
 
-/** Read a `--cr-*` length from the resolved theme, falling back to Crystal's own default. */
+/** Read a `--pr-*` length from the resolved theme, falling back to Prismata's own default. */
 function readLength(styles: CSSStyleDeclaration, token: string, fallback: number): number {
-  const value = Number.parseFloat(styles.getPropertyValue(`--cr-${token}`));
+  const value = Number.parseFloat(styles.getPropertyValue(`--pr-${token}`));
   return Number.isFinite(value) ? value : fallback;
 }
 
@@ -36,10 +36,10 @@ export interface UsePresetOptions {
    */
   readonly anchored?: boolean;
   /** Which edge a Mirage wash flows from. */
-  readonly from?: CrystalFlowDirection;
+  readonly from?: PrismataFlowDirection;
 }
 
-export type { CrystalPresetName };
+export type { PrismataPresetName };
 
 /**
  * Returns `[scope, play]`, where `play(preset)` resolves to a promise that
@@ -50,19 +50,19 @@ export type { CrystalPresetName };
  */
 export function usePreset(
   options: UsePresetOptions = {},
-): [ReturnType<typeof useAnimate>[0], (preset: CrystalPresetName) => Promise<void>] {
+): [ReturnType<typeof useAnimate>[0], (preset: PrismataPresetName) => Promise<void>] {
   const [scope, animate] = useAnimate();
-  const { resolveDuration, reduceMotion } = useCrystalTheme();
+  const { resolveDuration, reduceMotion } = usePrismataTheme();
   const { anchored = false, from } = options;
 
-  const play = useCallback(async (preset: CrystalPresetName): Promise<void> => {
+  const play = useCallback(async (preset: PrismataPresetName): Promise<void> => {
     const element = scope.current as HTMLElement | null;
     if (!element) return;
 
     /* Reduced motion removes the movement, never the state change. The promise
        still settles, so an exit that waits on it is not left waiting. */
     if (reduceMotion) {
-      element.dataset['crMotionState'] = 'instant';
+      element.dataset['prMotionState'] = 'instant';
       return;
     }
 
@@ -83,19 +83,19 @@ export function usePreset(
 
     if (!built.keyframes.length) {
       /* haze and stone have no component movement: their signature is paint. */
-      element.dataset['crMotionState'] = 'instant';
+      element.dataset['prMotionState'] = 'instant';
       return;
     }
 
-    element.dataset['crMotionName'] = preset;
-    element.dataset['crMotionState'] = 'running';
+    element.dataset['prMotionName'] = preset;
+    element.dataset['prMotionState'] = 'running';
 
-    /* Crystal resolves the duration: reduced motion to zero, and everything
+    /* Prismata resolves the duration: reduced motion to zero, and everything
        capped at the five-second ceiling so slowing playback cannot strand
        somebody inside a transition. */
-    const base = Number.parseFloat(styles.getPropertyValue(`--cr-${built.duration}`)) || 1000;
+    const base = Number.parseFloat(styles.getPropertyValue(`--pr-${built.duration}`)) || 1000;
     const duration = resolveDuration(base);
-    const easing = styles.getPropertyValue(`--cr-ease-${built.easing}`).trim();
+    const easing = styles.getPropertyValue(`--pr-ease-${built.easing}`).trim();
 
     const properties = new Set<string>();
     for (const frame of built.keyframes) {
@@ -112,7 +112,7 @@ export function usePreset(
         ...(easing ? { ease: easing as never } : {}),
       });
       releaseRestingStyles(element, values);
-      element.dataset['crMotionState'] = 'finished';
+      element.dataset['prMotionState'] = 'finished';
     } catch {
       /* Cancelled. This happens whenever a component unmounts mid-motion. */
     }

@@ -19,7 +19,7 @@
  * off a corner can be dropped where its title bar cannot be reached, and then
  * neither pointer nor keyboard can recover it, because both need the handle.
  *
- * The product owns the content, the bounds and persistence. Crystal owns the
+ * The product owns the content, the bounds and persistence. Prismata owns the
  * material, the elevation and the motion. Position and size are reported so a
  * product can remember them.
  */
@@ -155,7 +155,7 @@ export function FloatingWindow({
       {...(isModal ? { role: 'dialog', 'aria-modal': true } : {})}
       aria-label={label}
       data-modal={isModal || undefined}
-      className={cx(styles['window'], 'cr-resin', 'panel', className)}
+      className={cx(styles['window'], 'pr-resin', 'panel', className)}
       style={{
         insetInlineStart: `${rect.x}px`,
         insetBlockStart: `${rect.y}px`,
@@ -176,7 +176,7 @@ export function FloatingWindow({
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onKeyDown={onKeyDown}
-        className={cx(styles['bar'], 'cr-bare')}
+        className={cx(styles['bar'], 'pr-bare')}
       >
         <span className={cx(styles['title'])}>{label}</span>
       </button>

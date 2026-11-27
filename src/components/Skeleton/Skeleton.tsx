@@ -5,7 +5,7 @@
  * Placeholder shapes matching the layout of content that is loading.
  *
  * It wraps what it is standing in for instead of being rendered in its place.
- * The catalogue asks for "Crystal: fill, sweep, reduced-motion fallback,
+ * The catalogue asks for "Prismata: fill, sweep, reduced-motion fallback,
  * **resolve transition**", and a skeleton that is swapped out by its caller has
  * already unmounted when the data arrives, so there is nothing left to play
  * `skeleton-resolve` on. The resolve exists only because the skeleton owns the
@@ -90,7 +90,7 @@ export function SkeletonBox({
   shape = 'text', width, height, className, style, ...props
 }: SkeletonBoxProps): ReactNode {
   /* A box exists only while its skeleton is loading, so being mounted is being
-     pending: Crystal's `skeleton-sweep` runs from mount to unmount. */
+     pending: Prismata's `skeleton-sweep` runs from mount to unmount. */
   const sweep = useContinuous('skeleton-sweep', true);
   return (
     <span

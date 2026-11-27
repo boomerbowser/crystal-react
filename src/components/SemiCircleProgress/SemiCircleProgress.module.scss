@@ -1,7 +1,7 @@
 @use '../../styles/tokens' as *;
 @use '../../charts/svg' as chart;
 
-.semi { display: inline-flex; flex-direction: column; align-items: center; gap: $cr-spacing-xs; }
+.semi { display: inline-flex; flex-direction: column; align-items: center; gap: $pr-spacing-xs; }
 
 .plot { position: relative; }
 
@@ -15,22 +15,22 @@
 /* The catalogue calls the track Haze. Haze is a feathered paint layer (a
    backdrop filter behind a fill), and an SVG path has no layer to put behind
    it. The track takes Haze's reading ground instead of its recipe: the same
-   `--cr-surface-alt` the linear track uses, which is what Haze composites to
-   over Crystal's own foundation. Do not add a `--cr-haze-fill`. Crystal
+   `--pr-surface-alt` the linear track uses, which is what Haze composites to
+   over Prismata's own foundation. Do not add a `--pr-haze-fill`. Prismata
    publishes no such property. */
-.track { fill: var(--cr-surface-alt); }
-.arc { fill: var(--cr-primary); }
+.track { fill: var(--pr-surface-alt); }
+.arc { fill: var(--pr-primary); }
 
 .readout {
   display: flex;
   align-items: baseline;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   margin: 0;
-  font-size: var(--cr-text-caption-size);
+  font-size: var(--pr-text-caption-size);
 }
 
-.label { color: var(--cr-text); }
-.value { color: var(--cr-muted); font-variant-numeric: tabular-nums; }
+.label { color: var(--pr-text); }
+.value { color: var(--pr-muted); font-variant-numeric: tabular-nums; }
 
 .hidden {
   position: absolute;

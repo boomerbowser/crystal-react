@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor, within } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor, within } from '../../test/render.js';
 import { CommandPalette, groupCommands, type Command } from './CommandPalette.js';
 
-/* A closing scrim withdraws on Crystal's 650ms departure clock (`mirage-out`),
+/* A closing scrim withdraws on Prismata's 650ms departure clock (`mirage-out`),
    and `AnimatePresence` unmounts only after it. Testing Library waits one second
    by default, which is too short for the departure, so the exit assertions wait
    for `DEPARTURE`. */
@@ -35,26 +35,26 @@ function Harness({ onAction = () => {} }: { onAction?: (id: unknown) => void }):
 
 describe('CommandPalette', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <CommandPalette commands={commands} isOpen onAction={() => {}} />,
     );
     await expectNoAxeViolations(container);
   });
 
   it('renders nothing when closed', () => {
-    renderWithCrystal(<CommandPalette commands={commands} onAction={() => {}} />);
+    renderWithPrismata(<CommandPalette commands={commands} onAction={() => {}} />);
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('is a named dialog holding a search field and a list', () => {
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     const dialog = screen.getByRole('dialog', { name: 'Run a command' });
     expect(within(dialog).getByRole('searchbox', { name: 'Run a command' })).toBeInTheDocument();
     expect(within(dialog).getByRole('listbox')).toBeInTheDocument();
   });
 
   it('lists every command, grouped', () => {
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     expect(screen.getAllByRole('option')).toHaveLength(4);
     expect(screen.getByRole('group', { name: 'File' })).toBeInTheDocument();
     expect(screen.getByRole('group', { name: 'View' })).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('CommandPalette', () => {
      instead. */
   it('never moves focus out of the search field', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     const search = screen.getByRole('searchbox');
     await user.click(search);
     await user.keyboard('{ArrowDown}');
@@ -76,7 +76,7 @@ describe('CommandPalette', () => {
 
   it('names the highlighted row with aria-activedescendant', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     const search = screen.getByRole('searchbox');
     await user.click(search);
     await user.keyboard('{ArrowDown}');
@@ -87,7 +87,7 @@ describe('CommandPalette', () => {
 
   it('filters as you type', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     await user.type(screen.getByRole('searchbox'), 'save');
     await waitFor(() => { expect(screen.getAllByRole('option')).toHaveLength(1); });
     expect(screen.getByRole('option', { name: /Save/ })).toBeInTheDocument();
@@ -97,7 +97,7 @@ describe('CommandPalette', () => {
      whose language writes a letter more than one way. */
   it('matches without regard to case or accent', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(
+    renderWithPrismata(
       <CommandPalette commands={[{ id: 'e', label: 'Exporter le résumé' }]} isOpen onAction={() => {}} />,
     );
     await user.type(screen.getByRole('searchbox'), 'RESUME');
@@ -108,7 +108,7 @@ describe('CommandPalette', () => {
      which one applies. */
   it('says nothing matched, rather than showing an empty list', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     await user.type(screen.getByRole('searchbox'), 'zzzz');
     await waitFor(() => { expect(screen.queryByRole('option', { name: /Save/ })).toBeNull(); });
     expect(screen.getByRole('status')).toHaveTextContent('No matching commands');
@@ -121,7 +121,7 @@ describe('CommandPalette', () => {
   });
 
   it('says it is still loading, which is a different thing', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CommandPalette commands={[]} isOpen isLoading onAction={() => {}} />,
     );
     expect(screen.getByRole('status')).toHaveTextContent('Loading commands');
@@ -131,7 +131,7 @@ describe('CommandPalette', () => {
   it('runs the command that was chosen', async () => {
     const user = userEvent.setup();
     const onAction = vi.fn();
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={onAction} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={onAction} />);
     await user.click(screen.getByRole('option', { name: /Toggle dark mode/ }));
     expect(onAction).toHaveBeenCalledWith('theme');
   });
@@ -139,7 +139,7 @@ describe('CommandPalette', () => {
   it('runs the highlighted command on Enter', async () => {
     const user = userEvent.setup();
     const onAction = vi.fn();
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={onAction} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={onAction} />);
     await user.click(screen.getByRole('searchbox'));
     await user.keyboard('{ArrowDown}{Enter}');
     expect(onAction).toHaveBeenCalledOnce();
@@ -148,7 +148,7 @@ describe('CommandPalette', () => {
   /* A palette runs actions. Nothing stays selected afterwards, so nothing is
      marked as chosen. */
   it('selects nothing, and marks nothing with a check', () => {
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     for (const option of screen.getAllByRole('option')) {
       expect(option.getAttribute('aria-selected')).toBeNull();
       expect(option.textContent).not.toMatch(/[✓✔]/);
@@ -156,13 +156,13 @@ describe('CommandPalette', () => {
   });
 
   it('announces a shortcut as a shortcut', () => {
-    renderWithCrystal(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
+    renderWithPrismata(<CommandPalette commands={commands} isOpen onAction={() => {}} />);
     const option = screen.getByRole('option', { name: /Open file/ });
     expect(within(option).getByText('⌘O').tagName).toBe('KBD');
   });
 
   it('skips a disabled command', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CommandPalette
         commands={[{ id: 'a', label: 'Allowed' }, { id: 'b', label: 'Blocked', isDisabled: true }]}
         isOpen
@@ -174,7 +174,7 @@ describe('CommandPalette', () => {
 
   it('closes on Escape and returns focus to whatever opened it', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     const opener = screen.getByRole('button', { name: 'Open the palette' });
     await user.click(opener);
     await screen.findByRole('dialog');

@@ -2,13 +2,13 @@
  *
  * R-11: jsdom tests semantics and the parts of CSS that are not colours, axe
  * tests the tree, `verify-targets` measures geometry and `verify-behaviour`
- * drives the page. This script checks what a state looks like. Every Crystal
+ * drives the page. This script checks what a state looks like. Every Prismata
  * state is expressed through a custom property, and jsdom returns those
  * unresolved: `color` on a themed element reads as the literal text
- * `var(--cr-primary)`. So this check cannot live with the unit tests.
+ * `var(--pr-primary)`. So this check cannot live with the unit tests.
  *
  * `published-properties.test.tsx` catches an undefined property, such as a
- * `--cr-focus-core` or `--cr-focus-ring` read by a field and defined by nothing.
+ * `--pr-focus-core` or `--pr-focus-ring` read by a field and defined by nothing.
  * It does not catch a control that has no rule at all; this script does.
  *
  * Every assertion here is a relationship, never a value. R-11: "a gate that
@@ -44,7 +44,7 @@ const open = async (id, ready) => {
 
 /* ------------------------------------------------- a dialog opens where it can be read */
 
-/* Crystal's `.cr-dialog` is fixed, which centres a native `<dialog>` because the
+/* Prismata's `.pr-dialog` is fixed, which centres a native `<dialog>` because the
    browser gives a modal one `inset: 0` and auto margins. React Aria's surface is
    not a `<dialog>`, so with the class alone it keeps `position: fixed` with no
    offsets and sits at its static position: top-left corner at the middle of the
@@ -69,17 +69,17 @@ for (const [width, height, what] of [[1280, 900, 'at a desktop width'], [375, 81
 }
 await page.setViewportSize({ width: 1280, height: 900 });
 
-/* ------------------------------------------------- one location dot, Crystal's */
+/* ------------------------------------------------- one location dot, Prismata's */
 
-/* Crystal 2.3.0 draws the navigation entry's location dot on `.cr-nav-item`
+/* Prismata 2.3.0 draws the navigation entry's location dot on `.pr-nav-item`
    itself (D-22): a `::before` on `aria-current`, inside the entry's own padding.
    A dot drawn by NavLink as well would make two, and no other check here would
    notice, because each is correct in isolation. So: the current link paints
-   exactly one dot, Crystal's; the others paint none; and a label starts at the
+   exactly one dot, Prismata's; the others paint none; and a label starts at the
    same inline offset in its link whether or not that link is current. */
 {
-  await open('navigation-links--destinations', '#storybook-root a.cr-nav-item');
-  const links = await page.evaluate(() => [...document.querySelectorAll('#storybook-root a.cr-nav-item')].map((link) => {
+  await open('navigation-links--destinations', '#storybook-root a.pr-nav-item');
+  const links = await page.evaluate(() => [...document.querySelectorAll('#storybook-root a.pr-nav-item')].map((link) => {
     const before = getComputedStyle(link, '::before');
     const painted = before.content !== 'none' && before.display !== 'none' && before.backgroundColor !== 'rgba(0, 0, 0, 0)';
     /* A dot drawn by an element: a small, round, filled child with no text. */
@@ -97,7 +97,7 @@ await page.setViewportSize({ width: 1280, height: 900 });
   }));
   const current = links.filter((one) => one.current);
   const others = links.filter((one) => !one.current);
-  record('a current navigation link paints one dot, Crystal\'s, and no other link paints one',
+  record('a current navigation link paints one dot, Prismata\'s, and no other link paints one',
     current.length > 0 && current.every((one) => one.painted && one.own === 0) && others.every((one) => !one.painted && one.own === 0),
     JSON.stringify(links));
   const offsets = new Set(links.map((one) => one.labelOffset));
@@ -106,14 +106,14 @@ await page.setViewportSize({ width: 1280, height: 900 });
 
 /* ------------------------------------------------- an indicator shows what its host says */
 
-/* `Indicator` is Crystal's `.cr-indicator` from 2.3.0 (R-25): a glyph that its
+/* `Indicator` is Prismata's `.pr-indicator` from 2.3.0 (R-25): a glyph that its
    host's own state switches, rather than a colour set by a prop. So the check is
    the relationship: each mark shows the glyph its host calls for, and nothing
    on a host that does not carry the state. The field glyphs reach a
    `div` shell only from 2.3.0 (D-27), which is what the three field rows are. */
 {
-  await open('data-display-indicator--the-vocabulary', '#storybook-root .cr-indicator');
-  const marks = await page.evaluate(() => [...document.querySelectorAll('#storybook-root .cr-indicator')].map((mark) => {
+  await open('data-display-indicator--the-vocabulary', '#storybook-root .pr-indicator');
+  const marks = await page.evaluate(() => [...document.querySelectorAll('#storybook-root .pr-indicator')].map((mark) => {
     const shown = getComputedStyle(mark).display !== 'none';
     return { host: (mark.parentElement.textContent || mark.parentElement.querySelector('input')?.getAttribute('aria-label') || '').trim(), shown, glyph: shown ? getComputedStyle(mark, '::after').content : null };
   }));
@@ -144,7 +144,7 @@ for (const id of ['inputs-choice-and-range--ranges', 'media-video-player--defaul
 
 /* ------------------------------------------------- a focus ring exists */
 
-/* Crystal's focus is a crisp 2px primary core at 3px offset inside a four-layer
+/* Prismata's focus is a crisp 2px primary core at 3px offset inside a four-layer
    feathered halo. Checked as "focusing this changes how it looks, and the change
    includes a real outline", because the core's colour is the palette's and the
    halo's four layers are built from it. */
@@ -193,7 +193,7 @@ for (const [id, selector, what] of FOCUSABLE) {
     const element = document.querySelector(`#storybook-root ${css}`);
     element.focus();
     /* The ring is not always on the focused node, and that is correct. A
-       Crystal text field puts `outline: 0` on the bare `<input>` and draws the
+       Prismata text field puts `outline: 0` on the bare `<input>` and draws the
        ring on the field shell around it, because the shell is the control a
        person sees and the input is the part of it that takes text. So this
        gate asks whether focusing the element shows a ring, and walks up three
@@ -231,7 +231,7 @@ for (const [id, selector, what] of FOCUSABLE) {
     `${what} shows a focus ring`,
     ringed,
     `focused, the ring is on ${focused.on}: outline ${focused.outlineStyle} `
-    + `${focused.outlineWidth}px ${focused.outlineColor} — Crystal's focus is a crisp 2px core, and a control `
+    + `${focused.outlineWidth}px ${focused.outlineColor} — Prismata's focus is a crisp 2px core, and a control `
     + 'that reads a property nothing defines paints nothing at all',
   );
 
@@ -245,7 +245,7 @@ for (const [id, selector, what] of FOCUSABLE) {
 
 /* ------------------------------------------- selection is carried by weight */
 
-/* Crystal's rule, restated by Meridian: selection is label weight alone, never a
+/* Prismata's rule, restated by Meridian: selection is label weight alone, never a
    rail and never a check mark. Weight is typographic rather than chromatic, so
    selection never rests on colour, and this can be checked without naming a
    colour. */
@@ -275,14 +275,14 @@ for (const [id, selector, marker, what] of SELECTABLE) {
     `${what} carries selection in its weight`,
     seen.selected > seen.other,
     `selected weight ${seen.selected} is not heavier than unselected ${seen.other}. `
-    + 'Selection is label weight alone in Crystal; if the weight is equal, whatever '
+    + 'Selection is label weight alone in Prismata; if the weight is equal, whatever '
     + 'marks the selected item is doing it with colour or with a shape, and both are '
     + 'withdrawn',
   );
   record(
     `${what} is not marked with a check`,
     !/[✓✔]/.test(seen.text),
-    'a check mark means validated or informational in Crystal, never selected',
+    'a check mark means validated or informational in Prismata, never selected',
   );
 }
 
@@ -459,9 +459,9 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------------ a chart is not a thousand icons */
 
-/* `crystal.css` styles the element: `svg { width: 20px; height: 20px; fill:
+/* `prismata.css` styles the element: `svg { width: 20px; height: 20px; fill:
  * none; stroke: currentColor; stroke-width: 1.8 }`. That is right for the icons
- * Crystal ships and wrong for every other drawing, and a consumer loading the
+ * Prismata ships and wrong for every other drawing, and a consumer loading the
  * stylesheet gets it either way (the D-1 hazard).
  *
  * All five declarations reach a chart and each breaks something different. Two
@@ -494,7 +494,7 @@ for (const [id, selector, what] of DISABLED) {
     'a chart mark is not outlined by the icon reset',
     wedge.stroke === 'none',
     `a wedge's stroke is ${wedge.stroke}. Nothing in the chart's own stylesheet strokes it — `
-    + 'that is `svg { stroke: currentColor }` from `crystal.css`, inherited through the '
+    + 'that is `svg { stroke: currentColor }` from `prismata.css`, inherited through the '
     + 'canvas, and it draws a body-ink outline round every filled mark in the library',
   );
   record(
@@ -541,7 +541,7 @@ for (const [id, selector, what] of DISABLED) {
 /* A series colour clears 3:1 against the chart's ground, which is the floor a
  * mark owes. A label written on that mark owes 4.5:1 against the mark, and
  * nothing gives it that: the series colours are all drawn at one lightness, and
- * neither of a palette's inks reaches 4.5 on it. Crystal's answer is Stone, and
+ * neither of a palette's inks reaches 4.5 on it. Prismata's answer is Stone, and
  * this checks that Stone is behind the label. With the wrong `paint-order` the
  * halo is drawn on top of the glyphs instead, which looks like a bolder label
  * and cannot be read. */
@@ -646,7 +646,7 @@ for (const [id, selector, what] of DISABLED) {
  * ring.
  *
  * Second, the reduced-motion fallback the catalogue asks the indeterminate
- * components for. The check is not "the animation is gone": `crystal.css`
+ * components for. The check is not "the animation is gone": `prismata.css`
  * carries a global `animation: none !important` under reduced motion, so that
  * check passes with this component's own rules deleted (measured). What the
  * component owns is what is left when the movement stops. A travelling segment
@@ -716,7 +716,7 @@ for (const [id, selector, what] of DISABLED) {
   await page.getByRole('button', { name: 'Start the tour' }).click();
   await page.waitForTimeout(400);
   const lit = await page.evaluate(() => {
-    const scrim = document.querySelector('[data-cr-tour="scrim"]');
+    const scrim = document.querySelector('[data-pr-tour="scrim"]');
     const target = [...document.querySelectorAll('button')]
       .find((one) => one.textContent === 'Projects');
     if (!scrim || !target) return null;
@@ -742,7 +742,7 @@ for (const [id, selector, what] of DISABLED) {
 /* ------------------------------ a selected swatch still shows its own colour
  *
  * A swatch has no label to weight, so its selection is its pad, and the pad is
- * painted in `--cr-primary`. A product whose brand colour is also one of its
+ * painted in `--pr-primary`. A product whose brand colour is also one of its
  * variant colours would get a swatch that disappears into its own selected
  * state: pad and colour both `rgb(115, 56, 239)`.
  *
@@ -785,9 +785,9 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------------- a pressed toggle looks pressed
  *
- * `crystal.css` carries `:is(button[aria-pressed=true], …)` with its reading pad
- * in `--cr-primary`, `--cr-on-primary` ink and the label at weight 800, in
- * `@layer crystal.component`. An unlayered module class in this package
+ * `prismata.css` carries `:is(button[aria-pressed=true], …)` with its reading pad
+ * in `--pr-primary`, `--pr-on-primary` ink and the label at weight 800, in
+ * `@layer prismata.component`. An unlayered module class in this package
  * outranks that layer without a specificity contest, so a module rule can hide
  * it completely: the pad stays at the neutral Haze fill and the weight at 700
  * while `aria-pressed` is true.
@@ -810,12 +810,12 @@ for (const [id, selector, what] of DISABLED) {
   const off = await toggle('commerce-wishlist-button--default');
   const on = await toggle('commerce-wishlist-button--saved');
   record(
-    'a pressed toggle carries Crystal\'s selected recipe, pad and weight',
+    'a pressed toggle carries Prismata\'s selected recipe, pad and weight',
     off !== null && on !== null
       && off.pressed === 'false' && on.pressed === 'true'
       && on.pad !== off.pad && on.weight > off.weight,
     `off is ${off?.pad} at weight ${off?.weight}, on is ${on?.pad} at weight ${on?.weight}. `
-    + 'Crystal styles the element and this package styles a class, so the library\'s own '
+    + 'Prismata styles the element and this package styles a class, so the library\'s own '
     + 'rule wins the layer contest and a consumer sees whichever one this package wrote',
   );
 }
@@ -824,7 +824,7 @@ for (const [id, selector, what] of DISABLED) {
  *
  * "Pill" is the catalogue's geometry for it. A pill is a radius at least half
  * the element's height, which is the only definition that survives the element
- * changing size. `--cr-action-radius` is large enough for every size the badge
+ * changing size. `--pr-action-radius` is large enough for every size the badge
  * comes in, but checking that the token is applied only checks a spelling; what
  * a reader sees is whether the ends are round. */
 {
@@ -850,11 +850,11 @@ for (const [id, selector, what] of DISABLED) {
 
 /* ------------------------------------------- selection is not a focus ring
  *
- * A gallery thumbnail has no label to weight, so Crystal's other half of the
- * selection rule applies: the reading pad is tinted in `--cr-primary` with the
+ * A gallery thumbnail has no label to weight, so Prismata's other half of the
+ * selection rule applies: the reading pad is tinted in `--pr-primary` with the
  * feather off, exactly as core paints a selected control. The check is that the
  * selected thumbnail differs from an unselected one and that the difference is
- * not an outline. A 2px primary outline is how Crystal paints focus, so a
+ * not an outline. A 2px primary outline is how Prismata paints focus, so a
  * selection drawn that way looks focused, and keeps looking focused after focus
  * has left the strip. */
 {
@@ -1011,7 +1011,7 @@ for (const [id, selector, what] of DISABLED) {
      page scrolls sideways. */
   const strip = await page.evaluate(() => {
     const FOCUSABLE = 'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex="-1"])';
-    const el = document.querySelector('#storybook-root [data-cr-scroll-axis="x"]');
+    const el = document.querySelector('#storybook-root [data-pr-scroll-axis="x"]');
     const doc = document.scrollingElement;
     if (!el) return null;
     return {
@@ -1091,7 +1091,7 @@ for (const [id, selector, what] of DISABLED) {
     if (!description || !heading || !action) return null;
     const box = (el) => el.getBoundingClientRect();
     return {
-      state: header.dataset.crState,
+      state: header.dataset.prState,
       descriptionHidden: getComputedStyle(description).display === 'none'
         || box(description).height === 0,
       /* The more important half: what should stay is still shown. */
@@ -1118,7 +1118,7 @@ for (const [id, selector, what] of DISABLED) {
      the backing is soft and the text on it is not, which no assertion about
      class names can do. */
   const stone = await page.evaluate(() => {
-    const bar = document.querySelector('#storybook-root .cr-stone');
+    const bar = document.querySelector('#storybook-root .pr-stone');
     if (!bar) return null;
     const backing = getComputedStyle(bar, '::before');
     const said = bar.querySelector('[role="alert"]');
@@ -1194,14 +1194,14 @@ for (const [id, selector, what] of DISABLED) {
   );
 }
 
-/* ------------------------------------------ the switch is Crystal's switch
+/* ------------------------------------------ the switch is Prismata's switch
  *
- * Crystal 2.2.0 styles the native switch (`input[type=checkbox][role=switch]`)
+ * Prismata 2.2.0 styles the native switch (`input[type=checkbox][role=switch]`)
  * by element, and React Aria keeps its input visually hidden, so this library
  * cannot wear the recipe and restates it on its own track and thumb. A
  * restatement is a second copy that can drift. So a native switch in the same
  * state is planted beside the library's, in both states, and the track and
- * thumb must agree on every material property. Crystal's "on" is primary-soft
+ * thumb must agree on every material property. Prismata's "on" is primary-soft
  * with a 22px primary thumb.
  */
 {
@@ -1229,20 +1229,20 @@ for (const [id, selector, what] of DISABLED) {
   const second = await compare();
   for (const seen of [first, second]) {
     record(
-      `the switch ${seen.on ? 'on' : 'off'} is Crystal's native switch ${seen.on ? 'on' : 'off'}`,
+      `the switch ${seen.on ? 'on' : 'off'} is Prismata's native switch ${seen.on ? 'on' : 'off'}`,
       seen.differs.length === 0,
-      `differs on ${seen.differs.join(', ')}. The track and thumb restate Crystal's native switch because React Aria hides its input; a restatement that drifts is a second design`,
+      `differs on ${seen.differs.join(', ')}. The track and thumb restate Prismata's native switch because React Aria hides its input; a restatement that drifts is a second design`,
     );
   }
   record('both states of the switch were measured', first.on !== second.on, 'the click did not change the switch, so only one state was compared');
 }
 
-/* ---------------------------------------------- a field is Crystal's field
+/* ---------------------------------------------- a field is Prismata's field
  *
- * Meridian ruled on 28 September 2026 (D-24) that this library adopts Crystal's
- * `.cr-field-shell` as written: the rim, the 20px radius, the 8px inset, the
+ * Meridian ruled on 28 September 2026 (D-24) that this library adopts Prismata's
+ * `.pr-field-shell` as written: the rim, the 20px radius, the 8px inset, the
  * sheen, and the 44px floor for the control inside, which makes a single-line
- * field 62px tall. So a Crystal field shell around a native input is planted
+ * field 62px tall. So a Prismata field shell around a native input is planted
  * beside every field shell in the input stories, and the two must agree on the
  * material and, for a field of one line, on the height. A shell that forgets
  * the class, or a local rule that restates a different value, shows up here as
@@ -1266,51 +1266,51 @@ for (const [id, selector, what] of DISABLED) {
       const out = [];
       for (const shell of shells) {
         const planted = document.createElement('div');
-        planted.className = 'cr-field-shell';
+        planted.className = 'pr-field-shell';
         planted.append(document.createElement('input'));
         shell.parentElement.append(planted);
         const a = getComputedStyle(shell), b = getComputedStyle(planted);
         const invalid = shell.matches('[data-invalid], [data-invalid] *');
         const props = ['backgroundColor', 'backdropFilter', 'borderTopWidth', 'borderTopLeftRadius', 'paddingTop', 'paddingLeft'];
         if (!invalid) props.push('borderTopColor');
-        const differs = props.filter((k) => a[k] !== b[k]).map((k) => `${k} ${a[k]} (Crystal ${b[k]})`);
+        const differs = props.filter((k) => a[k] !== b[k]).map((k) => `${k} ${a[k]} (Prismata ${b[k]})`);
         for (const k of ['backgroundColor', 'filter', 'inset']) {
           if (getComputedStyle(shell, '::before')[k] !== getComputedStyle(planted, '::before')[k]) differs.push(`haze ${k}`);
         }
         if (getComputedStyle(shell, '::after').backgroundImage === 'none') differs.push('no sheen');
         const multiline = shell.querySelector('textarea') !== null;
-        const height = shell.getBoundingClientRect().height, crystal = planted.getBoundingClientRect().height;
-        if (!multiline && Math.abs(height - crystal) > 0.5) differs.push(`height ${height} (Crystal ${crystal})`);
+        const height = shell.getBoundingClientRect().height, prismata = planted.getBoundingClientRect().height;
+        if (!multiline && Math.abs(height - prismata) > 0.5) differs.push(`height ${height} (Prismata ${prismata})`);
         planted.remove();
         const name = shell.closest('[class*="_field_"]')?.querySelector('label, [class*="_label_"]')?.textContent?.trim() ?? shell.className;
-        out.push({ name, wears: shell.classList.contains('cr-field-shell'), differs });
+        out.push({ name, wears: shell.classList.contains('pr-field-shell'), differs });
       }
       return out;
     });
     record(`${id}: fields were found to compare`, seen.length > 0, 'no field shells in the story, so nothing was compared');
     const wrong = seen.filter((one) => !one.wears || one.differs.length > 0);
     record(
-      `${id}: every field is Crystal's field shell`,
+      `${id}: every field is Prismata's field shell`,
       wrong.length === 0,
-      wrong.map((one) => `${one.name}: ${one.wears ? '' : 'does not wear .cr-field-shell; '}${one.differs.join(', ')}`).join(' | '),
+      wrong.map((one) => `${one.name}: ${one.wears ? '' : 'does not wear .pr-field-shell; '}${one.differs.join(', ')}`).join(' | '),
     );
   }
 }
 
-/* ------------------------------------------------ a strip is Crystal's dock
+/* ------------------------------------------------ a strip is Prismata's dock
  *
- * Crystal's catalogue names the tab strip, the segmented control, the toolbar,
+ * Prismata's catalogue names the tab strip, the segmented control, the toolbar,
  * the command bar, the action bar, the dock and the bottom navigation as the
  * `dock` surface (D-23, 28 September 2026; the button group and the split button
  * became the `group` surface in 2.3.0 and are checked with the surfaces), and
- * `.cr-dock` is its recipe. So a `.cr-dock` is planted beside each of them and the
+ * `.pr-dock` is its recipe. So a `.pr-dock` is planted beside each of them and the
  * two must agree on the material: the Resin plane, its rim and shadow, and the
  * Haze fill it holds.
  *
  * The labels inside are checked too. A tab is `div[role=tab]`, a segment is a
- * radio `label` and a destination is a link. Since 2.3.0 `.cr-dock` reaches all
- * three itself (D-26), so a planted `.cr-dock button`, selected and not, is what
- * Crystal must draw them as, and this checks Crystal against itself on the
+ * radio `label` and a destination is a link. Since 2.3.0 `.pr-dock` reaches all
+ * three itself (D-26), so a planted `.pr-dock button`, selected and not, is what
+ * Prismata must draw them as, and this checks Prismata against itself on the
  * elements a consumer writes.
  */
 {
@@ -1323,7 +1323,7 @@ for (const [id, selector, what] of DISABLED) {
     /* Bottom navigation lays its destinations out as icon over label, at its
        own weight and padding, so only what selection paints is compared: the
        fill (on the pill) and its ink. Until R-33 the ink was not compared, and
-       the current destination's was `--cr-text` on the primary fill. */
+       the current destination's was `--pr-text` on the primary fill. */
     ['navigation-rails-and-bars--bottom-bar', 'nav[class*="_bar_"]', 'a', ['color']],
   ];
   for (const [id, selector, labels, only] of DOCKS) {
@@ -1333,17 +1333,17 @@ for (const [id, selector, what] of DISABLED) {
       const out = [];
       for (const strip of strips) {
         const planted = document.createElement('div');
-        planted.className = 'cr-dock';
+        planted.className = 'pr-dock';
         planted.innerHTML = '<button type="button" aria-selected="true">Planted</button><button type="button">Planted</button>';
         strip.parentElement.append(planted);
         const differs = [];
         const a = getComputedStyle(strip), b = getComputedStyle(planted);
         for (const k of ['backgroundColor', 'backdropFilter', 'borderTopColor', 'borderTopWidth', 'boxShadow', 'borderTopLeftRadius']) {
-          if (a[k] !== b[k]) differs.push(`plane ${k} ${a[k]} (Crystal ${b[k]})`);
+          if (a[k] !== b[k]) differs.push(`plane ${k} ${a[k]} (Prismata ${b[k]})`);
         }
         for (const k of ['content', 'backgroundColor', 'filter', 'inset']) {
           const x = getComputedStyle(strip, '::before')[k], y = getComputedStyle(planted, '::before')[k];
-          if (x !== y) differs.push(`haze ${k} ${x} (Crystal ${y})`);
+          if (x !== y) differs.push(`haze ${k} ${x} (Prismata ${y})`);
         }
         /* A dock's buttons carry no material of their own, because Resin never
            contains Resin. */
@@ -1358,26 +1358,26 @@ for (const [id, selector, what] of DISABLED) {
           const current = items.find((el) => el.matches('[data-selected], [aria-selected=true], [aria-current]:not([aria-current=false])'));
           const other = items.find((el) => el !== current);
           /* Since R-A8 the selected segment's fill and contact shadow are
-             Crystal's pill behind it (D-37), and the segment paints neither. So
+             Prismata's pill behind it (D-37), and the segment paints neither. So
              the pill is compared with the planted selected button for those,
              and must sit exactly under the segment; the segment for the rest. */
           /* In the plane: the strip itself, or the dock's inner row. */
-          const pill = strip.querySelector(':scope > .cr-indicator.pill[data-placed], :scope > .cr-dock-inner > .cr-indicator.pill[data-placed]');
+          const pill = strip.querySelector(':scope > .pr-indicator.pill[data-placed], :scope > .pr-dock-inner > .pr-indicator.pill[data-placed]');
           const PAINT = ['backgroundColor', 'boxShadow'];
-          for (const [mine, crystal, state] of [[current, planted.children[0], 'selected'], [other, planted.children[1], 'unselected']]) {
+          for (const [mine, prismata, state] of [[current, planted.children[0], 'selected'], [other, planted.children[1], 'unselected']]) {
             if (!mine) { differs.push(`no ${state} label found`); continue; }
-            const m = getComputedStyle(mine), c = getComputedStyle(crystal);
+            const m = getComputedStyle(mine), c = getComputedStyle(prismata);
             const keys = only ?? ['backgroundColor', 'color', 'fontWeight', 'paddingTop', 'paddingLeft', 'minHeight', 'height', 'borderTopLeftRadius', 'boxShadow'];
             for (const k of new Set([...keys, ...(state === 'selected' ? PAINT : [])])) {
               if (state === 'selected' && PAINT.includes(k)) {
                 if (!pill) { differs.push('no placed pill behind the selected label'); break; }
                 const p = getComputedStyle(pill);
-                if (p[k] !== c[k]) differs.push(`pill ${k} ${p[k]} (Crystal ${c[k]})`);
+                if (p[k] !== c[k]) differs.push(`pill ${k} ${p[k]} (Prismata ${c[k]})`);
                 const bare = k === 'backgroundColor' ? 'rgba(0, 0, 0, 0)' : 'none';
-                if (m[k] !== bare) differs.push(`selected ${k} ${m[k]} over the pill (Crystal ${bare})`);
+                if (m[k] !== bare) differs.push(`selected ${k} ${m[k]} over the pill (Prismata ${bare})`);
                 continue;
               }
-              if (m[k] !== c[k]) differs.push(`${state} ${k} ${m[k]} (Crystal ${c[k]})`);
+              if (m[k] !== c[k]) differs.push(`${state} ${k} ${m[k]} (Prismata ${c[k]})`);
             }
           }
           if (pill && current) {
@@ -1393,14 +1393,14 @@ for (const [id, selector, what] of DISABLED) {
     }, [selector, labels, only]);
     record(`${id}: a dock-surface strip was found`, seen.length > 0, `nothing matched ${selector}`);
     const wrong = seen.filter((differs) => differs.length > 0);
-    record(`${id}: the strip is Crystal's dock`, wrong.length === 0, wrong.map((differs) => differs.join(', ')).join(' | '));
+    record(`${id}: the strip is Prismata's dock`, wrong.length === 0, wrong.map((differs) => differs.join(', ')).join(' | '));
   }
 }
 
-/* ------------------------------------------- one check per Crystal surface
+/* ------------------------------------------- one check per Prismata surface
  *
- * Crystal 2.2.0 names what every component is made of from a closed vocabulary
- * (`@crystal-ui/core/surfaces`), and each surface is a class. For one component
+ * Prismata 2.2.0 names what every component is made of from a closed vocabulary
+ * (`@prismata/core/surfaces`), and each surface is a class. For one component
  * of each surface, an element of the same tag wearing the surface's class is
  * planted beside the component's own, and the two must agree on the recipe's
  * material: the fill, its image, the diffusion, the rim, the shadow, and both
@@ -1409,7 +1409,7 @@ for (const [id, selector, what] of DISABLED) {
  * Covered elsewhere, and not repeated here: `field` (every field in six stories,
  * above), `dock` (seven strips, above) and `choice` (the switch, above).
  * Not covered: `none`, which has no material to compare. `indicator` is
- * Crystal's own class on the component since 2.3.0 (R-25); what it shows is
+ * Prismata's own class on the component since 2.3.0 (R-25); what it shows is
  * checked by the relationship above, which is the part that can go wrong.
  *
  * `VERIFY_PLANT_RED=1` sabotages each component's fill before the comparison,
@@ -1418,41 +1418,41 @@ for (const [id, selector, what] of DISABLED) {
 {
   const RED = process.env['VERIFY_PLANT_RED'] === '1';
   const SURFACES = [
-    // [surface, story, the component's element, the classes Crystal's recipe wears, what to press first]
-    ['plastic', 'application-shell--shell', '[class*="_appShell_"]', 'cr-plastic'],
-    ['frost', 'charts-chart-tooltip--default', '[class*="_tooltip_"]', 'cr-frost'],
-    ['haze', 'data-display-card--default', '[class*="_card_"]', 'cr-haze'],
-    ['resin', 'data-display-image-compare--default', '[class*="_grip_"]', 'cr-resin'],
-    ['resin-panel', 'overlays-floating-surfaces--window', '[class*="_window_"]', 'cr-resin panel'],
-    ['control', 'actions-button--resin', 'button[class*="_button_"]', 'cr-button'],
-    ['compact', 'data-display-badge--default', '[class*="_badge_"]', 'cr-resin-haze count'],
-    ['group', 'actions-icon-group-and-floating--groups', '.cr-group', 'cr-group'],
-    ['stone', 'data-display-caption--overlaid', '[class*="_caption_"]', 'cr-stone'],
-    ['mirage', 'overlays-dialog--default', '[class*="cr-mirage"]', 'cr-mirage', 'button'],
-    ['dialog', 'overlays-dialog--default', '[role=dialog]', 'cr-dialog', 'button'],
-    ['status', 'data-display-status-badge--default', '[class*="_statusBadge_"]', 'cr-status'],
-    ['bubble', 'data-display-authored-bubble--default', '[class*="_bubble_"]', 'cr-bubble'],
-    ['table', 'data-display-table--default', '[class*="_shell_"]', 'cr-table-scroll'],
-    ['nav-item', 'navigation-links--destinations', 'a[class*="_navLink_"]:not([aria-current])', 'cr-nav-item'],
-    ['bare', 'data-display-accordion--default', 'button[class*="_trigger_"]', 'cr-bare'],
-    ['drag-handle', 'utilities-draghandle--default', 'button.cr-drag-handle', 'cr-bare cr-drag-handle'],
+    // [surface, story, the component's element, the classes Prismata's recipe wears, what to press first]
+    ['plastic', 'application-shell--shell', '[class*="_appShell_"]', 'pr-plastic'],
+    ['frost', 'charts-chart-tooltip--default', '[class*="_tooltip_"]', 'pr-frost'],
+    ['haze', 'data-display-card--default', '[class*="_card_"]', 'pr-haze'],
+    ['resin', 'data-display-image-compare--default', '[class*="_grip_"]', 'pr-resin'],
+    ['resin-panel', 'overlays-floating-surfaces--window', '[class*="_window_"]', 'pr-resin panel'],
+    ['control', 'actions-button--resin', 'button[class*="_button_"]', 'pr-button'],
+    ['compact', 'data-display-badge--default', '[class*="_badge_"]', 'pr-resin-haze count'],
+    ['group', 'actions-icon-group-and-floating--groups', '.pr-group', 'pr-group'],
+    ['stone', 'data-display-caption--overlaid', '[class*="_caption_"]', 'pr-stone'],
+    ['mirage', 'overlays-dialog--default', '[class*="pr-mirage"]', 'pr-mirage', 'button'],
+    ['dialog', 'overlays-dialog--default', '[role=dialog]', 'pr-dialog', 'button'],
+    ['status', 'data-display-status-badge--default', '[class*="_statusBadge_"]', 'pr-status'],
+    ['bubble', 'data-display-authored-bubble--default', '[class*="_bubble_"]', 'pr-bubble'],
+    ['table', 'data-display-table--default', '[class*="_shell_"]', 'pr-table-scroll'],
+    ['nav-item', 'navigation-links--destinations', 'a[class*="_navLink_"]:not([aria-current])', 'pr-nav-item'],
+    ['bare', 'data-display-accordion--default', 'button[class*="_trigger_"]', 'pr-bare'],
+    ['drag-handle', 'utilities-draghandle--default', 'button.pr-drag-handle', 'pr-bare pr-drag-handle'],
     ['native', 'inputs-text-and-choice--choice-family', 'select[class*="_native_"]', ''],
     /* The material variants (core 2.7.0 and 2.8.0, R-28): one component for each,
        wearing the variant in place of the rule it used to write by hand. */
-    ['haze inset', 'feedback-empty-state--truly-empty', '[class*="_empty_"]', 'cr-haze inset'],
-    ['haze flush', 'media-gallery--a-set', '[class*="_thumb_"]:not([aria-selected="true"])', 'cr-haze flush'],
-    ['haze flat', 'data-display-accordion--default', '[class*="_row_"]', 'cr-haze flat'],
-    ['haze flat sunken', 'data-display-image--default', '[class*="_image_"]', 'cr-haze flat sunken'],
-    ['haze raised', 'overlays-command-palette--palette', '[class*="_palette_"]', 'cr-haze raised', 'button'],
-    ['frost pane flat', 'navigation-rails-and-bars--rail', '[class*="_rail_"]', 'cr-frost pane flat'],
-    ['frost docked flat', 'application-shell--shell', '[class*="_appBar_"]', 'cr-frost docked flat'],
-    ['frost sheet flat', 'overlays-drawer--modal-focus', '[class*="_panel_"]', 'cr-frost sheet flat', 'button:has-text("Open the end drawer")'],
-    ['frost reading', 'feedback-toast--success', '[class*="_toast_"]', 'cr-frost reading'],
-    ['resin flat', 'inputs-choice-and-range--ranges', '[class*="_dial_"]', 'cr-resin flat'],
-    ['resin divider', 'application-shell--resizing', '[class*="_handle_"]', 'cr-resin divider'],
-    /* Crystal 2.0's box, not the outlined platform box (R-36, 22 November 2026). */
-    ['choice', 'inputs-choice-and-range--choices', '[class*="_choice_"]:not([data-selected]) [class*="_box_"]', 'cr-choice'],
-    ['field block', 'inputs-text-and-choice--text-family', '[class*="_shell_"].block', 'cr-field-shell block'],
+    ['haze inset', 'feedback-empty-state--truly-empty', '[class*="_empty_"]', 'pr-haze inset'],
+    ['haze flush', 'media-gallery--a-set', '[class*="_thumb_"]:not([aria-selected="true"])', 'pr-haze flush'],
+    ['haze flat', 'data-display-accordion--default', '[class*="_row_"]', 'pr-haze flat'],
+    ['haze flat sunken', 'data-display-image--default', '[class*="_image_"]', 'pr-haze flat sunken'],
+    ['haze raised', 'overlays-command-palette--palette', '[class*="_palette_"]', 'pr-haze raised', 'button'],
+    ['frost pane flat', 'navigation-rails-and-bars--rail', '[class*="_rail_"]', 'pr-frost pane flat'],
+    ['frost docked flat', 'application-shell--shell', '[class*="_appBar_"]', 'pr-frost docked flat'],
+    ['frost sheet flat', 'overlays-drawer--modal-focus', '[class*="_panel_"]', 'pr-frost sheet flat', 'button:has-text("Open the end drawer")'],
+    ['frost reading', 'feedback-toast--success', '[class*="_toast_"]', 'pr-frost reading'],
+    ['resin flat', 'inputs-choice-and-range--ranges', '[class*="_dial_"]', 'pr-resin flat'],
+    ['resin divider', 'application-shell--resizing', '[class*="_handle_"]', 'pr-resin divider'],
+    /* Prismata 2.0's box, not the outlined platform box (R-36, 22 November 2026). */
+    ['choice', 'inputs-choice-and-range--choices', '[class*="_choice_"]:not([data-selected]) [class*="_box_"]', 'pr-choice'],
+    ['field block', 'inputs-text-and-choice--text-family', '[class*="_shell_"].block', 'pr-field-shell block'],
   ];
   /* Differences that are decisions, each with where it is recorded. Anything not
      named here fails. */
@@ -1465,7 +1465,7 @@ for (const [id, selector, what] of DISABLED) {
       '::after': 'the handle\'s transparent 44px hit target, not a paint layer (R-28)',
     },
     'haze raised': {
-      borderTopColor: 'the palette\'s own `--cr-edge` boundary, outside the Haze recipe (R-28)',
+      borderTopColor: 'the palette\'s own `--pr-edge` boundary, outside the Haze recipe (R-28)',
     },
   };
   const PROPS = ['backgroundColor', 'backgroundImage', 'backdropFilter', 'borderTopColor', 'borderTopWidth', 'boxShadow'];
@@ -1490,13 +1490,13 @@ for (const [id, selector, what] of DISABLED) {
       mine.parentElement.append(planted);
       const differs = [];
       const a = getComputedStyle(mine), b = getComputedStyle(planted);
-      for (const k of PROPS) if (a[k] !== b[k]) differs.push(`${k} ${a[k].slice(0, 70)} (Crystal ${b[k].slice(0, 70)})`);
+      for (const k of PROPS) if (a[k] !== b[k]) differs.push(`${k} ${a[k].slice(0, 70)} (Prismata ${b[k].slice(0, 70)})`);
       for (const pseudo of ['::before', '::after']) {
         const x = getComputedStyle(mine, pseudo), y = getComputedStyle(planted, pseudo);
         const on = (s) => s.content !== 'none' && s.display !== 'none';
-        if (on(x) !== on(y)) { differs.push(`${pseudo} ${on(x) ? 'painted' : 'absent'} (Crystal ${on(y) ? 'painted' : 'absent'})`); continue; }
+        if (on(x) !== on(y)) { differs.push(`${pseudo} ${on(x) ? 'painted' : 'absent'} (Prismata ${on(y) ? 'painted' : 'absent'})`); continue; }
         if (!on(x)) continue;
-        for (const k of LAYER) if (x[k] !== y[k]) differs.push(`${pseudo} ${k} ${x[k].slice(0, 50)} (Crystal ${y[k].slice(0, 50)})`);
+        for (const k of LAYER) if (x[k] !== y[k]) differs.push(`${pseudo} ${k} ${x[k].slice(0, 50)} (Prismata ${y[k].slice(0, 50)})`);
       }
       planted.remove();
       if (RED) { mine.style.removeProperty('background-color'); mine.style.removeProperty('transition'); }
@@ -1506,7 +1506,7 @@ for (const [id, selector, what] of DISABLED) {
     if (seen) {
       const allowed = ALLOWED[surface] ?? {};
       const wrong = seen.filter((one) => !Object.keys(allowed).some((key) => one.startsWith(`${key} `)));
-      record(`the ${surface} surface: the component is Crystal's ${classes || 'element recipe'}`, wrong.length === 0, wrong.join(', '));
+      record(`the ${surface} surface: the component is Prismata's ${classes || 'element recipe'}`, wrong.length === 0, wrong.join(', '));
     }
   }
 }

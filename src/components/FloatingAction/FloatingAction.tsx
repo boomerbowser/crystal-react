@@ -6,7 +6,7 @@
  * bottom of a viewport covers whatever is underneath it: at the end of a list
  * that is the last item, and at any moment it may be the focused element.
  *
- * Crystal owns the material, the elevation and the safe-area offset. The page
+ * Prismata owns the material, the elevation and the safe-area offset. The page
  * owns the space it leaves underneath (`scroll-padding-block-end` on the
  * scrolling container, or a spacer at the end of the list), because only the
  * page knows its content. Each component's documentation says so.

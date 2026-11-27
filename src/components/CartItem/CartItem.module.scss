@@ -2,28 +2,28 @@
 
 /* "Haze content fill on the surrounding material; content radius." */
 .item {
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
   /* Flex instead of a five-column grid, and no container query. The line wraps
      on its own when the space runs out, so it behaves the same at any width
      with no breakpoint to maintain. */
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--cr-block-gap, $cr-spacing-md);
-  border-radius: $cr-shape-content-radius;
-  padding: calc(var(--cr-haze-inset) + var(--cr-block-padding, $cr-spacing-md));
-  color: var(--cr-text);
+  gap: var(--pr-block-gap, $pr-spacing-md);
+  border-radius: $pr-shape-content-radius;
+  padding: calc(var(--pr-haze-inset) + var(--pr-block-padding, $pr-spacing-md));
+  color: var(--pr-text);
 }
 
-/* The thumbnail is the product's, at the product's size. Crystal publishes no
+/* The thumbnail is the product's, at the product's size. Prismata publishes no
    thumbnail scale, and a consumer must not author a token, so this gives it a
    radius and a block and nothing else. */
 .media { display: flex; }
-.media img { block-size: auto; border-radius: $cr-shape-content-radius; }
+.media img { block-size: auto; border-radius: $pr-shape-content-radius; }
 
-.text { display: grid; gap: $cr-spacing-2xs; flex: 1 1 $cr-layout-min-cell-width; min-inline-size: 0; }
+.text { display: grid; gap: $pr-spacing-2xs; flex: 1 1 $pr-layout-min-cell-width; min-inline-size: 0; }
 .name { margin: 0; font-weight: 750; }
-.detail, .unit { margin: 0; color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+.detail, .unit { margin: 0; color: var(--pr-muted); font-size: var(--pr-text-caption-size); }
 
 .quantity { inline-size: auto; }
 .subtotal { margin: 0; font-weight: 750; margin-inline-start: auto; }

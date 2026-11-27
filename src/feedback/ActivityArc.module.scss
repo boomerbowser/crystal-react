@@ -1,23 +1,23 @@
 @use '../styles/tokens' as *;
 @use '../charts/svg' as chart;
 
-/* `crystal.css` styles the element with `svg { width: 20px; height: 20px; fill:
-   none; stroke: currentColor }`, which suits Crystal's icons and breaks every
+/* `prismata.css` styles the element with `svg { width: 20px; height: 20px; fill:
+   none; stroke: currentColor }`, which suits Prismata's icons and breaks every
    drawing that is not one. The charts have the same problem and the same fix. */
 .canvas {
   @include chart.chart-canvas;
 
   display: block;
-  --activity-colour: var(--cr-primary);
+  --activity-colour: var(--pr-primary);
 }
 
-.canvas[data-state='error'] { --activity-colour: var(--cr-danger-ink); }
-.canvas[data-state='paused'] { --activity-colour: var(--cr-muted); }
+.canvas[data-state='error'] { --activity-colour: var(--pr-danger-ink); }
+.canvas[data-state='paused'] { --activity-colour: var(--pr-muted); }
 
-.track { fill: var(--cr-primary-soft); }
+.track { fill: var(--pr-primary-soft); }
 .arc { fill: var(--activity-colour); }
 
-/* The canvas turns, not the arc (see the component). The turn is Crystal's
+/* The canvas turns, not the arc (see the component). The turn is Prismata's
    `activity-turn` (D-19, 2.2.0), played while the work is pending. This rule only
    puts its origin at the centre. */
 .canvas:not([data-determinate]) {
@@ -34,11 +34,11 @@
    folds the operating system's setting and a product's `reduceMotion` into one,
    and the query alone sees only the first. The query stays for the moment before
    hydration, when no script has answered yet. */
-.canvas[data-cr-motion-state='instant']:not([data-determinate]) .track {
+.canvas[data-pr-motion-state='instant']:not([data-determinate]) .track {
   fill: var(--activity-colour);
   opacity: 0.45;
 }
-.canvas[data-cr-motion-state='instant']:not([data-determinate]) .arc { display: none; }
+.canvas[data-pr-motion-state='instant']:not([data-determinate]) .arc { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .canvas:not([data-determinate]) .track {

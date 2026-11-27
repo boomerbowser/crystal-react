@@ -13,6 +13,6 @@
 .simpleGrid {
   display: grid;
   min-width: 0;
-  gap: var(--cr-grid-gap, #{$cr-spacing-md});
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--cr-cell-min, #{$cr-layout-min-cell-width}), 100%), 1fr));
+  gap: var(--pr-grid-gap, #{$pr-spacing-md});
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--pr-cell-min, #{$pr-layout-min-cell-width}), 100%), 1fr));
 }

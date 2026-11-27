@@ -38,7 +38,7 @@ import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './Lightbox.module.scss';
 import { MirageWash, washHolder } from '../../overlays/MirageWash.js';
 
-/* Crystal's own step. Doubling is too coarse for reading a photograph and 10%
+/* Prismata's own step. Doubling is too coarse for reading a photograph and 10%
    is too many presses to get anywhere. */
 const STEP = 0.5;
 const MIN_ZOOM = 1;

@@ -54,9 +54,9 @@ const config: StorybookConfig = {
    * re-bundle on every start would cost a few seconds of startup each time
    * and buy nothing.
    *
-   * If Crystal is ever linked locally again (`pnpm link` for a change being
+   * If Prismata is ever linked locally again (`pnpm link` for a change being
    * developed across both repositories), Vite's dependency optimiser caches a
-   * pre-bundled copy, and a change to Crystal's resolver does not reach the
+   * pre-bundled copy, and a change to Prismata's resolver does not reach the
    * served page until the cache is cleared. Pass `--force` on the Storybook
    * command for that session. */
 

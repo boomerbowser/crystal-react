@@ -67,7 +67,7 @@ export const OverlayBadge = forwardRef<HTMLSpanElement, OverlayBadgeProps>(funct
       <span
         {...semantics}
         ref={cue as never}
-        className={cx(styles['badge'], 'cr-haze', styles[PLACEMENT_CLASS[placement]])}
+        className={cx(styles['badge'], 'pr-haze', styles[PLACEMENT_CLASS[placement]])}
       >
         {badge}
       </span>

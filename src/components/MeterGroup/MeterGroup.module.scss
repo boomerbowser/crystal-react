@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
-.group { display: flex; flex-direction: column; gap: $cr-spacing-xs; inline-size: 100%; }
+.group { display: flex; flex-direction: column; gap: $pr-spacing-xs; inline-size: 100%; }
 
 .heading {
   margin: 0;
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-text);
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-text);
 }
 
 /* "Track keeps the content radius; segments meet without gaps." One flex row
@@ -14,10 +14,10 @@
 .track {
   display: flex;
   overflow: hidden;
-  block-size: $cr-slider-track-height;
-  border-radius: $cr-shape-content-radius;
-  background: var(--cr-surface-alt);
-  box-shadow: inset 0 1px 1px var(--cr-control-edge);
+  block-size: $pr-slider-track-height;
+  border-radius: $pr-shape-content-radius;
+  background: var(--pr-surface-alt);
+  box-shadow: inset 0 1px 1px var(--pr-control-edge);
 }
 
 .segment { block-size: 100%; background: var(--segment-colour); }
@@ -25,39 +25,39 @@
 .legend {
   display: flex;
   flex-wrap: wrap;
-  gap: $cr-spacing-xs $cr-spacing-md;
+  gap: $pr-spacing-xs $pr-spacing-md;
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: var(--cr-text-caption-size);
+  font-size: var(--pr-text-caption-size);
 }
 
-.entry { display: inline-flex; align-items: center; gap: $cr-spacing-2xs; }
+.entry { display: inline-flex; align-items: center; gap: $pr-spacing-2xs; }
 
-/* Round, like the status badge's well, and sized on the spacing scale. Crystal
+/* Round, like the status badge's well, and sized on the spacing scale. Prismata
    publishes no legend-swatch token, and a swatch on the scale stays in
    proportion when the scale changes. */
 .swatch {
   flex: none;
-  inline-size: $cr-spacing-sm;
-  block-size: $cr-spacing-sm;
+  inline-size: $pr-spacing-sm;
+  block-size: $pr-spacing-sm;
   border-radius: 50%;
   background: var(--segment-colour);
 }
 
-.name { color: var(--cr-text); }
-.value { color: var(--cr-muted); font-variant-numeric: tabular-nums; }
+.name { color: var(--pr-text); }
+.value { color: var(--pr-muted); font-variant-numeric: tabular-nums; }
 
-/* `--segment-colour` arrives from the component, which reads Crystal's chart
+/* `--segment-colour` arrives from the component, which reads Prismata's chart
    series scale through `seriesColour()`, the same function the charts use.
    A meter group is not a chart, but that scale was derived for several things
    on one picture told apart by colour. A second scale invented here would be a
    second one to keep at 3:1. */
 
-[data-status='success'] { --segment-colour: var(--cr-success-ink); }
-[data-status='attention'] { --segment-colour: var(--cr-attention-ink); }
-[data-status='danger'] { --segment-colour: var(--cr-danger-ink); }
-[data-status='info'] { --segment-colour: var(--cr-info-ink); }
+[data-status='success'] { --segment-colour: var(--pr-success-ink); }
+[data-status='attention'] { --segment-colour: var(--pr-attention-ink); }
+[data-status='danger'] { --segment-colour: var(--pr-danger-ink); }
+[data-status='info'] { --segment-colour: var(--pr-info-ink); }
 
 /* Colour is gone, and the names in the legend remain. That is why the legend
    is on by default. A rule between segments keeps the proportions readable. */

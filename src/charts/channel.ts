@@ -29,7 +29,7 @@ export { CHART_SERIES_COUNT };
 
 /** The custom property carrying series `index`'s colour. Wraps at six. */
 export function seriesColour(index: number): string {
-  return `var(--cr-chart-series-${(index % CHART_SERIES_COUNT) + 1})`;
+  return `var(--pr-chart-series-${(index % CHART_SERIES_COUNT) + 1})`;
 }
 
 /* Dash patterns in multiples of the stroke, so they stay in proportion when the

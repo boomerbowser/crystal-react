@@ -7,11 +7,11 @@ import { DateInput, TimeInput, DatePicker, DateRangePicker, DateTimePicker, Digi
 import { ColorInput, ColorPicker, ColorSwatchPicker, ColorWheel } from '../ColorPicker/ColorPicker.js';
 import { FileInput, DropZone, Upload, UploadZone } from '../FileInput/FileInput.js';
 import { Stack, Group } from '../Stack/Stack.js';
-import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
+import prismataFlat from '@prismata/core/flat' with { type: 'json' };
 
-/* The six palettes, from Crystal's own token file. Seeds typed here could drift
+/* The six palettes, from Prismata's own token file. Seeds typed here could drift
    from the palettes the swatch picker is showing. */
-const palettes = (crystalFlat as unknown as {
+const palettes = (prismataFlat as unknown as {
   palettes: Record<string, { name: string; seed: string }>;
 }).palettes;
 const PALETTE_SWATCHES = Object.values(palettes).map((palette) => ({
@@ -68,7 +68,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Temporal: Story = {
   render: () => (
-    <Stack gap="lg" style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>
+    <Stack gap="lg" style={{ maxWidth: '420px' /* prismata-allow-literal: story column */ }}>
       <DateInput label="Date of birth" description="Type it. No calendar needed." />
       <DatePicker label="Due date" defaultValue={today(getLocalTimeZone())} />
       <DatePicker
@@ -91,7 +91,7 @@ export const Temporal: Story = {
 
 export const Colour: Story = {
   render: () => (
-    <Stack gap="lg" style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>
+    <Stack gap="lg" style={{ maxWidth: '420px' /* prismata-allow-literal: story column */ }}>
       <ColorInput label="Brand colour" defaultValue={PALETTE_SWATCHES[0]!.value} />
       <ColorPicker label="Accent" />
       <ColorWheel />
@@ -105,7 +105,7 @@ export const Colour: Story = {
 
 export const Files: Story = {
   render: () => (
-    <Stack gap="lg" style={{ maxWidth: '460px' /* crystal-allow-literal: story column */ }}>
+    <Stack gap="lg" style={{ maxWidth: '460px' /* prismata-allow-literal: story column */ }}>
       <FileInput label="Avatar" acceptedFileTypes={['image/png', 'image/jpeg']} />
       <DropZone label="Attachments" allowsMultiple>
         Drop files here, or choose them
@@ -134,7 +134,7 @@ export const DroppingFiles: Story = {
       setFiles((held) => [...held, ...[...list].map((file) => ({ id: `${file.name}-${held.length}`, name: file.name, size: file.size }))]);
     };
     return (
-      <div style={{ maxWidth: '460px' /* crystal-allow-literal: story column */ }}>
+      <div style={{ maxWidth: '460px' /* prismata-allow-literal: story column */ }}>
         <UploadZone
           label="Attachments"
           allowsMultiple

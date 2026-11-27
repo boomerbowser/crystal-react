@@ -43,26 +43,26 @@ export const LoadingOverlay = forwardRef<HTMLDivElement, LoadingOverlayProps>(
       <div {...props} ref={ref} className={cx(styles['region'], className)} data-loading={loading ? '' : undefined}>
         {/* `inert` rather than `aria-hidden` and `pointer-events: none`: those
             two do two thirds of the job and leave the tab key alone. */}
-        {/* `data-cr-blocked` is always present and says which state it is in.
+        {/* `data-pr-blocked` is always present and says which state it is in.
             A gate that found the region by its `inert` attribute would crash
             when the attribute went missing, instead of reporting a failed
             check. */}
         <div
           className={styles['content']}
-          data-cr-blocked={loading ? 'true' : 'false'}
+          data-pr-blocked={loading ? 'true' : 'false'}
           inert={loading}
         >
           {children}
         </div>
         {loading ? (
           <>
-            <div className={cx('cr-mirage', styles['scrim'])} />
+            <div className={cx('pr-mirage', styles['scrim'])} />
             {/* The loader sits on a Resin card, so it stands clear of the
                 wash. The card is the wash's sibling, not its child: a backdrop
                 filter inside another one sees only its parent's empty layer,
                 so a nested Resin would blur nothing and show its fill as grey. */}
             <div className={styles['centre']}>
-              <div className={cx('cr-resin-haze', styles['card'])}>
+              <div className={cx('pr-resin-haze', styles['card'])}>
                 <Loader label={label} size={size} hideLabel={hideLabel} />
               </div>
             </div>

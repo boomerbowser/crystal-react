@@ -1,36 +1,36 @@
 @use '../../styles/tokens' as *;
 
-/* Table. Crystal's own recipe, value for value.
+/* Table. Prismata's own recipe, value for value.
  *
- * `crystal.css` already carries a complete `.cr-table` treatment, and this file
+ * `prismata.css` already carries a complete `.pr-table` treatment, and this file
  * follows it: a Resin shell with the content shadow, a Haze fill inset 6px,
- * hairline `--cr-edge` separators, 14px/18px cells, and a primary-soft header
+ * hairline `--pr-edge` separators, 14px/18px cells, and a primary-soft header
  * band whose top corners are inset 8px from the shell's radius. The Haze inset
  * is 6px rather than the usual 8 because the shell's own rule says so. Do not
  * "correct" it to the Haze default. The header inset is the catalogue's "header
- * corners inset 8px", and `calc(var(--cr-radius) - 8px)` keeps it right when the
+ * corners inset 8px", and `calc(var(--pr-radius) - 8px)` keeps it right when the
  * radius slider moves.
  *
- * The header band is the one place in this library where `--cr-primary-soft` is
- * a surface rather than a ring, and it is paired with `--cr-on-primary-soft`,
- * which is the ink tested against it. Both come from Crystal's rule.
+ * The header band is the one place in this library where `--pr-primary-soft` is
+ * a surface rather than a ring, and it is paired with `--pr-on-primary-soft`,
+ * which is the ink tested against it. Both come from Prismata's rule.
  *
- * The scrollbar comes from `.cr-table-scroll` in the library stylesheet, which
+ * The scrollbar comes from `.pr-table-scroll` in the library stylesheet, which
  * the shell also carries: a compact horizontal scroller is a control plane, so
  * the thumb is Resin.
  */
 
-$table-header-inset: 8px; /* crystal-allow-literal: the catalogue's stated header corner inset */
-$table-cell-block: 14px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
-$table-cell-inline: 18px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
-$table-cell-block-narrow: 11px; /* crystal-allow-literal: core's narrow-viewport cells */
-$table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewport cells */
+$table-header-inset: 8px; /* prismata-allow-literal: the catalogue's stated header corner inset */
+$table-cell-block: 14px; /* prismata-allow-literal: core `.pr-table :is(th,td)` */
+$table-cell-inline: 18px; /* prismata-allow-literal: core `.pr-table :is(th,td)` */
+$table-cell-block-narrow: 11px; /* prismata-allow-literal: core's narrow-viewport cells */
+$table-cell-inline-narrow: 13px; /* prismata-allow-literal: core's narrow-viewport cells */
 
-/* The frame is Crystal's `.cr-table-scroll`: the Resin frame, the rim, the
+/* The frame is Prismata's `.pr-table-scroll`: the Resin frame, the rim, the
    content shadow, the 6px-inset Haze fill under the rows, the Resin scrollbar,
    contained overscroll, and both fallbacks. Do not restate them here, where a
-   copy could drift. Its focus ring is Crystal's too, which reaches any element
-   with a tab index. This file sets only the gutter, which Crystal does not set
+   copy could drift. Its focus ring is Prismata's too, which reaches any element
+   with a tab index. This file sets only the gutter, which Prismata does not set
    and which a table whose rows arrive after it renders needs. */
 .shell {
   display: block;
@@ -48,7 +48,7 @@ $table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewpor
 
 .table :is(th, td) {
   border: 0;
-  border-block-end: 1px solid var(--cr-edge);
+  border-block-end: 1px solid var(--pr-edge);
   padding: $table-cell-block $table-cell-inline;
   text-align: start;
   vertical-align: top;
@@ -61,33 +61,33 @@ $table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewpor
   position: sticky;
   inset-block-start: 0;
   z-index: 1;
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
+  background: var(--pr-primary-soft);
+  color: var(--pr-on-primary-soft);
   font-weight: 800;
   border-block-end: 0;
 }
 
-.table thead th:first-child { border-start-start-radius: calc(var(--cr-radius) - #{$table-header-inset}); }
-.table thead th:last-child { border-start-end-radius: calc(var(--cr-radius) - #{$table-header-inset}); }
+.table thead th:first-child { border-start-start-radius: calc(var(--pr-radius) - #{$table-header-inset}); }
+.table thead th:last-child { border-start-end-radius: calc(var(--pr-radius) - #{$table-header-inset}); }
 
 .table tbody tr:last-child :is(th, td) { border-block-end: 0; }
 
-.table tbody tr:hover :is(th, td) { background: var(--cr-label-fill); }
+.table tbody tr:hover :is(th, td) { background: var(--pr-label-fill); }
 
 /* Selection is label weight, here as everywhere. The fill is the second signal
    and never the only one. */
 .table tbody tr[data-selected] :is(th, td) {
   font-weight: 800;
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
+  background: var(--pr-primary-soft);
+  color: var(--pr-on-primary-soft);
 }
 
 .caption {
   caption-side: top;
   text-align: start;
-  padding: $table-cell-block $table-cell-inline $cr-spacing-2xs;
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  padding: $table-cell-block $table-cell-inline $pr-spacing-2xs;
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
 }
 
 /* The sort control is a button in the header, and `aria-sort` on the header is
@@ -97,7 +97,7 @@ $table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewpor
 
   display: inline-flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: calc(#{$table-cell-block} * -1) calc(#{$table-cell-inline} * -1);
   padding: $table-cell-block $table-cell-inline;
   inline-size: calc(100% + #{$table-cell-inline} * 2);
@@ -111,9 +111,9 @@ $table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewpor
 }
 
 .sort:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(#{$cr-focus-core-offset} * -1);
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(#{$pr-focus-core-offset} * -1);
+  box-shadow: var(--pr-focus-ring);
 }
 
 /* Dim until the column is the sorted one, so the header does not read as six
@@ -122,22 +122,22 @@ $table-cell-inline-narrow: 13px; /* crystal-allow-literal: core's narrow-viewpor
 .arrow[data-sorted] { opacity: 1; }
 
 .notice {
-  padding: var(--cr-space);
+  padding: var(--pr-space);
   text-align: center;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
 }
 
 .placeholder {
   display: inline-block;
   inline-size: 40%;
-  block-size: 1em; /* crystal-allow-literal: one line box, relative to the text */
-  border-radius: var(--cr-radius);
-  /* Crystal's `.cr-haze.flat.sunken` (2.7.0): the fill on the element, and the
+  block-size: 1em; /* prismata-allow-literal: one line box, relative to the text */
+  border-radius: var(--pr-radius);
+  /* Prismata's `.pr-haze.flat.sunken` (2.7.0): the fill on the element, and the
      alternate surface where translucency gives way, so the placeholder stays
      visible on the surface it waits on. */
 }
 
-@media (max-width: $cr-breakpoint-sm) {
+@media (max-width: $pr-breakpoint-sm) {
   .table :is(th, td) { padding: $table-cell-block-narrow $table-cell-inline-narrow; }
 }
 

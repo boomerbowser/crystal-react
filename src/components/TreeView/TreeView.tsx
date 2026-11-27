@@ -6,12 +6,12 @@
  * `aria-setsize`, the roving tab stop, type-ahead, and the arrow-key contract
  * that makes a tree a tree: right expands or descends, left collapses or
  * ascends, and Home and End reach the ends of the visible rows instead of the
- * data. Crystal owns the row, the indentation and its guides, and the marking of
+ * data. Prismata owns the row, the indentation and its guides, and the marking of
  * the selected row.
  *
  * It is a `treegrid`, where the catalogue says `tree`, and the divergence is
  * intended. A `treeitem` in the plain tree pattern is a single navigable unit and
- * must not contain independently focusable widgets, and Crystal's row contains a
+ * must not contain independently focusable widgets, and Prismata's row contains a
  * disclosure button, which the catalogue also specifies. The two cannot both be
  * honoured. `treegrid` is the pattern ARIA provides for this case: rows carry
  * `aria-level` and `aria-expanded` as before, and the keyboard can reach into a
@@ -20,7 +20,7 @@
  * tracker, because changing the catalogue line is Meridian's call and not this
  * library's.
  *
- * Selection is label weight. It is not a check mark, which in Crystal means
+ * Selection is label weight. It is not a check mark, which in Prismata means
  * validated, and not a mark set beside the label, which would offset the label
  * it points at. In a tree the label's inline position already shows the depth,
  * so a mark there would also misstate the level.
@@ -33,7 +33,7 @@
  * ## Motion, and why it does not play on load
  *
  * Rows revealed by expanding play `accordion-in`. Rows present when the tree
- * first renders play nothing, because nothing in Crystal moves at rest, and a
+ * first renders play nothing, because nothing in Prismata moves at rest, and a
  * tree animating itself into existence on page load would be motion at rest.
  *
  * React's effect ordering (children before parents) cannot tell the two apart
@@ -146,10 +146,10 @@ function RowContent({
       className={cx(styles['row'])}
       /* The depth as a number, so one rule indents every level and one gradient
          draws every guide. CSS cannot read `aria-level` as a number. */
-      style={{ '--cr-tree-level': level - 1 } as React.CSSProperties}
+      style={{ '--pr-tree-level': level - 1 } as React.CSSProperties}
     >
       {hasChildItems ? (
-        <Button slot="chevron" className={cx(styles['chevron'], 'cr-bare')}>
+        <Button slot="chevron" className={cx(styles['chevron'], 'pr-bare')}>
           {ChevronIcon}
         </Button>
       ) : (

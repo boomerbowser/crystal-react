@@ -1,6 +1,6 @@
 'use client';
 
-/* Crystal's material presets as Motion for React props.
+/* Prismata's material presets as Motion for React props.
  *
  * `usePreset` plays a preset imperatively and resolves when it settles, which
  * suits a caller that awaits an exit before unmounting. Inside `AnimatePresence`,
@@ -8,7 +8,7 @@
  * `initial`, `animate` and `exit` targets and drives the lifecycle itself.
  *
  * This hook is the declarative half. It computes the same keyframes from the same
- * core module (`@crystal-ui/core/core/presets`, never a copy) and returns them
+ * core module (`@prismata/core/core/presets`, never a copy) and returns them
  * as Motion targets. The environment (travel and depth tokens, the duration and
  * easing tokens) is read once after mount, so the first render is stable under
  * server rendering and hydration. A surface that is open on the first paint
@@ -17,9 +17,9 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import type { TargetAndTransition } from 'motion/react';
-import presets from '@crystal-ui/core/core/presets';
-import type { CrystalPresetName, CrystalFlowDirection } from '@crystal-ui/core/core/presets';
-import { useCrystalTheme } from '../theme/CrystalProvider.js';
+import presets from '@prismata/core/core/presets';
+import type { PrismataPresetName, PrismataFlowDirection } from '@prismata/core/core/presets';
+import { usePrismataTheme } from '../theme/PrismataProvider.js';
 
 export interface UsePresetMotionOptions {
   /**
@@ -29,7 +29,7 @@ export interface UsePresetMotionOptions {
    */
   readonly anchored?: boolean;
   /** Which edge a Mirage wash flows from. */
-  readonly from?: CrystalFlowDirection;
+  readonly from?: PrismataFlowDirection;
   /**
    * Whether the surface the props are spread onto is currently open. When given,
    * the arrival plays only for an opening that began after the environment was
@@ -58,15 +58,15 @@ interface Environment {
   readonly ease: Readonly<Record<'enter' | 'exit', readonly number[] | undefined>>;
 }
 
-/** Read a `--cr-*` number from the resolved theme, falling back to Crystal's own default. */
+/** Read a `--pr-*` number from the resolved theme, falling back to Prismata's own default. */
 function readNumber(styles: CSSStyleDeclaration, token: string, fallback: number): number {
-  const value = Number.parseFloat(styles.getPropertyValue(`--cr-${token}`));
+  const value = Number.parseFloat(styles.getPropertyValue(`--pr-${token}`));
   return Number.isFinite(value) ? value : fallback;
 }
 
 /** Parses `cubic-bezier(a, b, c, d)` into `[a, b, c, d]`. Anything else is left to Motion's default. */
 function readEase(styles: CSSStyleDeclaration, role: 'enter' | 'exit'): readonly number[] | undefined {
-  const match = /cubic-bezier\(([^)]+)\)/.exec(styles.getPropertyValue(`--cr-ease-${role}`));
+  const match = /cubic-bezier\(([^)]+)\)/.exec(styles.getPropertyValue(`--pr-ease-${role}`));
   if (!match?.[1]) return undefined;
   const numbers = match[1].split(',').map((n) => Number.parseFloat(n));
   return numbers.length === 4 && numbers.every(Number.isFinite) ? numbers : undefined;
@@ -78,9 +78,9 @@ function readEnvironment(): Environment {
   for (const role of ['panel', 'floating', 'exit', 'feather', 'content']) {
     travel[role] = readNumber(styles, `travel-${role}`, 24);
   }
-  /* The fallbacks are Crystal's own published durations (material 1000ms,
+  /* The fallbacks are Prismata's own published durations (material 1000ms,
      liquid 1400ms, flow 1200ms, departure 650ms), so a page that has not loaded
-     the generated theme still moves at Crystal's timing and not at a flat
+     the generated theme still moves at Prismata's timing and not at a flat
      second. A flat 1000ms fallback, as in `usePreset`, makes a dismissal half
      again as long as the specification in a document without the theme. */
   const base: Record<string, number> = {};
@@ -97,7 +97,7 @@ function readEnvironment(): Environment {
 }
 
 /**
- * Frame offsets become Motion's `times`. Crystal authors an offset only on the
+ * Frame offsets become Motion's `times`. Prismata authors an offset only on the
  * frames that need one (a Mirage wash marks its middle at 0.58), so the ends
  * are filled in. A frame list with no offsets at all is left to Motion to space
  * evenly.
@@ -113,7 +113,7 @@ function resolveTimes(frames: readonly Record<string, unknown>[]): number[] | un
 }
 
 function target(
-  name: CrystalPresetName,
+  name: PrismataPresetName,
   env: Environment,
   options: UsePresetMotionOptions,
   resolveDuration: (base: number) => number,
@@ -166,11 +166,11 @@ function target(
  * carries the state change itself.
  */
 export function usePresetMotion(
-  enter: CrystalPresetName | null,
-  exit: CrystalPresetName | null,
+  enter: PrismataPresetName | null,
+  exit: PrismataPresetName | null,
   options: UsePresetMotionOptions = {},
 ): PresetMotionProps {
-  const { resolveDuration, reduceMotion } = useCrystalTheme();
+  const { resolveDuration, reduceMotion } = usePrismataTheme();
   const [env, setEnv] = useState<Environment | null>(null);
   useEffect(() => { setEnv(readEnvironment()); }, []);
 

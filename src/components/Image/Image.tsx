@@ -52,7 +52,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
     <span
       ref={mergeRefs<HTMLSpanElement>(scope as never)}
       data-state={state}
-      className={cx('cr-haze flat sunken', styles['image'], rounded ? styles['rounded'] : undefined, className)}
+      className={cx('pr-haze flat sunken', styles['image'], rounded ? styles['rounded'] : undefined, className)}
       style={ratio === undefined ? undefined : { aspectRatio: String(ratio) }}
     >
       {state === 'error' ? (

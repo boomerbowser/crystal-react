@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { SegmentedControl } from './SegmentedControl.js';
 
 const options = [
@@ -11,7 +11,7 @@ const options = [
 
 describe('SegmentedControl', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <SegmentedControl label="Appearance" options={options} defaultValue="light" />,
     );
     await expectNoAxeViolations(container);
@@ -21,7 +21,7 @@ describe('SegmentedControl', () => {
      announces its options as tabs, and a reader then expects a panel to change,
      which this control does not do. */
   it('is a radio group and never uses aria-selected', () => {
-    renderWithCrystal(<SegmentedControl label="Appearance" options={options} defaultValue="light" />);
+    renderWithPrismata(<SegmentedControl label="Appearance" options={options} defaultValue="light" />);
     expect(screen.getByRole('radiogroup', { name: /Appearance/ })).toBeInTheDocument();
     expect(screen.queryByRole('tab')).toBeNull();
     for (const option of screen.getAllByRole('radio')) {
@@ -30,7 +30,7 @@ describe('SegmentedControl', () => {
   });
 
   it('moves with the arrow keys, as one tab stop', async () => {
-    renderWithCrystal(<SegmentedControl label="Appearance" options={options} defaultValue="light" />);
+    renderWithPrismata(<SegmentedControl label="Appearance" options={options} defaultValue="light" />);
     await userEvent.tab();
     expect(screen.getByRole('radio', { name: 'Light' })).toHaveFocus();
 
@@ -41,7 +41,7 @@ describe('SegmentedControl', () => {
   /* A hidden label still has to name the group; dropping it would leave the
      group unnamed. */
   it('keeps the group named when the label is hidden', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <SegmentedControl label="Appearance" options={options} labelHidden defaultValue="light" />,
     );
     expect(screen.getByRole('radiogroup', { name: 'Appearance' })).toBeInTheDocument();

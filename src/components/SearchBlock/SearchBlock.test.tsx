@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor, within } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor, within } from '../../test/render.js';
 import { SearchBlock, type SearchBlockProps, type SearchResult, type SearchSuggestion } from './SearchBlock.js';
 
 const catalogue: SearchSuggestion[] = [
@@ -33,12 +33,12 @@ const results: SearchResult[] = [
 
 describe('SearchBlock', () => {
   it('is a combobox inside a search landmark', () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     expect(within(screen.getByRole('search')).getByRole('combobox', { name: 'Search' })).toBeInTheDocument();
   });
 
   it('offers recent searches as their own group before anything is typed', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await userEvent.click(screen.getByRole('combobox'));
     const listbox = await screen.findByRole('listbox');
     const group = within(listbox).getByRole('group', { name: 'Recent searches' });
@@ -47,7 +47,7 @@ describe('SearchBlock', () => {
 
   /* The opinion's first half: arrow keys move without losing the typed value. */
   it('keeps the typed value while the arrow keys move the highlight', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     const field = screen.getByRole('combobox');
     await userEvent.type(field, 'harb');
     await screen.findByRole('listbox');
@@ -61,7 +61,7 @@ describe('SearchBlock', () => {
 
   it('searches for what was typed on Enter, and for a row when one is chosen', async () => {
     const onSearch = vi.fn();
-    renderWithCrystal(<Harness onSearch={onSearch} />);
+    renderWithPrismata(<Harness onSearch={onSearch} />);
     const field = screen.getByRole('combobox');
     await userEvent.type(field, 'harv{Escape}{Enter}');
     expect(onSearch).toHaveBeenLastCalledWith('harv');
@@ -76,7 +76,7 @@ describe('SearchBlock', () => {
   /* Through React Aria's announcer, which its own aria-hidden sweep leaves
      reachable while the list is open. */
   it('says how many suggestions there are as they change', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await userEvent.type(screen.getByRole('combobox'), 'har');
     await userEvent.type(screen.getByRole('combobox'), 'b');
     await waitFor(() => {
@@ -85,7 +85,7 @@ describe('SearchBlock', () => {
   });
 
   it('says searching, then how many results a search found, and heads the results with the same', () => {
-    const { rerender } = renderWithCrystal(<SearchBlock query="harbour" onQueryChange={() => {}} onSearch={() => {}} />);
+    const { rerender } = renderWithPrismata(<SearchBlock query="harbour" onQueryChange={() => {}} onSearch={() => {}} />);
     expect(screen.getByRole('status')).toHaveTextContent('');
     rerender(<SearchBlock query="harbour" onQueryChange={() => {}} onSearch={() => {}} state="loading" />);
     expect(screen.getByRole('status')).toHaveTextContent('Searching');
@@ -96,7 +96,7 @@ describe('SearchBlock', () => {
   });
 
   it('says when a search found nothing', () => {
-    renderWithCrystal(<SearchBlock query="zzz" onQueryChange={() => {}} onSearch={() => {}} results={[]} searchedFor="zzz" state="empty" />);
+    renderWithPrismata(<SearchBlock query="zzz" onQueryChange={() => {}} onSearch={() => {}} results={[]} searchedFor="zzz" state="empty" />);
     expect(screen.getByRole('heading', { name: 'No results for zzz' })).toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('No results for zzz');
   });
@@ -107,7 +107,7 @@ describe('SearchBlock', () => {
     ['empty', { state: 'empty' as const, results: [], searchedFor: 'zzz' }],
     ['with results', { results, searchedFor: 'harbour' }],
   ])('has no axe violations %s', async (_, extra) => {
-    const { container } = renderWithCrystal(<SearchBlock query="" onQueryChange={() => {}} onSearch={() => {}} {...extra} />);
+    const { container } = renderWithPrismata(<SearchBlock query="" onQueryChange={() => {}} onSearch={() => {}} {...extra} />);
     await expectNoAxeViolations(container);
   });
 
@@ -117,7 +117,7 @@ describe('SearchBlock', () => {
      that on any page with a landmark, and no markup inside the block can change
      it. */
   it('has no axe violations open', async () => {
-    const { container } = renderWithCrystal(<Harness />);
+    const { container } = renderWithPrismata(<Harness />);
     await userEvent.type(screen.getByRole('combobox'), 'harb');
     const listbox = await screen.findByRole('listbox');
     await expectNoAxeViolations(container);

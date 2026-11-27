@@ -1,14 +1,14 @@
 @use '../../styles/tokens' as *;
 
 /* "Haze sections in a Frost panel." The step is the Frost panel, worn as
-   `.cr-frost`; its fields sit on one Haze section, worn as `.cr-haze`. The
+   `.pr-frost`; its fields sit on one Haze section, worn as `.pr-haze`. The
    summary is `CartSummary`, which carries its own surface. */
 .checkout {
   /* The block is the container the layout below measures, since a container
      query cannot style its own container. */
   container-type: inline-size;
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-lg);
+  gap: var(--pr-block-gap, $pr-spacing-lg);
   min-inline-size: 0;
 }
 
@@ -17,41 +17,41 @@
    because a checkout in a narrow column is narrow whatever the window is. */
 .main {
   display: grid;
-  gap: $cr-spacing-lg;
+  gap: $pr-spacing-lg;
   align-items: start;
 }
 
-@container (min-inline-size: 48rem) { /* crystal-allow-literal: the width at which a step and its summary both fit */
+@container (min-inline-size: 48rem) { /* prismata-allow-literal: the width at which a step and its summary both fit */
   .main { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
 }
 
 .step {
   display: grid;
-  gap: $cr-spacing-md;
-  padding: var(--cr-space);
+  gap: $pr-spacing-md;
+  padding: var(--pr-space);
 }
 
 .heading { margin: 0; }
 
 .fields {
   display: grid;
-  gap: $cr-spacing-md;
-  padding: var(--cr-space);
+  gap: $pr-spacing-md;
+  padding: var(--pr-space);
 }
 
 .failure {
-  padding: $cr-spacing-sm $cr-spacing-md;
-  border: 1px solid var(--cr-danger-ink);
-  border-radius: var(--cr-radius);
-  background: var(--cr-danger-surface);
-  color: var(--cr-danger-ink);
+  padding: $pr-spacing-sm $pr-spacing-md;
+  border: 1px solid var(--pr-danger-ink);
+  border-radius: var(--pr-radius);
+  background: var(--pr-danger-surface);
+  color: var(--pr-danger-ink);
   font-weight: 700;
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   flex-wrap: wrap;
 }
 

@@ -2,9 +2,9 @@
 
 /* "Increase, decrease and total colour from the status tokens."
  *
- * Crystal's feedback inks, unchanged, and not the series scale. A waterfall's
+ * Prismata's feedback inks, unchanged, and not the series scale. A waterfall's
  * three kinds of bar carry a meaning (this went up, this went down, this is
- * where we are) and are not three series. In Crystal, meanings take the status
+ * where we are) and are not three series. In Prismata, meanings take the status
  * colours.
  *
  * Never colour alone. The sign is written into every label and into the table's
@@ -12,16 +12,16 @@
  * colour: it runs from the axis where the others float.
  */
 
-.step .fill { transition: opacity var(--cr-state) var(--cr-ease-settle); }
+.step .fill { transition: opacity var(--pr-state) var(--pr-ease-settle); }
 
-.step[data-kind='increase'] .fill { fill: var(--cr-success-ink); }
-.step[data-kind='decrease'] .fill { fill: var(--cr-danger-ink); }
-.step[data-kind='total'] .fill { fill: var(--cr-info-ink); }
+.step[data-kind='increase'] .fill { fill: var(--pr-success-ink); }
+.step[data-kind='decrease'] .fill { fill: var(--pr-danger-ink); }
+.step[data-kind='total'] .fill { fill: var(--pr-info-ink); }
 
 .step:focus-visible { outline: none; }
 
 .connector {
-  stroke: var(--cr-chart-axis);
+  stroke: var(--pr-chart-axis);
   stroke-width: 1px;
   stroke-dasharray: 3 3;
 }

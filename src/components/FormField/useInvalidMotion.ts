@@ -2,7 +2,7 @@
 
 /* The validation binding, once.
  *
- * Crystal's rule is that motion binds to state and not to an event. For
+ * Prismata's rule is that motion binds to state and not to an event. For
  * validation this means a field that failed on the server must look exactly
  * like one that failed locally, because to the person filling in the form they
  * are the same thing. An `onBlur` handler cannot do that, because it only knows

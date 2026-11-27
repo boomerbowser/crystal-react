@@ -1,6 +1,6 @@
-/* The floor under the Crystal this library plays.
+/* The floor under the Prismata this library plays.
  *
- * Until 28 September 2026 this was an R-20 test, written to fail when Crystal
+ * Until 28 September 2026 this was an R-20 test, written to fail when Prismata
  * 2.2.0 was installed so the migration to its recipes (R-24) could not be
  * forgotten.
  *
@@ -14,7 +14,7 @@
  *
  * The floor is 2.3, because the location dot, the count badge, the group, the
  * dialog body and the recessed overlay this library wears exist only from 2.3.0.
- * Crystal 2.3.0 draws the navigation entry's location dot on `.cr-nav-item`, and
+ * Prismata 2.3.0 draws the navigation entry's location dot on `.pr-nav-item`, and
  * `NavLink` no longer draws its own (R-26).
  *
  * The floor is 2.4 since 7 November 2026: the players, the transport, `Prose`,
@@ -29,7 +29,7 @@
  * caption style would do nothing.
  *
  * The floor is 2.6 since 16 November 2026: tabs, the segmented control, the dock
- * and bottom navigation draw their selection as Crystal's travelling pill
+ * and bottom navigation draw their selection as Prismata's travelling pill
  * (R-A8, D-37). On 2.5 the pill has no styles, and the segment it took the
  * fill from would show none at all.
  */
@@ -37,27 +37,27 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
-import motionRecipes from '@crystal-ui/core/motion-recipes' with { type: 'json' };
+import motionRecipes from '@prismata/core/motion-recipes' with { type: 'json' };
 
 /* The package does not export its manifest, so it is found from a file it does
-   export: `./css` is `assets/crystal.css`, and the manifest is two levels up. */
+   export: `./css` is `assets/prismata.css`, and the manifest is two levels up. */
 const require = createRequire(import.meta.url);
-const stylesheetPath = require.resolve('@crystal-ui/core/css');
+const stylesheetPath = require.resolve('@prismata/core/css');
 const installed = JSON.parse(readFileSync(join(dirname(stylesheetPath), '..', 'package.json'), 'utf8')) as { version: string };
 const [major = 0, minor = 0] = installed.version.split('.').map(Number);
 
-/* Every recipe this library plays that an older Crystal does not have. */
+/* Every recipe this library plays that an older Prismata does not have. */
 const PLAYED_FROM_2_2 = ['activity-turn', 'activity-travel', 'skeleton-sweep', 'mark-in', 'selection-travel'];
 
-describe('the installed @crystal-ui/core', () => {
+describe('the installed @prismata/core', () => {
   it('is 2.10.0 or later', () => {
-    expect(major > 2 || (major === 2 && minor >= 10), `@crystal-ui/core ${installed.version} is installed; this library wears recipes that exist only from 2.10.0 — the input modality (core/modality, focus rings only for the keyboard), the choice box (.cr-choice, .outline, .radio), the material variants (.cr-haze.inset, .flush, .flat, .raised; .cr-frost.pane, .flat, .docked, .sheet, .reading; .cr-resin.flat, .divider; .cr-field-shell.block), the travelling selection pill, the media stage, the transport, the caption and its style, the prose and editor vocabulary, the editor's toolbar placements, the Frost bar`).toBe(true);
+    expect(major > 2 || (major === 2 && minor >= 10), `@prismata/core ${installed.version} is installed; this library wears recipes that exist only from 2.10.0 — the input modality (core/modality, focus rings only for the keyboard), the choice box (.pr-choice, .outline, .radio), the material variants (.pr-haze.inset, .flush, .flat, .raised; .pr-frost.pane, .flat, .docked, .sheet, .reading; .pr-resin.flat, .divider; .pr-field-shell.block), the travelling selection pill, the media stage, the transport, the caption and its style, the prose and editor vocabulary, the editor's toolbar placements, the Frost bar`).toBe(true);
   });
 
   /* The version could move without the classes, so the stylesheet is read too. */
   it('publishes every media, prose and editor class this library wears', () => {
     const css = readFileSync(stylesheetPath, 'utf8');
-    for (const selector of ['.cr-media {', '.cr-media-bar {', '.cr-media-caption {', '.cr-media.audio {', ').transport {', '.cr-editor {', '.cr-editor-toolbar {', '.cr-editor-toolbar:not(.above) {', '.cr-media-caption.large {', '.cr-media-caption.larger {', '.cr-media-caption.solid {', '.cr-indicator.pill[data-placed] {', ').bar {', ':is(.cr-prose,.cr-editor) {']) {
+    for (const selector of ['.pr-media {', '.pr-media-bar {', '.pr-media-caption {', '.pr-media.audio {', ').transport {', '.pr-editor {', '.pr-editor-toolbar {', '.pr-editor-toolbar:not(.above) {', '.pr-media-caption.large {', '.pr-media-caption.larger {', '.pr-media-caption.solid {', '.pr-indicator.pill[data-placed] {', ').bar {', ':is(.pr-prose,.pr-editor) {']) {
       expect(css.includes(selector), `${selector} is worn here and not published by the installed core`).toBe(true);
     }
   });

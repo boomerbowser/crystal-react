@@ -2,36 +2,36 @@
 @use '../../styles/status';
 
 .result {
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $cr-spacing-sm;
-  padding: $cr-spacing-2xl $cr-spacing-lg;
-  border-radius: $cr-shape-content-radius;
+  gap: $pr-spacing-sm;
+  padding: $pr-spacing-2xl $pr-spacing-lg;
+  border-radius: $pr-shape-content-radius;
   text-align: center;
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 @include status.status-pairs('.result');
 
-.well { @include status.status-well($cr-spacing-2xl); }
+.well { @include status.status-well($pr-spacing-2xl); }
 
 .title {
   margin: 0;
-  font-size: var(--cr-text-heading-size);
-  line-height: var(--cr-text-heading-leading);
-  letter-spacing: var(--cr-text-heading-tracking);
+  font-size: var(--pr-text-heading-size);
+  line-height: var(--pr-text-heading-leading);
+  letter-spacing: var(--pr-text-heading-tracking);
 }
 
 .body {
   max-inline-size: 52ch;
-  font-size: var(--cr-text-body-size);
-  line-height: var(--cr-text-body-leading);
-  color: var(--cr-muted);
+  font-size: var(--pr-text-body-size);
+  line-height: var(--pr-text-body-leading);
+  color: var(--pr-muted);
 }
 
-.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: $cr-spacing-xs; }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: $pr-spacing-xs; }
 
 @media (forced-colors: active) {
   .result { background: Canvas; border: 1px solid CanvasText; }

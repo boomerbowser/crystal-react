@@ -15,15 +15,15 @@
 .accordion {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
 }
 
 .row {
-  /* Crystal's `.cr-haze.flat` (2.7.0): the fill on the row itself, with the
+  /* Prismata's `.pr-haze.flat` (2.7.0): the fill on the row itself, with the
      surface in opaque mode and under reduced transparency, and system colours
      in forced colours. */
-  border-radius: var(--cr-radius);
-  color: var(--cr-text);
+  border-radius: var(--pr-radius);
+  color: var(--pr-text);
   overflow: hidden;
 }
 
@@ -34,11 +34,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   inline-size: 100%;
   box-sizing: border-box;
-  min-block-size: $cr-action-min-target;
-  padding: $cr-spacing-sm var(--cr-space);
+  min-block-size: $pr-action-min-target;
+  padding: $pr-spacing-sm var(--pr-space);
   border: 0;
   background: transparent;
   color: inherit;
@@ -49,19 +49,19 @@
 }
 
 .trigger[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(#{$cr-focus-core-offset} * -1);
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(#{$pr-focus-core-offset} * -1);
+  box-shadow: var(--pr-focus-ring);
 }
 
-.trigger[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.trigger[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
 
 .title { flex: 1 1 auto; min-inline-size: 0; }
 
 .chevron {
   flex: none;
-  inline-size: $cr-icon-action;
-  block-size: $cr-icon-action;
+  inline-size: $pr-icon-action;
+  block-size: $pr-icon-action;
 }
 
 /* The end state, in CSS. Correct at rest whether or not the recipe ran. A
@@ -72,7 +72,7 @@
 .panel { padding: 0; }
 
 .content {
-  padding: 0 var(--cr-space) var(--cr-space);
-  color: var(--cr-text);
+  padding: 0 var(--pr-space) var(--pr-space);
+  color: var(--pr-text);
 }
 

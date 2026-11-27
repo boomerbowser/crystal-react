@@ -26,7 +26,7 @@ module.exports = {
            preset-typescript 8 against core 7 the preset does not engage: the
            file is parsed as plain JavaScript, `createContext<T | null>(null)`
            becomes a chain of comparisons, and it fails at runtime with
-           "CrystalTheme is not defined", pointing at the context creation
+           "PrismataTheme is not defined", pointing at the context creation
            instead of the version skew. */
         '@babel/preset-typescript',
       ],

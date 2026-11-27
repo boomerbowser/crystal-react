@@ -26,10 +26,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-/** The four steps, on Crystal's 4px rhythm. */
+/** The four steps, on Prismata's 4px rhythm. */
 export const Sizes: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-space)', alignItems: 'center' }}>
       <Avatar {...only(args)} size="sm" />
       <Avatar {...only(args)} size="md" />
       <Avatar {...only(args)} size="lg" />
@@ -43,7 +43,7 @@ export const Sizes: Story = {
  *  replaces it outright. */
 export const Initials: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-space)', alignItems: 'center' }}>
       <Avatar {...only(args)} name="Ada Lovelace" />
       <Avatar {...only(args)} name="María del Carmen Rodríguez" />
       <Avatar {...only(args)} name="Prince" />
@@ -62,7 +62,7 @@ export const WhenTheImageFails: Story = {
  *  a label that already names the person. */
 export const Decorative: Story = {
   render: ({ name: _named, ...args }) => (
-    <span style={{ display: 'inline-flex', gap: 'var(--cr-spacing-xs)', alignItems: 'center' }}>
+    <span style={{ display: 'inline-flex', gap: 'var(--pr-spacing-xs)', alignItems: 'center' }}>
       <Avatar {...only(args)} initials="AL" />
       <span>Ada Lovelace</span>
     </span>

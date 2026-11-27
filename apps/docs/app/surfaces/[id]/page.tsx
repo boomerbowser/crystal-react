@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { Prose } from '@crystal-ui/react';
+import { Prose } from '@prismata/react';
 import { withCode } from '../../../lib/text';
-import { MODES, classesOf, describeBranch, madeOf, surface, surfaces, type Recipe } from '../../../lib/crystal';
+import { MODES, classesOf, describeBranch, madeOf, surface, surfaces, type Recipe } from '../../../lib/prismata';
 
 export const dynamicParams = false;
 

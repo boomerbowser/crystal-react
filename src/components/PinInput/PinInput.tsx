@@ -123,7 +123,7 @@ export function PinInput({
       <div
         ref={shellScope as never}
         /* React's onFocus is focusin, so focus arriving at any control inside
-           marks the field once with Crystal's `field-focus`. */
+           marks the field once with Prismata's `field-focus`. */
         onFocus={() => { void playField('field-focus'); }}
         role="group"
         aria-labelledby={labelId}
@@ -131,7 +131,7 @@ export function PinInput({
         className={cx(styles['wells'])}
       >
         {Array.from({ length }, (_, index) => (
-          <div key={index} className={cx(styles['well'], 'cr-field-shell block')} {...(invalid ? { 'data-invalid': true } : {})}>
+          <div key={index} className={cx(styles['well'], 'pr-field-shell block')} {...(invalid ? { 'data-invalid': true } : {})}>
             <input
               ref={(node) => { cells.current[index] = node; }}
               className={cx(styles['cell'])}

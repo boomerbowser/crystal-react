@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor } from '../../test/render.js';
 import { OnboardingBlock, type OnboardingState, type OnboardingStep } from './OnboardingBlock.js';
 
 const steps: OnboardingStep[] = [
@@ -35,7 +35,7 @@ const start = async (): Promise<void> => {
 describe('OnboardingBlock', () => {
   /* Progress announced: the position is in each step's name. */
   it('says where in the sequence each step is, in its name', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await start();
     expect(screen.getByRole('dialog', { name: /^Step 1 of 3\.\s*Welcome to Harbour$/ })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
@@ -43,7 +43,7 @@ describe('OnboardingBlock', () => {
   });
 
   it('shows the progress to the eye without saying it twice', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await start();
     expect(screen.queryByRole('progressbar')).toBeNull();
     expect(document.querySelector('[role="progressbar"]')).toHaveAttribute('aria-valuenow', '1');
@@ -51,7 +51,7 @@ describe('OnboardingBlock', () => {
 
   /* Focus moves with the step. */
   it('moves focus onto the panel at each step', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await start();
     await waitFor(() => { expect(screen.getByRole('dialog')).toHaveFocus(); });
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
@@ -59,7 +59,7 @@ describe('OnboardingBlock', () => {
   });
 
   it('shows the new step’s page, and lets the old one go', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await start();
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
     expect(screen.getByText('Projects are better shared.')).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe('OnboardingBlock', () => {
   it('is skipped by Escape from any step, and says so', async () => {
     const onSkip = vi.fn();
     const onComplete = vi.fn();
-    renderWithCrystal(<Harness onSkip={onSkip} onComplete={onComplete} />);
+    renderWithPrismata(<Harness onSkip={onSkip} onComplete={onComplete} />);
     await start();
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
     await userEvent.keyboard('{Escape}');
@@ -80,7 +80,7 @@ describe('OnboardingBlock', () => {
   });
 
   it('offers a way out on every step', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await start();
     for (let at = 0; at < steps.length - 1; at += 1) {
       expect(screen.getByRole('button', { name: 'Skip tour' })).toBeInTheDocument();
@@ -91,7 +91,7 @@ describe('OnboardingBlock', () => {
 
   it('is complete only when the last step is finished, and gives focus back', async () => {
     const onComplete = vi.fn();
-    renderWithCrystal(<Harness onComplete={onComplete} />);
+    renderWithPrismata(<Harness onComplete={onComplete} />);
     await start();
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
@@ -102,13 +102,13 @@ describe('OnboardingBlock', () => {
   });
 
   it('says nothing about a tour that was already over when the page loaded', () => {
-    renderWithCrystal(<OnboardingBlock steps={steps} state="complete" step={0} onStepChange={() => {}} onComplete={() => {}} onSkip={() => {}} />);
+    renderWithPrismata(<OnboardingBlock steps={steps} state="complete" step={0} onStepChange={() => {}} onComplete={() => {}} onSkip={() => {}} />);
     expect(screen.getByRole('status')).toHaveTextContent('');
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it.each(['at-rest', 'active', 'complete', 'skipped'] satisfies OnboardingState[])('has no axe violations %s', async (state) => {
-    renderWithCrystal(<OnboardingBlock steps={steps} state={state} step={1} onStepChange={() => {}} onComplete={() => {}} onSkip={() => {}} />);
+    renderWithPrismata(<OnboardingBlock steps={steps} state={state} step={1} onStepChange={() => {}} onComplete={() => {}} onSkip={() => {}} />);
     await expectNoAxeViolations(document.body);
   });
 });

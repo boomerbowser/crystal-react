@@ -12,11 +12,11 @@ const meta = {
           + 'the value rather than faking one**. There is deliberately no `indeterminate` flag. '
           + 'Omit `value` and you get the indeterminate bar, so "we do not know" cannot be typed '
           + 'beside a number.\n\n'
-          + 'The track is the slider\'s track (Crystal\'s `component.slider.trackHeight` at pill '
+          + 'The track is the slider\'s track (Prismata\'s `component.slider.trackHeight` at pill '
           + 'radius). The catalogue says "matching the slider track", so the two components '
           + 'must not drift.\n\n'
           + '`progress-change` plays when the value actually moves, after it has been applied. '
-          + 'The indeterminate travel is Crystal\'s continuous recipe `activity-travel`, which '
+          + 'The indeterminate travel is Prismata\'s continuous recipe `activity-travel`, which '
           + 'runs only while the work is pending. Under reduced motion it becomes a still, '
           + 'filled track, which reads as busy and not as a measurement.',
       },

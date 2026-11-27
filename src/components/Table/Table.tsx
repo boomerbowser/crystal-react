@@ -5,7 +5,7 @@
  * A real `table`, `thead`, `tbody`, `th` and `td`, with `scope` on every header.
  * Header association is what lets a screen reader say "Revenue, column 3,
  * £48,210" as you move across a row, and no ARIA pattern recovers it once the
- * elements are divs. This is what Crystal's catalogue means by "real table
+ * elements are divs. This is what Prismata's catalogue means by "real table
  * semantics with header associations".
  *
  * The same catalogue entry says "sort controls are buttons carrying aria-sort".
@@ -94,7 +94,7 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(function Table(
       tabIndex={0}
       role="region"
       aria-label={label}
-      className={cx(styles['shell'], 'cr-table-scroll', className)}
+      className={cx(styles['shell'], 'pr-table-scroll', className)}
     >
       <table className={styles['table']}>
         {caption === undefined ? null : <caption className={styles['caption']}>{caption}</caption>}
@@ -115,7 +115,7 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(function Table(
                   {column.sortable && onSortChange !== undefined ? (
                     <button
                       type="button"
-                      className={cx(styles['sort'], 'cr-bare')}
+                      className={cx(styles['sort'], 'pr-bare')}
                       onClick={() => { onSortChange(nextSort(column.id, sort)); }}
                     >
                       {column.header}
@@ -135,7 +135,7 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(function Table(
           {isEmpty || loading ? (
             <tr>
               <td colSpan={columns.length} className={styles['notice']}>
-                {loading ? <span aria-hidden="true" className={cx('cr-haze flat sunken', styles['placeholder'])} /> : empty}
+                {loading ? <span aria-hidden="true" className={cx('pr-haze flat sunken', styles['placeholder'])} /> : empty}
               </td>
             </tr>
           ) : (

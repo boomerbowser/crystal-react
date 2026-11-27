@@ -4,7 +4,7 @@ storybook-static/
 coverage/
 *.tsbuildinfo
 .DS_Store
-# Generated from Crystal's tokens — never hand-edited, never committed.
+# Generated from Prismata's tokens — never hand-edited, never committed.
 src/styles/_tokens.scss
 src/theme/tokens.generated.ts
 

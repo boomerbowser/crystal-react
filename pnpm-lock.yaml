@@ -8,15 +8,15 @@ importers:
 
   .:
     dependencies:
-      '@crystal-ui/core':
-        specifier: ^2.10.1
-        version: 2.10.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@internationalized/date':
         specifier: ^3.12.4
         version: 3.12.4
       '@internationalized/number':
         specifier: ^3.6.8
         version: 3.6.8
+      '@prismata/core':
+        specifier: ^3.0.0
+        version: 3.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       d3-geo:
         specifier: ^3.1.1
         version: 3.1.1
@@ -207,10 +207,10 @@ importers:
 
   apps/docs:
     dependencies:
-      '@crystal-ui/core':
-        specifier: ^2.10.1
-        version: 2.10.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@crystal-ui/react':
+      '@prismata/core':
+        specifier: ^3.0.0
+        version: 3.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@prismata/react':
         specifier: workspace:*
         version: link:../..
       next:
@@ -890,9 +890,6 @@ packages:
   '@bramus/specificity@2.4.2':
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
-
-  '@crystal-ui/core@2.10.1':
-    resolution: {integrity: sha512-ywA6DhQ5F6OMX5vb6OeNMKkeF8kG+CsNwgj6Fq4kD4ho880r8j1b4ycTLPiecTjoCytBkcCb5SXbdZkgS0XE+Q==}
 
   '@csstools/color-helpers@5.1.0':
     resolution: {integrity: sha512-S11EXWJyy0Mz5SYvRmY8nJYTFFd1LCNV+7cXyAgQtOOuzb4EsgfqDufL+9esx72/eLhsRdGZwaldu/h+E4t4BA==}
@@ -1856,6 +1853,9 @@ packages:
 
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
+
+  '@prismata/core@3.0.0':
+    resolution: {integrity: sha512-CXLatpjZRJNPfTMMGZckcDeMpDd5TWOaNSAn/4bJ+AnTDOcRzrdHXcuN62Ol3il6R44KKTP6wTShU/h41Ij/tA==}
 
   '@react-types/shared@3.36.1':
     resolution: {integrity: sha512-AzsuD9OfxTOZMMvTRhlN3oHBwOmFN7tDh27LzqmHt4+uOgPhJT7ZM7/kVs/8/o0WxayMUIk3hBmCFRHv1FUoag==}
@@ -5563,14 +5563,6 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
 
-  '@crystal-ui/core@2.10.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      gsap: 3.15.0
-      motion: 13.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-    transitivePeerDependencies:
-      - react
-      - react-dom
-
   '@csstools/color-helpers@5.1.0': {}
 
   '@csstools/color-helpers@6.1.1': {}
@@ -6353,6 +6345,14 @@ snapshots:
   '@pkgr/core@0.3.6': {}
 
   '@polka/url@1.0.0-next.29': {}
+
+  '@prismata/core@3.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+    dependencies:
+      gsap: 3.15.0
+      motion: 13.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+    transitivePeerDependencies:
+      - react
+      - react-dom
 
   '@react-types/shared@3.36.1(react@19.3.0)':
     dependencies:

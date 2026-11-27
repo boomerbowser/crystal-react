@@ -17,7 +17,7 @@
  * crossing the viewport, and slowing it down still moves it. Under reduced motion
  * the element renders without a `layoutId` and the views swap.
  *
- * The travel takes Crystal's spatial duration and entering ease. The rest of the
+ * The travel takes Prismata's spatial duration and entering ease. The rest of the
  * destination (its heading, its text) waits for the object to land and then
  * fades in, through `SharedElementReveal`: shown at once, it appears in full
  * while the object is still small and in flight, which testers read as the
@@ -35,12 +35,12 @@
  */
 import { motion } from 'motion/react';
 import type { HTMLAttributes, ReactNode } from 'react';
-import { useCrystalTheme } from '../../theme/CrystalProvider.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { usePrismataTheme } from '../../theme/PrismataProvider.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 
-/** Crystal's spatial duration, in seconds, and its entering ease. */
-const TRAVEL_S = Number.parseFloat(crystalTokens['motion.duration.spatial']) / 1000;
-const ENTER_EASE = (crystalTokens['motion.easing.enter'].match(/[\d.]+/g) ?? []).map(Number) as [number, number, number, number];
+/** Prismata's spatial duration, in seconds, and its entering ease. */
+const TRAVEL_S = Number.parseFloat(prismataTokens['motion.duration.spatial']) / 1000;
+const ENTER_EASE = (prismataTokens['motion.easing.enter'].match(/[\d.]+/g) ?? []).map(Number) as [number, number, number, number];
 
 export interface SharedElementProps extends Omit<HTMLAttributes<HTMLDivElement>,
   'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration' | 'onDrag' | 'onDragStart' | 'onDragEnd'> {
@@ -64,7 +64,7 @@ function resolveRadius(value: string | number | undefined): string | number | un
 }
 
 export function SharedElement({ id, style, children, ...props }: SharedElementProps): React.JSX.Element {
-  const { reduceMotion, resolveDuration } = useCrystalTheme();
+  const { reduceMotion, resolveDuration } = usePrismataTheme();
   /* The radius, resolved to pixels in the same render that mounts the element,
      because Motion takes its starting snapshot on mount and a radius corrected
      one render later is too late. */
@@ -72,7 +72,7 @@ export function SharedElement({ id, style, children, ...props }: SharedElementPr
 
   /* Removed, not damped. A slower moving object is still a moving object. */
   if (reduceMotion) {
-    return <div {...props} {...(style ? { style } : {})} data-cr-motion-state="instant">{children}</div>;
+    return <div {...props} {...(style ? { style } : {})} data-pr-motion-state="instant">{children}</div>;
   }
 
   const duration = resolveDuration(TRAVEL_S * 1000) / 1000;
@@ -86,7 +86,7 @@ export function SharedElement({ id, style, children, ...props }: SharedElementPr
       style={{ ...style, ...(radius ? { borderRadius: radius } : {}) } as never}
       layoutId={id}
       transition={{ layout: { duration, ease: ENTER_EASE } }}
-      data-cr-shared={id}
+      data-pr-shared={id}
     >
       {children}
     </motion.div>
@@ -104,7 +104,7 @@ export interface SharedElementRevealProps extends Omit<HTMLAttributes<HTMLDivEle
  * object that opened it has arrived. Under reduced motion it is shown at once.
  */
 export function SharedElementReveal({ style, children, ...props }: SharedElementRevealProps): React.JSX.Element {
-  const { reduceMotion, resolveDuration } = useCrystalTheme();
+  const { reduceMotion, resolveDuration } = usePrismataTheme();
   if (reduceMotion) return <div {...props} {...(style ? { style } : {})}>{children}</div>;
   const travel = resolveDuration(TRAVEL_S * 1000) / 1000;
   return (

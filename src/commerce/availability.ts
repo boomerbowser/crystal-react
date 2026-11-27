@@ -1,4 +1,4 @@
-/* Availability, and which of Crystal's four statuses each state is.
+/* Availability, and which of Prismata's four statuses each state is.
  *
  * The catalogue gives the stock indicator four states (`in-stock`, `low`,
  * `out-of-stock`, `backorder`) and says "words carry the state; status colour
@@ -10,7 +10,7 @@
  * tell a reader something is wrong with an ordinary outcome. `low` is a
  * warning, because it is the state where waiting has a cost.
  *
- * The words are defaults, not Crystal's. The catalogue puts "thresholds and
+ * The words are defaults, not Prismata's. The catalogue puts "thresholds and
  * wording" on the product, and rightly so. "Only 2 left" is a merchandising
  * decision, not a design-system one. They are here so that a component has
  * something to say rather than nothing, in the same way `STATUS_LABEL` is.

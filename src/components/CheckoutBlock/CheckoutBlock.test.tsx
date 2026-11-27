@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor } from '../../test/render.js';
 import { CheckoutBlock, type CheckoutBlockProps } from './CheckoutBlock.js';
 import type { AddressDescriptor } from '../../commerce/address.js';
 
@@ -35,7 +35,7 @@ const props: CheckoutBlockProps = {
 
 describe('CheckoutBlock', () => {
   it('renders the current step alone, as a region named for itself', () => {
-    renderWithCrystal(<CheckoutBlock {...props} />);
+    renderWithPrismata(<CheckoutBlock {...props} />);
     expect(screen.getByRole('region', { name: 'Delivery address' })).toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'Payment' })).toBeNull();
     expect(screen.getByRole('region', { name: 'Order summary' })).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('CheckoutBlock', () => {
   /* Errors are summarised at the top of the step, take focus, and link to their
      fields. Each link moves focus into the field it names. */
   it('summarises errors, moves focus to the summary, and links each to its field', async () => {
-    renderWithCrystal(<CheckoutBlock {...props} errors={{ line1: 'Enter the first line of the address', postcode: 'Enter a postcode' }} />);
+    renderWithPrismata(<CheckoutBlock {...props} errors={{ line1: 'Enter the first line of the address', postcode: 'Enter a postcode' }} />);
     const summary = screen.getByRole('region', { name: 'There are 2 problems' });
     await waitFor(() => { expect(summary).toHaveFocus(); });
     await userEvent.click(screen.getByRole('link', { name: 'Enter a postcode' }));
@@ -54,7 +54,7 @@ describe('CheckoutBlock', () => {
   /* The payment step has no field for card data anywhere, only the stored
      methods and the provider's own element. */
   it('never renders a field for card data', () => {
-    const { container } = renderWithCrystal(<CheckoutBlock {...props} step="payment" />);
+    const { container } = renderWithPrismata(<CheckoutBlock {...props} step="payment" />);
     expect(screen.getByRole('region', { name: 'Payment' })).toBeInTheDocument();
     expect(container.querySelector('input[autocomplete^="cc-"], input[name*="card" i], input[inputmode="numeric"]')).toBeNull();
   });
@@ -62,7 +62,7 @@ describe('CheckoutBlock', () => {
   it('asks the product to continue, and goes back itself', async () => {
     const onContinue = vi.fn();
     const onStepChange = vi.fn();
-    renderWithCrystal(<CheckoutBlock {...props} step="shipping" onContinue={onContinue} onStepChange={onStepChange} />);
+    renderWithPrismata(<CheckoutBlock {...props} step="shipping" onContinue={onContinue} onStepChange={onStepChange} />);
     await userEvent.click(screen.getByRole('button', { name: 'Continue' }));
     expect(onContinue).toHaveBeenCalledWith('shipping');
     await userEvent.click(screen.getByRole('button', { name: 'Back' }));
@@ -70,13 +70,13 @@ describe('CheckoutBlock', () => {
   });
 
   it('announces the order being placed and holds its controls', () => {
-    renderWithCrystal(<CheckoutBlock {...props} step="payment" state="submitting" />);
+    renderWithPrismata(<CheckoutBlock {...props} step="payment" state="submitting" />);
     expect(screen.getByText('Placing your order')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Place order' })).toBeDisabled();
   });
 
   it('says a failure that belongs to no field once, as an alert', () => {
-    renderWithCrystal(<CheckoutBlock {...props} step="payment" state="error" errorMessage="Your bank declined the payment." />);
+    renderWithPrismata(<CheckoutBlock {...props} step="payment" state="error" errorMessage="Your bank declined the payment." />);
     expect(screen.getByRole('alert')).toHaveTextContent('Your bank declined the payment.');
   });
 
@@ -89,7 +89,7 @@ describe('CheckoutBlock', () => {
     ['submitting', { step: 'payment' as const, state: 'submitting' as const }],
     ['failed', { step: 'payment' as const, state: 'error' as const, errorMessage: 'Declined.' }],
   ])('has no axe violations %s', async (_, extra) => {
-    const { container } = renderWithCrystal(<CheckoutBlock {...props} {...extra} />);
+    const { container } = renderWithPrismata(<CheckoutBlock {...props} {...extra} />);
     await expectNoAxeViolations(container);
   });
 });

@@ -1,26 +1,26 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/overlay' as overlay;
 
-/* A tooltip is Frost, like every transient overlay (Crystal R15e; the catalogue's
+/* A tooltip is Frost, like every transient overlay (Prismata R15e; the catalogue's
    `tooltip` entry as of 2.2.0). It is a small panel that opens over something,
    not a label sitting on something, so it does not take Stone; Meridian moved it
-   to Frost with the menus and popovers. Do not use `--cr-stone-feather`, a
+   to Frost with the menus and popovers. Do not use `--pr-stone-feather`, a
    1.95px paint feather, as a backdrop blur radius here: that is neither Stone
    nor Frost.
 
    The text sits directly on the panel. At caption size over a 40px-diffused
    Frost fill the contrast is the panel's own, and a Haze pad inside a tooltip
-   would be a well inside a well. The panel is Crystal's `.cr-frost`, which the
+   would be a well inside a well. The panel is Prismata's `.pr-frost`, which the
    tooltip wears. This rule holds only what makes it a tooltip. */
 .tooltip {
   @include overlay.surface;
   /* The catalogue's tooltip radius, `component.overlay.tooltipRadius`, published
-     from Crystal 2.3.0. The other overlays share the content radius instead. */
-  border-radius: $cr-overlay-tooltip-radius;
-  max-inline-size: $cr-overlay-tooltip-max-width;
-  padding: $cr-spacing-xs $cr-spacing-sm;
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+     from Prismata 2.3.0. The other overlays share the content radius instead. */
+  border-radius: $pr-overlay-tooltip-radius;
+  max-inline-size: $pr-overlay-tooltip-max-width;
+  padding: $pr-spacing-xs $pr-spacing-sm;
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
   font-weight: 650;
 }
 

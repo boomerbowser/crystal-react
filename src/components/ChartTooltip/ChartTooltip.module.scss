@@ -2,7 +2,7 @@
 
 /* "Frost panel. Panel radius; never covers the point it describes."
  *
- * Frost, not Haze. The panel floats over the plot, and Frost is Crystal's
+ * Frost, not Haze. The panel floats over the plot, and Frost is Prismata's
  * intermediate surface. The reader is looking at the plot underneath, so the
  * panel uses the material that lets some of it through.
  *
@@ -20,16 +20,16 @@
   translate: calc(var(--tooltip-x) + var(--tooltip-offset-x)) calc(var(--tooltip-y) + var(--tooltip-offset-y));
   display: none;
   min-inline-size: max-content;
-  max-inline-size: $cr-overlay-tooltip-max-width;
-  padding: $cr-spacing-xs $cr-spacing-sm;
-  /* "Frost panel". The tooltip wears Crystal's `.cr-frost`, as the catalogue
-     specifies. Do not paint it with `--cr-acrylic-fill` (an alias, not the
+  max-inline-size: $pr-overlay-tooltip-max-width;
+  padding: $pr-spacing-xs $pr-spacing-sm;
+  /* "Frost panel". The tooltip wears Prismata's `.pr-frost`, as the catalogue
+     specifies. Do not paint it with `--pr-acrylic-fill` (an alias, not the
      name), Resin's float shadow or an edge. Its own `position: absolute` still
      wins over Frost's `relative`. */
-  border-radius: var(--cr-radius);
-  color: var(--cr-text);
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+  border-radius: var(--pr-radius);
+  color: var(--pr-text);
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
   pointer-events: none;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .title {
-  margin: 0 0 $cr-spacing-2xs;
+  margin: 0 0 $pr-spacing-2xs;
   font-weight: 700;
 }
 
@@ -48,13 +48,13 @@
 .row {
   display: flex;
   align-items: baseline;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
 }
 
 .swatch {
   flex: none;
-  inline-size: $cr-spacing-xs;
-  block-size: $cr-spacing-xs;
+  inline-size: $pr-spacing-xs;
+  block-size: $pr-spacing-xs;
   border-radius: 50%;
   background: var(--series-colour);
   /* A baseline-aligned flex item with no text needs telling where its baseline
@@ -62,11 +62,11 @@
   align-self: center;
 }
 
-.name { color: var(--cr-muted); }
+.name { color: var(--pr-muted); }
 
 .value {
   margin-inline-start: auto;
-  padding-inline-start: $cr-spacing-sm;
+  padding-inline-start: $pr-spacing-sm;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }

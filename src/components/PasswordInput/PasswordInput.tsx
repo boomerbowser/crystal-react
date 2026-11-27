@@ -17,7 +17,7 @@
  * The strength meter carries a word as well as a bar. A bar that is longer or
  * shorter is meaningless to a reader who cannot see it and imprecise to one who
  * can, so the word carries the meaning and the bar illustrates it. Strength
- * policy is the product's. Crystal scores nothing, because a scoring rule that
+ * policy is the product's. Prismata scores nothing, because a scoring rule that
  * disagrees with the server's is worse than none.
  */
 import { forwardRef, useState, type ReactNode } from 'react';
@@ -30,13 +30,13 @@ import { declaredInvalid } from '../FormField/useInvalidMotion.js';
 import { FieldGroupShell } from '../FormField/FieldShell.js';
 import styles from './PasswordInput.module.scss';
 
-/** What the product decided about the value. Crystal renders it and scores nothing. */
+/** What the product decided about the value. Prismata renders it and scores nothing. */
 export interface PasswordStrength {
   /** 0 to 1. Drives the bar's length only. */
   score: number;
   /** The meaning, such as "Weak" or "Strong". This is what is announced. */
   label: string;
-  /** Colour role. Defaults to the palette's ink so it never implies a status Crystal did not assign. */
+  /** Colour role. Defaults to the palette's ink so it never implies a status Prismata did not assign. */
   tone?: 'danger' | 'attention' | 'success' | 'neutral';
 }
 
@@ -54,10 +54,10 @@ export interface PasswordInputProps extends Omit<AriaTextFieldProps, 'className'
 }
 
 const TONE_COLOUR: Record<NonNullable<PasswordStrength['tone']>, string> = {
-  danger: 'var(--cr-danger-ink)',
-  attention: 'var(--cr-attention-ink)',
-  success: 'var(--cr-success-ink)',
-  neutral: 'var(--cr-muted)',
+  danger: 'var(--pr-danger-ink)',
+  attention: 'var(--pr-attention-ink)',
+  success: 'var(--pr-success-ink)',
+  neutral: 'var(--pr-muted)',
 };
 
 const EyeIcon = ({ open }: { open: boolean }) => (
@@ -88,7 +88,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
       {/* The validity React Aria resolved, which can differ from the one the
           caller declared, so a server's rejection moves the field exactly as a
           local rule would. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'pr-field-shell block')}>
         <Input
           ref={forwardedRef}
           className={cx(styles['control'])}
@@ -101,7 +101,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
           aria-label={revealed ? `Hide ${reveals}` : `Show ${reveals}`}
           aria-pressed={revealed}
           onPress={() => setRevealed((was) => !was)}
-          className={cx(styles['inlineAction'], 'cr-bare')}
+          className={cx(styles['inlineAction'], 'pr-bare')}
         >
           <EyeIcon open={revealed} />
         </Button>
@@ -112,8 +112,8 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
             <div
               className={cx(styles['meterFill'])}
               style={{
-                '--cr-strength': `${Math.round(Math.min(1, Math.max(0, strength.score)) * 100)}%`,
-                '--cr-strength-colour': TONE_COLOUR[strength.tone ?? 'neutral'],
+                '--pr-strength': `${Math.round(Math.min(1, Math.max(0, strength.score)) * 100)}%`,
+                '--pr-strength-colour': TONE_COLOUR[strength.tone ?? 'neutral'],
               } as React.CSSProperties}
             />
           </div>

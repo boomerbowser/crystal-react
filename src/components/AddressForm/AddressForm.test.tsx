@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { AddressForm } from './AddressForm.js';
 import type { AddressDescriptor, AddressValue } from '../../commerce/address.js';
 
@@ -61,7 +61,7 @@ describe('AddressForm', () => {
   /* "Field order, labels and required-ness change by country." */
   it('renders the fields the chosen country actually has, in its order', async () => {
     const user = userEvent.setup();
-    const { container } = renderWithCrystal(<Harness />);
+    const { container } = renderWithPrismata(<Harness />);
     /* Document order, because the claim is about order and a set of fields
        says nothing about it. The United States writes a state between its city
        and its postcode, and the United Kingdom writes neither.
@@ -88,7 +88,7 @@ describe('AddressForm', () => {
      somebody using a screen reader, a switch, or one hand on a phone. */
   it('gives every field its autofill token, selects included', async () => {
     const user = userEvent.setup();
-    const { container } = renderWithCrystal(<Harness />);
+    const { container } = renderWithPrismata(<Harness />);
     for (const input of container.querySelectorAll('input')) {
       expect(input.getAttribute('autocomplete')).toBeTruthy();
     }
@@ -106,7 +106,7 @@ describe('AddressForm', () => {
      message about the form and the reader needs to know which box. */
   it('validates per-locale and puts the message on the field', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     const postcode = screen.getByLabelText(/Postcode/);
     await user.type(postcode, '12345');
     await user.tab();
@@ -118,14 +118,14 @@ describe('AddressForm', () => {
      into typing it is telling them off for not having finished. */
   it('says nothing while the reader is still typing', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await user.type(screen.getByLabelText(/Postcode/), '12');
     expect(screen.queryByText('That is not a UK postcode')).toBeNull();
   });
 
   /* The product's error wins: it knows something this form does not. */
   it('shows an error the product supplies', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <AddressForm
         countries={countries}
         country="GB"
@@ -141,7 +141,7 @@ describe('AddressForm', () => {
   it('submits the address it holds', async () => {
     const user = userEvent.setup();
     const onSubmit = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <AddressForm
         countries={countries}
         country="GB"
@@ -158,7 +158,7 @@ describe('AddressForm', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(<Harness />);
+    const { container } = renderWithPrismata(<Harness />);
     await expectNoAxeViolations(container);
   });
 });

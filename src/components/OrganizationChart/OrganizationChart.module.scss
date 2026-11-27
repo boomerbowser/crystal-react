@@ -21,7 +21,7 @@ $chart-connector: 1px;
 .chart {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   outline: none;
 }
 
@@ -33,9 +33,9 @@ $chart-connector: 1px;
   position: relative;
   display: flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
-  min-block-size: $cr-action-min-target;
-  padding-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step});
+  gap: $pr-spacing-2xs;
+  min-block-size: $pr-action-min-target;
+  padding-inline-start: calc(var(--pr-tree-level, 0) * #{$pr-tree-indent-step});
   cursor: pointer;
 }
 
@@ -46,9 +46,9 @@ $chart-connector: 1px;
   content: '';
   position: absolute;
   inset-block: 0;
-  inset-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step} - #{$cr-tree-indent-step} / 2);
+  inset-inline-start: calc(var(--pr-tree-level, 0) * #{$pr-tree-indent-step} - #{$pr-tree-indent-step} / 2);
   inline-size: $chart-connector;
-  background: var(--cr-rim);
+  background: var(--pr-rim);
   pointer-events: none;
 }
 
@@ -56,10 +56,10 @@ $chart-connector: 1px;
   content: '';
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step} - #{$cr-tree-indent-step} / 2);
-  inline-size: calc(#{$cr-tree-indent-step} / 2);
+  inset-inline-start: calc(var(--pr-tree-level, 0) * #{$pr-tree-indent-step} - #{$pr-tree-indent-step} / 2);
+  inline-size: calc(#{$pr-tree-indent-step} / 2);
   block-size: $chart-connector;
-  background: var(--cr-rim);
+  background: var(--pr-rim);
   pointer-events: none;
 }
 
@@ -72,8 +72,8 @@ $chart-connector: 1px;
   display: inline-grid;
   place-items: center;
   flex: none;
-  inline-size: $cr-icon-action;
-  block-size: $cr-icon-action;
+  inline-size: $pr-icon-action;
+  block-size: $pr-icon-action;
   padding: 0;
   border: 0;
   background: transparent;
@@ -81,7 +81,7 @@ $chart-connector: 1px;
   cursor: pointer;
 }
 
-.chevron svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.chevron svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 /* The end state, in CSS, correct at rest whether or not anything animated. */
 .item[data-expanded] .chevron svg { rotate: 90deg; }
@@ -89,16 +89,16 @@ $chart-connector: 1px;
 .chevronEmpty { cursor: default; }
 
 .node {
-  /* The element wears Crystal's `.cr-haze.flush` (2.7.0): the Haze fill to its own edge, with Crystal's opaque, reduced-transparency and forced-colours routes. */
+  /* The element wears Prismata's `.pr-haze.flush` (2.7.0): the Haze fill to its own edge, with Prismata's opaque, reduced-transparency and forced-colours routes. */
   display: flex;
   align-items: center;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   flex: 1 1 auto;
   min-inline-size: 0;
   box-sizing: border-box;
-  padding: $cr-spacing-xs $cr-spacing-sm;
-  border-radius: var(--cr-radius);
-  color: var(--cr-text);
+  padding: $pr-spacing-xs $pr-spacing-sm;
+  border-radius: var(--pr-radius);
+  color: var(--pr-text);
 }
 
 .leading { display: inline-flex; flex: none; }
@@ -108,17 +108,17 @@ $chart-connector: 1px;
 .name { font-weight: 700; }
 
 .role {
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
 }
 
 /* Selection is label weight, here as everywhere. */
 .item[data-selected] .name { font-weight: 800; }
-.item[data-selected] .node { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+.item[data-selected] .node { background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
 .item[data-selected] .role { color: inherit; }
 
-.item[data-hovered] .node { background: var(--cr-label-fill); }
+.item[data-hovered] .node { background: var(--pr-label-fill); }
 
 @media (forced-colors: active) {
   .row::before, .row::after { background: CanvasText; }

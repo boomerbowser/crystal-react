@@ -32,7 +32,7 @@ export const Default: Story = {};
 /** All three, with the words that make each one readable without the colour. */
 export const Directions: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--cr-spacing-xs)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--pr-spacing-xs)' }}>
       <TrendIndicator {...only(args)} direction="up">4.2% up on last month</TrendIndicator>
       <TrendIndicator {...only(args)} direction="down">1.1% down on last month</TrendIndicator>
       <TrendIndicator {...only(args)} direction="flat">No change on last month</TrendIndicator>

@@ -4,11 +4,11 @@
    surface inside it carries no material of its own, because a chart drawn on a
    pad inside a pad is the two-materials-deep shape. */
 .panel {
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-md);
-  padding: calc(var(--cr-haze-inset) + var(--cr-block-padding, $cr-spacing-lg));
-  border-radius: $cr-shape-content-radius;
+  gap: var(--pr-block-gap, $pr-spacing-md);
+  padding: calc(var(--pr-haze-inset) + var(--pr-block-padding, $pr-spacing-lg));
+  border-radius: $pr-shape-content-radius;
   min-inline-size: 0;
 }
 
@@ -16,12 +16,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   flex-wrap: wrap;
 }
 
 .heading { margin: 0; }
-.controls { display: flex; align-items: center; gap: $cr-spacing-xs; }
+.controls { display: flex; align-items: center; gap: $pr-spacing-xs; }
 
 @media (forced-colors: active) {
   .panel { border: 1px solid CanvasText; }

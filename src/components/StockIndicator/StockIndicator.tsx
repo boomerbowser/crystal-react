@@ -22,7 +22,7 @@ import { AVAILABILITY_LABEL, AVAILABILITY_STATUS, type Availability } from '../.
 
 export interface StockIndicatorProps extends Omit<StatusBadgeProps, 'status' | 'children'> {
   availability: Availability;
-  /** The words. Defaults to Crystal React's fallback wording for the state. */
+  /** The words. Defaults to Prismata React's fallback wording for the state. */
   children?: ReactNode;
 }
 

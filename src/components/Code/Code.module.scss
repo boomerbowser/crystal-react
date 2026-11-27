@@ -8,16 +8,16 @@
  * its own right and takes the content radius like every other surface.
  */
 
-$code-inline-radius: 14px; /* crystal-allow-literal: the catalogue's stated inline radius */
+$code-inline-radius: 14px; /* prismata-allow-literal: the catalogue's stated inline radius */
 
 .code {
-  /* The monospace stack is the reader's system stack. Crystal specifies Manrope
+  /* The monospace stack is the reader's system stack. Prismata specifies Manrope
      for reading and names no mono face, and this library must not make a
      typographic decision the design system did not make. */
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-  background: var(--cr-canvas);
-  color: var(--cr-text);
-  border: 1px solid var(--cr-edge);
+  background: var(--pr-canvas);
+  color: var(--pr-text);
+  border: 1px solid var(--pr-edge);
   /* Set explicitly instead of relying on inheritance. Code must stay exact, and
      a feather from a nearby surface would make it inexact. */
   filter: none;
@@ -25,9 +25,9 @@ $code-inline-radius: 14px; /* crystal-allow-literal: the catalogue's stated inli
 
 .inline {
   display: inline;
-  padding-inline: $cr-spacing-2xs;
+  padding-inline: $pr-spacing-2xs;
   border-radius: $code-inline-radius;
-  font-size: var(--cr-text-caption-size);
+  font-size: var(--pr-text-caption-size);
   /* Inline code must not change the line's rhythm, so the box grows sideways
      only and the leading stays the prose's. */
   line-height: inherit;
@@ -36,10 +36,10 @@ $code-inline-radius: 14px; /* crystal-allow-literal: the catalogue's stated inli
 .block {
   display: block;
   margin: 0;
-  padding: var(--cr-space);
-  border-radius: var(--cr-radius);
-  font-size: var(--cr-text-body-size);
-  line-height: var(--cr-text-body-leading);
+  padding: var(--pr-space);
+  border-radius: var(--pr-radius);
+  font-size: var(--pr-text-body-size);
+  line-height: var(--pr-text-body-leading);
   overflow: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
@@ -47,9 +47,9 @@ $code-inline-radius: 14px; /* crystal-allow-literal: the catalogue's stated inli
 }
 
 .block:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 .withCopy { position: relative; }
@@ -59,8 +59,8 @@ $code-inline-radius: 14px; /* crystal-allow-literal: the catalogue's stated inli
    content. */
 .copy {
   position: absolute;
-  inset-block-start: var(--cr-space);
-  inset-inline-end: var(--cr-space);
+  inset-block-start: var(--pr-space);
+  inset-inline-end: var(--pr-space);
 }
 
 @media (forced-colors: active) {

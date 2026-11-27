@@ -1,5 +1,5 @@
 /* The dismiss mark Alert, Banner, Notification and Toast share: a drawn cross
-   at Crystal's icon size. It used to be the "×" character at body size, which
+   at Prismata's icon size. It used to be the "×" character at body size, which
    testers found too small to see and aim at; a glyph's size follows the font,
    and its weight follows the font's idea of a multiplication sign. A drawn
    cross is the icon size in every font, with a stroke that matches the other

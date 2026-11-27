@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { CrystalProvider } from './CrystalProvider.js';
+import { PrismataProvider } from './PrismataProvider.js';
 import { useTypography } from './typography.js';
-import { crystalTokens } from './tokens.generated.js';
+import { prismataTokens } from './tokens.generated.js';
 
 function Probe() {
   const typography = useTypography();
@@ -11,29 +11,29 @@ function Probe() {
 const read = () => JSON.parse(screen.getByTestId('t').textContent ?? '{}');
 
 describe('useTypography', () => {
-  it('sets body to Crystal reading size exactly', () => {
-    render(<CrystalProvider><Probe /></CrystalProvider>);
-    expect(read().body.fontSize).toBe(crystalTokens['typography.readingSize']);
+  it('sets body to Prismata reading size exactly', () => {
+    render(<PrismataProvider><Probe /></PrismataProvider>);
+    expect(read().body.fontSize).toBe(prismataTokens['typography.readingSize']);
   });
 
   /* The scale is derived from the reading size, so moving that token upstream
      moves every step. Six hard-coded sizes would be six values that can no
      longer be changed centrally. */
   it('derives every step from the reading size', () => {
-    render(<CrystalProvider><Probe /></CrystalProvider>);
+    render(<PrismataProvider><Probe /></PrismataProvider>);
     const steps = read();
-    const base = Number.parseFloat(crystalTokens['typography.readingSize']);
+    const base = Number.parseFloat(prismataTokens['typography.readingSize']);
     expect(Number.parseFloat(steps.display.fontSize)).toBe(base * 2);
     expect(Number.parseFloat(steps.caption.fontSize)).toBeLessThan(base);
     expect(Number.parseFloat(steps.title.fontSize)).toBeGreaterThan(base);
   });
 
   /* Density tightens spacing, never size: shrinking text at higher density would
-     trade legibility for space, which Crystal does not do. */
+     trade legibility for space, which Prismata does not do. */
   it('tightens leading at compact density without changing any size', () => {
-    const { rerender } = render(<CrystalProvider><Probe /></CrystalProvider>);
+    const { rerender } = render(<PrismataProvider><Probe /></PrismataProvider>);
     const comfortable = read();
-    rerender(<CrystalProvider density="compact"><Probe /></CrystalProvider>);
+    rerender(<PrismataProvider density="compact"><Probe /></PrismataProvider>);
     const compact = read();
 
     expect(compact.body.fontSize).toBe(comfortable.body.fontSize);
@@ -46,7 +46,7 @@ describe('useTypography', () => {
       const { family } = useTypography();
       return <output data-testid="f">{family}</output>;
     }
-    render(<CrystalProvider><FamilyProbe /></CrystalProvider>);
-    expect(screen.getByTestId('f').textContent).toBe(crystalTokens['typography.family']);
+    render(<PrismataProvider><FamilyProbe /></PrismataProvider>);
+    expect(screen.getByTestId('f').textContent).toBe(prismataTokens['typography.family']);
   });
 });

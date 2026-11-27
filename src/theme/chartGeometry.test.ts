@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { chartGeometry, CHART_SERIES_COUNT } from './chartGeometry.js';
-import { crystalTokens } from './tokens.generated.js';
+import { prismataTokens } from './tokens.generated.js';
 
-/* Until `@crystal-ui/core@2.1.0` was published these values were transcribed
+/* Until `@prismata/core@2.1.0` was published these values were transcribed
  * here as literals, and the test in this file's place had exactly one job: to
  * fail the day the installed core started publishing them, so nobody had to
  * remember that the shim existed. It did fail on the bump.
  *
- * These numbers are now Crystal's, read at build time, which settles
+ * These numbers are now Prismata's, read at build time, which settles
  * "are they right". What this test asks is "is each one still reading the
  * token it claims to". A geometry that silently fell back to a stale number
  * would draw charts that look almost correct.
  */
 describe('chart geometry', () => {
-  it('reads every value from a token Crystal publishes', () => {
-    const expected: Record<keyof typeof chartGeometry, keyof typeof crystalTokens> = {
+  it('reads every value from a token Prismata publishes', () => {
+    const expected: Record<keyof typeof chartGeometry, keyof typeof prismataTokens> = {
       stroke: 'chart.stroke',
       hairline: 'chart.hairline',
       pointMin: 'chart.pointMin',
@@ -32,16 +32,16 @@ describe('chart geometry', () => {
     };
 
     for (const [key, token] of Object.entries(expected)) {
-      expect(crystalTokens[token], `${token} is not published`).toBeDefined();
+      expect(prismataTokens[token], `${token} is not published`).toBeDefined();
       expect(
         chartGeometry[key as keyof typeof chartGeometry],
         `${key} should read ${token}`,
-      ).toBe(Number.parseFloat(crystalTokens[token]));
+      ).toBe(Number.parseFloat(prismataTokens[token]));
     }
   });
 
-  it('takes the series count from Crystal rather than assuming six', () => {
-    expect(CHART_SERIES_COUNT).toBe(Number.parseFloat(crystalTokens['chart.seriesCount']));
+  it('takes the series count from Prismata rather than assuming six', () => {
+    expect(CHART_SERIES_COUNT).toBe(Number.parseFloat(prismataTokens['chart.seriesCount']));
   });
 
   /* Every one is a number a chart does arithmetic with. `NaN` propagates

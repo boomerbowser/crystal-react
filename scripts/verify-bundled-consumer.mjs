@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /* A consumer with no bundler of its own, bundled with esbuild (R-30).
  *
- * The library is published for bundlers: `dist/` imports Crystal's token and
+ * The library is published for bundlers: `dist/` imports Prismata's token and
  * recipe JSON without an import attribute, which every bundler accepts and
  * plain Node ESM refuses. Meridian ruled on 16 November 2026 that this stays
  * so: Next.js, where the documentation site lives, brings its own bundler, and
  * wherever no bundler is provided the consumer uses webpack or esbuild.
  *
  * So this proves the esbuild path end to end. A server-rendering consumer
- * imports the built package by its published name (`@crystal-ui/react`, the
+ * imports the built package by its published name (`@prismata/react`, the
  * package resolving itself through its `exports`), esbuild bundles it for
  * Node with the JSON inlined and the stylesheets left to the page, and the
  * bundle runs in plain Node and renders components to HTML. It also checks the
@@ -38,14 +38,14 @@ const failures = [];
 const entry = join(WORK, 'entry.jsx');
 writeFileSync(entry, `
 import { renderToString } from 'react-dom/server';
-import { CrystalProvider, Button, Tabs, SegmentedControl, Badge } from '@crystal-ui/react';
+import { PrismataProvider, Button, Tabs, SegmentedControl, Badge } from '@prismata/react';
 const html = renderToString(
-  <CrystalProvider>
+  <PrismataProvider>
     <Button>Save</Button>
     <Badge>4</Badge>
     <Tabs label="Sections" items={[{ id: 'a', label: 'Overview', content: 'One' }, { id: 'b', label: 'Usage', content: 'Two' }]} />
     <SegmentedControl label="View" defaultValue="day" options={[{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }]} />
-  </CrystalProvider>,
+  </PrismataProvider>,
 );
 process.stdout.write(html);
 `);
@@ -77,17 +77,17 @@ try {
 }
 if (html) {
   for (const [what, found] of [
-    ['a Crystal button', /class="[^"]*cr-button/.test(html)],
+    ['a Prismata button', /class="[^"]*pr-button/.test(html)],
     ['the tab list with its tabs', /role="tablist"/.test(html) && /Overview/.test(html)],
-    ['the segmented control on the dock', /cr-dock/.test(html) && /Week/.test(html)],
-    ['the provider\'s theme scope', /--cr-primary/.test(html)],
+    ['the segmented control on the dock', /pr-dock/.test(html) && /Week/.test(html)],
+    ['the provider\'s theme scope', /--pr-primary/.test(html)],
   ]) if (!found) failures.push(`the rendered HTML has no ${what}`);
 }
 
 /* The refusal the ruling answers, recorded rather than assumed. */
 let plainNode = 'imports';
 try {
-  execFileSync(process.execPath, ['--input-type=module', '-e', "await import('@crystal-ui/react')"], { cwd: ROOT, stdio: 'pipe' });
+  execFileSync(process.execPath, ['--input-type=module', '-e', "await import('@prismata/react')"], { cwd: ROOT, stdio: 'pipe' });
 } catch (error) {
   plainNode = /ERR_IMPORT_ATTRIBUTE_MISSING|ERR_UNKNOWN_FILE_EXTENSION|ERR_/.exec(String(error.stderr))?.[0] ?? 'fails';
 }

@@ -6,7 +6,7 @@
  *
  * A pill strip of mutually exclusive options.
  *
- * Selection is weight and the primary fill, as Crystal's dock draws it. See
+ * Selection is weight and the primary fill, as Prismata's dock draws it. See
  * `styles/_strip.scss`. The weight keeps selection from resting on colour alone.
  *
  * The strip and its pills are `styles/_strip.scss`, shared with the tab list,
@@ -20,14 +20,14 @@
 
 .strip { @include strip.strip; }
 
-/* The segment is Crystal's dock control. From 2.3.0, `.cr-dock` reaches a label
+/* The segment is Prismata's dock control. From 2.3.0, `.pr-dock` reaches a label
    holding a radio, including React Aria's wrapped one (D-26). The checked radio
    selects it, and its focus ring is drawn on the label. */
 
 
-.segment[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.segment[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
 
 .description, .error { @include field.message; }
-.description { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 700; }
+.description { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 700; }
 

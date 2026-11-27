@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { Prose } from '@crystal-ui/react';
-import { coreVersion, libraries, publishedVersions } from '../../lib/crystal';
+import { Prose } from '@prismata/react';
+import { coreVersion, libraries, publishedVersions } from '../../lib/prismata';
 
 export const metadata: Metadata = { title: 'Component libraries' };
 
@@ -10,9 +10,9 @@ export default function Libraries() {
       <Prose>
         <h1>Component libraries</h1>
         <p>
-          Crystal is implemented for each platform by its own library. This site is built against{' '}
-          <code>@crystal-ui/core</code> {coreVersion}; each version below is the one its package has published.
-          The list is Crystal's own, <code>@crystal-ui/core/libraries</code>.
+          Prismata is implemented for each platform by its own library. This site is built against{' '}
+          <code>@prismata/core</code> {coreVersion}; each version below is the one its package has published.
+          The list is Prismata's own, <code>@prismata/core/libraries</code>.
         </p>
       </Prose>
       <div className="table-scroll">

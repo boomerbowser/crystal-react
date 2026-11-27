@@ -6,51 +6,51 @@
    and needs no number. */
 .popover {
   @include overlay.surface;
-  padding: $cr-spacing-2xs;
+  padding: $pr-spacing-2xs;
   min-inline-size: max(min-content, var(--trigger-width, 0px));
-  max-inline-size: min(92vw, #{$cr-overlay-max-width});
+  max-inline-size: min(92vw, #{$pr-overlay-max-width});
 }
 /* "Frost panel with Haze rows (R15e)": on the page the rows read on a Haze fill
-   inside the Frost panel (R-A9), Crystal's `.cr-frost.reading` (2.7.0), inset
+   inside the Frost panel (R-A9), Prismata's `.pr-frost.reading` (2.7.0), inset
    by the menu's own 4px padding rather than the 8px pad inset, so every row
    sits wholly on it. The inset is the reading fill's own property, never
-   `--cr-haze-inset`, which the rows' controls read. Recessed into Haze, the
+   `--pr-haze-inset`, which the rows' controls read. Recessed into Haze, the
    panel is already Haze. */
-.popover[data-cr-overlay='frost'] { --cr-frost-reading-inset: #{$cr-spacing-2xs}; }
+.popover[data-pr-overlay='frost'] { --pr-frost-reading-inset: #{$pr-spacing-2xs}; }
 .menu { @include overlay.composite-focus; display: grid; gap: 1px; max-block-size: 60vh; overflow: auto; }
 
 .item {
   @include overlay.row;
   @include overlay.row-forced-colors;
   justify-content: space-between;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
 }
 
-/* A check mark here means checked, the one place in Crystal it does: a
+/* A check mark here means checked, the one place in Prismata it does: a
    checkable menu item is a checkbox in a menu, and it reports `aria-checked`.
    Everywhere else a check means validated, and selection is label weight, which
    this also uses for the highlighted row. */
-.mark { inline-size: $cr-icon-size; block-size: $cr-icon-size; flex: none; color: var(--cr-primary); }
+.mark { inline-size: $pr-icon-size; block-size: $pr-icon-size; flex: none; color: var(--pr-primary); }
 .mark[data-hidden] { visibility: hidden; }
 
 .label { flex: 1; min-inline-size: 0; }
-.shortcut { color: var(--cr-muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+.shortcut { color: var(--pr-muted); font-weight: 600; font-variant-numeric: tabular-nums; }
 .item[data-selected] .shortcut, .item[data-focused] .shortcut { color: inherit; }
 
-.chevron { inline-size: $cr-icon-size; block-size: $cr-icon-size; flex: none; color: var(--cr-muted); }
+.chevron { inline-size: $pr-icon-size; block-size: $pr-icon-size; flex: none; color: var(--pr-muted); }
 
-.section + .section { margin-block-start: $cr-spacing-2xs; }
+.section + .section { margin-block-start: $pr-spacing-2xs; }
 .heading {
-  padding: $cr-spacing-2xs $cr-spacing-sm;
-  font-size: var(--cr-text-caption-size);
+  padding: $pr-spacing-2xs $pr-spacing-sm;
+  font-size: var(--pr-text-caption-size);
   font-weight: 800;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
 }
 
 .separator {
   block-size: 1px;
-  margin: $cr-spacing-2xs $cr-spacing-sm;
-  background: var(--cr-edge);
+  margin: $pr-spacing-2xs $pr-spacing-sm;
+  background: var(--pr-edge);
   border: 0;
 }
 

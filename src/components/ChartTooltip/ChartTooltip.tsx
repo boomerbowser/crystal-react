@@ -46,7 +46,7 @@ export interface ChartTooltipProps extends Omit<HTMLAttributes<HTMLDivElement>, 
 }
 
 /* How far the panel sits from the point it describes. It is not a token. It is
-   derived from Crystal's largest point size, as the distance that keeps the
+   derived from Prismata's largest point size, as the distance that keeps the
    panel clear of a mark drawn at that size. */
 const CLEARANCE = 14;
 
@@ -79,7 +79,7 @@ export function ChartTooltip({
       aria-hidden="true"
       data-shown={shown || leaving ? '' : undefined}
       data-side={right ? 'start' : 'end'}
-      className={cx(styles['tooltip'], 'cr-frost', className)}
+      className={cx(styles['tooltip'], 'pr-frost', className)}
       style={{
         ...style,
         '--tooltip-x': `${x}px`,

@@ -88,7 +88,7 @@ export function Workspace({
   return (
     <div
       {...props}
-      data-cr-state={focused === null ? 'at-rest' : 'focus-mode'}
+      data-pr-state={focused === null ? 'at-rest' : 'focus-mode'}
       onFocus={trackFocus}
       className={cx(styles['workspace'], focused === null ? undefined : styles['focused'], className)}
     >
@@ -99,7 +99,7 @@ export function Workspace({
           aria-label={pane.label}
           /* Focusable only as the target of the move above, never a tab stop. */
           tabIndex={-1}
-          className={cx('cr-frost pane flat', styles['pane'])}
+          className={cx('pr-frost pane flat', styles['pane'])}
         >
           {pane.children}
         </section>

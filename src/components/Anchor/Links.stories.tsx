@@ -41,11 +41,11 @@ const meta = {
           + 'link list, unopenable in a new tab, and silent in the status bar.\n\n'
           + 'An `Anchor` is underlined at rest. The underline is the non-chromatic signal that '
           + 'distinguishes a link from the sentence around it, so it is not a hover affordance. '
-          + 'Crystal offsets it clear of the descenders.\n\n'
+          + 'Prismata offsets it clear of the descenders.\n\n'
           + 'A `NavLink` marks the current page with a dot and with weight, and reserves the '
           + 'dot\'s room whether or not it is drawn. A column that appears only for the current '
           + 'entry shifts every label in the list the moment you navigate (the defect '
-          + 'that had the leading selection mark withdrawn from Crystal), and it would be the same '
+          + 'that had the leading selection mark withdrawn from Prismata), and it would be the same '
           + 'defect here under a different name.',
       },
     },
@@ -64,7 +64,7 @@ const HomeIcon = (
 export const InRunningText: Story = {
   render: () => (
     <Text>
-      Crystal&rsquo;s materials are described in <Anchor href="#materials">the materials chapter</Anchor>,
+      Prismata&rsquo;s materials are described in <Anchor href="#materials">the materials chapter</Anchor>,
       and the reasoning behind them is drawn from{' '}
       <Anchor href="https://www.w3.org/TR/WCAG22/" isExternal>WCAG 2.2</Anchor>.
     </Text>
@@ -73,7 +73,7 @@ export const InRunningText: Story = {
 
 export const Destinations: Story = {
   render: () => (
-    <Stack gap="2xs" style={{ maxWidth: '280px' }} /* crystal-allow-literal: story bound, a navigation column */>
+    <Stack gap="2xs" style={{ maxWidth: '280px' }} /* prismata-allow-literal: story bound, a navigation column */>
       <NavLink href="#inbox" icon={HomeIcon}>Inbox</NavLink>
       <NavLink href="#drafts" icon={HomeIcon} isCurrent trailing="12">Drafts</NavLink>
       <NavLink href="#sent" icon={HomeIcon}>Sent</NavLink>
@@ -87,11 +87,11 @@ export const Destinations: Story = {
 export const TheLabelDoesNotMoveWhenYouNavigate: Story = {
   render: () => (
     <Stack gap="lg">
-      <Stack gap="2xs" style={{ maxWidth: '280px' }} /* crystal-allow-literal: story bound, a navigation column */>
+      <Stack gap="2xs" style={{ maxWidth: '280px' }} /* prismata-allow-literal: story bound, a navigation column */>
         <NavLink href="#inbox" isCurrent>Inbox</NavLink>
         <NavLink href="#drafts">Drafts</NavLink>
       </Stack>
-      <Stack gap="2xs" style={{ maxWidth: '280px' }} /* crystal-allow-literal: story bound, a navigation column */>
+      <Stack gap="2xs" style={{ maxWidth: '280px' }} /* prismata-allow-literal: story bound, a navigation column */>
         <NavLink href="#inbox">Inbox</NavLink>
         <NavLink href="#drafts" isCurrent>Drafts</NavLink>
       </Stack>

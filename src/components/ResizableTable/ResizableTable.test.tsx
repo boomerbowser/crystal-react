@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { ResizableTable } from './ResizableTable.js';
 
 const columns = [
@@ -17,7 +17,7 @@ describe('ResizableTable', () => {
   /* The difference from `DataTable`: resizing is the point, so it is opt-out
      rather than opt-in. */
   it('makes every column resizable unless it says otherwise', () => {
-    renderWithCrystal(<ResizableTable columns={columns} rows={rows} label="Workspaces" />);
+    renderWithPrismata(<ResizableTable columns={columns} rows={rows} label="Workspaces" />);
     expect(screen.getByRole('slider', { name: 'Resize Workspace' })).toBeInTheDocument();
     expect(screen.getByRole('slider', { name: 'Resize Plan' })).toBeInTheDocument();
     expect(screen.queryByRole('slider', { name: /Seats/ })).toBeNull();
@@ -29,7 +29,7 @@ describe('ResizableTable', () => {
      nothing to move. The width change is checked in a browser by
      `verify:behaviour`, with the library's other layout assertions. */
   it('announces the width as a real slider value', () => {
-    renderWithCrystal(<ResizableTable columns={columns} rows={rows} label="Workspaces" />);
+    renderWithPrismata(<ResizableTable columns={columns} rows={rows} label="Workspaces" />);
     const resizer = screen.getByRole('slider', { name: 'Resize Workspace' }) as HTMLInputElement;
     expect(resizer.type).toBe('range');
     expect(resizer).toHaveAttribute('aria-valuetext', expect.stringMatching(/pixels/));
@@ -39,7 +39,7 @@ describe('ResizableTable', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ResizableTable columns={columns} rows={rows} label="Workspaces" />,
     );
     await expectNoAxeViolations(container);

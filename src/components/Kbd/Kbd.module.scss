@@ -2,7 +2,7 @@
 
 /* Kbd. "a Resin cap with a defined lower rim".
  *
- * Resin already carries two optical rims in `--cr-shadow-float`. The catalogue
+ * Resin already carries two optical rims in `--pr-shadow-float`. The catalogue
  * asks for a defined lower one on top of that, so the cap reads as a key you
  * could press. The extra inset highlight along the bottom edge is the physical
  * cue: light from overhead, a lip underneath.
@@ -12,9 +12,9 @@
  * feather. The fill's own 8px inset is wider than the cap's padding.
  */
 
-$kbd-radius: 8px; /* crystal-allow-literal: the catalogue's stated cap radius */
+$kbd-radius: 8px; /* prismata-allow-literal: the catalogue's stated cap radius */
 
-/* A cap is Crystal's compact display, `.cr-resin-haze` (2.2.0). The catalogue
+/* A cap is Prismata's compact display, `.pr-resin-haze` (2.2.0). The catalogue
    gives `kbd` the compact surface, which is Resin with Haze under the glyph.
    Without the Haze pad, a glyph on a 20% fill reads against whatever is behind
    the page. The lip below is the key's own. */
@@ -24,22 +24,22 @@ $kbd-radius: 8px; /* crystal-allow-literal: the catalogue's stated cap radius */
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  min-inline-size: $cr-indicator-size;
+  min-inline-size: $pr-indicator-size;
   /* A cap sits in a line of text. The compact display's block padding is a
      tag's, and with it every cap is 55px tall. */
   padding-block: 0;
-  padding-inline: $cr-spacing-2xs;
+  padding-inline: $pr-spacing-2xs;
   border-radius: $kbd-radius;
-  color: var(--cr-text);
-  /* A key cap is not prose. The family is Crystal's, one step down, so a cap
+  color: var(--pr-text);
+  /* A key cap is not prose. The family is Prismata's, one step down, so a cap
      inside a sentence does not change the line's rhythm. */
   font-family: inherit;
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
   font-weight: 700;
   /* The lip. Inset, under the rim rather than outside it, so the cap keeps its
      own footprint in a line of text. */
-  box-shadow: var(--cr-shadow-float), inset 0 -2px 0 var(--cr-control-edge);
+  box-shadow: var(--pr-shadow-float), inset 0 -2px 0 var(--pr-control-edge);
 }
 
 /* Filled to the edge, like the badge: an 8px inset on a 20px cap would leave the

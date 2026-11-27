@@ -19,10 +19,10 @@ const meta = {
       description: {
         component:
           'The components with no appearance of their own. Each is React Aria\'s behaviour with '
-          + 'Crystal\'s contract stated around it. In two cases Crystal is stricter than the '
+          + 'Prismata\'s contract stated around it. In two cases Prismata is stricter than the '
           + 'library.\n\n'
           + '`ClickAway` also dismisses on Escape, because a keyboard user has no outside to '
-          + 'click and Crystal\'s rule is that a click-away is never the only way out. '
+          + 'click and Prismata\'s rule is that a click-away is never the only way out. '
           + '`Pressable` supplies the role React Aria leaves to the caller. A bare React Aria '
           + 'Pressable around a span is a tab stop a screen reader announces as nothing.\n\n'
           + 'Tab through this story instead of reading it. Most of it is visible only under '
@@ -42,7 +42,7 @@ export const Hidden: Story = {
         Saved
         <VisuallyHidden> at 14:32, by Meridian Digital</VisuallyHidden>
       </p>
-      <p style={{ color: 'var(--cr-muted)' }}>
+      <p style={{ color: 'var(--pr-muted)' }}>
         A screen reader reads the whole sentence; the page shows only the first word.
       </p>
     </Card>
@@ -53,7 +53,7 @@ export const Hidden: Story = {
  *  only the viewport, to the region below. */
 export const Skip: Story = {
   render: () => (
-    <div style={{ position: 'relative', minHeight: '160px' /* crystal-allow-literal: story box, so the skip link has somewhere to go */ }}>
+    <div style={{ position: 'relative', minHeight: '160px' /* prismata-allow-literal: story box, so the skip link has somewhere to go */ }}>
       <SkipLink targetId="story-main" />
       <p>Tab into this story. The skip link appears before anything else.</p>
       <Card aria-label="Main" id="story-main">
@@ -90,12 +90,12 @@ export const PressAndFocus: Story = {
   render: () => (
     <Stack gap="md">
       <Pressable onPress={() => undefined}>
-        <span style={{ display: 'inline-block', padding: 'var(--cr-spacing-sm)' }}>
+        <span style={{ display: 'inline-block', padding: 'var(--pr-spacing-sm)' }}>
           A span that is a button: Space and Enter activate it, and the press recipe plays.
         </span>
       </Pressable>
       <Focusable>
-        <div style={{ padding: 'var(--cr-spacing-sm)' }}>
+        <div style={{ padding: 'var(--pr-spacing-sm)' }}>
           A div that is a tab stop and nothing else, with no role invented.
         </div>
       </Focusable>

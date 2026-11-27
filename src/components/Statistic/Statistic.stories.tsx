@@ -30,7 +30,7 @@ export const Default: Story = {};
  *  every unremarkable figure look like a report. */
 export const Trends: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-spacing-2xl)' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-spacing-2xl)' }}>
       <Statistic {...only(args)} label="Revenue" value="£48,210"
         trend={{ direction: 'up', label: '4.2% up on last month' }} />
       <Statistic {...only(args)} label="Refunds" value="£1,180"

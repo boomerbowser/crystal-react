@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { NetworkGraph, adjacency } from './NetworkGraph.js';
 
 const nodes = [
@@ -14,7 +14,7 @@ describe('NetworkGraph', () => {
   /* A network graph's content is who is connected to whom, so a node that
      announced only its name would leave a reader with a list of names. */
   it('states a node degree and its neighbours', () => {
-    renderWithCrystal(<NetworkGraph label="Team" nodes={nodes} edges={edges} />);
+    renderWithPrismata(<NetworkGraph label="Team" nodes={nodes} edges={edges} />);
     expect(screen.getByLabelText('Brook, 2 connections, to Ash, Cedar')).toBeInTheDocument();
     expect(screen.getByLabelText('Ash, 1 connection, to Brook')).toBeInTheDocument();
   });
@@ -30,7 +30,7 @@ describe('NetworkGraph', () => {
   /* Positions are the caller's: a force simulation is motion, and nothing moves
      at rest. */
   it('takes positions rather than computing them', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <NetworkGraph label="Team" nodes={nodes} edges={edges} />,
     );
     const transforms = Array.from(container.querySelectorAll('[role="graphics-symbol"]'))
@@ -39,7 +39,7 @@ describe('NetworkGraph', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<NetworkGraph label="Team" nodes={nodes} edges={edges} />);
+    const { container } = renderWithPrismata(<NetworkGraph label="Team" nodes={nodes} edges={edges} />);
     await expectNoAxeViolations(container);
   });
 });

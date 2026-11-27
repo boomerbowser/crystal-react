@@ -2,7 +2,7 @@
 
 /* Lines, points and their hit areas.
  *
- * The stroke is Crystal's chart stroke and the colour arrives as a custom
+ * The stroke is Prismata's chart stroke and the colour arrives as a custom
  * property, never as a `fill` or `stroke` attribute. An inline presentation
  * attribute is beaten by any rule, but an inline style beats every rule,
  * including the forced-colours rules at the bottom of this file, which have to
@@ -12,14 +12,14 @@
 .line {
   fill: none;
   stroke: var(--series-colour);
-  stroke-width: var(--cr-chart-stroke);
+  stroke-width: var(--pr-chart-stroke);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .point .shape {
   fill: var(--series-colour);
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
+  transition: opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 /* The 44px hit area. Transparent rather than absent: a shape with no fill takes

@@ -2,19 +2,19 @@
 
 /* "Haze content fill on the surrounding material; content radius." */
 .summary {
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
-  border-radius: $cr-shape-content-radius;
-  padding: calc(var(--cr-haze-inset) + var(--cr-block-padding, $cr-spacing-md));
-  color: var(--cr-text);
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
+  border-radius: $pr-shape-content-radius;
+  padding: calc(var(--pr-haze-inset) + var(--pr-block-padding, $pr-spacing-md));
+  color: var(--pr-text);
 }
 
-.lines { display: grid; gap: $cr-spacing-xs; margin: 0; }
+.lines { display: grid; gap: $pr-spacing-xs; margin: 0; }
 
-.line { display: flex; align-items: baseline; justify-content: space-between; gap: $cr-spacing-md; }
+.line { display: flex; align-items: baseline; justify-content: space-between; gap: $pr-spacing-md; }
 
 .term { margin: 0; display: flex; flex-direction: column; }
 
-.note { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+.note { color: var(--pr-muted); font-size: var(--pr-text-caption-size); }
 
 /* `Price` already lines the amounts up down the column. This only stops the flex
    row from squashing it. */
@@ -23,13 +23,13 @@
 /* A rule separates the total, which marks it as a different kind of line from
    the ones above. A gap would only read as a pause. */
 .line[data-total] {
-  margin-block-start: $cr-spacing-2xs;
-  padding-block-start: $cr-spacing-sm;
-  border-block-start: 1px solid var(--cr-control-edge);
-  font-size: var(--cr-text-subheading-size);
+  margin-block-start: $pr-spacing-2xs;
+  padding-block-start: $pr-spacing-sm;
+  border-block-start: 1px solid var(--pr-control-edge);
+  font-size: var(--pr-text-subheading-size);
 }
 
-.empty { margin: 0; color: var(--cr-muted); }
+.empty { margin: 0; color: var(--pr-muted); }
 
 /* While updating, the figures stay visible and fade. They are not replaced by a
    spinner. */

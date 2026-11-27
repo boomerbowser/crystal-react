@@ -90,14 +90,14 @@ export const ImageCompare = forwardRef<HTMLDivElement, ImageCompareProps>(functi
       >
         <SliderTrack className={cx(styles['track'])}>
           <span aria-hidden="true" className={styles['position']} />
-          {/* `data-cr-handle` is the handle's identity in the DOM, in the same
-              `data-cr-*` namespace the motion state uses. React Aria puts the
+          {/* `data-pr-handle` is the handle's identity in the DOM, in the same
+              `data-pr-*` namespace the motion state uses. React Aria puts the
               real `input[role=slider]` in a visually-hidden 1px box inside
               this element, so the element ARIA names and the element a finger
               meets are different nodes. A target gate that probed the named one
               would report a 1px handle on a control that is 44px. The segmented
               control's label has the same trap. */}
-          <SliderThumb className={cx(styles['thumb'])} data-cr-handle="">
+          <SliderThumb className={cx(styles['thumb'])} data-pr-handle="">
             {({ isDragging }) => <Grip isDragging={isDragging} />}
           </SliderThumb>
         </SliderTrack>
@@ -106,7 +106,7 @@ export const ImageCompare = forwardRef<HTMLDivElement, ImageCompareProps>(functi
   );
 });
 
-/* The handle you can see: Crystal's Resin plane at the pill, filling the thumb.
+/* The handle you can see: Prismata's Resin plane at the pill, filling the thumb.
    An element of its own because React Aria positions the thumb with an inline
    `transform`, and a recipe that moved the thumb's transform would move it off
    the divider. The grip is free to move. It lifts with `drag-pickup` as a drag begins
@@ -114,5 +114,5 @@ export const ImageCompare = forwardRef<HTMLDivElement, ImageCompareProps>(functi
    without either, since nothing is picked up. */
 function Grip({ isDragging }: { isDragging: boolean }): React.JSX.Element {
   const scope = useChangeMotion(isDragging, (was, is) => (is ? 'drag-pickup' : was ? 'drag-settle' : null));
-  return <span ref={scope as never} aria-hidden="true" className={cx(styles['grip'], 'cr-resin')} />;
+  return <span ref={scope as never} aria-hidden="true" className={cx(styles['grip'], 'pr-resin')} />;
 }

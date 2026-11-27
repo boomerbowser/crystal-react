@@ -127,18 +127,18 @@ await page.goto(
 );
 await page.waitForSelector('#storybook-root [role="treegrid"]');
 
-/* Nothing in Crystal moves at rest. A tree that animates its own rows into
+/* Nothing in Prismata moves at rest. A tree that animates its own rows into
    existence on load violates that, and a screenshot taken after the animation
    has finished does not show it.
 
-   `useMotion` sets `data-cr-motion-state` to "running" and then to "finished"
+   `useMotion` sets `data-pr-motion-state` to "running" and then to "finished"
    rather than clearing it, so the attribute records that an animation happened,
    not only one in flight. Probing after the page has settled still catches a
    tree that animated itself and then stopped. */
 const atRest = await page.evaluate(() => {
   const root = document.querySelector('#storybook-root');
-  return [...root.querySelectorAll('[data-cr-motion-state]')]
-    .map((el) => `${el.dataset.crMotionName ?? '?'}:${el.dataset.crMotionState}`);
+  return [...root.querySelectorAll('[data-pr-motion-state]')]
+    .map((el) => `${el.dataset.prMotionName ?? '?'}:${el.dataset.prMotionState}`);
 });
 record(
   'a tree does not animate the rows it rendered with',
@@ -481,10 +481,10 @@ for (const { edge, flush, square } of EDGES) {
      element is honoured by every engine this library gates against, and this
      reads it back to confirm.
 
-     This does not prove whose rule painted it. Storybook loads `crystal.css`,
+     This does not prove whose rule painted it. Storybook loads `prismata.css`,
      which carries `[tabindex]:focus-visible { outline: … }`, so removing the
      library's own rule leaves this check green (measured). The library keeps its
-     rule anyway, because a consumer who does not load Crystal's element styles
+     rule anyway, because a consumer who does not load Prismata's element styles
      is the case D-1 is about, and this gate cannot see that consumer. */
   const ring = await page.evaluate(() => {
     const active = document.activeElement;
@@ -595,14 +595,14 @@ for (const { edge, flush, square } of EDGES) {
  * something false. */
 {
   await page.goto(`${ORIGIN}/iframe.html?id=feedback-loading-overlay--blocked&viewMode=story`, { waitUntil: 'networkidle' });
-  await page.waitForSelector('#storybook-root [data-cr-blocked="true"]');
+  await page.waitForSelector('#storybook-root [data-pr-blocked="true"]');
   await page.evaluate(() => { document.body.focus(); });
   const reached = [];
   for (let press = 0; press < 6; press += 1) {
     /* eslint-disable no-await-in-loop -- tabbing is a sequence */
     await page.keyboard.press('Tab');
     reached.push(await page.evaluate(() => {
-      const inert = document.querySelector('#storybook-root [data-cr-blocked="true"]');
+      const inert = document.querySelector('#storybook-root [data-pr-blocked="true"]');
       return Boolean(inert && document.activeElement && inert.contains(document.activeElement));
     }));
     /* eslint-enable no-await-in-loop */
@@ -647,7 +647,7 @@ for (const { edge, flush, square } of EDGES) {
  *
  * The claim is about the track, not the button: a toggle that flipped its own
  * `aria-pressed` and left the track alone would look and read correctly and
- * show no subtitles. Since 2 October 2026 Crystal draws the cues itself, on
+ * show no subtitles. Since 2 October 2026 Prismata draws the cues itself, on
  * Stone above the transport, so "on" is a track in `hidden` mode (cues firing,
  * the browser not drawing them) and a cue on the screen, above the bar. */
 {
@@ -690,7 +690,7 @@ for (const { edge, flush, square } of EDGES) {
     const root = document.querySelector('#storybook-root');
     const video = root.querySelector('video');
     const cue = root.querySelector('[class*="captions"]:not([hidden]) > span');
-    const bar = root.querySelector('.cr-resin');
+    const bar = root.querySelector('.pr-resin');
     return {
       modes: [...(video?.textTracks ?? [])].map((track) => track.mode),
       pressed: root.querySelector('[aria-label="Captions"]')?.getAttribute('aria-pressed'),
@@ -750,7 +750,7 @@ for (const { edge, flush, square } of EDGES) {
   await page.getByRole('button', { name: 'Captions' }).click();
   await page.waitForTimeout(500);
   const kept = await cueStyle();
-  await page.evaluate(() => { localStorage.removeItem('crystal-caption-style'); });
+  await page.evaluate(() => { localStorage.removeItem('prismata-caption-style'); });
   record(
     'a reader can enlarge captions and make their backing solid, and the choice is kept',
     plain !== null && styled !== null && kept !== null
@@ -774,7 +774,7 @@ for (const { edge, flush, square } of EDGES) {
   const geometry = await page.evaluate(() => {
     const root = document.querySelector('#storybook-root');
     const stage = root.querySelector('video').parentElement.getBoundingClientRect();
-    const bar = root.querySelector('.cr-resin');
+    const bar = root.querySelector('.pr-resin');
     const pill = bar.getBoundingClientRect();
     const first = bar.querySelector('button').getBoundingClientRect();
     const time = bar.querySelector('[class*="time"]');
@@ -836,13 +836,13 @@ for (const { edge, flush, square } of EDGES) {
   const card = await page.evaluate(() => {
     const player = document.querySelector('#storybook-root audio').parentElement;
     const box = player.getBoundingClientRect();
-    const pill = player.querySelector('.cr-resin').getBoundingClientRect();
-    return { haze: player.classList.contains('cr-haze'), inset: pill.left - box.left };
+    const pill = player.querySelector('.pr-resin').getBoundingClientRect();
+    return { haze: player.classList.contains('pr-haze'), inset: pill.left - box.left };
   });
   record(
     'the audio player is a Haze card with the transport inset by the card padding',
     card.haze && card.inset >= 19.5,
-    `cr-haze ${card.haze ? 'worn' : 'missing'}; the transport is ${card.inset.toFixed(1)}px from the card's edge`,
+    `pr-haze ${card.haze ? 'worn' : 'missing'}; the transport is ${card.inset.toFixed(1)}px from the card's edge`,
   );
 }
 
@@ -891,8 +891,8 @@ for (const { edge, flush, square } of EDGES) {
  * Ruled 17 November 2026: a ring is for someone moving with the keyboard, and
  * drawn after a click it is noise. A field clicked into and typed in, and a
  * list a click opened, show no ring; the same field reached with Tab, and the
- * list moved through with an arrow, do. Crystal's modality attribute
- * (core 2.10.0) decides, written by every CrystalProvider. */
+ * list moved through with an arrow, do. Prismata's modality attribute
+ * (core 2.10.0) decides, written by every PrismataProvider. */
 {
   const ringed = () => page.evaluate(() => [...document.querySelectorAll('*')].filter((e) => {
     const c = getComputedStyle(e);
@@ -1025,7 +1025,7 @@ for (const { edge, flush, square } of EDGES) {
 }
 
 {
-  /* "Collapses to a stack below the layout breakpoint." Crystal's `md` is
+  /* "Collapses to a stack below the layout breakpoint." Prismata's `md` is
      850px, so the two viewports sit well either side of it. A gate measured at
      the boundary would test the rounding instead of the rule. */
   const layoutAt = async (width) => {
@@ -1040,7 +1040,7 @@ for (const { edge, flush, square } of EDGES) {
         panes: panes.length,
         /* Side by side means they share a row; stacked means there is one. */
         sideBySide: boxes.length === 2 && Math.abs(boxes[0].top - boxes[1].top) < 4,
-        state: document.querySelector('#storybook-root [data-cr-state]')?.dataset.crState,
+        state: document.querySelector('#storybook-root [data-pr-state]')?.dataset.prState,
       };
     });
   };
@@ -1101,7 +1101,7 @@ for (const { edge, flush, square } of EDGES) {
  *
  * "A pop is a push mirrored, and right-to-left is a push mirrored again."
  *
- * This is R-23's check. It needs `@crystal-ui/core` 2.1.0 or later: without
+ * This is R-23's check. It needs `@prismata/core` 2.1.0 or later: without
  * `view-push-in` to resolve, both directions do nothing and look identical.
  * There are two motion hooks with fixed orientations because a single hook
  * would animate a pop with the push's orientation, arriving from the edge it
@@ -1201,10 +1201,10 @@ for (const { edge, flush, square } of EDGES) {
 
 /* --------------------------------------------- continuous indicators (D-19)
  *
- * Crystal 2.2.0 publishes three recipes that repeat, for work that is genuinely
+ * Prismata 2.2.0 publishes three recipes that repeat, for work that is genuinely
  * pending, and one rule: nothing else loops, and none of them runs at rest or
  * under reduced motion. jsdom cannot see an animation, so the claim is read here
- * from the running animation itself (infinite, linear, at Crystal's one period)
+ * from the running animation itself (infinite, linear, at Prismata's one period)
  * and then from the same story under reduced motion, where there must be no
  * animation and the element must say it was resolved instantly. The stylesheet
  * keys a static fallback on that state, and that fallback is what the reader
@@ -1227,7 +1227,7 @@ for (const { edge, flush, square } of EDGES) {
         const running = element.getAnimations()[0];
         const timing = running?.effect.getComputedTiming();
         return {
-          state: element.dataset['crMotionState'] ?? null,
+          state: element.dataset['prMotionState'] ?? null,
           iterations: timing ? String(timing.iterations) : null,
           duration: timing ? Math.round(Number(timing.duration)) : null,
           easing: running ? running.effect.getTiming().easing : null,
@@ -1241,7 +1241,7 @@ for (const { edge, flush, square } of EDGES) {
         );
       } else {
         record(
-          `${what} repeats Crystal's continuous recipe while pending`,
+          `${what} repeats Prismata's continuous recipe while pending`,
           seen !== null && seen.iterations === 'Infinity' && seen.duration === FLOW && seen.easing === 'linear',
           `saw ${JSON.stringify(seen)}; expected an infinite linear loop at motion.flow (${FLOW}ms)`,
         );
@@ -1319,7 +1319,7 @@ for (const { edge, flush, square } of EDGES) {
  * `useChangeMotion`, whose three rules are checked here per component: nothing
  * has played at rest, entering the state plays the recipe
  * on the item that entered it, and pressing an item already in that state plays
- * nothing more. `data-cr-motion-name` is left behind by `useMotion` when a
+ * nothing more. `data-pr-motion-name` is left behind by `useMotion` when a
  * recipe has run, which is what makes the first rule checkable after the fact.
  *
  * Each row: [story, the items, how to enter the state on the second item, the
@@ -1339,8 +1339,8 @@ for (const { edge, flush, square } of EDGES) {
       [...document.querySelectorAll(`#storybook-root ${items}`)]
         /* The item, or the cell it sits in: React Aria forwards a calendar
            day's ref to its \`td\`, so that is where the day moves. */
-        .map((el, index) => (el.dataset.crMotionName === recipe
-          || (el.parentElement?.tagName === 'TD' && el.parentElement.dataset.crMotionName === recipe) ? index : -1))
+        .map((el, index) => (el.dataset.prMotionName === recipe
+          || (el.parentElement?.tagName === 'TD' && el.parentElement.dataset.prMotionName === recipe) ? index : -1))
         .filter((index) => index >= 0),
     [items, recipe]);
     const atRest = await played();
@@ -1376,7 +1376,7 @@ for (const id of ['navigation-rails-and-bars--rail']) {
   await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
   const played = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root a')]
-    .filter((a) => a.dataset.crMotionName === 'selection').map((a) => a.textContent.trim()));
+    .filter((a) => a.dataset.prMotionName === 'selection').map((a) => a.textContent.trim()));
   const atRest = await played();
   await page.evaluate((storyId) => {
     window.__STORYBOOK_PREVIEW__.channel.emit('updateStoryArgs', { storyId, updatedArgs: { currentId: 'shared' } });
@@ -1394,7 +1394,7 @@ for (const id of ['navigation-rails-and-bars--rail']) {
 /* ------------------------------------- the selection pill travels (R-A8, D-37)
  *
  * Tabs, the segmented control, the dock and bottom navigation draw their
- * selection as Crystal's one `.cr-indicator.pill` behind the selected segment,
+ * selection as Prismata's one `.pr-indicator.pill` behind the selected segment,
  * and move it with `selection-travel` when a person changes the selection. Per
  * strip and per text direction: on load the pill is under the selected segment
  * and nothing moved; a click travels it, never past its destination (the recipe
@@ -1409,13 +1409,13 @@ for (const id of ['navigation-rails-and-bars--rail']) {
   const STRIPS = [
     // [name, story, the plane, the segments, the selected segment, arrow keys move it]
     ['tabs', 'navigation-tabs-and-breadcrumbs--tab-strip', '[role=tablist]', '[role=tab]', '[role=tab][aria-selected=true]', true],
-    ['segmented control', 'navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', '[role=radiogroup] .cr-dock', 'label', 'label[data-selected]', true],
-    ['dock', 'navigation-rails-and-bars--the-selection-travels', 'nav[aria-label=Dock] ul.cr-dock-inner', 'a', 'a[aria-current]', false],
+    ['segmented control', 'navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', '[role=radiogroup] .pr-dock', 'label', 'label[data-selected]', true],
+    ['dock', 'navigation-rails-and-bars--the-selection-travels', 'nav[aria-label=Dock] ul.pr-dock-inner', 'a', 'a[aria-current]', false],
     ['bottom navigation', 'navigation-rails-and-bars--the-selection-travels', 'nav[aria-label="Bottom bar"]', 'a', 'a[aria-current]', false],
   ];
   const measure = (plane, selected) => page.evaluate(([plane, selected]) => {
     const strip = document.querySelector(`#storybook-root ${plane}`);
-    const pill = strip?.querySelector(':scope > .cr-indicator.pill');
+    const pill = strip?.querySelector(':scope > .pr-indicator.pill');
     const target = strip?.querySelector(selected);
     if (!pill || !target) return { missing: pill ? 'the selected segment' : 'the pill' };
     const a = pill.getBoundingClientRect(), b = target.getBoundingClientRect();
@@ -1423,17 +1423,17 @@ for (const id of ['navigation-rails-and-bars--rail']) {
       label: target.textContent.trim(),
       off: Math.max(Math.abs(a.left - b.left), Math.abs(a.top - b.top), Math.abs(a.width - b.width), Math.abs(a.height - b.height)),
       placed: pill.hasAttribute('data-placed'),
-      state: pill.dataset.crMotionState ?? null,
+      state: pill.dataset.prMotionState ?? null,
       fill: getComputedStyle(pill).backgroundColor,
       segmentFill: getComputedStyle(target).backgroundColor,
-      count: strip.querySelectorAll(':scope > .cr-indicator.pill').length,
+      count: strip.querySelectorAll(':scope > .pr-indicator.pill').length,
     };
   }, [plane, selected]);
   /* Samples the pill's position every frame from now until it has been still
      for a while, so a travel is seen whole. */
   const watch = (plane) => page.evaluate((plane) => new Promise((resolve) => {
     const strip = document.querySelector(`#storybook-root ${plane}`);
-    const pill = strip.querySelector(':scope > .cr-indicator.pill');
+    const pill = strip.querySelector(':scope > .pr-indicator.pill');
     const samples = [];
     const start = performance.now();
     const tick = () => {
@@ -1491,14 +1491,14 @@ for (const id of ['navigation-rails-and-bars--rail']) {
      destination, as a product's router would. */
   await page.goto(`${ORIGIN}/iframe.html?id=navigation-rails-and-bars--the-selection-travels&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const quiet = watch('nav[aria-label=Dock] ul.cr-dock-inner');
+  const quiet = watch('nav[aria-label=Dock] ul.pr-dock-inner');
   await page.evaluate(() => {
     window.__STORYBOOK_PREVIEW__.channel.emit('updateStoryArgs', {
       storyId: 'navigation-rails-and-bars--the-selection-travels', updatedArgs: { currentId: 'settings' },
     });
   });
   const quietSamples = await quiet;
-  const routed = await measure('nav[aria-label=Dock] ul.cr-dock-inner', 'a[aria-current]');
+  const routed = await measure('nav[aria-label=Dock] ul.pr-dock-inner', 'a[aria-current]');
   record(
     'the dock\'s pill: a current destination changed with no person behind it is placed there, not travelled',
     !routed.missing && routed.label === 'Settings' && routed.off < 0.5 && routed.state === 'instant'
@@ -1529,18 +1529,18 @@ for (const id of ['navigation-rails-and-bars--rail']) {
 for (const id of ['inputs-text-and-choice--text-family', 'inputs-composite--tokens', 'inputs-temporal-colour-and-files--colour']) {
   await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const shells = page.locator('#storybook-root .cr-field-shell:has(input:not([type=hidden]), textarea)');
+  const shells = page.locator('#storybook-root .pr-field-shell:has(input:not([type=hidden]), textarea)');
   const count = await shells.count();
-  const atRest = await page.evaluate(() => [...document.querySelectorAll('#storybook-root .cr-field-shell')]
-    .filter((el) => el.dataset.crMotionName === 'field-focus').length);
+  const atRest = await page.evaluate(() => [...document.querySelectorAll('#storybook-root .pr-field-shell')]
+    .filter((el) => el.dataset.prMotionName === 'field-focus').length);
   const missed = [];
   for (let index = 0; index < count; index += 1) {
     const shell = shells.nth(index);
     await shell.locator('input:not([type=hidden]), textarea').first().focus();
     await page.waitForTimeout(80);
     /* The shell, or the group of wells a pin input marks as one field. */
-    const moved = await shell.evaluate((el) => el.dataset.crMotionName === 'field-focus'
-      || el.parentElement?.dataset.crMotionName === 'field-focus');
+    const moved = await shell.evaluate((el) => el.dataset.prMotionName === 'field-focus'
+      || el.parentElement?.dataset.prMotionName === 'field-focus');
     if (!moved) missed.push(await shell.evaluate((el) => el.closest('[class*="_field_"]')?.querySelector('label, [class*="_label_"]')?.textContent?.trim() ?? el.className));
   }
   record(
@@ -1577,7 +1577,7 @@ for (const id of ['inputs-text-and-choice--text-family', 'inputs-composite--toke
     await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(400);
     const played = () => page.evaluate(([where, recipe]) =>
-      [...document.querySelectorAll(`#storybook-root ${where}`)].filter((el) => el.dataset.crMotionName === recipe).length,
+      [...document.querySelectorAll(`#storybook-root ${where}`)].filter((el) => el.dataset.prMotionName === recipe).length,
     [where, recipe]);
     const atRest = await played();
     await act(id);
@@ -1597,14 +1597,14 @@ for (const id of ['inputs-text-and-choice--text-family', 'inputs-composite--toke
    the trigger is pressed; after, the popover (which React Aria portals to the
    body) has played exactly that recipe. */
 for (const [id, trigger, recipe] of [
-  ['inputs-text-and-choice--choice-family', 'button.cr-field-shell', 'menu-in'],
-  ['inputs-temporal-colour-and-files--temporal', '.cr-field-shell button', 'menu-in'],
-  ['inputs-composite--hierarchy', 'button.cr-field-shell', 'menu-in'],
-  ['inputs-composite--filtering', '.cr-field-shell button', 'popover-in'],
+  ['inputs-text-and-choice--choice-family', 'button.pr-field-shell', 'menu-in'],
+  ['inputs-temporal-colour-and-files--temporal', '.pr-field-shell button', 'menu-in'],
+  ['inputs-composite--hierarchy', 'button.pr-field-shell', 'menu-in'],
+  ['inputs-composite--filtering', '.pr-field-shell button', 'popover-in'],
 ]) {
   await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const played = () => page.evaluate((recipe) => document.querySelectorAll(`[data-cr-motion-name="${recipe}"]`).length, recipe);
+  const played = () => page.evaluate((recipe) => document.querySelectorAll(`[data-pr-motion-name="${recipe}"]`).length, recipe);
   const atRest = await played();
   await page.locator(`#storybook-root ${trigger}`).first().click();
   await page.waitForTimeout(500);
@@ -1622,7 +1622,7 @@ for (const [id, trigger, recipe] of [
   await page.waitForTimeout(700);
   await page.keyboard.press('Escape');
   await page.waitForTimeout(60);
-  const leaving = await page.evaluate((exit) => document.querySelectorAll(`[data-exiting][data-cr-motion-name="${exit}"]`).length, exit);
+  const leaving = await page.evaluate((exit) => document.querySelectorAll(`[data-exiting][data-pr-motion-name="${exit}"]`).length, exit);
   await page.waitForTimeout(1500);
   const left = await page.evaluate(() => document.querySelectorAll('[data-exiting]').length);
   record(
@@ -1646,7 +1646,7 @@ for (const [label, open, recipe] of [
   await page.waitForTimeout(400);
   const trigger = page.locator('#storybook-root button').filter({ hasText: label ? new RegExp(`^${label}$`) : /^$/ }).first();
   const exit = recipe.replace(/-in$/, '-out');
-  const count = (name, extra = '') => page.evaluate(([name, extra]) => document.querySelectorAll(`${extra}[data-cr-motion-name="${name}"]`).length, [name, extra]);
+  const count = (name, extra = '') => page.evaluate(([name, extra]) => document.querySelectorAll(`${extra}[data-pr-motion-name="${name}"]`).length, [name, extra]);
   const before = await count(recipe);
   if (open === 'click') await trigger.click();
   else { await page.keyboard.press('Tab'); await trigger.focus(); }
@@ -1671,19 +1671,19 @@ for (const [label, open, recipe] of [
 {
   await page.goto(`${ORIGIN}/iframe.html?id=inputs-composite--tokens&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const chips = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root .cr-field-shell')][0]
+  const chips = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root .pr-field-shell')][0]
     .querySelectorAll(':scope > [class*="_chip"]').length);
   const played = (name, extra = '') => page.evaluate(([name, extra]) =>
-    [...document.querySelectorAll('#storybook-root .cr-field-shell')][0].querySelectorAll(`:scope > ${extra}[data-cr-motion-name="${name}"]`).length, [name, extra]);
+    [...document.querySelectorAll('#storybook-root .pr-field-shell')][0].querySelectorAll(`:scope > ${extra}[data-pr-motion-name="${name}"]`).length, [name, extra]);
   const atRest = await played('list-in') + await played('list-out');
   const before = await chips();
-  const entry = page.locator('#storybook-root .cr-field-shell input').first();
+  const entry = page.locator('#storybook-root .pr-field-shell input').first();
   await entry.click();
   await entry.fill('Arrival');
   await page.keyboard.press('Enter');
   await page.waitForTimeout(150);
   const arrived = await played('list-in');
-  await page.locator('#storybook-root .cr-field-shell button[aria-label^="Remove"]').first().click();
+  await page.locator('#storybook-root .pr-field-shell button[aria-label^="Remove"]').first().click();
   await page.waitForTimeout(60);
   const leaving = await played('list-out', '[inert]');
   const during = await chips();
@@ -1697,7 +1697,7 @@ for (const [label, open, recipe] of [
 
   await page.goto(`${ORIGIN}/iframe.html?id=data-display-card--default&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
-  const loose = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-cr-motion-name^="list-"]').length);
+  const loose = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-pr-motion-name^="list-"]').length);
   record('a card that is not in a collection plays neither list recipe', loose === 0, `${loose} element(s) played a list recipe on load`);
 }
 
@@ -1719,9 +1719,9 @@ for (const [id, openWith, exit] of [
   const closer = page.locator('button[aria-label^="Close" i], button:has-text("Close")').first();
   if (await closer.count()) await closer.click(); else await page.keyboard.press('Escape');
   await page.waitForTimeout(80);
-  const leaving = await page.evaluate((exit) => document.querySelectorAll(`[data-cr-motion-name="${exit}"]`).length, exit);
+  const leaving = await page.evaluate((exit) => document.querySelectorAll(`[data-pr-motion-name="${exit}"]`).length, exit);
   await page.waitForTimeout(1600);
-  const left = await page.evaluate((exit) => document.querySelectorAll(`[data-cr-motion-name="${exit}"]`).length, exit);
+  const left = await page.evaluate((exit) => document.querySelectorAll(`[data-pr-motion-name="${exit}"]`).length, exit);
   record(
     `${exit} on ${id}: closed, the surface stays for its exit and then goes`,
     leaving === 1 && left === 0,
@@ -1735,7 +1735,7 @@ for (const [id, openWith, exit] of [
 {
   await page.goto(`${ORIGIN}/iframe.html?id=navigation-tabs-and-breadcrumbs--collapsed-trail&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const turned = () => page.evaluate(() => document.querySelectorAll('#storybook-root [data-cr-motion-name="icon-turn"]').length);
+  const turned = () => page.evaluate(() => document.querySelectorAll('#storybook-root [data-pr-motion-name="icon-turn"]').length);
   const atRest = await turned();
   await page.locator('#storybook-root button[aria-haspopup]').first().click();
   await page.waitForTimeout(200);
@@ -1749,7 +1749,7 @@ for (const [id, openWith, exit] of [
 
   await page.goto(`${ORIGIN}/iframe.html?id=navigation-tabs-and-breadcrumbs--going-deeper&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const arrived = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root nav [data-cr-motion-name="breadcrumb"]')].map((el) => el.textContent.trim()));
+  const arrived = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root nav [data-pr-motion-name="breadcrumb"]')].map((el) => el.textContent.trim()));
   const onLoad = await arrived();
   await page.locator('#storybook-root button').filter({ hasText: 'Go a level deeper' }).click();
   await page.waitForTimeout(200);
@@ -1769,14 +1769,14 @@ for (const [id, openWith, exit] of [
   const setArgs = (id, updatedArgs) => page.evaluate(([storyId, args]) => {
     window.__STORYBOOK_PREVIEW__.channel.emit('updateStoryArgs', { storyId, updatedArgs: args });
   }, [id, updatedArgs]);
-  const played = (name) => page.evaluate((name) => document.querySelectorAll(`#storybook-root [data-cr-motion-name="${name}"]`).length, name);
+  const played = (name) => page.evaluate((name) => document.querySelectorAll(`#storybook-root [data-pr-motion-name="${name}"]`).length, name);
 
   await page.goto(`${ORIGIN}/iframe.html?id=screens-masterdetail--default&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
   const detailAtRest = await played('page-in');
   await setArgs('screens-masterdetail--default', { selectedKey: 'b' });
   await page.waitForTimeout(250);
-  const detailAfter = await page.evaluate(() => document.querySelector('#storybook-root section[aria-label="Message"]')?.dataset.crMotionName ?? null);
+  const detailAfter = await page.evaluate(() => document.querySelector('#storybook-root section[aria-label="Message"]')?.dataset.prMotionName ?? null);
   record(
     'page-in on a master–detail: choosing another item brings the detail in as a new view, and loading does not',
     detailAtRest === 0 && detailAfter === 'page-in',
@@ -1788,7 +1788,7 @@ for (const [id, openWith, exit] of [
   const chromeAtRest = await played('page-out') + await played('page-in');
   await setArgs('screens-focusmode--off', { isOn: true });
   await page.waitForTimeout(100);
-  const leaving = await page.evaluate(() => document.querySelectorAll('#storybook-root [inert][data-cr-motion-name="page-out"]').length);
+  const leaving = await page.evaluate(() => document.querySelectorAll('#storybook-root [inert][data-pr-motion-name="page-out"]').length);
   await page.waitForTimeout(1200);
   const gone = await page.evaluate(() => [...document.querySelectorAll('#storybook-root button')].filter((b) => b.textContent.trim() === 'Sidebar').length);
   record(
@@ -1806,7 +1806,7 @@ for (const [id, openWith, exit] of [
   await page.waitForTimeout(400);
   await page.locator('#storybook-root [role=option]').first().click();
   await page.waitForTimeout(900);
-  const count = (name) => page.evaluate((name) => document.querySelectorAll(`[role=dialog] [data-cr-motion-name="${name}"]`).length, name);
+  const count = (name) => page.evaluate((name) => document.querySelectorAll(`[role=dialog] [data-pr-motion-name="${name}"]`).length, name);
   const onOpen = await count('media-in') + await count('caption-in');
   await page.locator('[role=dialog] button[aria-label="Next"]').click();
   await page.waitForTimeout(300);
@@ -1830,7 +1830,7 @@ for (const [id, openWith, exit] of [
   await page.waitForTimeout(900);
   await page.locator('[role=dialog] button[aria-label="Next"]').click();
   await page.waitForTimeout(300);
-  const media = await page.evaluate(() => document.querySelectorAll('[role=dialog] [data-cr-motion-name="media-in"]').length);
+  const media = await page.evaluate(() => document.querySelectorAll('[role=dialog] [data-pr-motion-name="media-in"]').length);
   record(
     'media-in on the product gallery: its viewer moving to the next picture brings it in',
     media === 1,
@@ -1847,18 +1847,18 @@ for (const [id, openWith, exit] of [
   await page.waitForSelector('#storybook-root [role=grid] [role=row]');
   await page.waitForTimeout(300);
   const rows = () => page.evaluate(() => document.querySelectorAll('#storybook-root [role=grid] [role=row]').length);
-  const atRest = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-cr-motion-name]').length);
+  const atRest = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-pr-motion-name]').length);
   const before = await rows();
   await page.getByRole('button', { name: 'Add a track' }).click();
   await page.waitForTimeout(120);
   const added = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [role=grid] [role=row]')].at(-1)
-    ?.querySelector('[data-cr-motion-name]')?.getAttribute('data-cr-motion-name') ?? null);
+    ?.querySelector('[data-pr-motion-name]')?.getAttribute('data-pr-motion-name') ?? null);
   await page.waitForTimeout(800);
   await page.getByRole('button', { name: 'Remove the first track' }).click();
   await page.waitForTimeout(60);
   const leaving = await page.evaluate(() => {
     const row = document.querySelector('#storybook-root [role=grid] [role=row]');
-    return { disabled: row?.getAttribute('aria-disabled'), motion: row?.querySelector('[data-cr-motion-name]')?.getAttribute('data-cr-motion-name') ?? null };
+    return { disabled: row?.getAttribute('aria-disabled'), motion: row?.querySelector('[data-pr-motion-name]')?.getAttribute('data-pr-motion-name') ?? null };
   });
   await page.waitForFunction((n) => document.querySelectorAll('#storybook-root [role=grid] [role=row]').length === n, before, { timeout: 5000 }).catch(() => {});
   const after = await rows();
@@ -1882,7 +1882,7 @@ for (const [id, handle, keys, where] of [
 ]) {
   await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const settled = () => page.evaluate((where) => document.querySelectorAll(`#storybook-root ${where}[data-cr-motion-name="resize-settle"]`).length, where);
+  const settled = () => page.evaluate((where) => document.querySelectorAll(`#storybook-root ${where}[data-pr-motion-name="resize-settle"]`).length, where);
   const atRest = await settled();
   await page.locator(`#storybook-root ${handle}`).first().focus();
   for (const key of keys) { await page.keyboard.press(key); await page.waitForTimeout(60); }
@@ -1903,7 +1903,7 @@ for (const [id, handle, keys, where] of [
   await page.goto(`${ORIGIN}/iframe.html?id=inputs-temporal-colour-and-files--dropping-files&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
   const zone = page.locator('#storybook-root [data-rac][class*="_zone_"]').first();
-  const before = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-cr-motion-name^="drag-"]').length);
+  const before = await page.evaluate(() => document.querySelectorAll('#storybook-root [data-pr-motion-name^="drag-"]').length);
   const box = await zone.boundingBox();
   const transfer = await page.evaluateHandle(() => {
     const data = new DataTransfer();
@@ -1924,10 +1924,10 @@ for (const [id, handle, keys, where] of [
   await zone.dispatchEvent('dragenter', { dataTransfer: transfer, ...at });
   await zone.dispatchEvent('dragover', { dataTransfer: transfer, ...at });
   await page.waitForTimeout(120);
-  const lifted = await zone.evaluate((el) => el.dataset.crMotionName);
+  const lifted = await zone.evaluate((el) => el.dataset.prMotionName);
   await zone.dispatchEvent('drop', { dataTransfer: transfer, ...at });
   await page.waitForTimeout(400);
-  const settled = await zone.evaluate((el) => el.dataset.crMotionName);
+  const settled = await zone.evaluate((el) => el.dataset.prMotionName);
   const listed = await page.evaluate(() => document.querySelector('#storybook-root')?.textContent.includes('quarterly.csv'));
   record(
     'a drop zone lifts as files arrive over it, settles as they land, and delivers them',
@@ -1942,9 +1942,9 @@ for (const [id, handle, keys, where] of [
 {
   await page.goto(`${ORIGIN}/iframe.html?id=data-display-image-compare--default&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const grip = () => page.evaluate(() => document.querySelector('#storybook-root [class*="_grip_"]')?.dataset.crMotionName ?? null);
+  const grip = () => page.evaluate(() => document.querySelector('#storybook-root [class*="_grip_"]')?.dataset.prMotionName ?? null);
   const atRest = await grip();
-  const box = await page.locator('#storybook-root [data-cr-handle]').boundingBox();
+  const box = await page.locator('#storybook-root [data-pr-handle]').boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   await page.mouse.move(box.x + box.width / 2 + 60, box.y + box.height / 2, { steps: 4 });
@@ -1967,7 +1967,7 @@ for (const [id, handle, keys, where] of [
   await page.goto(`${ORIGIN}/iframe.html?id=data-display-accordion--one-open-to-start&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
   const state = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root [class*="_content_"]')]
-    .map((c) => ({ name: c.dataset.crMotionName ?? null, hidden: c.parentElement.hasAttribute('hidden') })));
+    .map((c) => ({ name: c.dataset.prMotionName ?? null, hidden: c.parentElement.hasAttribute('hidden') })));
   const atRest = (await state()).filter((one) => one.name !== null).length;
   await page.locator('#storybook-root button[aria-expanded="true"]').first().click();
   await page.waitForTimeout(80);
@@ -1991,7 +1991,7 @@ for (const [id, trigger, surface] of [
   await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
   const find = (name) => page.evaluate(([surface, name]) =>
-    document.querySelectorAll(`#storybook-root ${surface}[data-cr-motion-name="${name}"]`).length, [surface, name]);
+    document.querySelectorAll(`#storybook-root ${surface}[data-pr-motion-name="${name}"]`).length, [surface, name]);
   const atRest = await find('menu-in') + await find('menu-out');
   const opener = page.locator(`#storybook-root ${trigger}`).first();
   await opener.click();
@@ -2000,7 +2000,7 @@ for (const [id, trigger, surface] of [
   await opener.click();
   await page.waitForTimeout(60);
   const leaving = await page.evaluate((surface) =>
-    [...document.querySelectorAll(`#storybook-root ${surface}[data-cr-motion-name="menu-out"]`)]
+    [...document.querySelectorAll(`#storybook-root ${surface}[data-pr-motion-name="menu-out"]`)]
       .filter((el) => el.inert || el.hasAttribute('inert')).length, surface);
   await page.waitForTimeout(900);
   const shown = await page.evaluate((surface) => [...document.querySelectorAll(`#storybook-root ${surface}`)]
@@ -2027,7 +2027,7 @@ for (const [id, trigger, surface] of [
     { id: 'prism', name: 'Prism', cells: { workspace: 'Prism', plan: 'Enterprise', seats: '210', renews: '30 November 2027' } },
   ];
   const added = { id: 'north', name: 'North', cells: { workspace: 'North', plan: 'Solo', seats: '2', renews: '1 May 2027' } };
-  const count = (name) => page.evaluate((name) => document.querySelectorAll(`#storybook-root [data-cr-motion-name="${name}"]`).length, name);
+  const count = (name) => page.evaluate((name) => document.querySelectorAll(`#storybook-root [data-pr-motion-name="${name}"]`).length, name);
   for (const id of ['data-display-table--default', 'data-display-data-table--default']) {
     await page.goto(`${ORIGIN}/iframe.html?id=${id}&viewMode=story`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(400);
@@ -2037,7 +2037,7 @@ for (const [id, trigger, surface] of [
     const highlighted = await count('highlight');
     await setArgs(id, { rows: [...base, added] });
     await page.waitForTimeout(250);
-    const arrivedIn = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [data-cr-motion-name="list-in"]')]
+    const arrivedIn = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [data-pr-motion-name="list-in"]')]
       .map((el) => el.closest('tr, [role=row]')?.textContent.includes('North')).filter(Boolean).length);
     record(
       `highlight and list-in on ${id}: a changed value is washed, an added row arrives, and nothing on load`,
@@ -2049,7 +2049,7 @@ for (const [id, trigger, surface] of [
   await page.waitForTimeout(400);
   await setArgs('data-display-table--default', { rows: base.slice(0, 3) });
   await page.waitForTimeout(80);
-  const leaving = await page.evaluate(() => document.querySelectorAll('#storybook-root tr[inert][data-cr-motion-name="list-out"]').length);
+  const leaving = await page.evaluate(() => document.querySelectorAll('#storybook-root tr[inert][data-pr-motion-name="list-out"]').length);
   await page.waitForTimeout(900);
   const gone = await page.evaluate(() => [...document.querySelectorAll('#storybook-root tbody tr')].filter((tr) => tr.textContent.includes('Prism')).length);
   record(
@@ -2064,7 +2064,7 @@ for (const [id, trigger, surface] of [
 {
   await page.goto(`${ORIGIN}/iframe.html?id=inputs-composite--two-lists&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const arrived = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root [data-cr-motion-name="list-in"]')].map((el) => el.textContent.trim()));
+  const arrived = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root [data-pr-motion-name="list-in"]')].map((el) => el.textContent.trim()));
   const onLoad = await arrived();
   const option = page.locator('#storybook-root [role=listbox]').first().locator('[role=option]:not([aria-disabled=true])').first();
   const name = (await option.textContent())?.trim();
@@ -2084,14 +2084,14 @@ for (const [id, trigger, surface] of [
 {
   await page.goto(`${ORIGIN}/iframe.html?id=data-display-list--reordering&viewMode=story`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(400);
-  const moved = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root li')].filter((li) => li.dataset.crMotionName === 'reorder').length);
+  const moved = () => page.evaluate(() => [...document.querySelectorAll('#storybook-root li')].filter((li) => li.dataset.prMotionName === 'reorder').length);
   const onLoad = await moved();
   await page.locator('#storybook-root button').filter({ hasText: 'Move last to top' }).click();
   await page.waitForTimeout(200);
   const reordered = await moved();
   await page.locator('#storybook-root button').filter({ hasText: 'Remove first' }).click();
   await page.waitForTimeout(80);
-  const leaving = await page.evaluate(() => document.querySelectorAll('#storybook-root li[inert][data-cr-motion-name="list-out"]').length);
+  const leaving = await page.evaluate(() => document.querySelectorAll('#storybook-root li[inert][data-pr-motion-name="list-out"]').length);
   await page.waitForTimeout(900);
   const rows = await page.evaluate(() => document.querySelectorAll('#storybook-root li').length);
   record(
@@ -2121,10 +2121,10 @@ for (const [id, trigger, surface] of [
   await page.waitForTimeout(400);
   const after = await order();
   const settled = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [role=row]')]
-    .filter((row) => row.querySelector('[data-cr-motion-name="drag-settle"]')).map((row) => row.querySelector('[class*="_title_"]')?.textContent));
+    .filter((row) => row.querySelector('[data-pr-motion-name="drag-settle"]')).map((row) => row.querySelector('[class*="_title_"]')?.textContent));
   const current = await page.evaluate(() => document.querySelector('#storybook-root [role=row][aria-current="true"] [class*="_title_"]')?.textContent);
   const displaced = await page.evaluate(() => [...document.querySelectorAll('#storybook-root [role=row]')]
-    .filter((row) => row.querySelector('[data-cr-motion-name="reorder"]')).map((row) => row.querySelector('[class*="_title_"]')?.textContent));
+    .filter((row) => row.querySelector('[data-pr-motion-name="reorder"]')).map((row) => row.querySelector('[class*="_title_"]')?.textContent));
   record(
     'a playlist reorders by keyboard, the moved track settles, the rows it passed reorder, and the now-playing row stays current',
     JSON.stringify(before) !== JSON.stringify(after) && after[0] !== 'Harbour Lights'
@@ -2205,7 +2205,7 @@ for (const [id, trigger, surface] of [
     await page.getByRole('button', { name: 'Next' }).click();
     await page.waitForTimeout(250);
     const played = await page.evaluate(() => [...document.querySelectorAll('[class*="_page_"]')].map((one) => ({
-      name: one.getAttribute('data-cr-motion-name'), text: one.textContent.trim().slice(0, 24),
+      name: one.getAttribute('data-pr-motion-name'), text: one.textContent.trim().slice(0, 24),
     })));
     const leaving = played.filter((one) => one.name === 'page-out');
     const arriving = played.filter((one) => one.name === 'page-in');

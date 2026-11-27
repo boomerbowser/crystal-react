@@ -14,7 +14,7 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -23,27 +23,27 @@
 .item {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
 }
 
 .separated { gap: 0; }
 
-.separated .item + .item { border-block-start: 1px solid var(--cr-edge); }
+.separated .item + .item { border-block-start: 1px solid var(--pr-edge); }
 
-/* The row wears Crystal's `.cr-haze.flat` (2.7.0): the Haze fill on the
+/* The row wears Prismata's `.pr-haze.flat` (2.7.0): the Haze fill on the
    element itself, with no feather, because a row is drawn edge to edge
-   against its neighbours. Crystal gives it the surface in opaque mode and
+   against its neighbours. Prismata gives it the surface in opaque mode and
    under reduced transparency, and system colours in forced colours. */
 .row {
   display: flex;
   flex: 1 1 auto;
   align-items: center;
-  gap: $cr-spacing-xs;
-  min-block-size: $cr-action-min-target;
+  gap: $pr-spacing-xs;
+  min-block-size: $pr-action-min-target;
   box-sizing: border-box;
-  padding: $cr-spacing-xs $cr-spacing-sm;
-  border-radius: var(--cr-radius);
-  color: var(--cr-text);
+  padding: $pr-spacing-xs $pr-spacing-sm;
+  border-radius: var(--pr-radius);
+  color: var(--pr-text);
   font: inherit;
   text-align: start;
   text-decoration: none;
@@ -53,12 +53,12 @@
    grow a cursor that promises something will happen. */
 a.row, button.row { cursor: pointer; }
 
-a.row:hover, button.row:hover { background: var(--cr-surface-alt); }
+a.row:hover, button.row:hover { background: var(--pr-surface-alt); }
 
 a.row:focus-visible, button.row:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 /* Selection is label weight. The fill is the second signal, never the only
@@ -66,16 +66,16 @@ a.row:focus-visible, button.row:focus-visible {
    at and break the column the rows line up in. */
 .row[aria-current='true'],
 .row[aria-pressed='true'],
-.row[data-selected] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+.row[data-selected] { font-weight: 800; background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
 
 .leading, .trailing { display: inline-flex; align-items: center; flex: none; }
 
 .body { flex: 1 1 auto; min-inline-size: 0; }
 
 .empty {
-  padding: var(--cr-space);
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
+  padding: var(--pr-space);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
   text-align: center;
 }
 

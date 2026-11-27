@@ -87,7 +87,7 @@ export interface PointMarksProps {
   offset: number;
   active: number;
   markProps: (index: number) => MarkProps;
-  /** Drawn point diameter. Defaults to the smallest on Crystal's point scale. */
+  /** Drawn point diameter. Defaults to the smallest on Prismata's point scale. */
   size?: number;
   /** Draw the point, or only its hit area. A line chart with forty points on it
    *  draws as a line rather than forty dots, and every point stays reachable. */
@@ -115,7 +115,7 @@ export function PointMarks({
             style={{ '--series-colour': seriesColour(seriesIndex) } as CSSProperties}
             transform={`translate(${point.x},${point.y})`}
           >
-            {/* The hit area, always. Crystal's action minimum sets what a person
+            {/* The hit area, always. Prismata's action minimum sets what a person
                 has to be able to hit, and a six-pixel dot does not meet it. This
                 area is invisible. `pointer-events` is what it is for, and the
                 visible shape is drawn beside it. */}

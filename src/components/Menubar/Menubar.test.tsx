@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Button, Menu, MenuItem, MenuTrigger, Popover } from 'react-aria-components';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { Menubar } from './Menubar.js';
 
 function Bar(): React.JSX.Element {
@@ -23,14 +23,14 @@ function Bar(): React.JSX.Element {
 
 describe('Menubar', () => {
   it('is a named menubar', () => {
-    renderWithCrystal(<Bar />);
+    renderWithPrismata(<Bar />);
     const bar = screen.getByRole('menubar', { name: 'Document' });
     expect(bar.getAttribute('aria-orientation')).toBe('horizontal');
   });
 
   it('is one tab stop, not one per trigger', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<><a href="/before">before</a><Bar /><a href="/after">after</a></>);
+    renderWithPrismata(<><a href="/before">before</a><Bar /><a href="/after">after</a></>);
     await user.tab();
     expect(document.activeElement?.textContent).toBe('before');
     await user.tab();
@@ -43,7 +43,7 @@ describe('Menubar', () => {
 
   it('moves between triggers with the arrow keys, and wraps', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Bar />);
+    renderWithPrismata(<Bar />);
     await user.tab();
     expect(document.activeElement?.textContent).toBe('File');
     await user.keyboard('{ArrowRight}');
@@ -57,7 +57,7 @@ describe('Menubar', () => {
 
   it('jumps to the ends with Home and End', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Bar />);
+    renderWithPrismata(<Bar />);
     await user.tab();
     await user.keyboard('{End}');
     expect(document.activeElement?.textContent).toBe('View');
@@ -67,7 +67,7 @@ describe('Menubar', () => {
 
   it('returns to where you left rather than to the beginning', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<><Bar /><a href="/after">after</a></>);
+    renderWithPrismata(<><Bar /><a href="/after">after</a></>);
     await user.tab();
     await user.keyboard('{ArrowRight}');
     expect(document.activeElement?.textContent).toBe('Edit');
@@ -80,7 +80,7 @@ describe('Menubar', () => {
 
   it('opens a trigger’s own menu', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Bar />);
+    renderWithPrismata(<Bar />);
     await user.click(screen.getByRole('menuitem', { name: 'Edit' }));
     expect(await screen.findByRole('menu', { name: 'Edit' })).toBeTruthy();
   });
@@ -91,7 +91,7 @@ describe('Menubar', () => {
      it, and this test keeps it in place. A query by role cannot catch the
      fault, because both elements report the role asked for; axe does. */
   it('presents its triggers as menuitems, which is what a menubar may contain', () => {
-    renderWithCrystal(<Bar />);
+    renderWithPrismata(<Bar />);
     const bar = screen.getByRole('menubar', { name: 'Document' });
     const items = screen.getAllByRole('menuitem');
     expect(items.map((item) => item.textContent)).toEqual(['File', 'Edit', 'View']);

@@ -2,7 +2,7 @@
  * element that reads it.
  *
  * `src/theme/published-properties.test.tsx` already mounts a provider and checks
- * that each `var(--cr-…)` in the stylesheets is one the provider writes. It
+ * that each `var(--pr-…)` in the stylesheets is one the provider writes. It
  * cannot catch three things:
  *
  *   1. The overlay container. React Aria portals a popover, a menu, a tooltip, a
@@ -12,9 +12,9 @@
  *      nothing on every overlay in the library while resolving correctly
  *      everywhere a unit test looks.
  *   2. A value that is present but not usable. jsdom records the property name;
- *      only a browser computes `blur(var(--cr-frost-blur))` and decides whether
+ *      only a browser computes `blur(var(--pr-frost-blur))` and decides whether
  *      it is a filter or a syntax error.
- *   3. A stale bundle. A dev server serving an old copy of `@crystal-ui/core`
+ *   3. A stale bundle. A dev server serving an old copy of `@prismata/core`
  *      reports missing properties that are present in the source, which looks
  *      the same as a real defect unless the served page is checked.
  *
@@ -31,7 +31,7 @@ const ORIGIN = process.env['STORYBOOK_ORIGIN'] ?? 'http://127.0.0.1:6006';
    column count or a tree row's depth. Keep this in step with the same list in
    `published-properties.test.tsx`; a property in one list and not the other
    needs checking. */
-const LOCAL = /^--cr-(angle|arc|arc-from|aspect|progress|fraction|strength|strength-colour|clamp-lines|fill-start|fill-size|cell-min|cell-span|cell-span-sm|cell-span-md|grid-columns|grid-gap|masonry-columns|masonry-columns-md|masonry-gap|container-max|shell-sidebar|stack-gap|toolbar-gap|overflow-gap|text-size|text-leading|text-tracking|title-size|title-leading|title-tracking|watermark-image|watermark-opacity|watermark-size|scroll-fade-start|scroll-fade-end|tree-level|toc-level|media-aspect|media-fit|media-transport|keyboard-inset|picked|swatch|carousel-gap|carousel-padding|block-gap|block-padding)$/;
+const LOCAL = /^--pr-(angle|arc|arc-from|aspect|progress|fraction|strength|strength-colour|clamp-lines|fill-start|fill-size|cell-min|cell-span|cell-span-sm|cell-span-md|grid-columns|grid-gap|masonry-columns|masonry-columns-md|masonry-gap|container-max|shell-sidebar|stack-gap|toolbar-gap|overflow-gap|text-size|text-leading|text-tracking|title-size|title-leading|title-tracking|watermark-image|watermark-opacity|watermark-size|scroll-fade-start|scroll-fade-end|tree-level|toc-level|media-aspect|media-fit|media-transport|keyboard-inset|picked|swatch|carousel-gap|carousel-padding|block-gap|block-padding)$/;
 
 function stylesheetsUnder(directory) {
   const found = [];
@@ -46,7 +46,7 @@ function stylesheetsUnder(directory) {
 const read = new Set();
 for (const file of stylesheetsUnder(resolve(process.cwd(), 'src'))) {
   const source = readFileSync(file, 'utf8');
-  for (const match of source.matchAll(/var\((--cr-[a-z0-9-]+)/g)) {
+  for (const match of source.matchAll(/var\((--pr-[a-z0-9-]+)/g)) {
     if (!LOCAL.test(match[1])) read.add(match[1]);
   }
 }
@@ -73,8 +73,8 @@ if (await dialog.count() === 0) {
 await dialog.first().waitFor({ timeout: 10000 });
 
 const result = await page.evaluate((wanted) => {
-  const scope = document.querySelector('#storybook-root [data-crystal-scope]');
-  const overlays = document.querySelector('[data-crystal-overlays]');
+  const scope = document.querySelector('#storybook-root [data-prismata-scope]');
+  const overlays = document.querySelector('[data-prismata-overlays]');
   const missing = { scope: [], overlays: [] };
   if (!scope) return { error: 'no themed scope in the story' };
   if (!overlays) return { error: 'no overlay container, though an overlay is open' };
@@ -114,7 +114,7 @@ const materials = await page.evaluate(() => {
   const palette = document.querySelector('[role="dialog"]');
   const field = palette?.querySelector('[class*="field"]');
   /* The wash is the palette's sibling, not its parent (R-37). */
-  const scrim = palette?.closest('[class*="scrim"]')?.querySelector(':scope > [data-cr-wash]');
+  const scrim = palette?.closest('[class*="scrim"]')?.querySelector(':scope > [data-pr-wash]');
   const filterOf = (el) => (el ? getComputedStyle(el).backdropFilter : 'no element');
   return {
     resin: filterOf(field),

@@ -11,7 +11,7 @@ const meta = {
         component:
           'A toast that does not leave. It differs from `Toast` in its lifetime: a '
           + 'notification is a record, it survives the session, and it has a read state.\n\n'
-          + '**Unread is label weight and nothing beside the label.** This is Crystal\'s '
+          + '**Unread is label weight and nothing beside the label.** This is Prismata\'s '
           + 'selection rule, applied here: a dot beside the title offsets the title it points '
           + 'at, so the unread item stops lining up with the others. Weight is typographic, '
           + 'so the distinction never rests on colour. A screen reader does not read out '

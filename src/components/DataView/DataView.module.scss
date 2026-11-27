@@ -16,20 +16,20 @@
   container-type: inline-size;
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
 }
 
 .toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   flex-wrap: wrap;
 }
 
-.tools { display: flex; align-items: center; gap: $cr-spacing-sm; }
+.tools { display: flex; align-items: center; gap: $pr-spacing-sm; }
 
-.switch { display: inline-flex; align-items: center; gap: $cr-spacing-2xs; }
+.switch { display: inline-flex; align-items: center; gap: $pr-spacing-2xs; }
 
 /* The switch is `SegmentedControl`, which brings its own strip material, shared
    with the tab strip in `styles/_strip.scss`. Nothing about it is restated
@@ -37,7 +37,7 @@
 
 .items {
   display: grid;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -47,32 +47,32 @@
 .view[data-layout='list'] .items { grid-template-columns: minmax(0, 1fr); }
 
 .view[data-layout='grid'] .items {
-  grid-template-columns: repeat(auto-fill, minmax(var(--cell-min, #{$cr-layout-min-cell-width}), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--cell-min, #{$pr-layout-min-cell-width}), 1fr));
 }
 
 .item {
-  /* The element wears Crystal's `.cr-haze.flush` (2.7.0): the Haze fill to its own edge, with Crystal's opaque, reduced-transparency and forced-colours routes. */
+  /* The element wears Prismata's `.pr-haze.flush` (2.7.0): the Haze fill to its own edge, with Prismata's opaque, reduced-transparency and forced-colours routes. */
   box-sizing: border-box;
-  padding: var(--cr-space);
-  border-radius: var(--cr-radius);
-  color: var(--cr-text);
+  padding: var(--pr-space);
+  border-radius: var(--pr-radius);
+  color: var(--pr-text);
 }
 
-.placeholder { min-block-size: $cr-spacing-2xl; }
+.placeholder { min-block-size: $pr-spacing-2xl; }
 
 .empty {
   margin: 0;
-  padding: var(--cr-space);
-  color: var(--cr-muted);
+  padding: var(--pr-space);
+  color: var(--pr-muted);
   text-align: center;
 }
 
-/* Below Crystal's small breakpoint the grid is a list and the switch is gone.
+/* Below Prismata's small breakpoint the grid is a list and the switch is gone.
  *
- * The width is Crystal's, not the caller's, because a container query's
+ * The width is Prismata's, not the caller's, because a container query's
  * condition cannot read a custom property, so there is no way to pass one in.
- * `$cr-breakpoint-sm` is where Crystal's own shell steps down. */
-@container (max-width: #{$cr-breakpoint-sm}) {
+ * `$pr-breakpoint-sm` is where Prismata's own shell steps down. */
+@container (max-width: #{$pr-breakpoint-sm}) {
   .view[data-layout='grid'] .items { grid-template-columns: minmax(0, 1fr); }
   .switch { display: none; }
 }

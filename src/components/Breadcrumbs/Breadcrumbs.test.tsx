@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, within } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, within } from '../../test/render.js';
 import { Breadcrumbs } from './Breadcrumbs.js';
 
 const trail = [
@@ -13,17 +13,17 @@ const trail = [
 
 describe('Breadcrumbs', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<Breadcrumbs items={trail} />);
+    const { container } = renderWithPrismata(<Breadcrumbs items={trail} />);
     await expectNoAxeViolations(container);
   });
 
   it('has no accessibility violations when collapsed', async () => {
-    const { container } = renderWithCrystal(<Breadcrumbs items={trail} maxItems={3} />);
+    const { container } = renderWithPrismata(<Breadcrumbs items={trail} maxItems={3} />);
     await expectNoAxeViolations(container);
   });
 
   it('is a named landmark holding an ordered list', () => {
-    renderWithCrystal(<Breadcrumbs items={trail} label="You are here" />);
+    renderWithPrismata(<Breadcrumbs items={trail} label="You are here" />);
     const nav = screen.getByRole('navigation', { name: 'You are here' });
     expect(within(nav).getByRole('list')).toBeInTheDocument();
     expect(within(nav).getAllByRole('listitem')).toHaveLength(5);
@@ -32,7 +32,7 @@ describe('Breadcrumbs', () => {
   /* A link to the page you are on does nothing. React Aria drops the href on
      the last child, and the current crumb is text. */
   it('ends in the current page, which is marked and is not a link', () => {
-    renderWithCrystal(<Breadcrumbs items={trail} />);
+    renderWithPrismata(<Breadcrumbs items={trail} />);
     /* The element that says "Q3" is the crumb's text; the one marked current is
        the crumb it sits in. */
     const current = screen.getByText('Q3').closest('[aria-current]');
@@ -44,19 +44,19 @@ describe('Breadcrumbs', () => {
   /* The list structure carries the relationship. A chevron read out between
      every pair is noise, so the separators are hidden from the tree. */
   it('does not announce its separators', () => {
-    renderWithCrystal(<Breadcrumbs items={trail} />);
+    renderWithPrismata(<Breadcrumbs items={trail} />);
     const nav = screen.getByRole('navigation');
     expect(nav.textContent).toBe('HomeLibraryDataReportsQ3');
   });
 
   it('does not collapse when maxItems is not given', () => {
-    renderWithCrystal(<Breadcrumbs items={trail} />);
+    renderWithPrismata(<Breadcrumbs items={trail} />);
     expect(screen.getAllByRole('listitem')).toHaveLength(5);
     expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('collapses the middle, keeping the root and the current page', () => {
-    renderWithCrystal(<Breadcrumbs items={trail} maxItems={3} />);
+    renderWithPrismata(<Breadcrumbs items={trail} maxItems={3} />);
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
     expect(screen.getByText('Q3').closest('[aria-current]')).toHaveAttribute('aria-current', 'page');
     expect(screen.queryByText('Library')).toBeNull();
@@ -67,7 +67,7 @@ describe('Breadcrumbs', () => {
      holds. */
   it('keeps every collapsed crumb reachable, and counts them', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Breadcrumbs items={trail} maxItems={3} />);
+    renderWithPrismata(<Breadcrumbs items={trail} maxItems={3} />);
     const disclosure = screen.getByRole('button', { name: 'Show 3 hidden breadcrumbs' });
     await user.click(disclosure);
     const menu = await screen.findByRole('menu');
@@ -79,7 +79,7 @@ describe('Breadcrumbs', () => {
      click, open in a new tab and the status bar all come with the element. */
   it('renders a collapsed crumb as a link, not a button that navigates', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Breadcrumbs items={trail} maxItems={3} />);
+    renderWithPrismata(<Breadcrumbs items={trail} maxItems={3} />);
     await user.click(screen.getByRole('button', { name: /hidden breadcrumb/ }));
     const menu = await screen.findByRole('menu');
     expect(within(menu).getByRole('menuitem', { name: 'Data' }).tagName).toBe('A');
@@ -91,20 +91,20 @@ describe('Breadcrumbs', () => {
      saves no room and costs a click. Because of this refusal, the disclosure's
      label is always plural. */
   it('refuses to collapse a trail that would hide only one crumb', () => {
-    renderWithCrystal(<Breadcrumbs items={trail.slice(0, 3)} maxItems={1} />);
+    renderWithPrismata(<Breadcrumbs items={trail.slice(0, 3)} maxItems={1} />);
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
     expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('hides two as soon as there are four', () => {
-    renderWithCrystal(<Breadcrumbs items={trail.slice(0, 4)} maxItems={3} />);
+    renderWithPrismata(<Breadcrumbs items={trail.slice(0, 4)} maxItems={3} />);
     expect(screen.getByRole('button', { name: 'Show 2 hidden breadcrumbs' })).toBeInTheDocument();
   });
 
   it('calls onAction for a crumb that navigates in the client', async () => {
     const user = userEvent.setup();
     const onAction = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <Breadcrumbs items={[{ id: 'home', label: 'Home', onAction }, { id: 'now', label: 'Now' }]} />,
     );
     await user.click(screen.getByText('Home'));

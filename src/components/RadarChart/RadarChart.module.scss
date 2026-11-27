@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* "Haze fill inside each series polygon" at Crystal's fill opacity, so two
+/* "Haze fill inside each series polygon" at Prismata's fill opacity, so two
  * overlapping series stay distinct. The outline carries the dash as well,
  * because two polygons at a quarter opacity look very similar and a reader
  * follows the edge.
@@ -9,21 +9,21 @@
 .ring,
 .spoke {
   fill: none;
-  stroke: var(--cr-chart-grid);
-  stroke-width: var(--cr-chart-hairline);
+  stroke: var(--pr-chart-grid);
+  stroke-width: var(--pr-chart-hairline);
 }
 
 .axisLabel {
-  fill: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
-  font-family: var(--cr-font);
+  fill: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
+  font-family: var(--pr-font);
 }
 
 .area {
   fill: var(--series-colour);
-  fill-opacity: var(--cr-chart-fill-opacity);
+  fill-opacity: var(--pr-chart-fill-opacity);
   stroke: var(--series-colour);
-  stroke-width: var(--cr-chart-stroke);
+  stroke-width: var(--pr-chart-stroke);
   stroke-linejoin: round;
 }
 

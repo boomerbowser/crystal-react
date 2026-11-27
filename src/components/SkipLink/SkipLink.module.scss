@@ -4,7 +4,7 @@
  *
  * Hidden until focused, then a real control at the top of the page.
  *
- * It is an action, so it is a pill. Crystal's action geometry applies to a link
+ * It is an action, so it is a pill. Prismata's action geometry applies to a link
  * that behaves like a button, so the skip link has the same shape as every other
  * control.
  */
@@ -12,16 +12,16 @@
 .skipLink {
   position: absolute;
   inset-block-start: -100%;
-  inset-inline-start: $cr-spacing-sm;
-  z-index: 100;  /* crystal-allow-literal: stacking order, not a design value */
+  inset-inline-start: $pr-spacing-sm;
+  z-index: 100;  /* prismata-allow-literal: stacking order, not a design value */
   display: inline-flex;
   align-items: center;
-  min-block-size: $cr-action-min-target;
-  padding: $cr-action-padding-block $cr-action-padding-inline;
-  border: 1px solid var(--cr-edge);
-  border-radius: $cr-action-radius;
-  background: var(--cr-surface);
-  color: var(--cr-text);
+  min-block-size: $pr-action-min-target;
+  padding: $pr-action-padding-block $pr-action-padding-inline;
+  border: 1px solid var(--pr-edge);
+  border-radius: $pr-action-radius;
+  background: var(--pr-surface);
+  color: var(--pr-text);
   font-weight: 700;
   text-decoration: none;
 }
@@ -31,7 +31,7 @@
    their cursor. */
 .skipLink:focus-visible,
 .skipLink:focus {
-  inset-block-start: $cr-spacing-sm;
+  inset-block-start: $pr-spacing-sm;
 }
 
 @media (forced-colors: active) {

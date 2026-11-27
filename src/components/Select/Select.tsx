@@ -10,11 +10,11 @@
  * `NativeSelect` exists so the native one can be chosen as a first choice.
  *
  * `NativeSelect` never restyles its options. The catalogue says so, and browsers
- * enforce it on most platforms. Crystal owns the shell around it and keeps the
+ * enforce it on most platforms. Prismata owns the shell around it and keeps the
  * platform's disclosure arrow uncovered.
  *
  * `Select` is React Aria's listbox, where selection is label weight and never a
- * check mark. In Crystal a check mark means validated or informational. The
+ * check mark. In Prismata a check mark means validated or informational. The
  * popover is Frost, because a transient overlay is Frost and never Resin.
  */
 import { forwardRef, type ReactNode, type SelectHTMLAttributes } from 'react';
@@ -63,7 +63,7 @@ export function Select({
       <Label className={cx(styles['label'])}>{label}</Label>
       {/* The validity React Aria resolved, not the one the caller declared, so a
           server's rejection moves the field exactly as a local rule would. */}
-      <FieldButtonShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block', styles['trigger'])}>
+      <FieldButtonShell isInvalid={isInvalid} className={cx(styles['shell'], 'pr-field-shell block', styles['trigger'])}>
         <SelectValue className={cx(styles['value'])}>
           {({ selectedText, isPlaceholder }) => (
             <span className={cx(isPlaceholder ? styles['placeholder'] : undefined)}>
@@ -78,7 +78,7 @@ export function Select({
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
       {/* Frost: a transient overlay is Frost, never Resin. */}
-      <ArrivingPopover recipe="menu-in" exit="menu-out" className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
+      <ArrivingPopover recipe="menu-in" exit="menu-out" className={cx(styles['popover'], 'pr-frost', 'pr-scroll-frost')}>
         <ListBox items={options} className={cx(styles['list'])}>
           {(option) => (
             <ListBoxItem
@@ -119,7 +119,7 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(fun
   return (
     <div className={cx(styles['field'], className)}>
       <label htmlFor={id} className={cx(styles['label'])}>{label}</label>
-      <div className={cx(styles['shell'], 'cr-field-shell block')} {...(invalid ? { 'data-invalid': true } : {})}>
+      <div className={cx(styles['shell'], 'pr-field-shell block')} {...(invalid ? { 'data-invalid': true } : {})}>
         {/* `appearance: auto` keeps the platform's own disclosure, and the
             trailing padding leaves room for it so nothing is drawn over it. */}
         <select

@@ -16,7 +16,7 @@
   display: grid;
   place-items: center;
   border-radius: inherit;
-  /* The element wears Crystal's `.cr-mirage`, with its opaque, reduced-transparency
+  /* The element wears Prismata's `.pr-mirage`, with its opaque, reduced-transparency
      and no-backdrop routes. */
 }
 
@@ -29,13 +29,13 @@
   place-items: center;
 }
 
-/* The card under the loader: Crystal's Resin plane, at the content radius,
+/* The card under the loader: Prismata's Resin plane, at the content radius,
    padded so the mark and its words sit well inside it. */
 .card {
   display: inline-flex;
   align-items: center;
-  padding: $cr-spacing-md $cr-spacing-lg;
-  border-radius: var(--cr-radius);
+  padding: $pr-spacing-md $pr-spacing-lg;
+  border-radius: var(--pr-radius);
 }
 
 @media (forced-colors: active) {

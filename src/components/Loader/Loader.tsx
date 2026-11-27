@@ -22,12 +22,12 @@
  * Under reduced motion each shape holds still in a legible resting state,
  * dimmed so it reads as busy and not as a measurement, and the words are what
  * carry the meaning. Speed follows the reader's motion-speed setting.
- * "Sizes on the 4px rhythm": the three named sizes are multiples of Crystal's
+ * "Sizes on the 4px rhythm": the three named sizes are multiples of Prismata's
  * smallest spacing step.
  */
 import { forwardRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
-import { useCrystalTheme } from '../../theme/CrystalProvider.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { usePrismataTheme } from '../../theme/PrismataProvider.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Loader.module.scss';
 
@@ -36,9 +36,9 @@ export type LoaderSize = 'small' | 'medium' | 'large';
 /** The shape of the mark. */
 export type LoaderVariant = 'spinner' | 'dots' | 'bars' | 'pulse' | 'infinity';
 
-/* Four, six and ten steps of Crystal's 4px rhythm. The rhythm is the token; the
+/* Four, six and ten steps of Prismata's 4px rhythm. The rhythm is the token; the
    multiples are this component choosing three sizes on it. */
-const STEP = Number.parseFloat(crystalTokens['spacing.2xs']);
+const STEP = Number.parseFloat(prismataTokens['spacing.2xs']);
 const SIZE: Record<LoaderSize, number> = {
   small: STEP * 4,
   medium: STEP * 6,
@@ -59,7 +59,7 @@ export interface LoaderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
 function Mark({ variant, size, still }: { variant: LoaderVariant; size: number; still: boolean }): ReactNode {
   /* Said on the mark itself, as every continuous indicator says it: resolved
      instantly, not moving, under reduced motion. */
-  const state = still ? { 'data-cr-motion-state': 'instant' } : {};
+  const state = still ? { 'data-pr-motion-state': 'instant' } : {};
   switch (variant) {
     case 'dots':
       return (
@@ -95,7 +95,7 @@ function Mark({ variant, size, still }: { variant: LoaderVariant; size: number; 
 export const Loader = forwardRef<HTMLDivElement, LoaderProps>(function Loader({
   label, size = 'medium', variant = 'spinner', hideLabel = false, className, style, ...props
 }, ref): ReactNode {
-  const { reduceMotion } = useCrystalTheme();
+  const { reduceMotion } = usePrismataTheme();
   return (
     <div
       {...props}

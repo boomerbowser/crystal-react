@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { SkipLink } from './SkipLink.js';
 
 describe('SkipLink', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <div><SkipLink targetId="main" /><main id="main">Content</main></div>,
     );
     await expectNoAxeViolations(container);
@@ -15,7 +15,7 @@ describe('SkipLink', () => {
      continues from where it was and the link appears to do nothing. The target
      is made programmatically focusable, and no more than that. */
   it('moves focus to the target, not only the viewport', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <div><SkipLink targetId="main" /><main id="main">Content</main></div>,
     );
     await userEvent.click(screen.getByRole('link', { name: 'Skip to content' }));
@@ -29,7 +29,7 @@ describe('SkipLink', () => {
 
   /* A target that is already focusable keeps whatever tab position it had. */
   it('leaves an already-focusable target alone', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <div><SkipLink targetId="main" /><section id="main" tabIndex={0}>Content</section></div>,
     );
     await userEvent.click(screen.getByRole('link', { name: 'Skip to content' }));

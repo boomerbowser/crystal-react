@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { SortSelect } from './SortSelect.js';
 
 const options = [
@@ -17,7 +17,7 @@ describe('SortSelect', () => {
      sees it flip, a screen reader hears the select close and then nothing. */
   it('announces the ordering when it changes', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<SortSelect options={options} defaultSelectedKey="relevance" />);
+    renderWithPrismata(<SortSelect options={options} defaultSelectedKey="relevance" />);
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
 
     await user.click(screen.getByRole('button', { name: /Sort by/ }));
@@ -34,7 +34,7 @@ describe('SortSelect', () => {
     const user = userEvent.setup();
     let finish = () => {};
     const reorder = vi.fn(() => new Promise<void>((resolve) => { finish = resolve; }));
-    renderWithCrystal(
+    renderWithPrismata(
       <SortSelect options={options} defaultSelectedKey="relevance" onSelectionChange={reorder} />,
     );
     await user.click(screen.getByRole('button', { name: /Sort by/ }));
@@ -53,7 +53,7 @@ describe('SortSelect', () => {
      it succeeded. */
   it('says nothing when the reorder fails', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(
+    renderWithPrismata(
       <SortSelect
         options={options}
         defaultSelectedKey="relevance"
@@ -68,12 +68,12 @@ describe('SortSelect', () => {
 
   /* A list that arrives sorted has not been reordered. */
   it('says nothing about the ordering it started in', () => {
-    renderWithCrystal(<SortSelect options={options} defaultSelectedKey="newest" />);
+    renderWithPrismata(<SortSelect options={options} defaultSelectedKey="newest" />);
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <SortSelect options={options} defaultSelectedKey="relevance" />,
     );
     await expectNoAxeViolations(container);

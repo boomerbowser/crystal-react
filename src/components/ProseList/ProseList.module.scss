@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* ProseList: Crystal's markers, outside a Prose block.
+/* ProseList: Prismata's markers, outside a Prose block.
  *
  * A list inside `Prose` is styled by that component's rhythm. This is the same
  * treatment for a list a product composes itself, so the two match.
@@ -8,16 +8,16 @@
 
 .list {
   margin: 0;
-  padding-inline-start: $cr-spacing-lg;
-  color: var(--cr-text);
-  line-height: var(--cr-text-body-leading);
+  padding-inline-start: $pr-spacing-lg;
+  color: var(--pr-text);
+  line-height: var(--pr-text-body-leading);
 }
 
-.list li + li { margin-block-start: $cr-spacing-xs; }
-.list li::marker { color: var(--cr-muted); }
+.list li + li { margin-block-start: $pr-spacing-xs; }
+.list li::marker { color: var(--pr-muted); }
 
 /* A nested list takes tighter spacing than the outer rhythm, because it is part
    of its parent item, not a new block. */
-.list :is(ul, ol) { margin-block-start: $cr-spacing-xs; }
+.list :is(ul, ol) { margin-block-start: $pr-spacing-xs; }
 
 .unmarked { list-style: none; padding-inline-start: 0; }

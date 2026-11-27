@@ -100,7 +100,7 @@ export function ChartSurface({
 
       {legend ? <div className={styles['legend']}>{legend}</div> : null}
 
-      <div className={cx('cr-haze inset', styles['plot'])} ref={ref}>
+      <div className={cx('pr-haze inset', styles['plot'])} ref={ref}>
         {/* `group`, not `img`. `img` is a leaf, so everything inside it,
             including the marks a keyboard moves between, stops being reachable.
             `group` takes the chart's name and lets its children keep theirs, so
@@ -118,7 +118,7 @@ export function ChartSurface({
           {empty || loading ? null : children?.(frame)}
         </svg>
         {empty ? <p className={styles['empty']}>{emptyLabel}</p> : null}
-        {/* Static text, with no animation. Crystal's rule is that nothing moves
+        {/* Static text, with no animation. Prismata's rule is that nothing moves
             at rest, and a chart waiting for data is at rest. The plot is held at
             its size so the page does not jump when the numbers arrive. */}
         {loading ? <p className={styles['empty']}>{'Loading'}</p> : null}

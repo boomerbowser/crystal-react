@@ -5,7 +5,7 @@
    over the first, so this file styles only the panels and their layout. */
 .workspace {
   display: grid;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   min-block-size: 0;
   grid-auto-flow: column;
   grid-auto-columns: minmax(0, 1fr);
@@ -13,7 +13,7 @@
 
 /* "Panels keep panel radius." */
 .pane {
-  /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Prismata's fallbacks. */
   min-inline-size: 0;
   min-block-size: 0;
 }

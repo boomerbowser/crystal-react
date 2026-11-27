@@ -3,7 +3,7 @@
 /* Carousel: "Resin controls floating over Haze slides".
  *
  * Two materials, and the order matters. The slides are the content, so they
- * take the Haze fill. The controls take the Resin shell every action in Crystal
+ * take the Haze fill. The controls take the Resin shell every action in Prismata
  * has. Resin on the slides would make each one look pressable.
  *
  * The track snaps. `scroll-snap-type: inline mandatory` with `scroll-snap-align:
@@ -19,12 +19,12 @@
 .carousel {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
 }
 
 .track {
   display: flex;
-  gap: var(--cr-carousel-gap, #{$cr-spacing-md});
+  gap: var(--pr-carousel-gap, #{$pr-spacing-md});
   margin: 0;
   padding: 0;
   list-style: none;
@@ -38,31 +38,31 @@
 }
 
 .track:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 .slide {
   flex: 0 0 100%;
   box-sizing: border-box;
   scroll-snap-align: start;
-  padding: var(--cr-carousel-padding, #{$cr-spacing-lg});
-  border-radius: var(--cr-radius);
-  color: var(--cr-text);
+  padding: var(--pr-carousel-padding, #{$pr-spacing-lg});
+  border-radius: var(--pr-radius);
+  color: var(--pr-text);
 }
 
 .controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
 }
 
 /* The step controls are Resin pills at the target floor, like every action. */
-/* R-19. The step controls wear `.cr-button`. Crystal paints every `<button>`
-   with the Resin material by element selector, and `.cr-button` adds the
-   geometry. `:focus-visible` and `:disabled` are Crystal's own selectors and
+/* R-19. The step controls wear `.pr-button`. Prismata paints every `<button>`
+   with the Resin material by element selector, and `.pr-button` adds the
+   geometry. `:focus-visible` and `:disabled` are Prismata's own selectors and
    reach this element directly, so they are not repeated here.
 
    Nothing is left to declare, so `.step` has no rule outside forced colours.
@@ -73,7 +73,7 @@
 .indicators {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -86,8 +86,8 @@
 
   display: inline-grid;
   place-items: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
   padding: 0;
   border: 0;
   background: transparent;
@@ -95,29 +95,29 @@
 }
 
 .indicator:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(#{$cr-focus-core-offset} * -1);
-  border-radius: $cr-action-radius;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(#{$pr-focus-core-offset} * -1);
+  border-radius: $pr-action-radius;
+  box-shadow: var(--pr-focus-ring);
 }
 
 .dot {
-  inline-size: $cr-spacing-xs;
-  block-size: $cr-spacing-xs;
+  inline-size: $pr-spacing-xs;
+  block-size: $pr-spacing-xs;
   border-radius: 50%;
-  background: var(--cr-muted);
+  background: var(--pr-muted);
   opacity: 0.45;
 }
 
-/* The current slide's indicator. Crystal marks the current thing by weight
+/* The current slide's indicator. Prismata marks the current thing by weight
    instead of a badge, and a dot has no label to thicken. It takes the
    full-strength ink and grows to the indicator size, the same "more of it"
    the weight rule expresses. */
 .indicator[aria-current] .dot {
-  inline-size: $cr-indicator-size;
-  block-size: $cr-spacing-xs;
-  border-radius: $cr-action-radius;
-  background: var(--cr-primary);
+  inline-size: $pr-indicator-size;
+  block-size: $pr-spacing-xs;
+  border-radius: $pr-action-radius;
+  background: var(--pr-primary);
   opacity: 1;
 }
 

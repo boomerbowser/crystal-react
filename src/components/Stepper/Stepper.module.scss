@@ -5,7 +5,7 @@
    under the markers rather than floating beside them. */
 .stepper {
   display: flex;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -30,21 +30,21 @@
   content: '';
   position: absolute;
   z-index: 0;
-  background: var(--cr-haze-fill);
+  background: var(--pr-haze-fill);
 }
 
 .stepper[data-orientation='horizontal'] .step:not(:last-child)::after {
-  inset-inline-start: calc(#{$cr-action-min-target} + #{$cr-spacing-xs});
-  inset-inline-end: calc(#{$cr-spacing-md} * -1);
-  inset-block-start: calc(#{$cr-action-min-target} / 2);
-  block-size: $cr-indicator-line-width;
+  inset-inline-start: calc(#{$pr-action-min-target} + #{$pr-spacing-xs});
+  inset-inline-end: calc(#{$pr-spacing-md} * -1);
+  inset-block-start: calc(#{$pr-action-min-target} / 2);
+  block-size: $pr-indicator-line-width;
 }
 
 .stepper[data-orientation='vertical'] .step:not(:last-child)::after {
-  inset-block-start: calc(#{$cr-action-min-target} + #{$cr-spacing-xs});
-  inset-block-end: calc(#{$cr-spacing-md} * -1);
-  inset-inline-start: calc(#{$cr-action-min-target} / 2);
-  inline-size: $cr-indicator-line-width;
+  inset-block-start: calc(#{$pr-action-min-target} + #{$pr-spacing-xs});
+  inset-block-end: calc(#{$pr-spacing-md} * -1);
+  inset-inline-start: calc(#{$pr-action-min-target} / 2);
+  inline-size: $pr-indicator-line-width;
 }
 
 .control {
@@ -53,18 +53,18 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: $cr-action-gap;
+  gap: $pr-action-gap;
   min-inline-size: 0;
   padding: 0;
   border: 0;
   background: none;
-  color: var(--cr-text);
+  color: var(--pr-text);
   text-align: start;
 }
 
 button.control { cursor: pointer; }
 
-/* Resin markers: the marker shape's marker wears Crystal's `.cr-resin.flat`
+/* Resin markers: the marker shape's marker wears Prismata's `.pr-resin.flat`
    (2.7.0), a Resin plane that is a mark rather than a control, so it has no
    sheen. The circle is its geometry. */
 .marker {
@@ -72,8 +72,8 @@ button.control { cursor: pointer; }
   flex: none;
   align-items: center;
   justify-content: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
   border-radius: 50%;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
@@ -81,24 +81,24 @@ button.control { cursor: pointer; }
 
 .text { display: flex; flex-direction: column; min-inline-size: 0; }
 .label { font-weight: 550; }
-.description { color: var(--cr-muted); }
+.description { color: var(--pr-muted); }
 
 /* State is weight and material, and it is said in the accessible name. Colour
    is never the only carrier: the complete marker also takes a tick and the
    error marker an exclamation, which is the shape half of the pair. */
 .step[data-state='current'] .label { font-weight: 800; }
-.step[data-state='current'] .marker { border-color: var(--cr-primary); color: var(--cr-primary); }
-.step[data-state='complete'] .marker { color: var(--cr-primary); }
-.step[data-state='error'] .marker { border-color: var(--cr-danger-ink); color: var(--cr-danger-ink); }
-.step[data-state='upcoming'] .label { color: var(--cr-muted); }
+.step[data-state='current'] .marker { border-color: var(--pr-primary); color: var(--pr-primary); }
+.step[data-state='complete'] .marker { color: var(--pr-primary); }
+.step[data-state='error'] .marker { border-color: var(--pr-danger-ink); color: var(--pr-danger-ink); }
+.step[data-state='upcoming'] .label { color: var(--pr-muted); }
 
-button.control[data-hovered] .marker { background: var(--cr-surface-alt); }
+button.control[data-hovered] .marker { background: var(--pr-surface-alt); }
 
 button.control[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  border-radius: $cr-action-radius;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  border-radius: $pr-action-radius;
+  box-shadow: var(--pr-focus-ring);
 }
 
 @media (forced-colors: active) {
@@ -117,19 +117,19 @@ button.control[data-focus-visible] {
  * Resin disc and becomes the leading glyph inside the pill. A pill with a
  * floating disc in it is two materials deep, and Resin never contains Resin.
  */
-/* A pill step is a Haze pill, Crystal's `.cr-haze.flush` (2.7.0), so it does
-   not wear `cr-bare`. The marker shape's steps do. The bare recipe removes both
+/* A pill step is a Haze pill, Prismata's `.pr-haze.flush` (2.7.0), so it does
+   not wear `pr-bare`. The marker shape's steps do. The bare recipe removes both
    pseudo-elements, and this fill is the `::before`. So the bare class goes on
    the marker shape's controls only, and the Haze classes on the pill shape's. */
 .stepper[data-shape='pill'] .control {
   display: inline-flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   box-sizing: border-box;
-  padding: $cr-spacing-2xs $cr-spacing-sm;
-  border: 1px solid var(--cr-rim);
-  border-radius: $cr-action-radius;
-  min-block-size: $cr-action-min-target;
+  padding: $pr-spacing-2xs $pr-spacing-sm;
+  border: 1px solid var(--pr-rim);
+  border-radius: $pr-action-radius;
+  min-block-size: $pr-action-min-target;
   color: inherit;
 }
 
@@ -141,30 +141,30 @@ button.control[data-focus-visible] {
 
 /* "Connectors are hairlines", against the marker shape's 2px track. */
 .stepper[data-shape='pill'] .step:not(:last-child)::after {
-  background: var(--cr-edge);
+  background: var(--pr-edge);
 }
 
 .stepper[data-shape='pill'][data-orientation='horizontal'] .step:not(:last-child)::after {
   inset-inline-start: 100%;
-  inset-inline-end: calc(#{$cr-spacing-md} * -1);
+  inset-inline-end: calc(#{$pr-spacing-md} * -1);
   inset-block-start: 50%;
   block-size: 1px;
 }
 
 .stepper[data-shape='pill'][data-orientation='vertical'] .step:not(:last-child)::after {
   inset-block-start: 100%;
-  inset-block-end: calc(#{$cr-spacing-md} * -1);
-  inset-inline-start: calc(#{$cr-action-min-target} / 2);
+  inset-block-end: calc(#{$pr-spacing-md} * -1);
+  inset-inline-start: calc(#{$pr-action-min-target} / 2);
   inline-size: 1px;
 }
 
 /* The current step carries the weight, which is the rule everywhere else in
-   Crystal and is already what the marker shape does. The rim thickens with it so
+   Prismata and is already what the marker shape does. The rim thickens with it so
    the position is legible to somebody who cannot resolve a weight difference. */
 .stepper[data-shape='pill'] .step[data-state='current'] .control {
   border-width: 2px;
-  border-color: var(--cr-primary);
-  padding: calc(#{$cr-spacing-2xs} - 1px) calc(#{$cr-spacing-sm} - 1px);
+  border-color: var(--pr-primary);
+  padding: calc(#{$pr-spacing-2xs} - 1px) calc(#{$pr-spacing-sm} - 1px);
 }
 
 @media (forced-colors: active) {

@@ -3,30 +3,30 @@
  * Every feedback surface distributes them the same way, and it is easy to get
  * backwards: the well takes the pair, and the panel stays its own material with
  * ordinary text. A status-coloured panel turns the message into decoration on a
- * coloured ground. A status-coloured perimeter is the shape Crystal uses for
+ * coloured ground. A status-coloured perimeter is the shape Prismata uses for
  * focus, so a danger-coloured one reads as a control in an error state instead
  * of a fact being reported.
  */
 
 @mixin status-pairs($selector: '&') {
   #{$selector}[data-status='success'] {
-    --status-surface: var(--cr-success-surface);
-    --status-ink: var(--cr-success-ink);
+    --status-surface: var(--pr-success-surface);
+    --status-ink: var(--pr-success-ink);
   }
 
   #{$selector}[data-status='attention'] {
-    --status-surface: var(--cr-attention-surface);
-    --status-ink: var(--cr-attention-ink);
+    --status-surface: var(--pr-attention-surface);
+    --status-ink: var(--pr-attention-ink);
   }
 
   #{$selector}[data-status='danger'] {
-    --status-surface: var(--cr-danger-surface);
-    --status-ink: var(--cr-danger-ink);
+    --status-surface: var(--pr-danger-surface);
+    --status-ink: var(--pr-danger-ink);
   }
 
   #{$selector}[data-status='info'] {
-    --status-surface: var(--cr-info-surface);
-    --status-ink: var(--cr-info-ink);
+    --status-surface: var(--pr-info-surface);
+    --status-ink: var(--pr-info-ink);
   }
 }
 

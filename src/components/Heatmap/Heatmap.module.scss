@@ -3,7 +3,7 @@
 /* Cells and their ink. This is the one place in the slice where the ink is
  * decided per mark and not once.
  *
- * Crystal's intensity ramp ships five grounds and five inks, each pair measured
+ * Prismata's intensity ramp ships five grounds and five inks, each pair measured
  * at 4.5:1. The cell writes both onto itself as custom properties, so the
  * number on each cell is in the ink measured against that cell's step. That is
  * what "intensity is paired with a value" requires.
@@ -20,32 +20,32 @@
 
 .cell[data-empty] .fill {
   fill: none;
-  stroke: var(--cr-chart-grid);
-  stroke-width: var(--cr-chart-hairline);
+  stroke: var(--pr-chart-grid);
+  stroke-width: var(--pr-chart-hairline);
 }
 
 .cell[data-missing] .fill { stroke-dasharray: 3 3; }
 
 .value {
   fill: var(--cell-ink);
-  font-size: var(--cr-text-caption-size);
-  font-family: var(--cr-font);
+  font-size: var(--pr-text-caption-size);
+  font-family: var(--pr-font);
   font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
 
 .axisLabel {
-  fill: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
-  font-family: var(--cr-font);
+  fill: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
+  font-family: var(--pr-font);
 }
 
 .cell:focus-visible { outline: none; }
 
 .cell:hover .fill,
 .cell[data-active] .fill {
-  stroke: var(--cr-text);
-  stroke-width: var(--cr-chart-stroke);
+  stroke: var(--pr-text);
+  stroke-width: var(--pr-chart-stroke);
 }
 
 /* Forced colours replaces the ramp with one colour, which would make every

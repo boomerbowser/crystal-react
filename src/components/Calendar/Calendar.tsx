@@ -11,7 +11,7 @@
  * first day and week numbering, and moving from the 31st to the next month with
  * an arrow key.
  *
- * Crystal owns the surface and three markings:
+ * Prismata owns the surface and three markings:
  *
  *   - The panel is Frost, because a calendar is a panel and not a control
  *     plane. Inside a picker it is already on one, so the standalone component
@@ -20,7 +20,7 @@
  *     and a filled "selected", a reader would have to tell the two apart by
  *     shade.
  *   - Selection is label weight, with the soft fill as the second signal, as
- *     everywhere else in Crystal.
+ *     everywhere else in Prismata.
  */
 import type { ReactNode } from 'react';
 import {
@@ -50,7 +50,7 @@ export function Calendar<T extends DateValue>(
     <AriaCalendar
       {...props}
       {...(label === undefined ? {} : { 'aria-label': label })}
-      className={cx('cr-frost flat reading', styles['panel'], className)}
+      className={cx('pr-frost flat reading', styles['panel'], className)}
     >
       <CalendarBody />
     </AriaCalendar>
@@ -72,7 +72,7 @@ export function RangeCalendar<T extends DateValue>(
     <AriaRangeCalendar
       {...props}
       {...(label === undefined ? {} : { 'aria-label': label })}
-      className={cx('cr-frost flat reading', styles['panel'], className)}
+      className={cx('pr-frost flat reading', styles['panel'], className)}
     >
       <CalendarBody />
     </AriaRangeCalendar>

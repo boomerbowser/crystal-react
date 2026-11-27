@@ -10,10 +10,10 @@ const picture = (colour: string) => (
   <div style={{ aspectRatio: '4 / 3', background: colour, borderRadius: 'inherit' }} />
 );
 const products: StorefrontProduct[] = [
-  { id: 'mug', name: 'Enamel mug', href: '#mug', price: gbp(24), availability: 'in-stock', media: picture('var(--cr-primary-soft)') },
-  { id: 'pot', name: 'Tea pot', href: '#pot', price: gbp(40), availability: 'low', media: picture('var(--cr-surface-alt)') },
-  { id: 'caddy', name: 'Tea caddy', href: '#caddy', price: gbp(18), was: gbp(22), media: picture('var(--cr-primary-soft)') },
-  { id: 'tray', name: 'Serving tray', href: '#tray', price: gbp(32), availability: 'out-of-stock', media: picture('var(--cr-surface-alt)') },
+  { id: 'mug', name: 'Enamel mug', href: '#mug', price: gbp(24), availability: 'in-stock', media: picture('var(--pr-primary-soft)') },
+  { id: 'pot', name: 'Tea pot', href: '#pot', price: gbp(40), availability: 'low', media: picture('var(--pr-surface-alt)') },
+  { id: 'caddy', name: 'Tea caddy', href: '#caddy', price: gbp(18), was: gbp(22), media: picture('var(--pr-primary-soft)') },
+  { id: 'tray', name: 'Serving tray', href: '#tray', price: gbp(32), availability: 'out-of-stock', media: picture('var(--pr-surface-alt)') },
 ];
 const sort = { options: [{ value: 'popular', label: 'Most popular' }, { value: 'price', label: 'Price, low to high' }], defaultSelectedKey: 'popular' };
 const facets = (

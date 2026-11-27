@@ -5,7 +5,7 @@
  * `Prose` is the reading rhythm applied to content the product did not lay out:
  * rendered Markdown, a CMS body, anything arriving as HTML. It is a wrapper whose
  * stylesheet reaches its descendants. This is the one place in this library where
- * that is allowed, because otherwise a content author would have to know Crystal.
+ * that is allowed, because otherwise a content author would have to know Prismata.
  *
  * `Blockquote` and `Abbr` exist as components as well, for quotations and
  * abbreviations a product composes itself. Both are thin, and each is here for
@@ -32,7 +32,7 @@ export const Prose = forwardRef<HTMLDivElement, ProseProps>(function Prose(
   ref,
 ) {
   return (
-    <div {...props} ref={ref} className={cx('cr-prose', styles['prose'], className)}>
+    <div {...props} ref={ref} className={cx('pr-prose', styles['prose'], className)}>
       {children}
     </div>
   );

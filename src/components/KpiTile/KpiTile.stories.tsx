@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { only } from '../../../.storybook/environment.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { KpiTile } from './KpiTile.js';
 
 const meta = {
@@ -17,7 +17,7 @@ const meta = {
           + '`onTarget` is the caller\'s judgement. The tile makes no comparison, because a '
           + 'cost target is met by coming in under it, and a tile that decided for itself '
           + 'would report every saving as a miss. The bar is a real `progress` element, and its '
-          + `treatment is Crystal's own: the ${crystalTokens['slider.trackHeight']} band at the pill radius that \`crystal.css\` `
+          + `treatment is Prismata's own: the ${prismataTokens['slider.trackHeight']} band at the pill radius that \`prismata.css\` `
           + 'already gives the range control. It is a native `<progress>`, not the `Progress` '
           + 'component, because this bar is '
           + 'reinforcement for words that are already on the screen, and a component that names '

@@ -109,7 +109,7 @@ export const MeterGroup = forwardRef<HTMLDivElement, MeterGroupProps>(function M
   );
 });
 
-/* One segment. A change in what it measures plays Crystal's `progress-change`
+/* One segment. A change in what it measures plays Prismata's `progress-change`
    after the value is set (the recipe does not stand in for the value), and
    never on the render that first shows it. */
 function MovingSegment({ value, ...props }: HTMLAttributes<HTMLDivElement> & { value: number; 'data-status'?: string | undefined }): React.JSX.Element {

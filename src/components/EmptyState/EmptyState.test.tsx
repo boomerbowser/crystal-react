@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { EmptyState } from './EmptyState.js';
 
 describe('EmptyState', () => {
@@ -8,7 +8,7 @@ describe('EmptyState', () => {
      component has no default state, so neither can be chosen by accident. The
      two render as different states, not as one state with different words. */
   it('keeps the two kinds of empty apart', () => {
-    const { container, rerender } = renderWithCrystal(
+    const { container, rerender } = renderWithPrismata(
       <EmptyState state="empty" title="No projects yet" />,
     );
     expect(container.querySelector('[data-state="empty"]')).toBeInTheDocument();
@@ -18,13 +18,13 @@ describe('EmptyState', () => {
   });
 
   it('names its region with the title', () => {
-    renderWithCrystal(<EmptyState state="empty" title="No projects yet" />);
+    renderWithPrismata(<EmptyState state="empty" title="No projects yet" />);
     expect(screen.getByRole('region', { name: 'No projects yet' })).toBeInTheDocument();
   });
 
   /* "Real text; never an illustration alone." */
   it('hides the illustration from assistive technology', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <EmptyState state="empty" title="No projects yet" illustration={<svg />} />,
     );
     const region = screen.getByRole('region');
@@ -33,7 +33,7 @@ describe('EmptyState', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <EmptyState state="no-results" title="No matches">Try a shorter search.</EmptyState>,
     );
     await expectNoAxeViolations(container);

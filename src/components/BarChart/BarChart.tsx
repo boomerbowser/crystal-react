@@ -160,7 +160,7 @@ export function BarChart({
                            rule in every sheet, including the one that replaces
                            it when the operating system takes the palette
                            away. */
-                        /* Crystal's `mark-in` grows each bar from the zero line,
+                        /* Prismata's `mark-in` grows each bar from the zero line,
                            upward above it and downward below it, so the origin is
                            the baseline, in the plot's own coordinates. */
                         data-mark-in=""

@@ -39,7 +39,7 @@ export const WithItsTrigger: Story = {
     const Demo = () => {
       const [open, setOpen] = useState(false);
       return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--cr-space)', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--pr-space)', alignItems: 'flex-start' }}>
           <Button
             variant="quiet"
             aria-expanded={open}

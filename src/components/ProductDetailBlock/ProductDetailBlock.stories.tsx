@@ -29,8 +29,8 @@ const meta = {
     nameText: 'Enamel mug',
     description: 'A steel mug with a glass enamel coat, fired twice. Holds 350ml.',
     media: [
-      { id: 'front', alt: 'The mug from the front', thumbnail: tile('Front', 'var(--cr-primary-soft)') },
-      { id: 'side', alt: 'The mug from the side', thumbnail: tile('Side', 'var(--cr-surface-alt)') },
+      { id: 'front', alt: 'The mug from the front', thumbnail: tile('Front', 'var(--pr-primary-soft)') },
+      { id: 'side', alt: 'The mug from the side', thumbnail: tile('Side', 'var(--pr-surface-alt)') },
     ],
     variantLabel: 'Colour',
     variants: [

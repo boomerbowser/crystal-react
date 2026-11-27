@@ -11,7 +11,7 @@
  * be mistaken for. The controls sit side by side and each is a full target. The
  * primitive underneath is the same; the geometry is not a stylesheet variant.
  *
- * "A typable numeric field … not role=spinbutton." This is Crystal 2.2.0's
+ * "A typable numeric field … not role=spinbutton." This is Prismata 2.2.0's
  * wording, after Meridian ruled on R-22 on 28 September 2026. React Aria's
  * `NumberField` computes the spin-button props and then strips them (`role:
  * null`, `aria-valuenow: null`, `aria-valuemin: null`, `aria-valuemax: null`),
@@ -113,14 +113,14 @@ export const QuantityStepper = forwardRef<HTMLInputElement, QuantityStepperProps
         </Label>
         {/* A `Group` carries React Aria's field context to the three controls
             inside it. */}
-        <Group className={cx(styles['shell'], 'cr-field-shell block')}>
+        <Group className={cx(styles['shell'], 'pr-field-shell block')}>
           {/* React Aria names these from the field's own label, so a page with
               four steppers does not have four buttons called "One more". */}
-          <Button slot="decrement" aria-label={decrementLabel} className={cx(styles['step'], 'cr-bare')}>
+          <Button slot="decrement" aria-label={decrementLabel} className={cx(styles['step'], 'pr-bare')}>
             {Minus}
           </Button>
           <SteppedInput inputRef={forwardedRef} className={cx(styles['control'])} />
-          <Button slot="increment" aria-label={incrementLabel} className={cx(styles['step'], 'cr-bare')}>
+          <Button slot="increment" aria-label={incrementLabel} className={cx(styles['step'], 'pr-bare')}>
             {Plus}
           </Button>
         </Group>
@@ -134,7 +134,7 @@ export const QuantityStepper = forwardRef<HTMLInputElement, QuantityStepperProps
 );
 
 /* The quantity. It marks a committed change (from a step button, an arrow key or
-   a typed value) with Crystal's \`slider-step\`, and does not mark the render
+   a typed value) with Prismata's \`slider-step\`, and does not mark the render
    that shows the first quantity. React Aria's number field state is read from
    its context, so the input moves on the value React Aria committed. */
 function SteppedInput({ inputRef, className }: {

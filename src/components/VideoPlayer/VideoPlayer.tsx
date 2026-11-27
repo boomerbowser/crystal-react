@@ -1,6 +1,6 @@
 'use client';
 
-/* VideoPlayer is a video surface with Crystal transport controls.
+/* VideoPlayer is a video surface with Prismata transport controls.
  *
  * "Native video element underneath. Controls are real buttons, **captions are
  * supported and their state is announced**, and **keyboard shortcuts do not trap
@@ -13,7 +13,7 @@
  * turn it on and no way to know whether it is on. The caption toggle and the
  * settings menu's subtitle group are both views of `textTracks`; the toggle's
  * pressed state is whether a caption track is on, and every change is announced
- * in words for a reader who cannot see subtitles appear. Crystal draws the cues
+ * in words for a reader who cannot see subtitles appear. Prismata draws the cues
  * itself, on Stone and above the transport, because the browser draws them at
  * the bottom of the picture where the transport covers them. `nativeCaptions`
  * hands drawing back to the browser.
@@ -30,7 +30,7 @@
  * scrolling. The handler ignores an event that started on a button, a slider or
  * anything else focusable, so Space on the play toggle is the button's Space.
  *
- * Showing and hiding the controls is Crystal's, and Crystal's rule is that
+ * Showing and hiding the controls is Prismata's, and Prismata's rule is that
  * nothing moves at rest, so the bar does not fade in and out on a timer. It is
  * shown whenever a pointer is over the video, focus is inside the player or the
  * video is paused, and hidden otherwise, so a person always started the change.
@@ -76,7 +76,7 @@ export interface VideoPlayerProps
   fit?: 'contain' | 'cover';
   /** What the caption control is called. */
   captionsLabel?: string;
-  /** Let the browser draw caption cues instead of Crystal. */
+  /** Let the browser draw caption cues instead of Prismata. */
   nativeCaptions?: boolean;
   /** The speeds the settings menu offers. Pass `[]` to leave speed out. */
   playbackRates?: readonly number[];
@@ -144,7 +144,7 @@ const FullScreenIcon = (
   </svg>
 );
 
-/** Draws the cues Crystal renders. `getCueAsHTML` keeps the cue's own italics,
+/** Draws the cues Prismata renders. `getCueAsHTML` keeps the cue's own italics,
  *  bold and voice spans, and builds them as nodes, never as markup. */
 function CaptionCues({ cues, captionStyle }: { cues: TextTrackCue[]; captionStyle: CaptionStyle }): ReactNode {
   const host = useRef<HTMLDivElement>(null);
@@ -171,7 +171,7 @@ function CaptionCues({ cues, captionStyle }: { cues: TextTrackCue[]; captionStyl
          `.larger` scale the cue's whole range, `.solid` puts it on the opaque
          surface. */
       className={cx(
-        'cr-media-caption',
+        'pr-media-caption',
         captionStyle.size === 'normal' ? undefined : captionStyle.size,
         captionStyle.backing === 'solid' ? 'solid' : undefined,
         styles['captions'],
@@ -239,7 +239,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
      portal into the player while it is full screen. In full screen the browser
      draws only the full-screen element's subtree, so a menu portalled to the
      body would open invisibly. */
-  /* Otherwise they go where `CrystalProvider` sends every overlay, a themed
+  /* Otherwise they go where `PrismataProvider` sends every overlay, a themed
      sibling of the scope; the player root is inside that scope, so a menu
      portalled into it in full screen keeps the palette and the mode. */
   const parentPortal = usePortalContext();
@@ -328,8 +328,8 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
 
   const stage = {
     ...style,
-    '--cr-media-aspect': aspectRatio,
-    '--cr-media-fit': fit,
+    '--pr-media-aspect': aspectRatio,
+    '--pr-media-fit': fit,
   } as CSSProperties;
 
   return (
@@ -346,7 +346,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
       data-paused={media.isPlaying ? undefined : ''}
     >
       <PortalProvider getContainer={portalContainer}>
-      <div className={cx('cr-media', styles['surface'])} style={stage}>
+      <div className={cx('pr-media', styles['surface'])} style={stage}>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption -- the caption `<track>` is the product's to supply through `children`; the control for it is below */}
         <video
           {...props}
@@ -357,7 +357,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(functi
           {children}
         </video>
         {nativeCaptions ? null : <CaptionCues cues={tracks.activeCues} captionStyle={captionStyle} />}
-        <div className={cx('cr-media-bar', styles['bar'])}>
+        <div className={cx('pr-media-bar', styles['bar'])}>
           <MediaControls
             mediaLabel={label}
             isPlaying={media.isPlaying}

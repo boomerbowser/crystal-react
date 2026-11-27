@@ -13,7 +13,7 @@
  * one part of the chart that never has a material.
  *
  * "Haze range bands" are the qualitative ranges behind the measure. Each is a
- * step of Crystal's intensity ramp, so "acceptable" and "good" read as a scale.
+ * step of Prismata's intensity ramp, so "acceptable" and "good" read as a scale.
  */
 import { type CSSProperties, type ReactNode } from 'react';
 import { intensityFill } from '../../charts/intensity.js';

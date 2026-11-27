@@ -127,11 +127,11 @@ export function ListItem({
   return (
     <li {...props} ref={scope as never} className={cx(styles['item'], className)}>
       {href !== undefined ? (
-        <a href={href} className={cx('cr-haze flat', styles['row'])} aria-current={isSelected ? 'true' : undefined}>{body}</a>
+        <a href={href} className={cx('pr-haze flat', styles['row'])} aria-current={isSelected ? 'true' : undefined}>{body}</a>
       ) : onPress !== undefined ? (
-        <button type="button" onClick={onPress} className={cx('cr-haze flat cr-bare', styles['row'])} aria-pressed={isSelected}>{body}</button>
+        <button type="button" onClick={onPress} className={cx('pr-haze flat pr-bare', styles['row'])} aria-pressed={isSelected}>{body}</button>
       ) : (
-        <span className={cx('cr-haze flat', styles['row'])} data-selected={isSelected ? '' : undefined}>{body}</span>
+        <span className={cx('pr-haze flat', styles['row'])} data-selected={isSelected ? '' : undefined}>{body}</span>
       )}
       {trailing === undefined ? null : <span className={styles['trailing']}>{trailing}</span>}
     </li>

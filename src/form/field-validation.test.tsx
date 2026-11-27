@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Form } from 'react-aria-components';
-import { renderWithCrystal, screen } from '../test/render.js';
+import { renderWithPrismata, screen } from '../test/render.js';
 import { TextInput } from '../components/TextInput/TextInput.js';
 import { TextArea } from '../components/TextArea/TextArea.js';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput.js';
@@ -43,7 +43,7 @@ const CASES: Array<[string, React.JSX.Element, string]> = [
 describe('a server error reaches every field', () => {
   for (const [name, element, label] of CASES) {
     it(`${name} shows it and marks itself invalid`, () => {
-      const { container } = renderWithCrystal(
+      const { container } = renderWithPrismata(
         <Form validationErrors={{ email: ['Already registered'] }}>{element}</Form>,
       );
       expect(screen.getByText('Already registered')).toBeInTheDocument();
@@ -55,7 +55,7 @@ describe('a server error reaches every field', () => {
   }
 
   it('Select shows it and marks itself invalid', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Form validationErrors={{ email: ['Already registered'] }}>
         <Select label="Email" name="email" options={OPTIONS} />
       </Form>,
@@ -65,7 +65,7 @@ describe('a server error reaches every field', () => {
   });
 
   it('CheckboxGroup shows it and marks itself invalid', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Form validationErrors={{ terms: ['You must agree'] }}>
         <CheckboxGroup label="Terms" name="terms">
           <Checkbox value="yes">I agree</Checkbox>
@@ -79,7 +79,7 @@ describe('a server error reaches every field', () => {
   /* A caller who does set validity still wins, and gets the message they wrote
      instead of one React Aria supplies. */
   it("keeps the caller's own error message when one is given", () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Form validationErrors={{ email: ['From the server'] }}>
         <TextInput label="Email" name="email" errorMessage="From the caller" />
       </Form>,
@@ -89,7 +89,7 @@ describe('a server error reaches every field', () => {
   });
 
   it('a caller may still declare a field valid and be believed', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Form validationErrors={{ email: ['From the server'] }}>
         <TextInput label="Email" name="email" isInvalid={false} />
       </Form>,
@@ -118,7 +118,7 @@ describe('a server error reaches the hand-built fields too', () => {
 
   for (const [name, element] of HAND_BUILT) {
     it(`${name} shows what the form was given for it`, () => {
-      renderWithCrystal(
+      renderWithPrismata(
         <Form validationErrors={{ phone: ['We could not reach that number'] }}>{element}</Form>,
       );
       expect(screen.getByRole('alert').textContent).toContain('We could not reach that number');
@@ -128,7 +128,7 @@ describe('a server error reaches the hand-built fields too', () => {
   /* A caller's own message still wins. It is the more specific statement, and
      showing two at once would contradict each other. */
   it("prefers the caller's message to the form's", () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Form validationErrors={{ phone: ['From the server'] }}>
         <MaskInput label="Phone" name="phone" mask="(000) 000-0000" errorMessage="From the caller" />
       </Form>,
@@ -142,7 +142,7 @@ describe('a server error reaches the hand-built fields too', () => {
    one it would ignore. */
 describe('DateRangePicker', () => {
   it('takes an error on either end', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Form validationErrors={{ 'trip-start': ['Too early'] }}>
         <DateRangePicker label="Trip" startName="trip-start" endName="trip-end" />
       </Form>,

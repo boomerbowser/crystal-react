@@ -12,18 +12,18 @@
  *
  * The switch is `SegmentedControl`, which is a radio group, although the
  * catalogue says "a control with a pressed state". Picking one of two
- * arrangements is a choice, and both Crystal and React Aria treat it that way:
- * Crystal's own segmented control is a radio group, and React Aria's
+ * arrangements is a choice, and both Prismata and React Aria treat it that way:
+ * Prismata's own segmented control is a radio group, and React Aria's
  * `ToggleButtonGroup` renders `role="radiogroup"` with `aria-checked` when its
  * selection is single. The catalogue's clause rules out two unlabelled icons
  * whose state is a colour, and a named radio group rules that out at least as
  * firmly as `aria-pressed` would.
  *
- * Below Crystal's small breakpoint the grid becomes a list and the switch goes
+ * Below Prismata's small breakpoint the grid becomes a list and the switch goes
  * away, which is the catalogue's "layout switches at a declared breakpoint". It
  * is a container query, so it follows the collection's own box: the same
  * collection is a grid in a full-width page and a list in a 320px sidebar of
- * the same window. The breakpoint is Crystal's `$cr-breakpoint-sm` and not a
+ * the same window. The breakpoint is Prismata's `$pr-breakpoint-sm` and not a
  * prop, because a container query's condition cannot read a custom property.
  * The switch is removed, not made inert, because a control that cannot change
  * anything is worse than no control.
@@ -98,7 +98,7 @@ export const DataView = forwardRef<HTMLElement, DataViewProps>(function DataView
         <div className={styles['toolbar']}>
           <div className={styles['tools']}>{toolbar}</div>
           {switchable ? (
-            /* Crystal's own control. Named by visible text, so the name a
+            /* Prismata's own control. Named by visible text, so the name a
                reader hears is the name on the screen. */
             <SegmentedControl
               label="Layout"
@@ -119,13 +119,13 @@ export const DataView = forwardRef<HTMLElement, DataViewProps>(function DataView
       ) : (
         <ul className={styles['items']}>
           {loading ? (
-            <li aria-hidden="true" className={cx('cr-haze flush', styles['item'], styles['placeholder'])} />
+            <li aria-hidden="true" className={cx('pr-haze flush', styles['item'], styles['placeholder'])} />
           ) : (
             /* An item added after the view first rendered arrives with `list-in`.
                One removed leaves with `list-out`. */
             <ListPresence>
               {items.map((item) => (
-                <PresenceItem key={item.id} className={cx('cr-haze flush', styles['item'])}>{item.content}</PresenceItem>
+                <PresenceItem key={item.id} className={cx('pr-haze flush', styles['item'])}>{item.content}</PresenceItem>
               ))}
             </ListPresence>
           )}

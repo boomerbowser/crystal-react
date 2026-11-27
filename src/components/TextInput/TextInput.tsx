@@ -4,7 +4,7 @@
  *
  * React Aria's TextField owns the parts that are easy to get subtly wrong: the
  * label association, `aria-describedby` for the description and the error, the
- * invalid state, and the disabled semantics. Crystal owns the materials, the
+ * invalid state, and the disabled semantics. Prismata owns the materials, the
  * focus ring and the motion.
  *
  * Motion binds to validation state instead of a blur handler. `field-invalid`
@@ -64,7 +64,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function T
           {/* Uses the validity React Aria resolved instead of the one the caller
               declared, so a server's rejection moves the field exactly as a
               local rule would. */}
-          <FieldShell isInvalid={isInvalid} className={cx('cr-field-shell block', styles['shell'])}>
+          <FieldShell isInvalid={isInvalid} className={cx('pr-field-shell block', styles['shell'])}>
             <Input
               ref={forwardedRef}
               className={cx(styles['input'])}

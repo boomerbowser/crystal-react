@@ -89,7 +89,7 @@ export function FocusMode({
   return (
     <div
       {...props}
-      data-cr-state={isOn ? 'on' : 'off'}
+      data-pr-state={isOn ? 'on' : 'off'}
       onFocus={trackFocus}
       className={cx(styles['wrap'], className)}
     >

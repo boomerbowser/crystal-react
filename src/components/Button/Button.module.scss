@@ -2,36 +2,36 @@
 
 /* Button.
  *
- * Everything Crystal's own control is made of comes from Crystal (R-19): the
- * component wears `cr-button`, and core paints it.
+ * Everything Prismata's own control is made of comes from Prismata (R-19): the
+ * component wears `pr-button`, and core paints it.
  *
  * The Resin recipe is keyed on
- * `:is(button, a.cr-button, .cr-control, .cr-field-shell, .cr-resin-haze, .cr-status)`,
+ * `:is(button, a.pr-button, .pr-control, .pr-field-shell, .pr-resin-haze, .pr-status)`,
  * which matches the element. A bare `<button>` with no class already resolves
  * to the Resin fill, the rim, the float shadow, the backdrop blur,
  * `position: relative`, `isolation: isolate` and both feathered pseudo-layers.
- * `.cr-button` adds the geometry.
+ * `.pr-button` adds the geometry.
  *
- * Do not restate Crystal's rules here. A module class is unlayered and Crystal
- * styles inside `@layer crystal.component`, and an unlayered declaration wins
- * whatever its specificity, so a duplicate paints over Crystal. Every
- * declaration below is one Crystal does not make.
+ * Do not restate Prismata's rules here. A module class is unlayered and Prismata
+ * styles inside `@layer prismata.component`, and an unlayered declaration wins
+ * whatever its specificity, so a duplicate paints over Prismata. Every
+ * declaration below is one Prismata does not make.
  *
  * No `data-*` selector is used. The states (`:disabled`, `:focus-visible`,
- * `[aria-pressed]`, hover) are in the DOM, and Crystal's own selectors reach
+ * `[aria-pressed]`, hover) are in the DOM, and Prismata's own selectors reach
  * them.
  *
- * The button does not brighten on hover. `.cr-button:hover` ("the one Crystal
- * writes for its own filled button") is in `@layer crystal.reset`, and
- * `:is(button, a.cr-button):hover { filter: none }` is in
- * `@layer crystal.component`, which wins because the layer is later. Crystal's
+ * The button does not brighten on hover. `.pr-button:hover` ("the one Prismata
+ * writes for its own filled button") is in `@layer prismata.reset`, and
+ * `:is(button, a.pr-button):hover { filter: none }` is in
+ * `@layer prismata.component`, which wins because the layer is later. Prismata's
  * button does not brighten, so this one does not either. The discrepancy is
  * filed against core as D-21.
  */
 
 .button {
   /* The motion engine sets the transform. Declaring the origin here keeps the
-     press deformation centred whatever the button's size. Crystal specifies no
+     press deformation centred whatever the button's size. Prismata specifies no
      transform on a button, so this rule belongs to the library. */
   transform-origin: center;
   will-change: transform;
@@ -39,18 +39,18 @@
 
 /* A toggle that is on, when it is also quiet.
  *
- * Crystal paints a pressed toggle by tinting the reading pad and taking
- * `--cr-on-primary` for the ink. A quiet button has no pad to tint
- * (`.cr-button.quiet::before` is `display: none`), which would leave the
- * on-primary ink over the bare Resin shell. Crystal's rule does not cover this
+ * Prismata paints a pressed toggle by tinting the reading pad and taking
+ * `--pr-on-primary` for the ink. A quiet button has no pad to tint
+ * (`.pr-button.quiet::before` is `display: none`), which would leave the
+ * on-primary ink over the bare Resin shell. Prismata's rule does not cover this
  * case. The weight of 800 still comes from core: selection is label weight, and
  * the pad only reinforces it. This is a candidate for a core recipe. */
-.button:global(.quiet)[aria-pressed='true'] { color: var(--cr-text); }
+.button:global(.quiet)[aria-pressed='true'] { color: var(--pr-text); }
 
-/* A card-shaped button keeps the content radius. Crystal documents the exception
-   in prose and publishes no `.cr-button.card`, so the rule stays in this library
+/* A card-shaped button keeps the content radius. Prismata documents the exception
+   in prose and publishes no `.pr-button.card`, so the rule stays in this library
    until core has a recipe for it. */
-.card { border-radius: var(--cr-radius); }
+.card { border-radius: var(--pr-radius); }
 
 /* Reduced transparency. Core flattens its material containers under this query
    and carries no rule for a control, so removing diffusion from the button
@@ -58,12 +58,12 @@
    control never flattens into a plain rectangle. */
 @media (prefers-reduced-transparency: reduce) {
   .button {
-    background: var(--cr-surface);
+    background: var(--pr-surface);
     backdrop-filter: none;
   }
 }
 
-/* Forced colours. Core sets `forced-color-adjust: auto` on `.cr-button` and
+/* Forced colours. Core sets `forced-color-adjust: auto` on `.pr-button` and
    delegates the fill to the user agent, and supplies the `ButtonText` border and
    the `Highlight` focus outline itself. Naming the system pair here adds to
    core and does not duplicate it. The sheen is removed, because a decorative

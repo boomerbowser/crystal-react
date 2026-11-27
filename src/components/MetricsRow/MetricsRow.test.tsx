@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { MetricsRow } from './MetricsRow.js';
 import { Statistic } from '../Statistic/Statistic.js';
 
@@ -10,7 +10,7 @@ describe('MetricsRow', () => {
      what they need from a dashboard's summary band. Four sibling divs say
      nothing. */
   it('is a named list whose items are the figures', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <MetricsRow label="This month">
         <Statistic label="Revenue" value="£41,200" />
         <Statistic label="Orders" value="1,204" />
@@ -25,7 +25,7 @@ describe('MetricsRow', () => {
      are loading would make a screen reader say the same sentence six times.
      `LoadingScreen` likewise renders one skeleton over many shapes. */
   it('announces the wait once, however many figures are coming', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <MetricsRow label="This month" loading>
         {Array.from({ length: 6 }, (_, i) => <Statistic key={i} label="Revenue" value="—" loading />)}
       </MetricsRow>,
@@ -37,7 +37,7 @@ describe('MetricsRow', () => {
   /* A dashboard whose metrics have not been chosen yet renders nothing at all
      if this is a bare map, and the reader is left looking at a gap. */
   it('shows the empty state rather than an empty band', () => {
-    renderWithCrystal(<MetricsRow label="This month" empty={<p>Choose the metrics to watch.</p>} />);
+    renderWithPrismata(<MetricsRow label="This month" empty={<p>Choose the metrics to watch.</p>} />);
     expect(screen.getByText('Choose the metrics to watch.')).toBeInTheDocument();
     expect(screen.queryByRole('list')).toBeNull();
   });
@@ -46,7 +46,7 @@ describe('MetricsRow', () => {
      exists only while loading. An axe assertion against the at-rest render
      passes even when the loading render is malformed. */
   it.each([false, true])('has no axe violations while loading is %s', async (loading) => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <MetricsRow label="This month" loading={loading}>
         <Statistic label="Revenue" value="£41,200" loading={loading} />
       </MetricsRow>,

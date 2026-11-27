@@ -11,54 +11,54 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-/* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
+/* The shell wears Prismata's `.pr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 .control { @include field.control; font-variant-numeric: tabular-nums; }
 
 .control:focus { outline: none; }
 .shell { @include field.keyboard-focus-within; }
-.shell[data-invalid] { border-color: var(--cr-danger-ink); }
+.shell[data-invalid] { border-color: var(--pr-danger-ink); }
 
 /* A swatch over a chequerboard, so a translucent colour reads as translucent
    and not as a paler opaque one. The colour is the top layer
-   (`--cr-swatch`, handed over from React Aria's background colour, which the
+   (`--pr-swatch`, handed over from React Aria's background colour, which the
    chequerboard would otherwise cover). */
 @mixin chequered {
   background-image:
-    linear-gradient(var(--cr-swatch, transparent), var(--cr-swatch, transparent)),
-    linear-gradient(45deg, var(--cr-surface-alt) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--cr-surface-alt) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, var(--cr-surface-alt) 75%),
-    linear-gradient(-45deg, transparent 75%, var(--cr-surface-alt) 75%);
-  background-size: 100% 100%, $cr-spacing-xs $cr-spacing-xs, $cr-spacing-xs $cr-spacing-xs, $cr-spacing-xs $cr-spacing-xs, $cr-spacing-xs $cr-spacing-xs;
-  background-position: 0 0, 0 0, 0 #{$cr-spacing-2xs}, #{$cr-spacing-2xs} calc(-1 * #{$cr-spacing-2xs}), calc(-1 * #{$cr-spacing-2xs}) 0;
+    linear-gradient(var(--pr-swatch, transparent), var(--pr-swatch, transparent)),
+    linear-gradient(45deg, var(--pr-surface-alt) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--pr-surface-alt) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--pr-surface-alt) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--pr-surface-alt) 75%);
+  background-size: 100% 100%, $pr-spacing-xs $pr-spacing-xs, $pr-spacing-xs $pr-spacing-xs, $pr-spacing-xs $pr-spacing-xs, $pr-spacing-xs $pr-spacing-xs;
+  background-position: 0 0, 0 0, 0 #{$pr-spacing-2xs}, #{$pr-spacing-2xs} calc(-1 * #{$pr-spacing-2xs}), calc(-1 * #{$pr-spacing-2xs}) 0;
 }
 
 .swatch {
   flex: none;
-  inline-size: $cr-choice-box-size;
-  block-size: $cr-choice-box-size;
-  margin-inline-start: $cr-spacing-sm;
-  border: 1px solid var(--cr-edge);
-  border-radius: $cr-choice-box-radius;
+  inline-size: $pr-choice-box-size;
+  block-size: $pr-choice-box-size;
+  margin-inline-start: $pr-spacing-sm;
+  border: 1px solid var(--pr-edge);
+  border-radius: $pr-choice-box-radius;
   @include chequered;
 }
 
 .area {
   inline-size: 100%;
-  block-size: calc(#{$cr-action-min-target} * 4);
-  border-radius: var(--cr-radius);
-  border: 1px solid var(--cr-edge);
+  block-size: calc(#{$pr-action-min-target} * 4);
+  border-radius: var(--pr-radius);
+  border: 1px solid var(--pr-edge);
 }
 
 .track {
-  block-size: $cr-slider-thumb-size;
-  border-radius: $cr-slider-thumb-size;
-  border: 1px solid var(--cr-edge);
+  block-size: $pr-slider-thumb-size;
+  border-radius: $pr-slider-thumb-size;
+  border: 1px solid var(--pr-edge);
 }
 
 .wheel { flex: none; }
 
-/* The Resin thumb (R-A10): `.cr-resin` worn in the markup supplies the fill, the
+/* The Resin thumb (R-A10): `.pr-resin` worn in the markup supplies the fill, the
    rim, the float shadow, the diffusion and the sheen. This rule is the
    geometry, and the edge a thumb on an arbitrary colour cannot do without: a
    dark hairline outside the Resin and a white ring round the picked colour, so
@@ -66,18 +66,18 @@
    family has always had, now with Resin between the rings). Resin's own rim is
    too faint for that in dark mode. */
 .thumb {
-  inline-size: $cr-slider-thumb-size;
-  block-size: $cr-slider-thumb-size;
+  inline-size: $pr-slider-thumb-size;
+  block-size: $pr-slider-thumb-size;
   border-radius: 50%;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.7), var(--cr-shadow-float);  /* crystal-allow-literal: the dark ring of a thumb that must keep an edge on any colour */
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.7), var(--pr-shadow-float);  /* prismata-allow-literal: the dark ring of a thumb that must keep an edge on any colour */
 }
 
 .picked {
   position: absolute;
-  inset: $cr-spacing-2xs;
+  inset: $pr-spacing-2xs;
   border-radius: 50%;
-  border: 2px solid #fff;  /* crystal-allow-literal: the light ring of the same thumb, which must not follow the palette */
-  background: var(--cr-picked);
+  border: 2px solid #fff;  /* prismata-allow-literal: the light ring of the same thumb, which must not follow the palette */
+  background: var(--pr-picked);
 }
 
 /* On a colour slider's track, React Aria sets the thumb's `left` and a
@@ -87,17 +87,17 @@
 .track .thumb { inset-block-start: 50%; }
 
 .thumb[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
 }
 
-.swatchGrid { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; }
+.swatchGrid { display: flex; flex-wrap: wrap; gap: $pr-spacing-xs; }
 
 .swatchOption {
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
-  border-radius: $cr-choice-box-radius;
-  border: 1px solid var(--cr-edge);
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
+  border-radius: $pr-choice-box-radius;
+  border: 1px solid var(--pr-edge);
   cursor: pointer;
 }
 
@@ -112,19 +112,19 @@
 
 /* Selection is a ring instead of a fill, because the fill is the value. */
 .swatchOption[data-selected] {
-  outline: $cr-indicator-line-width solid var(--cr-primary);
+  outline: $pr-indicator-line-width solid var(--pr-primary);
   outline-offset: 2px;
 }
 
 .swatchOption[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
 }
 
-.name { font-size: var(--cr-text-caption-size); color: var(--cr-muted); }
+.name { font-size: var(--pr-text-caption-size); color: var(--pr-muted); }
 .description, .error { @include field.message; }
-.description { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 700; }
+.description { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 700; }
 
 @media (forced-colors: active) {
   .swatchOption[data-selected] { outline-color: Highlight; }

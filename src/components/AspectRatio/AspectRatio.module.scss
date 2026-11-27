@@ -10,7 +10,7 @@
 .aspectRatio {
   position: relative;
   inline-size: 100%;
-  aspect-ratio: var(--cr-aspect, 16 / 9);
+  aspect-ratio: var(--pr-aspect, 16 / 9);
 }
 
 .aspectRatio > * {
@@ -19,9 +19,9 @@
   object-fit: cover;
 }
 
-/* Clipping media takes the content radius, which Crystal uses wherever content,
+/* Clipping media takes the content radius, which Prismata uses wherever content,
    and not a control, is being shaped. */
 .clip {
   overflow: hidden;
-  border-radius: var(--cr-radius);
+  border-radius: var(--pr-radius);
 }

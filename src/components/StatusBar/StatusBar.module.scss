@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* "Full-bleed; text stays crisp." Both come from core's `.cr-stone`, so this
+/* "Full-bleed; text stays crisp." Both come from core's `.pr-stone`, so this
    component wears that class rather than a mixin of its own. Stone's feather
    lives on an isolated `::before` at `z-index: -1`, so the backing is soft and
    the label on top of it is not. Feathering the element itself would feather
@@ -8,17 +8,17 @@
 .bar {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   box-sizing: border-box;
-  min-block-size: $cr-action-min-target;
-  padding-block: $cr-spacing-2xs;
-  padding-inline: $cr-spacing-md;
+  min-block-size: $pr-action-min-target;
+  padding-block: $pr-spacing-2xs;
+  padding-inline: $pr-spacing-md;
 }
 
 .text { min-inline-size: 0; }
 
-.busy { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 650; }
+.busy { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 650; }
 
 @media (forced-colors: active) {
   .bar { border-block-start: 1px solid CanvasText; }

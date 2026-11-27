@@ -3,8 +3,8 @@
 /* SkipLink.
  *
  * The first focusable element in the document, and the first piece of
- * accessibility furniture a keyboard user meets. Crystal's catalogue finds no
- * parity entry for it in any benchmarked library, and Crystal ships it because
+ * accessibility furniture a keyboard user meets. Prismata's catalogue finds no
+ * parity entry for it in any benchmarked library, and Prismata ships it because
  * every product otherwise rebuilds it badly.
  *
  * Two requirements are easy to satisfy halfway:

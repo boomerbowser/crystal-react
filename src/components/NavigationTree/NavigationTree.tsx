@@ -21,12 +21,12 @@
  * The row element is therefore given the attribute directly, from React Aria's
  * own `isCurrent`, the same value its `data-current` comes from.
  *
- * Crystal owns three things here, each one rule:
+ * Prismata owns three things here, each one rule:
  *
  *   - The row material. Haze rows, and a 44px row, which is the floor the
  *     catalogue states for a destination.
  *   - Current marking by label weight. Not a badge, a leading mark or colour
- *     alone: the same rule selection follows everywhere in Crystal. The soft
+ *     alone: the same rule selection follows everywhere in Prismata. The soft
  *     fill under the current row is the second signal.
  *   - Expansion motion. `accordion-in` plays on a row that arrives because
  *     somebody expanded its parent, and never on the rows that were there when
@@ -163,13 +163,13 @@ function RowContent(
   return (
     <div
       ref={scope as never}
-      className={cx('cr-haze flush', styles['row'])}
+      className={cx('pr-haze flush', styles['row'])}
       /* The depth as a number, so one rule indents every level. CSS cannot read
          `aria-level`. */
-      style={{ '--cr-tree-level': level - 1 } as CSSProperties}
+      style={{ '--pr-tree-level': level - 1 } as CSSProperties}
     >
       {hasChildItems ? (
-        <Button slot="chevron" className={cx(styles['chevron'], 'cr-bare')}>{ChevronIcon}</Button>
+        <Button slot="chevron" className={cx(styles['chevron'], 'pr-bare')}>{ChevronIcon}</Button>
       ) : (
         /* The chevron's space, held open on a leaf. Without it every leaf label
            sits one chevron to the left of its siblings', and the indentation no

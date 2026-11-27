@@ -11,68 +11,68 @@
 .switch {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-sm;
-  min-block-size: $cr-action-min-target;
-  color: var(--cr-text);
+  gap: $pr-spacing-sm;
+  min-block-size: $pr-action-min-target;
+  color: var(--pr-text);
   cursor: pointer;
 }
 
-/* The track and thumb are Crystal's native switch, `input[type=checkbox][role=switch]`
+/* The track and thumb are Prismata's native switch, `input[type=checkbox][role=switch]`
    (2.2.0), drawn here on React Aria's own elements because React Aria keeps its
    input visually hidden and the recipe is keyed on that input. The track wears
-   the same box as a class, `.cr-choice` (2.8.0); the thumb restates the native
+   the same box as a class, `.pr-choice` (2.8.0); the thumb restates the native
    thumb, which is opaque paint rather than material, and `verify:appearance`
    holds both to a native switch planted beside them, in both states.
 
-   On, Crystal's switch takes primary-soft for the track, keeps the rim, and
+   On, Prismata's switch takes primary-soft for the track, keeps the rim, and
    carries a 22px primary thumb with a contact shadow. This matches the
    catalogue's "primary-soft track when on, opaque thumb". The track colour and
    the thumb both change, so position is never the only signal. */
-$switch-thumb-inset: 2px; /* crystal-allow-literal: core's native switch thumb inset */
-$switch-thumb-gap: 6px;   /* crystal-allow-literal: core's native switch, thumb = track height - 6px */
+$switch-thumb-inset: 2px; /* prismata-allow-literal: core's native switch thumb inset */
+$switch-thumb-gap: 6px;   /* prismata-allow-literal: core's native switch, thumb = track height - 6px */
 
 .track {
-  /* The track wears Crystal's `.cr-choice` (2.8.0), the native switch's box on
+  /* The track wears Prismata's `.pr-choice` (2.8.0), the native switch's box on
      any element, with its fallbacks. Its size and the pill are the track's. */
   display: block;
-  inline-size: $cr-switch-track-width;
-  block-size: $cr-switch-track-height;
-  border-radius: $cr-action-radius;
+  inline-size: $pr-switch-track-width;
+  block-size: $pr-switch-track-height;
+  border-radius: $pr-action-radius;
 }
 
 .thumb {
   position: absolute;
   inset-block-start: $switch-thumb-inset;
   inset-inline-start: $switch-thumb-inset;
-  inline-size: calc(#{$cr-switch-track-height} - #{$switch-thumb-gap});
-  block-size: calc(#{$cr-switch-track-height} - #{$switch-thumb-gap});
+  inline-size: calc(#{$pr-switch-track-height} - #{$switch-thumb-gap});
+  block-size: calc(#{$pr-switch-track-height} - #{$switch-thumb-gap});
   border-radius: 50%;
-  background: var(--cr-surface);
-  box-shadow: 0 2px 4px var(--cr-control-edge), 0 4px 8px var(--cr-shadow-contact); /* crystal-allow-literal: core's native switch thumb shadow, published only as a rule */
-  transition: translate var(--cr-state) var(--cr-ease-settle);
+  background: var(--pr-surface);
+  box-shadow: 0 2px 4px var(--pr-control-edge), 0 4px 8px var(--pr-shadow-contact); /* prismata-allow-literal: core's native switch thumb shadow, published only as a rule */
+  transition: translate var(--pr-state) var(--pr-ease-settle);
 }
 
-.switch[data-selected] .track { background: var(--cr-primary-soft); }
+.switch[data-selected] .track { background: var(--pr-primary-soft); }
 
 .switch[data-selected] .thumb {
-  background: var(--cr-primary);
-  translate: calc(#{$cr-switch-track-width} - #{$cr-switch-track-height}) 0;
+  background: var(--pr-primary);
+  translate: calc(#{$pr-switch-track-width} - #{$pr-switch-track-height}) 0;
 }
 
 /* `translate` is physical, so right to left it runs the other way. The thumb
    starts at the inline start, which is the right-hand end there, and a positive
    translate would move it off the track. */
 .switch[data-selected]:dir(rtl) .thumb {
-  translate: calc(#{$cr-switch-track-height} - #{$cr-switch-track-width}) 0;
+  translate: calc(#{$pr-switch-track-height} - #{$pr-switch-track-width}) 0;
 }
 
 .switch[data-focus-visible] .track {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
-.switch[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.switch[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
 
 /* Reduced motion removes the travel and keeps the state change: the thumb is
    where it belongs the instant the value changes. */

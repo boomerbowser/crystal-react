@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createRef, useState } from 'react';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor } from '../../test/render.js';
 import { act } from '@testing-library/react';
 import { EditorBlock, type EditorState } from './EditorBlock.js';
 import { RichTextEditor, type RichTextEditorHandle } from '../../editor/RichTextEditor.js';
@@ -45,7 +45,7 @@ function Harness({ state = 'at-rest', onSave = () => {} }: { state?: EditorState
 describe('EditorBlock', () => {
   /* First half of the requirement: a real toolbar with one tab stop. */
   it('gives the toolbar one tab stop, with the arrow keys moving along it', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     screen.getByRole('button', { name: 'Before' }).focus();
     await userEvent.tab();
     expect(screen.getByRole('button', { name: 'Bold' })).toHaveFocus();
@@ -58,7 +58,7 @@ describe('EditorBlock', () => {
 
   /* Second half: formatting state is announced, as pressed on the toolbar… */
   it('says a format\'s state on its control', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     const bold = screen.getByRole('button', { name: 'Bold' });
     expect(bold).toHaveAttribute('aria-pressed', 'false');
     await userEvent.click(bold);
@@ -67,7 +67,7 @@ describe('EditorBlock', () => {
 
   /* …and in words when it changes while the reader is in the text. */
   it('says a format change made from the text, where the toolbar cannot', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     const text = screen.getByRole('textbox', { name: 'Notes' });
     text.focus();
     await userEvent.keyboard('{Control>}b{/Control}');
@@ -77,13 +77,13 @@ describe('EditorBlock', () => {
   });
 
   it('leaves a toolbar change to aria-pressed rather than saying it twice', async () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await userEvent.click(screen.getByRole('button', { name: 'Italic' }));
     expect(screen.getByRole('status')).toHaveTextContent('');
   });
 
   it('shows and says the save state as it changes', () => {
-    const { rerender } = renderWithCrystal(<Harness />);
+    const { rerender } = renderWithPrismata(<Harness />);
     expect(screen.getByRole('status')).toHaveTextContent('');
     rerender(<Harness state="dirty" />);
     expect(screen.getByRole('status')).toHaveTextContent('Unsaved changes');
@@ -95,7 +95,7 @@ describe('EditorBlock', () => {
 
   it('saves with the shortcut while there is something to save, and not otherwise', async () => {
     const onSave = vi.fn();
-    const { rerender } = renderWithCrystal(<Harness state="saved" onSave={onSave} />);
+    const { rerender } = renderWithPrismata(<Harness state="saved" onSave={onSave} />);
     screen.getByRole('textbox', { name: 'Notes' }).focus();
     await userEvent.keyboard('{Control>}s{/Control}');
     expect(onSave).not.toHaveBeenCalled();
@@ -107,7 +107,7 @@ describe('EditorBlock', () => {
   });
 
   it.each(['at-rest', 'dirty', 'saving', 'saved'] satisfies EditorState[])('has no axe violations %s', async (state) => {
-    const { container } = renderWithCrystal(<Harness state={state} />);
+    const { container } = renderWithPrismata(<Harness state={state} />);
     await expectNoAxeViolations(container);
   });
 
@@ -128,7 +128,7 @@ describe('EditorBlock', () => {
         />
       );
     }
-    renderWithCrystal(<WithEditor />);
+    renderWithPrismata(<WithEditor />);
     expect(await screen.findAllByRole('toolbar', { name: 'Formatting for Notes' })).toHaveLength(1);
     const save = screen.getByRole('button', { name: 'Save' });
     expect(save).toBeDisabled();

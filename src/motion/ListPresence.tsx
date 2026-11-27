@@ -1,6 +1,6 @@
 'use client';
 
-/* A collection's items arriving and leaving: Crystal's `list-in` and `list-out`.
+/* A collection's items arriving and leaving: Prismata's `list-in` and `list-out`.
  *
  * The catalogue gives these to every collection (chips in a tags field, rows of
  * files, cards, reviews, the items of a list) and says when they play: `list-in`

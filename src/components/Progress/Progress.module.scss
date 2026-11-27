@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* The track is the slider's track. `$cr-slider-track-height` is Crystal's
+/* The track is the slider's track. `$pr-slider-track-height` is Prismata's
    `component.slider.trackHeight`. The catalogue says "matching the slider
    track", so the two components must not drift, and this reads the same token
    rather than a second 8. */
@@ -8,7 +8,7 @@
 .progress {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   inline-size: 100%;
 }
 
@@ -16,9 +16,9 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: $cr-spacing-sm;
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+  gap: $pr-spacing-sm;
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
 }
 
 /* Visually hidden, still named. The bar keeps its accessible name either way. */
@@ -31,34 +31,34 @@
   white-space: nowrap;
 }
 
-.label { color: var(--cr-text); }
-.value { color: var(--cr-muted); font-variant-numeric: tabular-nums; }
+.label { color: var(--pr-text); }
+.value { color: var(--pr-muted); font-variant-numeric: tabular-nums; }
 
 .track {
   position: relative;
   overflow: hidden;
-  block-size: $cr-slider-track-height;
-  border-radius: $cr-slider-track-height;
-  background: var(--cr-surface-alt);
-  box-shadow: inset 0 1px 1px var(--cr-control-edge);
+  block-size: $pr-slider-track-height;
+  border-radius: $pr-slider-track-height;
+  background: var(--pr-surface-alt);
+  box-shadow: inset 0 1px 1px var(--pr-control-edge);
 }
 
 .fill {
   block-size: 100%;
-  border-radius: $cr-slider-track-height;
-  background: var(--cr-primary);
+  border-radius: $pr-slider-track-height;
+  background: var(--pr-primary);
   /* The width is set inline from the value. A transition rather than a keyframe
      animation, because the movement is from where it was to where it is, and
      where it was is not known at author time. */
-  transition: inline-size calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
-    #{$cr-motion-easing-settle};
+  transition: inline-size calc(var(--pr-motion-enabled) * #{$pr-motion-duration-state} / var(--pr-motion-speed))
+    #{$pr-motion-easing-settle};
 }
 
-/* Indeterminate: a segment that travels the track, on Crystal's `activity-travel`
+/* Indeterminate: a segment that travels the track, on Prismata's `activity-travel`
    (D-19, 2.2.0). The recipe translates by the element's own width, so what moves
    is a runner as wide as the track and the segment rides at its inline start:
    from -100% the segment is wholly before the track, at 100% wholly past it.
-   Linear, because Crystal rules that a continuous indicator travels at
+   Linear, because Prismata rules that a continuous indicator travels at
    constant speed. */
 .runner {
   position: absolute;
@@ -70,15 +70,15 @@
   transition: none;
 }
 
-.progress[data-state='error'] .fill { background: var(--cr-danger-ink); }
-.progress[data-state='paused'] .fill { background: var(--cr-muted); }
+.progress[data-state='error'] .fill { background: var(--pr-danger-ink); }
+.progress[data-state='paused'] .fill { background: var(--pr-muted); }
 
 /* "Reduced motion replaces the movement with a static, still-legible state."
    A full track rather than an empty one: the bar is busy, and an indeterminate
    bar drawn empty reads as nought per cent. */
 /* Keyed on the motion hook's answer, which includes a product's `reduceMotion`
    as well as the operating system's; the query stays for before hydration. */
-.runner[data-cr-motion-state='instant'] .fill {
+.runner[data-pr-motion-state='instant'] .fill {
   inline-size: 100%;
   opacity: 0.55;
 }

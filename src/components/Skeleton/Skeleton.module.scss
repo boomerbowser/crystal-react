@@ -2,16 +2,16 @@
 
 .skeleton { display: block; }
 
-.shapes { display: flex; flex-direction: column; gap: $cr-spacing-xs; }
+.shapes { display: flex; flex-direction: column; gap: $pr-spacing-xs; }
 
 /* A placeholder written as plain elements, not `SkeletonBox`es, is still drawn
    as boxes at whatever size it states. Left unstyled, a plain `div` is
    transparent and the whole loading view shows nothing at all. */
 .shapes > :where(div, span):not([data-shape]) {
   display: block;
-  min-block-size: calc(var(--cr-text-body-leading) * var(--cr-text-body-size));
-  border-radius: $cr-choice-box-radius;
-  background: var(--cr-surface-alt);
+  min-block-size: calc(var(--pr-text-body-leading) * var(--pr-text-body-size));
+  border-radius: $pr-choice-box-radius;
+  background: var(--pr-surface-alt);
 }
 
 /* Visually hidden. The words are the announcement, not a caption. */
@@ -31,26 +31,26 @@
   position: relative;
   overflow: hidden;
   inline-size: 100%;
-  border-radius: $cr-choice-box-radius;
-  background: var(--cr-surface-alt);
+  border-radius: $pr-choice-box-radius;
+  background: var(--pr-surface-alt);
 }
 
 /* A line is as tall as a line of the text it stands for. The leading tokens are
    unitless ratios (1.6), so they are multiplied by the size; used bare as a
    length they are invalid, and every text and title placeholder was zero
    pixels tall, which left loading views blank. */
-.box[data-shape='text'] { block-size: calc(var(--cr-text-body-leading) * var(--cr-text-body-size)); }
-.box[data-shape='title'] { block-size: calc(var(--cr-text-heading-leading) * var(--cr-text-heading-size)); }
-.box[data-shape='block'] { block-size: $cr-spacing-2xl; border-radius: $cr-shape-content-radius; }
-.box[data-shape='circle'] { inline-size: $cr-spacing-2xl; block-size: $cr-spacing-2xl; border-radius: 50%; }
+.box[data-shape='text'] { block-size: calc(var(--pr-text-body-leading) * var(--pr-text-body-size)); }
+.box[data-shape='title'] { block-size: calc(var(--pr-text-heading-leading) * var(--pr-text-heading-size)); }
+.box[data-shape='block'] { block-size: $pr-spacing-2xl; border-radius: $pr-shape-content-radius; }
+.box[data-shape='circle'] { inline-size: $pr-spacing-2xl; block-size: $pr-spacing-2xl; border-radius: 50%; }
 
-/* The sweep is Crystal's `skeleton-sweep` (D-19, 2.2.0), which moves this
+/* The sweep is Prismata's `skeleton-sweep` (D-19, 2.2.0), which moves this
    highlight's background position from 200% to -200%. The highlight is part of
    the box's own background so the recipe can reach it. Motion cannot animate a
    pseudo-element. At rest it sits wholly outside the box, which is also the
    reduced-motion state: a plain filled placeholder. */
 .box {
-  background-image: linear-gradient(90deg, transparent 40%, var(--cr-surface) 50%, transparent 60%);
+  background-image: linear-gradient(90deg, transparent 40%, var(--pr-surface) 50%, transparent 60%);
   background-size: 200% 100%;
   background-repeat: no-repeat;
   background-position: 200% 0;

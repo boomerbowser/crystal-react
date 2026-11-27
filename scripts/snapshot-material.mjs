@@ -1,5 +1,5 @@
 /* R-28 phase 2: the computed material of each converted element, in every mode,
- * so wearing a Crystal variant in place of a hand-written rule can be shown to
+ * so wearing a Prismata variant in place of a hand-written rule can be shown to
  * change nothing. Run before and after the conversion, then compare.
  *
  *   node scripts/snapshot-material.mjs targets.json before.json   # Storybook on 6006
@@ -18,7 +18,7 @@ if (process.argv[2] === '--diff') {
   let n = 0;
   for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
     if (!(key in a) || !(key in b)) { console.log(`${key}: only in ${key in a ? 'before' : 'after'}`); n++; continue; }
-    /* Wearing a Crystal surface makes an element `position: relative` and
+    /* Wearing a Prismata surface makes an element `position: relative` and
        `isolation: isolate`. With no offsets that moves nothing on screen, so a
        static element that becomes relative is reported once, not per inset. */
     const moved = a[key].position === 'static' && b[key].position === 'relative';

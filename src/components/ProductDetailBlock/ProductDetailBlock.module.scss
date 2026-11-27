@@ -12,11 +12,11 @@
 
 .layout {
   display: grid;
-  gap: $cr-spacing-lg;
+  gap: $pr-spacing-lg;
   align-items: start;
 }
 
-@container (min-inline-size: 48rem) { /* crystal-allow-literal: the width at which the gallery and the details both fit */
+@container (min-inline-size: 48rem) { /* prismata-allow-literal: the width at which the gallery and the details both fit */
   .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 
@@ -24,14 +24,14 @@
 
 .details {
   display: grid;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   align-content: start;
   justify-items: start;
 }
 
 .name { margin: 0; }
 .price { margin: 0; }
-.description { color: var(--cr-muted); }
+.description { color: var(--pr-muted); }
 
 /* The action the page exists for, as wide as the column so it is found without
    looking for it. */

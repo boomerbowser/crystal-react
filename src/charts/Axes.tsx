@@ -20,7 +20,7 @@ import styles from './Axes.module.scss';
 
 /* How far a tick's label sits from the plot. Not tokens: they are a consequence
    of the caption type size, which is why they are here beside the text that uses
-   them rather than in Crystal, and they move together or not at all. */
+   them rather than in Prismata, and they move together or not at all. */
 const VALUE_LABEL_GAP = 8;
 const CATEGORY_LABEL_BASELINE = 18;
 

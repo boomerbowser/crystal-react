@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'A bounded scrolling region carrying one of Crystal\'s two scrollbars. Frost is for '
+          'A bounded scrolling region carrying one of Prismata\'s two scrollbars. Frost is for '
           + 'panels and reading surfaces, because Frost is the intermediate surface and its '
           + 'scrollbar belongs to the panel the way the panel\'s own text does. Resin is for menus, '
           + 'popovers and compact scrollers, because Resin is the floating control plane and a '
@@ -50,9 +50,9 @@ export const Frost: Story = {
   args: { 'aria-label': 'Material notes' },
   render: (args) => (
     <Card aria-label="Materials">
-      <ScrollArea {...only(args)} style={{ maxHeight: '220px' }} /* crystal-allow-literal: story bound, so the area actually scrolls */>
+      <ScrollArea {...only(args)} style={{ maxHeight: '220px' }} /* prismata-allow-literal: story bound, so the area actually scrolls */>
         {paragraphs.map((text) => (
-          <p key={text} style={{ marginBlock: '0 var(--cr-space)' }}>{text}</p>
+          <p key={text} style={{ marginBlock: '0 var(--pr-space)' }}>{text}</p>
         ))}
       </ScrollArea>
     </Card>
@@ -64,12 +64,12 @@ export const Resin: Story = {
   args: { variant: 'resin', 'aria-label': 'Sections' },
   render: (args) => (
     <div
-      className="cr-resin"
-      style={{ borderRadius: 'var(--cr-radius)', padding: 'var(--cr-space)', maxWidth: '260px' }} /* crystal-allow-literal: story bound, a menu-width control plane */
+      className="pr-resin"
+      style={{ borderRadius: 'var(--pr-radius)', padding: 'var(--pr-space)', maxWidth: '260px' }} /* prismata-allow-literal: story bound, a menu-width control plane */
     >
-      <ScrollArea {...only(args)} style={{ maxHeight: '180px' }} /* crystal-allow-literal: story bound, so the area actually scrolls */>
+      <ScrollArea {...only(args)} style={{ maxHeight: '180px' }} /* prismata-allow-literal: story bound, so the area actually scrolls */>
         {paragraphs.map((text) => (
-          <p key={text} style={{ marginBlock: '0 var(--cr-space)' }}>{text.split('.')[0]}</p>
+          <p key={text} style={{ marginBlock: '0 var(--pr-space)' }}>{text.split('.')[0]}</p>
         ))}
       </ScrollArea>
     </div>
@@ -82,9 +82,9 @@ export const Horizontal: Story = {
   args: { axis: 'x', variant: 'resin', 'aria-label': 'Palettes' },
   render: (args) => (
     <ScrollArea {...only(args)}>
-      <div style={{ display: 'flex', gap: 'var(--cr-space)', width: 'max-content' }}>
+      <div style={{ display: 'flex', gap: 'var(--pr-space)', width: 'max-content' }}>
         {['Prism', 'Bloom', 'Harbor', 'Ion', 'Ember', 'Moss'].map((name) => (
-          <Card key={name} aria-label={name} style={{ minWidth: '160px' }} /* crystal-allow-literal: story bound, so the row overflows */>{name}</Card>
+          <Card key={name} aria-label={name} style={{ minWidth: '160px' }} /* prismata-allow-literal: story bound, so the row overflows */>{name}</Card>
         ))}
       </div>
     </ScrollArea>
@@ -96,10 +96,10 @@ export const Horizontal: Story = {
 export const AlreadyReachable: Story = {
   args: { 'aria-label': 'Actions' },
   render: (args) => (
-    <ScrollArea {...only(args)} style={{ maxHeight: '160px' }} /* crystal-allow-literal: story bound, so the area actually scrolls */>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--cr-space)' }}>
+    <ScrollArea {...only(args)} style={{ maxHeight: '160px' }} /* prismata-allow-literal: story bound, so the area actually scrolls */>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--pr-space)' }}>
         {paragraphs.map((text) => (
-          <button key={text} type="button" className="cr-control">{text.split(' ')[0]}</button>
+          <button key={text} type="button" className="pr-control">{text.split(' ')[0]}</button>
         ))}
       </div>
     </ScrollArea>

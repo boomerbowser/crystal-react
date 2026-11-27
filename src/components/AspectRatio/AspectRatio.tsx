@@ -8,7 +8,7 @@ import styles from './AspectRatio.module.scss';
 export interface AspectRatioProps extends HTMLAttributes<HTMLDivElement> {
   /** Width over height. Accepts a number (1.777…) or a CSS ratio ('16 / 9'). Defaults to 16 / 9. */
   ratio?: number | string;
-  /** Clip the content to the box, with Crystal's content radius. */
+  /** Clip the content to the box, with Prismata's content radius. */
   clip?: boolean;
   children?: ReactNode;
 }
@@ -18,7 +18,7 @@ export const AspectRatio = forwardRef<HTMLDivElement, AspectRatioProps>(function
   ref,
 ) {
   const box: CSSProperties = ratio !== undefined
-    ? { '--cr-aspect': String(ratio) } as CSSProperties
+    ? { '--pr-aspect': String(ratio) } as CSSProperties
     : {};
 
   return (

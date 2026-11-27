@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { LoadingOverlay } from './LoadingOverlay.js';
 
 describe('LoadingOverlay', () => {
@@ -9,7 +9,7 @@ describe('LoadingOverlay', () => {
      keyboard reader walks into a form they cannot see and fills in fields that
      are about to be replaced. This is the half that is usually missed. */
   it('makes the region it blocks inert', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <LoadingOverlay loading label="Saving changes">
         <button type="button">Save</button>
       </LoadingOverlay>,
@@ -20,7 +20,7 @@ describe('LoadingOverlay', () => {
   });
 
   it('leaves the region alone when nothing is loading', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <LoadingOverlay loading={false} label="Saving changes">
         <button type="button">Save</button>
       </LoadingOverlay>,
@@ -31,14 +31,14 @@ describe('LoadingOverlay', () => {
 
   /* "The reason is announced", in words. */
   it('says why the region is blocked', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <LoadingOverlay loading label="Saving changes"><p>Form</p></LoadingOverlay>,
     );
     expect(screen.getByRole('status')).toHaveTextContent('Saving changes');
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <LoadingOverlay loading label="Saving changes"><p>Form</p></LoadingOverlay>,
     );
     await expectNoAxeViolations(container);

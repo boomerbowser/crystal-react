@@ -1,23 +1,23 @@
 @use '../../styles/tokens' as *;
 
 /* "Haze sections in a Frost panel." The form is the Frost panel, worn as
-   `.cr-frost`; each section is Crystal's panelled `Fieldset` on a Haze fill,
-   worn as `.cr-haze`. */
+   `.pr-frost`; each section is Prismata's panelled `Fieldset` on a Haze fill,
+   worn as `.pr-haze`. */
 .form {
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-md);
-  padding: var(--cr-block-padding, var(--cr-space));
+  gap: var(--pr-block-gap, $pr-spacing-md);
+  padding: var(--pr-block-padding, var(--pr-space));
   min-inline-size: 0;
 }
 
 .heading { margin: 0; }
 
 .failure {
-  padding: $cr-spacing-sm $cr-spacing-md;
-  border: 1px solid var(--cr-danger-ink);
-  border-radius: var(--cr-radius);
-  background: var(--cr-danger-surface);
-  color: var(--cr-danger-ink);
+  padding: $pr-spacing-sm $pr-spacing-md;
+  border: 1px solid var(--pr-danger-ink);
+  border-radius: var(--pr-radius);
+  background: var(--pr-danger-surface);
+  color: var(--pr-danger-ink);
   font-weight: 700;
 }
 
@@ -27,7 +27,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   flex-wrap: wrap;
 }
 

@@ -1,7 +1,7 @@
-/* Fail the build on a name the installed @crystal-ui/core does not publish.
+/* Fail the build on a name the installed @prismata/core does not publish.
  *
- * Every fact the site states about Crystal is generated from the package, but a
- * page can still name a class in its markup (`cr-haze`, `cr-nav-item`) or a
+ * Every fact the site states about Prismata is generated from the package, but a
+ * page can still name a class in its markup (`pr-haze`, `pr-nav-item`) or a
  * surface by its id. Each must exist in the installed core, so a page written
  * against a vocabulary core has since changed fails here rather than rendering a
  * class that paints nothing (§3.10: parity is structural, not a review).
@@ -16,11 +16,11 @@ import { fileURLToPath } from 'node:url';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 const require = createRequire(import.meta.url);
-const coreCss = readFileSync(require.resolve('@crystal-ui/core/css'), 'utf8');
-const vocabulary = require('@crystal-ui/core/surfaces').surfaces;
-const catalogue = require('@crystal-ui/core/catalogue');
+const coreCss = readFileSync(require.resolve('@prismata/core/css'), 'utf8');
+const vocabulary = require('@prismata/core/surfaces').surfaces;
+const catalogue = require('@prismata/core/catalogue');
 
-const published = new Set([...coreCss.matchAll(/\.(cr-[a-z0-9-]+)/g)].map((m) => m[1]));
+const published = new Set([...coreCss.matchAll(/\.(pr-[a-z0-9-]+)/g)].map((m) => m[1]));
 const surfaceIds = new Set(vocabulary.map((s) => s.id));
 
 const files = (dir) => readdirSync(dir).flatMap((name) => {
@@ -31,11 +31,11 @@ const files = (dir) => readdirSync(dir).flatMap((name) => {
 const failures = [];
 for (const path of [...files(join(ROOT, 'app')), ...files(join(ROOT, 'lib'))]) {
   const code = readFileSync(path, 'utf8');
-  for (const [, name] of code.matchAll(/["'`\s](cr-[a-z0-9-]+)(?=["'`\s.])/g)) {
-    if (!published.has(name)) failures.push(`${relative(ROOT, path)}: class "${name}" is not in @crystal-ui/core's stylesheet`);
+  for (const [, name] of code.matchAll(/["'`\s](pr-[a-z0-9-]+)(?=["'`\s.])/g)) {
+    if (!published.has(name)) failures.push(`${relative(ROOT, path)}: class "${name}" is not in @prismata/core's stylesheet`);
   }
   for (const [, id] of code.matchAll(/\b(?:surface|madeOf)\(\s*'([a-z-]+)'\s*\)/g)) {
-    if (!surfaceIds.has(id)) failures.push(`${relative(ROOT, path)}: surface "${id}" is not in @crystal-ui/core's vocabulary`);
+    if (!surfaceIds.has(id)) failures.push(`${relative(ROOT, path)}: surface "${id}" is not in @prismata/core's vocabulary`);
   }
 }
 for (const category of catalogue.categories) for (const entry of category.components) {

@@ -70,7 +70,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
       {/* The validity React Aria resolved, which can differ from the one the
           caller declared, so a server's rejection moves the field exactly as a
           local rule would. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'pr-field-shell block')}>
         <Input
           ref={forwardedRef}
           className={cx(styles['control'])}
@@ -80,8 +80,8 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(functi
           {/* React Aria names these from the field's own label, so a form with
               three number fields does not have several buttons all called
               "Increase". */}
-          <Button slot="increment" className={cx(styles['stepper'], 'cr-bare')}><Chevron up /></Button>
-          <Button slot="decrement" className={cx(styles['stepper'], 'cr-bare')}><Chevron up={false} /></Button>
+          <Button slot="increment" className={cx(styles['stepper'], 'pr-bare')}><Chevron up /></Button>
+          <Button slot="decrement" className={cx(styles['stepper'], 'pr-bare')}><Chevron up={false} /></Button>
         </div>
       </FieldGroupShell>
       {description ? (

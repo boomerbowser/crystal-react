@@ -34,7 +34,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'The surface around a rich text editor: a field (Crystal\'s `field` surface) with a '
+          'The surface around a rich text editor: a field (Prismata\'s `field` surface) with a '
           + 'formatting toolbar whose buttons say whether the selection already has their format. '
           + 'The editor itself is the product\'s. It owns the document, and whatever it renders '
           + 'puts a value in the form. `Mentions` is the suggestion list that follows a trigger '

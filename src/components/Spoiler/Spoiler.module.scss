@@ -5,9 +5,9 @@
  * The fade is a mask on the content, so what shows through is whatever the
  * spoiler is sitting on. A gradient painted in a surface colour would be a stripe
  * of the wrong colour on every material except the one it was written for, and
- * Crystal has six.
+ * Prismata has six.
  *
- * The depth is Crystal's edge-fade depth, the same 24px the scroll contract uses
+ * The depth is Prismata's edge-fade depth, the same 24px the scroll contract uses
  * for a scrolled edge, because both show content continuing past a boundary. A
  * change to the fade is then one change.
  */
@@ -16,22 +16,22 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
 }
 
 .content {
   position: relative;
   overflow: hidden;
-  /* The edge travels on Crystal's spatial duration and entering ease, scaled
+  /* The edge travels on Prismata's spatial duration and entering ease, scaled
      by the reader's motion speed and zero under reduced motion, as
      `RollingNumber` does. */
   transition-property: max-block-size;
-  transition-timing-function: #{$cr-motion-easing-enter};
-  transition-duration: calc(var(--cr-motion-enabled, 1) * #{$cr-motion-duration-spatial} / var(--cr-motion-speed, 1));
+  transition-timing-function: #{$pr-motion-easing-enter};
+  transition-duration: calc(var(--pr-motion-enabled, 1) * #{$pr-motion-duration-spatial} / var(--pr-motion-speed, 1));
   /* The mask fades the content itself, so the material underneath shows through
      unchanged. It uses `to bottom` rather than a logical direction because the
      cut is at the bottom of a block of text in every writing mode. */
-  mask-image: linear-gradient(to bottom, #000 calc(100% - #{$cr-scroll-area-fade-depth}), transparent 100%);  /* crystal-allow-literal: mask coverage, not a colour */
+  mask-image: linear-gradient(to bottom, #000 calc(100% - #{$pr-scroll-area-fade-depth}), transparent 100%);  /* prismata-allow-literal: mask coverage, not a colour */
 }
 
 @media (prefers-reduced-motion: reduce) {

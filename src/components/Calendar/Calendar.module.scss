@@ -13,44 +13,44 @@
  */
 
 .panel {
-  /* The panel wears Crystal's `.cr-frost.flat` (2.7.0): Frost without grain, with Crystal's fallbacks. Its radius is the content radius plus the cell inset, so the cells nest. */
+  /* The panel wears Prismata's `.pr-frost.flat` (2.7.0): Frost without grain, with Prismata's fallbacks. Its radius is the content radius plus the cell inset, so the cells nest. */
   display: inline-block;
-  padding: var(--cr-space);
-  border-radius: calc(var(--cr-radius) + #{$cr-spacing-2xs});
-  color: var(--cr-text);
+  padding: var(--pr-space);
+  border-radius: calc(var(--pr-radius) + #{$pr-spacing-2xs});
+  color: var(--pr-text);
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $cr-spacing-sm;
-  margin-block-end: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
+  margin-block-end: $pr-spacing-sm;
 }
 
-.heading { font-weight: 750; font-size: var(--cr-text-subheading-size); }
+.heading { font-weight: 750; font-size: var(--pr-text-subheading-size); }
 
 .navButton {
 
   display: flex;
   align-items: center;
   justify-content: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
   border: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   background: transparent;
-  color: var(--cr-text);
+  color: var(--pr-text);
   cursor: pointer;
 }
 
-.navButton:hover { background: var(--cr-surface-alt); }
-.navButton svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.navButton:hover { background: var(--pr-surface-alt); }
+.navButton svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 .navButton[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(#{$cr-focus-core-offset} * -1);
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(#{$pr-focus-core-offset} * -1);
+  box-shadow: var(--pr-focus-ring);
 }
 
 .grid { border-collapse: collapse; }
@@ -58,9 +58,9 @@
 .grid td { padding: 0; }
 
 .weekday {
-  padding: $cr-spacing-2xs;
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  padding: $pr-spacing-2xs;
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
   font-weight: 700;
 }
 
@@ -70,21 +70,21 @@
   position: relative;
   display: grid;
   place-items: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
-  border-radius: $cr-action-radius;
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
+  border-radius: $pr-action-radius;
   font-weight: 550;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
-  transition: background-color #{$cr-motion-duration-state} #{$cr-motion-easing-enter}, border-radius #{$cr-motion-duration-state} #{$cr-motion-easing-enter};
+  transition: background-color #{$pr-motion-duration-state} #{$pr-motion-easing-enter}, border-radius #{$pr-motion-duration-state} #{$pr-motion-easing-enter};
 }
 
 /* Selection is label weight and a soft fill, as everywhere. */
-.cell[data-selected] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
-.cell[data-hovered]:not([data-selected]) { background: var(--cr-surface-alt); }
-.cell[data-outside-month] { color: var(--cr-muted); opacity: 0.6; }
-.cell[data-unavailable] { color: var(--cr-muted); text-decoration: line-through; cursor: not-allowed; }
-.cell[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.cell[data-selected] { font-weight: 800; background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
+.cell[data-hovered]:not([data-selected]) { background: var(--pr-surface-alt); }
+.cell[data-outside-month] { color: var(--pr-muted); opacity: 0.6; }
+.cell[data-unavailable] { color: var(--pr-muted); text-decoration: line-through; cursor: not-allowed; }
+.cell[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
 
 /* Today is marked with a dot beneath the number instead of a fill, so it
    cannot be mistaken for the selected day. With two fills, a reader would have
@@ -92,18 +92,18 @@
 .cell[data-today]::after {
   content: '';
   position: absolute;
-  inset-block-end: 6px; /* crystal-allow-literal: the dot's place under the number */
+  inset-block-end: 6px; /* prismata-allow-literal: the dot's place under the number */
   inset-inline-start: 50%;
-  inline-size: $cr-spacing-2xs;
-  block-size: $cr-spacing-2xs;
-  margin-inline-start: calc(#{$cr-spacing-2xs} / -2);
+  inline-size: $pr-spacing-2xs;
+  block-size: $pr-spacing-2xs;
+  margin-inline-start: calc(#{$pr-spacing-2xs} / -2);
   border-radius: 50%;
-  background: var(--cr-primary);
+  background: var(--pr-primary);
 }
 
 .cell[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(-1 * #{$cr-focus-core-offset});
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(-1 * #{$pr-focus-core-offset});
 }
 
 /* A range is one continuous bar: the days inside it are square and meet, and
@@ -113,13 +113,13 @@
 .range .cell[data-selected] { border-radius: 0; }
 .range .cell[data-selection-start],
 .range td:first-child .cell[data-selected] {
-  border-start-start-radius: $cr-action-radius;
-  border-end-start-radius: $cr-action-radius;
+  border-start-start-radius: $pr-action-radius;
+  border-end-start-radius: $pr-action-radius;
 }
 .range .cell[data-selection-end],
 .range td:last-child .cell[data-selected] {
-  border-start-end-radius: $cr-action-radius;
-  border-end-end-radius: $cr-action-radius;
+  border-start-end-radius: $pr-action-radius;
+  border-end-end-radius: $pr-action-radius;
 }
 .range .cell[data-selection-start], .range .cell[data-selection-end] { font-weight: 800; }
 /* The two ends carry a full-strength disc over the bar, so where the range
@@ -127,9 +127,9 @@
 .range .cell[data-selection-start],
 .range .cell[data-selection-end] {
   background:
-    radial-gradient(circle closest-side, var(--cr-primary) calc(100% - 1px), transparent 100%),
-    var(--cr-primary-soft);
-  color: var(--cr-on-primary);
+    radial-gradient(circle closest-side, var(--pr-primary) calc(100% - 1px), transparent 100%),
+    var(--pr-primary-soft);
+  color: var(--pr-on-primary);
 }
 
 @media (prefers-reduced-motion: reduce) {

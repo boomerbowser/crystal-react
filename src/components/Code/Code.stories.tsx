@@ -11,14 +11,14 @@ const meta = {
         component:
           'Monospace content that is never feathered, because code must stay exact. A softened '
           + 'edge around a fragment of syntax reads as imprecision in the thing being quoted. So '
-          + 'Code takes a canvas fill and an edge rim, the flattest surface Crystal has. A block is '
+          + 'Code takes a canvas fill and an edge rim, the flattest surface Prismata has. A block is '
           + 'a tab stop with a Resin scrollbar, because a sample wider than its column scrolls, and a '
           + 'scroll container with nothing focusable in it cannot be reached without a pointer. For '
           + 'a titled sample with a named region and a copy control in a header, use `CodeBlock`.',
       },
     },
   },
-  args: { children: 'npm i @crystal-ui/react' },
+  args: { children: 'npm i @prismata/react' },
 } satisfies Meta<typeof Code>;
 
 export default meta;
@@ -29,9 +29,9 @@ type Story = StoryObj<typeof meta>;
  *  height, and the leading stays the prose's so the line's rhythm is unchanged. */
 export const Inline: Story = {
   render: (args) => (
-    <p style={{ maxInlineSize: 'var(--cr-layout-reading-max)' }}>
+    <p style={{ maxInlineSize: 'var(--pr-layout-reading-max)' }}>
       Install it with <Code {...only(args)} />, then wrap your application in{' '}
-      <Code {...only(args)}>CrystalProvider</Code>.
+      <Code {...only(args)}>PrismataProvider</Code>.
     </p>
   ),
 };
@@ -39,7 +39,7 @@ export const Inline: Story = {
 export const Block: Story = {
   args: {
     block: true,
-    children: 'import { CrystalProvider } from \'@crystal-ui/react\';\n\nexport const App = () => <CrystalProvider>…</CrystalProvider>;',
+    children: 'import { PrismataProvider } from \'@prismata/react\';\n\nexport const App = () => <PrismataProvider>…</PrismataProvider>;',
   },
 };
 
@@ -50,6 +50,6 @@ export const WithCopy: Story = {
     block: true,
     copyable: true,
     copyLabel: 'Copy the install command',
-    children: 'npm i @crystal-ui/react @crystal-ui/core',
+    children: 'npm i @prismata/react @prismata/core',
   },
 };

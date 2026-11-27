@@ -112,9 +112,9 @@ export function Slider({
           <>
             <span
               className={cx(styles['fill'])}
-              style={{ '--cr-fill-size': `${state.getThumbPercent(0) * 100}%` } as React.CSSProperties}
+              style={{ '--pr-fill-size': `${state.getThumbPercent(0) * 100}%` } as React.CSSProperties}
             />
-            <SliderThumb className={cx('cr-resin flat', styles['thumb'])} {...(valueText ? { inputRef: input } : {})} />
+            <SliderThumb className={cx('pr-resin flat', styles['thumb'])} {...(valueText ? { inputRef: input } : {})} />
             {valueText ? <ValueText input={input} text={valueText(state.getThumbValue(0))} /> : null}
           </>
         )}
@@ -160,14 +160,14 @@ export function RangeSlider({
             <span
               className={cx(styles['fill'])}
               style={{
-                '--cr-fill-start': `${state.getThumbPercent(0) * 100}%`,
-                '--cr-fill-size': `${(state.getThumbPercent(1) - state.getThumbPercent(0)) * 100}%`,
+                '--pr-fill-start': `${state.getThumbPercent(0) * 100}%`,
+                '--pr-fill-size': `${(state.getThumbPercent(1) - state.getThumbPercent(0)) * 100}%`,
               } as React.CSSProperties}
             />
             {/* Two names, so a reader moving the lower bound is not told the
                 upper one. */}
-            <SliderThumb index={0} aria-label={startLabel} className={cx('cr-resin flat', styles['thumb'])} />
-            <SliderThumb index={1} aria-label={endLabel} className={cx('cr-resin flat', styles['thumb'])} />
+            <SliderThumb index={0} aria-label={startLabel} className={cx('pr-resin flat', styles['thumb'])} />
+            <SliderThumb index={1} aria-label={endLabel} className={cx('pr-resin flat', styles['thumb'])} />
           </>
         )}
       </SliderTrack>

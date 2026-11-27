@@ -12,7 +12,7 @@
  *
  * The underline is not decoration. It is the second, non-chromatic signal
  * that distinguishes a link from the text around it (WCAG 1.4.1), so it is
- * present at rest and not only on hover. Crystal offsets it so descenders are not
+ * present at rest and not only on hover. Prismata offsets it so descenders are not
  * struck through.
  *
  * Routing goes through `RouterProvider` when the application has one, so a link

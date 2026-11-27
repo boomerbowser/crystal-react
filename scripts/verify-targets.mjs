@@ -1,14 +1,14 @@
 /* Measure what a finger actually lands on, in a real browser.
  *
- * Crystal's floor is 44px, and the catalogue states it per component: "44px
+ * Prismata's floor is 44px, and the catalogue states it per component: "44px
  * minimum", "44px targets on touch". Unit tests cannot check it, because jsdom
  * reports every box as zero, so a `getBoundingClientRect` assertion in a vitest
  * test passes on a control of any size, including one that does not exist. axe
- * does not measure it either: SC 2.5.8's 24px floor is not what Crystal claims,
+ * does not measure it either: SC 2.5.8's 24px floor is not what Prismata claims,
  * and axe has no rule for it regardless. A screenshot shows the paint, not the
  * hit area.
  *
- * What is measured is the hit area. Crystal reaches the floor in two ways: some
+ * What is measured is the hit area. Prismata reaches the floor in two ways: some
  * controls are 44px tall, and some are shorter with a pseudo-element restoring
  * the target (a breadcrumb in a line of caption text, a pill inside a strip that
  * is itself 44px). A box measurement sees only the first, so this probes points:
@@ -42,7 +42,7 @@ const CASES = [
   /* The label, not `[role=radio]`. React Aria's radio is a visually-hidden 1px
      input inside the label, so the element ARIA names and the element a finger
      meets are different nodes. Probing the named one would report every
-     segmented control in Crystal as a 1px target. */
+     segmented control in Prismata as a 1px target. */
   { story: 'navigation-tabs-and-breadcrumbs--the-same-strip-with-different-semantics', selector: '[role="radiogroup"] label', why: 'a pill in a strip, same floor' },
   { story: 'navigation-links--destinations', selector: '#storybook-root a', why: 'catalogue: pill; minimum 44px target' },
   { story: 'navigation-hierarchies--files', selector: '[role="row"] > * > div', why: 'a tree row is a target' },
@@ -90,8 +90,8 @@ const CASES = [
      visually-hidden 1px box inside the handle, so probing the named element
      would report a 1px target on a control the catalogue states at 44px. The
      segmented control's radio above has the same problem. The handle carries
-     `data-cr-handle` so it can be selected here. */
-  { story: 'data-display-image-compare--default', selector: '#storybook-root [data-cr-handle]', why: 'catalogue: the compare handle is a pill and reaches 44px' },
+     `data-pr-handle` so it can be selected here. */
+  { story: 'data-display-image-compare--default', selector: '#storybook-root [data-pr-handle]', why: 'catalogue: the compare handle is a pill and reaches 44px' },
 
   /* The resizer's wrapper, not `[role=slider]`: React Aria's real input is a
      visually-hidden box inside it. The grip is drawn as a line, so the hit area
@@ -105,7 +105,7 @@ const CASES = [
      A legend entry is a control the catalogue states as a pill that reaches 44px,
      and it is the one chart control a pointer is expected to use.
 
-     A chart point's drawn mark is smaller than its target: Crystal's point scale
+     A chart point's drawn mark is smaller than its target: Prismata's point scale
      starts at 6px, and a thumb does not hit a 6px dot. The hit area is an
      invisible square round every point, so nothing on screen changes if it is
      dropped, and this check is what catches it.
@@ -113,7 +113,7 @@ const CASES = [
      The table disclosure opens the text equivalent of every chart in the
      library. If it is not reachable, the data is not either. */
   { story: 'charts-chart-legend--toggling', selector: '#storybook-root button', why: 'catalogue: legend entries are pills and reach 44px' },
-  { story: 'charts-scatter-chart--default', selector: '#storybook-root [role="graphics-symbol"] rect', why: 'a 6px point on Crystal\'s point scale still owes a 44px hit area' },
+  { story: 'charts-scatter-chart--default', selector: '#storybook-root [role="graphics-symbol"] rect', why: 'a 6px point on Prismata\'s point scale still owes a 44px hit area' },
   { story: 'charts-bar-chart--grouped', selector: '#storybook-root summary', why: 'the control that opens the text equivalent every chart owes' },
   /* Slice L. The catalogue states the floor for the banner's dismiss outright
      ("the dismiss control is a 44px pill"), and an alert's is the same control
@@ -228,7 +228,7 @@ console.log(JSON.stringify({
   suite: 'target size', floor: `${FLOOR}px default`, probes, least: LEAST_PROBES, failures,
 }, null, 2));
 if (failures.length) {
-  console.error('\nA control does not reach Crystal\'s target floor.');
+  console.error('\nA control does not reach Prismata\'s target floor.');
   console.error('Either make it taller or restore the hit area with a pseudo-element, as the');
   console.error('breadcrumb links and the strip pills do.');
   process.exit(1);

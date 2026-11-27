@@ -90,17 +90,17 @@ function Field({
       <Label className={cx(styles['label'])}>{label}</Label>
       {/* The validity React Aria resolved, not the one the caller declared, so a
           server's rejection moves the field exactly as a local rule would. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'pr-field-shell block')}>
         {/* Focus never leaves this input. The highlighted row is named through
             `aria-activedescendant`, which React Aria maintains. */}
         <Input className={cx(styles['control'])} {...(placeholder ? { placeholder } : {})} />
-        <Button className={cx(styles['trigger'], 'cr-bare')}>{ChevronIcon}</Button>
+        <Button className={cx(styles['trigger'], 'pr-bare')}>{ChevronIcon}</Button>
       </FieldGroupShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>
       ) : null}
       <FieldError className={cx(styles['error'])}>{errorMessage}</FieldError>
-      <ArrivingPopover recipe="popover-in" exit="popover-out" className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
+      <ArrivingPopover recipe="popover-in" exit="popover-out" className={cx(styles['popover'], 'pr-frost', 'pr-scroll-frost')}>
         {isLoading ? (
           /* In words. A reader who cannot see a spinner would get no sign that
              anything is happening. */

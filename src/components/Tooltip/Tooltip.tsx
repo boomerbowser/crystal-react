@@ -41,12 +41,12 @@ export function Tooltip({
     <AriaTooltip
       {...props}
       ref={scope as never}
-      /* Always Frost, because a transient overlay is Frost (Crystal R15e). A
+      /* Always Frost, because a transient overlay is Frost (Prismata R15e). A
          tooltip does not step down inside a dialog, because it does not compete
          with the dialog for depth. It is a small panel that lands where the
          pointer is, above whatever is there. */
-      data-cr-overlay="frost"
-      className={cx(styles['tooltip'], 'cr-frost', className)}
+      data-pr-overlay="frost"
+      className={cx(styles['tooltip'], 'pr-frost', className)}
     >
       {({ isExiting }) => (
         <>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { BoxPlot } from './BoxPlot.js';
 
 const boxes = [
@@ -13,14 +13,14 @@ describe('BoxPlot', () => {
      sighted reader counts by eye and a reader who cannot see it is told nothing
      about. */
   it('counts the outliers in the label and in the table', () => {
-    renderWithCrystal(<BoxPlot label="Latency" boxes={boxes} />);
+    renderWithPrismata(<BoxPlot label="Latency" boxes={boxes} />);
     expect(screen.getByLabelText(/Europe, median 24, .*3 outliers/)).toBeInTheDocument();
     expect(screen.getByRole('columnheader', { name: 'Outliers' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: '3' })).toBeInTheDocument();
   });
 
   it('says one outlier rather than 1 outliers', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <BoxPlot label="Latency" boxes={[{ ...boxes[0]!, outliers: [56] }]} />,
     );
     expect(screen.getByLabelText(/1 outlier$/)).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe('BoxPlot', () => {
   /* "Whisker caps align with the box width": a narrower cap makes the whisker
      look like an arrow, which says direction where the data says extent. */
   it('caps the whiskers at the box width', () => {
-    const { container } = renderWithCrystal(<BoxPlot label="Latency" boxes={boxes} />);
+    const { container } = renderWithPrismata(<BoxPlot label="Latency" boxes={boxes} />);
     const group = container.querySelector('[role="graphics-symbol"]')!;
     const box = group.querySelector('rect')!;
     const cap = Array.from(group.querySelectorAll('line'))
@@ -39,7 +39,7 @@ describe('BoxPlot', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<BoxPlot label="Latency by region" boxes={boxes} />);
+    const { container } = renderWithPrismata(<BoxPlot label="Latency by region" boxes={boxes} />);
     await expectNoAxeViolations(container);
   });
 });

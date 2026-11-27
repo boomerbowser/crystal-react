@@ -34,7 +34,7 @@ const meta = {
           + 'Errors come from one object keyed by field name, from a validation result or a server\'s '
           + 'rejection. React Aria\'s `Form` hands each field its message, and `ErrorSummary` lists '
           + 'them at the top, takes focus, and links to each. Checking, saving, saved and failed are '
-          + 'announced from one polite region, and saved is shown as well. Sections are Crystal\'s `Fieldset`, '
+          + 'announced from one polite region, and saved is shown as well. Sections are Prismata\'s `Fieldset`, '
           + 'Haze inside the Frost panel.',
       },
     },

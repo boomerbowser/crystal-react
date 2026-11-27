@@ -1,32 +1,32 @@
 @use '../tokens' as *;
 
-/* Nothing here but the material, which the specimens wear as Crystal's classes,
-   `.cr-frost` and `.cr-resin`, as every component in this library now does
+/* Nothing here but the material, which the specimens wear as Prismata's classes,
+   `.pr-frost` and `.pr-resin`, as every component in this library now does
    (R-28). Radius and size are the specimen's own and are not compared, because
-   Crystal's preview and this story are different compositions. */
+   Prismata's preview and this story are different compositions. */
 
-.row { display: flex; gap: $cr-spacing-lg; align-items: center; padding: $cr-spacing-xl; }
+.row { display: flex; gap: $pr-spacing-lg; align-items: center; padding: $pr-spacing-xl; }
 
 .frost {
-  padding: $cr-spacing-lg;
-  border-radius: calc(var(--cr-radius) + 6px); /* crystal-allow-literal: the specimen's own geometry, which this gate does not compare */
+  padding: $pr-spacing-lg;
+  border-radius: calc(var(--pr-radius) + 6px); /* prismata-allow-literal: the specimen's own geometry, which this gate does not compare */
 }
 
 .resin {
-  padding: $cr-spacing-md $cr-spacing-lg;
-  border-radius: $cr-action-radius;
+  padding: $pr-spacing-md $pr-spacing-lg;
+  border-radius: $pr-action-radius;
 }
 
-/* Haze is a content fill: `crystal.css` gives `.cr-haze` the surface colour, the
+/* Haze is a content fill: `prismata.css` gives `.pr-haze` the surface colour, the
    edge and the content shadow, without the feathered `::before` a component
    paints under its own label. The specimen is the primitive, so the primitive's
    recipe is what is compared. */
 .haze {
-  background: var(--cr-surface);
-  border: 1px solid var(--cr-edge);
-  border-radius: var(--cr-radius);
-  box-shadow: var(--cr-shadow-content);
-  padding: $cr-spacing-lg;
+  background: var(--pr-surface);
+  border: 1px solid var(--pr-edge);
+  border-radius: var(--pr-radius);
+  box-shadow: var(--pr-shadow-content);
+  padding: $pr-spacing-lg;
 }
 
-.variant { padding: $cr-spacing-md $cr-spacing-lg; min-inline-size: calc(#{$cr-action-min-target} * 4); }
+.variant { padding: $pr-spacing-md $pr-spacing-lg; min-inline-size: calc(#{$pr-action-min-target} * 4); }

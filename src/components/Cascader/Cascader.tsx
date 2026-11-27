@@ -141,14 +141,14 @@ export function Cascader({
           isDisabled={isDisabled}
           onFocus={() => { void playShell('field-focus'); }}
           {...(isInvalid ? { 'data-invalid': true } : {})}
-          className={cx(styles['shell'], 'cr-field-shell block', styles['trigger'])}
+          className={cx(styles['shell'], 'pr-field-shell block', styles['trigger'])}
         >
           <span className={cx(styles['value'], shown ? undefined : styles['placeholder'])}>
             {shown || placeholder}
           </span>
           <span className={cx(styles['disclosure'])} aria-hidden="true">{DownIcon}</span>
         </Button>
-        <ArrivingPopover recipe="menu-in" exit="menu-out" className={cx(styles['popover'], 'cr-frost reading')}>
+        <ArrivingPopover recipe="menu-in" exit="menu-out" className={cx(styles['popover'], 'pr-frost reading')}>
           <Dialog aria-labelledby={labelId}>
             {columns.map((column, depth) => (
               <ListBox
@@ -163,7 +163,7 @@ export function Cascader({
                   set([...path.slice(0, depth), String(chosen)]);
                 }}
                 disabledKeys={column.filter((node) => node.isDisabled).map((node) => node.value)}
-                className={cx(styles['column'], 'cr-scroll-frost')}
+                className={cx(styles['column'], 'pr-scroll-frost')}
               >
                 {(node: CascaderNode) => {
                   const isBranch = Boolean(node.children?.length);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { Cascader } from './Cascader.js';
 
 const PLACES = [
@@ -18,27 +18,27 @@ describe('Cascader', () => {
   /* The trigger is the field's shell and plays the field recipes (R-A3). */
   it('plays field-focus on its shell when focused', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Cascader label="Location" options={PLACES} />);
+    renderWithPrismata(<Cascader label="Location" options={PLACES} />);
     await user.tab();
     const shell = screen.getByRole('button', { name: /Location/ });
     expect(shell).toHaveFocus();
-    expect(shell.dataset['crMotionName']).toBe('field-focus');
+    expect(shell.dataset['prMotionName']).toBe('field-focus');
   });
 
   it('plays field-invalid when an error arrives, and field-valid when it goes', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(<Cascader label="Location" options={PLACES} />);
+    const { rerenderWithPrismata } = renderWithPrismata(<Cascader label="Location" options={PLACES} />);
     const shell = () => screen.getByRole('button', { name: /Location/ });
-    rerenderWithCrystal(<Cascader label="Location" options={PLACES} errorMessage="Choose a city." />);
-    expect(shell().dataset['crMotionName']).toBe('field-invalid');
+    rerenderWithPrismata(<Cascader label="Location" options={PLACES} errorMessage="Choose a city." />);
+    expect(shell().dataset['prMotionName']).toBe('field-invalid');
     expect(shell()).toHaveAttribute('data-invalid');
-    rerenderWithCrystal(<Cascader label="Location" options={PLACES} />);
-    expect(shell().dataset['crMotionName']).toBe('field-valid');
+    rerenderWithPrismata(<Cascader label="Location" options={PLACES} />);
+    expect(shell().dataset['prMotionName']).toBe('field-valid');
   });
 
   /* A column is named after the option it hangs from, so its name gives its
      subject. "Top level", "Level 2" and "Level 3" gave only its position. */
   it('names each column after what it is a list of', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Cascader label="Location" options={PLACES} defaultValue={['gb', 'sct']} />,
     );
     await userEvent.click(screen.getByRole('button', { name: /Location/ }));
@@ -50,7 +50,7 @@ describe('Cascader', () => {
   });
 
   it("takes the product's own names for the levels", async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Cascader
         label="Location"
         options={PLACES}
@@ -66,7 +66,7 @@ describe('Cascader', () => {
   /* The trigger shows the whole path. "Edinburgh" alone loses what
      disambiguates it. */
   it('shows the whole path on the trigger', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Cascader label="Location" options={PLACES} defaultValue={['gb', 'sct', 'edi']} />,
     );
     expect(screen.getByRole('button', { name: /Location/ }).textContent)

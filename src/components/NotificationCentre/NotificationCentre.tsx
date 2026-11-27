@@ -85,7 +85,7 @@ export function NotificationCentre({
   const groups = [...new Set(notifications.map((one) => one.group))];
 
   return (
-    <section aria-labelledby={headingId} className={cx(styles['centre'], 'cr-frost', className)}>
+    <section aria-labelledby={headingId} className={cx(styles['centre'], 'pr-frost', className)}>
       <div className={cx(styles['top'])}>
         <Heading id={headingId} className={cx(styles['heading'])}>{title}</Heading>
         <span className={cx(styles['count'])}>{unreadLabel(unread.length)}</span>
@@ -96,7 +96,7 @@ export function NotificationCentre({
 
       {marked ? (
         /* The undo stays until it is used, replaced or dismissed. */
-        <div className={cx(styles['undo'], 'cr-haze')}>
+        <div className={cx(styles['undo'], 'pr-haze')}>
           <span>{markedLabel(marked.length)}</span>
           <Button variant="quiet" onPress={() => { onMarkUnread(marked); setMarked(null); }}>Undo</Button>
           <Button variant="quiet" onPress={() => { setMarked(null); }}>Dismiss</Button>

@@ -4,7 +4,7 @@
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
 }
 
 .plot { position: relative; display: grid; place-items: center; }
@@ -17,10 +17,10 @@
   position: relative;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
-.label { font-size: var(--cr-text-caption-size); color: var(--cr-muted); }
+.label { font-size: var(--pr-text-caption-size); color: var(--pr-muted); }
 
 .hidden {
   position: absolute;

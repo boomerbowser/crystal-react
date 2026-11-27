@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'A hairline in Crystal\'s edge colour, never a heavy rule, so it does not compete '
+          'A hairline in Prismata\'s edge colour, never a heavy rule, so it does not compete '
           + 'with the content it separates.\n\n'
           + 'The accessibility behaviour splits two ways, and both halves are needed. An '
           + 'unlabelled divider is decoration. The headings either side already describe the '

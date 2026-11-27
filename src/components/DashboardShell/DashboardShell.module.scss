@@ -5,9 +5,9 @@
    a dashboard inside a split view reflows with the pane it is in. */
 .grid {
   display: grid;
-  gap: $cr-spacing-md;
-  padding: $cr-spacing-md;
+  gap: $pr-spacing-md;
+  padding: $pr-spacing-md;
   container-type: inline-size;
-  grid-template-columns: repeat(auto-fit, minmax($cr-layout-min-cell-width, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax($pr-layout-min-cell-width, 1fr));
   align-content: start;
 }

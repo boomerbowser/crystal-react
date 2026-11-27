@@ -8,7 +8,7 @@
  * keyboard since Chrome 108, iOS Safari never resizes the layout viewport, and
  * `env(keyboard-inset-height)` is there only where a page opts into the
  * VirtualKeyboard API. No emulator opens a keyboard, so this runs in Chrome on
- * a connected Android phone, as Crystal's D-4 was closed on a Pixel 6 Pro.
+ * a connected Android phone, as Prismata's D-4 was closed on a Pixel 6 Pro.
  *
  * It opens the editor, taps into the text so the keyboard opens, and measures,
  * rather than assumes, the visual viewport, the inset the hook computed, and
@@ -52,7 +52,7 @@ const steps = [];
 
 const measure = () => tab.evaluate(() => {
   const viewport = window.visualViewport;
-  const toolbar = document.querySelector('#storybook-root .cr-editor-toolbar');
+  const toolbar = document.querySelector('#storybook-root .pr-editor-toolbar');
   const surface = document.querySelector('#storybook-root [contenteditable=true]');
   const box = toolbar?.getBoundingClientRect();
   const visibleBottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
@@ -63,8 +63,8 @@ const measure = () => tab.evaluate(() => {
     covered: viewport ? Math.round(window.innerHeight - viewport.height - viewport.offsetTop) : null,
     virtualKeyboard: 'virtualKeyboard' in navigator,
     pointerCoarse: matchMedia('(pointer: coarse)').matches,
-    inset: toolbar ? getComputedStyle(toolbar).getPropertyValue('--cr-keyboard-inset').trim()
-      || getComputedStyle(toolbar.parentElement).getPropertyValue('--cr-keyboard-inset').trim() : null,
+    inset: toolbar ? getComputedStyle(toolbar).getPropertyValue('--pr-keyboard-inset').trim()
+      || getComputedStyle(toolbar.parentElement).getPropertyValue('--pr-keyboard-inset').trim() : null,
     placement: toolbar?.closest('[data-toolbar]')?.getAttribute('data-toolbar') ?? null,
     position: toolbar ? getComputedStyle(toolbar).position : null,
     toolbar: box ? { top: Math.round(box.top * 10) / 10, bottom: Math.round(box.bottom * 10) / 10, height: Math.round(box.height) } : null,
@@ -79,8 +79,8 @@ const measure = () => tab.evaluate(() => {
    screen's. */
 const adb = (...args) => execFileSync('adb', ['-s', device.serial(), ...args]).toString();
 const realTap = async (selector) => {
-  adb('shell', 'uiautomator', 'dump', '/sdcard/crystal-ui.xml');
-  const xml = adb('shell', 'cat', '/sdcard/crystal-ui.xml');
+  adb('shell', 'uiautomator', 'dump', '/sdcard/prismata.xml');
+  const xml = adb('shell', 'cat', '/sdcard/prismata.xml');
   const bounds = (id) => xml.match(new RegExp(`resource-id="com.android.chrome:id/${id}"[^>]*?bounds="\\[(\\d+),(\\d+)\\]\\[(\\d+),(\\d+)\\]"`))?.slice(1).map(Number);
   const top = bounds('control_container')?.[3] ?? bounds('compositor_view_holder')?.[1] ?? 0;
   const { x, y, ratio } = await tab.evaluate((selector) => {

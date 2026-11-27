@@ -9,7 +9,7 @@
 
 .fill {
   fill: var(--series-colour);
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
+  transition: opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 .label { @include chart.chart-label; }
@@ -17,7 +17,7 @@
 /* Outside the band it is on the plot rather than on paint, so it takes the
    ordinary ink and no backing. */
 .label[data-outside] {
-  fill: var(--cr-text);
+  fill: var(--pr-text);
   stroke: none;
 }
 

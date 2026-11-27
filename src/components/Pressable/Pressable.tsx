@@ -3,7 +3,7 @@
 /* Pressable.
  *
  * Makes any element respond to press across pointer, keyboard and touch, plays
- * Crystal's press recipe, and extends the hit area to the 44px minimum.
+ * Prismata's press recipe, and extends the hit area to the 44px minimum.
  *
  * React Aria's `Pressable` is the behaviour. It is used instead of an `onClick`
  * because a click handler does not fire on Space for a non-button, fires on a
@@ -12,12 +12,12 @@
  *
  * React Aria does not name the thing. It makes the child focusable and
  * pressable and leaves the role to the caller, so a bare `Pressable` around a
- * span is a tab stop a screen reader announces as nothing. Crystal's catalogue
+ * span is a tab stop a screen reader announces as nothing. Prismata's catalogue
  * says it "gives its child button semantics unless told otherwise", so the role
  * is applied here, and skipped when the child is already an element that has
  * one.
  *
- * Motion binds to the press state, not to a pointer event. That is Crystal's
+ * Motion binds to the press state, not to a pointer event. That is Prismata's
  * rule, and it means a keyboard user sees the same animation a mouse user does:
  * `onPressStart`/`onPressEnd` fire for Space and Enter too.
  */

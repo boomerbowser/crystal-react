@@ -10,7 +10,7 @@ import { CodeBlock } from '../CodeBlock/CodeBlock.js';
 import { GradientText } from '../GradientText/GradientText.js';
 import { Stack } from '../Stack/Stack.js';
 import { Card } from '../Card/Card.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 
 const meta = {
   title: 'Typography/Scale and prose',
@@ -19,9 +19,9 @@ const meta = {
     docs: {
       description: {
         component:
-          'The scale is Crystal\'s, derived from the reading size: each step is a ratio, so '
+          'The scale is Prismata\'s, derived from the reading size: each step is a ratio, so '
           + 'moving `typography.readingSize` moves all six. The scale is modest, because '
-          + 'Crystal\'s hierarchy is carried by weight and material as much as by size, and a '
+          + 'Prismata\'s hierarchy is carried by weight and material as much as by size, and a '
           + 'dramatic scale would compete with that.\n\n'
           + '**The level and the size are chosen separately.** The catalogue states this rule '
           + 'twice, and it is why Title takes both. If `level={2}` also meant "medium", products '
@@ -31,7 +31,7 @@ const meta = {
           + 'space.\n\n'
           + 'Prose is the rhythm applied to content the product did not lay out, such as rendered '
           + 'Markdown or a CMS body. It is the one place in this library where a stylesheet reaches '
-          + 'its descendants, so a content author does not need to know Crystal.',
+          + 'its descendants, so a content author does not need to know Prismata.',
       },
     },
   },
@@ -47,7 +47,7 @@ export const TheScale: Story = {
       <Title level={2}>Title: a section</Title>
       <Title level={3}>Heading: a subsection</Title>
       <Title level={4}>Subheading: a group</Title>
-      <Text>Body: Crystal&rsquo;s reading size exactly, at the 16/24 rhythm.</Text>
+      <Text>Body: Prismata&rsquo;s reading size exactly, at the 16/24 rhythm.</Text>
       <Text step="caption" tone="muted">Caption: supporting detail beside something else.</Text>
     </Stack>
   ),
@@ -95,7 +95,7 @@ export const LongForm: Story = {
       </ul>
       <blockquote>
         <p>Feathering applies to paint only. Text, icons, hit areas and focus rings stay crisp.</p>
-        <cite>Crystal, Materials</cite>
+        <cite>Prismata, Materials</cite>
       </blockquote>
       <p>
         A <abbr title="Cascading Style Sheets">CSS</abbr> approximation is not a native optical
@@ -103,7 +103,7 @@ export const LongForm: Story = {
       </p>
       {/* The figure is interpolated from the live token instead of typed into the
           sample, so the code example cannot drift from the material it describes. */}
-      <pre><code>{`.cr-haze { filter: blur(${crystalTokens['material.haze.feather']}); }`}</code></pre>
+      <pre><code>{`.pr-haze { filter: blur(${prismataTokens['material.haze.feather']}); }`}</code></pre>
     </Prose>
   ),
 };
@@ -132,7 +132,7 @@ export const Composed: Story = {
         </li>
       </ProseList>
       <Text step="caption" tone="muted">
-        Quoted from <Cite>Crystal, Materials</Cite>, with <Abbr expansion="Cascading Style Sheets">CSS</Abbr> examples.
+        Quoted from <Cite>Prismata, Materials</Cite>, with <Abbr expansion="Cascading Style Sheets">CSS</Abbr> examples.
       </Text>
       <Truncate lines={2}>
         A paragraph long enough to clamp at two lines, so the control to expand it appears. It
@@ -140,8 +140,8 @@ export const Composed: Story = {
         costs a keyboard user a tab stop to find that out. The full text stays in the document
         throughout, which is why clamping is used rather than cutting the string.
       </Truncate>
-      <CodeBlock language="TypeScript" label="crystal.ts">
-        {'import { CrystalProvider, Button } from \'@crystal-ui/react\';\n\n<CrystalProvider palette="prism">\n  <Button variant="primary">Save</Button>\n</CrystalProvider>'}
+      <CodeBlock language="TypeScript" label="prismata.ts">
+        {'import { PrismataProvider, Button } from \'@prismata/react\';\n\n<PrismataProvider palette="prism">\n  <Button variant="primary">Save</Button>\n</PrismataProvider>'}
       </CodeBlock>
     </Stack>
   ),

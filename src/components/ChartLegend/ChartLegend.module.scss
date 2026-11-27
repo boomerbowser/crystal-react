@@ -1,8 +1,8 @@
 @use '../../styles/tokens' as *;
 @use '../../charts/svg' as chart;
 
-/* "Entries are pills and reach 44px." Both are Crystal's action geometry, so
- * both come from Crystal's action tokens and not from numbers chosen here.
+/* "Entries are pills and reach 44px." Both are Prismata's action geometry, so
+ * both come from Prismata's action tokens and not from numbers chosen here.
  *
  * "Haze entry fills." This is the content fill every other reading surface
  * gets, so a legend entry is a pad with a label on it and its contrast does not
@@ -17,13 +17,13 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
 }
 
 .list {
   display: flex;
   flex-wrap: wrap;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -35,16 +35,16 @@
 .entry {
   display: inline-flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
+  gap: $pr-spacing-2xs;
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
   border: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   background: transparent;
-  color: var(--cr-text);
+  color: var(--pr-text);
   font: inherit;
-  font-size: var(--cr-text-caption-size);
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
+  font-size: var(--pr-text-caption-size);
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
 }
 
 .toggle {
@@ -55,8 +55,8 @@
   font-weight: 450;
   &[data-shown] { font-weight: 700; }
   &:focus-visible {
-    outline: $cr-focus-core-width solid var(--cr-primary);
-    outline-offset: $cr-focus-core-offset;
+    outline: $pr-focus-core-width solid var(--pr-primary);
+    outline-offset: $pr-focus-core-offset;
   }
 }
 
@@ -68,15 +68,15 @@
 .swatch {
   @include chart.chart-canvas;
   flex: none;
-  inline-size: $cr-icon-size;
-  block-size: $cr-icon-size;
+  inline-size: $pr-icon-size;
+  block-size: $pr-icon-size;
 }
 
 .swatchFill { fill: var(--series-colour); }
 
 .swatchLine {
   stroke: var(--series-colour);
-  stroke-width: var(--cr-chart-stroke);
+  stroke-width: var(--pr-chart-stroke);
   stroke-linecap: round;
 }
 

@@ -5,11 +5,11 @@
    four columns in a 300px pane. */
 .row {
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-md);
+  gap: var(--pr-block-gap, $pr-spacing-md);
   container-type: inline-size;
-  grid-template-columns: repeat(auto-fit, minmax($cr-layout-min-cell-width, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax($pr-layout-min-cell-width, 1fr));
   margin: 0;
-  padding: var(--cr-block-padding, 0);
+  padding: var(--pr-block-padding, 0);
   list-style: none;
 }
 

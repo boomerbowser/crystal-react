@@ -10,7 +10,7 @@
  * to imply it.
  */
 
-/* The scrim holds layout only. Its wash is `MirageWash`, a sibling of the panel that wears Crystal's `.cr-mirage` with its fallbacks (R-37). */
+/* The scrim holds layout only. Its wash is `MirageWash`, a sibling of the panel that wears Prismata's `.pr-mirage` with its fallbacks (R-37). */
 .scrim {
   position: fixed;
   inset: 0;
@@ -41,14 +41,14 @@
 .modalHolder.top { align-items: flex-start; }
 .modalHolder.bottom { align-items: flex-end; }
 
-/* The panel wears Crystal's `.cr-frost.sheet.flat` (2.7.0): the Frost fill and
-   blur, the `--cr-edge` rim, the float shadow and no grain, with Crystal's
+/* The panel wears Prismata's `.pr-frost.sheet.flat` (2.7.0): the Frost fill and
+   blur, the `--pr-edge` rim, the float shadow and no grain, with Prismata's
    fallbacks. Which corners square off against the edge is set below. */
 .panel {
   display: flex;
   flex-direction: column;
-  padding: var(--cr-space);
-  color: var(--cr-text);
+  padding: var(--pr-space);
+  color: var(--pr-text);
   /* The sweep is a 3D transform, so the panel needs its own stacking context and
      a stable origin for the rotation not to pivot about the page. */
   transform-origin: center;
@@ -60,21 +60,21 @@
    mirror. */
 .panel.start {
   block-size: 100%;
-  inline-size: min(#{$cr-layout-sidebar-width} * 1.4, 100%);
+  inline-size: min(#{$pr-layout-sidebar-width} * 1.4, 100%);
   border-start-start-radius: 0;
   border-end-start-radius: 0;
-  border-start-end-radius: var(--cr-radius);
-  border-end-end-radius: var(--cr-radius);
+  border-start-end-radius: var(--pr-radius);
+  border-end-end-radius: var(--pr-radius);
   border-inline-start: 0;
 }
 
 .panel.end {
   block-size: 100%;
-  inline-size: min(#{$cr-layout-sidebar-width} * 1.4, 100%);
+  inline-size: min(#{$pr-layout-sidebar-width} * 1.4, 100%);
   border-start-end-radius: 0;
   border-end-end-radius: 0;
-  border-start-start-radius: var(--cr-radius);
-  border-end-start-radius: var(--cr-radius);
+  border-start-start-radius: var(--pr-radius);
+  border-end-start-radius: var(--pr-radius);
   border-inline-end: 0;
 }
 
@@ -83,8 +83,8 @@
   max-block-size: 85vh;
   border-start-start-radius: 0;
   border-start-end-radius: 0;
-  border-end-start-radius: var(--cr-radius);
-  border-end-end-radius: var(--cr-radius);
+  border-end-start-radius: var(--pr-radius);
+  border-end-end-radius: var(--pr-radius);
   border-block-start: 0;
 }
 
@@ -93,8 +93,8 @@
   max-block-size: 85vh;
   border-end-start-radius: 0;
   border-end-end-radius: 0;
-  border-start-start-radius: var(--cr-radius);
-  border-start-end-radius: var(--cr-radius);
+  border-start-start-radius: var(--pr-radius);
+  border-start-end-radius: var(--pr-radius);
   border-block-end: 0;
 }
 
@@ -105,26 +105,26 @@
   position: relative;
   block-size: auto;
   max-block-size: 100%;
-  border-radius: var(--cr-radius);
-  border: 1px solid var(--cr-edge);
+  border-radius: var(--pr-radius);
+  border: 1px solid var(--pr-edge);
 }
 
-.panel.inline.start, .panel.inline.end { inline-size: min(#{$cr-layout-sidebar-width} * 1.4, 100%); }
+.panel.inline.start, .panel.inline.end { inline-size: min(#{$pr-layout-sidebar-width} * 1.4, 100%); }
 .panel.inline.top, .panel.inline.bottom { inline-size: 100%; }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $cr-spacing-sm;
-  margin-block-end: $cr-spacing-md;
+  gap: $pr-spacing-sm;
+  margin-block-end: $pr-spacing-md;
 }
 
 .title {
   margin: 0;
-  font-size: var(--cr-text-heading-size);
-  line-height: var(--cr-text-heading-leading);
-  letter-spacing: var(--cr-text-heading-tracking);
+  font-size: var(--pr-text-heading-size);
+  line-height: var(--pr-text-heading-leading);
+  letter-spacing: var(--pr-text-heading-tracking);
   font-weight: 800;
 }
 
@@ -134,8 +134,8 @@
   /* Out to the panel's edges and padded back in, so the scroll area's clip
      falls where the panel ends instead of cutting the float shadows of the
      fields and buttons inside it off in a hard line. */
-  margin: 0 calc(var(--cr-space) * -1) calc(var(--cr-space) * -1);
-  padding: $cr-spacing-xs var(--cr-space) var(--cr-space);
+  margin: 0 calc(var(--pr-space) * -1) calc(var(--pr-space) * -1);
+  padding: $pr-spacing-xs var(--pr-space) var(--pr-space);
 }
 
 @media (forced-colors: active) {

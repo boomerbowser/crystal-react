@@ -12,7 +12,7 @@
  *     cannot see. The label names the thing, which also tells several copy
  *     buttons on one page apart.
  *
- * `copy-confirm` is the recipe Crystal's catalogue assigns this. It plays on the
+ * `copy-confirm` is the recipe Prismata's catalogue assigns this. It plays on the
  * state change, not on the click, so a keyboard user sees it too.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';

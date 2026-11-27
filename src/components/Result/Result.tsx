@@ -10,7 +10,7 @@
  * already in words.
  *
  * Six outcomes, four ink pairs. `not-found` and `unauthorised` are outcomes
- * rather than statuses, and Crystal publishes no fifth and sixth semantic pair.
+ * rather than statuses, and Prismata publishes no fifth and sixth semantic pair.
  * Two new pairs would be two more colours to keep at 4.5:1 across twelve
  * palette-and-mode combinations. Each maps onto the pair that says the same
  * thing: a page that is not there is information, and a page you may not see is
@@ -67,7 +67,7 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result({
       ref={merged as never}
       data-outcome={outcome}
       data-status={status}
-      className={cx('cr-haze inset', styles['result'], className)}
+      className={cx('pr-haze inset', styles['result'], className)}
     >
       {outcome === 'success' ? <Arrival play={play} recipe="success" /> : null}
       <span aria-hidden="true" className={styles['well']}>{STATUS_SYMBOL[status]}</span>

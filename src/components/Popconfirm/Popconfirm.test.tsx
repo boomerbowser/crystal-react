@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, waitFor } from '../../test/render.js';
 import { Popconfirm } from './Popconfirm.js';
 import { Button } from '../Button/Button.js';
 
@@ -11,7 +11,7 @@ describe('Popconfirm', () => {
      answer is yes. Cancel is also what Escape does and what clicking away does,
      so the focused control and all three ways out agree. */
   it('opens with focus on cancel, not on confirm', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Popconfirm label="Delete this project?" destructive>
         <Button>Delete</Button>
       </Popconfirm>,
@@ -22,7 +22,7 @@ describe('Popconfirm', () => {
 
   it('confirms when the reader takes the second step', async () => {
     const onConfirm = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <Popconfirm label="Delete this project?" onConfirm={onConfirm}>
         <Button>Delete</Button>
       </Popconfirm>,
@@ -34,7 +34,7 @@ describe('Popconfirm', () => {
 
   /* A confirmation that can be pressed twice has confirmed twice. */
   it('disables both controls while it is in flight', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Popconfirm label="Delete this project?" pending>
         <Button>Delete</Button>
       </Popconfirm>,
@@ -47,7 +47,7 @@ describe('Popconfirm', () => {
   /* Both controls close it. Without `slot="close"` on confirm, an uncontrolled
      caller confirms and the popover stays open, still asking the question. */
   it('closes itself after confirming', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Popconfirm label="Delete this project?" onConfirm={() => {}}>
         <Button>Delete</Button>
       </Popconfirm>,

@@ -18,13 +18,13 @@
  */
 import { forwardRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
-import { spacingValue, type CrystalSpacing } from '../../styles/spacing.js';
+import { spacingValue, type PrismataSpacing } from '../../styles/spacing.js';
 import styles from './Grid.module.scss';
 
 export interface GridProps extends HTMLAttributes<HTMLDivElement> {
-  /** Gutter between cells, from Crystal's scale. Defaults to `md`. */
-  gap?: CrystalSpacing;
-  /** Columns in the grid. Defaults to Crystal's twelve-column reference. */
+  /** Gutter between cells, from Prismata's scale. Defaults to `md`. */
+  gap?: PrismataSpacing;
+  /** Columns in the grid. Defaults to Prismata's twelve-column reference. */
   columns?: number;
   children?: ReactNode;
 }
@@ -44,9 +44,9 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(
   ref,
 ) {
   const spans: CSSProperties = {
-    ...(span !== undefined ? { '--cr-cell-span': span } as CSSProperties : {}),
-    ...(spanMd !== undefined ? { '--cr-cell-span-md': spanMd } as CSSProperties : {}),
-    ...(spanSm !== undefined ? { '--cr-cell-span-sm': spanSm } as CSSProperties : {}),
+    ...(span !== undefined ? { '--pr-cell-span': span } as CSSProperties : {}),
+    ...(spanMd !== undefined ? { '--pr-cell-span-md': spanMd } as CSSProperties : {}),
+    ...(spanSm !== undefined ? { '--pr-cell-span-sm': spanSm } as CSSProperties : {}),
     ...style,
   };
 
@@ -62,8 +62,8 @@ const GridRoot = forwardRef<HTMLDivElement, GridProps>(function Grid(
   ref,
 ) {
   const layout: CSSProperties = {
-    ...(gap !== undefined ? { '--cr-grid-gap': spacingValue(gap) } as CSSProperties : {}),
-    ...(columns !== undefined ? { '--cr-grid-columns': columns } as CSSProperties : {}),
+    ...(gap !== undefined ? { '--pr-grid-gap': spacingValue(gap) } as CSSProperties : {}),
+    ...(columns !== undefined ? { '--pr-grid-columns': columns } as CSSProperties : {}),
     ...style,
   };
 

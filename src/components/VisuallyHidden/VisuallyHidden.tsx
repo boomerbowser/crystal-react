@@ -6,7 +6,7 @@
  * knowledge. It uses a 1px clipped box. `display: none` removes the content from
  * the accessibility tree entirely, and `visibility: hidden`, `width: 0` or an
  * off-screen `position` are each dropped by at least one screen reader or break
- * right-to-left. Crystal states the rule, React Aria carries the recipe, and this
+ * right-to-left. Prismata states the rule, React Aria carries the recipe, and this
  * file is the binding.
  *
  * The focusable variant is why this is a component and not a class. Content that

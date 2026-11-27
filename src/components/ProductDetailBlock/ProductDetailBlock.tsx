@@ -86,7 +86,7 @@ export function ProductDetailBlock({
   const state = unavailable ? 'unavailable' : isAdding ? 'adding' : 'at-rest';
 
   return (
-    <article className={cx(styles['product'], className)} data-cr-state={state}>
+    <article className={cx(styles['product'], className)} data-pr-state={state}>
       <div className={cx(styles['layout'])}>
         <ProductGallery media={media} label={nameText} className={cx(styles['gallery'])} />
         <div className={cx(styles['details'])}>

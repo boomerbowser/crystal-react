@@ -120,7 +120,7 @@ export function PieChart({
                 className={styles['wedge']}
                 data-active={marks.active === wedge.index ? '' : undefined}
                 /* A segment grows out of the centre, which is this group's own
-                   origin: the parent translates to it. Crystal's `mark-in`, once. */
+                   origin: the parent translates to it. Prismata's `mark-in`, once. */
                 data-mark-in=""
                 style={{
                   '--series-colour': seriesColour(wedge.index),

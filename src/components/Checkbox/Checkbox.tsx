@@ -2,7 +2,7 @@
 
 /* Checkbox, CheckboxGroup, Radio and RadioGroup.
  *
- * A check mark here means checked. This is the one place in Crystal it may: the
+ * A check mark here means checked. This is the one place in Prismata it may: the
  * system's rule is that a check mark never means "selected" in a list or a menu,
  * where selection is label weight. A checkbox's mark is the value of a boolean,
  * and it is contained inside the box so the pair reads as one control and not as
@@ -34,14 +34,14 @@ import { FieldShell } from '../FormField/FieldShell.js';
 import styles from './Checkbox.module.scss';
 
 /* Plays `check` when the value becomes true and `check-off` when it returns to
- * false: Crystal's iris opening and closing toward the same point. It is bound
+ * false: Prismata's iris opening and closing toward the same point. It is bound
  * to the value React Aria resolved, not to a click, so a checkbox changed by the
  * keyboard, a form reset or a server response animates the same way as one
  * changed by hand. The previous value starts undefined, so a box that mounts
  * already checked does not animate, because that state was never entered.
  *
  * The catalogue assigns both recipes to the checkbox and the radio from 2.0.
- * R15h in Crystal's request log recorded that the web preview had `check`
+ * R15h in Prismata's request log recorded that the web preview had `check`
  * "wired to nothing". */
 function ChoiceMotion({ isSelected, play }: {
   isSelected: boolean;
@@ -84,8 +84,8 @@ export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(function Che
     <AriaCheckbox {...props} ref={ref} className={cx(styles['choice'], className)}>
       {({ isIndeterminate, isSelected }) => (
         <>
-          <span ref={scope as never} className={cx('cr-choice', styles['box'])}>
-            {/* Crystal's own checkbox: the Resin box with a well inside it,
+          <span ref={scope as never} className={cx('pr-choice', styles['box'])}>
+            {/* Prismata's own checkbox: the Resin box with a well inside it,
                 outlined in the primary until it is checked, then filled with
                 the mark. Driven by React Aria's state and not by a class, so
                 the drawn mark and the announced one cannot disagree. */}
@@ -113,7 +113,7 @@ export const Radio = forwardRef<HTMLLabelElement, RadioProps>(function Radio(
     <AriaRadio {...props} ref={ref} className={cx(styles['choice'], className)}>
       {({ isSelected }) => (
         <>
-          <span ref={scope as never} className={cx('cr-choice radio', styles['box'], styles['circle'])}>
+          <span ref={scope as never} className={cx('pr-choice radio', styles['box'], styles['circle'])}>
             <span className={cx(styles['well'], styles['round'])} />
           </span>
           <span>{children}</span>

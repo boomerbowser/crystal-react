@@ -4,7 +4,7 @@
  * rendering of their own, and every element on the screen is still written by
  * this library. A charting library that owns the DOM owns the materials, the
  * focus ring and the forced-colours behaviour too, and none of those would be
- * Crystal's otherwise.
+ * Prismata's otherwise.
  */
 import { scaleBand, scaleLinear, scalePoint } from 'd3-scale';
 import type { ChartSeries } from './types.js';

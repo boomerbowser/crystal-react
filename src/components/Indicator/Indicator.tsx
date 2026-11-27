@@ -9,7 +9,7 @@
  * announced anything would say it twice, and a mark that could be pressed would
  * be a second control for the same thing.
  *
- * It is Crystal's `.cr-indicator`, and its host decides what it shows. A 20px
+ * It is Prismata's `.pr-indicator`, and its host decides what it shows. A 20px
  * Haze disc with a feathered fill at the host's top end corner, carrying a
  * glyph: ● on a host that is `aria-current`, … on one that is `aria-busy`, and
  * nothing otherwise. On a field shell it shows ○ at rest, ● focused, * required
@@ -18,7 +18,7 @@
  * mark cannot disagree with the control it describes. It must be the host's own
  * child for that to work.
  *
- * There is no `selection` kind and no `state` prop (R-25). Selection in Crystal
+ * There is no `selection` kind and no `state` prop (R-25). Selection in Prismata
  * is label weight, with nothing drawn beside the label.
  */
 import { forwardRef, type HTMLAttributes } from 'react';
@@ -30,7 +30,7 @@ export type IndicatorKind = 'current' | 'busy' | 'field';
 export interface IndicatorProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
   /**
    * `current` shows on a host that is `aria-current`; `busy` on one that is
-   * `aria-busy`; `field` inside a `.cr-field-shell`, reading its field.
+   * `aria-busy`; `field` inside a `.pr-field-shell`, reading its field.
    */
   kind: IndicatorKind;
 }
@@ -46,7 +46,7 @@ export const Indicator = forwardRef<HTMLSpanElement, IndicatorProps>(function In
       /* The control says what this means. The mark only shows it. */
       aria-hidden="true"
       data-kind={kind}
-      className={cx('cr-indicator', className)}
+      className={cx('pr-indicator', className)}
     />
   );
 });

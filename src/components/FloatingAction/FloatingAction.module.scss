@@ -10,65 +10,65 @@
  */
 
 .floating {
-  /* A floating action is a `<button>`, so it is Crystal's Resin control: the
+  /* A floating action is a `<button>`, so it is Prismata's Resin control: the
      rim, the Resin fill and blur, the float shadow, the Haze reading pad over
-     whatever content scrolls beneath it, and Crystal's fallbacks. The circle
+     whatever content scrolls beneath it, and Prismata's fallbacks. The circle
      and the pill are its geometry. */
   position: fixed;
-  inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
-  inset-inline-end: max(var(--cr-space), env(safe-area-inset-right));
-  z-index: 20;  /* crystal-allow-literal: stacking order, not a design value */
+  inset-block-end: max(var(--pr-space), env(safe-area-inset-bottom));
+  inset-inline-end: max(var(--pr-space), env(safe-area-inset-right));
+  z-index: 20;  /* prismata-allow-literal: stacking order, not a design value */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: $cr-action-gap;
-  min-inline-size: $cr-action-min-target;
-  min-block-size: $cr-action-min-target;
+  gap: $pr-action-gap;
+  min-inline-size: $pr-action-min-target;
+  min-block-size: $pr-action-min-target;
   padding: 0;
   border-radius: 50%;
-  color: var(--cr-text);
+  color: var(--pr-text);
   cursor: pointer;
 }
 
 /* Extended: a pill with a label beside the icon. The circle is the compact form
    of the same control. */
 .extended {
-  border-radius: $cr-action-radius;
-  padding-inline: $cr-action-padding-inline;
+  border-radius: $pr-action-radius;
+  padding-inline: $pr-action-padding-inline;
   font-weight: 700;
 }
 
-.floating svg { inline-size: $cr-icon-action; block-size: $cr-icon-action; }
+.floating svg { inline-size: $pr-icon-action; block-size: $pr-icon-action; }
 
 /* A dial's actions stack above the trigger. They are pills with visible labels,
    never icons alone, because an icon in a set that appeared a moment ago has no
    context to be read from. */
 .dial {
   position: fixed;
-  inset-block-end: calc(max(var(--cr-space), env(safe-area-inset-bottom)) + #{$cr-action-min-target} + #{$cr-spacing-sm});
-  inset-inline-end: max(var(--cr-space), env(safe-area-inset-right));
-  z-index: 20;  /* crystal-allow-literal: stacking order, not a design value */
+  inset-block-end: calc(max(var(--pr-space), env(safe-area-inset-bottom)) + #{$pr-action-min-target} + #{$pr-spacing-sm});
+  inset-inline-end: max(var(--pr-space), env(safe-area-inset-right));
+  z-index: 20;  /* prismata-allow-literal: stacking order, not a design value */
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
 }
 
 /* An action bar is centred rather than cornered, because it belongs to a
    selection in the content and not to the page. */
 .actionBar {
-  /* The bar is Crystal's dock (`Toolbar`'s `resin` variant wears `.cr-dock`), so
+  /* The bar is Prismata's dock (`Toolbar`'s `resin` variant wears `.pr-dock`), so
      these rules only position it. */
   position: fixed;
-  inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
+  inset-block-end: max(var(--pr-space), env(safe-area-inset-bottom));
   inset-inline: 0;
-  z-index: 20;  /* crystal-allow-literal: stacking order, not a design value */
+  z-index: 20;  /* prismata-allow-literal: stacking order, not a design value */
   margin-inline: auto;
   inline-size: max-content;
-  max-inline-size: calc(100% - var(--cr-space) * 2);
+  max-inline-size: calc(100% - var(--pr-space) * 2);
 }
 
-.count { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+.count { color: var(--pr-muted); font-size: var(--pr-text-caption-size); }
 
 @media (forced-colors: active) {
   .floating { background: ButtonFace; border-color: ButtonText; }

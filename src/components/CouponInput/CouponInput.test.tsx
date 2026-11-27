@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { CouponInput } from './CouponInput.js';
 
 function Harness({ onApply = vi.fn() }: { onApply?: (code: string) => void }) {
@@ -16,7 +16,7 @@ describe('CouponInput', () => {
   it('applies from the keyboard as well as from the control', async () => {
     const user = userEvent.setup();
     const onApply = vi.fn();
-    renderWithCrystal(<Harness onApply={onApply} />);
+    renderWithPrismata(<Harness onApply={onApply} />);
     await user.type(screen.getByRole('textbox', { name: 'Discount code' }), 'HARBOUR10{Enter}');
     expect(onApply).toHaveBeenCalledWith('HARBOUR10');
   });
@@ -25,7 +25,7 @@ describe('CouponInput', () => {
   it('does not offer to apply nothing', async () => {
     const user = userEvent.setup();
     const onApply = vi.fn();
-    renderWithCrystal(<Harness onApply={onApply} />);
+    renderWithPrismata(<Harness onApply={onApply} />);
     expect(screen.getByRole('button', { name: 'Apply' })).toBeDisabled();
     await user.type(screen.getByRole('textbox', { name: 'Discount code' }), '   {Enter}');
     expect(onApply).not.toHaveBeenCalled();
@@ -35,7 +35,7 @@ describe('CouponInput', () => {
      before they can finish, which is the narrow case where interrupting is
      right. So failure is an alert and success is a status. */
   it('announces a refusal assertively', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CouponInput value="NOPE" onValueChange={() => {}} onApply={() => {}} error="That code has expired" />,
     );
     expect(screen.getByRole('alert')).toHaveTextContent('That code has expired');
@@ -43,7 +43,7 @@ describe('CouponInput', () => {
   });
 
   it('announces a success politely', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CouponInput value="" onValueChange={() => {}} onApply={() => {}} applied="HARBOUR10" />,
     );
     expect(screen.getByRole('status')).toHaveTextContent('HARBOUR10 applied');
@@ -54,7 +54,7 @@ describe('CouponInput', () => {
   it('offers a named control to remove an applied code', async () => {
     const user = userEvent.setup();
     const onRemove = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <CouponInput
         value=""
         onValueChange={() => {}}
@@ -70,14 +70,14 @@ describe('CouponInput', () => {
   /* A control that vanishes under the cursor mid-press has to be found again,
      so applying disables the action and does not replace it with a spinner. */
   it('keeps the action in place while a code is on its way', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CouponInput value="HARBOUR10" onValueChange={() => {}} onApply={() => {}} isApplying />,
     );
     expect(screen.getByRole('button', { name: 'Apply' })).toBeDisabled();
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(<Harness />);
+    const { container } = renderWithPrismata(<Harness />);
     await expectNoAxeViolations(container);
   });
 });
@@ -100,7 +100,7 @@ describe('CouponInput, after removing a code', () => {
         />
       );
     }
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     await user.click(screen.getByRole('button', { name: 'Remove HARBOUR10' }));
     expect(screen.getByRole('textbox', { name: 'Discount code' })).toHaveFocus();
   });

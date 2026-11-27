@@ -1,7 +1,7 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/option' as option;
 
-.group :global(.cr-field-shell),
+.group :global(.pr-field-shell),
 .group > * { inline-size: 100%; }
 
 .option {
@@ -14,7 +14,7 @@
      figures for the same reason. */
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: $cr-spacing-2xs $cr-spacing-sm;
+  gap: $pr-spacing-2xs $pr-spacing-sm;
   align-items: baseline;
 }
 
@@ -23,8 +23,8 @@
 .estimate {
   grid-column: 1;
   grid-row: 2;
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
   /* The estimate is the second half of the trade, so it never takes the
      selected weight. If both were weighted, nothing would carry the choice. */
   font-weight: 500;

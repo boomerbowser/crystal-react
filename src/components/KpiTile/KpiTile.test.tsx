@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { KpiTile } from './KpiTile.js';
 
 const base = {
@@ -16,13 +16,13 @@ describe('KpiTile', () => {
      and a bar past its end look the same, and neither says whether past the end
      is good. */
   it('states the attainment in words, not only in the bar', () => {
-    renderWithCrystal(<KpiTile {...base} onTarget />);
+    renderWithPrismata(<KpiTile {...base} onTarget />);
     expect(screen.getByText('107% of target, on target')).toBeInTheDocument();
     expect(screen.getByText('£45,000 target')).toBeInTheDocument();
   });
 
   it('is a real progress element, labelled by the sentence above it', () => {
-    const { container } = renderWithCrystal(<KpiTile {...base} onTarget />);
+    const { container } = renderWithPrismata(<KpiTile {...base} onTarget />);
     const bar = container.querySelector('progress');
     expect(bar).not.toBeNull();
     expect(bar?.max).toBe(1);
@@ -34,26 +34,26 @@ describe('KpiTile', () => {
   /* Attainment is not always "value ≥ target": a cost target is met by coming in
      under it, so the judgement is the caller's. */
   it('takes the on-target judgement rather than making it', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <KpiTile {...base} onTarget data-testid="t" />,
     );
     expect(screen.getByTestId('t').dataset['state']).toBe('on-target');
-    rerenderWithCrystal(<KpiTile {...base} onTarget={false} data-testid="t" />);
+    rerenderWithPrismata(<KpiTile {...base} onTarget={false} data-testid="t" />);
     expect(screen.getByTestId('t').dataset['state']).toBe('off-target');
-    rerenderWithCrystal(<KpiTile {...base} data-testid="t" />);
+    rerenderWithPrismata(<KpiTile {...base} data-testid="t" />);
     expect(screen.getByTestId('t').dataset['state']).toBe('at-rest');
   });
 
   /* No value at all while loading, which is what makes a progress element
      indeterminate rather than showing a figure nobody measured. */
   it('leaves the bar indeterminate while it loads', () => {
-    const { container } = renderWithCrystal(<KpiTile {...base} loading data-testid="t" />);
+    const { container } = renderWithPrismata(<KpiTile {...base} loading data-testid="t" />);
     expect(container.querySelector('progress')?.hasAttribute('value')).toBe(false);
     expect(screen.getByTestId('t').dataset['state']).toBe('loading');
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<KpiTile {...base} onTarget />);
+    const { container } = renderWithPrismata(<KpiTile {...base} onTarget />);
     await expectNoAxeViolations(container);
   });
 });

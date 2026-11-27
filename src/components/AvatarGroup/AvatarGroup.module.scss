@@ -12,7 +12,7 @@
  * instead of having a scale of its own.
  */
 
-$avatar-overlap: -7px; /* crystal-allow-literal: the catalogue's stated overlap */
+$avatar-overlap: -7px; /* prismata-allow-literal: the catalogue's stated overlap */
 
 .group {
   display: inline-flex;
@@ -40,12 +40,12 @@ $avatar-overlap: -7px; /* crystal-allow-literal: the catalogue's stated overlap 
   inline-size: var(--avatar-size);
   block-size: var(--avatar-size);
   border-radius: 50%;
-  background: var(--cr-surface-alt);
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
+  background: var(--pr-surface-alt);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
   font-weight: 700;
   line-height: 1;
-  box-shadow: 0 0 0 avatar.$ring var(--cr-surface);
+  box-shadow: 0 0 0 avatar.$ring var(--pr-surface);
 }
 
 /* The chip "matches avatar size", from Avatar's own table instead of a second

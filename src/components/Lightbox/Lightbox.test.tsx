@@ -2,12 +2,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { Lightbox } from './Lightbox.js';
 
 describe('Lightbox', () => {
   it('is a dialog named for what it is showing', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Lightbox isOpen label="Harbour at dusk"><img alt="" src="/1.jpg" /></Lightbox>,
     );
     expect(screen.getByRole('dialog', { name: /Harbour at dusk/ })).toBeInTheDocument();
@@ -18,7 +18,7 @@ describe('Lightbox', () => {
      The shortcut works as well. */
   it('zooms from a control and from the keyboard', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(
+    renderWithPrismata(
       <Lightbox isOpen label="Harbour at dusk"><img alt="" src="/1.jpg" /></Lightbox>,
     );
     const status = screen.getByRole('status');
@@ -45,7 +45,7 @@ describe('Lightbox', () => {
      only reachable once it is useful. */
   it('makes the item pannable only once it is bigger than the frame', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(
+    renderWithPrismata(
       <Lightbox isOpen label="Harbour at dusk"><img alt="" src="/1.jpg" /></Lightbox>,
     );
     /* `screen`, not the render container. The overlay is portalled to `body`,
@@ -58,7 +58,7 @@ describe('Lightbox', () => {
 
   it('cannot be zoomed past its limits', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(
+    renderWithPrismata(
       <Lightbox isOpen label="Harbour at dusk"><img alt="" src="/1.jpg" /></Lightbox>,
     );
     expect(screen.getByRole('button', { name: 'Zoom out' })).toBeDisabled();
@@ -71,7 +71,7 @@ describe('Lightbox', () => {
   });
 
   it('names its close control for what it closes', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Lightbox isOpen label="Harbour at dusk"><img alt="" src="/1.jpg" /></Lightbox>,
     );
     expect(screen.getByRole('button', { name: 'Close Harbour at dusk' })).toBeInTheDocument();
@@ -92,7 +92,7 @@ describe('Lightbox', () => {
         </>
       );
     }
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     const trigger = screen.getByRole('button', { name: 'Open the photograph' });
     await user.click(trigger);
     expect(screen.getByRole('dialog')).toBeInTheDocument();
@@ -104,7 +104,7 @@ describe('Lightbox', () => {
      it; changing that name while they are already inside announces nothing, so
      the position has to be said as well as named. */
   it('says the item out loud when it changes under the reader', () => {
-    const { rerender } = renderWithCrystal(
+    const { rerender } = renderWithPrismata(
       <Lightbox isOpen label="Harbour at dusk" position="1 of 3">
         <img alt="" src="/1.jpg" />
       </Lightbox>,
@@ -123,7 +123,7 @@ describe('Lightbox', () => {
   it('closes on Escape', async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <Lightbox isOpen onOpenChange={onOpenChange} label="Harbour at dusk">
         <img alt="" src="/1.jpg" />
       </Lightbox>,

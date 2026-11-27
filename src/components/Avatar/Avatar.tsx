@@ -22,7 +22,7 @@ import { forwardRef, useEffect, useState, type HTMLAttributes, type ReactNode } 
 import { cx } from '../../styles/cx.js';
 import styles from './Avatar.module.scss';
 
-/** Sizes on Crystal's 4px rhythm. */
+/** Sizes on Prismata's 4px rhythm. */
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
 
 export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {

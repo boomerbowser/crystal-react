@@ -112,7 +112,7 @@ export function Transfer({
     selection: Selection,
     onSelectionChange: (next: Selection) => void,
   ) => (
-    <div className={cx('cr-haze', styles['panel'])}>
+    <div className={cx('pr-haze', styles['panel'])}>
       <div className={cx(styles['panelHead'])}>
         {/* The name is the heading alone. Pointing at the whole row would make
             the list's name "Available 3", which changes every time an item
@@ -127,7 +127,7 @@ export function Transfer({
         onSelectionChange={onSelectionChange}
         disabledKeys={pool.filter((item) => item.isDisabled).map((item) => item.value)}
         items={pool}
-        className={cx(styles['list'], 'cr-scroll-frost')}
+        className={cx(styles['list'], 'pr-scroll-frost')}
         renderEmptyState={() => <div className={cx(styles['empty'])}>{emptyMessage}</div>}
       >
         {(item: TransferItem) => (

@@ -2,7 +2,7 @@
 
 /* Container.
  *
- * Two ceilings, because Crystal has two: the shell, which is how wide the page
+ * Two ceilings, because Prismata has two: the shell, which is how wide the page
  * becomes, and the reading column, which is how wide a line of prose can get
  * before it stops being comfortable to read. They are different numbers for
  * different reasons, which a single `size="lg"` scale would blur, so the prop
@@ -32,7 +32,7 @@ export const Container = forwardRef<HTMLElement, ContainerProps>(function Contai
   ref,
 ) {
   const ceiling: CSSProperties = width === 'reading'
-    ? { '--cr-container-max': 'var(--cr-layout-reading-max)' } as CSSProperties
+    ? { '--pr-container-max': 'var(--pr-layout-reading-max)' } as CSSProperties
     : {};
 
   return (

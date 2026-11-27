@@ -12,7 +12,7 @@
  * calendar heatmap. A year is 53 columns of 7. The alternative, 7 columns of 53,
  * is a tall strip that cannot be compared across.
  *
- * The scale, the buckets and the contrast floor are Crystal's, the same ones the
+ * The scale, the buckets and the contrast floor are Prismata's, the same ones the
  * heatmap uses. There is one ramp in the system, not one per chart.
  */
 import { type CSSProperties, type ReactNode } from 'react';
@@ -121,7 +121,7 @@ export function CalendarHeatmap({
                       width={side}
                       height={side}
                       /* Just off square. A day is a mark, not a control, so it
-                         takes none of Crystal's action geometry. This is the
+                         takes none of Prismata's action geometry. This is the
                          smallest radius that stops a 14px square reading as a
                          pixel. */
                       rx={2}

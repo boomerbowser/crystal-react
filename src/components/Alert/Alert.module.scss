@@ -2,37 +2,37 @@
 @use '../../styles/status';
 
 /* "Content radius; 12px minimum from content to the feathered edge." The
-   element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill is inset by
-   `--cr-haze-inset`, so the padding is measured from the element and the
-   feather sits inside it. `$cr-spacing-sm` is that 12px. */
+   element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill is inset by
+   `--pr-haze-inset`, so the padding is measured from the element and the
+   feather sits inside it. `$pr-spacing-sm` is that 12px. */
 .alert {
   display: flex;
   align-items: flex-start;
-  gap: $cr-spacing-sm;
-  padding: $cr-spacing-md;
-  border-radius: $cr-shape-content-radius;
-  color: var(--cr-text);
+  gap: $pr-spacing-sm;
+  padding: $pr-spacing-md;
+  border-radius: $pr-shape-content-radius;
+  color: var(--pr-text);
 }
 
 @include status.status-pairs('.alert');
 
 .well {
-  @include status.status-well($cr-icon-action);
+  @include status.status-well($pr-icon-action);
 
-  margin-block-start: $cr-spacing-2xs;
+  margin-block-start: $pr-spacing-2xs;
 }
 
-.content { display: flex; flex-direction: column; gap: $cr-spacing-2xs; min-inline-size: 0; flex: 1; }
+.content { display: flex; flex-direction: column; gap: $pr-spacing-2xs; min-inline-size: 0; flex: 1; }
 
 .title { margin: 0; font-weight: 750; }
 
 .body {
-  font-size: var(--cr-text-body-size);
-  line-height: var(--cr-text-body-leading);
-  color: var(--cr-muted);
+  font-size: var(--pr-text-body-size);
+  line-height: var(--pr-text-body-leading);
+  color: var(--pr-muted);
 }
 
-.actions { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; margin-block-start: $cr-spacing-2xs; }
+.actions { display: flex; flex-wrap: wrap; gap: $pr-spacing-xs; margin-block-start: $pr-spacing-2xs; }
 
 /* A pill, and a real target. The glyph is small; what a fingertip meets is not. */
 .dismiss {
@@ -40,19 +40,19 @@
   flex: none;
   display: inline-grid;
   place-items: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
-  margin: calc(-1 * #{$cr-spacing-xs});
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
+  margin: calc(-1 * #{$pr-spacing-xs});
   border: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   background: transparent;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   cursor: pointer;
-  font-size: var(--cr-text-body-size);
+  font-size: var(--pr-text-body-size);
 }
 
-.dismiss:hover { color: var(--cr-text); background: var(--cr-surface-alt); }
-.dismiss svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.dismiss:hover { color: var(--pr-text); background: var(--pr-surface-alt); }
+.dismiss svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 @media (forced-colors: active) {
   .alert { border: 1px solid CanvasText; background: Canvas; }

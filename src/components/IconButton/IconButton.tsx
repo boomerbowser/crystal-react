@@ -74,10 +74,10 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       onPressStart={() => play('press')}
       className={cx(
         styles['iconButton'],
-        /* Nothing for `resin`: Crystal paints every `<button>` as a Resin
+        /* Nothing for `resin`: Prismata paints every `<button>` as a Resin
            control already, so the variant is the absence of a class. `quiet`
            takes that coat off. */
-        variant === 'resin' ? undefined : cx('cr-bare', styles['quiet']),
+        variant === 'resin' ? undefined : cx('pr-bare', styles['quiet']),
         circle ? styles['circle'] : undefined,
         className,
       )}

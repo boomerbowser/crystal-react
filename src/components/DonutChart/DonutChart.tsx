@@ -6,7 +6,7 @@
  * is text, not an image". These two decisions are what separate this component
  * from the pie.
  *
- * The thickness is Crystal's `--cr-chart-ring-thickness`, declared once and not
+ * The thickness is Prismata's `--pr-chart-ring-thickness`, declared once and not
  * chosen per chart, so a donut is recognisably the same object at every size. A
  * donut whose ring thinned as it grew would be a different component at each
  * size.
@@ -22,7 +22,7 @@ import { PieChart, type PieChartProps } from '../PieChart/PieChart.js';
 import { chartGeometry } from '../../theme/chartGeometry.js';
 
 export interface DonutChartProps extends Omit<PieChartProps, 'hole'> {
-  /** As a proportion of the radius. Crystal's declared thickness by default. */
+  /** As a proportion of the radius. Prismata's declared thickness by default. */
   hole?: number;
 }
 

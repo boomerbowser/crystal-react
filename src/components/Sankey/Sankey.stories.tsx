@@ -12,7 +12,7 @@ const meta = {
           + 'sankey cannot be told "the shape of the flow", so every link is a mark that names '
           + 'both ends and its size, and the table lists every one. The nodes are the labels '
           + 'and the links are the data, so naming only the nodes would describe nothing.\n\n'
-          + '"Link opacity keeps crossings readable". Crystal\'s link opacity is higher than a '
+          + '"Link opacity keeps crossings readable". Prismata\'s link opacity is higher than a '
           + 'fill\'s because a link is the mark rather than its backing, and low enough that '
           + 'a crossing reads as two links rather than as a third shape.',
       },

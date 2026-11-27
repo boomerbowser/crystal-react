@@ -4,8 +4,8 @@
  *
  * The material assignment of a whole view: Plastic underneath, Frost for the
  * supporting panels, Resin for the floating destination group. That ordering is
- * Crystal's hierarchy applied at the largest scale. Getting it wrong is the most
- * visible way a product stops looking like Crystal: a Resin sidebar and a Frost
+ * Prismata's hierarchy applied at the largest scale. Getting it wrong is the most
+ * visible way a product stops looking like Prismata: a Resin sidebar and a Frost
  * dock inverts the hierarchy.
  *
  * What it owns, from the catalogue: the material per region, the elevation
@@ -33,7 +33,7 @@
  * The content scrolls, not the page. A sticky header does not hold inside a grid
  * whose header row is exactly as tall as the header, because a sticky element
  * sticks within its containing block and that block leaves it no room. Both
- * scrolling regions take Crystal's Frost scrollbar and the scroll contract that
+ * scrolling regions take Prismata's Frost scrollbar and the scroll contract that
  * comes with it.
  */
 import { forwardRef, useRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
@@ -75,7 +75,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
   ref,
 ) {
   const layout: CSSProperties = {
-    ...(sidebarWidth ? { '--cr-shell-sidebar': sidebarWidth } as CSSProperties : {}),
+    ...(sidebarWidth ? { '--pr-shell-sidebar': sidebarWidth } as CSSProperties : {}),
     ...style,
   };
   /* Published so an `AppBar` in the header slot can tell when the content has
@@ -88,13 +88,13 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
     <div
       {...props}
       ref={ref}
-      data-cr-state={isCollapsed ? 'collapsed' : 'expanded'}
-      className={cx(styles['appShell'], 'cr-plastic', isCollapsed ? styles['collapsed'] : undefined, className)}
+      data-pr-state={isCollapsed ? 'collapsed' : 'expanded'}
+      className={cx(styles['appShell'], 'pr-plastic', isCollapsed ? styles['collapsed'] : undefined, className)}
       style={layout}
     >
       {header ? <div className={cx(styles['header'])}>{header}</div> : null}
       {sidebar ? (
-        <nav aria-label={sidebarLabel} className={cx('cr-frost docked flat', styles['sidebar'], 'cr-scroll-frost')} hidden={isCollapsed}>
+        <nav aria-label={sidebarLabel} className={cx('pr-frost docked flat', styles['sidebar'], 'pr-scroll-frost')} hidden={isCollapsed}>
           {sidebar}
         </nav>
       ) : null}
@@ -104,7 +104,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
           `ScrollArea` to apply the same reachability rule. */}
       <main
         ref={main}
-        className={cx(styles['main'], 'cr-scroll-frost')}
+        className={cx(styles['main'], 'pr-scroll-frost')}
         {...(mainNeedsTabStop ? { tabIndex: 0 } : {})}
       >
         {children}
@@ -113,7 +113,7 @@ export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(function AppSh
       {destinations ? (
         /* Resin, and floating: the one surface in the shell that is above the
            content instead of beside it. */
-        <nav aria-label={destinationsLabel} className={cx(styles['destinations'], 'cr-dock')}>
+        <nav aria-label={destinationsLabel} className={cx(styles['destinations'], 'pr-dock')}>
           {destinations}
         </nav>
       ) : null}

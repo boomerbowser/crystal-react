@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { HoverCard } from './HoverCard.js';
 
 /* Real timers, short delays. Fake timers deadlock against userEvent's own wait
@@ -22,7 +22,7 @@ function Card({ openDelay = 10, closeDelay = 10 }: { openDelay?: number; closeDe
 describe('HoverCard', () => {
   it('does not open the moment the pointer arrives', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Card openDelay={100_000} />);
+    renderWithPrismata(<Card openDelay={100_000} />);
     await user.hover(screen.getByRole('link', { name: 'Ada Lovelace' }));
     /* A card that fires as the pointer crosses on its way somewhere else fills
        the screen with previews nobody asked for. */
@@ -31,14 +31,14 @@ describe('HoverCard', () => {
 
   it('opens once the pointer has rested', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Card />);
+    renderWithPrismata(<Card />);
     await user.hover(screen.getByRole('link', { name: 'Ada Lovelace' }));
     expect(await screen.findByRole('dialog', { name: 'Ada Lovelace' })).toBeTruthy();
   });
 
   it('opens on focus, not only on hover', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Card />);
+    renderWithPrismata(<Card />);
     /* Hover alone makes the preview unreachable from the keyboard, and makes
        whatever it previews unreachable with it. */
     await user.tab();
@@ -47,7 +47,7 @@ describe('HoverCard', () => {
 
   it('stays open while the pointer travels from the trigger into the card', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Card />);
+    renderWithPrismata(<Card />);
     await user.hover(screen.getByRole('link', { name: 'Ada Lovelace' }));
     await screen.findByRole('dialog', { name: 'Ada Lovelace' });
 
@@ -60,7 +60,7 @@ describe('HoverCard', () => {
 
   it('closes once the pointer is over neither', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<><Card /><p>elsewhere</p></>);
+    renderWithPrismata(<><Card /><p>elsewhere</p></>);
     await user.hover(screen.getByRole('link', { name: 'Ada Lovelace' }));
     await screen.findByRole('dialog', { name: 'Ada Lovelace' });
     await user.hover(screen.getByText('elsewhere'));
@@ -68,7 +68,7 @@ describe('HoverCard', () => {
   });
 
   it('leaves the trigger its own accessible name', () => {
-    renderWithCrystal(<Card />);
+    renderWithPrismata(<Card />);
     /* The card supplements the trigger's existing name and never replaces it. */
     expect(screen.getByRole('link', { name: 'Ada Lovelace' })).toBeTruthy();
   });

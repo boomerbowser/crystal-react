@@ -20,12 +20,12 @@ const meta = {
         component:
           'The frame every chart draws into. It provides the Haze plot fill, the measured box, '
           + 'the axis gutters, the legend and tooltip slots, and the empty and loading states.\n\n'
-          + '`table` is a required prop. Crystal\'s catalogue says "every chart owes a text '
+          + '`table` is a required prop. Prismata\'s catalogue says "every chart owes a text '
           + 'equivalent of its data, so the chart is never the only representation". '
           + 'If a chart could be drawn without one, eventually one would be. No chart in this '
           + 'library renders a table of its own; they all pass their data through here.\n\n'
           + 'The plot is drawn in CSS pixels at the measured width, not in a scaled `viewBox`, '
-          + 'so the stroke and point scales stay at the sizes Crystal published and do not '
+          + 'so the stroke and point scales stay at the sizes Prismata published and do not '
           + 'stretch with the window.',
       },
     },
@@ -64,7 +64,7 @@ export const Empty: Story = {
   render: (args) => <ChartSurface {...only(args)} empty table={{ columns: table.columns, rows: [] }} />,
 };
 
-/** Waiting. Nothing moves, because Crystal's rule is that nothing moves at rest
+/** Waiting. Nothing moves, because Prismata's rule is that nothing moves at rest
  *  and a chart waiting for data is at rest. The plot holds its size so the page
  *  does not jump when the numbers arrive. */
 export const Loading: Story = {

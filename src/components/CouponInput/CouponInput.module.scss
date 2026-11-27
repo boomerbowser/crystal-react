@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-.coupon { display: grid; gap: $cr-spacing-xs; }
+.coupon { display: grid; gap: $pr-spacing-xs; }
 
 /* "Field and action share one pill row." The action aligns to the bottom of the
    row, because the field is taller than its control. It carries a label above
@@ -9,7 +9,7 @@
 .row {
   display: flex;
   align-items: flex-end;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
 }
 
 .field { flex: 1; min-inline-size: 0; }
@@ -18,15 +18,15 @@
 .applied {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
   font-weight: 750;
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 /* A check mark here means validated, which is the one legitimate use of the
-   glyph in Crystal. It never means "selected". */
-.tick { color: var(--cr-success-ink); }
+   glyph in Prismata. It never means "selected". */
+.tick { color: var(--pr-success-ink); }
 
 .announcement {
   position: absolute;

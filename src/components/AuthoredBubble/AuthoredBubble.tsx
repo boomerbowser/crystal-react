@@ -2,7 +2,7 @@
 
 /* AuthoredBubble: a reading surface with one intentionally tightened corner.
  *
- * The silhouette is Crystal's identity and carries through from the approved
+ * The silhouette is Prismata's identity and carries through from the approved
  * baseline: three content-radius corners and one cut to 6px, on the side the
  * message came from. It shows, without reading, which way a message went. The
  * catalogue also says "author and time are text, not implied by side alone".
@@ -53,7 +53,7 @@ export const AuthoredBubble = forwardRef<HTMLElement, AuthoredBubbleProps>(funct
   const settled = useRef(false);
 
   useEffect(() => {
-    /* Crystal's own note on the recipe: "Only on a new message; do not replay on
+    /* Prismata's own note on the recipe: "Only on a new message; do not replay on
        virtualised history or steal scroll". The caller says which this is,
        because only the caller knows. */
     if (settled.current) return;
@@ -69,7 +69,7 @@ export const AuthoredBubble = forwardRef<HTMLElement, AuthoredBubbleProps>(funct
       data-delivery={delivery}
       className={cx(
         styles['bubble'],
-        'cr-bubble',
+        'pr-bubble',
         own ? cx(styles['own'], 'own') : undefined,
         grouped ? styles['grouped'] : undefined,
         className,

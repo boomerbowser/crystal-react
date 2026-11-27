@@ -16,29 +16,29 @@
   display: grid;
   justify-items: center;
   align-content: start;
-  padding: var(--cr-space);
+  padding: var(--pr-space);
   /* Not vertically centred. A palette appears under the hand that summoned it,
      and a list that grows and shrinks as you type would walk up and down the
      screen if it were pinned to the middle. */
   padding-block-start: 12vh;
-  /* The overlay holds layout only; its `MirageWash` layer wears Crystal's `.cr-mirage`, with its opaque, reduced-transparency
+  /* The overlay holds layout only; its `MirageWash` layer wears Prismata's `.pr-mirage`, with its opaque, reduced-transparency
      and no-backdrop routes. */
 }
 
 .holder { display: contents; }
 
-/* The palette wears Crystal's `.cr-haze.raised` (2.7.0): the feathered Haze
+/* The palette wears Prismata's `.pr-haze.raised` (2.7.0): the feathered Haze
    fill behind the content, with the float shadow, because it opens over
-   everything. The `--cr-edge` boundary is the palette's own. */
+   everything. The `--pr-edge` boundary is the palette's own. */
 .palette {
   display: flex;
   flex-direction: column;
   inline-size: 100%;
-  max-inline-size: var(--cr-overlay-max-width);
+  max-inline-size: var(--pr-overlay-max-width);
   max-block-size: 60vh;
-  padding: $cr-spacing-xs;
-  border: 1px solid var(--cr-edge);
-  border-radius: var(--cr-radius);
+  padding: $pr-spacing-xs;
+  border: 1px solid var(--pr-edge);
+  border-radius: var(--pr-radius);
   outline: none;
   transform-origin: top center;
 }
@@ -46,17 +46,17 @@
 /* The field is Resin. The styles go on the shell, so the focus ring traces the
    control and not the bare text box inside it. */
 .field {
-  /* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
-  gap: $cr-spacing-xs;
+  /* The shell wears Prismata's `.pr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
+  gap: $pr-spacing-xs;
 }
 
 .field { @include field.keyboard-focus-within; }
 
 /* This padding sits inside the shell's own 8px inset and positions the glyph. */
-.searchIcon { display: inline-flex; flex: none; padding-inline-start: $cr-spacing-2xs; color: var(--cr-muted); }
+.searchIcon { display: inline-flex; flex: none; padding-inline-start: $pr-spacing-2xs; color: var(--pr-muted); }
 .searchIcon svg {
-  inline-size: $cr-icon-size;
-  block-size: $cr-icon-size;
+  inline-size: $pr-icon-size;
+  block-size: $pr-icon-size;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -72,13 +72,13 @@
 /* "Results list inset 8px", from the field above it and from the surface's own
    edge, so the rows read as content within the palette. */
 .results {
-  margin-block-start: $cr-spacing-xs;
+  margin-block-start: $pr-spacing-xs;
   padding: 0;
   overflow-y: auto;
   outline: none;
 }
 
-/* The scrollbar is `.cr-scroll-resin`, applied in the component. Crystal owns
+/* The scrollbar is `.pr-scroll-resin`, applied in the component. Prismata owns
    the thumb's colour, its geometry and the scroll contract (no chaining, a
    stable gutter, native gestures), so none of it is restated here. A compact
    list of rows is a control plane, which takes Resin's scrollbar. */
@@ -91,46 +91,46 @@
 
 .heading {
   display: block;
-  padding: $cr-spacing-xs $cr-spacing-sm $cr-spacing-2xs;
-  font-size: var(--cr-text-caption-size);
+  padding: $pr-spacing-xs $pr-spacing-sm $pr-spacing-2xs;
+  font-size: var(--pr-text-caption-size);
   font-weight: 700;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
 }
 
 .row {
   @include overlay.row;
   @include overlay.row-forced-colors;
-  padding-block: $cr-spacing-2xs;
+  padding-block: $pr-spacing-2xs;
 }
 
-.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
-.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.icon { display: inline-flex; flex: none; color: var(--pr-muted); }
+.icon svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 .labels { display: flex; flex-direction: column; min-inline-size: 0; flex: 1; }
 .label { display: block; }
 .description {
   display: block;
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
 }
 
 .shortcut {
   flex: none;
-  padding: 0 $cr-spacing-2xs;
-  border: 1px solid var(--cr-control-edge);
-  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  padding: 0 $pr-spacing-2xs;
+  border: 1px solid var(--pr-control-edge);
+  border-radius: calc(var(--pr-radius) - #{$pr-field-well-inset});
   font-family: inherit;
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
 }
 
 /* Empty and loading are the same shape so the palette does not jump between
    them. Both are text, because a spinner is not announced. */
 .status {
-  padding: $cr-spacing-md $cr-spacing-sm;
+  padding: $pr-spacing-md $pr-spacing-sm;
   text-align: center;
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
 }
 
 @media (forced-colors: active) {

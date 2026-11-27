@@ -2,7 +2,7 @@
 
 /* The field anatomy, once.
  *
- * Every text-shaped control in Crystal has the same anatomy: a label, a Haze
+ * Every text-shaped control in Prismata has the same anatomy: a label, a Haze
  * well inside a Resin shell, and helper text or an error beneath. Ten copies in
  * ten stylesheets would diverge as soon as one changed. This is CONTRACT §1
  * applied inside a library.
@@ -15,17 +15,17 @@
 @mixin field {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-xs;
-  color: var(--cr-text);
+  gap: $pr-spacing-xs;
+  color: var(--pr-text);
 }
 
 @mixin label {
-  font-size: var(--cr-text-caption-size);
+  font-size: var(--pr-text-caption-size);
   font-weight: 800;
 }
 
 /* The shell floats. The well inside is what you read and type into, so it is
-   recessed. Crystal's light source is overhead throughout, so recession inverts
+   recessed. Prismata's light source is overhead throughout, so recession inverts
    the light pair: a highlight inset along the top edge where the light lands,
    over the content-level shadow. */
 /* Only the unprefixed `backdrop-filter` is ever written in this library.
@@ -40,27 +40,27 @@
    `@include control` on the shell itself: `inherit` then reaches past the shell
    to the field, which has no radius, and the whole control renders square. Use
    `trigger` for an element that is both. */
-/* The floor Crystal gives a control inside a field shell:
-   `.cr-field-shell :is(input, select, textarea) { min-height: 44px; border-radius: 12px }`.
-   Crystal publishes it only as that rule, so it is named here once. */
-$field-control-floor: 44px; /* crystal-allow-literal: core `.cr-field-shell :is(input,select,textarea)` min-height */
+/* The floor Prismata gives a control inside a field shell:
+   `.pr-field-shell :is(input, select, textarea) { min-height: 44px; border-radius: 12px }`.
+   Prismata publishes it only as that rule, so it is named here once. */
+$field-control-floor: 44px; /* prismata-allow-literal: core `.pr-field-shell :is(input,select,textarea)` min-height */
 
-/* The height a shell reaches around that floor: Crystal's 8px inset on each side
+/* The height a shell reaches around that floor: Prismata's 8px inset on each side
    and the 1px rim. For an element that must be exactly as tall as a field
    without holding a native control, such as a trigger, or a pin well's width. */
-$field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* crystal-allow-literal: the shell's 1px rim, twice */
+$field-height: calc(#{$field-control-floor} + 2 * #{$pr-spacing-xs} + 2px); /* prismata-allow-literal: the shell's 1px rim, twice */
 
 @mixin control {
   flex: 1;
   min-width: 0;
   /* The height floor, the 12px radius, the transparent fill and the absent
-     border come from Crystal's rule above, which reaches every native control
+     border come from Prismata's rule above, which reaches every native control
      inside the shell. Setting a separate floor here changes the field's height:
-     a 48px floor makes it 74px tall inside Crystal's 8px inset instead of the 62
-     Crystal draws. This mixin sets only the text's position: no block padding,
-     so the control is exactly Crystal's 44px, and inline padding that puts the
+     a 48px floor makes it 74px tall inside Prismata's 8px inset instead of the 62
+     Prismata draws. This mixin sets only the text's position: no block padding,
+     so the control is exactly Prismata's 44px, and inline padding that puts the
      text roughly where it sat before the shell was inset by 8px. */
-  padding: 0 $cr-spacing-sm;
+  padding: 0 $pr-spacing-sm;
 }
 
 /* One element that is the shell and the control at once, such as a select's
@@ -73,14 +73,14 @@ $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* c
  * transparent` and `border: 0`. Those suit a control inside a shell, but on the
  * shell itself they erase the well `shell` paints, and `border: 0` leaves
  * `borderColor` resolving to `currentColor`, the text ink instead of the
- * outline. Text fields and Crystal's own `.cr-field-shell` render the Resin
+ * outline. Text fields and Prismata's own `.pr-field-shell` render the Resin
  * fill. This mixin takes the parts of `control` that describe a control and
  * leaves out the two that unpaint a surface. */
 @mixin trigger {
   flex: 1;
   min-width: 0;
   /* A trigger is its own shell, so it takes the height a shell reaches around a
-     44px control: Crystal's 8px inset on each side and the 1px rim. The inset
+     44px control: Prismata's 8px inset on each side and the 1px rim. The inset
      and the 20px radius are the shell's, as written. The padding a text field's
      input adds inside that inset, the trigger's contents add with
      `trigger-content`. */
@@ -95,27 +95,27 @@ $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* c
    and the disclosure of a trigger, so a Select's text starts where a TextInput's
    does in the same form. */
 @mixin trigger-content {
-  padding-inline: $cr-spacing-sm;
+  padding-inline: $pr-spacing-sm;
 }
 
 /* The ring belongs to the shell, so it traces the control and not the bare
    input inside it. */
 /* The field's ring, drawn while focus is anywhere inside the shell, and only
-   when the person is moving with the keyboard: Crystal's modality attribute
+   when the person is moving with the keyboard: Prismata's modality attribute
    (core 2.9.0) is `pointer` after a click, and a field clicked into does not
    grow a ring. Use on the shell itself: `.shell { @include field.keyboard-focus-within; }`. */
 @mixin keyboard-focus-within {
-  :global(:root:not([data-crystal-modality='pointer'])) &:focus-within { @include focus-ring; }
+  :global(:root:not([data-prismata-modality='pointer'])) &:focus-within { @include focus-ring; }
 }
 
 @mixin focus-ring {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 @mixin message {
-  font-size: var(--cr-text-caption-size);
+  font-size: var(--pr-text-caption-size);
 }
 
 /* A control inside the shell, such as a reveal toggle or a clear button. It
@@ -127,11 +127,11 @@ $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* c
   align-items: center;
   justify-content: center;
   align-self: stretch;
-  min-inline-size: $cr-action-min-target;
+  min-inline-size: $pr-action-min-target;
   border: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   background: transparent;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   cursor: pointer;
 }
 
@@ -142,12 +142,12 @@ $field-height: calc(#{$field-control-floor} + 2 * #{$cr-spacing-xs} + 2px); /* c
   align-items: center;
   /* Inside the shell's 8px inset, so the glyph sits where the text of a field
      without one begins. */
-  padding-inline-start: $cr-spacing-sm;
-  color: var(--cr-muted);
+  padding-inline-start: $pr-spacing-sm;
+  color: var(--pr-muted);
   pointer-events: none;
 }
 
-/* No fallback mixin. Crystal's `.cr-field-shell` publishes all three routes
+/* No fallback mixin. Prismata's `.pr-field-shell` publishes all three routes
    (`[data-effects=opaque]`, reduced transparency and forced colours) for the
    element itself. A local copy would restate them and, in forced colours, lose
-   to Crystal's `!important`. */
+   to Prismata's `!important`. */

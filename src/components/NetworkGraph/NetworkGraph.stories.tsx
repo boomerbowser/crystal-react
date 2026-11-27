@@ -44,10 +44,10 @@ const meta = {
           + 'connected to whom, and a node that announced only its name would leave a reader '
           + 'with a list of names and no graph.\n\n'
           + '**Positions are the caller\'s.** The catalogue puts "layout algorithm" on the '
-          + "product's side. A force simulation is also motion, and Crystal's rule is that "
+          + "product's side. A force simulation is also motion, and Prismata's rule is that "
           + 'nothing moves at rest: a graph that settles for four seconds after it appears '
           + 'gives a reader who tabs into it a moving target.\n\n'
-          + '"Node size is a scale": Crystal\'s point scale, by area, as the scatter\'s is.',
+          + '"Node size is a scale": Prismata\'s point scale, by area, as the scatter\'s is.',
       },
     },
   },

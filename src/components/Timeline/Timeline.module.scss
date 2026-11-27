@@ -12,7 +12,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-lg;
+  gap: $pr-spacing-lg;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -22,7 +22,7 @@
   position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   align-items: start;
 }
 
@@ -32,44 +32,44 @@
 .event:not(:last-child)::before {
   content: '';
   position: absolute;
-  inset-block-start: $cr-indicator-field-size;
-  inset-block-end: calc(#{$cr-spacing-lg} * -1);
-  inset-inline-start: calc(#{$cr-indicator-field-size} / 2);
+  inset-block-start: $pr-indicator-field-size;
+  inset-block-end: calc(#{$pr-spacing-lg} * -1);
+  inset-inline-start: calc(#{$pr-indicator-field-size} / 2);
   inline-size: 2px;
   translate: -1px 0;
-  background: var(--cr-haze-fill);
+  background: var(--pr-haze-fill);
 }
 
-/* The marker wears Crystal's `.cr-resin.flat` (2.7.0): a Resin plane that is a
-   mark rather than a control, so it has no sheen, with Crystal's fallbacks.
+/* The marker wears Prismata's `.pr-resin.flat` (2.7.0): a Resin plane that is a
+   mark rather than a control, so it has no sheen, with Prismata's fallbacks.
    The circle is its geometry. */
 .marker {
   display: inline-grid;
   place-items: center;
   box-sizing: border-box;
-  inline-size: $cr-indicator-field-size;
-  block-size: $cr-indicator-field-size;
+  inline-size: $pr-indicator-field-size;
+  block-size: $pr-indicator-field-size;
   border-radius: 50%;
-  color: var(--cr-text);
-  font-size: var(--cr-text-caption-size);
+  color: var(--pr-text);
+  font-size: var(--pr-text-caption-size);
   font-weight: 800;
 }
 
-.event[data-status='complete'] .marker { background: var(--cr-success-surface); color: var(--cr-success-ink); }
-.event[data-status='current'] .marker { background: var(--cr-primary); color: var(--cr-on-primary); }
-.event[data-status='error'] .marker { background: var(--cr-danger-surface); color: var(--cr-danger-ink); }
+.event[data-status='complete'] .marker { background: var(--pr-success-surface); color: var(--pr-success-ink); }
+.event[data-status='current'] .marker { background: var(--pr-primary); color: var(--pr-on-primary); }
+.event[data-status='error'] .marker { background: var(--pr-danger-surface); color: var(--pr-danger-ink); }
 
-.body { display: flex; flex-direction: column; gap: $cr-spacing-2xs; }
+.body { display: flex; flex-direction: column; gap: $pr-spacing-2xs; }
 
 /* The current event is marked by a heavier weight, the same rule that carries
-   selection everywhere else in Crystal. */
-.title { color: var(--cr-text); font-weight: 650; }
+   selection everywhere else in Prismata. */
+.title { color: var(--pr-text); font-weight: 650; }
 .event[data-status='current'] .title { font-weight: 800; }
 
 .status, .meta {
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
 }
 
 @media (forced-colors: active) {

@@ -13,7 +13,7 @@
  * somebody who cannot tell which end is which. That is the most common failure
  * in this control, and the one the catalogue names.
  *
- * Crystal's `switch-on` and `switch-off` recipes play on the value, not on the
+ * Prismata's `switch-on` and `switch-off` recipes play on the value, not on the
  * click, so a keyboard user sees what a pointer user sees.
  */
 import { forwardRef, useEffect, useRef, type ReactNode } from 'react';
@@ -40,7 +40,7 @@ export const Switch = forwardRef<HTMLLabelElement, SwitchProps>(function Switch(
       {({ isSelected }) => (
         <>
           <SwitchMotion isSelected={isSelected} play={play} />
-          <span className={cx('cr-choice', styles['track'])}>
+          <span className={cx('pr-choice', styles['track'])}>
             <span className={cx(styles['thumb'])} />
           </span>
           <span>{children}</span>

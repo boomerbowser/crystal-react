@@ -12,8 +12,8 @@
      below its text, never behind the page. */
   z-index: -1;
   border-radius: inherit;
-  background: var(--cr-haze-fill);
-  filter: blur(var(--cr-haze-feather));
+  background: var(--pr-haze-fill);
+  filter: blur(var(--pr-haze-feather));
   opacity: 0;
   pointer-events: none;
 }

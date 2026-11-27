@@ -2,8 +2,8 @@
 
 /* AreaChart: a line chart with the region beneath it filled.
  *
- * "Fill never obscures gridlines beneath it." The fill is Crystal's
- * `--cr-chart-fill-opacity` and not a solid. At a quarter, two overlapping series
+ * "Fill never obscures gridlines beneath it." The fill is Prismata's
+ * `--pr-chart-fill-opacity` and not a solid. At a quarter, two overlapping series
  * stay distinct and the gridlines a reader measures against stay legible through
  * both. A solid area chart with three series hides everything below the topmost
  * one.

@@ -4,13 +4,13 @@
  *
  * The fade is a mask on the strip, so the edges show whatever the marquee sits
  * on. A gradient painted in a surface colour would be a stripe of the wrong
- * colour on five of Crystal's six palettes. `Spoiler` uses the same mask for the
- * same reason, at the same depth: Crystal's stated edge-fade depth, once.
+ * colour on five of Prismata's six palettes. `Spoiler` uses the same mask for the
+ * same reason, at the same depth: Prismata's stated edge-fade depth, once.
  *
- * `--cr-motion-enabled` multiplies the duration to zero when motion is off,
+ * `--pr-motion-enabled` multiplies the duration to zero when motion is off,
  * which stops the animation instead of running it invisibly. The
  * `prefers-reduced-motion` query is the platform's own setting and does not
- * depend on Crystal's being set.
+ * depend on Prismata's being set.
  */
 .marquee {
   position: relative;
@@ -18,16 +18,16 @@
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    #000 #{$cr-scroll-area-fade-depth},  /* crystal-allow-literal: mask coverage, not a colour */
-    #000 calc(100% - #{$cr-scroll-area-fade-depth}),  /* crystal-allow-literal: mask coverage, not a colour */
+    #000 #{$pr-scroll-area-fade-depth},  /* prismata-allow-literal: mask coverage, not a colour */
+    #000 calc(100% - #{$pr-scroll-area-fade-depth}),  /* prismata-allow-literal: mask coverage, not a colour */
     transparent 100%
   );
 }
 
 .marquee:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 .track { display: flex; inline-size: max-content; }
@@ -39,10 +39,10 @@
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   /* The measured duration, gated and scaled like every other animation in this
-     library: multiplied by `--cr-motion-enabled`, which the provider publishes
+     library: multiplied by `--pr-motion-enabled`, which the provider publishes
      as 0 under reduced motion, and divided by the reader's motion-speed
      preference. A zero duration stops the animation. */
-  animation-duration: calc(var(--cr-motion-enabled) * var(--marquee-duration, 0s) / var(--cr-motion-speed));
+  animation-duration: calc(var(--pr-motion-enabled) * var(--marquee-duration, 0s) / var(--pr-motion-speed));
   animation-play-state: running;
 }
 

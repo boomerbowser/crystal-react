@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor, within } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor, within } from '../../test/render.js';
 import { TextInput } from '../TextInput/TextInput.js';
 import { CrudFormBlock, type CrudFormBlockProps, type CrudFormState } from './CrudFormBlock.js';
 
@@ -23,7 +23,7 @@ const props: CrudFormBlockProps = { title: 'Edit project', sections, onSubmit: (
 
 describe('CrudFormBlock', () => {
   it('puts each section in a group named by its legend', () => {
-    renderWithCrystal(<CrudFormBlock {...props} />);
+    renderWithPrismata(<CrudFormBlock {...props} />);
     const details = screen.getByRole('group', { name: 'Details' });
     expect(within(details).getByRole('textbox', { name: 'Project name' })).toBeInTheDocument();
     expect(screen.getByRole('group', { name: 'Owner' })).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe('CrudFormBlock', () => {
 
   it('hands the product the named values on submit', async () => {
     const onSubmit = vi.fn();
-    renderWithCrystal(<CrudFormBlock {...props} onSubmit={onSubmit} />);
+    renderWithPrismata(<CrudFormBlock {...props} onSubmit={onSubmit} />);
     await userEvent.type(screen.getByRole('textbox', { name: 'Project code' }), 'HB-1');
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     const values = onSubmit.mock.calls[0]![0] as FormData;
@@ -42,7 +42,7 @@ describe('CrudFormBlock', () => {
   /* The opinion, half one: errors summarise at the top and link to their fields. */
   it('summarises the errors at the top, takes focus there, and links each to its field', async () => {
     const errors = { code: 'Enter a project code', owner: 'Enter an email address' };
-    renderWithCrystal(<CrudFormBlock {...props} errors={errors} state="error" />);
+    renderWithPrismata(<CrudFormBlock {...props} errors={errors} state="error" />);
     const summary = screen.getByRole('region', { name: 'There are 2 problems' });
     await waitFor(() => { expect(summary).toHaveFocus(); });
     /* The same messages reach the fields, from the same object. */
@@ -58,18 +58,18 @@ describe('CrudFormBlock', () => {
     ['saved', 'Saved'],
     ['error', 'Not saved'],
   ] as const)('says %s in the one polite region', (state, said) => {
-    renderWithCrystal(<CrudFormBlock {...props} state={state} />);
+    renderWithPrismata(<CrudFormBlock {...props} state={state} />);
     expect(screen.getByRole('status')).toHaveTextContent(said);
   });
 
   it('says nothing at rest, from a region that is already there', () => {
-    renderWithCrystal(<CrudFormBlock {...props} />);
+    renderWithPrismata(<CrudFormBlock {...props} />);
     expect(screen.getByRole('status')).toHaveTextContent('');
   });
 
   it('holds the form while it checks or saves, and marks it busy', async () => {
     const onSubmit = vi.fn();
-    renderWithCrystal(<CrudFormBlock {...props} onSubmit={onSubmit} state="submitting" />);
+    renderWithPrismata(<CrudFormBlock {...props} onSubmit={onSubmit} state="submitting" />);
     expect(screen.getByRole('textbox', { name: 'Project name' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Save' }).closest('form')).toHaveAttribute('aria-busy', 'true');
@@ -78,17 +78,17 @@ describe('CrudFormBlock', () => {
   });
 
   it('shows saved in a word as well as saying it', () => {
-    renderWithCrystal(<CrudFormBlock {...props} state="saved" savedLabel="All changes saved" />);
+    renderWithPrismata(<CrudFormBlock {...props} state="saved" savedLabel="All changes saved" />);
     expect(screen.getAllByText('All changes saved')).toHaveLength(2);
   });
 
   it('alerts a failure that belongs to no field', () => {
-    renderWithCrystal(<CrudFormBlock {...props} state="error" errorMessage="The server could not be reached." />);
+    renderWithPrismata(<CrudFormBlock {...props} state="error" errorMessage="The server could not be reached." />);
     expect(screen.getByRole('alert')).toHaveTextContent('The server could not be reached.');
   });
 
   it('offers cancel only when the product can take it', () => {
-    renderWithCrystal(<CrudFormBlock title="New project" sections={sections} onSubmit={() => {}} />);
+    renderWithPrismata(<CrudFormBlock title="New project" sections={sections} onSubmit={() => {}} />);
     expect(screen.queryByRole('button', { name: 'Cancel' })).toBeNull();
   });
 
@@ -96,7 +96,7 @@ describe('CrudFormBlock', () => {
     'has no axe violations %s',
     async (state) => {
       const errors = state === 'error' ? { code: 'Enter a project code' } : {};
-      const { container } = renderWithCrystal(
+      const { container } = renderWithPrismata(
         <CrudFormBlock {...props} state={state} errors={errors} errorMessage="Not saved. Try again." />,
       );
       await expectNoAxeViolations(container);

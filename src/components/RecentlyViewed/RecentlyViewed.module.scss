@@ -1,14 +1,14 @@
 @use '../../styles/tokens' as *;
 
-.strip { display: grid; gap: $cr-spacing-sm; }
+.strip { display: grid; gap: $pr-spacing-sm; }
 
-.heading { margin: 0; font-size: var(--cr-text-heading-size); font-weight: 750; }
+.heading { margin: 0; font-size: var(--pr-text-heading-size); font-weight: 750; }
 
 .scroller { inline-size: 100%; }
 
 .row {
   display: flex;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -17,9 +17,9 @@
 /* Each cell holds its width rather than shrinking to fit. Cards that narrowed
    as more were added would reflow the strip every time somebody looked at
    another product. */
-.cell { flex: 0 0 $cr-layout-min-cell-width; }
+.cell { flex: 0 0 $pr-layout-min-cell-width; }
 
-.empty { margin: 0; color: var(--cr-muted); }
+.empty { margin: 0; color: var(--pr-muted); }
 
 @media (forced-colors: active) {
   .empty { color: CanvasText; }

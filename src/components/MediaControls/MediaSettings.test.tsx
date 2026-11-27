@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { MediaSettings } from './MediaSettings.js';
 
 const tracks = [
@@ -12,7 +12,7 @@ const tracks = [
 describe('MediaSettings', () => {
   /* A control that opens an empty menu is a control that does nothing. */
   it('renders nothing when there is nothing to choose', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <MediaSettings playbackRates={[1]} onPlaybackRateChange={() => undefined} audioTracks={[tracks[0]!]} onAudioTrackChange={() => undefined} />,
     );
     expect(container.querySelector('button')).toBeNull();
@@ -21,7 +21,7 @@ describe('MediaSettings', () => {
   /* One choice is a flat group of radio items. */
   it('shows a single choice as a flat group of radio items', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<MediaSettings playbackRates={[1, 2]} playbackRate={1} onPlaybackRateChange={() => undefined} />);
+    renderWithPrismata(<MediaSettings playbackRates={[1, 2]} playbackRate={1} onPlaybackRateChange={() => undefined} />);
     await user.click(screen.getByRole('button', { name: 'Settings' }));
     expect(await screen.findAllByRole('menuitemradio')).toHaveLength(2);
     expect(screen.queryByRole('menuitem')).toBeNull();
@@ -31,7 +31,7 @@ describe('MediaSettings', () => {
      the menu stays short over a short picture. */
   it('shows several choices as one submenu each, naming the current value', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(
+    renderWithPrismata(
       <MediaSettings
         playbackRates={[1, 2]}
         playbackRate={2}
@@ -54,7 +54,7 @@ describe('MediaSettings', () => {
     const user = userEvent.setup();
     const picked: (string | null)[] = [];
     const said: string[] = [];
-    renderWithCrystal(
+    renderWithPrismata(
       <MediaSettings
         textTracks={tracks}
         activeTextTrack="text-0"
@@ -76,7 +76,7 @@ describe('MediaSettings', () => {
     const user = userEvent.setup();
     const styles: unknown[] = [];
     const said: string[] = [];
-    renderWithCrystal(
+    renderWithPrismata(
       <MediaSettings
         textTracks={tracks}
         activeTextTrack="text-0"
@@ -97,7 +97,7 @@ describe('MediaSettings', () => {
 
   it('does not offer a caption style without a handler for it', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<MediaSettings textTracks={tracks} activeTextTrack="text-0" onTextTrackChange={() => undefined} playbackRates={[1, 2]} onPlaybackRateChange={() => undefined} />);
+    renderWithPrismata(<MediaSettings textTracks={tracks} activeTextTrack="text-0" onTextTrackChange={() => undefined} playbackRates={[1, 2]} onPlaybackRateChange={() => undefined} />);
     await user.click(screen.getByRole('button', { name: 'Settings' }));
     await screen.findAllByRole('menuitem');
     expect(screen.queryByRole('menuitem', { name: /^Caption style/ })).toBeNull();
@@ -105,7 +105,7 @@ describe('MediaSettings', () => {
 
   it('has no axe violations when open', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<MediaSettings playbackRates={[1, 2]} playbackRate={1} onPlaybackRateChange={() => undefined} />);
+    renderWithPrismata(<MediaSettings playbackRates={[1, 2]} playbackRate={1} onPlaybackRateChange={() => undefined} />);
     await user.click(screen.getByRole('button', { name: 'Settings' }));
     await screen.findAllByRole('menuitemradio');
     await expectNoAxeViolations(document.body);

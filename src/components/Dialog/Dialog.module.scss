@@ -8,7 +8,7 @@
  * instead of elevation above it.
  */
 
-/* The scrim's wash is Crystal's Mirage, `.cr-mirage` (2.2.0), drawn by `MirageWash` beside the surface (R-37). It
+/* The scrim's wash is Prismata's Mirage, `.pr-mirage` (2.2.0), drawn by `MirageWash` beside the surface (R-37). It
    draws chroma from the real backdrop instead of an invented overlay gradient,
    which is why it is a filter and not a dark fill. This rule holds only the
    layout. */
@@ -17,7 +17,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  padding: var(--cr-space);
+  padding: var(--pr-space);
 }
 
 /* React Aria's Modal sits between the scrim and the surface. As a grid item it
@@ -29,14 +29,14 @@
   inline-size: 100%;
 }
 
-/* The surface is Crystal's `.cr-dialog`: the 80% feathered Haze fill on its own
+/* The surface is Prismata's `.pr-dialog`: the 80% feathered Haze fill on its own
    paint layer, so the feather never touches text, with its rim, its panel radius,
    its shadow and both fallbacks. From 2.3.0 this file follows the class in three
    places:
 
-   - Scrolling. The scroll area wears `.cr-dialog-body`, and a dialog with a body
+   - Scrolling. The scroll area wears `.pr-dialog-body`, and a dialog with a body
      is a column whose surface does not scroll (D-25).
-   - Position. `.cr-dialog` is fixed only on a native `<dialog>` (D-29), so React
+   - Position. `.pr-dialog` is fixed only on a native `<dialog>` (D-29), so React
      Aria's surface sits in the scrim's grid, which centres it, without an
      override.
    - Radius. The catalogue specifies the panel radius (D-23), which the class
@@ -46,9 +46,9 @@
    at least the catalogue's 12px from content to the feathered edge, at the
    page's own spacing. */
 .dialog {
-  max-width: 560px;  /* crystal-allow-literal: reading measure, not a material value */
+  max-width: 560px;  /* prismata-allow-literal: reading measure, not a material value */
   width: 100%;
-  padding: var(--cr-space);
+  padding: var(--pr-space);
 }
 
 .dialog:focus { outline: none; }
@@ -59,27 +59,27 @@
    reaching to the card's edge moves that clip to where the card itself ends and
    the shadow has faded. */
 .body {
-  margin-inline: calc(var(--cr-space) * -1);
-  padding-inline: var(--cr-space);
-  margin-block-end: calc(var(--cr-space) * -1);
-  padding-block-end: var(--cr-space);
+  margin-inline: calc(var(--pr-space) * -1);
+  padding-inline: var(--pr-space);
+  margin-block-end: calc(var(--pr-space) * -1);
+  padding-block-end: var(--pr-space);
 }
 
-.body:not(:last-child) { margin-block-end: 0; padding-block-end: $cr-spacing-xs; }
+.body:not(:last-child) { margin-block-end: 0; padding-block-end: $pr-spacing-xs; }
 
 /* The footer the buttons sit in, outside the scroll area. */
 .actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: $cr-spacing-sm;
-  margin-block-start: $cr-spacing-md;
+  gap: $pr-spacing-sm;
+  margin-block-start: $pr-spacing-md;
 }
 
 .title {
-  margin: 0 0 var(--cr-space);
-  font-size: var(--cr-text-heading-size);
-  line-height: var(--cr-text-heading-leading);
-  letter-spacing: var(--cr-text-heading-tracking);
+  margin: 0 0 var(--pr-space);
+  font-size: var(--pr-text-heading-size);
+  line-height: var(--pr-text-heading-leading);
+  letter-spacing: var(--pr-text-heading-tracking);
   font-weight: 750;
 }

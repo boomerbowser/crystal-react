@@ -3,23 +3,23 @@
 .wrap {
   display: grid;
   min-block-size: 0;
-  grid-template-columns: minmax(0, $cr-layout-sidebar-width) minmax(0, 1fr);
-  gap: $cr-spacing-md;
+  grid-template-columns: minmax(0, $pr-layout-sidebar-width) minmax(0, 1fr);
+  gap: $pr-spacing-md;
 }
 
 /* "Frost list pane; Haze detail surface." The list is an intermediate surface
    beside the content. The detail is the content, so it takes the protective
    fill a reading surface gives its text, with no material of its own. */
 .list {
-  /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Prismata's fallbacks. */
   min-inline-size: 0;
 }
 
 .detail {
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
   min-inline-size: 0;
-  padding: $cr-spacing-lg;
-  border-radius: $cr-shape-content-radius;
+  padding: $pr-spacing-lg;
+  border-radius: $pr-shape-content-radius;
 }
 
 /* "Collapses to a stack below the layout breakpoint." One column, with one pane

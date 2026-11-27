@@ -97,7 +97,7 @@ export function SettingsBlock({
   const showBar = saveMode === 'deferred' && state !== 'at-rest';
 
   return (
-    <section aria-labelledby={headingId} data-cr-state={state} className={cx(styles['settings'], className)}>
+    <section aria-labelledby={headingId} data-pr-state={state} className={cx(styles['settings'], className)}>
       <Heading id={headingId} className={cx(styles['heading'])}>{title}</Heading>
 
       {groups.map((group) => (
@@ -140,7 +140,7 @@ export function SettingsBlock({
 function SettingsRegion({ group, Heading }: { group: SettingsGroup; Heading: 'h3' }): React.JSX.Element {
   const id = useId();
   return (
-    <section aria-labelledby={id} className={cx(styles['group'], 'cr-haze')}>
+    <section aria-labelledby={id} className={cx(styles['group'], 'pr-haze')}>
       <Heading id={id} className={cx(styles['groupHeading'])}>{group.title}</Heading>
       {group.description ? <p className={cx(styles['description'])}>{group.description}</p> : null}
       <div className={cx(styles['fields'])}>{group.children}</div>

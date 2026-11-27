@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { FocusTrap } from './FocusTrap.js';
 
 describe('FocusTrap', () => {
   it('contains Tab within the region while active', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <div>
         <button type="button">Outside</button>
         <FocusTrap>
@@ -24,7 +24,7 @@ describe('FocusTrap', () => {
   /* Rendering it unconditionally around something only sometimes modal has to be
      safe, or every caller writes the same conditional. */
   it('leaves the subtree alone when inactive', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <div>
         <FocusTrap isActive={false}>
           <div><button type="button">Inside</button></div>

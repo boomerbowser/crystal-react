@@ -1,22 +1,22 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, within } from '../../test/render.js';
+import { renderWithPrismata, screen, within } from '../../test/render.js';
 import { List, ListItem } from './List.js';
 
 describe('List', () => {
   it('is a real list, ordered when the numbers mean something', () => {
-    const { container, rerenderWithCrystal } = renderWithCrystal(
+    const { container, rerenderWithPrismata } = renderWithPrismata(
       <List><ListItem>One</ListItem></List>,
     );
     expect(container.querySelector('ul')).not.toBeNull();
-    rerenderWithCrystal(<List ordered><ListItem>One</ListItem></List>);
+    rerenderWithPrismata(<List ordered><ListItem>One</ListItem></List>);
     expect(container.querySelector('ol')).not.toBeNull();
   });
 
   /* "Interactive rows are buttons or links, not clickable divs." */
   it('renders the element the interaction means', async () => {
     const onPress = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <List>
         <ListItem href="/one">A link</ListItem>
         <ListItem onPress={onPress}>A button</ListItem>
@@ -30,7 +30,7 @@ describe('List', () => {
   });
 
   it('keeps a trailing action outside the row\'s own control', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <List>
         <ListItem onPress={() => undefined} trailing={<button type="button">Remove</button>}>
           A row
@@ -44,7 +44,7 @@ describe('List', () => {
   });
 
   it('shows the empty state instead of an empty list', () => {
-    renderWithCrystal(<List empty="Nothing here yet">{[]}</List>);
+    renderWithPrismata(<List empty="Nothing here yet">{[]}</List>);
     expect(screen.getByText('Nothing here yet')).toBeInTheDocument();
     expect(screen.queryByRole('list')).toBeNull();
   });
@@ -52,27 +52,27 @@ describe('List', () => {
   /* Nothing moves at rest: a row that was there when the page loaded has not
      just arrived. One that mounts afterwards has. */
   it('plays nothing on the first render and plays for a row that arrives', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <List><ListItem data-testid="first">One</ListItem></List>,
     );
     const first = screen.getByTestId('first');
-    expect(first.dataset['crMotionName'] ?? first.dataset['crMotionState']).toBeUndefined();
+    expect(first.dataset['prMotionName'] ?? first.dataset['prMotionState']).toBeUndefined();
 
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <List>
         <ListItem data-testid="first">One</ListItem>
         <ListItem data-testid="second">Two</ListItem>
       </List>,
     );
     const second = screen.getByTestId('second');
-    expect(second.dataset['crMotionName'] ?? second.dataset['crMotionState']).toBeDefined();
+    expect(second.dataset['prMotionName'] ?? second.dataset['prMotionState']).toBeDefined();
     /* And the row that was already there stays still. */
     const stillFirst = screen.getByTestId('first');
-    expect(stillFirst.dataset['crMotionName'] ?? stillFirst.dataset['crMotionState']).toBeUndefined();
+    expect(stillFirst.dataset['prMotionName'] ?? stillFirst.dataset['prMotionState']).toBeUndefined();
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <List separated>
         <ListItem href="/one" leading={<span aria-hidden="true">•</span>}>One</ListItem>
         <ListItem href="/two" isSelected>Two</ListItem>

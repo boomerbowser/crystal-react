@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { CommandBar } from './CommandBar.js';
 import { Button } from '../Button/Button.js';
 
@@ -13,7 +13,7 @@ describe('CommandBar', () => {
      stop would put eight presses between the reader and the next field; React
      Aria's toolbar collapses them to one and moves between them with arrows. */
   it('is a named toolbar', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CommandBar aria-label="Report commands" renderOverflow={overflow}>
         <Button>Export</Button>
         <Button>Share</Button>
@@ -27,7 +27,7 @@ describe('CommandBar', () => {
      so the overflow behaviour is tested in `verify:appearance` and only
      reachability is tested here. */
   it('keeps every command reachable', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CommandBar aria-label="Report commands" renderOverflow={overflow}>
         <Button>Export</Button>
         <Button>Share</Button>
@@ -50,7 +50,7 @@ describe('CommandBar', () => {
    * it appears there too. Whether the affordance appears when the bar is too
    * narrow is tested in `verify:appearance`, at a width. */
   it('renders its row inside the toolbar, so the overflow trigger lands there', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <CommandBar aria-label="Report commands" renderOverflow={overflow}>
         <Button>Export</Button>
       </CommandBar>,
@@ -64,7 +64,7 @@ describe('CommandBar', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <CommandBar aria-label="Report commands" renderOverflow={overflow}>
         <Button>Export</Button>
         <Button>Share</Button>

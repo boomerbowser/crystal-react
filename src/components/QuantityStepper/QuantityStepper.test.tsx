@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { QuantityStepper } from './QuantityStepper.js';
 
 function Harness({ min = 1, max = 5 }: { min?: number; max?: number }) {
@@ -17,7 +17,7 @@ describe('QuantityStepper', () => {
      attributes because, in its own comment, "we can't focus a spin button with
      VO". The field must still be an operable number. See R-22. */
   it('is a typable number with a numeric keypad', () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     const field = screen.getByRole('textbox', { name: 'Quantity' }) as HTMLInputElement;
     expect(field.value).toBe('1');
     expect(field.inputMode).toBe('numeric');
@@ -28,7 +28,7 @@ describe('QuantityStepper', () => {
      twelve of something does not press a control twelve times. */
   it('steps from the keyboard as well as from the controls', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     const field = screen.getByRole('textbox', { name: 'Quantity' }) as HTMLInputElement;
     field.focus();
     await user.keyboard('{ArrowUp}');
@@ -39,7 +39,7 @@ describe('QuantityStepper', () => {
 
   it('steps from either control', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     const field = screen.getByRole('textbox', { name: 'Quantity' }) as HTMLInputElement;
     await user.click(screen.getByRole('button', { name: /One more/ }));
     expect(field.value).toBe('2');
@@ -50,7 +50,7 @@ describe('QuantityStepper', () => {
   /* React Aria appends the field's own label, so a page with four steppers does
      not have four buttons called "One more". */
   it('names its controls after what they count', () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     expect(screen.getByRole('button', { name: 'One more Quantity' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'One fewer Quantity' })).toBeInTheDocument();
   });
@@ -63,7 +63,7 @@ describe('QuantityStepper', () => {
     /* Three, so that stepping back from the maximum lands on a value that is
        not also the minimum. With a range of one step every value is a bound,
        and the test could not see the announcement clear. */
-    renderWithCrystal(<Harness max={3} />);
+    renderWithPrismata(<Harness max={3} />);
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
     await user.click(screen.getByRole('button', { name: /One more/ }));
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
@@ -78,7 +78,7 @@ describe('QuantityStepper', () => {
   /* A stepper rendered at its minimum has not reached anything, so it does not
      announce on mount. */
   it('says nothing about a bound it started on', () => {
-    renderWithCrystal(<Harness />);
+    renderWithPrismata(<Harness />);
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
@@ -89,7 +89,7 @@ describe('QuantityStepper', () => {
   it('cannot hold a fraction', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <QuantityStepper label="Quantity" defaultValue={1} onChange={onChange} minValue={1} maxValue={99} />,
     );
     const field = screen.getByRole('textbox', { name: 'Quantity' }) as HTMLInputElement;
@@ -104,12 +104,12 @@ describe('QuantityStepper', () => {
   /* The label is the accessible name whether or not it is drawn. A cart row
      shows the product name beside the stepper and hides the label. */
   it('keeps its name when the label is not shown', () => {
-    renderWithCrystal(<QuantityStepper label="Quantity" showLabel={false} defaultValue={1} />);
+    renderWithPrismata(<QuantityStepper label="Quantity" showLabel={false} defaultValue={1} />);
     expect(screen.getByRole('textbox', { name: 'Quantity' })).toBeInTheDocument();
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(<Harness />);
+    const { container } = renderWithPrismata(<Harness />);
     await expectNoAxeViolations(container);
   });
 });

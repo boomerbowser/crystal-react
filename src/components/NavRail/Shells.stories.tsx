@@ -52,9 +52,9 @@ const meta = {
           + 'changes.\n\n'
           + 'Nothing is drawn beside the label to mark it. A leading mark sits inside the control and '
           + 'offsets the label it points at, so the current item stops lining up with the others. '
-          + 'Crystal carries selection typographically instead.\n\n'
+          + 'Prismata carries selection typographically instead.\n\n'
           + 'A collapsed rail keeps full-height hit areas. The label is hidden and the target stays. '
-          + 'That is the 44px floor, measured in a real browser by `verify-targets.mjs`, '  /* crystal-allow-literal: the catalogue's wording, quoted in prose; the floor itself is FLOOR in verify-targets.mjs */
+          + 'That is the 44px floor, measured in a real browser by `verify-targets.mjs`, '  /* prismata-allow-literal: the catalogue's wording, quoted in prose; the floor itself is FLOOR in verify-targets.mjs */
           + 'because jsdom reports every box as zero.',
       },
     },

@@ -11,7 +11,7 @@ const meta = {
           '"Axis labels sit outside the outer ring" and "axes are labelled; series are named". '
           + 'A radar without axis labels says only that one shape is bigger than another, and '
           + 'the measures are lost.\n\n'
-          + '"Haze fill inside each series polygon", at Crystal\'s fill opacity, so two '
+          + '"Haze fill inside each series polygon", at Prismata\'s fill opacity, so two '
           + 'overlapping series stay distinct. The outline carries the series\' dash as well, '
           + 'because two polygons at a quarter opacity look very similar and a reader follows '
           + 'the edge.\n\n'

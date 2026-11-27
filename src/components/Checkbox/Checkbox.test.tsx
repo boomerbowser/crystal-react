@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { Checkbox, CheckboxGroup, Radio, RadioGroup } from './Checkbox.js';
 
 describe('Checkbox', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<Checkbox>Remember this device</Checkbox>);
+    const { container } = renderWithPrismata(<Checkbox>Remember this device</Checkbox>);
     expect(screen.getByRole('checkbox', { name: 'Remember this device' })).toBeInTheDocument();
     await expectNoAxeViolations(container);
   });
@@ -17,7 +17,7 @@ describe('Checkbox', () => {
      the property because that is the mechanism the rule names. `aria-checked`
      is absent because the native state is used. */
   it('sets indeterminate through the property, not a class', () => {
-    renderWithCrystal(<Checkbox isIndeterminate>Select all</Checkbox>);
+    renderWithPrismata(<Checkbox isIndeterminate>Select all</Checkbox>);
     const box = screen.getByRole('checkbox', { name: 'Select all' }) as HTMLInputElement;
     expect(box.indeterminate).toBe(true);
     expect(box.getAttribute('aria-checked')).toBeNull();
@@ -25,7 +25,7 @@ describe('Checkbox', () => {
 
   it('toggles from the keyboard', async () => {
     const onChange = vi.fn();
-    renderWithCrystal(<Checkbox onChange={onChange}>Remember</Checkbox>);
+    renderWithPrismata(<Checkbox onChange={onChange}>Remember</Checkbox>);
     screen.getByRole('checkbox', { name: 'Remember' }).focus();
     await userEvent.keyboard(' ');
     expect(onChange).toHaveBeenCalledWith(true);
@@ -36,7 +36,7 @@ describe('CheckboxGroup', () => {
   /* "Choose at least one" belongs to the set. Attached to the first checkbox, it
      would describe only that checkbox. */
   it('describes the group rather than the first option', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <CheckboxGroup label="Notify me about" errorMessage="Choose at least one">
         <Checkbox value="mentions">Mentions</Checkbox>
         <Checkbox value="replies">Replies</Checkbox>
@@ -51,7 +51,7 @@ describe('CheckboxGroup', () => {
 
 describe('RadioGroup', () => {
   it('moves between options with the arrow keys, as one tab stop', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <RadioGroup label="Plan">
         <Radio value="free">Free</Radio>
         <Radio value="pro">Pro</Radio>

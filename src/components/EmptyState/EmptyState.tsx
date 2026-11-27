@@ -18,7 +18,7 @@
  * hidden` and the title is required.
  *
  * `empty-in` plays when the state changes, not on mount. That is the rule across
- * this library and Crystal: an empty state that was on the page when it loaded
+ * this library and Prismata: an empty state that was on the page when it loaded
  * did not arrive.
  */
 import {
@@ -62,7 +62,7 @@ export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(function E
       role="region"
       aria-labelledby={`${id}-title`}
       data-state={state}
-      className={cx('cr-haze inset', styles['empty'], className)}
+      className={cx('pr-haze inset', styles['empty'], className)}
     >
       {illustration ? (
         <div aria-hidden="true" className={styles['illustration']}>{illustration}</div>

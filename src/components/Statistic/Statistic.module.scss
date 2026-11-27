@@ -10,14 +10,14 @@
 .statistic {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-2xs;
-  color: var(--cr-text);
+  gap: $pr-spacing-2xs;
+  color: var(--pr-text);
 }
 
 .label {
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
 }
 
 .value {
@@ -27,10 +27,10 @@
   isolation: isolate;
   display: flex;
   align-items: baseline;
-  gap: $cr-spacing-2xs;
-  font-size: var(--cr-text-title-size);
-  line-height: var(--cr-text-title-leading);
-  letter-spacing: var(--cr-text-title-tracking);
+  gap: $pr-spacing-2xs;
+  font-size: var(--pr-text-title-size);
+  line-height: var(--pr-text-title-leading);
+  letter-spacing: var(--pr-text-title-tracking);
   font-weight: 800;
   /* Tabular figures, so a column of statistics can be read down its own
      length. */
@@ -38,17 +38,17 @@
 }
 
 .unit {
-  color: var(--cr-muted);
-  font-size: var(--cr-text-body-size);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-body-size);
   font-weight: 600;
 }
 
 .placeholder {
   display: inline-block;
-  inline-size: $cr-spacing-2xl;
-  block-size: 1em;  /* crystal-allow-literal: relative to the text, not a design value */
-  border-radius: var(--cr-radius);
-  /* Crystal's `.cr-haze.flat.sunken` (2.7.0): the fill on the element, and the
+  inline-size: $pr-spacing-2xl;
+  block-size: 1em;  /* prismata-allow-literal: relative to the text, not a design value */
+  border-radius: var(--pr-radius);
+  /* Prismata's `.pr-haze.flat.sunken` (2.7.0): the fill on the element, and the
      alternate surface where translucency gives way, so the placeholder stays
      visible on the surface it waits on. */
 }

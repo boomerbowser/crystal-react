@@ -13,10 +13,10 @@
  * cannot be chosen.
  *
  * The two shapes carry selection differently. A pill has a label, so selection
- * is the label's weight, by Crystal's rule and the catalogue's. A swatch is a
+ * is the label's weight, by Prismata's rule and the catalogue's. A swatch is a
  * circle of colour with no label to weight, so a selected swatch uses its pad:
  * the colour shrinks inside a tinted surround. The gallery thumbnail does the
- * same. It is never an outline, because an outline at an offset is how Crystal
+ * same. It is never an outline, because an outline at an offset is how Prismata
  * draws focus, and an option with one keeps looking focused after focus has
  * left.
  *
@@ -69,7 +69,7 @@ export function VariantSelector({
           isDisabled={variant.unavailable !== undefined}
           className={cx(
             styles['variant'],
-            shape === 'swatch' ? cx('cr-haze flush', styles['swatch']) : cx('cr-haze flush', styles['pill']),
+            shape === 'swatch' ? cx('pr-haze flush', styles['swatch']) : cx('pr-haze flush', styles['pill']),
           )}
           /* The swatch's name, because its own content is a colour with no text.
              The pill needs none, because its content is its name. */

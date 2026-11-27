@@ -14,13 +14,13 @@
 import { type ReactNode, type Ref } from 'react';
 import { Form as AriaForm, type FormProps as AriaFormProps } from 'react-aria-components';
 import { cx } from '../styles/cx.js';
-import type { CrystalFormProps } from './useCrystalForm.js';
+import type { PrismataFormProps } from './usePrismataForm.js';
 import styles from './Form.module.scss';
 
 export interface FormProps
   extends Omit<AriaFormProps, 'children' | 'className' | 'onSubmit' | 'onChange' | 'onReset' | 'validationErrors'> {
-  /** `formProps` from `useCrystalForm`. */
-  form: CrystalFormProps;
+  /** `formProps` from `usePrismataForm`. */
+  form: PrismataFormProps;
   /** Errors belonging to the form, not to any field. */
   formErrors?: readonly string[];
   children: ReactNode;

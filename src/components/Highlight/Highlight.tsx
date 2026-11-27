@@ -26,7 +26,7 @@ export interface MarkProps extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
   /**
    * The mark has just appeared because what is being searched for changed, so
-   * it plays Crystal's \`highlight\` once as it arrives. \`Highlight\` sets it; a
+   * it plays Prismata's \`highlight\` once as it arrives. \`Highlight\` sets it; a
    * mark rendered by hand with the rest of the page does not need it.
    */
   arriving?: boolean;
@@ -47,7 +47,7 @@ export function Mark({ className, children, arriving = false, ...props }: MarkPr
 function ArrivingCue(): React.JSX.Element {
   const [scope, play] = useMotion();
   return (
-    <span ref={scope as never} aria-hidden="true" className={cx('cr-haze flush', styles['cue'])}>
+    <span ref={scope as never} aria-hidden="true" className={cx('pr-haze flush', styles['cue'])}>
       <Arrival play={play} recipe="highlight" />
     </span>
   );

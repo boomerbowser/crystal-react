@@ -19,8 +19,8 @@ import {
 } from 'react';
 import { Button } from '../Button/Button.js';
 import { cx } from '../../styles/cx.js';
-import { useCrystalTheme } from '../../theme/CrystalProvider.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { usePrismataTheme } from '../../theme/PrismataProvider.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import styles from './Spoiler.module.scss';
 
 export interface SpoilerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -35,13 +35,13 @@ export interface SpoilerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chil
   defaultExpanded?: boolean;
 }
 
-/** Crystal's duration for a spatial change, in milliseconds. */
-const REVEAL_MS = Number.parseFloat(crystalTokens['motion.duration.spatial']);
+/** Prismata's duration for a spatial change, in milliseconds. */
+const REVEAL_MS = Number.parseFloat(prismataTokens['motion.duration.spatial']);
 
 export function Spoiler({
   /* A height in lines of the reader's own text. Eight ems is about five lines at
-     Crystal's reading rhythm, and it follows the font if that changes. */
-  children, maxHeight = '8em', showLabel = 'Show more', hideLabel = 'Show less', // crystal-allow-literal: relative to the text, not a design value
+     Prismata's reading rhythm, and it follows the font if that changes. */
+  children, maxHeight = '8em', showLabel = 'Show more', hideLabel = 'Show less', // prismata-allow-literal: relative to the text, not a design value
   defaultExpanded = false, className, ...props
 }: SpoilerProps): ReactNode {
   const [expanded, setExpanded] = useState(defaultExpanded);
@@ -54,7 +54,7 @@ export function Spoiler({
      The travel runs between two measured heights, because `max-block-size`
      cannot transition to `none`. When it ends the limit is removed, so content
      that changes size afterwards is never cut. */
-  const { resolveDuration } = useCrystalTheme();
+  const { resolveDuration } = usePrismataTheme();
   const content = useRef<HTMLDivElement>(null);
   const [limit, setLimit] = useState<string | undefined>(defaultExpanded ? undefined : maxHeight);
   const first = useRef(true);

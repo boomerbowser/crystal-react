@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { Slider, RangeSlider } from './Slider.js';
 
 describe('Slider', () => {
@@ -8,7 +8,7 @@ describe('Slider', () => {
      bounds natively. React Aria leaves `aria-valuenow` off, so the test asserts
      the native attributes instead. */
   it('has no accessibility violations and announces its bounds', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Slider label="Volume" defaultValue={40} minValue={0} maxValue={100} />,
     );
     const slider = screen.getByRole('slider', { name: 'Volume' }) as HTMLInputElement;
@@ -22,7 +22,7 @@ describe('Slider', () => {
      only that aria-valuetext is non-empty would pass with the unit on the screen
      and missing from the announcement, so the test checks for the unit. */
   it('announces the value with its unit, not only shows it', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Slider
         label="Price"
         defaultValue={24}
@@ -37,7 +37,7 @@ describe('Slider', () => {
 
   it('steps from the keyboard', async () => {
     const onChange = vi.fn();
-    renderWithCrystal(<Slider label="Volume" defaultValue={40} onChange={onChange} />);
+    renderWithPrismata(<Slider label="Volume" defaultValue={40} onChange={onChange} />);
     screen.getByRole('slider', { name: 'Volume' }).focus();
     await userEvent.keyboard('{ArrowRight}');
     expect(onChange).toHaveBeenCalledWith(41);
@@ -48,7 +48,7 @@ describe('RangeSlider', () => {
   /* Two sliders with distinct names. One control with two handles announces one
      value, so a reader moving the lower bound is told the upper one. */
   it('is two sliders, each announcing its own bound', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <RangeSlider
         label="Price"
         defaultValue={[20, 80]}

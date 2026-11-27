@@ -23,7 +23,7 @@ const meta = {
           + 'a container with no `overflow` does not scroll. It makes the page wide, and a '
           + 'reader on a phone finds a horizontal scrollbar under the whole document.\n\n'
           + 'The scrolling belongs to a `ScrollArea` with the Resin scrollbar, because '
-          + 'Crystal\'s scroll contract puts Frost on panels and reading surfaces and Resin on '
+          + 'Prismata\'s scroll contract puts Frost on panels and reading surfaces and Resin on '
           + 'compact or horizontal scrollers.',
       },
     },

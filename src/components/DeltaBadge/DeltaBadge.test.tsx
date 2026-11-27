@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { DeltaBadge, deltaSign } from './DeltaBadge.js';
 
 describe('DeltaBadge', () => {
@@ -15,25 +15,25 @@ describe('DeltaBadge', () => {
   });
 
   it('formats the magnitude and writes the sign itself', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <DeltaBadge value={-0.024} format={{ style: 'percent', minimumFractionDigits: 1 }} locale="en-GB" />,
     );
     expect(screen.getByText('−2.4%')).toBeInTheDocument();
   });
 
   it('carries the state as data, and zero is neutral rather than positive', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(<DeltaBadge value={0} data-testid="d" />);
+    const { rerenderWithPrismata } = renderWithPrismata(<DeltaBadge value={0} data-testid="d" />);
     expect(screen.getByTestId('d').dataset['state']).toBe('neutral');
-    rerenderWithCrystal(<DeltaBadge value={3} data-testid="d" />);
+    rerenderWithPrismata(<DeltaBadge value={3} data-testid="d" />);
     expect(screen.getByTestId('d').dataset['state']).toBe('positive');
-    rerenderWithCrystal(<DeltaBadge value={-3} data-testid="d" />);
+    rerenderWithPrismata(<DeltaBadge value={-3} data-testid="d" />);
     expect(screen.getByTestId('d').dataset['state']).toBe('negative');
   });
 
   /* A synthesiser may or may not expand "+" and "−", and what the badge means
      should not depend on which. */
   it('says the direction in words, and names what changed', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <DeltaBadge value={-0.024} format={{ style: 'percent', minimumFractionDigits: 1 }}
         locale="en-GB" description="refunds" />,
     );
@@ -42,7 +42,7 @@ describe('DeltaBadge', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<DeltaBadge value={12} description="open tickets" />);
+    const { container } = renderWithPrismata(<DeltaBadge value={12} description="open tickets" />);
     await expectNoAxeViolations(container);
   });
 });

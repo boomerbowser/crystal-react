@@ -1,32 +1,32 @@
 @use '../../styles/tokens' as *;
 
 .review {
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-xs);
-  border-radius: $cr-shape-content-radius;
-  padding: calc(var(--cr-haze-inset) + var(--cr-block-padding, $cr-spacing-md));
-  color: var(--cr-text);
+  gap: var(--pr-block-gap, $pr-spacing-xs);
+  border-radius: $pr-shape-content-radius;
+  padding: calc(var(--pr-haze-inset) + var(--pr-block-padding, $pr-spacing-md));
+  color: var(--pr-text);
 }
 
 .rating { display: flex; }
-.title { margin: 0; font-size: var(--cr-text-subheading-size); font-weight: 750; }
-.body { line-height: var(--cr-text-body-leading); }
+.title { margin: 0; font-size: var(--pr-text-subheading-size); font-weight: 750; }
+.body { line-height: var(--pr-text-body-leading); }
 
 .who {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: $cr-spacing-xs;
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
+  gap: $pr-spacing-xs;
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
 }
 
 /* The author is who is speaking, so it is set apart from the metadata in the
    rest of the footer. */
-.author { color: var(--cr-text); font-weight: 700; }
+.author { color: var(--pr-text); font-weight: 700; }
 
-.badge { font-weight: 700; color: var(--cr-success-ink); }
+.badge { font-weight: 700; color: var(--pr-success-ink); }
 
 @media (forced-colors: active) {
   .review { border: 1px solid CanvasText; }

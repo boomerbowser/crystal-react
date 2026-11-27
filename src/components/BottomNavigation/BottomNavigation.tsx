@@ -11,7 +11,7 @@
  * It is pinned, so it publishes its height. A bar fixed to the bottom of the
  * viewport covers whatever is under it, and the last item of a list becomes
  * unreachable. The component sets its own height as
- * `--cr-bottom-navigation-block-size` on the element, so a layout can reserve
+ * `--pr-bottom-navigation-block-size` on the element, so a layout can reserve
  * the space instead of guessing a number that goes stale when the bar gains a
  * row.
  *
@@ -50,7 +50,7 @@ export function BottomNavigation({
   const [height, setHeight] = useState<number | null>(null);
   /* Measured, not declared. A height written into a token becomes wrong, without
      warning, when somebody adds a second line to a label. */
-  /* The primary fill is Crystal's pill behind the current destination, and it
+  /* The primary fill is Prismata's pill behind the current destination, and it
      travels to the one a person goes to (D-37). */
   const { planeRef } = useTravelMotion('selection-travel', 'a[aria-current]:not([aria-current=false])');
   const measure = useCallback((node: HTMLElement | null) => {
@@ -62,8 +62,8 @@ export function BottomNavigation({
     <nav
       ref={measure}
       aria-label={props['aria-label'] ?? 'Destinations'}
-      className={cx(styles['bar'], 'cr-dock', className)}
-      style={height === null ? undefined : { ['--cr-bottom-navigation-block-size' as string]: `${height}px` }}
+      className={cx(styles['bar'], 'pr-dock', className)}
+      style={height === null ? undefined : { ['--pr-bottom-navigation-block-size' as string]: `${height}px` }}
     >
       <ul className={cx(styles['list'])}>
         {items.map((item) => {

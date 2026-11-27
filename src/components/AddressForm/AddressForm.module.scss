@@ -3,8 +3,8 @@
 /* "Fields follow the input geometry", so there is nothing to draw here beyond
    the rhythm between them. The fields are `TextInput` and `Select`, which carry
    the Haze wells in Resin shells the catalogue asks for. */
-.form { display: grid; gap: $cr-spacing-md; }
+.form { display: grid; gap: $pr-spacing-md; }
 
 /* The country decides everything below it, so it sits apart from the fields it
    decides rather than in the run of them. */
-.country { padding-block-end: $cr-spacing-2xs; }
+.country { padding-block-end: $pr-spacing-2xs; }

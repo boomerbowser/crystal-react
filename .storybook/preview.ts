@@ -1,29 +1,29 @@
 import type { Preview } from '@storybook/react-vite';
-import { withCrystal, crystalGlobalTypes } from './withCrystal.js';
+import { withPrismata, prismataGlobalTypes } from './withPrismata.js';
 import { createElement, type ComponentType } from 'react';
 import { environmentArgs, environmentArgTypes, only } from './environment.js';
 
-/* Crystal's reset, materials and scrollbars, and the resolved theme. A story
+/* Prismata's reset, materials and scrollbars, and the resolved theme. A story
    renders against the same CSS an application would.
  *
- * There is deliberately no third import. `@crystal-ui/core/controls`, the
+ * There is deliberately no third import. `@prismata/core/controls`, the
  * preview site's own control layer, styles bare elements:
- * `:is(button, a.cr-button)` gives every button on the page a Resin background,
+ * `:is(button, a.pr-button)` gives every button on the page a Resin background,
  * a feathered ::before and a 48px minimum height. Loading it puts a second
  * implementation of every control underneath this library's own, which is the
  * drift CONTRACT §1 is about: a 32px chip renders 50px tall, and every story is
  * validated against styles a consumer never has.
  *
- * Crystal no longer exports it, so the import would not resolve today. The
+ * Prismata no longer exports it, so the import would not resolve today. The
  * reason is recorded so that nothing like it is added. */
-import '@crystal-ui/core/css';
-import '@crystal-ui/core/theme';
+import '@prismata/core/css';
+import '@prismata/core/theme';
 
 const preview: Preview = {
   /* Declared here rather than in each story file, so the environment is on
      every component's Controls panel without twenty-seven story authors having
      to offer it. That is what "available per-component to test with and
-     against" means: a reviewer opening any story finds the same panel Crystal's
+     against" means: a reviewer opening any story finds the same panel Prismata's
      own preview has.
 
      The decorator only honours one of these once it differs from the story's
@@ -64,8 +64,8 @@ const preview: Preview = {
       test: 'error',
     },
   },
-  globalTypes: crystalGlobalTypes,
-  decorators: [withCrystal],
+  globalTypes: prismataGlobalTypes,
+  decorators: [withPrismata],
 };
 
 export default preview;

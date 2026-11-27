@@ -1,6 +1,6 @@
 /* How a media time is displayed and how it is announced.
  *
- * "Crystal: … **time formatting**". The catalogue assigns this to Crystal rather
+ * "Prismata: … **time formatting**". The catalogue assigns this to Prismata rather
  * than the product, as it does the palette, so that two players never format
  * the same second differently.
  *

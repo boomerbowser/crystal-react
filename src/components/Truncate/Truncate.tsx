@@ -69,7 +69,7 @@ export const Truncate = forwardRef<HTMLDivElement, TruncateProps>(function Trunc
         ref={mergeRefs(body, ref)}
         id={bodyId}
         className={cx(styles['clamp'], expanded ? styles['expanded'] : undefined)}
-        style={{ '--cr-clamp-lines': lines, ...style } as CSSProperties}
+        style={{ '--pr-clamp-lines': lines, ...style } as CSSProperties}
       >
         {children}
       </div>

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { only } from '../../../.storybook/environment.js';
 import { Card } from './Card.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 
 const meta = {
   title: 'Data display/Card',
@@ -12,10 +12,10 @@ const meta = {
         component:
           /* The figures come from the live tokens instead of being typed into the
              prose, so the documentation cannot drift from the material it describes. */
-          `A Haze content fill: ${Number(crystalTokens['material.haze.fill']) * 100}% opaque with a `
-          + `${crystalTokens['material.haze.feather']} feathered perimeter. The feather lives on an `
+          `A Haze content fill: ${Number(prismataTokens['material.haze.fill']) * 100}% opaque with a `
+          + `${prismataTokens['material.haze.feather']} feathered perimeter. The feather lives on an `
           + 'isolated paint layer, so the edge softens while text, icons and focus rings stay crisp. '
-          + 'Card plays no motion. Crystal\'s catalogue assigns it none, and a library must not '
+          + 'Card plays no motion. Prismata\'s catalogue assigns it none, and a library must not '
           + 'invent motion the design system did not specify.',
       },
     },
@@ -30,7 +30,7 @@ export const Default: Story = {
     children: (
       <>
         <h3 style={{ margin: 0 }}>Part of the same material world</h3>
-        <p style={{ marginBlock: 'var(--cr-space) 0', color: 'var(--cr-muted)' }}>
+        <p style={{ marginBlock: 'var(--pr-space) 0', color: 'var(--pr-muted)' }}>
           Colour carries through from the material beneath it.
         </p>
       </>
@@ -49,8 +49,8 @@ export const AsRegion: Story = {
 export const InsideResin: Story = {
   render: (args) => (
     <div
-      className="cr-resin"
-      style={{ padding: 'var(--cr-space)' }}
+      className="pr-resin"
+      style={{ padding: 'var(--pr-space)' }}
     >
       <Card {...only(args)}>This card sits inside a Resin frame, and is recessed into it.</Card>
     </div>

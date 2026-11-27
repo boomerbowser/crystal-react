@@ -2,17 +2,17 @@
 
 /* Marquee: content that scrolls continuously along one axis.
  *
- * This is the one component in Crystal whose default state is movement at
- * rest, and Crystal's rule is that nothing moves at rest. The catalogue lists it
+ * This is the one component in Prismata whose default state is movement at
+ * rest, and Prismata's rule is that nothing moves at rest. The catalogue lists it
  * anyway, on the condition in the last clause of its own semantics line:
  * "removed entirely under reduced motion". A reader can switch it off
  * system-wide and, until they do, stop it by pointing at it or tabbing to it.
  * None of that is optional here.
  *
- * Crystal assigns no recipe and no duration, because a continuous scroll's
+ * Prismata assigns no recipe and no duration, because a continuous scroll's
  * duration depends on the length of the caller's children. `speed` is therefore
  * a rate in pixels per second, and the duration is measured from the rendered
- * width. Whether it plays is not this component's choice: `--cr-motion-enabled`
+ * width. Whether it plays is not this component's choice: `--pr-motion-enabled`
  * gates it, the same property every other animation in this library uses.
  *
  * The viewport takes a tab stop so that "pausable on focus" works without a
@@ -20,7 +20,7 @@
  * content reachable, the same reason `Code`'s blocks are focusable.
  */
 import { forwardRef, useEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
-import { useCrystalTheme } from '../../theme/CrystalProvider.js';
+import { usePrismataTheme } from '../../theme/PrismataProvider.js';
 import { cx } from '../../styles/cx.js';
 import styles from './Marquee.module.scss';
 
@@ -38,7 +38,7 @@ export const Marquee = forwardRef<HTMLDivElement, MarqueeProps>(function Marquee
   { children, label, speed = 60, reverse = false, className, ...props },
   ref,
 ) {
-  const { reduceMotion } = useCrystalTheme();
+  const { reduceMotion } = usePrismataTheme();
   const track = useRef<HTMLDivElement>(null);
   const [duration, setDuration] = useState<number | null>(null);
 
@@ -83,7 +83,7 @@ export const Marquee = forwardRef<HTMLDivElement, MarqueeProps>(function Marquee
         /* The measured duration arrives as a custom property rather than as
            `animationDuration`, so the stylesheet can still divide it by the
            reader's motion-speed preference and multiply it by
-           `--cr-motion-enabled`. An inline `animation-duration` would outrank
+           `--pr-motion-enabled`. An inline `animation-duration` would outrank
            the rule and remove the gate. */
         style={moving ? ({ '--marquee-duration': `${duration}s` } as CSSProperties) : undefined}
       >

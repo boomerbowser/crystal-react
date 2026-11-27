@@ -3,10 +3,10 @@
 /* Code renders inline or block monospace content.
  *
  * "Never feathered, as code must stay exact." Because of that clause, Code is
- * the one surface in this slice that is not a Crystal material. Haze feathers
+ * the one surface in this slice that is not a Prismata material. Haze feathers
  * its own paint layer, and even with crisp text above it the softened edge
  * around a fragment of syntax reads as imprecision in the thing being quoted. So
- * Code takes a canvas fill and an edge rim, the flattest surface Crystal has.
+ * Code takes a canvas fill and an edge rim, the flattest surface Prismata has.
  *
  * A block here is the typographic primitive: a scrollable, keyboard-reachable
  * `pre` and nothing else. `CodeBlock` is the documented sample, with a filename,
@@ -51,7 +51,7 @@ export const Code = forwardRef<HTMLElement, CodeProps>(function Code(
       {...props}
       ref={ref as Ref<HTMLPreElement>}
       tabIndex={0}
-      className={cx(styles['code'], styles['block'], 'cr-scroll-resin', copyable ? undefined : className)}
+      className={cx(styles['code'], styles['block'], 'pr-scroll-resin', copyable ? undefined : className)}
     >
       <code>{children}</code>
     </pre>

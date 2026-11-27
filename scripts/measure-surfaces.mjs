@@ -4,8 +4,8 @@
  * `audit-recipes.mjs` reads each component's own markup for the class of every
  * surface the catalogue names for it, and reports a surface it cannot find
  * there as "not worn in its own markup". Reading source cannot follow
- * composition: a card that renders a `Card` wears `.cr-haze` through it, and an
- * overlay wears `.cr-frost` only once it is open, in a portal outside the
+ * composition: a card that renders a `Card` wears `.pr-haze` through it, and an
+ * overlay wears `.pr-frost` only once it is open, in a portal outside the
  * component. So this asks the built stories.
  *
  * For each implemented entry with a surface the static reading did not find, it
@@ -17,7 +17,7 @@
  * element, to `surfaces-measured.json` beside the audit, and
  * `audit-recipes.mjs` gives every entry its reason from it.
  *
- * A found class says the recipe is worn, not that it renders as Crystal's:
+ * A found class says the recipe is worn, not that it renders as Prismata's:
  * `verify:materials` and `verify:appearance` measure that, for the surfaces
  * they name.
  *
@@ -40,8 +40,8 @@ const scratch = join(ROOT, 'node_modules/.cache/audit-for-surfaces.json');
 execFileSync('node', [join(ROOT, 'scripts/audit-recipes.mjs'), '--json', scratch], { stdio: 'ignore' });
 const audit = JSON.parse(readFileSync(scratch, 'utf8'));
 
-const CORE = existsSync(join(ROOT, '../crystal-design-system/core/tokens/surfaces.json'))
-  ? join(ROOT, '../crystal-design-system/core') : join(ROOT, 'node_modules/@crystal-ui/core');
+const CORE = existsSync(join(ROOT, '../prismata-design-system/core/tokens/surfaces.json'))
+  ? join(ROOT, '../prismata-design-system/core') : join(ROOT, 'node_modules/@prismata/core');
 const surfaces = JSON.parse(readFileSync(join(CORE, 'tokens/surfaces.json'), 'utf8')).surfaces;
 const selectorFor = Object.fromEntries(surfaces.map((s) => [s.id, [...new Set(
   [s.class, ...(s.also ?? [])].filter((x) => x?.startsWith('.')).map((x) => `.${x.slice(1).split(/[.:\s[]/)[0]}`),
@@ -49,17 +49,17 @@ const selectorFor = Object.fromEntries(surfaces.map((s) => [s.id, [...new Set(
 
 /* A surface worn under another name (R-A2, 17 November 2026). Each is the
    surface's material in a published form the class list above does not name:
-   a Haze reading fill inside Frost is `.cr-frost.reading` (core 2.7.0), and a
+   a Haze reading fill inside Frost is `.pr-frost.reading` (core 2.7.0), and a
    dialog's decision surface over a scrim is raised Haze, the dialog's own
    `::before`. `PER_ENTRY` is the same for one component, where the form is
    that component's alone: a player's time readouts are painted on Haze by
-   `.cr-resin.transport`, and an editor's writing surface is the Haze well of
-   its `.cr-field-shell`. */
-const EQUIVALENT = { haze: ['.cr-frost.reading'], dialog: ['.cr-haze.raised'] };
+   `.pr-resin.transport`, and an editor's writing surface is the Haze well of
+   its `.pr-field-shell`. */
+const EQUIVALENT = { haze: ['.pr-frost.reading'], dialog: ['.pr-haze.raised'] };
 const PER_ENTRY = {
-  'media-controls': { haze: ['.cr-resin.transport'] },
-  'video-player': { haze: ['.cr-resin.transport'] },
-  'editor-block': { haze: ['.cr-field-shell'] },
+  'media-controls': { haze: ['.pr-resin.transport'] },
+  'video-player': { haze: ['.pr-resin.transport'] },
+  'editor-block': { haze: ['.pr-field-shell'] },
 };
 /* What a reader does to open the surface, where it is not the story's first
    control: a hover card opens on hover, a gallery's viewer from a thumbnail, a
@@ -94,7 +94,7 @@ const describe = (selector, everywhere) => page.evaluate(([selector, everywhere]
   const el = scope?.querySelector(selector);
   if (!el) return null;
   const module = [...el.classList].find((name) => /^_[a-zA-Z]+_[a-z0-9]+_\d+$/.test(name));
-  return [el.tagName.toLowerCase(), ...[...el.classList].filter((name) => name.startsWith('cr-')), module ? `(${module.split('_')[1]})` : '']
+  return [el.tagName.toLowerCase(), ...[...el.classList].filter((name) => name.startsWith('pr-')), module ? `(${module.split('_')[1]})` : '']
     .filter(Boolean).join(' ');
 }, [selector, everywhere]);
 

@@ -1,8 +1,8 @@
-export { useCrystalForm } from './useCrystalForm.js';
+export { usePrismataForm } from './usePrismataForm.js';
 export type {
-  CrystalForm, CrystalFormProps, CrystalMutation,
-  CrystalSubmissionStatus, UseCrystalFormOptions,
-} from './useCrystalForm.js';
+  PrismataForm, PrismataFormProps, PrismataMutation,
+  PrismataSubmissionStatus, UsePrismataFormOptions,
+} from './usePrismataForm.js';
 export { Form } from './Form.js';
 export { ErrorSummary } from './ErrorSummary.js';
 export type { ErrorSummaryProps } from './ErrorSummary.js';

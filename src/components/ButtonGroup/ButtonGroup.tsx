@@ -38,7 +38,7 @@ export function ButtonGroup({
     <div
       {...(label ? { role: 'group', 'aria-label': label } : {})}
       className={cx(
-        'cr-group',
+        'pr-group',
         orientation === 'vertical' ? 'vertical' : undefined,
         className,
       )}

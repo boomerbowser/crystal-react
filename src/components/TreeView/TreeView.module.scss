@@ -5,7 +5,7 @@
  *
  * Haze instead of Resin, because a tree sits in a panel instead of floating
  * above one. A Resin row inside a Resin sidebar would be Resin containing
- * Resin, which Crystal forbids, because two panes of the same glass read as
+ * Resin, which Prismata forbids, because two panes of the same glass read as
  * neither pane.
  */
 
@@ -24,13 +24,13 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
-  min-block-size: $cr-action-min-target;
-  padding-inline-end: $cr-spacing-sm;
-  /* One rule for every level. `--cr-tree-level` is 0 at the root. */
-  padding-inline-start: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step});
-  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
-  color: var(--cr-text);
+  gap: $pr-spacing-2xs;
+  min-block-size: $pr-action-min-target;
+  padding-inline-end: $pr-spacing-sm;
+  /* One rule for every level. `--pr-tree-level` is 0 at the root. */
+  padding-inline-start: calc(var(--pr-tree-level, 0) * #{$pr-tree-indent-step});
+  border-radius: calc(var(--pr-radius) - #{$pr-field-well-inset});
+  color: var(--pr-text);
   font-weight: 550;
   cursor: pointer;
 }
@@ -45,12 +45,12 @@
   position: absolute;
   inset-block: 0;
   inset-inline-start: 0;
-  inline-size: calc(var(--cr-tree-level, 0) * #{$cr-tree-indent-step});
+  inline-size: calc(var(--pr-tree-level, 0) * #{$pr-tree-indent-step});
   pointer-events: none;
   background-image: repeating-linear-gradient(
     to right,
-    var(--cr-control-edge) 0 1px,
-    transparent 1px $cr-tree-indent-step
+    var(--pr-control-edge) 0 1px,
+    transparent 1px $pr-tree-indent-step
   );
 }
 
@@ -59,28 +59,28 @@
 [dir='rtl'] .row::before {
   background-image: repeating-linear-gradient(
     to left,
-    var(--cr-control-edge) 0 1px,
-    transparent 1px $cr-tree-indent-step
+    var(--pr-control-edge) 0 1px,
+    transparent 1px $pr-tree-indent-step
   );
 }
 
-.item[data-hovered] .row { background: var(--cr-surface-alt); }
+.item[data-hovered] .row { background: var(--pr-surface-alt); }
 
 /* Selection is weight. The soft fill is the second signal, never the only one. */
 .item[data-selected] .row {
   font-weight: 800;
-  color: var(--cr-on-primary-soft);
-  background: var(--cr-primary-soft);
+  color: var(--pr-on-primary-soft);
+  background: var(--pr-primary-soft);
 }
 
 .item[data-focus-visible] .row {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(-1 * #{$cr-focus-core-offset});
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(-1 * #{$pr-focus-core-offset});
+  box-shadow: var(--pr-focus-ring);
 }
 
 .item[data-disabled] .row {
-  opacity: $cr-action-disabled-opacity;
+  opacity: $pr-action-disabled-opacity;
   cursor: not-allowed;
 }
 
@@ -90,13 +90,13 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  inline-size: $cr-icon-action;
-  block-size: $cr-icon-action;
+  inline-size: $pr-icon-action;
+  block-size: $pr-icon-action;
   padding: 0;
   border: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   background: transparent;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   cursor: pointer;
 }
 
@@ -104,14 +104,14 @@
    open, so its rotation shows the state without relying on colour.
    `aria-expanded` also states it in words. */
 .chevron svg {
-  inline-size: $cr-icon-size;
-  block-size: $cr-icon-size;
+  inline-size: $pr-icon-size;
+  block-size: $pr-icon-size;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: rotate var(--cr-state) var(--cr-ease-settle);
+  transition: rotate var(--pr-state) var(--pr-ease-settle);
 }
 
 .item[data-expanded] > * .chevron svg { rotate: 90deg; }
@@ -120,12 +120,12 @@
 .chevronEmpty { cursor: default; }
 
 .chevron[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(-1 * #{$cr-focus-core-offset});
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(-1 * #{$pr-focus-core-offset});
 }
 
-.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
-.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.icon { display: inline-flex; flex: none; color: var(--pr-muted); }
+.icon svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 .label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -139,7 +139,7 @@
     background-image: repeating-linear-gradient(
       to right,
       CanvasText 0 1px,
-      transparent 1px $cr-tree-indent-step
+      transparent 1px $pr-tree-indent-step
     );
   }
 }

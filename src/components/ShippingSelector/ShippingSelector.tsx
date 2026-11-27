@@ -16,7 +16,7 @@
  * The whole card is the target. A radio dot with a label beside it gives a thumb
  * something small to find. These options are large enough to press and have no
  * dot, because selection here is label weight. That is the catalogue's rule and
- * Crystal's own for a choice among peers, as distinct from an action in an on
+ * Prismata's own for a choice among peers, as distinct from an action in an on
  * state. See `_option.scss` for why those two differ.
  *
  * It is built on `RadioGroup`, not on React Aria directly, so it keeps the field
@@ -58,7 +58,7 @@ export function ShippingSelector({
           key={option.value}
           value={option.value}
           isDisabled={option.unavailable !== undefined}
-          className={cx('cr-haze flush', styles['option'])}
+          className={cx('pr-haze flush', styles['option'])}
         >
           {/* No `aria-label`. The card's own text is its name, and it already
               holds all three facts in one place, as "states price and estimate

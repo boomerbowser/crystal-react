@@ -1,17 +1,17 @@
 @use '../../styles/tokens' as *;
 
-/* "Haze rows." Each event is Crystal's `.cr-haze` reading fill, on whatever
+/* "Haze rows." Each event is Prismata's `.pr-haze` reading fill, on whatever
    material the feed sits on; the feed itself paints nothing. */
 .feed {
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-md);
+  gap: var(--pr-block-gap, $pr-spacing-md);
   min-inline-size: 0;
 }
 
 .top {
   display: flex;
   align-items: baseline;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
 }
 
 .heading { margin: 0; }
@@ -19,14 +19,14 @@
 /* Said in a word, not a pulsing dot: a feed that changes by itself says so, and
    nothing moves at rest. */
 .live {
-  font-size: var(--cr-text-caption-size);
+  font-size: var(--pr-text-caption-size);
   font-weight: 800;
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 .events {
   display: grid;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -36,12 +36,12 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: $cr-spacing-sm;
-  padding: $cr-spacing-sm $cr-spacing-md;
-  border-radius: var(--cr-radius);
+  gap: $pr-spacing-sm;
+  padding: $pr-spacing-sm $pr-spacing-md;
+  border-radius: var(--pr-radius);
 }
 
 .avatar { display: inline-flex; }
 .sentence { margin: 0; grid-column: 2; }
 .actor { font-weight: 800; }
-.time { color: var(--cr-muted); font-size: var(--cr-text-caption-size); white-space: nowrap; }
+.time { color: var(--pr-muted); font-size: var(--pr-text-caption-size); white-space: nowrap; }

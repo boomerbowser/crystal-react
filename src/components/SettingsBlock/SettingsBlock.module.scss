@@ -1,10 +1,10 @@
 @use '../../styles/tokens' as *;
 
 /* "Haze groups." The block sits on whatever surface the page gives it; each
-   group is a Haze fill, worn as `.cr-haze`. */
+   group is a Haze fill, worn as `.pr-haze`. */
 .settings {
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-md);
+  gap: var(--pr-block-gap, $pr-spacing-md);
   min-inline-size: 0;
 }
 
@@ -12,41 +12,41 @@
 
 .group {
   display: grid;
-  gap: $cr-spacing-sm;
-  padding: var(--cr-space);
-  border-radius: var(--cr-radius);
+  gap: $pr-spacing-sm;
+  padding: var(--pr-space);
+  border-radius: var(--pr-radius);
   min-inline-size: 0;
 }
 
 .groupHeading {
   margin: 0;
-  font-size: var(--cr-text-subheading-size);
+  font-size: var(--pr-text-subheading-size);
   font-weight: 750;
 }
 
-.description { margin: 0; color: var(--cr-muted); }
+.description { margin: 0; color: var(--pr-muted); }
 
-.fields { display: grid; gap: $cr-spacing-md; }
+.fields { display: grid; gap: $pr-spacing-md; }
 
 /* The save bar stays in view at the foot of a long page while there is
    something to save. */
 .bar {
   position: sticky;
-  inset-block-end: $cr-spacing-sm;
+  inset-block-end: $pr-spacing-sm;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   flex-wrap: wrap;
 }
 
 .barState { margin-inline-end: auto; font-weight: 800; }
 
-.leaving { margin: 0 0 $cr-spacing-md; }
+.leaving { margin: 0 0 $pr-spacing-md; }
 
 .leavingActions {
   display: flex;
   justify-content: flex-end;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   flex-wrap: wrap;
 }

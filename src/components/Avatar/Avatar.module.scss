@@ -5,7 +5,7 @@
  *
  * The ring lets avatars overlap in a group and still read as separate people.
  * Each one carries a band of the page's own surface around it, so the visible
- * edge is the gap between them. That is why it is painted in `--cr-surface` and
+ * edge is the gap between them. That is why it is painted in `--pr-surface` and
  * not in the rim colour, and why `AvatarGroup` needs no rule of its own to
  * produce it.
  *
@@ -22,18 +22,18 @@
   inline-size: var(--avatar-size);
   block-size: var(--avatar-size);
   /* Always circular. It is not a variant and is not derived from the content
-     radius. A person is a circle throughout Crystal. */
+     radius. A person is a circle throughout Prismata. */
   border-radius: 50%;
   overflow: hidden;
-  background: var(--cr-surface-alt);
-  color: var(--cr-text);
-  font-size: var(--cr-text-caption-size);
+  background: var(--pr-surface-alt);
+  color: var(--pr-text);
+  font-size: var(--pr-text-caption-size);
   font-weight: 700;
   line-height: 1;
   user-select: none;
   /* The separating band. `box-shadow` and not `border`, so it sits outside the
      circle and does not eat into the picture. */
-  box-shadow: 0 0 0 avatar.$ring var(--cr-surface);
+  box-shadow: 0 0 0 avatar.$ring var(--pr-surface);
 }
 
 @include avatar.sizes;
@@ -55,13 +55,13 @@
   place-items: center;
   inline-size: 100%;
   block-size: 100%;
-  background: var(--cr-surface-alt);
+  background: var(--pr-surface-alt);
 }
 
 /* Loading shows no spinner. An avatar is small and usually one of many, and a
    row of spinners is worse than a row of still discs. The fallback holds still
    until the picture resolves. Nothing moves at rest. */
-.avatar[data-state='loading'] .fallback { color: var(--cr-muted); }
+.avatar[data-state='loading'] .fallback { color: var(--pr-muted); }
 
 @media (forced-colors: active) {
   .avatar {

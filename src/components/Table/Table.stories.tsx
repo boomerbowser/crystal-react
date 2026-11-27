@@ -36,8 +36,8 @@ const meta = {
           + 'The shell scrolls rather than the page, so it is a named tab stop, because a scroll '
           + 'container with nothing focusable in it cannot be reached without a pointer. '
           + 'Its scrollbar is Resin, because a compact horizontal scroller is a control plane. '
-          + 'The material is Crystal\'s own `.cr-table` recipe value for value, down to the Haze '
-          + 'fill being inset 6px here rather than the usual 8.',  // crystal-allow-literal: quoting the two insets in prose
+          + 'The material is Prismata\'s own `.pr-table` recipe value for value, down to the Haze '
+          + 'fill being inset 6px here rather than the usual 8.',  // prismata-allow-literal: quoting the two insets in prose
       },
     },
   },

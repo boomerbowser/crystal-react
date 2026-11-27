@@ -1,7 +1,7 @@
 /* The blocks entry and the main entry agree.
  *
- * Every block is exported from both (`@crystal-ui/react` and
- * `@crystal-ui/react/blocks`), and they must be the same objects: a block added
+ * Every block is exported from both (`@prismata/react` and
+ * `@prismata/react/blocks`), and they must be the same objects: a block added
  * to the main barrel's Blocks section and forgotten here would exist in one
  * entry and not the other, which is exactly the drift a second entry point
  * invites.

@@ -46,7 +46,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '**Both surfaces here are Resin, and neither may contain Resin.** Crystal\'s materials nest '
+          '**Both surfaces here are Resin, and neither may contain Resin.** Prismata\'s materials nest '
           + 'Plastic → Frost → Resin, back to front. An overlay portals to `body`, so by the time it '
           + 'renders the DOM no longer shows what it sits inside. `SurfaceProvider` supplies that '
           + 'answer instead, so the rule still holds across the portal.\n\n'
@@ -97,7 +97,7 @@ export const Preview: Story = {
       >
         <Stack gap="sm">
           <Title level={4}>CONTRACT §1</Title>
-          <Text>A library implements Crystal for a platform. It does not fork the token or material definitions.</Text>
+          <Text>A library implements Prismata for a platform. It does not fork the token or material definitions.</Text>
         </Stack>
       </HoverCard>
       , and it is generated from the catalogue rather than written twice.

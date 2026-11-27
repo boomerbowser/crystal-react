@@ -14,8 +14,8 @@
  */
 
 .masonry {
-  column-count: var(--cr-masonry-columns, 3);
-  column-gap: var(--cr-masonry-gap, #{$cr-spacing-md});
+  column-count: var(--pr-masonry-columns, 3);
+  column-gap: var(--pr-masonry-gap, #{$pr-spacing-md});
   min-width: 0;
 }
 
@@ -23,13 +23,13 @@
   /* Without this an item can be split across a column boundary, which for a card
      means its top half in one column and its bottom half in the next. */
   break-inside: avoid;
-  margin-block-end: var(--cr-masonry-gap, #{$cr-spacing-md});
+  margin-block-end: var(--pr-masonry-gap, #{$pr-spacing-md});
 }
 
-@media (max-width: $cr-breakpoint-md) {
-  .masonry { column-count: var(--cr-masonry-columns-md, 2); }
+@media (max-width: $pr-breakpoint-md) {
+  .masonry { column-count: var(--pr-masonry-columns-md, 2); }
 }
 
-@media (max-width: $cr-breakpoint-sm) {
+@media (max-width: $pr-breakpoint-sm) {
   .masonry { column-count: 1; }
 }

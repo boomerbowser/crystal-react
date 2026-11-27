@@ -88,7 +88,7 @@ export function CheckoutBlock({
   const headingId = `checkout-${step}-heading`;
 
   return (
-    <div className={cx(styles['checkout'], className)} data-cr-state={state} aria-busy={busy || undefined}>
+    <div className={cx(styles['checkout'], className)} data-pr-state={state} aria-busy={busy || undefined}>
       <CheckoutSteps
         steps={ORDER.map((one, at) => ({
           id: one,
@@ -102,13 +102,13 @@ export function CheckoutBlock({
       />
 
       <div className={cx(styles['main'])}>
-        <section aria-labelledby={headingId} className={cx(styles['step'], 'cr-frost')}>
+        <section aria-labelledby={headingId} className={cx(styles['step'], 'pr-frost')}>
           <h2 id={headingId} className={cx(styles['heading'])}>{stepLabels[step]}</h2>
           {state === 'error' && errorMessage ? (
             <div role="alert" className={cx(styles['failure'])}>{errorMessage}</div>
           ) : null}
           <ErrorSummary errors={errors} />
-          <div className={cx(styles['fields'], 'cr-haze')}>
+          <div className={cx(styles['fields'], 'pr-haze')}>
             {step === 'address' ? (
               <AddressForm {...address} errors={errors} isSubmitting={busy} />
             ) : step === 'shipping' ? (

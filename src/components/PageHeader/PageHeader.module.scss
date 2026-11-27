@@ -6,15 +6,15 @@
    Frost. */
 .header {
   display: grid;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   box-sizing: border-box;
-  padding-block: $cr-spacing-lg;
-  padding-inline: $cr-spacing-lg;
-  transition: padding-block $cr-motion-duration-state #{$cr-motion-easing-settle};
+  padding-block: $pr-spacing-lg;
+  padding-inline: $pr-spacing-lg;
+  transition: padding-block $pr-motion-duration-state #{$pr-motion-easing-settle};
 }
 
 .banded {
-  /* Crystal's `.cr-frost.flat` (2.7.0): a band of Frost without grain, square,
+  /* Prismata's `.pr-frost.flat` (2.7.0): a band of Frost without grain, square,
      because it spans the page. */
   border-radius: 0;
 }
@@ -23,27 +23,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   flex-wrap: wrap;
 }
 
 .title { margin: 0; }
-.description { margin: 0; color: var(--cr-muted); }
+.description { margin: 0; color: var(--pr-muted); }
 
-/* "Actions are pills". That is Crystal's action geometry, so the actions get it
+/* "Actions are pills". That is Prismata's action geometry, so the actions get it
    by being actions and this rule does not set it. This rule keeps them together
    so they do not wrap under the title one at a time. */
 .actions {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   flex: none;
 }
 
 /* Condensed: the band tightens and the description goes. The title, the
    breadcrumbs and the actions all stay. Condensing saves room and does not take
    controls away from the reader. */
-.condensed { padding-block: $cr-spacing-xs; }
+.condensed { padding-block: $pr-spacing-xs; }
 .condensed .description { display: none; }
 
 @media (prefers-reduced-motion: reduce) {

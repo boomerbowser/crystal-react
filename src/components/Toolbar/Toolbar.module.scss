@@ -10,16 +10,16 @@
 .toolbar {
   display: flex;
   align-items: center;
-  gap: var(--cr-toolbar-gap, #{$cr-action-gap});
-  min-block-size: $cr-action-min-target;
+  gap: var(--pr-toolbar-gap, #{$pr-action-gap});
+  min-block-size: $pr-action-min-target;
   min-width: 0;
 }
 
 .vertical { flex-direction: column; align-items: stretch; }
 
-/* A floating toolbar is Crystal's dock, worn as `.cr-dock` by the component.
+/* A floating toolbar is Prismata's dock, worn as `.pr-dock` by the component.
    The dock supplies the Resin plane, its Haze fill and its fallbacks, and strips
    the Resin coat from the buttons inside so there is no Resin inside Resin.
-   Crystal has no vertical dock, so a vertical toolbar keeps the content radius
+   Prismata has no vertical dock, so a vertical toolbar keeps the content radius
    instead of becoming a very tall pill. */
-.vertical.resin { border-radius: var(--cr-radius); }
+.vertical.resin { border-radius: var(--pr-radius); }

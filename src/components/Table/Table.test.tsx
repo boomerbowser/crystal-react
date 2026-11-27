@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, within } from '../../test/render.js';
+import { renderWithPrismata, screen, within } from '../../test/render.js';
 import { Table, nextSort, type TableSort } from './Table.js';
 
 const columns = [
@@ -19,7 +19,7 @@ describe('Table', () => {
   /* No ARIA pattern recovers header association once the elements are divs, so
      this is a real table. */
   it('is a real table with a scope on every header', () => {
-    const { container } = renderWithCrystal(<Table columns={columns} rows={rows} label="Workspaces" />);
+    const { container } = renderWithPrismata(<Table columns={columns} rows={rows} label="Workspaces" />);
     expect(container.querySelector('table')).not.toBeNull();
     const columnHeaders = [...container.querySelectorAll('thead th')];
     expect(columnHeaders).toHaveLength(3);
@@ -35,7 +35,7 @@ describe('Table', () => {
      not sorted carries nothing. */
   it('puts aria-sort on one header only, and on the header rather than the button', () => {
     const sort: TableSort = { column: 'name', direction: 'ascending' };
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Table columns={columns} rows={rows} label="Workspaces" sort={sort} onSortChange={vi.fn()} />,
     );
     const sorted = [...container.querySelectorAll('[aria-sort]')];
@@ -47,7 +47,7 @@ describe('Table', () => {
 
   it('offers sorting as a button, and asks for the next order when pressed', async () => {
     const onSortChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <Table columns={columns} rows={rows} label="Workspaces"
         sort={{ column: 'name', direction: 'ascending' }} onSortChange={onSortChange} />,
     );
@@ -64,7 +64,7 @@ describe('Table', () => {
   });
 
   it('gives no sort control to a column that is not sortable', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Table columns={columns} rows={rows} label="Workspaces" onSortChange={vi.fn()} />,
     );
     expect(screen.queryByRole('button', { name: /Plan/ })).toBeNull();
@@ -73,24 +73,24 @@ describe('Table', () => {
   /* The shell scrolls, and a scroll container with nothing focusable in it
      cannot be reached without a pointer. */
   it('makes the scrolling shell a named, focusable region', () => {
-    renderWithCrystal(<Table columns={columns} rows={rows} label="Workspaces" />);
+    renderWithPrismata(<Table columns={columns} rows={rows} label="Workspaces" />);
     const region = screen.getByRole('region', { name: 'Workspaces' });
     expect(region).toHaveAttribute('tabindex', '0');
-    expect(region.className).toMatch(/cr-table-scroll/);
+    expect(region.className).toMatch(/pr-table-scroll/);
   });
 
   it('shows the empty state instead of an empty body', () => {
-    renderWithCrystal(<Table columns={columns} rows={[]} label="Workspaces" empty="No workspaces yet." />);
+    renderWithPrismata(<Table columns={columns} rows={[]} label="Workspaces" empty="No workspaces yet." />);
     expect(screen.getByText('No workspaces yet.')).toBeInTheDocument();
   });
 
   it('marks a selected row as data rather than only as a class', () => {
-    const { container } = renderWithCrystal(<Table columns={columns} rows={rows} label="Workspaces" />);
+    const { container } = renderWithPrismata(<Table columns={columns} rows={rows} label="Workspaces" />);
     expect(container.querySelectorAll('tbody tr[data-selected]')).toHaveLength(1);
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Table columns={columns} rows={rows} label="Workspaces" caption="Workspaces and their seats"
         sort={{ column: 'seats', direction: 'descending' }} onSortChange={vi.fn()} />,
     );

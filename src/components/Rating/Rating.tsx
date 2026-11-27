@@ -74,7 +74,7 @@ export function Rating({
                   {fraction > 0 ? (
                     <span
                       className={cx(styles['partial'])}
-                      style={{ '--cr-fraction': `${fraction * 100}%` } as CSSProperties}
+                      style={{ '--pr-fraction': `${fraction * 100}%` } as CSSProperties}
                     >
                       {StarIcon}
                     </span>

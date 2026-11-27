@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { CartSummary } from './CartSummary.js';
 
 const lines = [
@@ -14,7 +14,7 @@ describe('CartSummary', () => {
      technology, rows of two spans are a stream of words and numbers with
      nothing joining them. */
   it('pairs every label with its amount in a description list', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />,
     );
     expect(container.querySelector('dl')).not.toBeNull();
@@ -27,7 +27,7 @@ describe('CartSummary', () => {
   /* "The total is marked as such" in the markup. Size and weight help a sighted
      reader find it; other readers need the markup. */
   it('marks the total as the total', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />,
     );
     const strong = container.querySelector('dt strong');
@@ -37,19 +37,19 @@ describe('CartSummary', () => {
   /* A discount is a negative amount. `Intl` formats the sign; this component
      does not prepend a minus sign itself. */
   it('reads a discount as a negative amount', () => {
-    renderWithCrystal(<CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />);
+    renderWithPrismata(<CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />);
     expect(screen.getByText('-£8.00')).toBeInTheDocument();
   });
 
   /* A total being recalculated is still a number, so it stays on screen while
      the status region says it is updating. */
   it('keeps its figures while it updates, and says that it is', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />,
     );
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
 
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} isUpdating />,
     );
     expect(screen.getByRole('status')).toHaveTextContent('Updating the total');
@@ -57,14 +57,14 @@ describe('CartSummary', () => {
   });
 
   it('shows an empty basket as one', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CartSummary lines={[]} total={{ amount: 0, currency: 'GBP' }} empty="Your basket is empty" />,
     );
     expect(screen.getByText('Your basket is empty')).toBeInTheDocument();
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <CartSummary lines={lines} total={{ amount: 75.99, currency: 'GBP' }} />,
     );
     await expectNoAxeViolations(container);

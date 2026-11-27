@@ -64,9 +64,9 @@ export const Title = forwardRef<HTMLHeadingElement, TitleProps>(function Title(
   const Heading = `h${level}` as 'h1';
   const resolved = step ?? STEP_FOR_LEVEL[level];
   const scale: CSSProperties = {
-    '--cr-title-size': `var(--cr-text-${resolved}-size)`,
-    '--cr-title-leading': `var(--cr-text-${resolved}-leading)`,
-    '--cr-title-tracking': `var(--cr-text-${resolved}-tracking)`,
+    '--pr-title-size': `var(--pr-text-${resolved}-size)`,
+    '--pr-title-leading': `var(--pr-text-${resolved}-leading)`,
+    '--pr-title-tracking': `var(--pr-text-${resolved}-tracking)`,
   } as CSSProperties;
 
   return (

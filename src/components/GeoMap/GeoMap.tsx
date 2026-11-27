@@ -14,7 +14,7 @@
  * GeoJSON the product chose, and `values` is keyed by whatever property of it
  * the product joins on.
  *
- * The intensity is Crystal's ramp, the same five steps the heatmap uses, with
+ * The intensity is Prismata's ramp, the same five steps the heatmap uses, with
  * the ink measured for each, because a choropleth is a heatmap with an
  * irregular grid.
  */

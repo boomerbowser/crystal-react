@@ -37,7 +37,7 @@ const meta = {
           + 'shipped a world outline would ship one political opinion about borders and names to '
           + 'every product that used it. The regions here are fictional squares for that '
           + 'reason.\n\n'
-          + 'The intensity is Crystal\'s ramp, because a choropleth is a heatmap with an '
+          + 'The intensity is Prismata\'s ramp, because a choropleth is a heatmap with an '
           + 'irregular grid. A region the join missed is drawn as the plot showing through, with '
           + 'its border intact.',
       },

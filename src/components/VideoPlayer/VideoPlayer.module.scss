@@ -1,7 +1,7 @@
 @use '../../styles/tokens' as *;
 
-/* The stage, the bar region and the caption cue are Crystal's `.cr-media`,
-   `.cr-media-bar` and `.cr-media-caption`, worn in the markup: the frame, the
+/* The stage, the bar region and the caption cue are Prismata's `.pr-media`,
+   `.pr-media-bar` and `.pr-media-caption`, worn in the markup: the frame, the
    letterbox, the aspect ratio, the 12px inset of the bar, the cue's place above
    the transport, its Stone backing and every fallback of that backing are the
    recipe's. This file holds what the player adds: when the bar is shown, the
@@ -11,11 +11,11 @@
 
 .bar {
   opacity: 0;
-  transition: opacity calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
-    #{$cr-motion-easing-settle};
+  transition: opacity calc(var(--pr-motion-enabled) * #{$pr-motion-duration-state} / var(--pr-motion-speed))
+    #{$pr-motion-easing-settle};
 }
 
-/* "The motion of showing and hiding controls" is Crystal's, and Crystal's rule
+/* "The motion of showing and hiding controls" is Prismata's, and Prismata's rule
    is that nothing moves at rest. The bar has no timer that fades it away while
    nobody is doing anything. It shows whenever a pointer is over the video or
    focus is inside the player, so a person always started the change.
@@ -41,15 +41,15 @@
 }
 
 /* Full screen is the player, not the stage, so the settings popover (portalled
-   into the player) stays visible; the recipe's `.cr-media:fullscreen` rules
+   into the player) stays visible; the recipe's `.pr-media:fullscreen` rules
    are restated for that element. The stage fills the screen and centres the
    picture, and the bar grows to the safe area on a phone with a notch or a home
    bar. */
-.player[data-full-screen] { display: grid; place-items: center; background: var(--cr-surface-alt); }
+.player[data-full-screen] { display: grid; place-items: center; background: var(--pr-surface-alt); }
 .player[data-full-screen] .surface { inline-size: 100%; block-size: 100%; aspect-ratio: auto; border-radius: 0; }
 .player[data-full-screen] .bar {
-  inset-inline: max(#{$cr-spacing-sm}, env(safe-area-inset-left), env(safe-area-inset-right));
-  inset-block-end: max(#{$cr-spacing-sm}, env(safe-area-inset-bottom));
+  inset-inline: max(#{$pr-spacing-sm}, env(safe-area-inset-left), env(safe-area-inset-right));
+  inset-block-end: max(#{$pr-spacing-sm}, env(safe-area-inset-bottom));
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -3,32 +3,32 @@
 /* The two materials an overlay can be, in one place.
  *
  * React decides which one it gets, because the DOM cannot tell: an overlay is
- * portalled to `body` and loses its nesting. `data-cr-overlay` records the
+ * portalled to `body` and loses its nesting. `data-pr-overlay` records the
  * decision.
  *
- * A transient overlay is Frost (Crystal R15e, the `frost` surface in Crystal's
+ * A transient overlay is Frost (Prismata R15e, the `frost` surface in Prismata's
  * vocabulary), as Meridian decided on 17 September. Once something Frost, Resin
  * or Haze is already between it and the page, it recesses into Haze instead,
- * because independently blurred panes do not nest. Crystal's chapters said
- * `.cr-resin-haze` for menus until 2.2.0.
+ * because independently blurred panes do not nest. Prismata's chapters said
+ * `.pr-resin-haze` for menus until 2.2.0.
  */
 @mixin surface {
   /* The catalogue's geometry for a menu, a popover, a toast and a notification is
-     the content radius, not the Frost panel radius `.cr-frost` brings, so it is
+     the content radius, not the Frost panel radius `.pr-frost` brings, so it is
      stated here, where it wins. */
-  border-radius: var(--cr-radius);
-  color: var(--cr-text);
+  border-radius: var(--pr-radius);
+  color: var(--pr-text);
 
-  /* Frost is Crystal's: the element wears `.cr-frost` (see `overlayMaterialClass`),
+  /* Frost is Prismata's: the element wears `.pr-frost` (see `overlayMaterialClass`),
      which paints the fill, the rim, the panel shadow and the diffusion. */
 
   /* Recessed, inside something that is already lifted: the element wears
-     Crystal's `.cr-haze.overlay` (2.3.0), which paints the flat Haze fill, the
+     Prismata's `.pr-haze.overlay` (2.3.0), which paints the flat Haze fill, the
      edge and the content shadow, and its three fallbacks. */
 }
 
 /* A composite widget holds focus on behalf of whichever row is active, so the
-   container must not wear the focus ring. Crystal's global rule puts a halo on
+   container must not wear the focus ring. Prismata's global rule puts a halo on
    anything with a tabindex. That suits a scroll region that is itself the focus
    target, but here it would ring the whole menu while the person is on one row
    inside it.
@@ -42,32 +42,32 @@
 
 /* A row in a menu, a listbox, a tree. Selection is label weight. Nothing is set
    beside the label, because that offsets the label it marks, and there is never
-   a check mark, which in Crystal means validated or informational. */
+   a check mark, which in Prismata means validated or informational. */
 @mixin row {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-sm;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
-  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
-  color: var(--cr-text);
+  gap: $pr-spacing-sm;
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
+  border-radius: calc(var(--pr-radius) - #{$pr-field-well-inset});
+  color: var(--pr-text);
   font-weight: 550;
   cursor: pointer;
 
-  &[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-  &[data-focused] { background: var(--cr-surface-alt); }
+  &[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
+  &[data-focused] { background: var(--pr-surface-alt); }
   /* The keyboard ring, on the row that has it. Inset, because a halo outside a
      row inside a padded surface is cropped by the surface. */
   &[data-focus-visible] {
-    outline: $cr-focus-core-width solid var(--cr-focus-core);
-    outline-offset: calc(-1 * #{$cr-focus-core-width});
+    outline: $pr-focus-core-width solid var(--pr-focus-core);
+    outline-offset: calc(-1 * #{$pr-focus-core-width});
   }
   &[data-selected] {
     font-weight: 800;
-    background: var(--cr-primary-soft);
-    color: var(--cr-on-primary-soft);
+    background: var(--pr-primary-soft);
+    color: var(--pr-on-primary-soft);
   }
-  &[data-selected][data-focused] { background: var(--cr-primary-soft); }
+  &[data-selected][data-focused] { background: var(--pr-primary-soft); }
 }
 
 @mixin row-forced-colors {

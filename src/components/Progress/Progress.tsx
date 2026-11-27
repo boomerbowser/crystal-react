@@ -15,7 +15,7 @@
  * accurate case the default: omit `value` and you get the indeterminate bar,
  * with no way to pass a fake one by accident.
  *
- * The track is the slider's track, at Crystal's own 8px and pill radius, from
+ * The track is the slider's track, at Prismata's own 8px and pill radius, from
  * `component.slider.trackHeight` rather than from an 8 typed here. The catalogue
  * says "matching the slider track", so the two components must not drift and
  * share one token.
@@ -23,7 +23,7 @@
  * Motion. `progress-change` plays when the value actually moves. The recipe's
  * own note is "actual progress is set first; this animation does not fabricate
  * completion", so the value is applied first and the settle is marked after
- * it. The indeterminate travel is Crystal's continuous recipe
+ * it. The indeterminate travel is Prismata's continuous recipe
  * `activity-travel` (D-19, 2.2.0). It runs only while the work is pending, and
  * under reduced motion the bar becomes a still, filled track that still reads
  * as busy.
@@ -74,7 +74,7 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progr
   const at = determinate ? clamp(value, min, max) : min;
   const fraction = max > min ? (at - min) / (max - min) : 0;
   const said = valueLabel ?? (determinate ? `${Math.round(fraction * 100)}%` : busyLabel);
-  /* Crystal's `activity-travel` while the work is pending and cannot be measured.
+  /* Prismata's `activity-travel` while the work is pending and cannot be measured.
      Paused or failed work is not pending. The recipe moves the element by its own
      width, so it plays on a runner as wide as the track, carrying the segment.
      Played on the segment itself, a 40% bar would cross only 80% of the way. */

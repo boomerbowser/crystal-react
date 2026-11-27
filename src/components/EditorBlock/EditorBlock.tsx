@@ -27,7 +27,7 @@
  * "Haze surface in a Frost frame": the block is the Frost frame, and the surface
  * is `RichTextSurface`'s Haze, under its toolbar.
  *
- * A complete editor, such as `RichTextEditor` from `@crystal-ui/react/editor`,
+ * A complete editor, such as `RichTextEditor` from `@prismata/react/editor`,
  * brings its own surface, toolbar and announcements, so it is given as `editor`
  * and the block hosts it as it is, adding only the frame and the save state
  * (R-T7). Wrapped in a second surface it would draw two toolbars.
@@ -109,9 +109,9 @@ export function EditorBlock({
     <div
       ref={frame}
       onKeyDown={shortcut}
-      data-cr-state={state}
+      data-pr-state={state}
       aria-busy={state === 'saving' || undefined}
-      className={cx(styles['editor'], 'cr-frost', className)}
+      className={cx(styles['editor'], 'pr-frost', className)}
     >
       {editor === undefined ? (
         <RichTextSurface label={label} actions={actions} className={cx(styles['surface'])}>

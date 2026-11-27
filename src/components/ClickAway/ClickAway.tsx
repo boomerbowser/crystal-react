@@ -8,7 +8,7 @@
  * all report that sequence differently. A `document.addEventListener('click')`
  * implementation closes on the text selection every time.
  *
- * Crystal's rule, which no library supplies: dismissal is never only a
+ * Prismata's rule, which no library supplies: dismissal is never only a
  * click-away. Escape must work too, and something visible must close it. A
  * keyboard user has no way to click outside, and a screen reader user may not
  * know there is an outside. This component therefore also listens for Escape

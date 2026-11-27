@@ -7,22 +7,22 @@
  * names per file, so the table is emitted into each module instead of imported
  * as a class, and this mixin is the single definition both emissions use.
  *
- * The property is `--avatar-size`, not `--cr-avatar-size`. The `--cr-` prefix
- * means "Crystal publishes this", and two gates check that every `--cr-…` the
+ * The property is `--avatar-size`, not `--pr-avatar-size`. The `--pr-` prefix
+ * means "Prismata publishes this", and two gates check that every `--pr-…` the
  * stylesheets read resolves to something on a mounted provider. This property
  * is written and read only inside these two modules, so it stays out of that
  * namespace. Using the prefix would mean adding it to two hand-maintained
  * exception lists.
  *
- * The steps are on Crystal's 4px rhythm. They are literals because 2.0.0
+ * The steps are on Prismata's 4px rhythm. They are literals because 2.0.0
  * publishes action geometry as tokens and avatar geometry not at all. When a
  * core release carries them, this is the one file that changes.
  */
 
-$sm: 24px; /* crystal-allow-literal: 4px rhythm; wants a core token */
-$md: 32px; /* crystal-allow-literal: 4px rhythm; wants a core token */
-$lg: 40px; /* crystal-allow-literal: 4px rhythm; wants a core token */
-$xl: 48px; /* crystal-allow-literal: 4px rhythm; wants a core token */
+$sm: 24px; /* prismata-allow-literal: 4px rhythm; wants a core token */
+$md: 32px; /* prismata-allow-literal: 4px rhythm; wants a core token */
+$lg: 40px; /* prismata-allow-literal: 4px rhythm; wants a core token */
+$xl: 48px; /* prismata-allow-literal: 4px rhythm; wants a core token */
 
 /** The band of page surface that separates overlapping avatars. */
 $ring: 2px;

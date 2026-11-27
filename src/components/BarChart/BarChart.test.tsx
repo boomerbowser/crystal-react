@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { fireEvent } from '@testing-library/react';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, waitFor } from '../../test/render.js';
 import { BarChart } from './BarChart.js';
 
 const series = [
@@ -15,7 +15,7 @@ describe('BarChart', () => {
   /* Every bar is a mark with its own label, so a reader who cannot see the
      height still gets the number rather than a position. */
   it('labels every bar with its category, series and value', () => {
-    renderWithCrystal(<BarChart label="Revenue" series={series} categories={categories} />);
+    renderWithPrismata(<BarChart label="Revenue" series={series} categories={categories} />);
     expect(screen.getByLabelText('February, Revenue, 18')).toBeInTheDocument();
     expect(screen.getByLabelText('January, Costs, 8')).toBeInTheDocument();
   });
@@ -23,12 +23,12 @@ describe('BarChart', () => {
   /* A gap is not a zero, and a zero-height bar drawn for a month nobody measured
      is a chart asserting something nobody knows. */
   it('draws no bar where there is no value', () => {
-    renderWithCrystal(<BarChart label="Revenue" series={series} categories={categories} />);
+    renderWithPrismata(<BarChart label="Revenue" series={series} categories={categories} />);
     expect(screen.queryByLabelText(/March, Costs/)).toBeNull();
   });
 
   it('builds the table from its own data', () => {
-    renderWithCrystal(<BarChart label="Revenue" series={series} categories={categories} />);
+    renderWithPrismata(<BarChart label="Revenue" series={series} categories={categories} />);
     expect(screen.getByRole('columnheader', { name: 'Costs' })).toBeInTheDocument();
     expect(screen.getByRole('rowheader', { name: 'March' })).toBeInTheDocument();
     /* The gap reaches the table as a gap too. */
@@ -36,7 +36,7 @@ describe('BarChart', () => {
   });
 
   it('puts one tab stop in the plot, not one per bar', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <BarChart label="Revenue" series={series} categories={categories} />,
     );
     const stops = container.querySelectorAll('[tabindex="0"]');
@@ -47,7 +47,7 @@ describe('BarChart', () => {
   /* The format reaches the axis, the mark labels and the table. It is one
      function, so the three cannot disagree about what a number is. */
   it('formats every reading of a value through one function', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <BarChart
         label="Revenue"
         series={[{ name: 'Revenue', values: [12] }]}
@@ -60,12 +60,12 @@ describe('BarChart', () => {
   });
 
   it('is empty when it has no categories', () => {
-    renderWithCrystal(<BarChart label="Revenue" series={[]} categories={[]} />);
+    renderWithPrismata(<BarChart label="Revenue" series={[]} categories={[]} />);
     expect(screen.getByText('No data to show')).toBeInTheDocument();
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <BarChart label="Revenue by month" series={series} categories={categories} />,
     );
     await expectNoAxeViolations(container);
@@ -79,21 +79,21 @@ describe('BarChart', () => {
     const half = [series[0]!, { ...series[1]!, hidden: true }];
 
     it('is not drawn', () => {
-      renderWithCrystal(<BarChart label="Revenue" series={half} categories={categories} />);
+      renderWithPrismata(<BarChart label="Revenue" series={half} categories={categories} />);
       expect(screen.queryByLabelText('January, Costs, 8')).toBeNull();
       expect(screen.getByLabelText('January, Revenue, 12')).toBeInTheDocument();
     });
 
     it('leaves the series before it on its own colour', () => {
-      const { container } = renderWithCrystal(
+      const { container } = renderWithPrismata(
         <BarChart label="Revenue" series={[{ ...series[0]!, hidden: true }, series[1]!]} categories={categories} />,
       );
       const drawn = container.querySelector('[aria-label="January, Costs, 8"]');
-      expect(drawn).toHaveStyle({ '--series-colour': 'var(--cr-chart-series-2)' });
+      expect(drawn).toHaveStyle({ '--series-colour': 'var(--pr-chart-series-2)' });
     });
 
     it('stays in the legend, so it can be turned back on', () => {
-      const { container } = renderWithCrystal(
+      const { container } = renderWithPrismata(
         <BarChart label="Revenue" series={half} categories={categories} />,
       );
       expect(legendNames(container)).toEqual(['Revenue', 'Costs']);
@@ -104,21 +104,21 @@ describe('BarChart', () => {
      folded-away table is a chart a sighted reader cannot read. */
   describe('the legend', () => {
     it('names every series without being asked', () => {
-      const { container } = renderWithCrystal(
+      const { container } = renderWithPrismata(
         <BarChart label="Revenue" series={series} categories={categories} />,
       );
       expect(legendNames(container)).toEqual(['Revenue', 'Costs']);
     });
 
     it('is absent for one series, which needs no key', () => {
-      const { container } = renderWithCrystal(
+      const { container } = renderWithPrismata(
         <BarChart label="Revenue" series={[series[0]!]} categories={categories} />,
       );
       expect(legendNames(container)).toEqual([]);
     });
 
     it('can be declined', () => {
-      const { container } = renderWithCrystal(
+      const { container } = renderWithPrismata(
         <BarChart label="Revenue" series={series} categories={categories} legend={null} />,
       );
       expect(legendNames(container)).toEqual([]);
@@ -131,7 +131,7 @@ describe('BarChart', () => {
   describe('the tooltip', () => {
     it('follows the pointer onto a bar and says its value', async () => {
       const user = userEvent.setup();
-      const { container } = renderWithCrystal(
+      const { container } = renderWithPrismata(
         <BarChart label="Revenue" series={series} categories={categories} />,
       );
       const bar = container.querySelector('[aria-label="February, Revenue, 18"]')!;
@@ -144,7 +144,7 @@ describe('BarChart', () => {
 
     it('is dismissed by Escape and comes back on the next move', async () => {
       const user = userEvent.setup();
-      const { container } = renderWithCrystal(
+      const { container } = renderWithPrismata(
         <BarChart label="Revenue" series={series} categories={categories} />,
       );
       const bar = container.querySelector('[aria-label="February, Revenue, 18"]')!;

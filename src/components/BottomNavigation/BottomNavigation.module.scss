@@ -1,7 +1,7 @@
 @use '../../styles/tokens' as *;
 
-/* Crystal's dock, worn as `.cr-dock`: the catalogue's "Pill" and its Resin
-   plane, with the one Haze fill under every label that `.cr-dock` carries. The
+/* Prismata's dock, worn as `.pr-dock`: the catalogue's "Pill" and its Resin
+   plane, with the one Haze fill under every label that `.pr-dock` carries. The
    destinations paint no Haze fill of their own. */
 .bar {
   position: sticky;
@@ -13,7 +13,7 @@
   margin-block-end: env(safe-area-inset-bottom, 0px);
 }
 
-/* The list fills the dock. `.cr-dock` is a flex row, and a list that does not
+/* The list fills the dock. `.pr-dock` is a flex row, and a list that does not
    grow in it measures its own content, which collapses the equal slots. */
 .list {
   display: flex;
@@ -32,28 +32,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: $cr-spacing-2xs;
-  min-block-size: $cr-action-min-target;
-  padding: $cr-spacing-xs $cr-spacing-2xs;
-  border-radius: $cr-action-radius;
-  color: var(--cr-text);
+  gap: $pr-spacing-2xs;
+  min-block-size: $pr-action-min-target;
+  padding: $pr-spacing-xs $pr-spacing-2xs;
+  border-radius: $pr-action-radius;
+  color: var(--pr-text);
   font-weight: 550;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
 }
 
-/* The current destination sits on Crystal's primary fill (`.cr-dock` since
+/* The current destination sits on Prismata's primary fill (`.pr-dock` since
    2.3.0, the travelling pill since 2.6.0), so its ink is the fill's own ink.
-   Until R-33 this rule kept `--cr-text` and tinted the icon primary, both
+   Until R-33 this rule kept `--pr-text` and tinted the icon primary, both
    written for a bar with no fill: dark ink on the primary measured 2.7:1 and
    the icon disappeared into the fill. The icon inherits the link's ink, so it
    crosses with the label while the pill travels. */
-.item[aria-current] { font-weight: 800; color: var(--cr-on-primary); }
+.item[aria-current] { font-weight: 800; color: var(--pr-on-primary); }
 .item[aria-current] .icon { color: inherit; }
 
-.icon { display: inline-flex; flex: none; color: var(--cr-muted); }
-.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.icon { display: inline-flex; flex: none; color: var(--pr-muted); }
+.icon svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 .label {
   min-inline-size: 0;
@@ -65,16 +65,16 @@
 
 /* Not the current destination: this module is unlayered, so a hover here would
    paint over the pill under it. */
-.item:hover:not([aria-current]) { background: var(--cr-surface-alt); }
+.item:hover:not([aria-current]) { background: var(--pr-surface-alt); }
 
 .item:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 /* The dock's opaque, reduced-transparency and forced-colours routes are
-   Crystal's. */
+   Prismata's. */
 @media (forced-colors: active) {
   /* A fill is erased by Chromium's text backplate, so the current destination
      is a ring. */

@@ -3,34 +3,34 @@
 .pagination {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
 }
 
 .pages {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 /* Resin shells with a Haze fill. That is the catalogue's material line for
-   this component and the construction every Crystal control uses: Resin
+   this component and the construction every Prismata control uses: Resin
    diffuses what is behind it, so the number needs something stable to sit on. */
 .page,
 .arrow {
-  /* An arrow is a `<button>`, and Crystal already paints it. This rule sets
+  /* An arrow is a `<button>`, and Prismata already paints it. This rule sets
      only the component's geometry: a square-ish target with tabular figures
      beside it. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-inline-size: $cr-action-min-target;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
-  border-radius: $cr-action-radius;
-  color: var(--cr-text);
+  min-inline-size: $pr-action-min-target;
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
+  border-radius: $pr-action-radius;
+  color: var(--pr-text);
   font-weight: 550;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
@@ -45,29 +45,29 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-inline-size: $cr-action-min-target;
-  min-block-size: $cr-action-min-target;
-  color: var(--cr-muted);
+  min-inline-size: $pr-action-min-target;
+  min-block-size: $pr-action-min-target;
+  color: var(--pr-muted);
 }
 
 .page[data-hovered],
-.arrow[data-hovered] { background: var(--cr-surface-alt); }
+.arrow[data-hovered] { background: var(--pr-surface-alt); }
 
 .page[data-focus-visible],
 .arrow[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 /* Disabled and still present. A control that disappears at the edge changes
    the row's shape and moves every other target. */
 .arrow[data-disabled] {
-  opacity: $cr-action-disabled-opacity;
+  opacity: $pr-action-disabled-opacity;
   cursor: not-allowed;
 }
 
-/* Opaque and reduced transparency are Crystal's routes for a `<button>`. */
+/* Opaque and reduced transparency are Prismata's routes for a `<button>`. */
 
 @media (forced-colors: active) {
   .page, .arrow {

@@ -16,7 +16,7 @@ const meta = {
           + '`ul` or a `nav`, rather than nesting a meaningful element inside a meaningless one. A '
           + 'layout component that introduces a landmark tells assistive technology about a '
           + 'grouping that exists only visually.\n\n'
-          + 'The gap comes from Crystal\'s spacing scale. `space` is the density-aware padding '
+          + 'The gap comes from Prismata\'s spacing scale. `space` is the density-aware padding '
           + 'step rather than a step on the scale, which is what a stack matching a card\'s own '
           + 'padding wants.',
       },
@@ -44,13 +44,13 @@ export const TheScale: Story = {
     <Stack gap="lg">
       {(['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const).map((step) => (
         <Group key={step} gap={step}>
-          <code style={{ minWidth: '44px' /* crystal-allow-literal: story label column, so the swatches line up */ }}>{step}</code>
+          <code style={{ minWidth: '44px' /* prismata-allow-literal: story label column, so the swatches line up */ }}>{step}</code>
           {[0, 1, 2, 3].map((n) => (
             <span
               key={n}
               style={{
-                display: 'block', width: 'var(--cr-spacing-lg)', height: 'var(--cr-spacing-lg)',
-                borderRadius: 'var(--cr-spacing-2xs)', background: 'var(--cr-primary)',
+                display: 'block', width: 'var(--pr-spacing-lg)', height: 'var(--pr-spacing-lg)',
+                borderRadius: 'var(--pr-spacing-2xs)', background: 'var(--pr-primary)',
               }}
             />
           ))}

@@ -10,11 +10,11 @@
   box-sizing: border-box;
   min-block-size: 100%;
   padding-block:
-    max(#{$cr-spacing-lg}, env(safe-area-inset-top))
-    max(#{$cr-spacing-lg}, env(safe-area-inset-bottom));
+    max(#{$pr-spacing-lg}, env(safe-area-inset-top))
+    max(#{$pr-spacing-lg}, env(safe-area-inset-bottom));
   padding-inline:
-    max(#{$cr-spacing-lg}, env(safe-area-inset-left))
-    max(#{$cr-spacing-lg}, env(safe-area-inset-right));
+    max(#{$pr-spacing-lg}, env(safe-area-inset-left))
+    max(#{$pr-spacing-lg}, env(safe-area-inset-right));
 }
 
 .centred { @include screen.state-screen; }

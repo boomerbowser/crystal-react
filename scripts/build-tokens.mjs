@@ -1,8 +1,8 @@
-/* Generate Crystal React's token surfaces from Crystal's generated export.
+/* Generate Prismata React's token surfaces from Prismata's generated export.
  *
  * CONTRACT §1: "A hard-coded #7338EF, 40px or 1.95px anywhere in a library is a
  * defect, because it is a value that can no longer be changed centrally." This
- * script is the only place a Crystal value may enter the library, so a
+ * script is the only place a Prismata value may enter the library, so a
  * hand-written _tokens.scss is a defect. Both outputs are gitignored for the
  * same reason: a committed generated file invites hand edits.
  *
@@ -13,7 +13,7 @@
  * divergence §1 warns about.
  *
  * Palette colours are absent. Palette and mode are runtime choices: their
- * values arrive as custom properties from Crystal's theme stylesheet, and the
+ * values arrive as custom properties from Prismata's theme stylesheet, and the
  * provider switches between them. What is generated here is everything that
  * does not vary that way.
  *
@@ -39,15 +39,15 @@ const ROOT = resolve(HERE, '..');
 /* Resolved at run time, so a moved checkout fails here rather than falling back
    to stale values. */
 const CANDIDATES = [
-  resolve(ROOT, 'node_modules/@crystal-ui/core/exports/crystal-tokens.ts'),
-  resolve(ROOT, '../crystal-design-system/core/exports/crystal-tokens.ts'),
+  resolve(ROOT, 'node_modules/@prismata/core/exports/prismata-tokens.ts'),
+  resolve(ROOT, '../prismata-design-system/core/exports/prismata-tokens.ts'),
 ];
 const SOURCE = CANDIDATES.find((path) => {
   try { readFileSync(path); return true; } catch { return false; }
 });
 if (!SOURCE) {
-  console.error('Cannot find the generated crystal-tokens export. Looked in:\n  ' + CANDIDATES.join('\n  '));
-  console.error('\nCrystal React consumes the design system; it does not carry its own copy of these values.');
+  console.error('Cannot find the generated prismata-tokens export. Looked in:\n  ' + CANDIDATES.join('\n  '));
+  console.error('\nPrismata React consumes the design system; it does not carry its own copy of these values.');
   process.exit(1);
 }
 
@@ -83,7 +83,7 @@ for (const [name, value] of Object.entries(tokenMap)) {
 const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/\./g, '-').toLowerCase();
 /* Quote everything that is not provably safe bare. The danger status symbol is
    a bare `!`, which SCSS reads as the start of `!important` and refuses, so
-   `$cr-feedback-light-danger-symbol: !;` must be quoted. Status symbols, font
+   `$pr-feedback-light-danger-symbol: !;` must be quoted. Status symbols, font
    stacks and easing curves are all strings; only numbers, numbers with a unit,
    and hex colours are values SCSS should read literally. */
 const SAFE_BARE = /^(-?\d*\.?\d+[a-z%]*|#[0-9a-fA-F]{3,8})$/;
@@ -96,24 +96,24 @@ const scssValue = (value) => {
 const entries = Object.entries(tokenMap).filter(([, value]) => value === null || typeof value !== 'object');
 
 const scss = [
-  "// Generated from Crystal's design tokens. Do not edit, and do not commit.",
+  "// Generated from Prismata's design tokens. Do not edit, and do not commit.",
   `// Source: ${SOURCE}`,
   '//',
   '// These are the compile-time values. Everything that varies with palette,',
   '// mode or density is a custom property instead and is not listed here.',
   '',
-  ...entries.map(([name, value]) => `$cr-${kebab(name)}: ${scssValue(value)};`),
+  ...entries.map(([name, value]) => `$pr-${kebab(name)}: ${scssValue(value)};`),
   '',
 ].join('\n');
 
 const ts = [
-  "/* Generated from Crystal's design tokens. Do not edit, and do not commit. */",
+  "/* Generated from Prismata's design tokens. Do not edit, and do not commit. */",
   '',
-  'export const crystalTokens = {',
+  'export const prismataTokens = {',
   ...entries.map(([name, value]) => `  ${JSON.stringify(name)}: ${JSON.stringify(value)},`),
   '} as const;',
   '',
-  'export type CrystalTokenName = keyof typeof crystalTokens;',
+  'export type PrismataTokenName = keyof typeof prismataTokens;',
   '',
 ].join('\n');
 

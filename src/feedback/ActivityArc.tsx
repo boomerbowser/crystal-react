@@ -5,7 +5,7 @@
  * `RingProgress` and `Loader` draw the same object: a track, an arc on it, and,
  * when nobody knows how far along the work is, that arc going round. They are
  * one component instead of two that agree, for the same reason
- * `--cr-progress-ring-stroke` exists: a loader and a ring progress built
+ * `--pr-progress-ring-stroke` exists: a loader and a ring progress built
  * separately end up as two different sizes of the same thing.
  *
  * `fraction` separates them. A number means "this far", drawn still. Its absence
@@ -50,7 +50,7 @@ export function ActivityArc({
   const stroke = chartGeometry.ringStroke;
   const radius = size / 2;
   const determinate = fraction !== undefined;
-  /* Crystal's `activity-turn`, while the work is pending and only then. Paused or
+  /* Prismata's `activity-turn`, while the work is pending and only then. Paused or
      failed work is not pending, so the arc stops where it is. */
   const scope = useContinuous('activity-turn', !determinate && state === 'at-rest');
 

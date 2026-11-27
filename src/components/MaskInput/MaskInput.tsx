@@ -77,9 +77,9 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(function M
       <div
         ref={shellScope as never}
         /* React's onFocus is focusin, so focus arriving at any control inside
-           marks the field once with Crystal's `field-focus`. */
+           marks the field once with Prismata's `field-focus`. */
         onFocus={() => { void playField('field-focus'); }}
-        className={cx(styles['shell'], 'cr-field-shell')}
+        className={cx(styles['shell'], 'pr-field-shell')}
         {...(invalid ? { 'data-invalid': true } : {})}
       >
         <IMaskInput

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { Caption } from './Caption.js';
 import { photos } from '../../../.storybook/fixtures/index.js';
 
@@ -27,14 +27,14 @@ const meta = {
           'Media with its description, as a real `figure` and `figcaption`. A caption never replaces '
           + 'alt text. Alt text says what the image is, for someone who cannot see it, and a caption '
           + 'says what it means, to everyone. So this takes no `alt` prop and the media carries its '
-          + `own. Overlaid, the caption sits on Stone: a ${Number(crystalTokens['material.stone.fill.light']) * 100}% fill in light and `
-          + `${Number(crystalTokens['material.stone.fill.dark']) * 100}% in dark, feathered by ${crystalTokens['material.stone.feather']}, `
+          + `own. Overlaid, the caption sits on Stone: a ${Number(prismataTokens['material.stone.fill.light']) * 100}% fill in light and `
+          + `${Number(prismataTokens['material.stone.fill.dark']) * 100}% in dark, feathered by ${prismataTokens['material.stone.feather']}, `
           + 'which keeps it legible over a white sky and a black one alike.',
       },
     },
   },
   args: { caption: 'Low tide on the east shore, 5:40am', children: <Media /> },
-  decorators: [(Story) => <div style={{ inlineSize: 'min(560px, 100%)' /* crystal-allow-literal: a story's column width */ }}><Story /></div>],
+  decorators: [(Story) => <div style={{ inlineSize: 'min(560px, 100%)' /* prismata-allow-literal: a story's column width */ }}><Story /></div>],
 } satisfies Meta<typeof Caption>;
 
 export default meta;

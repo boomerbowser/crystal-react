@@ -19,7 +19,7 @@ const meta = {
       description: {
         component:
           '"Point size is a scale, not an arbitrary radius." A third value is mapped onto '
-          + "Crystal's point scale by area rather than by diameter. A point twice as wide is "
+          + "Prismata's point scale by area rather than by diameter. A point twice as wide is "
           + 'four times as big to the eye, so sizing by diameter doubles every difference in '
           + 'the data without saying so.\n\n'
           + '"Dense regions remain describable; a table equivalent is required." The table is '

@@ -1,10 +1,10 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/overlay' as overlay;
 
-.popover { @include overlay.surface; padding: var(--cr-space); max-inline-size: min(92vw, #{$cr-overlay-max-width}); }
-.popover[data-cr-overlay='haze'] { padding: $cr-spacing-md; }
+.popover { @include overlay.surface; padding: var(--pr-space); max-inline-size: min(92vw, #{$pr-overlay-max-width}); }
+.popover[data-pr-overlay='haze'] { padding: $pr-spacing-md; }
 /* "Frost panel with Haze reading fill (R15e)": on the page the content reads on
-   a Haze fill inside the Frost panel, Crystal's `.cr-frost.reading` (2.7.0),
+   a Haze fill inside the Frost panel, Prismata's `.pr-frost.reading` (2.7.0),
    worn by the component when the panel is Frost. Recessed into Haze, it is
    already Haze. */
 

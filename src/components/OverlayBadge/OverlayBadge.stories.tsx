@@ -37,7 +37,7 @@ export const Default: Story = {};
  *  wrapper does not clip: "never clipped by its host". */
 export const Placements: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-spacing-2xl)', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-spacing-2xl)', alignItems: 'center' }}>
       <OverlayBadge {...only(args)} placement="top-start" />
       <OverlayBadge {...only(args)} placement="top-end" />
       <OverlayBadge {...only(args)} placement="bottom-start" />

@@ -5,7 +5,7 @@ import { Button } from '../Button/Button.js';
 
 const plate = `data:image/svg+xml,${encodeURIComponent(
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420">'
-  + '<rect width="640" height="420" fill="hsl(268 45% 62%)"/>' /* crystal-allow-literal: sample photography, not a design value */
+  + '<rect width="640" height="420" fill="hsl(268 45% 62%)"/>' /* prismata-allow-literal: sample photography, not a design value */
   + '<text x="320" y="230" font-family="system-ui" font-size="48" fill="white" '
   + 'text-anchor="middle">Harbour at dusk</text></svg>',
 )}`;

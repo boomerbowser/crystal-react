@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { act, fireEvent, renderWithCrystal, screen } from '../../test/render.js';
+import { act, fireEvent, renderWithPrismata, screen } from '../../test/render.js';
 import { ScrollArea } from './ScrollArea.js';
 
 /* jsdom has no ResizeObserver, and the component's production path for "the
@@ -54,100 +54,100 @@ function scrollTo(element: HTMLElement, position: number, axis: 'x' | 'y' = 'y')
 
 describe('ScrollArea', () => {
   it('renders its children', () => {
-    renderWithCrystal(<ScrollArea>Contents</ScrollArea>);
+    renderWithPrismata(<ScrollArea>Contents</ScrollArea>);
     expect(screen.getByText('Contents')).toBeInTheDocument();
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ScrollArea aria-label="Release notes">Contents</ScrollArea>,
     );
     await expectNoAxeViolations(container);
   });
 
-  /* The scrollbar is Crystal's, reached by class rather than restated in this
+  /* The scrollbar is Prismata's, reached by class rather than restated in this
      package's CSS. Frost is the default because most scroll areas are panels. */
   it('takes the Frost scrollbar by default and the Resin one on request', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(<ScrollArea data-testid="a">C</ScrollArea>);
-    expect(screen.getByTestId('a').className).toMatch(/\bcr-scroll-frost\b/);
+    const { rerenderWithPrismata } = renderWithPrismata(<ScrollArea data-testid="a">C</ScrollArea>);
+    expect(screen.getByTestId('a').className).toMatch(/\bpr-scroll-frost\b/);
 
-    rerenderWithCrystal(<ScrollArea variant="resin" data-testid="a">C</ScrollArea>);
+    rerenderWithPrismata(<ScrollArea variant="resin" data-testid="a">C</ScrollArea>);
     const el = screen.getByTestId('a');
-    expect(el.className).toMatch(/\bcr-scroll-resin\b/);
-    expect(el.className).not.toMatch(/\bcr-scroll-frost\b/);
+    expect(el.className).toMatch(/\bpr-scroll-resin\b/);
+    expect(el.className).not.toMatch(/\bpr-scroll-frost\b/);
   });
 
-  /* Crystal's CSS fades only when the attribute is present. A container that
+  /* Prismata's CSS fades only when the attribute is present. A container that
      cannot scroll must therefore not carry it, or every short panel is faded at
      both ends for no reason. */
   it('carries no fade attribute when there is nothing to scroll', () => {
-    renderWithCrystal(<ScrollArea data-testid="a">C</ScrollArea>);
+    renderWithPrismata(<ScrollArea data-testid="a">C</ScrollArea>);
     const el = screen.getByTestId('a');
-    expect(el.dataset['crScroll']).toBeUndefined();
+    expect(el.dataset['prScroll']).toBeUndefined();
   });
 
   it('fades the far edge at the start, both in the middle, and the near edge at the end', () => {
-    renderWithCrystal(<ScrollArea data-testid="a"><p>long</p></ScrollArea>);
+    renderWithPrismata(<ScrollArea data-testid="a"><p>long</p></ScrollArea>);
     const el = screen.getByTestId('a');
     layout(el, { size: 100, content: 400, position: 0 });
     resize();
-    expect(el.dataset['crScroll']).toBe('start');
+    expect(el.dataset['prScroll']).toBe('start');
 
     scrollTo(el, 150);
-    expect(el.dataset['crScroll']).toBe('both');
+    expect(el.dataset['prScroll']).toBe('both');
 
     scrollTo(el, 300);
-    expect(el.dataset['crScroll']).toBe('end');
+    expect(el.dataset['prScroll']).toBe('end');
   });
 
   /* Fractional layout means a container at its end can report a position a
      fraction short of the maximum. Without the tolerance the far edge stays
      faded at the bottom of every list. */
   it('counts a fractional pixel short of the end as the end', () => {
-    renderWithCrystal(<ScrollArea data-testid="a"><p>long</p></ScrollArea>);
+    renderWithPrismata(<ScrollArea data-testid="a"><p>long</p></ScrollArea>);
     const el = screen.getByTestId('a');
     layout(el, { size: 100, content: 400, position: 0 });
     scrollTo(el, 299.6);
-    expect(el.dataset['crScroll']).toBe('end');
+    expect(el.dataset['prScroll']).toBe('end');
   });
 
   /* A right-to-left container counts scrollLeft down from zero, so a position
      read without a magnitude reports every RTL scroller as being at its start. */
   it('reads a right-to-left horizontal position by its magnitude', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <ScrollArea axis="x" data-testid="a"><p>wide</p></ScrollArea>,
       { theme: { direction: 'rtl' } },
     );
     const el = screen.getByTestId('a');
     layout(el, { size: 100, content: 400, position: 0 }, 'x');
     scrollTo(el, -150, 'x');
-    expect(el.dataset['crScroll']).toBe('both');
+    expect(el.dataset['prScroll']).toBe('both');
   });
 
   it('declares its axis so the fade runs along it', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(<ScrollArea data-testid="a">C</ScrollArea>);
-    expect(screen.getByTestId('a').dataset['crScrollAxis']).toBe('y');
+    const { rerenderWithPrismata } = renderWithPrismata(<ScrollArea data-testid="a">C</ScrollArea>);
+    expect(screen.getByTestId('a').dataset['prScrollAxis']).toBe('y');
 
-    rerenderWithCrystal(<ScrollArea axis="x" data-testid="a">C</ScrollArea>);
-    expect(screen.getByTestId('a').dataset['crScrollAxis']).toBe('x');
+    rerenderWithPrismata(<ScrollArea axis="x" data-testid="a">C</ScrollArea>);
+    expect(screen.getByTestId('a').dataset['prScrollAxis']).toBe('x');
   });
 
   /* Two crossed gradients darken the corners, so a two-axis area carries no fade
      and no fade attribute. */
   it('does not fade a two-axis area, or one that opts out', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <ScrollArea axis="both" data-testid="a">C</ScrollArea>,
     );
-    expect(screen.getByTestId('a').dataset['crScrollAxis']).toBeUndefined();
+    expect(screen.getByTestId('a').dataset['prScrollAxis']).toBeUndefined();
 
-    rerenderWithCrystal(<ScrollArea fade={false} data-testid="a">C</ScrollArea>);
-    expect(screen.getByTestId('a').dataset['crScrollAxis']).toBeUndefined();
+    rerenderWithPrismata(<ScrollArea fade={false} data-testid="a">C</ScrollArea>);
+    expect(screen.getByTestId('a').dataset['prScrollAxis']).toBeUndefined();
   });
 
   /* A scrollable region holding nothing focusable is unreachable by keyboard.
      This is the WCAG failure axe calls `scrollable-region-focusable`. */
   it('becomes a tab stop only when it scrolls and holds nothing focusable', () => {
-    renderWithCrystal(<ScrollArea data-testid="a"><p>text</p></ScrollArea>);
+    renderWithPrismata(<ScrollArea data-testid="a"><p>text</p></ScrollArea>);
     const el = screen.getByTestId('a');
     expect(el.tabIndex).toBe(-1);
 
@@ -157,7 +157,7 @@ describe('ScrollArea', () => {
   });
 
   it('adds no tab stop when the content is already reachable', () => {
-    renderWithCrystal(<ScrollArea data-testid="a"><button type="button">Go</button></ScrollArea>);
+    renderWithPrismata(<ScrollArea data-testid="a"><button type="button">Go</button></ScrollArea>);
     const el = screen.getByTestId('a');
     layout(el, { size: 100, content: 400, position: 0 });
     resize();
@@ -167,7 +167,7 @@ describe('ScrollArea', () => {
   /* A landmark without a name is noise in a screen reader's landmark list, so the
      area takes the `region` role only when it has a name. */
   it('is a region only when it is both a tab stop and named', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <ScrollArea data-testid="a"><p>text</p></ScrollArea>,
     );
     const el = screen.getByTestId('a');
@@ -175,7 +175,7 @@ describe('ScrollArea', () => {
     resize();
     expect(el.getAttribute('role')).toBeNull();
 
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <ScrollArea aria-label="Release notes" data-testid="a"><p>text</p></ScrollArea>,
     );
     resize();
@@ -185,7 +185,7 @@ describe('ScrollArea', () => {
   it('forwards a ref, merges a className, and still calls a consumer onScroll', () => {
     const ref = { current: null as HTMLDivElement | null };
     const seen: number[] = [];
-    renderWithCrystal(
+    renderWithPrismata(
       <ScrollArea ref={ref} className="mine" data-testid="a" onScroll={() => seen.push(1)}>
         C
       </ScrollArea>,
@@ -193,15 +193,15 @@ describe('ScrollArea', () => {
     const el = screen.getByTestId('a');
     expect(ref.current).toBe(el);
     expect(el.className).toMatch(/mine/);
-    expect(el.className).toMatch(/\bcr-scroll-frost\b/);
+    expect(el.className).toMatch(/\bpr-scroll-frost\b/);
     scrollTo(el, 10);
     expect(seen).toHaveLength(1);
   });
 
-  /* Crystal's catalogue assigns this component no recipe. A library must not
+  /* Prismata's catalogue assigns this component no recipe. A library must not
      invent motion the design system did not specify. */
   it('plays no motion of its own', () => {
-    renderWithCrystal(<ScrollArea data-testid="a">C</ScrollArea>);
-    expect(screen.getByTestId('a').dataset['crMotionName']).toBeUndefined();
+    renderWithPrismata(<ScrollArea data-testid="a">C</ScrollArea>);
+    expect(screen.getByTestId('a').dataset['prMotionName']).toBeUndefined();
   });
 });

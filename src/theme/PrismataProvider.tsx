@@ -1,13 +1,13 @@
 'use client';
 
-/* The Crystal theme provider.
+/* The Prismata theme provider.
  *
  * It has three jobs and takes on no others: hold the resolved theme, publish it
  * to CSS as custom properties on a scope element, and make it readable from
  * hooks.
  *
- * It does not re-derive any Crystal rule. Normalisation, clamps, choices and
- * duration resolution come from `@crystal-ui/core/core/preferences`, whose
+ * It does not re-derive any Prismata rule. Normalisation, clamps, choices and
+ * duration resolution come from `@prismata/core/core/preferences`, whose
  * ranges are contract. CONTRACT §1 says to reuse the resolver's arithmetic
  * rather than reimplement it, "because two implementations of the same formula
  * will diverge".
@@ -23,58 +23,58 @@ import {
 } from 'react';
 import { I18nProvider } from 'react-aria-components';
 import { UNSAFE_PortalProvider } from 'react-aria';
-import preferences from '@crystal-ui/core/core/preferences';
-import modality from '@crystal-ui/core/core/modality';
-import resolver from '@crystal-ui/core/resolver';
-import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
+import preferences from '@prismata/core/core/preferences';
+import modality from '@prismata/core/core/modality';
+import resolver from '@prismata/core/resolver';
+import prismataFlat from '@prismata/core/flat' with { type: 'json' };
 import type {
-  CrystalTheme, CrystalThemeInput, CrystalThemeValues, CrystalDirection, CrystalMode,
+  PrismataTheme, PrismataThemeInput, PrismataThemeValues, PrismataDirection, PrismataMode,
 } from './types.js';
 import { usePreferredMode, usePrefersReducedTransparency, useForcedColors, usePrefersReducedMotion } from './usePreferredScheme.js';
 
 const core = preferences;
 
-/* Crystal's own defaults and palette list, used directly so that no second copy
+/* Prismata's own defaults and palette list, used directly so that no second copy
    exists. Passing `palettes` makes an unknown palette name fall back to the
    default instead of being written into the DOM as given. */
-const CRYSTAL_DEFAULTS = {
-  ...(crystalFlat as { default: Record<string, unknown>; palettes: Record<string, unknown> }).default,
-  palettes: (crystalFlat as { palettes: Record<string, unknown> }).palettes,
+const PRISMATA_DEFAULTS = {
+  ...(prismataFlat as { default: Record<string, unknown>; palettes: Record<string, unknown> }).default,
+  palettes: (prismataFlat as { palettes: Record<string, unknown> }).palettes,
 };
 
-/** Crystal's own ranges and choices, re-exported so consumers need not guess. */
-export const crystalRanges = core.RANGES;
-export const crystalChoices = core.CHOICES;
+/** Prismata's own ranges and choices, re-exported so consumers need not guess. */
+export const prismataRanges = core.RANGES;
+export const prismataChoices = core.CHOICES;
 
-const CrystalThemeContext = createContext<CrystalTheme | null>(null);
+const PrismataThemeContext = createContext<PrismataTheme | null>(null);
 
 function resolveTheme(
-  input: CrystalThemeInput,
-  inherited: CrystalTheme | null,
-  system: { mode: CrystalMode; reducedTransparency: boolean; forcedColors: boolean; reducedMotion: boolean },
-): CrystalTheme {
+  input: PrismataThemeInput,
+  inherited: PrismataTheme | null,
+  system: { mode: PrismataMode; reducedTransparency: boolean; forcedColors: boolean; reducedMotion: boolean },
+): PrismataTheme {
   /* `system` is a preference, never a resolved value. A component asking "am I
      dark?" needs an answer, so `system` is resolved to a mode here and only
      here.
    *
    * It is opt-in by decision. Making an unset provider follow the operating
    * system would change the default appearance of every existing consumer, and
-   * Crystal's own `default.mode` token says `light`. The catalogue agrees: it
+   * Prismata's own `default.mode` token says `light`. The catalogue agrees: it
    * says the theme provider "respects the system preference *when set to
    * system*". */
   const requestedMode = input.mode;
-  const mode: CrystalMode | undefined = requestedMode === 'system' ? system.mode
+  const mode: PrismataMode | undefined = requestedMode === 'system' ? system.mode
     : requestedMode;
   const merged = { ...(inherited ?? {}), ...input, ...(mode ? { mode } : {}) };
-  /* Crystal normalises and clamps; anything it does not recognise it replaces
+  /* Prismata normalises and clamps; anything it does not recognise it replaces
      with the documented default, so an out-of-range value cannot reach CSS. */
   const normalised = core.normalisePreferences(
     merged as Record<string, unknown>,
-    CRYSTAL_DEFAULTS,
-  ) as unknown as CrystalThemeValues;
+    PRISMATA_DEFAULTS,
+  ) as unknown as PrismataThemeValues;
 
-  const direction: CrystalDirection = input.direction ?? inherited?.direction ?? 'ltr';
-  /* `effects` is a Crystal preference under the name `reduced`, which is a
+  const direction: PrismataDirection = input.direction ?? inherited?.direction ?? 'ltr';
+  /* `effects` is a Prismata preference under the name `reduced`, which is a
      boolean. Translating here keeps the public API legible without inventing a
      second concept. */
   /* A request from the operating system for less transparency is separate from
@@ -92,13 +92,13 @@ function resolveTheme(
   /* The same rule for movement. Every recipe this library plays runs in script,
      and script does not see a media query unless it asks. Without this, with the
      operating system set to reduce motion, a button's press plays in full while
-     the CSS-driven indicators beside it stand still. Crystal's accessibility
+     the CSS-driven indicators beside it stand still. Prismata's accessibility
      chapter says reduced motion is honoured by every recipe, so the system's
      answer wins here as it does for reduced transparency: a product preference
      can ask for less movement than the system, never for more. */
   const reduceMotion = system.reducedMotion || normalised.reduceMotion;
 
-  const values: CrystalThemeValues = { ...normalised, reduceMotion, direction, effects };
+  const values: PrismataThemeValues = { ...normalised, reduceMotion, direction, effects };
 
   return {
     ...values,
@@ -108,17 +108,17 @@ function resolveTheme(
 
 /** The custom properties a scope publishes.
  *
- * All of them, colours included, are resolved by Crystal's own resolver and
- * written onto the scope. `crystal-theme.css` cannot supply the colours: it is
+ * All of them, colours included, are resolved by Prismata's own resolver and
+ * written onto the scope. `prismata-theme.css` cannot supply the colours: it is
  * a single palette at `:root` and defines no selector for
- * `data-crystal-palette` or `data-crystal-mode`. A scope that published only
+ * `data-prismata-palette` or `data-prismata-mode`. A scope that published only
  * the numeric preferences and asked for Harbor in dark mode would silently
  * render Prism in light, and a palette or mode control would change an
  * attribute and nothing else.
  *
- * `resolve` is Crystal's arithmetic, imported as CONTRACT §1 asks. The resolver
+ * `resolve` is Prismata's arithmetic, imported as CONTRACT §1 asks. The resolver
  * is importable for that reason. */
-function scopeStyle(theme: CrystalThemeValues): CSSProperties {
+function scopeStyle(theme: PrismataThemeValues): CSSProperties {
   const resolved = resolver.resolve(
     {
       palette: theme.palette,
@@ -128,7 +128,7 @@ function scopeStyle(theme: CrystalThemeValues): CSSProperties {
       elevation: theme.elevation,
       radius: theme.radius,
       density: theme.density,
-      /* Must be forwarded. Crystal's resolver branches `--cr-font` on this and
+      /* Must be forwarded. Prismata's resolver branches `--pr-font` on this and
          `preferences.js` clamps it to `manrope` or `system`. If it is left out,
          a product that asks for the system face is given Manrope, with no error
          and nothing to see in a test. */
@@ -142,14 +142,14 @@ function scopeStyle(theme: CrystalThemeValues): CSSProperties {
 
   return {
     ...resolved,
-    '--cr-atmosphere': `${theme.atmosphere}`,
-    '--cr-translucency': `${theme.translucency}`,
-    '--cr-elevation': `${theme.elevation}`,
-    '--cr-radius': `${theme.radius}px`,
-    '--cr-motion-speed': `${theme.motionSpeed}`,
-    '--cr-motion-enabled': theme.reduceMotion ? '0' : '1',
+    '--pr-atmosphere': `${theme.atmosphere}`,
+    '--pr-translucency': `${theme.translucency}`,
+    '--pr-elevation': `${theme.elevation}`,
+    '--pr-radius': `${theme.radius}px`,
+    '--pr-motion-speed': `${theme.motionSpeed}`,
+    '--pr-motion-enabled': theme.reduceMotion ? '0' : '1',
     /* Native controls and the browser's own scrollbars read `color-scheme`, not
-       Crystal's tokens. Without it a dark Crystal scope still gets a light form
+       Prismata's tokens. Without it a dark Prismata scope still gets a light form
        control and a light default scrollbar. */
     colorScheme: theme.mode,
     /* `color` and the family are inherited properties, and publishing the tokens
@@ -157,12 +157,12 @@ function scopeStyle(theme: CrystalThemeValues): CSSProperties {
        document above had. On an overlay, a Harbor dark calendar would draw
        Prism light's near-black text on its own dark surface. A scope paints its
        own ink for the same reason it declares its own colour-scheme. */
-    color: 'var(--cr-text)',
-    fontFamily: 'var(--cr-font)',
+    color: 'var(--pr-text)',
+    fontFamily: 'var(--pr-font)',
   } as CSSProperties;
 }
 
-export interface CrystalProviderProps extends CrystalThemeInput {
+export interface PrismataProviderProps extends PrismataThemeInput {
   /**
    * BCP-47 locale for React Aria's formatting and collation: dates, numbers,
    * calendars, sorting. Given one, its direction wins over `direction`, because a
@@ -185,7 +185,7 @@ export interface CrystalProviderProps extends CrystalThemeInput {
  * React Aria portals a popover, a modal or a tooltip to `document.body`, which is
  * outside the scope element, so none of the scope's custom properties reach it
  * and an overlay there resolves `:root`. A Harbor dark page would open a Prism
- * light menu, and `backdrop-filter: blur(var(--cr-frost-blur))` would be invalid
+ * light menu, and `backdrop-filter: blur(var(--pr-frost-blur))` would be invalid
  * at computed-value time because the variable does not exist there, so the Frost
  * material would lose its diffusion entirely and show the page straight through.
  *
@@ -209,7 +209,7 @@ function useThemedPortal(
      the count of containers is the count of live scopes. By decision it does not
      depend on the theme: re-theming rewrites this element, because replacing it
      would tear down every open overlay inside it. */
-  /* Focus rings only when they are needed: Crystal draws none while the
+  /* Focus rings only when they are needed: Prismata draws none while the
      document's modality is `pointer` (core 2.9.0). Every provider watches; the
      attribute is the document's, so a portalled overlay reads it too, and a
      second watcher writes the same value. */
@@ -218,7 +218,7 @@ function useThemedPortal(
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;
     const element = document.createElement('div');
-    element.dataset['crystalOverlays'] = 'true';
+    element.dataset['prismataOverlays'] = 'true';
     document.body.append(element);
     setContainer(element);
     return () => { element.remove(); };
@@ -248,9 +248,9 @@ function useThemedPortal(
   return container;
 }
 
-export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
+export function PrismataProvider(props: PrismataProviderProps): JSX.Element {
   const { children, as: Element = 'div', className, style, locale, ...input } = props;
-  const inherited = useContext(CrystalThemeContext);
+  const inherited = useContext(PrismataThemeContext);
   /* A stable id per provider, so nested scopes are distinguishable in the DOM
      and in a screenshot diff without relying on render order. */
   const scopeId = useId();
@@ -275,10 +275,10 @@ export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
 
   const resolved = scopeStyle(theme);
   const scopeAttributes = useMemo(() => ({
-    'data-crystal-scope': scopeId,
-    'data-crystal-palette': theme.palette,
-    'data-crystal-mode': theme.mode,
-    'data-crystal-density': theme.density,
+    'data-prismata-scope': scopeId,
+    'data-prismata-palette': theme.palette,
+    'data-prismata-mode': theme.mode,
+    'data-prismata-density': theme.density,
     'data-effects': theme.effects === 'opaque' ? 'opaque' : undefined,
     dir: theme.direction,
   }), [scopeId, theme.palette, theme.mode, theme.density, theme.effects, theme.direction]);
@@ -286,7 +286,7 @@ export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
   const overlayContainer = useThemedPortal(scopeAttributes, resolved);
 
   return (
-    <CrystalThemeContext.Provider value={theme}>
+    <PrismataThemeContext.Provider value={theme}>
       {/* React Aria needs the direction too, or its own components lay out
           left-to-right inside a right-to-left scope. A JavaScript layout
           calculation does not read a `dir` attribute. */}
@@ -304,7 +304,7 @@ export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
       </Element>
       </UNSAFE_PortalProvider>
       </I18nProvider>
-    </CrystalThemeContext.Provider>
+    </PrismataThemeContext.Provider>
   );
 }
 
@@ -315,11 +315,11 @@ export function CrystalProvider(props: CrystalProviderProps): JSX.Element {
  * render silently with un-themed values, which produces "it looks nothing like
  * the design system" bug reports.
  */
-export function useCrystalTheme(): CrystalTheme {
-  const theme = useContext(CrystalThemeContext);
+export function usePrismataTheme(): PrismataTheme {
+  const theme = useContext(PrismataThemeContext);
   if (!theme) {
     throw new Error(
-      'useCrystalTheme must be used inside <CrystalProvider>. '
+      'usePrismataTheme must be used inside <PrismataProvider>. '
       + 'Wrap your application once at the root, or wrap the subtree that needs its own scope.',
     );
   }
@@ -327,6 +327,6 @@ export function useCrystalTheme(): CrystalTheme {
 }
 
 /** The theme if there is one, `null` if not, for code that must work either way. */
-export function useOptionalCrystalTheme(): CrystalTheme | null {
-  return useContext(CrystalThemeContext);
+export function useOptionalPrismataTheme(): PrismataTheme | null {
+  return useContext(PrismataThemeContext);
 }

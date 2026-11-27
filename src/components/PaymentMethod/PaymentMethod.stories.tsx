@@ -18,7 +18,7 @@ const meta = {
           '"A radio group. Card fields are never reimplemented: the host supplies its '
           + 'provider element." The second sentence is why this component is in the '
           + 'catalogue. A card number, an expiry and a CVC typed into inputs this library '
-          + 'rendered would put every product using Crystal inside PCI scope, because the data '
+          + 'rendered would put every product using Prismata inside PCI scope, because the data '
           + 'touched their page in the clear.\n\n'
           + 'A card form built here would work, look right and pass every test in the '
           + 'repository, and it would move a compliance obligation onto every product that '
@@ -51,10 +51,10 @@ export const WithAProviderElement: Story = {
           provider={
             <div
               style={{
-                border: '1px dashed var(--cr-outline)', /* crystal-allow-literal: a stand-in for a third party's iframe, not a Crystal surface */
-                borderRadius: 'var(--cr-radius)',
-                padding: 'var(--cr-space)',
-                color: 'var(--cr-muted)',
+                border: '1px dashed var(--pr-outline)', /* prismata-allow-literal: a stand-in for a third party's iframe, not a Prismata surface */
+                borderRadius: 'var(--pr-radius)',
+                padding: 'var(--pr-space)',
+                color: 'var(--pr-muted)',
               }}
             >
               The payment provider&rsquo;s own element goes here.

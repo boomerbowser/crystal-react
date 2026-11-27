@@ -4,12 +4,12 @@
  *
  * "Intensity is paired with a value; colour alone never carries meaning."
  * Every cell is labelled with its number, and every cell's label reads on its
- * own paint, because Crystal's intensity ramp ships the ink for each step. A
+ * own paint, because Prismata's intensity ramp ships the ink for each step. A
  * number written in one colour across a five-step ramp is unreadable at one
  * end of it.
  *
  * "Cells are square with a hairline gap." Square, so a row and a column weigh
- * the same. The gap is Crystal's `--cr-chart-cell-gap`, a gap and not a border
+ * the same. The gap is Prismata's `--pr-chart-cell-gap`, a gap and not a border
  * for the same reason the pie's separation is.
  *
  * The scale is equal-width buckets, never quantiles. `charts/intensity.ts`

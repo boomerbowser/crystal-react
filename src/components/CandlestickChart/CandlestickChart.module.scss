@@ -9,28 +9,28 @@
  */
 
 .candle .wick {
-  stroke: var(--cr-text);
+  stroke: var(--pr-text);
   stroke-width: 1px;
 }
 
 .candle .body {
-  stroke-width: var(--cr-chart-hairline);
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
+  stroke-width: var(--pr-chart-hairline);
+  transition: opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 .candle[data-direction='rose'] .body {
-  fill: var(--cr-canvas);
-  stroke: var(--cr-success-ink);
+  fill: var(--pr-canvas);
+  stroke: var(--pr-success-ink);
 }
 
-.candle[data-direction='rose'] .wick { stroke: var(--cr-success-ink); }
+.candle[data-direction='rose'] .wick { stroke: var(--pr-success-ink); }
 
 .candle[data-direction='fell'] .body {
-  fill: var(--cr-danger-ink);
-  stroke: var(--cr-danger-ink);
+  fill: var(--pr-danger-ink);
+  stroke: var(--pr-danger-ink);
 }
 
-.candle[data-direction='fell'] .wick { stroke: var(--cr-danger-ink); }
+.candle[data-direction='fell'] .wick { stroke: var(--pr-danger-ink); }
 
 .candle:focus-visible { outline: none; }
 

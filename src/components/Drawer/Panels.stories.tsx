@@ -45,7 +45,7 @@ const meta = {
           + 'The radius is on the inner edges only. The outer edge is flush against the '
           + 'viewport, and rounding it would show a sliver of page through a corner that belongs '
           + 'to the screen.\n\n'
-          + 'Crystal authors one drawer recipe, arriving from the right. Every other edge and '
+          + 'Prismata authors one drawer recipe, arriving from the right. Every other edge and '
           + 'every right-to-left page uses that same authored movement, spring included, pointed '
           + 'somewhere else. Three more recipes would be three more specifications.',
       },
@@ -143,7 +143,7 @@ export const NotModal: Story = {
   render: function NotModalStory() {
     const [isOpen, setOpen] = useState(true);
     return (
-      <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'start' }}>
+      <div style={{ display: 'flex', gap: 'var(--pr-space)', alignItems: 'start' }}>
         <main style={{ flex: 1 }}>
           <Stack gap="md">
             <Text>The page beside an inspector keeps working. Tab into it and back out.</Text>

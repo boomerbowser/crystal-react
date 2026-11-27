@@ -11,7 +11,7 @@
  * own surface, whose contrast is already known, so Stone is not needed there.
  */
 
-$caption-inset: 12px; /* crystal-allow-literal: the catalogue's stated inset from the media edge */
+$caption-inset: 12px; /* prismata-allow-literal: the catalogue's stated inset from the media edge */
 
 .figure {
   position: relative;
@@ -19,17 +19,17 @@ $caption-inset: 12px; /* crystal-allow-literal: the catalogue's stated inset fro
   margin: 0;
   /* The figure is the media's own box, so a rounded image and an overlaid caption
      share one perimeter and the caption does not overhang a corner. */
-  border-radius: var(--cr-radius);
+  border-radius: var(--pr-radius);
   overflow: hidden;
   isolation: isolate;
 }
 
 .caption {
   display: block;
-  margin-block-start: $cr-spacing-xs;
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+  margin-block-start: $pr-spacing-xs;
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
 }
 
 .overlaid {
@@ -37,13 +37,13 @@ $caption-inset: 12px; /* crystal-allow-literal: the catalogue's stated inset fro
   inset-block-end: $caption-inset;
   inset-inline: $caption-inset;
   margin-block-start: 0;
-  padding: $cr-spacing-xs;
-  border-radius: var(--cr-radius);
-  /* The backing is Crystal's Stone, `.cr-stone` (2.2.0), which an overlaid caption
+  padding: $pr-spacing-xs;
+  border-radius: var(--pr-radius);
+  /* The backing is Prismata's Stone, `.pr-stone` (2.2.0), which an overlaid caption
      wears. It supplies the fill on an isolated, feathered layer beneath crisp
      words, and both fallbacks, which keep the protection as the surface colour
      instead of dropping it, because Stone guards contrast. */
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 @media (forced-colors: active) {

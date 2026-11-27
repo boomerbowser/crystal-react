@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'The grip is Crystal\'s `.cr-drag-handle` (2.2.0): a bare control with a grip in its own ink, '
+          'The grip is Prismata\'s `.pr-drag-handle` (2.2.0): a bare control with a grip in its own ink, '
           + 'the grab cursor and a lift while held. This component styles what is carried: the item '
           + 'rises, not the handle.\n\n'
           + 'A button, not a decorated div: React Aria\'s drag button carries the keyboard state machine, '

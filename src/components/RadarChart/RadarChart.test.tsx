@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { RadarChart } from './RadarChart.js';
 
 const series = [
@@ -13,7 +13,7 @@ describe('RadarChart', () => {
   /* A radar without axis labels says only "this shape is bigger than that
      shape", and the measures are lost. */
   it('labels every axis outside the ring', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <RadarChart label="Review" series={series} axes={axes} />,
     );
     /* In the picture as well as in the table beside it, which holds the other
@@ -25,7 +25,7 @@ describe('RadarChart', () => {
   /* Each value is its own mark, so a reader gets the numbers and not only an
      outline. */
   it('makes every axis of every series a reachable value', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <RadarChart label="Review" series={series} axes={axes} />,
     );
     expect(container.querySelectorAll('[role="graphics-symbol"]').length).toBe(10);
@@ -35,14 +35,14 @@ describe('RadarChart', () => {
   /* Two polygons at a quarter opacity look very similar, so the edge carries
      the dash as well. */
   it('dashes the outline of every series after the first', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <RadarChart label="Review" series={series} axes={axes} />,
     );
     expect(container.querySelectorAll('polygon[stroke-dasharray]').length).toBe(1);
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <RadarChart label="Review scores" series={series} axes={axes} />,
     );
     await expectNoAxeViolations(container);

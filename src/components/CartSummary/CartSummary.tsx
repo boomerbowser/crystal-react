@@ -63,7 +63,7 @@ export const CartSummary = forwardRef<HTMLElement, CartSummaryProps>(
         ref={ref}
         aria-label={label}
         {...(isUpdating ? { 'data-updating': '' } : {})}
-        className={cx('cr-haze inset', styles['summary'], className)}
+        className={cx('pr-haze inset', styles['summary'], className)}
       >
         {isEmpty ? (
           <p className={styles['empty']}>{empty}</p>

@@ -15,7 +15,7 @@ const meta = {
           + '"The target is a crisp marker, not a bar." A bar drawn to the target would be a '
           + 'second measurement, and the eye would compare two lengths instead of a length '
           + 'against a line.\n\n'
-          + '"Haze range bands": the qualitative ranges are steps of Crystal\'s intensity ramp, '
+          + '"Haze range bands": the qualitative ranges are steps of Prismata\'s intensity ramp, '
           + 'so "acceptable" and "good" read as a scale. Every band is named, because an '
           + 'unnamed band carries meaning by colour alone.',
       },
@@ -45,7 +45,7 @@ export const PastTheTarget: Story = { args: { value: 92 } };
  *  each against its own target. */
 export const AColumn: Story = {
   render: () => (
-    <div style={{ display: 'grid', gap: '20px' }}>{/* crystal-allow-literal: story scaffolding */}
+    <div style={{ display: 'grid', gap: '20px' }}>{/* prismata-allow-literal: story scaffolding */}
       <BulletChart label="Revenue" value={62} target={80} format={(v) => `£${v}k`} ranges={[{ to: 50, name: 'below plan' }, { to: 75, name: 'acceptable' }, { to: 100, name: 'good' }]} />
       <BulletChart label="New accounts" value={184} target={150} min={0} max={200} ranges={[{ to: 100, name: 'below plan' }, { to: 150, name: 'acceptable' }, { to: 200, name: 'good' }]} />
       <BulletChart label="Churn" value={4.2} target={3} min={0} max={8} format={(v) => `${v}%`} ranges={[{ to: 3, name: 'good' }, { to: 5, name: 'acceptable' }, { to: 8, name: 'above plan' }]} />

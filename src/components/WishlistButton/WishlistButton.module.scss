@@ -1,7 +1,7 @@
 @use '../../styles/tokens' as *;
 
-/* The pill needs nothing here. `Button` carries the pressed state in Crystal's
-   own vocabulary, with the reading pad in `--cr-primary`, `--cr-on-primary` ink
+/* The pill needs nothing here. `Button` carries the pressed state in Prismata's
+   own vocabulary, with the reading pad in `--pr-primary`, `--pr-on-primary` ink
    and the label at weight 800. A filled heart on top would be a second treatment
    for one state, and a reader would look for a difference between the two.
  *
@@ -11,7 +11,7 @@
  * with an outline. */
 .wish[aria-pressed='true'] svg { fill: currentColor; }
 
-.pill { display: inline-flex; align-items: center; gap: $cr-spacing-2xs; }
+.pill { display: inline-flex; align-items: center; gap: $pr-spacing-2xs; }
 
 .mark { display: inline-flex; }
-.mark svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.mark svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }

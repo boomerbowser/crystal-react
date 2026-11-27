@@ -160,7 +160,7 @@ export const Gallery = forwardRef<HTMLDivElement, GalleryProps>(function Gallery
             aria-selected={index === active}
             aria-label={item.label}
             tabIndex={index === Math.min(active, items.length - 1) ? 0 : -1}
-            className={cx('cr-haze flush', styles['thumb'])}
+            className={cx('pr-haze flush', styles['thumb'])}
             onFocus={() => setActive(index)}
             onClick={() => { setActive(index); setOpen(true); }}
           >

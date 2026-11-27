@@ -5,11 +5,11 @@
  * React Aria owns `role="tablist"` / `tab` / `tabpanel`, the roving tab stop,
  * arrow keys with Home and End, the `aria-controls` and `aria-labelledby` pair
  * between a tab and its panel, and the automatic-versus-manual activation
- * distinction. Crystal owns the material and the one semantic rule.
+ * distinction. Prismata owns the material and the one semantic rule.
  *
- * Selection is weight and the primary fill, as Crystal's dock draws a selected
+ * Selection is weight and the primary fill, as Prismata's dock draws a selected
  * control. The tab is heavier and filled, so selection never rests on colour
- * alone. The strip is Crystal's `.cr-dock`, shared with the segmented control
+ * alone. The strip is Prismata's `.pr-dock`, shared with the segmented control
  * through `styles/_strip.scss`. The material is the same and the semantics differ.
  * A segmented control picks a value and announces as a radio group; a tab list
  * picks a view and promises a panel will change. The catalogue rules out
@@ -17,7 +17,7 @@
  * tablist".
  *
  * The panel plays `tab-in` on arrival. That is movement somebody started by
- * pressing the tab, which is the only kind Crystal has. Nothing moves at rest.
+ * pressing the tab, which is the only kind Prismata has. Nothing moves at rest.
  */
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import {
@@ -66,7 +66,7 @@ export function Tabs({
      dropped silently and leave the list unnamed, so it is shown instead. */
   const nameable = typeof label === 'string' ? label : undefined;
   const visible = labelVisible || nameable === undefined;
-  /* The selected tab's fill is Crystal's pill, which travels to the tab a
+  /* The selected tab's fill is Prismata's pill, which travels to the tab a
      person chooses (D-37). The hook puts it in the list itself, `aria-hidden`,
      outside React Aria's collection. */
   const { planeRef } = useTravelMotion('selection-travel', '[role=tab][aria-selected=true]');
@@ -76,7 +76,7 @@ export function Tabs({
       {visible ? <span id={labelId} className={cx(styles['label'])}>{label}</span> : null}
       <TabList
         ref={planeRef as never}
-        className={cx(styles['strip'], 'cr-dock')}
+        className={cx(styles['strip'], 'pr-dock')}
         items={items}
         {...(visible ? { 'aria-labelledby': labelId } : { 'aria-label': nameable })}
       >

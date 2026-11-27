@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { Badge, formatCount } from './Badge.js';
 
 describe('Badge', () => {
@@ -13,33 +13,33 @@ describe('Badge', () => {
   /* A zero count still has a badge, and the caller decides whether it is
      shown. */
   it('hides a zero count unless asked to show it', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(<Badge count={0} />);
+    const { rerenderWithPrismata } = renderWithPrismata(<Badge count={0} />);
     expect(screen.queryByText('0')).toBeNull();
-    rerenderWithCrystal(<Badge count={0} showZero />);
+    rerenderWithPrismata(<Badge count={0} showZero />);
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 
   /* The visual never speaks. A loose "3" announced beside a button leaves a
      listener to guess what the 3 belongs to. */
   it('hides the visual from assistive technology', () => {
-    renderWithCrystal(<Badge count={3} data-testid="badge" />);
+    renderWithPrismata(<Badge count={3} data-testid="badge" />);
     expect(screen.getByTestId('badge')).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('announces a whole sentence when given one, and nothing when not', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(<Badge count={3} />);
+    const { rerenderWithPrismata } = renderWithPrismata(<Badge count={3} />);
     expect(screen.queryByRole('status')).toBeNull();
-    rerenderWithCrystal(<Badge count={3} description="3 unread messages" />);
+    rerenderWithPrismata(<Badge count={3} description="3 unread messages" />);
     expect(screen.getByRole('status')).toHaveTextContent('3 unread messages');
   });
 
   it('wraps a host and stands alone without one', () => {
-    const { container, rerenderWithCrystal } = renderWithCrystal(
+    const { container, rerenderWithPrismata } = renderWithPrismata(
       <Badge count={3} data-testid="badge" />,
     );
     expect(screen.getByTestId('badge').parentElement).toBe(container.firstElementChild);
 
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <Badge count={3} data-testid="badge"><button type="button">Inbox</button></Badge>,
     );
     const host = screen.getByRole('button', { name: 'Inbox' }).parentElement;
@@ -49,12 +49,12 @@ describe('Badge', () => {
 
   /* A dot's whole message is that it is there; there is nothing to read. */
   it('renders a dot with no content', () => {
-    renderWithCrystal(<Badge dot data-testid="badge" />);
+    renderWithPrismata(<Badge dot data-testid="badge" />);
     expect(screen.getByTestId('badge')).toBeEmptyDOMElement();
   });
 
   it('has no accessibility violations on a host', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Badge count={120} description="120 unread messages">
         <button type="button">Inbox</button>
       </Badge>,

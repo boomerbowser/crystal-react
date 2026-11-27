@@ -5,13 +5,13 @@
    make it look like a card floating inside its container, and a card is not
    pinned. */
 .banner {
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
   display: flex;
   align-items: center;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   inline-size: 100%;
-  padding: $cr-spacing-sm $cr-spacing-md;
-  color: var(--cr-text);
+  padding: $pr-spacing-sm $pr-spacing-md;
+  color: var(--pr-text);
   /* A banner spans the page, so it is square. */
   border-radius: 0;
 }
@@ -26,11 +26,11 @@
   position: absolute;
   inset-block: 0;
   inset-inline-start: 0;
-  inline-size: $cr-spacing-2xs;
+  inline-size: $pr-spacing-2xs;
   background: var(--status-ink);
 }
 
-.well { @include status.status-well($cr-icon-size); }
+.well { @include status.status-well($pr-icon-size); }
 
 .message { margin: 0; flex: 1; min-inline-size: 0; }
 
@@ -41,18 +41,18 @@
   flex: none;
   display: inline-grid;
   place-items: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
-  margin-block: calc(-1 * #{$cr-spacing-xs});
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
+  margin-block: calc(-1 * #{$pr-spacing-xs});
   border: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   background: transparent;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   cursor: pointer;
 }
 
-.dismiss:hover { color: var(--cr-text); background: var(--cr-surface-alt); }
-.dismiss svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.dismiss:hover { color: var(--pr-text); background: var(--pr-surface-alt); }
+.dismiss svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 @media (forced-colors: active) {
   .banner { border: 0; border-block-end: 1px solid CanvasText; }

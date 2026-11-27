@@ -129,7 +129,7 @@ export function SearchBlock({
   };
 
   return (
-    <div className={cx(styles['search'], className)} data-cr-state={state}>
+    <div className={cx(styles['search'], className)} data-pr-state={state}>
       <form role="search" onSubmit={submit} className={cx(styles['form'])}>
         <ComboBox
           inputValue={query}
@@ -142,18 +142,18 @@ export function SearchBlock({
           className={cx(styles['field'])}
         >
           <Label className={cx(styles['label'])}>{label}</Label>
-          <FieldGroupShell isInvalid={false} className={cx(styles['shell'], 'cr-field-shell block')}>
+          <FieldGroupShell isInvalid={false} className={cx(styles['shell'], 'pr-field-shell block')}>
             <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" className={cx(styles['glass'])}>
               <circle cx="11" cy="11" r="6" /><path d="M20 20l-4.5-4.5" />
             </svg>
             <Input className={cx(styles['control'])} {...(placeholder ? { placeholder } : {})} />
             {/* So a pointer can open the list without typing. React Aria keeps it
                 out of the tab order and names it; the field is the stop. */}
-            <AriaButton className={cx(styles['trigger'], 'cr-bare')}>
+            <AriaButton className={cx(styles['trigger'], 'pr-bare')}>
               <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
             </AriaButton>
           </FieldGroupShell>
-          <ArrivingPopover recipe="menu-in" exit="menu-out" className={cx(styles['popover'], 'cr-frost', 'cr-scroll-frost')}>
+          <ArrivingPopover recipe="menu-in" exit="menu-out" className={cx(styles['popover'], 'pr-frost', 'pr-scroll-frost')}>
             {state === 'loading' && typed && offering === 0 ? (
               <div className={cx(styles['state'])}>Searching</div>
             ) : (
@@ -197,7 +197,7 @@ export function SearchBlock({
       >
         <ListPresence>
           {(results ?? []).map((result) => (
-            <PresenceItem key={result.id} className={cx(styles['result'], 'cr-haze')}>
+            <PresenceItem key={result.id} className={cx(styles['result'], 'pr-haze')}>
               {result.href ? (
                 <a href={result.href} className={cx(styles['resultTitle'])}>{result.title}</a>
               ) : (

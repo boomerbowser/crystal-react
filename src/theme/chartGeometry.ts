@@ -1,15 +1,15 @@
 /* Chart geometry, as numbers.
  *
- * Crystal publishes these as custom properties, and a chart cannot use them
- * that way: `var(--cr-chart-bar-radius)` is a string the browser resolves at
+ * Prismata publishes these as custom properties, and a chart cannot use them
+ * that way: `var(--pr-chart-bar-radius)` is a string the browser resolves at
  * paint time, and an SVG rounding a bar needs the number now, to put in a
  * `rx` attribute or to subtract from a height. So the same values exist twice,
  * once as properties for CSS and once here as numbers for arithmetic, and the
  * two must not drift.
  *
  * They cannot drift, because both come from the same place.
- * `tokens.generated.ts` is generated from the installed `@crystal-ui/core`'s own
- * export on every build and is gitignored, so these are Crystal's published
+ * `tokens.generated.ts` is generated from the installed `@prismata/core`'s own
+ * export on every build and is gitignored, so these are Prismata's published
  * values read at build time. No table of them is typed out here.
  *
  * The package publishes these tokens from 2.1.0. The catalogue had named the
@@ -21,16 +21,16 @@
  * indicator, so that a gauge arc and a progress ring cannot be drawn at
  * different weights.
  */
-import { crystalTokens } from './tokens.generated.js';
+import { prismataTokens } from './tokens.generated.js';
 
 /* Every one of these is published as a dimension or a bare number. `parseFloat`
    takes the leading number and ignores a unit, so `2px` and `0.32` are both
    readable here, and a malformed value becomes `NaN` instead of silently
    becoming zero. */
-const value = (name: keyof typeof crystalTokens): number => {
-  const parsed = Number.parseFloat(crystalTokens[name]);
+const value = (name: keyof typeof prismataTokens): number => {
+  const parsed = Number.parseFloat(prismataTokens[name]);
   if (Number.isNaN(parsed)) {
-    throw new RangeError(`Crystal published no usable number for ${name}`);
+    throw new RangeError(`Prismata published no usable number for ${name}`);
   }
   return parsed;
 };
@@ -51,6 +51,6 @@ export const chartGeometry = {
 } as const;
 
 /** How many series the scale tells apart by colour. A seventh repeats the first
- *  and must differ by another channel. This is Crystal's `chart.seriesCount`,
+ *  and must differ by another channel. This is Prismata's `chart.seriesCount`,
  *  and the reason `seriesChannel` exists. */
 export const CHART_SERIES_COUNT = value('chart.seriesCount');

@@ -15,9 +15,9 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import { DEFAULT_CAPTION_STYLE, type CaptionStyle } from '../components/MediaControls/MediaSettings.js';
 
-const KEY = 'crystal-caption-style';
+const KEY = 'prismata-caption-style';
 /* Same-page changes; `storage` only reports other pages. */
-const CHANGED = 'crystal-caption-style-change';
+const CHANGED = 'prismata-caption-style-change';
 
 let memory: string | null = null;
 let cachedRaw: string | null | undefined;

@@ -9,7 +9,7 @@
  *
  * Selection is by weight, never by a mark or by colour. A legend entry that is
  * on is heavier than one that is off. The swatch beside it says which series
- * this is, never whether it is showing. That is Crystal's rule everywhere, and it
+ * this is, never whether it is showing. That is Prismata's rule everywhere, and it
  * matters more here because a legend entry already carries a colour.
  *
  * The swatch also carries the series' second channel (the dash for a line, the
@@ -71,7 +71,7 @@ export function ChartLegend({
               {onToggle ? (
                 <Toggle
                   isShown={shown}
-                  className={cx(styles['toggle'], 'cr-bare')}
+                  className={cx(styles['toggle'], 'pr-bare')}
                   aria-pressed={shown}
                   data-shown={shown ? '' : undefined}
                   onClick={() => {
@@ -82,7 +82,7 @@ export function ChartLegend({
                   {content}
                 </Toggle>
               ) : (
-                <span className={cx('cr-haze inset', styles['entry'])}>{content}</span>
+                <span className={cx('pr-haze inset', styles['entry'])}>{content}</span>
               )}
             </li>
           );

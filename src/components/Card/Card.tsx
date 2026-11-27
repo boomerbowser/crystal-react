@@ -3,7 +3,7 @@
 /* Card.
  *
  * A surface, not a control. It has no press behaviour and no motion of its own.
- * Crystal's catalogue assigns Card no recipe, and the library must not add
+ * Prismata's catalogue assigns Card no recipe, and the library must not add
  * motion the design system did not specify.
  *
  * It renders a `section` when given an accessible name and a `div` otherwise,
@@ -33,7 +33,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
 ) {
   const named = Boolean(props['aria-label'] ?? props['aria-labelledby']);
   const Element = named ? 'section' : 'div';
-  const classes = cx(styles['card'], 'cr-haze', className);
+  const classes = cx(styles['card'], 'pr-haze', className);
 
   /* In a product's `ListPresence`, this arrives with `list-in` when it is
      added and leaves with `list-out` when it is removed. Anywhere else it

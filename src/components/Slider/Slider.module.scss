@@ -15,7 +15,7 @@
  */
 
 .field { @include field.field; }
-.header { display: flex; align-items: baseline; justify-content: space-between; gap: $cr-spacing-sm; }
+.header { display: flex; align-items: baseline; justify-content: space-between; gap: $pr-spacing-sm; }
 .label { @include field.label; }
 
 /* Visually hidden, still read: the label names the slider. */
@@ -27,13 +27,13 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.output { font-size: var(--cr-text-caption-size); font-variant-numeric: tabular-nums; color: var(--cr-muted); }
+.output { font-size: var(--pr-text-caption-size); font-variant-numeric: tabular-nums; color: var(--pr-muted); }
 
 .track {
   position: relative;
   display: flex;
   align-items: center;
-  block-size: $cr-action-min-target;
+  block-size: $pr-action-min-target;
   inline-size: 100%;
 }
 
@@ -43,19 +43,19 @@
   content: '';
   position: absolute;
   inset-inline: 0;
-  block-size: $cr-slider-track-height;
-  border-radius: $cr-slider-track-height;
-  background: var(--cr-surface-alt);
-  box-shadow: inset 0 1px 1px var(--cr-control-edge);
+  block-size: $pr-slider-track-height;
+  border-radius: $pr-slider-track-height;
+  background: var(--pr-surface-alt);
+  box-shadow: inset 0 1px 1px var(--pr-control-edge);
 }
 
 .fill {
   position: absolute;
-  block-size: $cr-slider-track-height;
-  border-radius: $cr-slider-track-height;
-  background: var(--cr-primary);
-  inset-inline-start: var(--cr-fill-start, 0%);
-  inline-size: var(--cr-fill-size, 0%);
+  block-size: $pr-slider-track-height;
+  border-radius: $pr-slider-track-height;
+  background: var(--pr-primary);
+  inset-inline-start: var(--pr-fill-start, 0%);
+  inline-size: var(--pr-fill-size, 0%);
 }
 
 /* React Aria places the thumb with an inline `left` and `translate(-50%, -50%)`
@@ -66,10 +66,10 @@
 .thumb {
   position: relative;
   inset-block-start: 50%;
-  inline-size: $cr-slider-thumb-size;
-  block-size: $cr-slider-thumb-size;
-  /* The thumb wears Crystal's `.cr-resin.flat` (2.7.0): the Resin plane, its
-     rim, blur and float shadow, without the sheen, with Crystal's fallbacks. */
+  inline-size: $pr-slider-thumb-size;
+  block-size: $pr-slider-thumb-size;
+  /* The thumb wears Prismata's `.pr-resin.flat` (2.7.0): the Resin plane, its
+     rim, blur and float shadow, without the sheen, with Prismata's fallbacks. */
   border-radius: 50%;
 }
 
@@ -83,16 +83,16 @@
   position: absolute;
   inset: 50% auto auto 50%;
   translate: -50% -50%;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
 }
 
-.thumb[data-dragging] { background: var(--cr-primary); }
+.thumb[data-dragging] { background: var(--pr-primary); }
 
 .thumb[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 /* Two thumbs that meet must stay separable, which the catalogue asks for: the
@@ -102,12 +102,12 @@
 .ticks {
   display: flex;
   justify-content: space-between;
-  margin-block-start: calc(-1 * #{$cr-spacing-xs});
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  margin-block-start: calc(-1 * #{$pr-spacing-xs});
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
 }
 
-.field[data-disabled] { opacity: $cr-action-disabled-opacity; }
+.field[data-disabled] { opacity: $pr-action-disabled-opacity; }
 
 @media (forced-colors: active) {
   .track::before { background: Canvas; border: 1px solid CanvasText; }

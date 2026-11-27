@@ -7,13 +7,13 @@
 
 .body {
   display: grid;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   align-content: start;
 }
 
 .lines {
   display: grid;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   margin: 0;
   padding: 0;
   list-style: none;

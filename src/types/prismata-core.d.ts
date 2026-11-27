@@ -1,4 +1,4 @@
-/* Entry points `@crystal-ui/core` ships as plain JavaScript.
+/* Entry points `@prismata/core` ships as plain JavaScript.
  *
  * Ambient declarations for the modules the design system exports but does not yet
  * type. Where it does ship types (`core/state`, `core/preferences`), they are
@@ -7,11 +7,11 @@
  * these is the design system itself; they live here until it ships them.
  */
 
-/** A single step of a Crystal recipe. The vocabulary is deliberately narrow:
+/** A single step of a Prismata recipe. The vocabulary is deliberately narrow:
  *  transform, opacity and clip-path are the properties a compositor can animate
  *  without repainting, and they are also the ones that port to SwiftUI and
  *  Compose. */
-interface CrystalKeyframe {
+interface PrismataKeyframe {
   readonly transform?: string;
   readonly opacity?: number;
   readonly clipPath?: string;
@@ -20,7 +20,7 @@ interface CrystalKeyframe {
   readonly offset?: number;
 }
 
-interface CrystalSpring {
+interface PrismataSpring {
   readonly stiffness: number;
   readonly damping: number;
   readonly mass: number;
@@ -32,13 +32,13 @@ interface CrystalSpring {
   };
 }
 
-interface CrystalRecipe {
+interface PrismataRecipe {
   readonly id: string;
   readonly category: string;
   readonly label: string;
   readonly duration: number;
   readonly engine: 'Motion' | 'GSAP';
-  readonly keyframes: readonly CrystalKeyframe[];
+  readonly keyframes: readonly PrismataKeyframe[];
   readonly use: string;
   readonly reduced: string;
   readonly material?: string;
@@ -48,7 +48,7 @@ interface CrystalRecipe {
   readonly layer?: string;
   /** Fitted upstream so the spring's settling time equals the authored duration.
    *  Absent on a travelling loop, which is linear by definition. */
-  readonly spring?: CrystalSpring;
+  readonly spring?: PrismataSpring;
   /** A continuous indicator of pending work (2.2.0): repeats until stopped. Only
    *  `activity-turn`, `activity-travel` and `skeleton-sweep` carry it. */
   readonly loop?: boolean;
@@ -61,28 +61,28 @@ interface CrystalRecipe {
   readonly stagger?: { readonly step: number; readonly maxMarks: number };
 }
 
-interface CrystalAnimation {
+interface PrismataAnimation {
   readonly finished: Promise<unknown>;
   cancel(): void;
 }
 
-declare module '@crystal-ui/core/engines' {
+declare module '@prismata/core/engines' {
   /** Play keyframes on an element. Cancelling always settles `finished` and
    *  restores any paint the animation owned. */
   export function frames(
     element: Element,
-    keyframes: readonly CrystalKeyframe[],
+    keyframes: readonly PrismataKeyframe[],
     options: { duration: number; engine?: string; easing?: string; pseudoElement?: string },
-  ): CrystalAnimation;
+  ): PrismataAnimation;
   export const versions: Readonly<{ motion: string; gsap: string }>;
 }
 
-declare module '@crystal-ui/core/motion-recipes' {
-  const catalogue: { readonly recipes: readonly CrystalRecipe[] };
+declare module '@prismata/core/motion-recipes' {
+  const catalogue: { readonly recipes: readonly PrismataRecipe[] };
   export default catalogue;
 }
 
-declare module '@crystal-ui/core/flat' {
+declare module '@prismata/core/flat' {
   const flat: {
     readonly default: Record<string, unknown>;
     readonly palettes: Record<string, unknown>;

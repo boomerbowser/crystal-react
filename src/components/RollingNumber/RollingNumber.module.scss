@@ -8,7 +8,7 @@
  * proportional figures a `1` is narrower than a `0` and the roll would wobble
  * sideways.
  *
- * The timing is Crystal's: `motion.duration.state` is what the system uses for a
+ * The timing is Prismata's: `motion.duration.state` is what the system uses for a
  * value changing, and `motion.easing.settle` is how a value comes to rest. This
  * file chooses neither.
  */
@@ -27,13 +27,13 @@
    exactly one glyph. */
 .column {
   display: inline-block;
-  block-size: 1em; /* crystal-allow-literal: one line box, relative to the text */
+  block-size: 1em; /* prismata-allow-literal: one line box, relative to the text */
   overflow: hidden;
   line-height: 1;
 }
 
-/* The duration is Crystal's `motion.duration.state`, divided by the reader's
-   motion-speed preference and multiplied by `--cr-motion-enabled`, which the
+/* The duration is Prismata's `motion.duration.state`, divided by the reader's
+   motion-speed preference and multiplied by `--pr-motion-enabled`, which the
    provider publishes as 0 under reduced motion. This is the arithmetic
    `resolveDuration` does for the JS recipes (`duration / speed`, and zero when
    motion is off), expressed in CSS so the roll follows the same slider. */
@@ -41,13 +41,13 @@
   display: flex;
   flex-direction: column;
   transition-property: translate;
-  transition-timing-function: #{$cr-motion-easing-settle};
-  transition-duration: calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed));
+  transition-timing-function: #{$pr-motion-easing-settle};
+  transition-duration: calc(var(--pr-motion-enabled) * #{$pr-motion-duration-state} / var(--pr-motion-speed));
 }
 
-.glyph { display: block; block-size: 1em; /* crystal-allow-literal: matches the window */ line-height: 1; }
+.glyph { display: block; block-size: 1em; /* prismata-allow-literal: matches the window */ line-height: 1; }
 
-/* The platform's own preference applies whether or not Crystal's was set. The
+/* The platform's own preference applies whether or not Prismata's was set. The
    state change still happens, without the movement. */
 @media (prefers-reduced-motion: reduce) {
   .strip { transition: none; }

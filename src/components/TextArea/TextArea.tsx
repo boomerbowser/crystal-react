@@ -3,7 +3,7 @@
 /* TextArea.
  *
  * The field anatomy with a multi-line well. React Aria's TextField owns the
- * label, the description and error association and the invalid state; Crystal
+ * label, the description and error association and the invalid state; Prismata
  * owns the material and the motion.
  *
  * Autosize uses `field-sizing: content` instead of measuring the text in a
@@ -82,7 +82,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
           declared, so a server's rejection moves the field exactly as a local
           rule would. Over the limit is this component's own judgement and is
           added to it. */}
-      <FieldShell isInvalid={isInvalid || over} className={cx(styles['shell'], 'cr-field-shell block')}>
+      <FieldShell isInvalid={isInvalid || over} className={cx(styles['shell'], 'pr-field-shell block')}>
         <AriaTextArea
           ref={forwardedRef}
           rows={rows}

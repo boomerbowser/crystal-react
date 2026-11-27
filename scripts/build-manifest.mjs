@@ -6,7 +6,7 @@
  * what it does not do, and which of its peers in other libraries it corresponds
  * to.
  *
- * All of that is in Crystal's catalogue, and a second hand-written description
+ * All of that is in Prismata's catalogue, and a second hand-written description
  * would drift from it (CONTRACT §1). So this reads the catalogue, and takes
  * implementation status from what the package exports instead of from a list
  * maintained by hand.
@@ -25,19 +25,19 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const CANDIDATES = [
-  join(ROOT, 'node_modules/@crystal-ui/core/tokens/catalogue.json'),
-  resolve(ROOT, '../crystal-design-system/design-system/tokens/catalogue.json'),
+  join(ROOT, 'node_modules/@prismata/core/tokens/catalogue.json'),
+  resolve(ROOT, '../prismata-design-system/design-system/tokens/catalogue.json'),
 ];
 const SOURCE = CANDIDATES.find((path) => existsSync(path));
 if (!SOURCE) {
-  console.error('Cannot find the Crystal catalogue. Looked in:\n  ' + CANDIDATES.join('\n  '));
+  console.error('Cannot find the Prismata catalogue. Looked in:\n  ' + CANDIDATES.join('\n  '));
   process.exit(1);
 }
 
 const catalogue = JSON.parse(readFileSync(SOURCE, 'utf8'));
 
 /* The closed vocabulary every catalogue entry's `surface` is drawn from, beside
-   the catalogue it describes. Crystal's build fails closed on an entry whose
+   the catalogue it describes. Prismata's build fails closed on an entry whose
    surface is not in it, so this fails closed too rather than writing an
    unexplained name into the manifest. */
 const SURFACES_SOURCE = SOURCE.replace('catalogue.json', 'surfaces.json');
@@ -80,10 +80,10 @@ for (const barrel of barrels) {
 }
 /* Exports whose name differs from the catalogue id. Status still comes from the
    exports; this table only translates names where the library's vocabulary is
-   better than the catalogue's generic one. `CrystalProvider` is the theme
+   better than the catalogue's generic one. `PrismataProvider` is the theme
    provider, and also exporting `ThemeProvider` would give one thing two names. */
 const NAMED_DIFFERENTLY = {
-  CrystalProvider: 'theme-provider',
+  PrismataProvider: 'theme-provider',
   /* The component is the element; the transition is what it does to it. */
   SharedElement: 'shared-element-transition',
   /* React Aria's name, and the catalogue's since 2.3.0, which removed the
@@ -93,13 +93,13 @@ const NAMED_DIFFERENTLY = {
   Virtualizer: 'virtualizer',
   Abbr: 'abbreviation',
   TextArea: 'textarea',
-  /* The catalogue spells these as one word; Crystal spells them the way React
+  /* The catalogue spells these as one word; Prismata spells them the way React
      and the DOM do. */
   ComboBox: 'combobox',
   DropZone: 'dropzone',
   /* The catalogue lists `title` (the levels with display tracking) and `heading`
      (levels two to six) separately. They are one component with a different
-     default, so one export covers both, as with `CrystalProvider`. */
+     default, so one export covers both, as with `PrismataProvider`. */
   Title: ['title', 'heading'],
 };
 
@@ -114,7 +114,7 @@ const implemented = new Set([...exported].flatMap((name) => {
     .toLowerCase()];
 }));
 
-/* Every recipe and preset Crystal ships, so the scan below matches real names
+/* Every recipe and preset Prismata ships, so the scan below matches real names
    instead of guessing at call syntax. Matching `play('name')` literally would
    miss `play(invalid ? 'field-invalid' : 'field-valid')`. */
 const RECIPE_IDS = new Set(
@@ -254,13 +254,13 @@ const components = catalogue.categories.flatMap((category) =>
     anatomy: component.anatomy,
     states: component.states,
     material: component.material,
-    /* What the component is made of, from Crystal's closed vocabulary, back to
+    /* What the component is made of, from Prismata's closed vocabulary, back to
        front. Each id names a class in `surfaces` below. */
     surface: component.surface ?? [],
     geometry: component.geometry,
     semantics: component.semantics,
     /* The split that tells a consumer what they still have to decide. */
-    crystalOwns: component.crystal,
+    prismataOwns: component.prismata,
     productOwns: component.product,
     equivalentTo: component.parity,
     ...(implemented.has(component.id) ? motionUsed(component.id) : {}),
@@ -309,7 +309,7 @@ const counts = components.reduce((acc, component) => {
 
 const manifest = {
   $description:
-    'Crystal React component manifest. Generated from Crystal\'s catalogue and from this package\'s '
+    'Prismata React component manifest. Generated from Prismata\'s catalogue and from this package\'s '
     + 'source tree, so each status reflects what exists in the source.',
   package: pkg.name,
   version: pkg.version,
@@ -332,8 +332,8 @@ const llms = `# ${pkg.name}
 
 ${pkg.description}
 
-Crystal is Meridian's design system, and this library implements it for React.
-Every value, material and motion recipe comes from \`@crystal-ui/core\`. A
+Prismata is Meridian's design system, and this library implements it for React.
+Every value, material and motion recipe comes from \`@prismata/core\`. A
 hard-coded colour or length in this library is a defect.
 
 ## Status
@@ -345,22 +345,22 @@ Implemented: ${done.map((component) => component.name).join(', ') || 'none yet'}
 
 ## How to use it
 
-Import Crystal's stylesheets once, then this library's, and wrap the application
-or any subtree in \`CrystalProvider\`. The provider scopes the theme to its own
+Import Prismata's stylesheets once, then this library's, and wrap the application
+or any subtree in \`PrismataProvider\`. The provider scopes the theme to its own
 element, so a dark region inside a light page needs no second root.
 
 \`\`\`tsx
-import '@crystal-ui/core/theme';
-import '@crystal-ui/core/css';
+import '@prismata/core/theme';
+import '@prismata/core/css';
 import '${pkg.name}/styles.css';
-import { CrystalProvider, Button } from '${pkg.name}';
+import { PrismataProvider, Button } from '${pkg.name}';
 
-<CrystalProvider palette="prism" mode="light">
+<PrismataProvider palette="prism" mode="light">
   <Button variant="primary">Save</Button>
-</CrystalProvider>
+</PrismataProvider>
 \`\`\`
 
-\`useCrystalTheme\` throws outside a provider, so a component cannot render
+\`usePrismataTheme\` throws outside a provider, so a component cannot render
 without a theme unnoticed.
 
 ## Rules
@@ -373,7 +373,7 @@ without a theme unnoticed.
   never delayed, blurred or replaced by a badge.
 - Resin never contains Resin. A surface above Resin is a Haze content fill.
 - Reduced motion removes spatial movement and keeps state feedback.
-- Nothing moves at rest. Crystal 2.0 has no ambient motion.
+- Nothing moves at rest. Prismata 2.0 has no ambient motion.
 - Text, icons, hit areas and focus rings are never blurred.
 
 ## Materials
@@ -384,22 +384,22 @@ Haze over Mirage.
 
 ## Surfaces
 
-Every component names what it is made of from Crystal's closed vocabulary of
-${surfaces.length} surfaces, and each surface is a class in \`@crystal-ui/core\`. The
+Every component names what it is made of from Prismata's closed vocabulary of
+${surfaces.length} surfaces, and each surface is a class in \`@prismata/core\`. The
 manifest's \`surface\` field lists them for each component, back to front.
 
 ${surfaces.map((surface) => `- \`${surface.id}\`, ${surface.class ?? 'no class'}: ${surface.name}`).join('\n')}
 
 ## Motion
 
-Recipes come from Crystal and are played through Motion for React, driven by each
+Recipes come from Prismata and are played through Motion for React, driven by each
 recipe's own spring. Motion is bound to state, so a change made by keyboard or
 assistive technology animates the same way as one made by pointer.
 
 ## Machine-readable
 
 \`component-manifest.json\` beside this file lists every component with its
-anatomy, states, material, surface, geometry and semantics, the parts Crystal owns
+anatomy, states, material, surface, geometry and semantics, the parts Prismata owns
 and the parts the product owns, the recipes it plays, and the components it
 corresponds to in Mantine, MUI, Ant Design and PrimeReact.
 `;

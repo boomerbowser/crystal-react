@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { only } from '../../../.storybook/environment.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { NavigationTree } from './NavigationTree.js';
 
 const items = [
@@ -43,7 +43,7 @@ const meta = {
           + 'also does not set `aria-current`. It computes `data-current` and '
           + '`data-current-ancestor` for styling only, so this library puts the attribute on the '
           + 'row from React Aria\'s own `isCurrent`.\n\n'
-          + `Crystal owns the rest: Haze rows at the ${crystalTokens['action.minTarget']} destination floor, the current row `
+          + `Prismata owns the rest: Haze rows at the ${prismataTokens['action.minTarget']} destination floor, the current row `
           + 'marked by **label weight** with the soft fill as the second signal, and '
           + '`accordion-in` on a row that arrives because somebody expanded its parent, never '
           + 'on the rows that were there when the page loaded.',

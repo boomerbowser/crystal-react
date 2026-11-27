@@ -63,8 +63,8 @@ export function AnalyticsPanel({
       {...props}
       aria-labelledby={`${id}-title`}
       aria-busy={state === 'loading' || undefined}
-      data-cr-state={state}
-      className={cx('cr-haze inset', styles['panel'], className)}
+      data-pr-state={state}
+      className={cx('pr-haze inset', styles['panel'], className)}
     >
       <div className={cx(styles['top'])}>
         <Heading id={`${id}-title`} className={cx(styles['heading'])}>{title}</Heading>

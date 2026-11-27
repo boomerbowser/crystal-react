@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { ImageCompare } from './ImageCompare.js';
 
 const before = { src: '/before.jpg', alt: 'The façade before cleaning' };
@@ -12,7 +12,7 @@ describe('ImageCompare', () => {
      divider that is only draggable is a control nobody without a pointer can
      use. */
   it('is a real slider with a percentage value', () => {
-    renderWithCrystal(<ImageCompare before={before} after={after} label="Before and after cleaning" />);
+    renderWithPrismata(<ImageCompare before={before} after={after} label="Before and after cleaning" />);
     /* React Aria renders the thumb as a real `input type="range"`, so the value
        is the input's and the browser derives `aria-valuenow` from it. The test
        asserts the text, which is the part a reader hears. */
@@ -27,7 +27,7 @@ describe('ImageCompare', () => {
 
   it('moves with the keyboard', async () => {
     const onChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <ImageCompare before={before} after={after} label="Before and after" onChange={onChange} />,
     );
     const slider = screen.getByRole('slider') as HTMLInputElement;
@@ -40,13 +40,13 @@ describe('ImageCompare', () => {
   /* Two different pictures, so a reader told about one of them has been told
      half the comparison. */
   it('gives both pictures their own description', () => {
-    renderWithCrystal(<ImageCompare before={before} after={after} label="Before and after" />);
+    renderWithPrismata(<ImageCompare before={before} after={after} label="Before and after" />);
     expect(screen.getByAltText('The façade before cleaning')).toBeInTheDocument();
     expect(screen.getByAltText('The façade after cleaning')).toBeInTheDocument();
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ImageCompare before={before} after={after} label="Before and after cleaning" defaultValue={62} />,
     );
     await expectNoAxeViolations(container);

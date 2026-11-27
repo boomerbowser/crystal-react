@@ -37,7 +37,7 @@ export const WordsForScreenReadersOnly: Story = { args: { hideLabel: true } };
  *  places a ring does not, such as inside a line of text or a button. */
 export const Shapes: Story = {
   render: (args) => (
-    <div style={{ display: 'grid', gap: 'var(--cr-spacing-md)' }}>
+    <div style={{ display: 'grid', gap: 'var(--pr-spacing-md)' }}>
       {(['spinner', 'dots', 'bars', 'pulse', 'infinity'] as const).map((variant) => (
         <Loader key={variant} {...only(args)} size="large" variant={variant} label={`Loading (${variant})`} />
       ))}

@@ -30,7 +30,7 @@ export const Default: Story = {};
  *  no direction and signing it "+0.0%" would claim one. */
 export const States: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-spacing-xs)', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-spacing-xs)', alignItems: 'center' }}>
       <DeltaBadge {...only(args)} value={0.042} description="revenue" />
       <DeltaBadge {...only(args)} value={-0.011} description="refunds" />
       <DeltaBadge {...only(args)} value={0} description="open tickets" />
@@ -41,7 +41,7 @@ export const States: Story = {
 /** Whole numbers, for a count rather than a rate. */
 export const Counts: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-spacing-xs)', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-spacing-xs)', alignItems: 'center' }}>
       <DeltaBadge {...only(args)} value={12} format={{}} description="subscribers" />
       <DeltaBadge {...only(args)} value={-3} format={{}} description="subscribers" />
     </div>

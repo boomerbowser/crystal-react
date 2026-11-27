@@ -12,7 +12,7 @@
 .overflowList {
   display: flex;
   align-items: center;
-  gap: var(--cr-overflow-gap, #{$cr-action-gap});
+  gap: var(--pr-overflow-gap, #{$pr-action-gap});
   min-width: 0;
   /* A row that measures its own children must not wrap, or every child fits by
      definition and nothing ever overflows. */

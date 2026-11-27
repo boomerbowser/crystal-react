@@ -1,21 +1,21 @@
 @use '../../styles/tokens' as *;
 
 .summary {
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-sm);
-  border-radius: $cr-shape-content-radius;
-  padding: calc(var(--cr-haze-inset) + var(--cr-block-padding, $cr-spacing-md));
-  color: var(--cr-text);
+  gap: var(--pr-block-gap, $pr-spacing-sm);
+  border-radius: $pr-shape-content-radius;
+  padding: calc(var(--pr-haze-inset) + var(--pr-block-padding, $pr-spacing-md));
+  color: var(--pr-text);
 }
 
 /* The sentence, at reading size. The average and the count are stated together
    at the same weight, because both halves are the claim. */
-.headline { margin: 0; font-weight: 750; font-size: var(--cr-text-subheading-size); }
+.headline { margin: 0; font-weight: 750; font-size: var(--pr-text-subheading-size); }
 
 .stars { display: flex; }
 .bars { inline-size: 100%; }
-.empty { margin: 0; color: var(--cr-muted); }
+.empty { margin: 0; color: var(--pr-muted); }
 
 @media (forced-colors: active) {
   .summary { border: 1px solid CanvasText; }

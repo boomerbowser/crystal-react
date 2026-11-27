@@ -34,7 +34,7 @@ const meta = {
           + 'interaction mode. Rendered as a plain table, none of those keys would work.\n\n'
           + 'Selection is shown by label weight, with no check badge on the row. The checkbox is '
           + 'the control that makes the selection. The row shows that it is selected by being '
-          + 'heavier, as every selected thing in Crystal does. React Aria composes each '
+          + 'heavier, as every selected thing in Prismata does. React Aria composes each '
           + 'checkbox\'s name from its own label plus the row\'s text value, so the label passed '
           + 'in is the verb alone. Passing "Select Gather" would announce as "Select Gather '
           + 'Gather".',

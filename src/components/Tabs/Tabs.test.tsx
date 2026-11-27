@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { Tabs } from './Tabs.js';
 
 const items = [
@@ -11,12 +11,12 @@ const items = [
 
 describe('Tabs', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<Tabs label="Documentation" items={items} />);
+    const { container } = renderWithPrismata(<Tabs label="Documentation" items={items} />);
     await expectNoAxeViolations(container);
   });
 
   it('is a tablist with tabs and one panel', () => {
-    renderWithCrystal(<Tabs label="Documentation" items={items} />);
+    renderWithPrismata(<Tabs label="Documentation" items={items} />);
     expect(screen.getByRole('tablist', { name: 'Documentation' })).toBeInTheDocument();
     expect(screen.getAllByRole('tab')).toHaveLength(3);
     expect(screen.getByRole('tabpanel')).toHaveTextContent('What this is');
@@ -25,7 +25,7 @@ describe('Tabs', () => {
   /* A visible label names the list by reference, so what is seen and what is
      announced cannot drift apart. */
   it('names the list by reference when the label is shown', () => {
-    renderWithCrystal(<Tabs label="Documentation" items={items} labelVisible />);
+    renderWithPrismata(<Tabs label="Documentation" items={items} labelVisible />);
     const list = screen.getByRole('tablist', { name: 'Documentation' });
     expect(list.getAttribute('aria-label')).toBeNull();
     expect(list.getAttribute('aria-labelledby')).toBeTruthy();
@@ -34,14 +34,14 @@ describe('Tabs', () => {
   /* An aria-label can only carry a string. A rich label would be dropped
      silently and leave the list unnamed, so it is shown instead of hidden. */
   it('shows a rich label rather than dropping it', () => {
-    renderWithCrystal(<Tabs label={<em>Docs</em>} items={items} />);
+    renderWithPrismata(<Tabs label={<em>Docs</em>} items={items} />);
     expect(screen.getByRole('tablist', { name: 'Docs' })).toBeInTheDocument();
     expect(screen.getByText('Docs').tagName).toBe('EM');
   });
 
   it('moves between tabs with the arrow keys and Home and End', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Tabs label="Documentation" items={items} />);
+    renderWithPrismata(<Tabs label="Documentation" items={items} />);
     await user.tab();
     expect(screen.getByRole('tab', { name: 'Overview' })).toHaveFocus();
     await user.keyboard('{ArrowRight}');
@@ -54,7 +54,7 @@ describe('Tabs', () => {
 
   it('shows the selected tab’s panel and only that one', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Tabs label="Documentation" items={items} />);
+    renderWithPrismata(<Tabs label="Documentation" items={items} />);
     await user.click(screen.getByRole('tab', { name: 'API' }));
     expect(screen.getByRole('tab', { name: 'API' })).toHaveAttribute('aria-selected', 'true');
     const panels = screen.getAllByRole('tabpanel');
@@ -69,7 +69,7 @@ describe('Tabs', () => {
      none of them afterwards. */
   it('unmounts the panel that is not shown, which is what makes arrival motion arrive', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Tabs label="Documentation" items={items} />);
+    renderWithPrismata(<Tabs label="Documentation" items={items} />);
     expect(screen.queryByText('Every prop')).toBeNull();
     await user.click(screen.getByRole('tab', { name: 'API' }));
     expect(screen.getByText('Every prop')).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe('Tabs', () => {
 
   it('associates each tab with its panel', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Tabs label="Documentation" items={items} />);
+    renderWithPrismata(<Tabs label="Documentation" items={items} />);
     await user.click(screen.getByRole('tab', { name: 'Usage' }));
     const tab = screen.getByRole('tab', { name: 'Usage' });
     const panel = screen.getByRole('tabpanel');
@@ -88,7 +88,7 @@ describe('Tabs', () => {
 
   it('skips a disabled tab', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(
+    renderWithPrismata(
       <Tabs
         label="Documentation"
         items={[items[0]!, { ...items[1]!, isDisabled: true }, items[2]!]}
@@ -103,14 +103,14 @@ describe('Tabs', () => {
      coerced `false` flattens a prop whose defined-ness is the mode switch into a
      value, a defect that has affected ten field components in this library. */
   it('leaves a tab enabled when the item says nothing about it', () => {
-    renderWithCrystal(<Tabs label="Documentation" items={items} />);
+    renderWithPrismata(<Tabs label="Documentation" items={items} />);
     for (const tab of screen.getAllByRole('tab')) {
       expect(tab.getAttribute('aria-disabled')).toBeNull();
     }
   });
 
   it('reports its orientation', () => {
-    renderWithCrystal(<Tabs label="Documentation" items={items} orientation="vertical" />);
+    renderWithPrismata(<Tabs label="Documentation" items={items} orientation="vertical" />);
     expect(screen.getByRole('tablist')).toHaveAttribute('aria-orientation', 'vertical');
   });
 
@@ -119,7 +119,7 @@ describe('Tabs', () => {
      for one. */
   it('never marks selection with a check', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Tabs label="Documentation" items={items} />);
+    renderWithPrismata(<Tabs label="Documentation" items={items} />);
     await user.click(screen.getByRole('tab', { name: 'Usage' }));
     for (const tab of screen.getAllByRole('tab')) {
       expect(tab.querySelector('svg')).toBeNull();

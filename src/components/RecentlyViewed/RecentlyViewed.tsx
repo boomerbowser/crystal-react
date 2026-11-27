@@ -9,10 +9,10 @@
  * `overflow` set does not scroll. It makes the page wide, and a reader on a
  * phone finds a horizontal scrollbar under the whole document. The scrolling
  * belongs to a `ScrollArea`, which also owns the edge fade,
- * `overscroll-behavior: contain`, and Crystal's rule that a scrollbar is tinted
+ * `overscroll-behavior: contain`, and Prismata's rule that a scrollbar is tinted
  * like the material it scrolls.
  *
- * The scrollbar is Resin. Crystal's scroll contract puts Frost on panels and
+ * The scrollbar is Resin. Prismata's scroll contract puts Frost on panels and
  * reading surfaces, and Resin on control planes and compact or horizontal
  * scrollers. This strip is horizontal.
  *
@@ -58,7 +58,7 @@ export const RecentlyViewed = forwardRef<HTMLElement, RecentlyViewedProps>(
     return (
       <section {...props} ref={ref} aria-label={label} className={cx(styles['strip'], className)}>
         {heading ? <h2 className={styles['heading']}>{heading}</h2> : null}
-        {/* Resin, because Crystal's scroll contract gives Resin to compact and
+        {/* Resin, because Prismata's scroll contract gives Resin to compact and
             horizontal scrollers and Frost to panels and reading surfaces. */}
         <ScrollArea axis="x" variant="resin" className={cx(styles['scroller'])}>
           <ul className={styles['row']}>

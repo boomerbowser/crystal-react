@@ -10,7 +10,7 @@
  * `actions` is required, and the type says so.
  *
  * It is not an alert, because nothing failed. A missing thing is a fact about
- * the address, and `Result`'s `not-found` outcome is the vocabulary Crystal
+ * the address, and `Result`'s `not-found` outcome is the vocabulary Prismata
  * already has for it. Announcing it assertively would interrupt whatever the
  * reader was being told for news that is not urgent.
  */

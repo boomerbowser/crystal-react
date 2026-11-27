@@ -13,11 +13,11 @@
  *
  * Progress is a number as well as a bar. A bar alone says "something is
  * happening". The number says how much, which is what somebody waiting wants,
- * and a screen reader can read only the number. Crystal renders progress it is
+ * and a screen reader can read only the number. Prismata renders progress it is
  * told about and computes none, because an upload's state belongs to whatever is
  * doing the uploading.
  *
- * A drop surface has a dashed edge, the one place Crystal uses one. It marks the
+ * A drop surface has a dashed edge, the one place Prismata uses one. It marks the
  * boundary as a target and not a surface.
  */
 import { useId, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
@@ -44,7 +44,7 @@ const CrossIcon = (
   </svg>
 );
 
-/** What the product knows about one file. Crystal renders it and computes none of it. */
+/** What the product knows about one file. Prismata renders it and computes none of it. */
 export interface UploadedFile {
   id: string;
   name: string;
@@ -213,7 +213,7 @@ function UploadedFiles({ files, onRemove }: {
                     >
                       <div
                         className={cx(styles['progressFill'])}
-                        style={{ '--cr-progress': `${file.progress * 100}%` } as CSSProperties}
+                        style={{ '--pr-progress': `${file.progress * 100}%` } as CSSProperties}
                       />
                     </MovingProgress>
                     <span className={cx(styles['fileSize'])}>{Math.round(file.progress * 100)}%</span>
@@ -225,7 +225,7 @@ function UploadedFiles({ files, onRemove }: {
                     type="button"
                     aria-label={`Remove ${file.name}`}
                     onClick={() => onRemove(file.id)}
-                    className={cx(styles['remove'], 'cr-bare')}
+                    className={cx(styles['remove'], 'pr-bare')}
                   >
                     {CrossIcon}
                   </button>

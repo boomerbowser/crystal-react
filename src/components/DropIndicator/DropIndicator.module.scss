@@ -19,10 +19,10 @@
   content: '';
   position: absolute;
   inset-inline: 0;
-  inset-block-start: calc(-1 * $cr-spacing-2xs / 2);
-  block-size: $cr-indicator-line-width;
-  border-radius: $cr-indicator-line-width;
-  background: var(--cr-primary);
+  inset-block-start: calc(-1 * $pr-spacing-2xs / 2);
+  block-size: $pr-indicator-line-width;
+  border-radius: $pr-indicator-line-width;
+  background: var(--pr-primary);
   opacity: 0;
 }
 
@@ -31,7 +31,7 @@
 /* An invalid target is shown, not hidden. Otherwise a reader who cannot see the
    indicator appear has no way to tell "not here" from "not yet". */
 .invalid::before {
-  background: var(--cr-danger-ink);
+  background: var(--pr-danger-ink);
   opacity: 1;
 }
 

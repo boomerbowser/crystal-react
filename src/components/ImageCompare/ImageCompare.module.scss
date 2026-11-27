@@ -16,9 +16,9 @@
   position: relative;
   display: block;
   overflow: hidden;
-  border-radius: var(--cr-radius);
+  border-radius: var(--pr-radius);
   isolation: isolate;
-  background: var(--cr-surface-alt);
+  background: var(--pr-surface-alt);
 }
 
 .image {
@@ -60,7 +60,7 @@
   inset-inline-start: var(--compare-at, 50%);
   inline-size: 2px;
   translate: -1px 0;
-  background: var(--cr-rim);
+  background: var(--pr-rim);
   pointer-events: none;
 }
 
@@ -72,24 +72,24 @@
   /* The inline-start is React Aria's, written inline from the real value, so
      the handle and the clip cannot disagree about where the divider is. */
   box-sizing: border-box;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
-  border-radius: $cr-action-radius;
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
+  border-radius: $pr-action-radius;
   cursor: ew-resize;
 }
 
 .thumb[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 @media (forced-colors: active) {
   .position { background: CanvasText; }
 }
 
-/* The handle is Crystal's Resin plane at the pill, worn as `.cr-resin` (the
-   catalogue's `resin` surface, D-23), filling the thumb. `.cr-resin` brings its
+/* The handle is Prismata's Resin plane at the pill, worn as `.pr-resin` (the
+   catalogue's `resin` surface, D-23), filling the thumb. `.pr-resin` brings its
    two optical layers, the sheen and the inner highlight, and its opaque,
    reduced-transparency and forced-colours routes. */
 .grip {

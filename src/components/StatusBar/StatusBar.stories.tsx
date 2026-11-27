@@ -16,7 +16,7 @@ const meta = {
           + 'So there are two regions and the message is in exactly one at a time. An '
           + 'escalated message arrives as new content in an assertive region, which every '
           + 'screen reader agrees to interrupt for.\n\n'
-          + 'Stone comes from core\'s `.cr-stone`. The feather is on an isolated `::before` '
+          + 'Stone comes from core\'s `.pr-stone`. The feather is on an isolated `::before` '
           + 'beneath the content rather than on the element, which is what "text stays crisp" '
           + 'means.',
       },

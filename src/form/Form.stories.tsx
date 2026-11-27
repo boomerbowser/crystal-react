@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import * as v from 'valibot';
 import { useState } from 'react';
 import { Form } from './Form.js';
-import { useCrystalForm } from './useCrystalForm.js';
-import type { CrystalFormProps } from './useCrystalForm.js';
+import { usePrismataForm } from './usePrismataForm.js';
+import type { PrismataFormProps } from './usePrismataForm.js';
 import type { StandardSchemaV1 } from './standard-schema.js';
 import { TextInput } from '../components/TextInput/TextInput.js';
 import { NumberInput } from '../components/NumberInput/NumberInput.js';
@@ -12,18 +12,18 @@ import { Button } from '../components/Button/Button.js';
 import { Group } from '../components/Stack/Stack.js';
 
 const meta = {
-  title: 'Forms/useCrystalForm',
+  title: 'Forms/usePrismataForm',
   /* Without this, docgen has nothing to read and Storybook generates no
      controls at all. This file shows several components together. The one named
      here is its subject, and the others are the context it is normally seen in. */
   component: Form,
   args: {
     /* Placeholders. Every story in this file builds its own form with
-       `useCrystalForm`, because the subject is a form's state: a schema, its
+       `usePrismataForm`, because the subject is a form's state: a schema, its
        errors and what it does on submit. These exist only so the required props
        are satisfied and docgen has a component to read, which generates the
        props table. */
-    form: undefined as unknown as CrystalFormProps,
+    form: undefined as unknown as PrismataFormProps,
     children: null,
   },
   parameters: {
@@ -65,7 +65,7 @@ export const Signing: Story = {
   render: function Signing() {
     const [saved, setSaved] = useState<unknown>(null);
 
-    const form = useCrystalForm({
+    const form = usePrismataForm({
       schema: Signup as unknown as StandardSchemaV1,
       /* The shape TanStack Query's mutation already has, and a `fetch` wrapper
          reaches in four lines. Neither is a dependency. */
@@ -88,7 +88,7 @@ export const Signing: Story = {
     });
 
     return (
-      <Form form={form.formProps} formErrors={form.formErrors} style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>
+      <Form form={form.formProps} formErrors={form.formErrors} style={{ maxWidth: '420px' /* prismata-allow-literal: story column */ }}>
         <TextInput label="Email" name="email" isRequired description="Try one ending @taken.com" />
         <NumberInput label="Age" name="age" isRequired />
         <Select label="Plan" name="plan" options={PLANS} isRequired />

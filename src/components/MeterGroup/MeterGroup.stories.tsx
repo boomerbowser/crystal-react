@@ -13,7 +13,7 @@ const meta = {
           + 'would have to pick which one it meant.\n\n'
           + '"Meaning never rests on colour alone", so the legend is on by default: it is where '
           + "each segment's name is written beside its swatch, and the same name is the "
-          + "segment's own accessible name. The tints are Crystal's chart series scale, not a "
+          + "segment's own accessible name. The tints are Prismata's chart series scale, not a "
           + 'second scale invented here.\n\n'
           + '"Segments meet without gaps": one track with `overflow: hidden`, so the radius '
           + 'belongs to the track and each segment ends where the next begins.',

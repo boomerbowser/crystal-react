@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import type { ChartFrame } from '../../charts/types.js';
 import { ChartSurface } from './ChartSurface.js';
 
@@ -14,7 +14,7 @@ describe('ChartSurface', () => {
      equivalent of its data, so the chart is never the only representation."
      `table` is required, and this test checks that it is rendered. */
   it('renders the data as a table beside the picture', () => {
-    renderWithCrystal(<ChartSurface label="Revenue" table={table} />);
+    renderWithPrismata(<ChartSurface label="Revenue" table={table} />);
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(screen.getByRole('columnheader', { name: 'Revenue' })).toBeInTheDocument();
     expect(screen.getByRole('rowheader', { name: 'February' })).toBeInTheDocument();
@@ -24,19 +24,19 @@ describe('ChartSurface', () => {
   /* A gap is not a zero. Printing `0` for a month nobody measured would tell
      the reader a value nobody knows. */
   it('shows a gap as a gap, not as zero', () => {
-    renderWithCrystal(<ChartSurface label="Revenue" table={table} />);
+    renderWithPrismata(<ChartSurface label="Revenue" table={table} />);
     expect(screen.getByRole('cell', { name: '—' })).toBeInTheDocument();
   });
 
   it('names the figure from its caption', () => {
-    renderWithCrystal(<ChartSurface label="Revenue by month" table={table} />);
+    renderWithPrismata(<ChartSurface label="Revenue by month" table={table} />);
     expect(screen.getByRole('figure', { name: 'Revenue by month' })).toBeInTheDocument();
   });
 
   /* `group`, not `img`. An `img` is a leaf, so everything inside it, including
      the marks a keyboard moves between, stops being reachable. */
   it('gives the plot a group role so its marks stay reachable', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <ChartSurface label="Revenue" table={table}>
         {() => <g data-testid="mark" tabIndex={0} />}
       </ChartSurface>,
@@ -46,7 +46,7 @@ describe('ChartSurface', () => {
   });
 
   it('draws nothing, and names nothing, when there is nothing to draw', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ChartSurface label="Revenue" table={table} empty emptyLabel="No revenue recorded">
         {() => <g data-testid="mark" />}
       </ChartSurface>,
@@ -61,7 +61,7 @@ describe('ChartSurface', () => {
      measurement would render nothing in either. */
   it('draws at a declared size before it has been measured', () => {
     let seen: ChartFrame | null = null;
-    renderWithCrystal(
+    renderWithPrismata(
       <ChartSurface label="Revenue" table={table} height={180}>
         {(frame) => { seen = frame; return null; }}
       </ChartSurface>,
@@ -73,7 +73,7 @@ describe('ChartSurface', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<ChartSurface label="Revenue" table={table} />);
+    const { container } = renderWithPrismata(<ChartSurface label="Revenue" table={table} />);
     await expectNoAxeViolations(container);
   });
 });

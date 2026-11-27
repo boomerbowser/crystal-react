@@ -9,13 +9,13 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-.row { display: flex; align-items: center; gap: var(--cr-space); }
+.row { display: flex; align-items: center; gap: var(--pr-space); }
 
 .dial {
-  /* The dial wears Crystal's `.cr-resin.flat` (2.7.0): the Resin plane, its rim,
-     blur and float shadow, without the sheen, with Crystal's fallbacks. */
-  inline-size: calc(#{$cr-action-min-target} * 2);
-  block-size: calc(#{$cr-action-min-target} * 2);
+  /* The dial wears Prismata's `.pr-resin.flat` (2.7.0): the Resin plane, its rim,
+     blur and float shadow, without the sheen, with Prismata's fallbacks. */
+  inline-size: calc(#{$pr-action-min-target} * 2);
+  block-size: calc(#{$pr-action-min-target} * 2);
   border-radius: 50%;
   touch-action: none;
   cursor: grab;
@@ -30,14 +30,14 @@
   /* A conic gradient is the arc: one paint rather than an SVG path recalculated
      on every frame. */
   background: conic-gradient(
-    from var(--cr-arc-from, 0deg),
-    var(--cr-primary) var(--cr-arc, 0deg),
-    transparent var(--cr-arc, 0deg)
+    from var(--pr-arc-from, 0deg),
+    var(--pr-primary) var(--pr-arc, 0deg),
+    transparent var(--pr-arc, 0deg)
   );
   /* The mask turns the filled circle into a ring. `#000` here is coverage. Only
      a mask's alpha is used, and none of it is visible. */
-  mask: radial-gradient(farthest-side, transparent calc(100% - #{$cr-slider-track-height}), #000 0);  /* crystal-allow-literal: mask coverage, not a colour */
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - #{$cr-slider-track-height}), #000 0);  /* crystal-allow-literal: mask coverage, not a colour */
+  mask: radial-gradient(farthest-side, transparent calc(100% - #{$pr-slider-track-height}), #000 0);  /* prismata-allow-literal: mask coverage, not a colour */
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - #{$pr-slider-track-height}), #000 0);  /* prismata-allow-literal: mask coverage, not a colour */
 }
 
 /* The thumb rides the rim. Its hit area is the whole dial, which is why the dial
@@ -51,32 +51,32 @@
 .orbit {
   position: absolute;
   inset: 0;
-  rotate: var(--cr-angle, 0deg);
+  rotate: var(--pr-angle, 0deg);
 }
 
 .thumb {
   position: absolute;
-  inset-block-start: calc(#{$cr-slider-track-height} / 2);
+  inset-block-start: calc(#{$pr-slider-track-height} / 2);
   inset-inline-start: 50%;
-  inline-size: $cr-slider-thumb-size;
-  block-size: $cr-slider-thumb-size;
+  inline-size: $pr-slider-thumb-size;
+  block-size: $pr-slider-thumb-size;
   translate: -50% -25%;
   border-radius: 50%;
-  border: 1px solid var(--cr-rim);
-  background: var(--cr-surface);
-  box-shadow: var(--cr-shadow-content);
+  border: 1px solid var(--pr-rim);
+  background: var(--pr-surface);
+  box-shadow: var(--pr-shadow-content);
 }
 
 .dial[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
-.value { font-variant-numeric: tabular-nums; font-weight: 700; font-size: var(--cr-text-heading-size); }
-.unit { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+.value { font-variant-numeric: tabular-nums; font-weight: 700; font-size: var(--pr-text-heading-size); }
+.unit { color: var(--pr-muted); font-size: var(--pr-text-caption-size); }
 
-.field[data-disabled] { opacity: $cr-action-disabled-opacity; }
+.field[data-disabled] { opacity: $pr-action-disabled-opacity; }
 .field[data-disabled] .dial { cursor: not-allowed; }
 
 @media (forced-colors: active) {

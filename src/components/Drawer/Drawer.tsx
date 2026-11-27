@@ -24,7 +24,7 @@
  *
  * ## Which way it comes in
  *
- * Crystal authors `drawer-in` once, from the right, with a physical
+ * Prismata authors `drawer-in` once, from the right, with a physical
  * `translateX(105%)`. That is the inline-end edge of a left-to-right page and
  * wrong everywhere else, and CSS cannot mirror a transform the way it mirrors
  * `padding-inline-start`. `useMotion`'s `reorient` points the authored movement
@@ -159,7 +159,7 @@ function ModalDrawer({
      uses `useMotion` and not `usePreset`. */
   const [scope, play] = useMotion({ reorient });
   /* The scrim is Mirage, and Mirage has a wash: the catalogue's `mirage` and
-     `mirage-out`, computed by Crystal's preset module and not a hand-written
+     `mirage-out`, computed by Prismata's preset module and not a hand-written
      fade. */
   const wash = usePresetMotion('mirage', 'mirage-out', { active: props.isOpen === true });
 
@@ -178,7 +178,7 @@ function ModalDrawer({
             <AriaDialog
               ref={scope as never}
               aria-labelledby={titleId}
-              className={cx('cr-frost sheet flat', styles['panel'], styles[placement], className)}
+              className={cx('pr-frost sheet flat', styles['panel'], styles[placement], className)}
             >
               {/* The render prop supplies `close`. With children passed directly,
                   the close control cannot reach the overlay's state, so it
@@ -223,7 +223,7 @@ function InlineDrawer({
   isOpen, onOpenChange,
 }: PanelProps & { isOpen: boolean; onOpenChange?: (isOpen: boolean) => void }): React.JSX.Element | null {
   /* Rendered only while open, so mounting is the arrival. The tree does the
-     same, for the same reason: nothing in Crystal moves at rest, and a panel
+     same, for the same reason: nothing in Prismata moves at rest, and a panel
      that is already there must not sweep itself in. */
   /* Kept for its exit: `AnimatePresence` holds the panel while it plays
      `drawer-out`, which `PresenceExit` inside it starts. */
@@ -259,7 +259,7 @@ function InlinePanel({
     <aside
       ref={scope as never}
       aria-labelledby={titleId}
-      className={cx('cr-frost sheet flat', styles['panel'], styles['inline'], styles[placement], className)}
+      className={cx('pr-frost sheet flat', styles['panel'], styles['inline'], styles[placement], className)}
     >
       <Sweep play={play} />
       <PresenceExit play={play} recipe="drawer-out" />

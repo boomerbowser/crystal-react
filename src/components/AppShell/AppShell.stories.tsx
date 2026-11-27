@@ -17,7 +17,7 @@ const meta = {
         component:
           'The material assignment of a whole view, in one place: Plastic underneath, Frost for '
           + 'the supporting panels, Resin for the floating destination group. That ordering is '
-          + 'Crystal\'s hierarchy at the largest scale. A Resin sidebar with a Frost dock inverts it.\n\n'
+          + 'Prismata\'s hierarchy at the largest scale. A Resin sidebar with a Frost dock inverts it.\n\n'
           + 'The shell also owns the landmarks, with one main per view, so the regions are props '
           + 'and not children a caller arranges. Collapsing the sidebar removes it from the '
           + 'accessibility tree too. A sidebar that is visually gone but still focusable sends a '
@@ -47,9 +47,9 @@ export const Shell: Story = {
           />
         )}
         sidebar={(
-          <Stack gap="2xs" style={{ padding: 'var(--cr-space)' }}>
+          <Stack gap="2xs" style={{ padding: 'var(--pr-space)' }}>
             {['Overview', 'Materials', 'Components', 'Catalogue'].map((label) => (
-              <a key={label} href={`#${label}`} style={{ padding: 'var(--cr-spacing-sm)' }}>{label}</a>
+              <a key={label} href={`#${label}`} style={{ padding: 'var(--pr-spacing-sm)' }}>{label}</a>
             ))}
           </Stack>
         )}
@@ -76,7 +76,7 @@ export const Shell: Story = {
  *  The arrow keys move it, because pointer dragging is never the only route. */
 export const Resizing: Story = {
   render: () => (
-    <div style={{ height: '320px' /* crystal-allow-literal: story box, so the split has somewhere to be */ }}>
+    <div style={{ height: '320px' /* prismata-allow-literal: story box, so the split has somewhere to be */ }}>
       <Resizable
         aria-label="Resize the panel"
         defaultSize={260}

@@ -15,11 +15,11 @@
 
 /* Centring is the common case but not the only one (a drawer's scrim holds its
    panel against an edge), so it is a class the component opts into. */
-.centred { display: grid; place-items: center; padding: var(--cr-space); }
+.centred { display: grid; place-items: center; padding: var(--pr-space); }
 
-/* The element wears Crystal's `.cr-mirage`. Without the filter, in opaque mode
-   (Crystal 2.7.0) and under reduced transparency, the wash has to carry the
-   separation alone, and Crystal gives it the heavier fallback fill. Forced
+/* The element wears Prismata's `.pr-mirage`. Without the filter, in opaque mode
+   (Prismata 2.7.0) and under reduced transparency, the wash has to carry the
+   separation alone, and Prismata gives it the heavier fallback fill. Forced
    colours draw the system Canvas. */
 @media (forced-colors: active) {
   .scrim { background: Canvas; }

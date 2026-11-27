@@ -5,7 +5,7 @@
  * surface gets; the value is the palette's action colour, because a gauge is a
  * reading of something rather than one of several series.
  *
- * The status colours are Crystal's feedback tokens, unchanged, and they are never
+ * The status colours are Prismata's feedback tokens, unchanged, and they are never
  * the only signal: the band's name is beside the number and inside the meter's
  * own text.
  */
@@ -14,7 +14,7 @@
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   inline-size: var(--gauge-size);
 }
 
@@ -31,9 +31,9 @@
   block-size: 100%;
 }
 
-.track { fill: var(--cr-content-fill); }
+.track { fill: var(--pr-content-fill); }
 
-.value { fill: var(--cr-primary); }
+.value { fill: var(--pr-primary); }
 
 .reading {
   position: absolute;
@@ -43,31 +43,31 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 .number {
-  font-size: var(--cr-text-title-size);
+  font-size: var(--pr-text-title-size);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
 }
 
 .status {
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
 }
 
 .caption {
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
   text-align: center;
 }
 
-.gauge[data-status='success'] .value { fill: var(--cr-success-ink); }
-.gauge[data-status='attention'] .value { fill: var(--cr-attention-ink); }
-.gauge[data-status='danger'] .value { fill: var(--cr-danger-ink); }
-.gauge[data-status='info'] .value { fill: var(--cr-info-ink); }
+.gauge[data-status='success'] .value { fill: var(--pr-success-ink); }
+.gauge[data-status='attention'] .value { fill: var(--pr-attention-ink); }
+.gauge[data-status='danger'] .value { fill: var(--pr-danger-ink); }
+.gauge[data-status='info'] .value { fill: var(--pr-info-ink); }
 
 @media (forced-colors: active) {
   .track { fill: Canvas; stroke: CanvasText; stroke-width: 1px; }

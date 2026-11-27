@@ -3,7 +3,7 @@
 /* Dialog.
  *
  * React Aria's Modal and Dialog own focus containment, the return of focus on
- * close, Escape handling, scroll locking and `aria-modal`. Crystal owns the
+ * close, Escape handling, scroll locking and `aria-modal`. Prismata owns the
  * materials and the movement.
  *
  * The surface is Haze, not Resin. Resin is the floating control plane. A dialog
@@ -98,7 +98,7 @@ export function Dialog({ title, children, actions, className, role = 'dialog', .
             <MotionDialog
               role={role}
               aria-labelledby={titleId}
-              className={cx(styles['dialog'], 'cr-dialog', className)}
+              className={cx(styles['dialog'], 'pr-dialog', className)}
               {...dismissal}
             >
               <Heading slot="title" id={titleId} className={cx(styles['title'])}>
@@ -107,7 +107,7 @@ export function Dialog({ title, children, actions, className, role = 'dialog', .
               {/* A dialog is a reading surface, so its scrollbar is the Frost one.
                   It is on the body and not the surface, because the surface
                   carries the material. */}
-              <ScrollArea variant="frost" className={cx('cr-dialog-body', styles['body'])}>
+              <ScrollArea variant="frost" className={cx('pr-dialog-body', styles['body'])}>
                 {/* A dialog is Haze, so anything opened from inside it opens on
                     top of Haze and recesses instead of floating. Resin never
                     contains Resin. The DOM cannot express this, because an

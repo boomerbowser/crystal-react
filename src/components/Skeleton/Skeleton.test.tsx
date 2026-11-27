@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { Skeleton, SkeletonBox } from './Skeleton.js';
 
 const placeholder = (
@@ -15,7 +15,7 @@ describe('Skeleton', () => {
   /* "aria-hidden … must not be read as content." A screen reader meeting three
      placeholder lines would be read three paragraphs of nothing. */
   it('keeps the shapes out of the accessibility tree', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Skeleton loading placeholder={placeholder}>Real content</Skeleton>,
     );
     const shapes = container.querySelector('[aria-hidden="true"]');
@@ -26,7 +26,7 @@ describe('Skeleton', () => {
   /* One live region for the whole placeholder, so twelve lines are not
      announced twelve times. */
   it('announces what is loading exactly once', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Skeleton loading placeholder={placeholder} label="Loading invoices" />,
     );
     const said = screen.getAllByRole('status');
@@ -38,7 +38,7 @@ describe('Skeleton', () => {
      has something to play on. A skeleton swapped out by its caller has already
      unmounted when the data arrives. */
   it('shows the real content in the same place once it arrives', () => {
-    const { rerender } = renderWithCrystal(
+    const { rerender } = renderWithPrismata(
       <Skeleton loading placeholder={placeholder}>Real content</Skeleton>,
     );
     expect(screen.queryByText('Real content')).toBeNull();
@@ -48,7 +48,7 @@ describe('Skeleton', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Skeleton loading placeholder={placeholder} label="Loading invoices" />,
     );
     await expectNoAxeViolations(container);

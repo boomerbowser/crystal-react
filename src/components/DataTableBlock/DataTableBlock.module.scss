@@ -5,7 +5,7 @@
    that painted a pad behind a table would put the table two materials deep. */
 .block {
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-md);
+  gap: var(--pr-block-gap, $pr-spacing-md);
   min-inline-size: 0;
 }
 
@@ -13,17 +13,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   flex-wrap: wrap;
   /* The toolbar swaps with the filters when a selection starts. Holding the row's
      height keeps the table from jumping under the pointer that just selected. */
-  min-block-size: $cr-action-min-target;
+  min-block-size: $pr-action-min-target;
 }
 
 .heading { margin: 0; }
-.filters, .toolbar { display: flex; align-items: center; gap: $cr-spacing-xs; flex-wrap: wrap; }
+.filters, .toolbar { display: flex; align-items: center; gap: $pr-spacing-xs; flex-wrap: wrap; }
 
 /* Selection is label weight, here as on the rows the count describes. */
-.count { font-weight: 800; padding-inline: $cr-spacing-xs; }
+.count { font-weight: 800; padding-inline: $pr-spacing-xs; }
 
 .pages { justify-self: center; }

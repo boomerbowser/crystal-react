@@ -16,10 +16,10 @@
  * every screen reader agrees to interrupt for. The other region is emptied in
  * the same render, so nothing is said twice.
  *
- * Stone comes from core. `.cr-stone` puts the feather on an isolated `::before`
+ * Stone comes from core. `.pr-stone` puts the feather on an isolated `::before`
  * beneath the content rather than on the element, which is what "text stays
  * crisp" means: a soft backing under a crisp label. The recipe belongs to
- * Crystal, so this wears Crystal's class instead of reimplementing it.
+ * Prismata, so this wears Prismata's class instead of reimplementing it.
  */
 import { type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
@@ -47,7 +47,7 @@ export function StatusBar({
     <div
       {...props}
       aria-busy={state === 'busy' || undefined}
-      className={cx(styles['bar'], 'cr-stone', className)}
+      className={cx(styles['bar'], 'pr-stone', className)}
     >
       {/* Two regions, one message. Politeness is bound when a live region is
           inserted, so an escalation has to be new content in the assertive one

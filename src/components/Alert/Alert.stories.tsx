@@ -19,7 +19,7 @@ const meta = {
           + 'The semantic pair goes on the symbol well and nowhere else: the panel stays Haze '
           + 'and the message stays ordinary text. A danger-coloured panel makes the message '
           + 'decoration on a coloured ground, and a danger-coloured perimeter is the shape '
-          + 'Crystal uses for focus.\n\n'
+          + 'Prismata uses for focus.\n\n'
           + 'The dismiss control is named for what it dismisses. Three alerts otherwise give a '
           + 'reader three identical buttons called "Close".',
       },
@@ -70,9 +70,9 @@ export const Dismissible: Story = {
     return (
       <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
         <Alert key={round} {...only(args)} returnFocusTo={back} />
-        {/* A native button with Crystal's class, because Storybook's source
+        {/* A native button with Prismata's class, because Storybook's source
             panel warns about a `ref` on a forwardRef component in a story. */}
-        <button ref={back} type="button" className="cr-button" onClick={() => { setRound((n) => n + 1); }}>Show the alert again</button>
+        <button ref={back} type="button" className="pr-button" onClick={() => { setRound((n) => n + 1); }}>Show the alert again</button>
       </div>
     );
   },

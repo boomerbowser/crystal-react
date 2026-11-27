@@ -11,27 +11,27 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-.row { display: flex; align-items: center; gap: $cr-spacing-sm; }
+.row { display: flex; align-items: center; gap: $pr-spacing-sm; }
 .symbols { display: flex; }
 
 .symbol {
   display: flex;
   align-items: center;
   justify-content: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
-  color: var(--cr-edge);
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
+  color: var(--pr-edge);
   cursor: pointer;
 }
 
-.symbol svg { inline-size: $cr-icon-action; block-size: $cr-icon-action; fill: currentColor; stroke: none; }
+.symbol svg { inline-size: $pr-icon-action; block-size: $pr-icon-action; fill: currentColor; stroke: none; }
 
-.symbol[data-selected], .filled { color: var(--cr-primary); }
+.symbol[data-selected], .filled { color: var(--pr-primary); }
 
 .symbol[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(-1 * #{$cr-focus-core-offset});
-  border-radius: $cr-action-radius;
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(-1 * #{$pr-focus-core-offset});
+  border-radius: $pr-action-radius;
 }
 
 /* A fractional symbol is one glyph clipped. Overlaying two glyphs doubles the
@@ -41,16 +41,16 @@
   position: absolute;
   inset-block: 0;
   inset-inline-start: 0;
-  inline-size: var(--cr-fraction, 0%);
+  inline-size: var(--pr-fraction, 0%);
   overflow: hidden;
-  color: var(--cr-primary);
+  color: var(--pr-primary);
 }
 
 .value { font-variant-numeric: tabular-nums; font-weight: 700; }
 
 .readonly .symbol { inline-size: auto; block-size: auto; cursor: default; }
 
-.field[data-disabled] { opacity: $cr-action-disabled-opacity; }
+.field[data-disabled] { opacity: $pr-action-disabled-opacity; }
 
 @media (forced-colors: active) {
   .symbol { color: CanvasText; }

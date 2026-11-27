@@ -21,25 +21,25 @@
  * It takes `emptySelection` and says what to do, which is what `EmptyState` is
  * for.
  *
- * The breakpoint is Crystal's `md`, read through `useMediaQuery` instead of a
+ * The breakpoint is Prismata's `md`, read through `useMediaQuery` instead of a
  * `ResizeObserver`, because "the layout breakpoint" is a property of the display
  * and not of this element. Two master-detail views on one page collapse
  * together, and a product's own CSS at the same breakpoint stays in step.
  */
 import { useEffect, useMemo, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { useMediaQuery } from '../../theme/useMediaQuery.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { cx } from '../../styles/cx.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 import { useChangeMotion } from '../../motion/useChangeMotion.js';
 import styles from './MasterDetail.module.scss';
 
-/* Crystal's `md`, taken from the generated token export instead of retyped.
+/* Prismata's `md`, taken from the generated token export instead of retyped.
    The layout and the focus rule are driven by this one value, and the
    stylesheet has no media query of its own, so the component has one
    breakpoint and it is the published one. A literal would go stale when the
    token changes. */
-const COLLAPSE_AT = crystalTokens['breakpoint.md'];
+const COLLAPSE_AT = prismataTokens['breakpoint.md'];
 
 export interface MasterDetailProps extends HTMLAttributes<HTMLDivElement> {
   /** The list pane. */
@@ -87,13 +87,13 @@ export function MasterDetail({
   return (
     <div
       {...props}
-      data-cr-state={stacked ? 'narrow' : nothingChosen ? 'empty-selection' : 'at-rest'}
+      data-pr-state={stacked ? 'narrow' : nothingChosen ? 'empty-selection' : 'at-rest'}
       className={cx(styles['wrap'], stacked ? styles['stacked'] : undefined, className)}
     >
       {/* Stacked, one pane is displayed at a time: a stack showing both would be
           the list and the detail in sequence, which is a page. */}
       {stacked && !nothingChosen ? null : (
-        <section aria-label={listLabel} className={cx('cr-frost pane flat', styles['list'])}>{list}</section>
+        <section aria-label={listLabel} className={cx('pr-frost pane flat', styles['list'])}>{list}</section>
       )}
       {stacked && nothingChosen ? null : (
         <section
@@ -103,7 +103,7 @@ export function MasterDetail({
              stop, because a keyboard stop on this region would announce
              nothing. */
           tabIndex={-1}
-          className={cx('cr-haze inset', styles['detail'])}
+          className={cx('pr-haze inset', styles['detail'])}
         >
           {nothingChosen ? emptySelection : children}
         </section>

@@ -7,11 +7,11 @@
 .label { @include field.label; }
 
 .shell {
-  /* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
+  /* The shell wears Prismata's `.pr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 
   /* A pill, because the catalogue makes this an action control. Half the
      target height keeps it a pill at every size. */
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   inline-size: fit-content;
 }
 
@@ -52,28 +52,28 @@
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  inline-size: $cr-action-min-target;
-  /* "Both controls reach 44px". This is the floor Crystal gives the value
+  inline-size: $pr-action-min-target;
+  /* "Both controls reach 44px". This is the floor Prismata gives the value
      beside them, so the pill is a field's height and no taller. */
   min-block-size: field.$field-control-floor;
   border: 0;
   border-radius: inherit;
   background: transparent;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   cursor: pointer;
 }
 
-.step:hover:not(:disabled) { color: var(--cr-text); }
+.step:hover:not(:disabled) { color: var(--pr-text); }
 
 /* A bound is shown here and said in the live region. Shown alone, it looks
    broken to anyone who can see it and is silent to anyone who cannot. */
-.step:disabled { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.step:disabled { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
 
-.step svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.step svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
-.field[data-disabled] { opacity: $cr-action-disabled-opacity; }
+.field[data-disabled] { opacity: $pr-action-disabled-opacity; }
 
-/* The shell's forced-colours border is Crystal's. */
+/* The shell's forced-colours border is Prismata's. */
 @media (forced-colors: active) {
   .step { color: CanvasText; }
 }

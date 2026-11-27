@@ -3,7 +3,7 @@
 /* DragHandle: the grip, and the lift.
  *
  * The lift is elevation. A picked-up item rises off the surface it was resting
- * on, so the gesture reads as carrying and not as smearing. It takes Crystal's
+ * on, so the gesture reads as carrying and not as smearing. It takes Prismata's
  * float shadow, the one a Resin plane uses, because a lifted item is briefly a
  * floating plane.
  */
@@ -13,14 +13,14 @@
   touch-action: none;
 }
 
-/* The handle is Crystal's `.cr-bare .cr-drag-handle`: no coat, the 44px target,
+/* The handle is Prismata's `.pr-bare .pr-drag-handle`: no coat, the 44px target,
    a grip in the handle's own ink, the grab cursor, and a lift while it is held.
    This file styles only the item, below. The handle shows that it can be
    grabbed, and the item being carried is what rises. */
 
 .dragging {
-  box-shadow: var(--cr-shadow-float);
-  border-radius: var(--cr-radius);
+  box-shadow: var(--pr-shadow-float);
+  border-radius: var(--pr-radius);
   opacity: 0.9;
 }
 

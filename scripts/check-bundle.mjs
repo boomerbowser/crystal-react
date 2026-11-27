@@ -1,7 +1,7 @@
 /* Fail if the build vendored a dependency.
  *
  * A dependency missing from the externals list is inlined into `dist/` and the
- * build reports nothing. Vendoring `@crystal-ui/core` breaks CONTRACT §1: a
+ * build reports nothing. Vendoring `@prismata/core` breaks CONTRACT §1: a
  * consumer resolves two copies of the token set, which can then drift.
  *
  * A bundled dependency leaves `node_modules` in the output paths, so that is the
@@ -36,7 +36,7 @@ if (vendored.length) {
   console.error(`The build vendored ${vendored.length} dependency tree(s) into dist/:\n`);
   for (const path of vendored) console.error('  - ' + path);
   console.error('\nAdd the package to `external` in vite.config.ts. A dependency belongs in');
-  console.error('package.json, not in the bundle — vendoring @crystal-ui/core in particular');
+  console.error('package.json, not in the bundle — vendoring @prismata/core in particular');
   console.error('would leave a consumer resolving two copies of the token set.');
   process.exit(1);
 }

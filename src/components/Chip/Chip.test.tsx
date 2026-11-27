@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { Chip } from './Chip.js';
 
 describe('Chip', () => {
   /* A chip that only displays a value must not be a tab stop. It is a label,
      and making it focusable puts a stop on something that does nothing. */
   it('is a label, not a control, until it is selectable', async () => {
-    const { container } = renderWithCrystal(<Chip>London</Chip>);
+    const { container } = renderWithPrismata(<Chip>London</Chip>);
     expect(screen.queryByRole('button')).toBeNull();
     expect(screen.getByText('London')).toBeInTheDocument();
     await expectNoAxeViolations(container);
@@ -17,7 +17,7 @@ describe('Chip', () => {
      a tablist, and outside one it says the chip is part of a collection it is
      not in. */
   it('announces selection with aria-pressed', () => {
-    renderWithCrystal(<Chip isSelectable isSelected>London</Chip>);
+    renderWithPrismata(<Chip isSelectable isSelected>London</Chip>);
     expect(screen.getByRole('button', { name: 'London' }).getAttribute('aria-pressed')).toBe('true');
   });
 
@@ -26,7 +26,7 @@ describe('Chip', () => {
      keyboard nor screen reader. */
   it('removes through its own named button', async () => {
     const onRemove = vi.fn();
-    renderWithCrystal(<Chip onRemove={onRemove}>London</Chip>);
+    renderWithPrismata(<Chip onRemove={onRemove}>London</Chip>);
     const remove = screen.getByRole('button', { name: 'Remove London' });
     await userEvent.click(remove);
     expect(onRemove).toHaveBeenCalledTimes(1);
@@ -38,7 +38,7 @@ describe('Chip', () => {
   it('is two sibling controls when it is both selectable and removable', async () => {
     const onRemove = vi.fn();
     const onChange = vi.fn();
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Chip isSelectable onChange={onChange} onRemove={onRemove}>London</Chip>,
     );
     expect(container.querySelector('button button')).toBeNull();

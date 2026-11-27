@@ -1,6 +1,6 @@
 'use client';
 
-/* useMarkArrival: Crystal's `mark-in`, played on a chart's marks once, when the
+/* useMarkArrival: Prismata's `mark-in`, played on a chart's marks once, when the
  * chart first appears.
  *
  * R-21, ruled on 28 September 2026. A bar, a series or a segment grows from its
@@ -26,11 +26,11 @@
 import { useLayoutEffect, useRef } from 'react';
 import { useAnimate } from 'motion/react';
 import { getRecipe, toMotionKeyframes, transitionFor } from '../motion/useMotion.js';
-import { useCrystalTheme } from '../theme/CrystalProvider.js';
+import { usePrismataTheme } from '../theme/PrismataProvider.js';
 
 export function useMarkArrival(): ReturnType<typeof useAnimate>[0] {
   const [scope, animate] = useAnimate();
-  const { resolveDuration, reduceMotion } = useCrystalTheme();
+  const { resolveDuration, reduceMotion } = usePrismataTheme();
   const arrived = useRef(false);
 
   useLayoutEffect(() => {

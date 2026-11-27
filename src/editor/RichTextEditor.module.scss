@@ -9,41 +9,41 @@
 /* The engine's root fills the surface, so a tap anywhere below the last line
    still places the caret in the document. */
 .content { min-block-size: 100%; }
-.content > [contenteditable] { min-block-size: calc(#{$cr-action-min-target} * 3); outline: none; }
+.content > [contenteditable] { min-block-size: calc(#{$pr-action-min-target} * 3); outline: none; }
 
 /* The block-type control: a quiet pill naming the current block, wide enough
    that the toolbar does not shift as the caret moves from "Paragraph" to
    "Minor heading". */
-.blockType { min-inline-size: calc(#{$cr-action-min-target} * 3); justify-content: space-between; gap: $cr-spacing-2xs; }
-.chevron { inline-size: $cr-icon-size; block-size: $cr-icon-size; flex: none; }
+.blockType { min-inline-size: calc(#{$pr-action-min-target} * 3); justify-content: space-between; gap: $pr-spacing-2xs; }
+.chevron { inline-size: $pr-icon-size; block-size: $pr-icon-size; flex: none; }
 
 /* Each block type previews itself in the menu, so the choice is made by look as
    well as by name. Weight still marks the selected one: it is the row's. */
-.preview-heading-2 { font-size: var(--cr-text-subheading-size); }
-.preview-heading-3 { font-size: var(--cr-text-body-size); }
-.preview-heading-4 { font-size: var(--cr-text-caption-size); text-transform: uppercase; letter-spacing: 0.04em; }
-.preview-blockquote { padding-inline-start: $cr-spacing-xs; border-inline-start: $cr-indicator-line-width solid var(--cr-primary-soft); }
+.preview-heading-2 { font-size: var(--pr-text-subheading-size); }
+.preview-heading-3 { font-size: var(--pr-text-body-size); }
+.preview-heading-4 { font-size: var(--pr-text-caption-size); text-transform: uppercase; letter-spacing: 0.04em; }
+.preview-blockquote { padding-inline-start: $pr-spacing-xs; border-inline-start: $pr-indicator-line-width solid var(--pr-primary-soft); }
 .preview-code-block { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
-/* The selection toolbar is Crystal's `.cr-frost.bar`, worn in the markup: a
+/* The selection toolbar is Prismata's `.pr-frost.bar`, worn in the markup: a
    Frost overlay with the pill silhouette and the dock's spacing. It floats over
    the text, so it stacks above the surface and its toolbar. */
 .selection { z-index: 3; }
 
 .selectionBar { display: inline-flex; align-items: center; gap: 2px; }
 
-.link { display: grid; gap: $cr-spacing-sm; min-inline-size: min(80vw, calc(#{$cr-action-min-target} * 7)); }
-.linkActions { display: flex; justify-content: flex-end; gap: $cr-spacing-xs; }
+.link { display: grid; gap: $pr-spacing-sm; min-inline-size: min(80vw, calc(#{$pr-action-min-target} * 7)); }
+.linkActions { display: flex; justify-content: flex-end; gap: $pr-spacing-xs; }
 
 /* The pre-mount body holds the surface's height, so nothing moves when the
    engine arrives. */
-.placeholderBody { min-block-size: calc(#{$cr-action-min-target} * 3); }
+.placeholderBody { min-block-size: calc(#{$pr-action-min-target} * 3); }
 
 /* ProseMirror's own nodes, inside the surface. */
 
 /* A checklist item, as TipTap writes it: a label holding the native checkbox
    and an empty span the engine uses for custom drawing. The checkbox is
-   Crystal's selection control already; the span is not needed. */
+   Prismata's selection control already; the span is not needed. */
 .content :global(li[data-type='taskItem']) > label > span { display: none; }
 .content :global(li[data-type='taskItem']) > label input { margin: 0; cursor: pointer; }
 
@@ -52,11 +52,11 @@
    rule in the document.
    ProseMirror shows and hides it (only while the editor has focus); this
    restyles it, and stops the blink its default stylesheet loops forever,
-   because nothing in Crystal moves at rest (D-19 admits no blink). */
+   because nothing in Prismata moves at rest (D-19 admits no blink). */
 .content :global(.ProseMirror-gapcursor)::after {
-  inset-block-start: calc(-1 * #{$cr-spacing-2xs});
-  inline-size: $cr-spacing-lg;
-  border-block-start: 2px solid var(--cr-primary);
+  inset-block-start: calc(-1 * #{$pr-spacing-2xs});
+  inline-size: $pr-spacing-lg;
+  border-block-start: 2px solid var(--pr-primary);
   animation: none;
 }
 
@@ -79,25 +79,25 @@
   content: attr(data-placeholder);
   float: inline-start;
   block-size: 0;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   pointer-events: none;
   user-select: none;
 }
 
 /* The document variant: no toolbar, so the text starts at the top of the
    surface; the page is a little taller, as a page is. */
-.editor[data-variant='document'] .content > [contenteditable] { min-block-size: calc(#{$cr-action-min-target} * 6); }
+.editor[data-variant='document'] .content > [contenteditable] { min-block-size: calc(#{$pr-action-min-target} * 6); }
 
 /* The block menu that "/" opens: Frost, as every surface that opens over
    content is. Fixed, at the caret, above the page. */
 .slash {
   position: fixed;
   z-index: 5;
-  min-inline-size: calc(#{$cr-action-min-target} * 5);
-  max-block-size: min(calc(#{$cr-action-min-target} * 8), 50vh);
+  min-inline-size: calc(#{$pr-action-min-target} * 5);
+  max-block-size: min(calc(#{$pr-action-min-target} * 8), 50vh);
   overflow-y: auto;
-  padding: $cr-spacing-2xs;
-  border-radius: var(--cr-radius);
+  padding: $pr-spacing-2xs;
+  border-radius: var(--pr-radius);
 }
 
 .slashList { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
@@ -105,32 +105,32 @@
 .slashOption {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-sm;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
-  border-radius: calc(var(--cr-radius) - #{$cr-spacing-2xs});
+  gap: $pr-spacing-sm;
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
+  border-radius: calc(var(--pr-radius) - #{$pr-spacing-2xs});
   font-weight: 600;
-  color: var(--cr-text);
+  color: var(--pr-text);
   cursor: pointer;
 }
 
 /* The option the arrows have reached: the soft primary fill, as a menu marks
    its active item. Shown for the keyboard and the pointer alike, because it is
    what Enter will apply, not a focus ring. */
-.slashOption[data-active] { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+.slashOption[data-active] { background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
 
 .slashIcon {
   display: inline-grid;
   place-items: center;
-  inline-size: $cr-action-min-target;
-  block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-xs});
-  border-radius: calc(var(--cr-radius) / 2);
-  background: var(--cr-surface);
+  inline-size: $pr-action-min-target;
+  block-size: calc(#{$pr-action-min-target} - #{$pr-spacing-xs});
+  border-radius: calc(var(--pr-radius) / 2);
+  background: var(--pr-surface);
 }
 
-.slashIcon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.slashIcon svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
-.slashEmpty { margin: 0; padding: $cr-spacing-sm; color: var(--cr-muted); }
+.slashEmpty { margin: 0; padding: $pr-spacing-sm; color: var(--pr-muted); }
 
 @media (forced-colors: active) {
   .slash { border: 1px solid CanvasText; background: Canvas; }

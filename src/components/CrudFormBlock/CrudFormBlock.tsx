@@ -18,7 +18,7 @@
  *     are each announced from one polite region, and saved is also shown,
  *     because a form that saves silently gets pressed twice. A failure that
  *     belongs to no field is one alert.
- *   - Sections are Crystal's `Fieldset`. Each has a legend, so a screen reader
+ *   - Sections are Prismata's `Fieldset`. Each has a legend, so a screen reader
  *     names a field's group as the reader moves into it, and disabling a
  *     section while the form is busy disables every control in it.
  *
@@ -89,8 +89,8 @@ export function CrudFormBlock({
       validationErrors={errors}
       validationBehavior="aria"
       aria-busy={busy || undefined}
-      data-cr-state={state}
-      className={cx(styles['form'], 'cr-frost', className)}
+      data-pr-state={state}
+      className={cx(styles['form'], 'pr-frost', className)}
     >
       <Heading className={cx(styles['heading'])}>{title}</Heading>
       {state === 'error' && errorMessage ? (
@@ -105,7 +105,7 @@ export function CrudFormBlock({
           {...(section.description ? { description: section.description } : {})}
           isDisabled={busy}
           panelled
-          className={cx(styles['section'], 'cr-haze')}
+          className={cx(styles['section'], 'pr-haze')}
         >
           {section.children}
         </Fieldset>

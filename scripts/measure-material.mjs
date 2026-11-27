@@ -1,5 +1,5 @@
-/* R-28 (ruled 16 November 2026): each hand-painted element against a twin wearing its Crystal surface, in the built stories.
- * Evidence for Crystal's proposals/2026-11-16-library-material-upstream.md.
+/* R-28 (ruled 16 November 2026): each hand-painted element against a twin wearing its Prismata surface, in the built stories.
+ * Evidence for Prismata's proposals/2026-11-16-library-material-upstream.md.
  *
  *   node scripts/inventory-material.mjs inventory.json
  *   node scripts/measure-material.mjs inventory.json measured.json   # Storybook on 6006
@@ -10,18 +10,18 @@ const inv = JSON.parse(readFileSync(process.argv[2], 'utf8'));
 
 const index = await (await fetch('http://localhost:6006/index.json')).json();
 const stories = Object.values(index.entries).filter((e) => e.type === 'story');
-const CLASS = { 'field.shell': 'cr-field-shell', 'material.resin': 'cr-resin', 'material.frost': 'cr-frost', 'material.haze-fill': 'cr-haze', 'fill:haze': 'cr-haze' };
+const CLASS = { 'field.shell': 'pr-field-shell', 'material.resin': 'pr-resin', 'material.frost': 'pr-frost', 'material.haze-fill': 'pr-haze', 'fill:haze': 'pr-haze' };
 function classFor(rule, entries) {
   const s = entries.join(' '), sel = rule.selector;
   for (const h of rule.hits) { const k = h.split('(')[0]; if (CLASS[k]) return CLASS[k]; }
-  if (/scrim/i.test(sel)) return 'cr-mirage';
-  if (/resin-panel/.test(s)) return 'cr-resin panel';
-  if (/\[table\]/.test(s)) return 'cr-table-scroll';
-  if (/frost/.test(s) && /(panel|sidebar|appBar|rail|popover|tooltip|arrow)/i.test(sel)) return 'cr-frost';
+  if (/scrim/i.test(sel)) return 'pr-mirage';
+  if (/resin-panel/.test(s)) return 'pr-resin panel';
+  if (/\[table\]/.test(s)) return 'pr-table-scroll';
+  if (/frost/.test(s) && /(panel|sidebar|appBar|rail|popover|tooltip|arrow)/i.test(sel)) return 'pr-frost';
   if (/choice/.test(s)) return null; // element-painted
-  if (/control/.test(s) || /(button|page|arrow|burger|floating)/i.test(sel)) return 'cr-button';
-  if (/resin/.test(s)) return 'cr-resin';
-  if (/frost/.test(s)) return 'cr-frost';
+  if (/control/.test(s) || /(button|page|arrow|burger|floating)/i.test(sel)) return 'pr-button';
+  if (/resin/.test(s)) return 'pr-resin';
+  if (/frost/.test(s)) return 'pr-frost';
   return null;
 }
 const PROPS = ['backgroundColor', 'backgroundImage', 'backdropFilter', 'borderTopWidth', 'borderTopColor', 'borderTopLeftRadius', 'boxShadow'];

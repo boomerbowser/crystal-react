@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* "Resin panel." Crystal's `.cr-resin.panel` (2.2.0) paints the Resin plane
+/* "Resin panel." Prismata's `.pr-resin.panel` (2.2.0) paints the Resin plane
    (fill, rim, float shadow, backdrop blur and its two optical layers) at the
    Frost panel's radius. Do not use the local Resin mixin here: it carries the
    plane without either optical layer. The rules below are what make it a
@@ -20,17 +20,17 @@
   display: flex;
   align-items: center;
   /* It is a `<button>`, so the user agent's button styling is removed for
-     Crystal's to show. The rim below is the bar's only border. */
+     Prismata's to show. The rim below is the bar's only border. */
   appearance: none;
   inline-size: 100%;
   border: 0;
   background: none;
   font: inherit;
   text-align: start;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-md;
-  border-block-end: 1px solid var(--cr-rim);
-  color: var(--cr-text);
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-md;
+  border-block-end: 1px solid var(--pr-rim);
+  color: var(--pr-text);
   font-weight: 650;
   cursor: move;
   touch-action: none;
@@ -38,9 +38,9 @@
 }
 
 .bar:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(#{$cr-focus-core-offset} * -1);
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(#{$pr-focus-core-offset} * -1);
+  box-shadow: var(--pr-focus-ring);
 }
 
 .title { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -48,7 +48,7 @@
 .body {
   flex: 1 1 auto;
   min-block-size: 0;
-  padding: $cr-spacing-md;
+  padding: $pr-spacing-md;
   overflow: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;

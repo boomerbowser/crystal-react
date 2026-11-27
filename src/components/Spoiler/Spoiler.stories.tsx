@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { Spoiler } from './Spoiler.js';
 
-const passage = `Crystal's materials are ordered back to front: Plastic is the foundation, `
+const passage = `Prismata's materials are ordered back to front: Plastic is the foundation, `
   + `Frost the diffused intermediate surface, and Resin the floating optical control plane. `
   + `Haze is the protective content fill a control paints under its label, at eighty per cent `
-  + `with a ${crystalTokens['material.haze.feather']} feather on an isolated paint layer, so the edge softens while the text above `
+  + `with a ${prismataTokens['material.haze.feather']} feather on an isolated paint layer, so the edge softens while the text above `
   + `it stays crisp. Stone is the label backing used over artwork, where contrast cannot be `
   + `argued from the palette because the palette is whatever the photograph happens to be. `
   + `Mirage is the modal scrim. Nothing in this list moves at rest.`;
@@ -41,5 +41,5 @@ export const OpenToStart: Story = {
 /** A taller cut, and wording that says what is being revealed. A reader out of
  *  context cannot use "more". */
 export const NamedControl: Story = {
-  args: { maxHeight: '4em', showLabel: 'Read the material hierarchy', hideLabel: 'Collapse the material hierarchy' }, // crystal-allow-literal: lines of the reader's own text, not a design value
+  args: { maxHeight: '4em', showLabel: 'Read the material hierarchy', hideLabel: 'Collapse the material hierarchy' }, // prismata-allow-literal: lines of the reader's own text, not a design value
 };

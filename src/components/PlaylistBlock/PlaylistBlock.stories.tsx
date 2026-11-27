@@ -67,10 +67,10 @@ export const AddingAndRemoving: Story = {
     return (
       <div style={{ display: 'grid', gap: 12, maxInlineSize: 520 }}>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" className="cr-button" disabled={next === undefined} onClick={() => { if (next) setQueue([...queue, next]); }}>
+          <button type="button" className="pr-button" disabled={next === undefined} onClick={() => { if (next) setQueue([...queue, next]); }}>
             Add a track
           </button>
-          <button type="button" className="cr-button" disabled={queue.length === 0} onClick={() => { setQueue(queue.slice(1)); }}>
+          <button type="button" className="pr-button" disabled={queue.length === 0} onClick={() => { setQueue(queue.slice(1)); }}>
             Remove the first track
           </button>
         </div>

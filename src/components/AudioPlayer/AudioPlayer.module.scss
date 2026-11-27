@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* The audio player is Crystal's `.cr-haze.cr-media.audio`, worn in the markup:
+/* The audio player is Prismata's `.pr-haze.pr-media.audio`, worn in the markup:
    a Haze card holding the title and a Resin transport, with the card padding
    and the gap the recipe sets. */
 
@@ -16,7 +16,7 @@
 
 .title { margin: 0; font-weight: 750; }
 
-.subtitle { margin: 0; font-size: var(--cr-text-caption-size); font-weight: 650; color: var(--cr-muted); }
+.subtitle { margin: 0; font-size: var(--pr-text-caption-size); font-weight: 650; color: var(--pr-muted); }
 
 /* The element is not drawn, because the transport is the control surface. It is
    not `display: none` either. Some engines decline to load a hidden media

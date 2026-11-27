@@ -5,7 +5,7 @@
 /* RichTextSurface and Mentions: a toolbar above an editable surface, and a
  * popover attached to one.
  *
- * Crystal owns the chrome. The catalogue states that the editing engine is the
+ * Prismata owns the chrome. The catalogue states that the editing engine is the
  * product's: an editor is a document model, a paste pipeline and a
  * serialisation format, and a design system has no opinion about any of them.
  */
@@ -13,17 +13,17 @@
 .field { @include field.field; min-inline-size: 0; }
 .label { @include field.label; }
 
-/* The frame is Crystal's `.cr-field-shell` holding a `.cr-editor`, worn in
+/* The frame is Prismata's `.pr-field-shell` holding a `.pr-editor`, worn in
    the markup: the Resin surround, the Haze well, and the column at the content
    radius padded by the well's inset are the recipe's
-   (`.cr-field-shell:has(> .cr-editor)`). It is not `overflow: hidden`, because
+   (`.pr-field-shell:has(> .pr-editor)`). It is not `overflow: hidden`, because
    that would stop the toolbar sticking above a touch keyboard; the surface
    scrolls on its own. */
 .frame { max-inline-size: 100%; }
 .frame { @include field.keyboard-focus-within; }
-.frame[data-invalid] { border-color: var(--cr-danger-ink); }
+.frame[data-invalid] { border-color: var(--pr-danger-ink); }
 
-/* The toolbar is Crystal's `.cr-editor-toolbar`, worn in the markup: the row,
+/* The toolbar is Prismata's `.pr-editor-toolbar`, worn in the markup: the row,
    its padding and separators, the Haze backing rounded to the well, sticking
    above the text on a fine pointer and below it on a touch screen, and the
    `.below` and `.above` placements for `toolbarPlacement` are the recipe's
@@ -32,7 +32,7 @@
   /* The recipe's 2px gap, handed to the `Toolbar` component through its own
      property: its stylesheet sets the action gap unlayered, which would beat
      the recipe's layered `gap`. */
-  --cr-toolbar-gap: 2px;
+  --pr-toolbar-gap: 2px;
   /* A row that scrolls must not set the frame's width: without this its
      one-line width props the field open past a phone's screen. */
   min-inline-size: 0;
@@ -43,7 +43,7 @@
    one `useKeyboardInset` measures from the visual viewport. */
 @mixin toolbar-below {
   .toolbar {
-    inset-block-end: max(env(keyboard-inset-height, 0px), var(--cr-keyboard-inset, 0px));
+    inset-block-end: max(env(keyboard-inset-height, 0px), var(--pr-keyboard-inset, 0px));
   }
 }
 
@@ -53,7 +53,7 @@
   .frame[data-toolbar='auto'] { @include toolbar-below; }
 }
 
-/* The surface is the document, and wears `.cr-editor`: the type, the reading
+/* The surface is the document, and wears `.pr-editor`: the type, the reading
    vocabulary, the caret, the padding, the selection tint (and the action pair
    on a selected highlight, D-39) and the empty block's prompt are the
    recipe's. It sits on the shell's Haze well, so it paints no fill of its own;
@@ -74,52 +74,52 @@
   min-block-size: 100%;
 }
 
-.surface[data-readonly] { background: var(--cr-surface-alt); border-radius: calc(var(--cr-radius) - var(--cr-haze-inset)); }
+.surface[data-readonly] { background: var(--pr-surface-alt); border-radius: calc(var(--pr-radius) - var(--pr-haze-inset)); }
 
 /* A mention, once inserted. It is a token, so it is visibly a reference rather
    than a word that happens to start with @. */
 .token {
   padding-inline: 0.2em;
-  border-radius: $cr-spacing-2xs;
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
+  border-radius: $pr-spacing-2xs;
+  background: var(--pr-primary-soft);
+  color: var(--pr-on-primary-soft);
   font-weight: 700;
 }
 
 .popover {
-  /* The suggestions wear Crystal's `.cr-frost`, which supplies the Frost fill,
+  /* The suggestions wear Prismata's `.pr-frost`, which supplies the Frost fill,
      the rim, the panel shadow and the diffusion (R15e). This rule is the
      geometry only: the popover takes the content radius, as the combobox's
      does. */
-  min-inline-size: calc(#{$cr-action-min-target} * 4);
+  min-inline-size: calc(#{$pr-action-min-target} * 4);
   max-block-size: 30vh;
-  /* The suggestions read on the Haze reading fill (`.cr-frost.reading`, the
+  /* The suggestions read on the Haze reading fill (`.pr-frost.reading`, the
      catalogue's "Haze rows"), inset by this 4px padding, as the menu's are. */
-  --cr-frost-reading-inset: #{$cr-spacing-2xs};
-  padding: $cr-spacing-2xs;
-  border-radius: var(--cr-radius);
+  --pr-frost-reading-inset: #{$pr-spacing-2xs};
+  padding: $pr-spacing-2xs;
+  border-radius: var(--pr-radius);
   overflow: auto;
 }
 
 .option {
   display: flex;
   align-items: center;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
-  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
+  border-radius: calc(var(--pr-radius) - #{$pr-field-well-inset});
   font-weight: 550;
   cursor: pointer;
 }
 
-.option[data-selected], .option[data-focused] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
-.state { display: flex; align-items: center; min-block-size: $cr-action-min-target; padding-inline: $cr-spacing-sm; color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+.option[data-selected], .option[data-focused] { font-weight: 800; background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
+.state { display: flex; align-items: center; min-block-size: $pr-action-min-target; padding-inline: $pr-spacing-sm; color: var(--pr-muted); font-size: var(--pr-text-caption-size); }
 
 .description, .error { @include field.message; }
-.description { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 700; }
+.description { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 700; }
 
 :global([data-effects='opaque']) .popover {
-  background: var(--cr-surface);
+  background: var(--pr-surface);
   backdrop-filter: none;
 }
 

@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* The transport is Crystal's `.cr-resin.transport`, worn in the markup: the
+/* The transport is Prismata's `.pr-resin.transport`, worn in the markup: the
    Resin pill, its 4px and 12px padding around the 48px targets, the readouts'
    Haze pills (`.time`), the narrow-player wrap and the forced-colours branch
    are all the recipe's. This file holds only what the recipe leaves to the
@@ -10,16 +10,16 @@
    only the track shows. Both sliders are inset by half a thumb (26px / 2), so
    at nought and at the end the thumb sits on its track instead of over the
    readout beside it. */
-.scrubber { flex: 1; min-inline-size: 0; padding-inline: calc(#{$cr-slider-thumb-size} / 2); }
+.scrubber { flex: 1; min-inline-size: 0; padding-inline: calc(#{$pr-slider-thumb-size} / 2); }
 
 /* Wide enough to operate with a pointer and narrow enough not to compete with
-   the scrubber. It is two of Crystal's largest spacing steps, so it moves with
+   the scrubber. It is two of Prismata's largest spacing steps, so it moves with
    the scale. */
-.volume { flex: none; inline-size: calc(#{$cr-spacing-2xl} * 2); padding-inline: calc(#{$cr-slider-thumb-size} / 2); box-sizing: content-box; }
+.volume { flex: none; inline-size: calc(#{$pr-spacing-2xl} * 2); padding-inline: calc(#{$pr-slider-thumb-size} / 2); box-sizing: content-box; }
 
 /* When the recipe wraps a narrow player's bar, the scrubber takes the second
    row to itself rather than sharing it with the trailing controls. */
-@container (max-width: 420px) { // crystal-allow-literal: the breakpoint of Crystal's `.cr-resin.transport` recipe
+@container (max-width: 420px) { // prismata-allow-literal: the breakpoint of Prismata's `.pr-resin.transport` recipe
   .scrubber { order: 1; flex-basis: 100%; }
 }
 

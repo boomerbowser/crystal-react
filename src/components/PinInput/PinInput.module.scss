@@ -6,14 +6,14 @@
 .field { @include field.field; }
 .label { @include field.label; }
 
-.wells { display: flex; gap: $cr-spacing-xs; }
+.wells { display: flex; gap: $pr-spacing-xs; }
 
-/* "Square-ish wells at the field radius; 44px minimum." Each well is Crystal's
+/* "Square-ish wells at the field radius; 44px minimum." Each well is Prismata's
    field shell, with its 20px radius and 8px inset, around a cell that takes
-   Crystal's 44px floor, so the well is as tall as every other field and as wide
+   Prismata's 44px floor, so the well is as tall as every other field and as wide
    as it is tall. */
 .well {
-  /* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
+  /* The shell wears Prismata's `.pr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
   inline-size: field.$field-height;
   justify-content: center;
 }
@@ -22,7 +22,7 @@
   inline-size: 100%;
   padding: 0;
   font: inherit;
-  font-size: var(--cr-text-heading-size);
+  font-size: var(--pr-text-heading-size);
   font-variant-numeric: tabular-nums;
   text-align: center;
   color: inherit;
@@ -30,10 +30,10 @@
 
 .cell:focus { outline: none; }
 .well { @include field.keyboard-focus-within; }
-.well[data-invalid] { border-color: var(--cr-danger-ink); }
+.well[data-invalid] { border-color: var(--pr-danger-ink); }
 
 .description, .error { @include field.message; }
-.description { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 700; }
+.description { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 700; }
 
-.field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.field[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }

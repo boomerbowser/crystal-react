@@ -47,7 +47,7 @@ export const Filtering: Story = {
   render: function Filtering() {
     const [loading, setLoading] = useState(false);
     return (
-      <Stack gap="lg" style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>
+      <Stack gap="lg" style={{ maxWidth: '420px' /* prismata-allow-literal: story column */ }}>
         <ComboBox label="Palette" options={palettes} description="Type to filter." />
         <Autocomplete label="City" options={palettes} description="Anything you type is the value." />
         <ComboBox
@@ -65,7 +65,7 @@ export const Filtering: Story = {
 
 export const Tokens: Story = {
   render: () => (
-    <Stack gap="lg" style={{ maxWidth: '420px' /* crystal-allow-literal: story column */ }}>
+    <Stack gap="lg" style={{ maxWidth: '420px' /* prismata-allow-literal: story column */ }}>
       <TagsInput
         label="Topics"
         defaultValue={['design', 'accessibility']}

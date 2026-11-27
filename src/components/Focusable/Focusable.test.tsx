@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { Focusable } from './Focusable.js';
 
 describe('Focusable', () => {
   it('adds a tab stop', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <div>
         <button type="button">Before</button>
         <Focusable><div data-testid="f">A region</div></Focusable>
@@ -18,13 +18,13 @@ describe('Focusable', () => {
   /* "Without inventing a role" is the contract. A focusable div is announced as
      whatever it already was. An element that does something needs Pressable. */
   it('invents no role', () => {
-    renderWithCrystal(<Focusable><div data-testid="f">A region</div></Focusable>);
+    renderWithPrismata(<Focusable><div data-testid="f">A region</div></Focusable>);
     expect(screen.getByTestId('f').getAttribute('role')).toBeNull();
     expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('can be reachable programmatically without being a tab stop', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <div>
         <button type="button">Before</button>
         <Focusable excludeFromTabOrder><div data-testid="f">A region</div></Focusable>

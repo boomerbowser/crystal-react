@@ -6,7 +6,7 @@ const transforms = (recipe: typeof drawerIn) => recipe.keyframes.map((frame) => 
 
 describe('reorientRecipe', () => {
   /* The authored recipe runs in one direction, written with physical transforms.
-     Every test below depends on this, so it is checked here: if Crystal
+     Every test below depends on this, so it is checked here: if Prismata
      reauthors `drawer-in`, this test fails first. */
   it('starts from a recipe that arrives from the right', () => {
     expect(transforms(drawerIn)[0]).toContain('translateX(105%)');
@@ -24,7 +24,7 @@ describe('reorientRecipe', () => {
     /* The overshoot frame flips with the rest of the movement: the panel that
        overshot 8px to the left now overshoots 8px to the right. The expected
        value is derived from the authored recipe, so the test checks mirroring
-       without copying Crystal's numbers. */
+       without copying Prismata's numbers. */
     const authored = transforms(drawerIn)[1] ?? '';
     const signFlipped = authored
       .replace(/translateX\((-?)([^)]*)\)/, (_m, sign: string, v: string) => `translateX(${sign ? '' : '-'}${v})`)
@@ -66,7 +66,7 @@ describe('reorientRecipe', () => {
   });
 
   /* Compared with the authored recipe instead of a number, because the
-     perspective value belongs to Crystal and should not be copied here. */
+     perspective value belongs to Prismata and should not be copied here. */
   it('leaves perspective and every other transform function alone', () => {
     const authored = transforms(drawerIn);
     const turned = transforms(reorientRecipe(drawerIn, { mirrorInline: true }));

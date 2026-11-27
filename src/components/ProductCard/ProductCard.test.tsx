@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { ProductCard } from './ProductCard.js';
 import { Button } from '../Button/Button.js';
 
@@ -10,7 +10,7 @@ describe('ProductCard', () => {
      enormous link whose name is every word on the card, and nests the Add
      control inside it, which is invalid markup. */
   it('is exactly two tab stops, and the link is the name', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ProductCard
         name="Harbour print"
         href="/harbour"
@@ -26,7 +26,7 @@ describe('ProductCard', () => {
 
   /* Invalid markup, and it behaves differently in every browser. */
   it('never nests the action inside the link', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ProductCard
         name="Harbour print"
         href="/harbour"
@@ -44,7 +44,7 @@ describe('ProductCard', () => {
 
   /* A line through text is a drawing; `<s>` is what carries it to a reader. */
   it('marks a former price as former, in the markup', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ProductCard
         name="Harbour print"
         href="/harbour"
@@ -60,7 +60,7 @@ describe('ProductCard', () => {
   /* An unavailable product keeps its card and loses its action: there is
      nothing to press, and the product page is still where a reader goes. */
   it('keeps the link and drops the action when it cannot be bought', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <ProductCard
         name="Harbour print"
         href="/harbour"
@@ -75,7 +75,7 @@ describe('ProductCard', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ProductCard
         name="Harbour print"
         href="/harbour"

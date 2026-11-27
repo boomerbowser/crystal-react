@@ -3,7 +3,7 @@
 /* FormField, Fieldset and HelperText.
  *
  * `FormField` wraps a control this library does not ship, such as a
- * third-party editor, a canvas or something bespoke. Every Crystal input
+ * third-party editor, a canvas or something bespoke. Every Prismata input
  * already binds its own label and messages through React Aria. This component
  * gives a product that reaches outside the library the same wiring, so it does
  * not have to rebuild it.

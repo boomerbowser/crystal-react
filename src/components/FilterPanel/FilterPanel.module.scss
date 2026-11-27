@@ -3,19 +3,19 @@
 /* "Frost panel with Haze groups." The panel is Frost because it is a reading
    surface that holds controls. It is not itself a control plane. */
 .panel {
-  /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Prismata's fallbacks. */
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-md);
-  padding: var(--cr-block-padding, $cr-spacing-md);
-  color: var(--cr-text);
+  gap: var(--pr-block-gap, $pr-spacing-md);
+  padding: var(--pr-block-padding, $pr-spacing-md);
+  color: var(--pr-text);
 }
 
-.applied { display: grid; gap: $cr-spacing-xs; justify-items: start; }
+.applied { display: grid; gap: $pr-spacing-xs; justify-items: start; }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -23,7 +23,7 @@
 
 /* The facet groups. Haze, per the catalogue, separated by space and not by
    rules between facets. */
-.facets { display: grid; gap: $cr-spacing-md; }
+.facets { display: grid; gap: $pr-spacing-md; }
 
 /* Loading: the panel dims and keeps its controls where they are, so the reader
    does not lose their place while the counts are recomputed. */

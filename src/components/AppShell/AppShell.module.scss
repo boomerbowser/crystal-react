@@ -16,15 +16,15 @@
 .appShell {
   display: grid;
   grid-template-areas: 'header header' 'sidebar main' 'footer footer';
-  grid-template-columns: var(--cr-shell-sidebar, #{$cr-layout-sidebar-width}) minmax(0, 1fr);
+  grid-template-columns: var(--pr-shell-sidebar, #{$pr-layout-sidebar-width}) minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
   block-size: 100dvh;
   overflow: hidden;
-  /* The foundation is Crystal's `.cr-plastic`, worn by the component: the canvas
+  /* The foundation is Prismata's `.pr-plastic`, worn by the component: the canvas
      and the atmosphere over it, the inactive-window treatment, and the forced
      colours route. Painting a flat canvas here would cover the atmosphere the
      provider's own Plastic draws underneath. */
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 .collapsed { grid-template-columns: 0 minmax(0, 1fr); }
@@ -35,16 +35,16 @@
    because it is about the view and not part of it. */
 .footer { grid-area: footer; min-width: 0; }
 
-/* The sidebar wears Crystal's `.cr-frost.docked.flat` (2.7.0): the Frost fill
+/* The sidebar wears Prismata's `.pr-frost.docked.flat` (2.7.0): the Frost fill
    and blur, docked to the window's edge with no rim, radius, shadow or grain,
-   and Crystal's opaque, reduced-transparency and forced-colours routes. The
+   and Prismata's opaque, reduced-transparency and forced-colours routes. The
    side it shares with the content is drawn here. */
 .sidebar {
   grid-area: sidebar;
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  border-inline-end: 1px solid var(--cr-edge);
+  border-inline-end: 1px solid var(--pr-edge);
   /* A sidebar pinned to the left of a phone in landscape sits under the notch
      without the safe-area inset. */
   padding-inline-start: env(safe-area-inset-left);
@@ -55,13 +55,13 @@
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
-  padding: var(--cr-space);
-  padding-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
+  padding: var(--pr-space);
+  padding-block-end: max(var(--pr-space), env(safe-area-inset-bottom));
 }
 
 /* Below the sidebar's breakpoint the shell is one column, and the product decides
    what the sidebar becomes: a drawer, a sheet or a menu. */
-@media (max-width: $cr-breakpoint-md) {
+@media (max-width: $pr-breakpoint-md) {
   .appShell {
     grid-template-areas: 'header' 'main' 'footer';
     grid-template-columns: minmax(0, 1fr);
@@ -70,16 +70,16 @@
 }
 
 .destinations {
-  /* The destination strip is Crystal's dock, worn as `.cr-dock`: the Resin plane,
+  /* The destination strip is Prismata's dock, worn as `.pr-dock`: the Resin plane,
      its Haze fill, its fallbacks, and buttons that carry no Resin of their own.
      The rules here only position it. */
   position: fixed;
-  inset-block-end: max(var(--cr-space), env(safe-area-inset-bottom));
+  inset-block-end: max(var(--pr-space), env(safe-area-inset-bottom));
   inset-inline: 0;
-  z-index: 20;  /* crystal-allow-literal: stacking order, not a design value */
+  z-index: 20;  /* prismata-allow-literal: stacking order, not a design value */
   margin-inline: auto;
   width: max-content;
-  max-width: calc(100% - var(--cr-space) * 2);
+  max-width: calc(100% - var(--pr-space) * 2);
 }
 
 @media (forced-colors: active) {

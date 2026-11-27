@@ -47,7 +47,7 @@ export const Default: Story = {
         { id: 'in-stock', label: 'In stock only' },
       ]);
       return (
-        <div style={{ maxWidth: 'var(--cr-layout-sidebar-width)' }}>
+        <div style={{ maxWidth: 'var(--pr-layout-sidebar-width)' }}>
           <FilterPanel
             {...only(args)}
             applied={applied}
@@ -76,7 +76,7 @@ export const Default: Story = {
 /** Nothing applied: no chips, no Clear all, and nothing announced. */
 export const NothingApplied: Story = {
   render: (args) => (
-    <div style={{ maxWidth: 'var(--cr-layout-sidebar-width)' }}>
+    <div style={{ maxWidth: 'var(--pr-layout-sidebar-width)' }}>
       <FilterPanel {...only(args)}>
         <CheckboxGroup label="Colour">
           <Checkbox value="blue">Blue (12)</Checkbox>

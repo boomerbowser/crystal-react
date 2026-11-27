@@ -27,7 +27,7 @@ export function useMediaQuery(query: string, serverValue: boolean): boolean {
     () => (typeof window !== 'undefined' && window.matchMedia
       ? window.matchMedia(query).matches
       : serverValue),
-    /* The server cannot know, so it renders Crystal's default and the first
+    /* The server cannot know, so it renders Prismata's default and the first
        client render agrees with it. Guessing differently is a hydration
        mismatch. */
     () => serverValue,

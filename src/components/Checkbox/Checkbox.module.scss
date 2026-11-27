@@ -15,26 +15,26 @@
 .choice {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-sm;
-  min-block-size: $cr-action-min-target;
-  color: var(--cr-text);
+  gap: $pr-spacing-sm;
+  min-block-size: $pr-action-min-target;
+  color: var(--pr-text);
   cursor: pointer;
 }
 
 .box {
-  /* The box wears Crystal's `.cr-choice` (2.8.0), the Resin box of Crystal 2.0
+  /* The box wears Prismata's `.pr-choice` (2.8.0), the Resin box of Prismata 2.0
      with the control light, the rim, the blur and the three-part shadow, and
-     Crystal's opaque, reduced-transparency and forced-colours routes. A
-     radio's adds `.radio`. It used to wear `.cr-choice.outline`, the flat
+     Prismata's opaque, reduced-transparency and forced-colours routes. A
+     radio's adds `.radio`. It used to wear `.pr-choice.outline`, the flat
      outlined box of the platform libraries, which testers read as the style
-     from before Crystal 2.0. The well inside is drawn here, as core draws it
+     from before Prismata 2.0. The well inside is drawn here, as core draws it
      on a native input's `::after`. */
   display: flex;
   align-items: center;
   justify-content: center;
-  inline-size: $cr-choice-box-size;
-  block-size: $cr-choice-box-size;
-  border-radius: $cr-choice-box-radius;
+  inline-size: $pr-choice-box-size;
+  block-size: $pr-choice-box-size;
+  border-radius: $pr-choice-box-radius;
 }
 
 .circle { border-radius: 50%; }
@@ -46,29 +46,29 @@
   display: grid;
   place-items: center;
   box-sizing: border-box;
-  inline-size: calc(#{$cr-choice-box-size} * 0.54);
-  block-size: calc(#{$cr-choice-box-size} * 0.54);
-  border: 2px solid var(--cr-primary);
-  border-radius: 4px; /* crystal-allow-literal: core's native checkbox well radius */
-  background: var(--cr-surface);
-  color: var(--cr-on-primary);
-  transition: inline-size #{$cr-motion-duration-press} ease-out, block-size #{$cr-motion-duration-press} ease-out, background-color #{$cr-motion-duration-press} ease-out;
+  inline-size: calc(#{$pr-choice-box-size} * 0.54);
+  block-size: calc(#{$pr-choice-box-size} * 0.54);
+  border: 2px solid var(--pr-primary);
+  border-radius: 4px; /* prismata-allow-literal: core's native checkbox well radius */
+  background: var(--pr-surface);
+  color: var(--pr-on-primary);
+  transition: inline-size #{$pr-motion-duration-press} ease-out, block-size #{$pr-motion-duration-press} ease-out, background-color #{$pr-motion-duration-press} ease-out;
 }
 
 .round { border-radius: 50%; }
 
 .choice:is([data-selected], [data-indeterminate]) .well {
-  inline-size: calc(#{$cr-choice-box-size} * 0.69);
-  block-size: calc(#{$cr-choice-box-size} * 0.69);
+  inline-size: calc(#{$pr-choice-box-size} * 0.69);
+  block-size: calc(#{$pr-choice-box-size} * 0.69);
   border: 0;
-  background: var(--cr-primary);
+  background: var(--pr-primary);
 }
 
 /* A selected radio is core's: the primary disc inside a ring of the surface. */
 .choice[data-selected] .round {
-  inline-size: calc(#{$cr-choice-box-size} * 0.54);
-  block-size: calc(#{$cr-choice-box-size} * 0.54);
-  box-shadow: inset 0 0 0 3px var(--cr-surface); /* crystal-allow-literal: core's native radio ring */
+  inline-size: calc(#{$pr-choice-box-size} * 0.54);
+  block-size: calc(#{$pr-choice-box-size} * 0.54);
+  box-shadow: inset 0 0 0 3px var(--pr-surface); /* prismata-allow-literal: core's native radio ring */
 }
 
 .mark {
@@ -89,28 +89,28 @@
 }
 
 .choice[data-focus-visible] .box {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
-.choice[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-.choice[data-invalid] .box { border-color: var(--cr-danger-ink); }
-.choice[data-invalid]:not([data-selected], [data-indeterminate]) .well { border-color: var(--cr-danger-ink); }
+.choice[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
+.choice[data-invalid] .box { border-color: var(--pr-danger-ink); }
+.choice[data-invalid]:not([data-selected], [data-indeterminate]) .well { border-color: var(--pr-danger-ink); }
 
 /* A group is a fieldset with spacing and no panel. */
 .group { @include field.field; }
 .legend { @include field.label; }
-.options { display: flex; flex-direction: column; gap: $cr-spacing-2xs; }
-.horizontal { flex-direction: row; flex-wrap: wrap; gap: var(--cr-space); }
+.options { display: flex; flex-direction: column; gap: $pr-spacing-2xs; }
+.horizontal { flex-direction: row; flex-wrap: wrap; gap: var(--pr-space); }
 
 .description, .error { @include field.message; }
-.description { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 700; }
+.description { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 700; }
 
 @media (forced-colors: active) {
   .well { border-color: CanvasText; background: Field; }
   .choice:is([data-selected], [data-indeterminate]) .well { background: Highlight; color: HighlightText; }
-  .choice[data-selected] .round { box-shadow: inset 0 0 0 3px Field; /* crystal-allow-literal: core's native radio ring */ }
+  .choice[data-selected] .round { box-shadow: inset 0 0 0 3px Field; /* prismata-allow-literal: core's native radio ring */ }
   .choice[data-focus-visible] .box { outline-color: Highlight; }
 }

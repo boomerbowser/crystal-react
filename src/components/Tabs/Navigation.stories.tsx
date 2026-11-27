@@ -60,7 +60,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '**Selection is weight and the primary fill.** The strip is Crystal\'s dock, and the selected '
+          '**Selection is weight and the primary fill.** The strip is Prismata\'s dock, and the selected '
           + 'tab is heavier as well as filled, which is what keeps selection off colour alone. '
           + 'In forced colours the fill goes and a ring takes its place, because Chromium paints an '
           + 'opaque backplate behind text and a filled label disappears under it.\n\n'
@@ -169,7 +169,7 @@ export const CollapsedTrail: Story = {
   render: () => <Breadcrumbs items={trail} maxItems={3} />,
 };
 
-/* Going a level deeper adds a crumb, and the new crumb arrives with Crystal's
+/* Going a level deeper adds a crumb, and the new crumb arrives with Prismata's
    `breadcrumb`. The ones the page loaded with do not move. */
 export const GoingDeeper: Story = {
   render: function GoingDeeperStory() {

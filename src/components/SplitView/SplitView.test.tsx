@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { SplitView } from './SplitView.js';
 
 describe('SplitView', () => {
-  /* Crystal's separator, from `Resizable`: a value a keyboard can change, not a
+  /* Prismata's separator, from `Resizable`: a value a keyboard can change, not a
      grab handle a pointer can drag. */
   it('gives the divider a value a keyboard can move', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <SplitView aria-label="Resize the list" secondary={<div>Detail</div>} defaultSize={200}>
         <div>List</div>
       </SplitView>,
@@ -20,7 +20,7 @@ describe('SplitView', () => {
      change, and a keyboard user who lands on it can press arrow keys at it
      forever. So collapsing removes the divider rather than disabling it. */
   it('removes the divider when a pane is folded away', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <SplitView aria-label="Resize the list" secondary={<div>Detail</div>} collapse="secondary">
         <div>List</div>
       </SplitView>,
@@ -31,7 +31,7 @@ describe('SplitView', () => {
   });
 
   it('folds the other way round too', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <SplitView aria-label="Resize the list" secondary={<div>Detail</div>} collapse="primary">
         <div>List</div>
       </SplitView>,
@@ -46,7 +46,7 @@ describe('SplitView', () => {
      which is invalid markup, a warning in development, and silent in
      production. This test passes them alongside `collapse`. */
   it('does not leak the resizing vocabulary onto the collapsed element', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <SplitView
         aria-label="Resize the list"
         secondary={<div>Detail</div>}
@@ -58,7 +58,7 @@ describe('SplitView', () => {
         <div>List</div>
       </SplitView>,
     );
-    const collapsed = container.querySelector('[data-cr-state="collapsed"]');
+    const collapsed = container.querySelector('[data-pr-state="collapsed"]');
     expect(collapsed).not.toBeNull();
     for (const leaked of ['minsize', 'maxsize', 'orientation', 'issize', 'onsizechange']) {
       expect(collapsed?.hasAttribute(leaked)).toBe(false);
@@ -66,7 +66,7 @@ describe('SplitView', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <SplitView aria-label="Resize the list" secondary={<div>Detail</div>} defaultSize={200}>
         <div>List</div>
       </SplitView>,

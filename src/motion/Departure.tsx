@@ -21,7 +21,7 @@
  * is held and nothing plays, so the overlay closes at once with no movement.
  */
 import { useLayoutEffect, useRef, type RefObject } from 'react';
-import { useCrystalTheme } from '../theme/CrystalProvider.js';
+import { usePrismataTheme } from '../theme/PrismataProvider.js';
 import { getRecipe } from './useMotion.js';
 
 export function Departure({ isExiting, play, recipe, scope, hold }: {
@@ -36,7 +36,7 @@ export function Departure({ isExiting, play, recipe, scope, hold }: {
    */
   hold?: () => HTMLElement | null;
 }): null {
-  const { resolveDuration, reduceMotion } = useCrystalTheme();
+  const { resolveDuration, reduceMotion } = usePrismataTheme();
   /* Only a change into exiting is a departure. A disclosure that renders closed
      is not leaving. `null` until the first pass has been seen. */
   const was = useRef<boolean | null>(null);

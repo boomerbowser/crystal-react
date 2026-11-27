@@ -1,23 +1,23 @@
 @use '../styles/tokens' as *;
 
-.form { display: grid; gap: $cr-spacing-lg; }
+.form { display: grid; gap: $pr-spacing-lg; }
 
 /* The states are attributes instead of classes, so a product can style them from
    its own stylesheet without reaching into this one. */
-.form[data-cr-submission='submitting'] { cursor: progress; }
-.form[data-cr-submission='submitting'] :is(input, select, textarea, button) { pointer-events: none; }
+.form[data-pr-submission='submitting'] { cursor: progress; }
+.form[data-pr-submission='submitting'] :is(input, select, textarea, button) { pointer-events: none; }
 
 .formErrors {
   display: grid;
-  gap: $cr-spacing-2xs;
-  padding: $cr-spacing-sm $cr-spacing-md;
-  border: 1px solid var(--cr-danger-ink);
-  border-radius: var(--cr-radius);
-  background: var(--cr-danger-surface);
-  color: var(--cr-danger-ink);
+  gap: $pr-spacing-2xs;
+  padding: $pr-spacing-sm $pr-spacing-md;
+  border: 1px solid var(--pr-danger-ink);
+  border-radius: var(--pr-radius);
+  background: var(--pr-danger-surface);
+  color: var(--pr-danger-ink);
 }
 
-/* Weight, not colour alone, as everywhere else in Crystal. */
+/* Weight, not colour alone, as everywhere else in Prismata. */
 .formError { margin: 0; font-weight: 700; }
 
 @media (forced-colors: active) {
@@ -28,18 +28,18 @@
    form-level errors use, a heading that says how many, and a link per error. */
 .errorSummary {
   display: grid;
-  gap: $cr-spacing-xs;
-  padding: $cr-spacing-sm $cr-spacing-md;
-  border: 1px solid var(--cr-danger-ink);
-  border-radius: var(--cr-radius);
-  background: var(--cr-danger-surface);
-  color: var(--cr-danger-ink);
+  gap: $pr-spacing-xs;
+  padding: $pr-spacing-sm $pr-spacing-md;
+  border: 1px solid var(--pr-danger-ink);
+  border-radius: var(--pr-radius);
+  background: var(--pr-danger-surface);
+  color: var(--pr-danger-ink);
 }
 
 .errorSummary:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 /* Weight, not colour alone. */
@@ -47,9 +47,9 @@
 
 .errorSummaryList {
   display: grid;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
-  padding-inline-start: $cr-spacing-md;
+  padding-inline-start: $pr-spacing-md;
 }
 
 .errorSummaryList a { color: inherit; font-weight: 700; text-decoration: underline; }

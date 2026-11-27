@@ -2,21 +2,21 @@
 
 /* StatusBadge. A Resin pill with a tinted well.
  *
- * Crystal's `.cr-status` puts the semantic pair on the well and leaves the pill
+ * Prismata's `.pr-status` puts the semantic pair on the well and leaves the pill
  * itself Resin with ordinary text. That is how "never a coloured perimeter
  * stroke" and "the word carries the meaning" render. A status-coloured pill
  * would make the word decoration on a coloured ground.
  *
  * The 18px radius, the 18px inline padding, the 36px floor and the 7px gap come
- * from wearing `span.cr-status`, as do the status pairs from Crystal's own
- * `[data-status]` rules (R-19). "Crystal publishes these as rules rather than as
+ * from wearing `span.pr-status`, as do the status pairs from Prismata's own
+ * `[data-status]` rules (R-19). "Prismata publishes these as rules rather than as
  * tokens", and the class reaches them, so none is restated here as a literal.
  *
- * Measured against a planted `.cr-status`, the pill agrees on radius, padding,
+ * Measured against a planted `.pr-status`, the pill agrees on radius, padding,
  * floor, gap, background, ink, weight, size and display.
  *
- * The word is bare text rather than a span. Crystal's well is
- * `span.cr-status > span`, so a span around the word is painted as a second 24px
+ * The word is bare text rather than a span. Prismata's well is
+ * `span.pr-status > span`, so a span around the word is painted as a second 24px
  * circle in the status colour.
  */
 
@@ -27,24 +27,24 @@
 }
 
 /* Neutral is the absence of a status rather than a fifth one, so it takes the
-   ordinary surface pair. Crystal publishes four, and this is the one that is not
+   ordinary surface pair. Prismata publishes four, and this is the one that is not
    among them. It also renders no symbol, because a glyph would imply a meaning
    the state does not have. */
 .statusBadge[data-status='neutral'] {
-  --status-surface: var(--cr-surface-alt);
-  --status-ink: var(--cr-text);
+  --status-surface: var(--pr-surface-alt);
+  --status-ink: var(--pr-text);
 }
 
-/* The circle itself is Crystal's. This says only that a wider glyph should not
+/* The circle itself is Prismata's. This says only that a wider glyph should not
    clip: the well's square is a floor rather than a size. */
 .well {
-  min-inline-size: $cr-icon-action;
+  min-inline-size: $pr-icon-action;
   inline-size: auto;
 }
 
 @media (forced-colors: active) {
-  /* Crystal supplies `forced-color-adjust: auto` and the `ButtonText` border for
-     `.cr-status`, and the well's own system pair. The material has to be told to
+  /* Prismata supplies `forced-color-adjust: auto` and the `ButtonText` border for
+     `.pr-status`, and the well's own system pair. The material has to be told to
      go: a float shadow survives the forced palette and reads as dirt. */
   .statusBadge {
     background: Canvas;

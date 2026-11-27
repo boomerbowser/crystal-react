@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { CompareTable, differs } from './CompareTable.js';
 
 const products = [
@@ -19,7 +19,7 @@ describe('CompareTable', () => {
      is the attribute and the column header is the product. Without both, a cell
      reads as a bare value with no indication of what it belongs to. */
   it('has both row headers and column headers', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <CompareTable label="Compare prints" products={products} attributes={attributes} />,
     );
     expect(container.querySelectorAll('thead th[scope="col"]').length).toBeGreaterThan(0);
@@ -30,7 +30,7 @@ describe('CompareTable', () => {
      twelve attributes is looking for the rows where they differ, and a tint
      alone tells only people who can see it. */
   it('says in words which rows differ', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <CompareTable label="Compare prints" products={products} attributes={attributes} />,
     );
     expect(screen.getByRole('rowheader', { name: /Frame, differs/ })).toBeInTheDocument();
@@ -49,12 +49,12 @@ describe('CompareTable', () => {
   /* Computed from the values. A flag passed in from outside cannot be checked
      and goes stale as soon as a product joins the comparison. */
   it('works the difference out rather than being told', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <CompareTable label="Compare" products={products} attributes={[attributes[0]!]} />,
     );
     expect(screen.queryByRole('rowheader', { name: /differs/ })).toBeNull();
 
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <CompareTable
         label="Compare"
         products={[...products, { id: 'c', label: 'Bridge print' }]}
@@ -65,7 +65,7 @@ describe('CompareTable', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <CompareTable label="Compare prints" products={products} attributes={attributes} />,
     );
     await expectNoAxeViolations(container);

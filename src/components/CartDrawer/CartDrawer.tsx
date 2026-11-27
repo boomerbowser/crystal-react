@@ -7,7 +7,7 @@
  *
  * The first half is `Drawer`'s, which is a React Aria modal. Focus moves into it
  * as it opens and goes back to whatever opened it as it closes, and it enters
- * and leaves with Crystal's `drawer-in` and `drawer-out`. Nothing here restates
+ * and leaves with Prismata's `drawer-in` and `drawer-out`. Nothing here restates
  * that.
  *
  * The second half is this component's own. A basket's total changes as a
@@ -93,7 +93,7 @@ export function CartDrawer({
       placement="end"
       className={cx(styles['drawer'], className)}
     >
-      <div className={cx(styles['body'])} data-cr-state={empty ? 'empty' : isUpdating ? 'updating' : 'open'}>
+      <div className={cx(styles['body'])} data-pr-state={empty ? 'empty' : isUpdating ? 'updating' : 'open'}>
         {empty ? (
           <EmptyState state="empty" title={emptyLabel} />
         ) : (

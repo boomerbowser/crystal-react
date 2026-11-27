@@ -11,7 +11,7 @@
 .scrim {
   position: absolute;
   inset: 0;
-  /* The element wears Crystal's `.cr-mirage`, with its opaque, reduced-transparency
+  /* The element wears Prismata's `.pr-mirage`, with its opaque, reduced-transparency
      and no-backdrop routes. */
 }
 
@@ -29,27 +29,27 @@
 
 /* "Frost step panel over a Mirage scrim." */
 .panel {
-  /* The element wears Crystal's `.cr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Crystal's fallbacks. */
+  /* The element wears Prismata's `.pr-frost.pane.flat` (2.7.0): the Frost panel at the content radius, without grain, with Prismata's fallbacks. */
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
   translate: -50% -50%;
   inline-size: min(92vw, 40ch);
-  padding: $cr-spacing-md;
-  color: var(--cr-text);
+  padding: $pr-spacing-md;
+  color: var(--pr-text);
 }
 
 /* Anchored under its target, once there is one to anchor to. */
 .panel[data-anchored] {
-  inset-block-start: calc(var(--panel-top) + #{$cr-spacing-sm});
+  inset-block-start: calc(var(--panel-top) + #{$pr-spacing-sm});
   inset-inline-start: var(--panel-left);
   translate: none;
 }
 
 .position {
-  margin: 0 0 $cr-spacing-2xs;
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  margin: 0 0 $pr-spacing-2xs;
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -65,17 +65,17 @@
 }
 
 .body {
-  margin-block-start: $cr-spacing-2xs;
-  font-size: var(--cr-text-body-size);
-  line-height: var(--cr-text-body-leading);
-  color: var(--cr-muted);
+  margin-block-start: $pr-spacing-2xs;
+  font-size: var(--pr-text-body-size);
+  line-height: var(--pr-text-body-leading);
+  color: var(--pr-muted);
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-xs;
-  margin-block-start: $cr-spacing-md;
+  gap: $pr-spacing-xs;
+  margin-block-start: $pr-spacing-md;
 }
 
 .spacer { flex: 1; }

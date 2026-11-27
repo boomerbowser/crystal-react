@@ -2,11 +2,11 @@
 
 /* QRCode.
  *
- * `qrcode.react` (ISC) renders the code; Crystal owns the quiet zone, the
+ * `qrcode.react` (ISC) renders the code; Prismata owns the quiet zone, the
  * contrast floor and the status surfaces.
  *
  * The code's two colours are fixed black-on-white and do not follow the palette.
- * Every other surface in Crystal takes its colour from the theme. A scanner reads
+ * Every other surface in Prismata takes its colour from the theme. A scanner reads
  * luminance, and a tinted code scans in good light and fails in bad. The quiet
  * zone around it is a Haze fill, so the component still belongs to the surface
  * it sits on.
@@ -20,11 +20,11 @@ import { useId, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
 import styles from './QRCode.module.scss';
 
-/* The one place in this library where a colour is not a token. Crystal's
+/* The one place in this library where a colour is not a token. Prismata's
    catalogue carries the rule, "contrast fixed regardless of palette". These are
    constants so that a theme cannot change them. */
-const CODE_DARK = '#000000';  // crystal-allow-literal: scannability, never themed
-const CODE_LIGHT = '#ffffff';  // crystal-allow-literal: scannability, never themed
+const CODE_DARK = '#000000';  // prismata-allow-literal: scannability, never themed
+const CODE_LIGHT = '#ffffff';  // prismata-allow-literal: scannability, never themed
 
 export interface QRCodeProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /** What the code encodes. Also the text alternative, unless `alt` overrides it. */
@@ -50,7 +50,7 @@ export function QRCode({
   const labelId = useId();
 
   return (
-    <div className={cx('cr-haze flush', styles['qrCode'], isExpired ? styles['expired'] : undefined, className)} {...props}>
+    <div className={cx('pr-haze flush', styles['qrCode'], isExpired ? styles['expired'] : undefined, className)} {...props}>
       <div role="img" aria-labelledby={labelId}>
         <QRCodeSVG
           value={value}

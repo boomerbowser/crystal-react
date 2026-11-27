@@ -47,7 +47,7 @@ export const ADot: Story = {
  *  issues" is sometimes what the reader needs to see. */
 export const Zero: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-space)', alignItems: 'center' }}>
       <Badge {...only(args)} count={0} />
       <Badge {...only(args)} count={0} showZero />
     </div>

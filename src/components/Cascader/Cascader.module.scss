@@ -5,62 +5,62 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-/* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
+/* The shell wears Prismata's `.pr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 .trigger { @include field.trigger; }
 
 .shell { @include field.keyboard-focus-within; }
 .value { @include field.trigger-content; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.placeholder { color: var(--cr-muted); }
-.disclosure { @include field.trigger-content; display: flex; align-items: center; color: var(--cr-muted); pointer-events: none; }
-.disclosure svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.placeholder { color: var(--pr-muted); }
+.disclosure { @include field.trigger-content; display: flex; align-items: center; color: var(--pr-muted); pointer-events: none; }
+.disclosure svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 .popover {
-  /* The popover wears Crystal's `.cr-frost`, which supplies the Frost fill, the
+  /* The popover wears Prismata's `.pr-frost`, which supplies the Frost fill, the
      rim, the panel shadow and the diffusion. Do not add the float shadow or an
      edge here; that is Resin's shadow on Frost's fill. The catalogue's popover
      geometry is the content radius, stated here. */
   display: flex;
   max-block-size: 40vh;
-  padding: $cr-spacing-2xs;
-  border-radius: var(--cr-radius);
+  padding: $pr-spacing-2xs;
+  border-radius: var(--pr-radius);
 }
 
 .column {
-  min-inline-size: calc(#{$cr-action-min-target} * 4);
+  min-inline-size: calc(#{$pr-action-min-target} * 4);
   overflow-y: auto;
   outline: none;
 }
 
-.column + .column { border-inline-start: 1px solid var(--cr-edge); }
+.column + .column { border-inline-start: 1px solid var(--pr-edge); }
 
 .option {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $cr-spacing-sm;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
-  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  gap: $pr-spacing-sm;
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
+  border-radius: calc(var(--pr-radius) - #{$pr-field-well-inset});
   font-weight: 550;
   cursor: pointer;
 }
 
-.option[data-selected] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
-.option[data-focused] { background: var(--cr-surface-alt); }
-.option[data-selected][data-focused] { background: var(--cr-primary-soft); }
-.branch { color: var(--cr-muted); }
-.branch svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.option[data-selected] { font-weight: 800; background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
+.option[data-focused] { background: var(--pr-surface-alt); }
+.option[data-selected][data-focused] { background: var(--pr-primary-soft); }
+.branch { color: var(--pr-muted); }
+.branch svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 /* Narrow screens show one column at a time with a way back. Four columns in a
    phone's width are too narrow to read. */
-@media (max-width: $cr-breakpoint-sm) {
+@media (max-width: $pr-breakpoint-sm) {
   .popover { flex-direction: column; }
-  .column + .column { border-inline-start: 0; border-block-start: 1px solid var(--cr-edge); }
+  .column + .column { border-inline-start: 0; border-block-start: 1px solid var(--pr-edge); }
 }
 
 .description, .error { @include field.message; }
-.description { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 700; }
+.description { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 700; }
 
 @media (forced-colors: active) {
   .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }

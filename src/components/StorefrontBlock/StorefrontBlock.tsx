@@ -75,7 +75,7 @@ export function StorefrontBlock({
   const filtering = state === 'filtering';
 
   return (
-    <div className={cx(styles['storefront'], className)} data-cr-state={state}>
+    <div className={cx(styles['storefront'], className)} data-pr-state={state}>
       <Heading className={cx(styles['title'])}>{title}</Heading>
       <div className={cx(styles['layout'])}>
         <FilterPanel

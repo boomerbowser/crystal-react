@@ -6,7 +6,7 @@
  *
  * States: `at-rest`, `resizing`, `collapsed`, `focus-visible`.
  *
- * Three of those four already exist. `Resizable` is Crystal's separator: React
+ * Three of those four already exist. `Resizable` is Prismata's separator: React
  * Aria's `useMove` behind a `role="separator"` that carries `aria-valuenow`,
  * `aria-valuemin` and `aria-valuemax`, so it is resizable by keyboard as well as
  * by pointer. Its 44px target sits around a 4px grip, because a few pixels is
@@ -60,12 +60,12 @@ export function SplitView({
   ...props
 }: SplitViewProps): React.JSX.Element {
   if (collapse !== 'none') {
-    /* One pane, no divider. `data-cr-state` so the collapse is legible to a
+    /* One pane, no divider. `data-pr-state` so the collapse is legible to a
        gate and to a product's own styling without reading the class hash. */
     return (
       <div
         {...props}
-        data-cr-state="collapsed"
+        data-pr-state="collapsed"
         className={cx(styles['collapsed'], className)}
       >
         {collapse === 'secondary' ? children : secondary}
@@ -76,7 +76,7 @@ export function SplitView({
   return (
     <Resizable
       {...props}
-      data-cr-state="at-rest"
+      data-pr-state="at-rest"
       className={className}
       {...(secondary === undefined ? {} : { secondary })}
       {...(size === undefined ? {} : { size })}

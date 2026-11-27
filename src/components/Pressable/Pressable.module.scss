@@ -18,8 +18,8 @@
   position: absolute;
   inset: 50% auto auto 50%;
   translate: -50% -50%;
-  min-inline-size: $cr-action-min-target;
-  min-block-size: $cr-action-min-target;
+  min-inline-size: $pr-action-min-target;
+  min-block-size: $pr-action-min-target;
   inline-size: 100%;
   block-size: 100%;
 }

@@ -22,7 +22,7 @@ export interface PriceProps extends Omit<NumberFormatterProps, 'value' | 'format
   /** The amount and its currency. */
   value: Money;
   /**
-   * How `Intl` renders the currency. Crystal's default is the platform's, which
+   * How `Intl` renders the currency. Prismata's default is the platform's, which
    * is locale-aware: `USD` is `$` to a reader in the United States and `US$` to
    * one in Britain.
    */

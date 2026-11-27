@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { DragHandle } from './DragHandle.js';
 
 const items = () => [{ 'text/plain': 'Alpha' }];
 
 describe('DragHandle', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <DragHandle getItems={items} handleLabel="Move Alpha"><p>Alpha</p></DragHandle>,
     );
     await expectNoAxeViolations(container);
@@ -17,7 +17,7 @@ describe('DragHandle', () => {
      reader can start one from a button. A decorated div supports only the
      pointer path. */
   it('offers a real button to start a keyboard drag', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <DragHandle getItems={items} handleLabel="Move Alpha"><p>Alpha</p></DragHandle>,
     );
     const grip = screen.getByRole('button', { name: 'Move Alpha' });
@@ -28,12 +28,12 @@ describe('DragHandle', () => {
   });
 
   it('starts at rest and refuses to lift when disabled', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <DragHandle getItems={items} handleLabel="Move Alpha" isDisabled data-testid="d">
         <p>Alpha</p>
       </DragHandle>,
     );
-    expect(screen.getByTestId('d').dataset['crState']).toBe('at-rest');
+    expect(screen.getByTestId('d').dataset['prState']).toBe('at-rest');
     expect(screen.getByRole('button', { name: 'Move Alpha' })).toBeDisabled();
   });
 });

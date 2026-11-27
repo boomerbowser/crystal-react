@@ -1,5 +1,5 @@
 /* R-28 (ruled 16 November 2026): every rule that paints material by hand, per component directory.
- * Evidence for Crystal's proposals/2026-11-16-library-material-upstream.md.
+ * Evidence for Prismata's proposals/2026-11-16-library-material-upstream.md.
  *
  *   node scripts/inventory-material.mjs inventory.json
  *   node scripts/measure-material.mjs inventory.json measured.json   # Storybook on 6006
@@ -21,7 +21,7 @@ for (const [dir, entries] of byDir) {
       const hits = [];
       if (/backdrop-filter\s*:(?!\s*none\b)/.test(body)) hits.push('backdrop-filter');
       for (const x of body.matchAll(/@include\s+(?:material\.)?(resin|frost|haze-fill|stone|plastic|field\.shell)\b[^;]*/g)) hits.push(x[0].replace('@include ', ''));
-      if (/var\(--cr-(haze|stone|frost|resin)-fill\)/.test(body) && !hits.length) hits.push('fill:' + body.match(/var\(--cr-(haze|stone|frost|resin)-fill\)/)[1]);
+      if (/var\(--pr-(haze|stone|frost|resin)-fill\)/.test(body) && !hits.length) hits.push('fill:' + body.match(/var\(--pr-(haze|stone|frost|resin)-fill\)/)[1]);
       if (hits.length) rules.push({ file, selector: sel.slice(0, 80), hits });
     }
   }

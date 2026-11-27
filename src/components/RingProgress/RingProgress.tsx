@@ -10,8 +10,8 @@
  * `aria-valuetext`, and a ring rendered with no centre label loses nothing an
  * assistive technology needs.
  *
- * The catalogue says "Stroke matches the icon stroke weight family", and Crystal
- * published `--cr-progress-ring-stroke` for it, with the note that a gauge is a
+ * The catalogue says "Stroke matches the icon stroke weight family", and Prismata
+ * published `--pr-progress-ring-stroke` for it, with the note that a gauge is a
  * progress ring that has been told what it is measuring. One token keeps the two
  * the same.
  *

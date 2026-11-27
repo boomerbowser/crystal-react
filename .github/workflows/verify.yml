@@ -1,4 +1,4 @@
-# Crystal React's gates, run on every push and pull request.
+# Prismata React's gates, run on every push and pull request.
 #
 # Every step already exists as a script. This workflow runs them on a clean
 # checkout, on a machine nobody has edited, before a change lands.
@@ -20,19 +20,19 @@ jobs:
   verify:
     name: Tokens, types, tests and bundle
     runs-on: ubuntu-latest
-    # Crystal is a published package: `@crystal-ui/core` is `^2.0.0` from npm,
+    # Prismata is a published package: `@prismata/core` is `^2.0.0` from npm,
     # and the library reads its tokens, its resolver and its stylesheets out of
     # `node_modules`. CONTRACT §1 is the reason: a second copy of a value drifts
     # from the first. A registry version is the same bytes for everyone and
     # cannot be edited underneath a build, which a sibling directory can.
     defaults:
       run:
-        working-directory: crystal-react
+        working-directory: prismata-react
     steps:
-      - name: Check out Crystal React
+      - name: Check out Prismata React
         uses: actions/checkout@v5
         with:
-          path: crystal-react
+          path: prismata-react
 
       # What is left of R-16, the push-ordering trap, which is closed. A
       # published version is the same bytes for every build and cannot be
@@ -41,26 +41,26 @@ jobs:
       # The `file:` branch below only fires if somebody points the dependency
       # back at a working copy. That is reasonable for a change spanning both
       # repositories but must not be merged, and the step says so.
-      - name: Crystal is present, and new enough
+      - name: Prismata is present, and new enough
         run: |
           set -euo pipefail
-          declared="$(node -p "const d=require('./package.json');(d.devDependencies?.['@crystal-ui/core'] ?? d.dependencies['@crystal-ui/core'])")"
+          declared="$(node -p "const d=require('./package.json');(d.devDependencies?.['@prismata/core'] ?? d.dependencies['@prismata/core'])")"
           case "$declared" in
             file:*)
               # The declared path is used verbatim. Stripping the `../` would
               # fail a correct checkout.
               #
-              # CI does not check Crystal out, so a `file:` range never resolves
+              # CI does not check Prismata out, so a `file:` range never resolves
               # here. The step names the missing path instead of leaving pnpm to
               # report it.
               here="${declared#file:}"
               if [ ! -d "$here" ]; then
                 echo "::error::package.json depends on '$declared', and '$here' is not in this checkout."
-                echo "::error::Nothing checks Crystal out in CI: the dependency is expected to be a published range like '^2.0.0'. A file: path works on a contributor's disk and nowhere else, so it cannot be merged."
-                echo "::error::If this is a change spanning both repositories, publish Crystal first and depend on the version."
+                echo "::error::Nothing checks Prismata out in CI: the dependency is expected to be a published range like '^2.0.0'. A file: path works on a contributor's disk and nowhere else, so it cannot be merged."
+                echo "::error::If this is a change spanning both repositories, publish Prismata first and depend on the version."
                 exit 1
               fi
-              echo "Crystal at $here — $(node -p "const p=require('$here/package.json');p.name+' '+p.version")"
+              echo "Prismata at $here — $(node -p "const p=require('$here/package.json');p.name+' '+p.version")"
               ;;
             *) echo "Depends on the published '$declared' — no sibling checkout needed." ;;
           esac
@@ -74,7 +74,7 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: crystal-react/pnpm-lock.yaml
+          cache-dependency-path: prismata-react/pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
 
@@ -83,7 +83,7 @@ jobs:
       # thing.
       - run: pnpm run tokens
 
-      # No value is redeclared that Crystal already defines. This is CONTRACT §1
+      # No value is redeclared that Prismata already defines. This is CONTRACT §1
       # as a script, and it is first because it is the one that fails loudest
       # when somebody types a number.
       - run: pnpm run lint:tokens
@@ -92,7 +92,7 @@ jobs:
 
       # The review surface must be reviewable. A ratchet over meta.component,
       # args, argTypes, play functions and action args, plus the one line in
-      # preview.ts that puts Crystal's environment on every story. It guards
+      # preview.ts that puts Prismata's environment on every story. It guards
       # against a flat ground that hides the material hierarchy, an environment
       # nothing exposes, and a Controls panel reading "This story has no
       # controls". It runs before the tests because it is cheap and because a
@@ -122,7 +122,7 @@ jobs:
       # page against the built package, which is also the Next.js consumer
       # check (§3.6). It fails on a class or surface the installed core does
       # not publish before Next builds anything.
-      - run: pnpm --filter @crystal-ui/docs build
+      - run: pnpm --filter @prismata/docs build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
 
@@ -160,31 +160,31 @@ jobs:
       # styling.
       #
       # `verify:materials` is the aesthetic check and the only one that needs
-      # both servers: it renders the same material in Crystal's own preview and
+      # both servers: it renders the same material in Prismata's own preview and
       # in this library and compares the computed style. Neither side's values
-      # are written down, so the expectation follows Crystal rather than a copy
-      # of it, and this library cannot drift from Crystal while its own tests
+      # are written down, so the expectation follows Prismata rather than a copy
+      # of it, and this library cannot drift from Prismata while its own tests
       # stay green.
       #
-      # Crystal's site is built rather than only checked out. The site reaches
+      # Prismata's site is built rather than only checked out. The site reaches
       # the library through a copy its build makes, that copy is gitignored,
-      # and serve.py refuses to start without it. A site served without Crystal
+      # and serve.py refuses to start without it. A site served without Prismata
       # renders, and looks like a design regression.
       #
-      # crystal-preview is private (`crystal` is public), so this needs a
+      # prismata-preview is private (`prismata` is public), so this needs a
       # repository-scoped token. Without the token `actions/checkout` reports
       # "Not Found", which reads like a typo in the repository name.
-      - name: Check out Crystal's site
+      - name: Check out Prismata's site
         uses: actions/checkout@v5
         with:
-          repository: boomerbowser/crystal-preview
-          path: crystal-preview
-          token: ${{ secrets.CRYSTAL_HEAD_TOKEN }}
+          repository: boomerbowser/prismata-preview
+          path: prismata-preview
+          token: ${{ secrets.PRISMATA_HEAD_TOKEN || secrets.CRYSTAL_HEAD_TOKEN }}
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-      - name: Build Crystal's site
-        working-directory: crystal-preview
+      - name: Build Prismata's site
+        working-directory: prismata-preview
         run: |
           npm ci --no-audit --no-fund
           pip install -r tools/requirements.txt
@@ -208,18 +208,18 @@ jobs:
           # fails on a palette change.
           #
           # The focus half guards against a property that is read but never
-          # defined: when --cr-focus-core and --cr-focus-ring were read by every
+          # defined: when --pr-focus-core and --pr-focus-ring were read by every
           # field in this library and defined by nothing, no control painted a
           # focus ring and every test passed.
           pnpm run verify:appearance
 
-          # Material parity needs Crystal's own site beside the Storybook, so
+          # Material parity needs Prismata's own site beside the Storybook, so
           # the same material can be rendered in both and compared. It is
           # checked out and built in the step above. The site reaches the
           # library through a copy that the build makes, and serve.py refuses
-          # to start without it. A site served without Crystal renders, and
+          # to start without it. A site served without Prismata renders, and
           # looks like a design regression.
-          python3 ../crystal-preview/tools/serve.py &
+          python3 ../prismata-preview/tools/serve.py &
           for _ in $(seq 1 40); do
             curl -sf http://127.0.0.1:4321/ >/dev/null && break
             sleep 0.5
@@ -234,6 +234,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: storybook
-          path: crystal-react/storybook-static
+          path: prismata-react/storybook-static
           retention-days: 7
           if-no-files-found: ignore

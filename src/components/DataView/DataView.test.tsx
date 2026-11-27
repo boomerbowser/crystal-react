@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, within } from '../../test/render.js';
+import { renderWithPrismata, screen, within } from '../../test/render.js';
 import { DataView } from './DataView.js';
 
 const items = [
@@ -15,22 +15,22 @@ describe('DataView', () => {
      choice and the count is information, so a reader is told "3 items" in
      either layout. */
   it('is a real list in both layouts', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <DataView items={items} label="Workspaces" layout="grid" />,
     );
     expect(within(screen.getByRole('list')).getAllByRole('listitem')).toHaveLength(3);
-    rerenderWithCrystal(<DataView items={items} label="Workspaces" layout="list" />);
+    rerenderWithPrismata(<DataView items={items} label="Workspaces" layout="list" />);
     expect(within(screen.getByRole('list')).getAllByRole('listitem')).toHaveLength(3);
   });
 
   /* "The layout switch is a control with a pressed state, not a hidden toggle."
      It is a named radio group, not `aria-pressed`, because picking one of two
-     arrangements is a choice. Crystal's segmented control and React Aria's
+     arrangements is a choice. Prismata's segmented control and React Aria's
      single-selection toggle group both use `role="radiogroup"`. The clause rules out two unlabelled icons whose state
      is a colour, and a named radio group rules that out at least as firmly. */
   it('offers the layout switch as a named group of real options', async () => {
     const onLayoutChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <DataView items={items} label="Workspaces" defaultLayout="grid" onLayoutChange={onLayoutChange} />,
     );
     const group = screen.getByRole('radiogroup', { name: 'Layout' });
@@ -43,28 +43,28 @@ describe('DataView', () => {
   });
 
   it('names the switch with visible text rather than an aria-label', () => {
-    renderWithCrystal(<DataView items={items} label="Workspaces" />);
+    renderWithPrismata(<DataView items={items} label="Workspaces" />);
     expect(screen.getByText('Layout')).toBeInTheDocument();
   });
 
   it('carries the layout as data, so one rule per layout arranges the grid', () => {
-    const { container } = renderWithCrystal(<DataView items={items} label="Workspaces" layout="list" />);
+    const { container } = renderWithPrismata(<DataView items={items} label="Workspaces" layout="list" />);
     expect(container.querySelector('section')?.dataset['layout']).toBe('list');
   });
 
   it('can be told it has only one arrangement', () => {
-    renderWithCrystal(<DataView items={items} label="Workspaces" switchable={false} />);
+    renderWithPrismata(<DataView items={items} label="Workspaces" switchable={false} />);
     expect(screen.queryByRole('radiogroup')).toBeNull();
   });
 
   it('shows the empty state instead of an empty list', () => {
-    renderWithCrystal(<DataView items={[]} label="Workspaces" empty="No workspaces yet." />);
+    renderWithPrismata(<DataView items={[]} label="Workspaces" empty="No workspaces yet." />);
     expect(screen.getByText('No workspaces yet.')).toBeInTheDocument();
     expect(screen.queryByRole('list')).toBeNull();
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <DataView items={items} label="Workspaces" toolbar={<span>3 workspaces</span>} />,
     );
     await expectNoAxeViolations(container);

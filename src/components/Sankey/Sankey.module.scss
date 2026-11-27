@@ -15,8 +15,8 @@
 .flow {
   fill: none;
   stroke: var(--series-colour);
-  stroke-opacity: var(--cr-chart-link-opacity);
-  transition: stroke-opacity var(--cr-state) var(--cr-ease-settle);
+  stroke-opacity: var(--pr-chart-link-opacity);
+  transition: stroke-opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 .link:focus-visible { outline: none; }
@@ -24,7 +24,7 @@
 .link:hover .flow,
 .link[data-active] .flow { stroke-opacity: 1; }
 
-.node { fill: var(--cr-text); }
+.node { fill: var(--pr-text); }
 
 .nodeLabel {
   @include chart.chart-label;

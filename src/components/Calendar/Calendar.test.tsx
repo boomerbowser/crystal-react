@@ -2,14 +2,14 @@ import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { CalendarDate } from '@internationalized/date';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, within } from '../../test/render.js';
+import { renderWithPrismata, screen, within } from '../../test/render.js';
 import { Calendar, RangeCalendar } from './Calendar.js';
 
 describe('Calendar', () => {
   /* "Usable on its own rather than only inside a picker" is why the month grid
      lives outside `DatePicker`. */
   it('stands on its own, as a named grid', () => {
-    renderWithCrystal(<Calendar label="Departure" defaultValue={new CalendarDate(2026, 9, 23)} />);
+    renderWithPrismata(<Calendar label="Departure" defaultValue={new CalendarDate(2026, 9, 23)} />);
     expect(screen.getByRole('application', { name: /Departure/ })).toBeInTheDocument();
     expect(screen.getByRole('grid')).toBeInTheDocument();
   });
@@ -21,7 +21,7 @@ describe('Calendar', () => {
      "a grid with row and column headers" reads like a requirement for
      `columnheader` roles and is not one. */
   it('shows the weekday row and keeps it out of the accessibility tree', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Calendar label="Departure" defaultValue={new CalendarDate(2026, 9, 23)} />,
     );
     const head = container.querySelector('thead');
@@ -34,14 +34,14 @@ describe('Calendar', () => {
   });
 
   it('marks the selected day as selected', () => {
-    renderWithCrystal(<Calendar label="Departure" defaultValue={new CalendarDate(2026, 9, 23)} />);
+    renderWithPrismata(<Calendar label="Departure" defaultValue={new CalendarDate(2026, 9, 23)} />);
     const selected = screen.getByRole('gridcell', { selected: true });
     expect(selected).toHaveTextContent('23');
   });
 
   it('moves with the keyboard, across a month boundary', async () => {
     const onChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <Calendar label="Departure" defaultValue={new CalendarDate(2026, 9, 30)} onChange={onChange} />,
     );
     /* The roving tab stop is the selected cell, behind the two month controls. */
@@ -53,7 +53,7 @@ describe('Calendar', () => {
   });
 
   it('refuses the days the product cannot accept', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Calendar
         label="Departure"
         defaultValue={new CalendarDate(2026, 9, 23)}
@@ -65,7 +65,7 @@ describe('Calendar', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Calendar label="Departure" defaultValue={new CalendarDate(2026, 9, 23)} />,
     );
     await expectNoAxeViolations(container);
@@ -74,7 +74,7 @@ describe('Calendar', () => {
 
 describe('RangeCalendar', () => {
   it('picks two dates in the same grid', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <RangeCalendar
         label="Stay"
         defaultValue={{ start: new CalendarDate(2026, 9, 21), end: new CalendarDate(2026, 9, 25) }}

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { LineChart } from './LineChart.js';
 
 const meta = {
@@ -19,7 +19,7 @@ const meta = {
           + "hides the whole story. A bar's marks are lengths, and a length from a false "
           + 'baseline lies.\n\n'
           + 'Every point is reachable whether or not one is drawn, and each carries a hit area '
-          + `of Crystal's action minimum (${crystalTokens['action.minTarget']}) regardless of how small the marker is.`,
+          + `of Prismata's action minimum (${prismataTokens['action.minTarget']}) regardless of how small the marker is.`,
       },
     },
   },

@@ -19,7 +19,7 @@ const meta = {
           + 'what goes in it.\n\n'
           + 'The grid reflows by container width, not viewport width. A dashboard inside a '
           + 'split view or a workspace pane is narrower than the window, and a media query '
-          + 'would give it three columns in a 300px pane.', /* crystal-allow-literal: prose about a viewport that is not a value this component sets */
+          + 'would give it three columns in a 300px pane.', /* prismata-allow-literal: prose about a viewport that is not a value this component sets */
       },
     },
   },

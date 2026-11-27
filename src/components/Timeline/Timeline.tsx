@@ -64,7 +64,7 @@ export const Timeline = forwardRef<HTMLElement, TimelineProps>(function Timeline
               data-status={status}
               aria-current={status === 'current' ? 'step' : undefined}
             >
-              <span aria-hidden="true" className={cx('cr-resin flat', styles['marker'])}>{item.marker}</span>
+              <span aria-hidden="true" className={cx('pr-resin flat', styles['marker'])}>{item.marker}</span>
               <span className={styles['body']}>
                 <span className={styles['title']}>{item.title}</span>
                 {item.statusLabel === undefined ? null : (

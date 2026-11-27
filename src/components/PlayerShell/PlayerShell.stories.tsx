@@ -23,7 +23,7 @@ const meta = {
       description: {
         component:
           '"Real media elements; captions and their state announced; transport reachable by keyboard."\n\n'
-          + 'The shell is `VideoPlayer` or `AudioPlayer`, a native element under Crystal\'s Resin transport '
+          + 'The shell is `VideoPlayer` or `AudioPlayer`, a native element under Prismata\'s Resin transport '
           + 'with the caption toggle and keyboard shortcuts that answer only while focus is inside. It adds '
           + 'full screen on the shell\'s stage so the transport comes too, metadata on Haze, and '
           + '`PlaylistBlock` as the queue.',

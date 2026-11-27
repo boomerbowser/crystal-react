@@ -9,7 +9,7 @@
  *
  * Zod, Valibot, ArkType and anything else implementing `~standard` work here
  * unchanged, and none of them is a dependency of this library. The product
- * picks its validator, not Crystal.
+ * picks its validator, not Prismata.
  */
 
 /** A validator that speaks Standard Schema v1. */

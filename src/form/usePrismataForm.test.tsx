@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import * as v from 'valibot';
-import { renderWithCrystal, screen, waitFor } from '../test/render.js';
+import { renderWithPrismata, screen, waitFor } from '../test/render.js';
 import { TextInput } from '../components/TextInput/TextInput.js';
 import { Button } from '../components/Button/Button.js';
 import { Form } from './Form.js';
-import { useCrystalForm, type UseCrystalFormOptions } from './useCrystalForm.js';
+import { usePrismataForm, type UsePrismataFormOptions } from './usePrismataForm.js';
 import { valuesFromForm } from './standard-schema.js';
 import type { StandardSchemaV1 } from './standard-schema.js';
 
@@ -20,10 +20,10 @@ const Signup = v.object({
 });
 
 function Subject({ options, formErrors = true }: {
-  options: UseCrystalFormOptions<StandardSchemaV1>;
+  options: UsePrismataFormOptions<StandardSchemaV1>;
   formErrors?: boolean;
 }): React.JSX.Element {
-  const form = useCrystalForm(options);
+  const form = usePrismataForm(options);
   return (
     <Form form={form.formProps} formErrors={formErrors ? form.formErrors : []}>
       <TextInput label="Email" name="email" />
@@ -40,9 +40,9 @@ const fill = async (email: string, age: string) => {
   await userEvent.type(screen.getByRole('textbox', { name: 'Age' }), age);
 };
 
-describe('useCrystalForm', () => {
+describe('usePrismataForm', () => {
   it('puts a schema issue on the field it names', async () => {
-    renderWithCrystal(<Subject options={{ schema: Signup as never }} />);
+    renderWithPrismata(<Subject options={{ schema: Signup as never }} />);
     await fill('nope', '30');
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));
 
@@ -61,7 +61,7 @@ describe('useCrystalForm', () => {
       v.object({ email: v.string(), age: v.string() }),
       v.check((value) => value.email !== '' || value.age !== '', 'Give an email or an age'),
     );
-    renderWithCrystal(<Subject options={{ schema: EitherOr as never }} />);
+    renderWithPrismata(<Subject options={{ schema: EitherOr as never }} />);
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -72,7 +72,7 @@ describe('useCrystalForm', () => {
   it('runs the mutation and then the submit handler with the parsed value', async () => {
     const mutateAsync = vi.fn().mockResolvedValue(undefined);
     const onSubmit = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <Subject options={{ schema: Signup as never, mutation: { mutateAsync }, onSubmit }} />,
     );
     await fill('a@b.com', '30');
@@ -90,7 +90,7 @@ describe('useCrystalForm', () => {
   it('submits once when submitted twice at once', async () => {
     let release: (() => void) | undefined;
     const mutateAsync = vi.fn(() => new Promise<void>((resolve) => { release = resolve; }));
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Subject options={{ schema: Signup as never, mutation: { mutateAsync } }} />,
     );
     await fill('a@b.com', '30');
@@ -108,7 +108,7 @@ describe('useCrystalForm', () => {
      produces, or a field looks different depending on how it failed. */
   it('lands a server error on the field it names', async () => {
     const mutateAsync = vi.fn().mockRejectedValue(new Error('Conflict'));
-    renderWithCrystal(
+    renderWithPrismata(
       <Subject options={{
         schema: Signup as never,
         mutation: { mutateAsync },
@@ -126,7 +126,7 @@ describe('useCrystalForm', () => {
      editing itself does not clear one. Without this, a rejected email stays
      marked wrong while the person retypes it. */
   it('clears a server error as soon as that field is edited', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Subject options={{
         schema: Signup as never,
         mutation: { mutateAsync: vi.fn().mockRejectedValue(new Error('Conflict')) },
@@ -144,7 +144,7 @@ describe('useCrystalForm', () => {
   /* A failure no field claimed is still reported. A submit that does nothing
      and says nothing looks like a broken button. */
   it('says something when a failure names no field', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Subject options={{
         schema: Signup as never,
         mutation: { mutateAsync: vi.fn().mockRejectedValue(new Error('The server is unreachable')) },
@@ -160,21 +160,21 @@ describe('useCrystalForm', () => {
 
   it('publishes the submission state as an attribute the stylesheet can read', async () => {
     let release: (() => void) | undefined;
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Subject options={{
         schema: Signup as never,
         mutation: { mutateAsync: () => new Promise<void>((resolve) => { release = resolve; }) },
       }} />,
     );
     const form = container.querySelector('form')!;
-    expect(form.getAttribute('data-cr-submission')).toBe('idle');
+    expect(form.getAttribute('data-pr-submission')).toBe('idle');
 
     await fill('a@b.com', '30');
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));
-    await waitFor(() => expect(form.getAttribute('data-cr-submission')).toBe('submitting'));
+    await waitFor(() => expect(form.getAttribute('data-pr-submission')).toBe('submitting'));
 
     release?.();
-    await waitFor(() => expect(form.getAttribute('data-cr-submission')).toBe('succeeded'));
+    await waitFor(() => expect(form.getAttribute('data-pr-submission')).toBe('succeeded'));
   });
 });
 

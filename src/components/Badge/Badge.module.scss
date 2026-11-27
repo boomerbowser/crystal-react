@@ -7,16 +7,16 @@
  * shape follows the content. One digit is a circle and three digits is a pill,
  * with no variant for either.
  *
- * That rule is Crystal's count size from 2.3.0, `.cr-resin-haze.count`, which the
+ * That rule is Prismata's count size from 2.3.0, `.pr-resin-haze.count`, which the
  * badge wears: the 20px minimum, the pill radius, no block padding, the Haze pad
  * filled to the badge's own edge, weight 700 in tabular figures. The tag sizing
  * does not fit a badge: its 8px inset leaves a pad a few pixels across, and its
  * block padding makes a badge 55px tall (D-27).
  */
 
-/* Crystal 2.0.0 publishes action geometry as tokens and badge geometry only as
+/* Prismata 2.0.0 publishes action geometry as tokens and badge geometry only as
    rules. Until a core release carries them, the values enter here, once, named. */
-$badge-dot-size: 8px; /* crystal-allow-literal: a marker, not a container; wants a core token */
+$badge-dot-size: 8px; /* prismata-allow-literal: a marker, not a container; wants a core token */
 $badge-ring-width: 2px;
 
 .dot {
@@ -25,7 +25,7 @@ $badge-ring-width: 2px;
   inline-size: $badge-dot-size;
   block-size: $badge-dot-size;
   padding-inline: 0;
-  background: var(--cr-primary);
+  background: var(--pr-primary);
 }
 
 /* A dot only signals presence, so it carries no Haze fill. There is no label
@@ -44,7 +44,7 @@ $badge-ring-width: 2px;
 .attached {
   position: absolute;
   z-index: 1;
-  outline: $badge-ring-width solid var(--cr-surface);
+  outline: $badge-ring-width solid var(--pr-surface);
 }
 
 .topEnd { inset-block-start: 0; inset-inline-end: 0; translate: 50% -50%; }

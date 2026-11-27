@@ -5,7 +5,7 @@
  * a table cell, and anything it added around itself would be spacing the sentence
  * did not ask for.
  *
- * "Stroke weight at small size" is Crystal's chart stroke, unchanged. Do not thin
+ * "Stroke weight at small size" is Prismata's chart stroke, unchanged. Do not thin
  * the line at a small size. It is already only twenty pixels tall, and a thinner
  * line disappears on a low-contrast surface.
  */
@@ -13,7 +13,7 @@
 .spark {
   display: inline-flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   vertical-align: middle;
 }
 
@@ -26,8 +26,8 @@
 
 .path {
   fill: none;
-  stroke: var(--cr-chart-series-1);
-  stroke-width: var(--cr-chart-stroke);
+  stroke: var(--pr-chart-series-1);
+  stroke-width: var(--pr-chart-stroke);
   stroke-linecap: round;
   stroke-linejoin: round;
 }

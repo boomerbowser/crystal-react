@@ -12,7 +12,7 @@
  * would give `aria-current` and the state wording two places to drift, and the
  * wording carries the meaning to anybody not looking at the markers.
  *
- * This is the one place in Crystal the check mark glyph is right. It means
+ * This is the one place in Prismata the check mark glyph is right. It means
  * validated (the step is done and correct), which is information display. It never means "selected". Selection is label weight,
  * and the current step here takes exactly that.
  */

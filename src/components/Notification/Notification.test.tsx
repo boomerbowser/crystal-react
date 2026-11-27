@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { Notification } from './Notification.js';
 
 describe('Notification', () => {
-  /* Crystal's selection rule, applied here: nothing is drawn beside the title
+  /* Prismata's selection rule, applied here: nothing is drawn beside the title
      to mark it. A dot beside the title offsets the title it points at, so the
      unread item stops lining up with the others. */
   it('marks unread with label weight and nothing beside the label', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ul><Notification unread title="Build failed" /></ul>,
     );
     const item = container.querySelector('[data-unread]');
@@ -19,12 +19,12 @@ describe('Notification', () => {
 
   /* A screen reader does not read out weight, so it is said in words too. */
   it('says "unread" for a reader who cannot see the weight', () => {
-    renderWithCrystal(<ul><Notification unread title="Build failed" /></ul>);
+    renderWithPrismata(<ul><Notification unread title="Build failed" /></ul>);
     expect(screen.getByRole('listitem', { name: /^Unread\.\s*Build failed$/ })).toBeInTheDocument();
   });
 
   it('does not say it when it is read', () => {
-    renderWithCrystal(<ul><Notification title="Build failed" /></ul>);
+    renderWithPrismata(<ul><Notification title="Build failed" /></ul>);
     expect(screen.getByRole('listitem', { name: 'Build failed' })).toBeInTheDocument();
   });
 
@@ -32,7 +32,7 @@ describe('Notification', () => {
      reader's language and has to age. The machine-readable stamp is the
      element's. */
   it('carries a machine-readable time beside the words', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ul>
         <Notification title="Build failed" dateTime="2026-09-23T09:15:00Z" timestamp="3 minutes ago" />
       </ul>,
@@ -41,7 +41,7 @@ describe('Notification', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ul><Notification unread title="Build failed" timestamp="3 minutes ago" /></ul>,
     );
     await expectNoAxeViolations(container);

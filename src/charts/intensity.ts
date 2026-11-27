@@ -1,4 +1,4 @@
-/* Which bucket a value falls in, on Crystal's intensity ramp.
+/* Which bucket a value falls in, on Prismata's intensity ramp.
  *
  * The ramp is five steps, each shipped with the ink that reads on it, and the
  * contrast floor is met at every one (`docs/colors.md` sets out the
@@ -37,10 +37,10 @@ export function intensityStep(value: number, low: number, high: number): number 
 
 /** The custom property carrying that step's paint. Step 0 is the plot's ground. */
 export function intensityFill(step: number): string {
-  return step === 0 ? 'transparent' : `var(--cr-chart-heat-${step})`;
+  return step === 0 ? 'transparent' : `var(--pr-chart-heat-${step})`;
 }
 
 /** And the ink that reads on it. */
 export function intensityInk(step: number): string {
-  return step === 0 ? 'var(--cr-muted)' : `var(--cr-chart-on-heat-${step})`;
+  return step === 0 ? 'var(--pr-muted)' : `var(--pr-chart-on-heat-${step})`;
 }

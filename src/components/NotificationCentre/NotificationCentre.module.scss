@@ -1,19 +1,19 @@
 @use '../../styles/tokens' as *;
 
-/* "Frost panel with Haze rows." The centre wears `.cr-frost`; the notifications
+/* "Frost panel with Haze rows." The centre wears `.pr-frost`; the notifications
    inside it step down to Haze through the surface context. The undo row is a
    Haze fill too, as reading content inside the panel. */
 .centre {
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-md);
-  padding: var(--cr-block-padding, var(--cr-space));
+  gap: var(--pr-block-gap, $pr-spacing-md);
+  padding: var(--pr-block-padding, var(--pr-space));
   min-inline-size: 0;
 }
 
 .top {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   flex-wrap: wrap;
 }
 
@@ -25,26 +25,26 @@
 .undo {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   flex-wrap: wrap;
-  padding: $cr-spacing-xs $cr-spacing-md;
-  border-radius: var(--cr-radius);
+  padding: $pr-spacing-xs $pr-spacing-md;
+  border-radius: var(--pr-radius);
 }
 
 .undo > span { margin-inline-end: auto; font-weight: 700; }
 
-.group { display: grid; gap: $cr-spacing-xs; }
+.group { display: grid; gap: $pr-spacing-xs; }
 
 .groupHeading {
   margin: 0;
-  font-size: var(--cr-text-caption-size);
+  font-size: var(--pr-text-caption-size);
   font-weight: 800;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
 }
 
 .list {
   display: grid;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   margin: 0;
   padding: 0;
   list-style: none;

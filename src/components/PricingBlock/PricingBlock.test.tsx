@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, within } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, within } from '../../test/render.js';
 import { PricingBlock, type PricingPlan } from './PricingBlock.js';
 
 const gbp = (amount: number) => ({ amount, currency: 'GBP' });
@@ -12,7 +12,7 @@ const plans: PricingPlan[] = [
 
 describe('PricingBlock', () => {
   it('lists the plans, each an article named by its heading', () => {
-    const { container } = renderWithCrystal(<PricingBlock plans={plans} onChoose={() => {}} />);
+    const { container } = renderWithPrismata(<PricingBlock plans={plans} onChoose={() => {}} />);
     expect(container.querySelectorAll('ul > li > article')).toHaveLength(3);
     expect(screen.getByRole('article', { name: 'Solo' })).toBeInTheDocument();
     expect(screen.getByRole('article', { name: 'Organisation' })).toBeInTheDocument();
@@ -20,7 +20,7 @@ describe('PricingBlock', () => {
 
   /* The recommended plan is stated in words, not only styled. */
   it('says recommended in the plan\'s heading, in words', () => {
-    renderWithCrystal(<PricingBlock plans={plans} onChoose={() => {}} />);
+    renderWithPrismata(<PricingBlock plans={plans} onChoose={() => {}} />);
     expect(screen.getByRole('heading', { name: 'Team, Recommended' })).toBeInTheDocument();
     expect(screen.getByRole('article', { name: 'Team, Recommended' })).toHaveTextContent('Recommended');
     expect(screen.getAllByText('Recommended')).toHaveLength(1);
@@ -28,7 +28,7 @@ describe('PricingBlock', () => {
 
   it('gives the recommended plan the one primary action, and names every action for its plan', async () => {
     const onChoose = vi.fn();
-    renderWithCrystal(<PricingBlock plans={plans} onChoose={onChoose} />);
+    renderWithPrismata(<PricingBlock plans={plans} onChoose={onChoose} />);
     const team = screen.getByRole('button', { name: 'Choose Team' });
     expect(team.className).toMatch(/primary/);
     expect(screen.getByRole('button', { name: 'Choose Solo' }).className).not.toMatch(/primary/);
@@ -37,13 +37,13 @@ describe('PricingBlock', () => {
   });
 
   it('says a missing feature is not included, rather than only leaving it unticked', () => {
-    renderWithCrystal(<PricingBlock plans={plans} onChoose={() => {}} />);
+    renderWithPrismata(<PricingBlock plans={plans} onChoose={() => {}} />);
     const solo = screen.getByRole('article', { name: 'Solo' });
     expect(within(solo).getByText(/Not included/).closest('li')).toHaveTextContent('Not included: Shared workspaces');
   });
 
   it('says which plan is the reader\'s, and does not offer it', () => {
-    renderWithCrystal(<PricingBlock plans={plans} onChoose={() => {}} currentPlan="solo" />);
+    renderWithPrismata(<PricingBlock plans={plans} onChoose={() => {}} currentPlan="solo" />);
     expect(screen.queryByRole('button', { name: 'Choose Solo' })).toBeNull();
     expect(within(screen.getByRole('article', { name: 'Solo' })).getByText('Your plan')).toBeInTheDocument();
   });
@@ -52,7 +52,7 @@ describe('PricingBlock', () => {
     ['at-rest', plans.map((plan) => ({ ...plan, recommended: false }))],
     ['recommended', plans],
   ])('has no axe violations %s', async (_, shown) => {
-    const { container } = renderWithCrystal(<PricingBlock plans={shown} onChoose={() => {}} currentPlan="solo" />);
+    const { container } = renderWithPrismata(<PricingBlock plans={shown} onChoose={() => {}} currentPlan="solo" />);
     await expectNoAxeViolations(container);
   });
 });

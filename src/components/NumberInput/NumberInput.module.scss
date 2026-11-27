@@ -5,7 +5,7 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-/* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
+/* The shell wears Prismata's `.pr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 .control { @include field.control; text-align: start; font-variant-numeric: tabular-nums; }
 
 .control:focus { outline: none; }
@@ -16,7 +16,7 @@
    Styling only the first would let a field be announced as invalid and drawn
    as valid. */
 .shell[data-invalid],
-.field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
+.field[data-invalid] .shell { border-color: var(--pr-danger-ink); }
 
 .steppers {
   display: flex;
@@ -25,7 +25,7 @@
   /* No padding of its own. The shell's 8px inset is the margin, and the two
      20px steppers and their gap fill exactly the 44px the input sets. */
   padding: 0;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
 }
 
 /* Each stepper is short, so the pair together reaches the target height. A 44px
@@ -33,8 +33,8 @@
    mistake. They are pointer affordances. The arrow keys are the primary route
    and always reach the value. */
 .stepper {
-  /* From 2.1.0, Crystal's `button { min-height: 48px }` would make each stepper
-     48px and the field 110px tall. `cr-bare`'s own 44px minimum would do the same,
+  /* From 2.1.0, Prismata's `button { min-height: 48px }` would make each stepper
+     48px and the field 110px tall. `pr-bare`'s own 44px minimum would do the same,
      so both are released here and the pair divides the field's height between
      them. */
   min-block-size: 0;
@@ -43,24 +43,24 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  min-inline-size: $cr-spacing-xl;
+  min-inline-size: $pr-spacing-xl;
   border: 0;
-  border-radius: $cr-spacing-xs;
+  border-radius: $pr-spacing-xs;
   background: transparent;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   cursor: pointer;
 }
 
-.stepper:hover:not(:disabled) { background: var(--cr-surface-alt); color: var(--cr-text); }
-.stepper:disabled { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
-.stepper svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.stepper:hover:not(:disabled) { background: var(--pr-surface-alt); color: var(--pr-text); }
+.stepper:disabled { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
+.stepper svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 /* The control shows that it has reached a bound, so it does not silently refuse
    to move. */
-.shell[data-at-bound] .stepper:disabled { color: var(--cr-edge); }
+.shell[data-at-bound] .stepper:disabled { color: var(--pr-edge); }
 
 .description, .error { @include field.message; }
-.description { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 700; }
+.description { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 700; }
 
-.field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.field[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }

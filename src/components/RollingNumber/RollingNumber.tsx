@@ -2,16 +2,16 @@
 
 /* RollingNumber: a number that rolls digit by digit when it changes.
  *
- * Crystal assigns this component no motion recipe. A library must not invent
+ * Prismata assigns this component no motion recipe. A library must not invent
  * motion the design system did not specify, and `Card` plays nothing for that
  * reason. Here the movement is the component: the catalogue's own anatomy is "a
  * number that animates digit by digit when it changes".
  *
- * The roll is built from Crystal's published motion tokens rather than an
+ * The roll is built from Prismata's published motion tokens rather than an
  * invented recipe. The travel is one digit. The duration is
- * `motion.duration.state`, which Crystal uses for a value changing. The easing
+ * `motion.duration.state`, which Prismata uses for a value changing. The easing
  * is `motion.easing.settle`. This library chose none of the numbers, and if
- * Crystal authors a recipe for it, this is the file that changes.
+ * Prismata authors a recipe for it, this is the file that changes.
  *
  * "The value is announced once it settles, not on every frame". The digits are
  * `aria-hidden`, and a polite live region carries the settled value one
@@ -19,8 +19,8 @@
  * duration resolves to zero, so the announcement is immediate.
  */
 import { forwardRef, useEffect, useRef, useState, type HTMLAttributes } from 'react';
-import { useCrystalTheme } from '../../theme/CrystalProvider.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { usePrismataTheme } from '../../theme/PrismataProvider.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden.js';
 import { cx } from '../../styles/cx.js';
 import styles from './RollingNumber.module.scss';
@@ -37,14 +37,14 @@ export interface RollingNumberProps extends Omit<HTMLAttributes<HTMLSpanElement>
 
 const DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
 
-/** Crystal's own duration for a value changing, in milliseconds. */
-const ROLL_MS = Number.parseFloat(crystalTokens['motion.duration.state']);
+/** Prismata's own duration for a value changing, in milliseconds. */
+const ROLL_MS = Number.parseFloat(prismataTokens['motion.duration.state']);
 
 export const RollingNumber = forwardRef<HTMLSpanElement, RollingNumberProps>(function RollingNumber(
   { value, format, locale, description, className, ...props },
   ref,
 ) {
-  const { resolveDuration } = useCrystalTheme();
+  const { resolveDuration } = usePrismataTheme();
   const text = new Intl.NumberFormat(locale, format).format(value);
   const [settled, setSettled] = useState(text);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);

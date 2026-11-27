@@ -29,7 +29,7 @@ export interface ScrimProps {
 
 export function Scrim({ isCentred = true, children, className }: ScrimProps): React.JSX.Element {
   /* The catalogue's `mirage` plays as the scrim arrives and `mirage-out` as it
-     goes, computed by Crystal's preset module, as the dialog and the drawer
+     goes, computed by Prismata's preset module, as the dialog and the drawer
      play them. The exit plays only when a product shows and hides the scrim
      inside `AnimatePresence`, where Motion can hold it. */
   const wash = usePresetMotion('mirage', 'mirage-out');
@@ -40,7 +40,7 @@ export function Scrim({ isCentred = true, children, className }: ScrimProps): Re
          hiding the wrapper hides the dialog inside it, which would make every
          modal in the library invisible to a screen reader. It needs no hiding:
          a div with no role and nothing focusable has nothing to announce. */
-      className={cx('cr-mirage', styles['scrim'], isCentred ? styles['centred'] : undefined, className)}
+      className={cx('pr-mirage', styles['scrim'], isCentred ? styles['centred'] : undefined, className)}
     >
       {children}
     </motion.div>

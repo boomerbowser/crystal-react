@@ -8,7 +8,7 @@
  * its current value; with one it is a flat group. Each is a set of radio items (`menuitemradio` with
  * `aria-checked`), because each is a choice of exactly one. The chosen item is
  * shown by label weight and the selected fill. There is no check mark: in
- * Crystal a check means validated, and a mark beside the label would offset the
+ * Prismata a check means validated, and a mark beside the label would offset the
  * very item it points at.
  *
  * A group with nothing to choose between is left out. A file with one audio
@@ -20,7 +20,7 @@
  * a "Caption style" submenu with two groups, the size and the backing, because
  * a reader who cannot read the default size or cannot read through a feathered
  * backing needs to change it, as broadcast caption rules require. A solid
- * backing is the opaque surface Crystal already falls back to under reduced
+ * backing is the opaque surface Prismata already falls back to under reduced
  * transparency, not a new colour.
  *
  * Every change is reported through `onAnnounce` in words ("Speed 1.5 times",

@@ -1,8 +1,8 @@
 @use '../../styles/tokens' as *;
 
-/* DataTable: Crystal's table surface, shared with `Table`.
+/* DataTable: Prismata's table surface, shared with `Table`.
  *
- * The material is the same recipe `crystal.css` gives `.cr-table`, so a reader
+ * The material is the same recipe `prismata.css` gives `.pr-table`, so a reader
  * cannot tell from the paint whether a table is interactive. Resin shell, Haze
  * fill inset 6px, hairline separators, the primary-soft header band with its
  * corners inset 8px from the shell's radius.
@@ -14,18 +14,18 @@
  * the column edge it reports.
  */
 
-$table-header-inset: 8px; /* crystal-allow-literal: the catalogue's stated header corner inset */
-$table-cell-block: 14px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
-$table-cell-inline: 18px; /* crystal-allow-literal: core `.cr-table :is(th,td)` */
-$resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the edge; the target is the floor */
+$table-header-inset: 8px; /* prismata-allow-literal: the catalogue's stated header corner inset */
+$table-cell-block: 14px; /* prismata-allow-literal: core `.pr-table :is(th,td)` */
+$table-cell-inline: 18px; /* prismata-allow-literal: core `.pr-table :is(th,td)` */
+$resizer-width: 12px; /* prismata-allow-literal: the grip's visual inset from the edge; the target is the floor */
 
-.shell { display: flex; flex-direction: column; gap: $cr-spacing-sm; }
+.shell { display: flex; flex-direction: column; gap: $pr-spacing-sm; }
 
-/* The frame is Crystal's `.cr-table-scroll`: the Resin frame, the rim, the
+/* The frame is Prismata's `.pr-table-scroll`: the Resin frame, the rim, the
    content shadow, the 6px-inset Haze fill under the rows, the Resin scrollbar,
    contained overscroll, and both fallbacks. None of these is restated here. Its
-   focus ring is Crystal's too, which reaches any element with a tab index. This
-   file sets only the gutter, which Crystal does not set and which a table whose
+   focus ring is Prismata's too, which reaches any element with a tab index. This
+   file sets only the gutter, which Prismata does not set and which a table whose
    rows arrive after it renders needs. */
 .scroller {
   display: block;
@@ -53,8 +53,8 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
 .column, .selectColumn {
   position: relative;
   padding: $table-cell-block $table-cell-inline;
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
+  background: var(--pr-primary-soft);
+  color: var(--pr-on-primary-soft);
   font-weight: 800;
   text-align: start;
   outline: none;
@@ -65,19 +65,19 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
 
 .column[data-focus-visible], .selectColumn[data-focus-visible],
 .cell[data-focus-visible], .selectCell[data-focus-visible], .row[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(#{$cr-focus-core-offset} * -1);
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(#{$pr-focus-core-offset} * -1);
+  box-shadow: var(--pr-focus-ring);
 }
 
-.header tr > :first-child { border-start-start-radius: calc(var(--cr-radius) - #{$table-header-inset}); }
-.header tr > :last-child { border-start-end-radius: calc(var(--cr-radius) - #{$table-header-inset}); }
+.header tr > :first-child { border-start-start-radius: calc(var(--pr-radius) - #{$table-header-inset}); }
+.header tr > :last-child { border-start-end-radius: calc(var(--pr-radius) - #{$table-header-inset}); }
 
 .columnLabel { display: inline-block; }
 .columnLabel[data-align='end'] { text-align: end; inline-size: 100%; }
 
 .selectHeading {
-  font-size: var(--cr-text-caption-size);
+  font-size: var(--pr-text-caption-size);
   font-weight: 700;
 }
 
@@ -98,7 +98,7 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
   position: absolute;
   inset-block: 0;
   inset-inline-end: 0;
-  inline-size: $cr-action-min-target;
+  inline-size: $pr-action-min-target;
   cursor: col-resize;
   touch-action: none;
 }
@@ -107,23 +107,23 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
 .resizer::before {
   content: '';
   position: absolute;
-  inset-block: $cr-spacing-2xs;
+  inset-block: $pr-spacing-2xs;
   inset-inline-end: calc(#{$resizer-width} / 2);
   inline-size: 1px;
-  background: var(--cr-on-primary-soft);
+  background: var(--pr-on-primary-soft);
   opacity: 0.4;
 }
 
 .resizer[data-resizing]::before, .resizer[data-hovered]::before { opacity: 1; }
 
 .resizer[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(#{$cr-focus-core-offset} * -1);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(#{$pr-focus-core-offset} * -1);
 }
 
 .cell, .selectCell {
   padding: $table-cell-block $table-cell-inline;
-  border-block-end: 1px solid var(--cr-edge);
+  border-block-end: 1px solid var(--pr-edge);
   vertical-align: top;
   outline: none;
 }
@@ -138,64 +138,64 @@ $resizer-width: 12px; /* crystal-allow-literal: the grip's visual inset from the
 
 .body tr:last-child :is(td, th) { border-block-end: 0; }
 
-.row[data-hovered] :is(td, th) { background: var(--cr-label-fill); }
+.row[data-hovered] :is(td, th) { background: var(--pr-label-fill); }
 
 /* Selection is label weight, "not a check badge on the row". The checkbox is
    the control that makes the selection. The row shows that it is selected by
-   being heavier, as every selected thing in Crystal does. */
+   being heavier, as every selected thing in Prismata does. */
 .row[data-selected] :is(td, th) {
   font-weight: 800;
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
+  background: var(--pr-primary-soft);
+  color: var(--pr-on-primary-soft);
 }
 
 .checkbox { display: inline-flex; cursor: pointer; }
 
 .box {
-  /* Crystal's `.cr-choice`, the Resin box, with the well inside it that
+  /* Prismata's `.pr-choice`, the Resin box, with the well inside it that
      `Checkbox` draws: outlined in the primary, then filled with the mark. */
   display: inline-grid;
   place-items: center;
-  inline-size: $cr-choice-box-size;
-  block-size: $cr-choice-box-size;
-  border-radius: $cr-choice-box-radius;
+  inline-size: $pr-choice-box-size;
+  block-size: $pr-choice-box-size;
+  border-radius: $pr-choice-box-radius;
 }
 
 .well {
   display: grid;
   place-items: center;
   box-sizing: border-box;
-  inline-size: calc(#{$cr-choice-box-size} * 0.54);
-  block-size: calc(#{$cr-choice-box-size} * 0.54);
-  border: 2px solid var(--cr-primary);
-  border-radius: 4px; /* crystal-allow-literal: core's native checkbox well radius */
-  background: var(--cr-surface);
+  inline-size: calc(#{$pr-choice-box-size} * 0.54);
+  block-size: calc(#{$pr-choice-box-size} * 0.54);
+  border: 2px solid var(--pr-primary);
+  border-radius: 4px; /* prismata-allow-literal: core's native checkbox well radius */
+  background: var(--pr-surface);
   color: transparent;
 }
 
 .well svg { inline-size: 80%; block-size: 80%; }
 
 .checkbox:is([data-selected], [data-indeterminate]) .well {
-  inline-size: calc(#{$cr-choice-box-size} * 0.69);
-  block-size: calc(#{$cr-choice-box-size} * 0.69);
+  inline-size: calc(#{$pr-choice-box-size} * 0.69);
+  block-size: calc(#{$pr-choice-box-size} * 0.69);
   border: 0;
-  background: var(--cr-primary);
-  color: var(--cr-on-primary);
+  background: var(--pr-primary);
+  color: var(--pr-on-primary);
 }
 
 .checkbox[data-focus-visible] .box {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 .empty {
-  padding: var(--cr-space);
+  padding: var(--pr-space);
   text-align: center;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
 }
 
-.footer { display: flex; align-items: center; justify-content: space-between; gap: $cr-spacing-sm; }
+.footer { display: flex; align-items: center; justify-content: space-between; gap: $pr-spacing-sm; }
 
 @media (forced-colors: active) {
   .scroller { background: Canvas; border: 1px solid CanvasText; box-shadow: none; backdrop-filter: none; }

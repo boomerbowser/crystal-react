@@ -3,7 +3,7 @@
 /* Breadcrumbs.
  *
  * React Aria owns the ordered list, the link semantics and `aria-current="page"`
- * on the last crumb. Crystal owns the landmark, the separator, the collapse and
+ * on the last crumb. Prismata owns the landmark, the separator, the collapse and
  * the treatment of the current entry.
  *
  * The landmark is written here because React Aria does not supply one: its
@@ -102,7 +102,7 @@ export function Breadcrumbs({
   const hidden = collapses ? items.slice(1, items.length - 1) : [];
   const visible = collapses ? [items[0]!, items[items.length - 1]!] : items;
   /* A crumb that was not in the trail before (the reader went a level deeper)
-     arrives with Crystal's `breadcrumb`. The trail the page loads with does not.
+     arrives with Prismata's `breadcrumb`. The trail the page loads with does not.
      This is decided by the crumbs already seen, not by mounting: React Aria
      rebuilds every item when the trail changes, so a crumb that stayed put is
      mounted afresh too and would otherwise arrive again. */

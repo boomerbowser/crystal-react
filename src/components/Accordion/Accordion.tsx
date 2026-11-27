@@ -16,7 +16,7 @@
  * this library had to add; it is the reason to use React Aria's disclosure rather
  * than assemble one.
  *
- * Crystal owns the material and three rules:
+ * Prismata owns the material and three rules:
  *
  *   - The header meets 44px. It is the whole row's press target, so the
  *     padding reaches the floor rather than a grown hit area. There is
@@ -27,13 +27,13 @@
  *     chevron is correct at rest whether or not the recipe ran. A
  *     reduced-motion reader, a re-render mid-animation and a server-rendered
  *     expanded row all need that. This is the rule `Burger` established.
- *   - `accordion-in` plays on the content, not on the panel. Crystal's recipe
+ *   - `accordion-in` plays on the content, not on the panel. Prismata's recipe
  *     is a clip and a fade ("animate visible content after expanding; no
  *     scripted height measurement needed"), a different mechanism from
  *     React Aria's `--disclosure-panel-height`, and the two do not need to agree.
  *
  * `accordion-out` plays on the content as the row closes, and the panel is held
- * open until it has. Crystal's note on the recipe is "hide content after
+ * open until it has. Prismata's note on the recipe is "hide content after
  * completion". React Aria applies `hidden` once the panel's own animations
  * settle, checked from a layout effect in the disclosure, which runs after this
  * content's, so the content registers a hold on the panel first (`Departure`),
@@ -99,14 +99,14 @@ function Row({ item }: { item: AccordionItem }): ReactNode {
     <Disclosure
       id={item.id}
       {...(item.isDisabled === undefined ? {} : { isDisabled: item.isDisabled })}
-      className={cx('cr-haze flat', styles['row'])}
+      className={cx('pr-haze flat', styles['row'])}
     >
       {({ isExpanded }) => (
         <>
           <h3 className={styles['heading']}>
             <AriaButton
               slot="trigger"
-              className={cx(styles['trigger'], 'cr-bare')}
+              className={cx(styles['trigger'], 'pr-bare')}
               onPress={() => { void turn('icon-turn'); }}
             >
               <span className={styles['title']}>{item.title}</span>

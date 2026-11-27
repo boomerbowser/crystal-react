@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, within } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, within } from '../../test/render.js';
 import { TableOfContents, useHeadingInView, type TocEntry } from './TableOfContents.js';
 
 const entries: TocEntry[] = [
@@ -12,44 +12,44 @@ const entries: TocEntry[] = [
 
 describe('TableOfContents', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <TableOfContents entries={entries} activeId="frost" />,
     );
     await expectNoAxeViolations(container);
   });
 
   it('is a named landmark holding an ordered list of links', () => {
-    renderWithCrystal(<TableOfContents entries={entries} label="On this page" />);
+    renderWithPrismata(<TableOfContents entries={entries} label="On this page" />);
     const nav = screen.getByRole('navigation', { name: 'On this page' });
     expect(within(nav).getByRole('list')).toBeInTheDocument();
     expect(within(nav).getAllByRole('link')).toHaveLength(4);
   });
 
   it('links each entry to its heading', () => {
-    renderWithCrystal(<TableOfContents entries={entries} />);
+    renderWithPrismata(<TableOfContents entries={entries} />);
     expect(screen.getByRole('link', { name: 'Frost' })).toHaveAttribute('href', '#frost');
   });
 
   /* `location`, not `page`. Every entry here points at the document being read,
      so `page` would be true of all of them and would say nothing. */
   it('marks where you are with aria-current="location"', () => {
-    renderWithCrystal(<TableOfContents entries={entries} activeId="frost" />);
+    renderWithPrismata(<TableOfContents entries={entries} activeId="frost" />);
     expect(screen.getByRole('link', { name: 'Frost' })).toHaveAttribute('aria-current', 'location');
     expect(screen.getByRole('link', { name: 'Resin' }).getAttribute('aria-current')).toBeNull();
   });
 
   it('marks nothing when no entry is active', () => {
-    const { container } = renderWithCrystal(<TableOfContents entries={entries} />);
+    const { container } = renderWithPrismata(<TableOfContents entries={entries} />);
     expect(container.querySelectorAll('[aria-current]')).toHaveLength(0);
   });
 
   /* Indentation is relative to the shallowest heading present, so a document
      whose headings start at h2 is not indented by a level it does not have. */
   it('indents from the shallowest level in the document, not from h1', () => {
-    renderWithCrystal(<TableOfContents entries={entries} />);
+    renderWithPrismata(<TableOfContents entries={entries} />);
     const depthOf = (name: string) => {
       const link = screen.getByRole('link', { name });
-      return Number((link as HTMLElement).style.getPropertyValue('--cr-toc-level'));
+      return Number((link as HTMLElement).style.getPropertyValue('--pr-toc-level'));
     };
     expect(depthOf('Materials')).toBe(0);
     expect(depthOf('Frost')).toBe(1);
@@ -59,7 +59,7 @@ describe('TableOfContents', () => {
   it('hands navigation to the product when it asks for it', async () => {
     const user = userEvent.setup();
     const onNavigate = vi.fn();
-    renderWithCrystal(<TableOfContents entries={entries} onNavigate={onNavigate} />);
+    renderWithPrismata(<TableOfContents entries={entries} onNavigate={onNavigate} />);
     await user.click(screen.getByRole('link', { name: 'Resin' }));
     expect(onNavigate).toHaveBeenCalledWith('resin');
   });
@@ -70,7 +70,7 @@ describe('TableOfContents', () => {
   it('leaves a modified click to the browser', async () => {
     const user = userEvent.setup();
     const onNavigate = vi.fn();
-    renderWithCrystal(<TableOfContents entries={entries} onNavigate={onNavigate} />);
+    renderWithPrismata(<TableOfContents entries={entries} onNavigate={onNavigate} />);
     await user.keyboard('{Meta>}');
     await user.click(screen.getByRole('link', { name: 'Resin' }));
     await user.keyboard('{/Meta}');
@@ -78,7 +78,7 @@ describe('TableOfContents', () => {
   });
 
   it('follows the fragment itself when no handler is given', () => {
-    renderWithCrystal(<TableOfContents entries={entries} />);
+    renderWithPrismata(<TableOfContents entries={entries} />);
     const link = screen.getByRole('link', { name: 'Resin' });
     /* No click handler at all. A handler that calls preventDefault and then
        does nothing stops the link working without any error. */
@@ -86,7 +86,7 @@ describe('TableOfContents', () => {
   });
 
   it('never marks the active entry with a check', () => {
-    renderWithCrystal(<TableOfContents entries={entries} activeId="frost" />);
+    renderWithPrismata(<TableOfContents entries={entries} activeId="frost" />);
     const link = screen.getByRole('link', { name: 'Frost' });
     expect(link.textContent).not.toMatch(/[✓✔]/);
     expect(link.querySelector('svg')).toBeNull();
@@ -110,7 +110,7 @@ describe('useHeadingInView', () => {
       seen = useHeadingInView(['nothing-here', 'nor-this']);
       return null;
     }
-    renderWithCrystal(<Probe />);
+    renderWithPrismata(<Probe />);
     expect(seen).toBeUndefined();
   });
 
@@ -120,7 +120,7 @@ describe('useHeadingInView', () => {
       seen = useHeadingInView([]);
       return null;
     }
-    renderWithCrystal(<Probe />);
+    renderWithPrismata(<Probe />);
     expect(seen).toBeUndefined();
   });
 });

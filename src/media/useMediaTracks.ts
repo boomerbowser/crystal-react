@@ -11,7 +11,7 @@
  *
  * Three facts about the platform shape the API:
  *
- *   - Captions are rendered by Crystal, not the browser. A browser draws a cue
+ *   - Captions are rendered by Prismata, not the browser. A browser draws a cue
  *     at the bottom of the picture, under the transport while the transport is
  *     shown, and in its own type in every engine. The chosen track is put in
  *     `hidden` mode, which keeps its cues firing without drawing them, and the
@@ -42,7 +42,7 @@ export interface MediaTracks {
   /** The caption track that is on, or `null` for off. */
   activeTextTrack: string | null;
   selectTextTrack: (id: string | null) => void;
-  /** The cues to draw now, when Crystal draws them. Empty when `native`. */
+  /** The cues to draw now, when Prismata draws them. Empty when `native`. */
   activeCues: TextTrackCue[];
   /** Empty where the browser has no audio track list. */
   audioTracks: MediaTrackOption[];
@@ -143,7 +143,7 @@ export function useMediaTracks(
     if (!element) return;
     const captions = captionTracks(element);
     /* A track the browser turned on itself (the `default` attribute, or the
-       reader's system caption preference) is `showing`. When Crystal draws the
+       reader's system caption preference) is `showing`. When Prismata draws the
        captions it is moved to `hidden`, which keeps the reader's choice and
        moves only who draws it. The guard keeps this from looping on the
        `change` event it fires. */

@@ -7,9 +7,9 @@
  * `Availability` raised the same question.
  *
  * The glyph and wording maps are exported with it, because a product building
- * something status-bearing that Crystal has no component for should use
- * Crystal's own symbols instead of picking four of its own. That is
- * `extend-crystal-not-the-library` applied to a consumer.
+ * something status-bearing that Prismata has no component for should use
+ * Prismata's own symbols instead of picking four of its own. That is
+ * `extend-prismata-not-the-library` applied to a consumer.
  */
 export { STATUS_LABEL, STATUS_RECIPE, STATUS_SYMBOL } from './status.js';
 export type { FeedbackStatus } from './status.js';

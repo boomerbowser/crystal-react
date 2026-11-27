@@ -9,7 +9,7 @@
  *
  * React Aria's `Toolbar` owns the roving tab index, the arrow keys and the
  * orientation handling. A vertical toolbar uses up and down, and a horizontal
- * one uses left and right, mirrored in right-to-left. Crystal owns the material
+ * one uses left and right, mirrored in right-to-left. Prismata owns the material
  * and the geometry.
  *
  * A toolbar that floats above content is a Resin plane. One inside a surface that
@@ -22,7 +22,7 @@ import styles from './Toolbar.module.scss';
 
 export interface ToolbarProps extends Omit<AriaToolbarProps, 'className' | 'children' | 'style'> {
   /**
-   * `resin` floats the toolbar as its own control plane: Crystal's `.cr-dock`,
+   * `resin` floats the toolbar as its own control plane: Prismata's `.pr-dock`,
    * whose buttons carry no material of their own. `inherit` is for a toolbar
    * inside a surface that already carries a material, because Resin never
    * contains Resin.
@@ -46,7 +46,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       className={cx(
         styles['toolbar'],
         orientation === 'vertical' ? styles['vertical'] : undefined,
-        variant === 'resin' ? cx(styles['resin'], 'cr-dock') : undefined,
+        variant === 'resin' ? cx(styles['resin'], 'pr-dock') : undefined,
         className,
       )}
     >

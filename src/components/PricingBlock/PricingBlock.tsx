@@ -11,7 +11,7 @@
  *     a reader moving by headings hears, and what a sighted reader sees as the
  *     label beside the name. A ring or a lift says nothing to a reader who
  *     cannot see it.
- *   - Emphasis is Crystal's, and Crystal does not carry emphasis in colour. The
+ *   - Emphasis is Prismata's, and Prismata does not carry emphasis in colour. The
  *     colour specification says emphasis is carried by `.primary` being opt-in,
  *     by label weight and by placement. So the recommended plan's call to
  *     action is the one primary button on the block, its label is weighted, and
@@ -21,7 +21,7 @@
  *     started" are three identical entries in a list of controls; "Choose Team"
  *     is one.
  *   - A missing feature is said, not just left unticked. Included features
- *     carry a check, which in Crystal only ever means informational, and an
+ *     carry a check, which in Prismata only ever means informational, and an
  *     excluded one says "Not included" in words.
  */
 import { useId, type ReactNode } from 'react';
@@ -101,7 +101,7 @@ function Plan({ plan, isCurrent, onChoose, headingLevel, recommendedLabel, curre
       <article
         aria-labelledby={headingId}
         data-recommended={plan.recommended || undefined}
-        className={cx(styles['plan'], 'cr-haze')}
+        className={cx(styles['plan'], 'pr-haze')}
       >
         <Heading id={headingId} className={cx(styles['name'])}>
           <span>{plan.name}</span>

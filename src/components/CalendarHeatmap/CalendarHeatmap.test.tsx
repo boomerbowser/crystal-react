@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { CalendarHeatmap, place } from './CalendarHeatmap.js';
 
 const days = Array.from({ length: 21 }, (_, i) => ({
@@ -13,12 +13,12 @@ describe('CalendarHeatmap', () => {
      "third column, fifth row" back to a Tuesday in March. So the date is in the
      label rather than inferred from where the cell sits. */
   it('states the date of every cell', () => {
-    renderWithCrystal(<CalendarHeatmap label="Commits" days={days} />);
+    renderWithPrismata(<CalendarHeatmap label="Commits" days={days} />);
     expect(screen.getByLabelText('2026-03-03, 1')).toBeInTheDocument();
   });
 
   it('says a day with no measurement rather than drawing it pale', () => {
-    renderWithCrystal(<CalendarHeatmap label="Commits" days={days} />);
+    renderWithPrismata(<CalendarHeatmap label="Commits" days={days} />);
     expect(screen.getByLabelText('2026-03-06, no measurement')).toBeInTheDocument();
   });
 
@@ -34,7 +34,7 @@ describe('CalendarHeatmap', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<CalendarHeatmap label="Commits" days={days} />);
+    const { container } = renderWithPrismata(<CalendarHeatmap label="Commits" days={days} />);
     await expectNoAxeViolations(container);
   });
 });

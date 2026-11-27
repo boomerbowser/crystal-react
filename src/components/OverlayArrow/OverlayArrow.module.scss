@@ -16,22 +16,22 @@
    this rule sets the shape and nothing else. Positioning it here as well would
    override React Aria and move it to the corner of the surface. */
 .arrow {
-  inline-size: $cr-overlay-arrow-size;
-  block-size: $cr-overlay-arrow-size;
+  inline-size: $pr-overlay-arrow-size;
+  block-size: $pr-overlay-arrow-size;
   rotate: 45deg;
-  border: 1px solid var(--cr-rim);
-  border-radius: $cr-overlay-arrow-radius;
+  border: 1px solid var(--pr-rim);
+  border-radius: $pr-overlay-arrow-radius;
 }
 
 /* The surface's own shadow goes on the arrow too. Frost is a translucent fill
    with a rim, and the float shadow around it is what makes the surface legible
    against the page. A 14px square with the fill and the rim and no shadow is
    invisible on a pale page. */
-/* Frost, like the surface it points from. A transient overlay is Frost (Crystal
-   R15e), so the arrow wears Crystal's `.cr-frost.flat` (2.7.0): the Frost fill,
+/* Frost, like the surface it points from. A transient overlay is Frost (Prismata
+   R15e), so the arrow wears Prismata's `.pr-frost.flat` (2.7.0): the Frost fill,
    blur and panel shadow, and no grain, which a 14px square cannot show. Recessed
-   into Haze, it wears `.cr-haze.overlay`, the recessed overlay's flat fill,
-   `--cr-edge` rim and content shadow. Both bring Crystal's fallbacks, so the
+   into Haze, it wears `.pr-haze.overlay`, the recessed overlay's flat fill,
+   `--pr-edge` rim and content shadow. Both bring Prismata's fallbacks, so the
    arrow matches its overlay "including under reduced effects". The square and
    its 3px corners are the arrow's own. */
 
@@ -46,16 +46,16 @@
  * draw a line straight across it. `data-placement` is where the overlay sits
  * relative to its trigger, so an overlay below its trigger has its arrow at the
  * top, pointing up. */
-.wrap { inline-size: $cr-overlay-arrow-size; block-size: $cr-overlay-arrow-size; }
+.wrap { inline-size: $pr-overlay-arrow-size; block-size: $pr-overlay-arrow-size; }
 
 .wrap[data-placement='bottom'] .arrow { translate: 0 25%; border-block-end-color: transparent; border-inline-end-color: transparent; }
 .wrap[data-placement='top'] .arrow { translate: 0 -25%; border-block-start-color: transparent; border-inline-start-color: transparent; }
 .wrap[data-placement='right'] .arrow { translate: 25% 0; border-block-start-color: transparent; border-inline-end-color: transparent; }
 .wrap[data-placement='left'] .arrow { translate: -25% 0; border-block-end-color: transparent; border-inline-start-color: transparent; }
-.arrow[data-placement='bottom'] { translate: 0 calc(#{$cr-overlay-arrow-size} / 2); border-block-end-color: transparent; border-inline-end-color: transparent; }
-.arrow[data-placement='top'] { translate: 0 calc(#{$cr-overlay-arrow-size} / -2); border-block-start-color: transparent; border-inline-start-color: transparent; }
-.arrow[data-placement='right'] { translate: calc(#{$cr-overlay-arrow-size} / 2) 0; border-block-start-color: transparent; border-inline-end-color: transparent; }
-.arrow[data-placement='left'] { translate: calc(#{$cr-overlay-arrow-size} / -2) 0; border-block-end-color: transparent; border-inline-start-color: transparent; }
+.arrow[data-placement='bottom'] { translate: 0 calc(#{$pr-overlay-arrow-size} / 2); border-block-end-color: transparent; border-inline-end-color: transparent; }
+.arrow[data-placement='top'] { translate: 0 calc(#{$pr-overlay-arrow-size} / -2); border-block-start-color: transparent; border-inline-start-color: transparent; }
+.arrow[data-placement='right'] { translate: calc(#{$pr-overlay-arrow-size} / 2) 0; border-block-start-color: transparent; border-inline-end-color: transparent; }
+.arrow[data-placement='left'] { translate: calc(#{$pr-overlay-arrow-size} / -2) 0; border-block-end-color: transparent; border-inline-start-color: transparent; }
 
 @media (forced-colors: active) {
   .wrap { display: none; }

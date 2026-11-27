@@ -8,14 +8,14 @@
  * pieces of one circle rather than as two objects.
  *
  * The label on a wedge is the second channel, so it has to be readable on every
- * series colour, and no ink is readable on all of them by itself. Crystal's Stone
+ * series colour, and no ink is readable on all of them by itself. Prismata's Stone
  * backing makes it readable; `charts/_label.scss` explains this and why the
  * backing is a halo here rather than a pad.
  */
 
 .wedge .fill {
   fill: var(--series-colour);
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
+  transition: opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 .label { @include chart.chart-label; }
@@ -37,7 +37,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 @media (prefers-reduced-motion: reduce) {

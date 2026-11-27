@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, within } from '../../test/render.js';
+import { renderWithPrismata, screen, within } from '../../test/render.js';
 import { DataTable } from './DataTable.js';
 
 const columns = [
@@ -20,7 +20,7 @@ describe('DataTable', () => {
      cells, controls inside cells. `role="grid"` tells assistive technology to
      switch from reading mode to interaction mode. */
   it('is a grid, where the static Table is a document', () => {
-    renderWithCrystal(<DataTable columns={columns} rows={rows} label="Workspaces" />);
+    renderWithPrismata(<DataTable columns={columns} rows={rows} label="Workspaces" />);
     expect(screen.getByRole('grid', { name: 'Workspaces' })).toBeInTheDocument();
   });
 
@@ -30,7 +30,7 @@ describe('DataTable', () => {
      value, so the label passed in is the verb alone. Passing "Select Gather"
      would produce "Select Gather Gather". */
   it('names every selection checkbox after its row', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <DataTable columns={columns} rows={rows} label="Workspaces" selectionMode="multiple" />,
     );
     expect(screen.getByRole('checkbox', { name: 'Select Gather' })).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('DataTable', () => {
 
   it('reports what was selected', async () => {
     const onSelectionChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <DataTable columns={columns} rows={rows} label="Workspaces" selectionMode="multiple"
         onSelectionChange={onSelectionChange} />,
     );
@@ -52,7 +52,7 @@ describe('DataTable', () => {
 
   /* Single selection has nothing to select all of, so there is no such box. */
   it('offers no select-all when only one row can be selected', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <DataTable columns={columns} rows={rows} label="Workspaces" selectionMode="single" />,
     );
     expect(screen.queryByRole('checkbox', { name: 'Select all rows' })).toBeNull();
@@ -60,7 +60,7 @@ describe('DataTable', () => {
 
   it('puts aria-sort on the sorted header and on no other', async () => {
     const onSortChange = vi.fn();
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <DataTable columns={columns} rows={rows} label="Workspaces"
         sortDescriptor={{ column: 'seats', direction: 'descending' }} onSortChange={onSortChange} />,
     );
@@ -75,7 +75,7 @@ describe('DataTable', () => {
   /* "The resizer is a slider: arrow keys resize, and the new width is
      announced." */
   it('offers the resizer as a named slider', () => {
-    renderWithCrystal(<DataTable columns={columns} rows={rows} label="Workspaces" resizable />);
+    renderWithPrismata(<DataTable columns={columns} rows={rows} label="Workspaces" resizable />);
     /* "Resize" plus the column React Aria appends, and the width announced as
        `aria-valuetext`. React Aria does the announcing, and this asserts that
        it happens. */
@@ -84,14 +84,14 @@ describe('DataTable', () => {
   });
 
   it('gives no resizer to a column that did not ask for one', () => {
-    renderWithCrystal(<DataTable columns={columns} rows={rows} label="Workspaces" resizable />);
+    renderWithPrismata(<DataTable columns={columns} rows={rows} label="Workspaces" resizable />);
     expect(screen.queryByRole('slider', { name: /Plan/ })).toBeNull();
   });
 
   /* A select-all drawn with a check mark while one row of four is selected
      reads as "all of them". */
   it('draws the select-all as partial when only some rows are selected', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <DataTable columns={columns} rows={rows} label="Workspaces" selectionMode="multiple"
         defaultSelectedKeys={new Set(['gather'])} />,
     );
@@ -105,14 +105,14 @@ describe('DataTable', () => {
   });
 
   it('shows the empty state instead of an empty body', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <DataTable columns={columns} rows={[]} label="Workspaces" empty="No workspaces yet." />,
     );
     expect(screen.getByText('No workspaces yet.')).toBeInTheDocument();
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <DataTable columns={columns} rows={rows} label="Workspaces" selectionMode="multiple"
         sortDescriptor={{ column: 'seats', direction: 'ascending' }} onSortChange={vi.fn()} />,
     );

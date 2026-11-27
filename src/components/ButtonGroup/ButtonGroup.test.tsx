@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { ButtonGroup, SplitButton } from './ButtonGroup.js';
 import { Button } from '../Button/Button.js';
 
@@ -9,12 +9,12 @@ describe('ButtonGroup', () => {
      reader nothing, and unrelated buttons announced as a group tell them
      something untrue. */
   it('is a group only when it is named', async () => {
-    const { container, rerenderWithCrystal } = renderWithCrystal(
+    const { container, rerenderWithPrismata } = renderWithPrismata(
       <ButtonGroup><Button>Cut</Button><Button>Copy</Button></ButtonGroup>,
     );
     expect(screen.queryByRole('group')).toBeNull();
 
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <ButtonGroup label="Clipboard"><Button>Cut</Button><Button>Copy</Button></ButtonGroup>,
     );
     expect(screen.getByRole('group', { name: 'Clipboard' })).toBeInTheDocument();
@@ -27,14 +27,14 @@ describe('SplitButton', () => {
      which half was pressed cannot be described to somebody who cannot see that
      there are halves. */
   it('is two buttons with separate names', () => {
-    renderWithCrystal(<SplitButton menuLabel="More save options">Save</SplitButton>);
+    renderWithPrismata(<SplitButton menuLabel="More save options">Save</SplitButton>);
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'More save options' })).toBeInTheDocument();
   });
 
   it('declares the disclosure as a menu trigger and its state', async () => {
     const onToggleMenu = vi.fn();
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <SplitButton menuLabel="More save options" onToggleMenu={onToggleMenu}>Save</SplitButton>,
     );
     const disclosure = screen.getByRole('button', { name: 'More save options' });
@@ -44,7 +44,7 @@ describe('SplitButton', () => {
     await userEvent.click(disclosure);
     expect(onToggleMenu).toHaveBeenCalledTimes(1);
 
-    rerenderWithCrystal(<SplitButton menuLabel="More save options" isOpen>Save</SplitButton>);
+    rerenderWithPrismata(<SplitButton menuLabel="More save options" isOpen>Save</SplitButton>);
     expect(screen.getByRole('button', { name: 'More save options' }).getAttribute('aria-expanded')).toBe('true');
   });
 });

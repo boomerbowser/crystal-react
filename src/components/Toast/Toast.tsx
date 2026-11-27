@@ -199,7 +199,7 @@ export function Toast({
       /* `AnimationScope` is typed as `Element`. Every other caller of
          `useMotion` on a non-div uses the same cast. */
       ref={scope as never}
-      className={cx(styles['toast'], 'cr-frost reading')}
+      className={cx(styles['toast'], 'pr-frost reading')}
       data-status={status}
       /* No live role here. `role="status"` on an `<li>` replaces its `listitem`
          role, and then the stack is a list with nothing in it. The provider's
@@ -215,7 +215,7 @@ export function Toast({
       {action ? <div className={styles['action']}>{action}</div> : null}
       <button
         type="button"
-        className={cx(styles['dismiss'], 'cr-bare')}
+        className={cx(styles['dismiss'], 'pr-bare')}
         aria-label={dismissLabel ?? (typeof title === 'string' ? `Dismiss: ${title}` : 'Dismiss')}
         onClick={leave}
       >

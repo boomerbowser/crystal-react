@@ -8,7 +8,7 @@
  * are the labels and the links are the data, so naming only the nodes would
  * describe nothing.
  *
- * "Link opacity keeps crossings readable." Crystal's `--cr-chart-link-opacity`
+ * "Link opacity keeps crossings readable." Prismata's `--pr-chart-link-opacity`
  * is higher than a fill's because a link is the mark rather than its backing,
  * and low enough that a crossing reads as two links rather than as a third
  * shape.

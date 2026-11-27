@@ -35,7 +35,7 @@ export const Default: Story = {};
  *  than emptying it so the row does not reflow. */
 export const ARow: Story = {
   render: (args) => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 'var(--cr-space)' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 'var(--pr-space)' }}>
       <StatCard {...only(args)} label="Revenue" value="£48,210" period="this month"
         trend={{ direction: 'up', label: '4.2% up on last month' }} />
       <StatCard {...only(args)} label="Refunds" value="£1,180" period="this month"

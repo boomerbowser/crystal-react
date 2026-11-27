@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { FloatingWindow } from './FloatingWindow.js';
 
 const start = { x: 100, y: 100, width: 360, height: 240 };
@@ -9,7 +9,7 @@ const panel = (): HTMLElement => screen.getByRole('region', { name: 'Notes' });
 
 describe('FloatingWindow', () => {
   it('is named, and is not a dialog unless it is modal', () => {
-    renderWithCrystal(<FloatingWindow label="Notes" defaultRect={start}><p>body</p></FloatingWindow>);
+    renderWithPrismata(<FloatingWindow label="Notes" defaultRect={start}><p>body</p></FloatingWindow>);
     /* A non-modal window announced as a dialog claims an exclusivity it does
        not have. */
     expect(screen.queryByRole('dialog')).toBeNull();
@@ -17,14 +17,14 @@ describe('FloatingWindow', () => {
   });
 
   it('is a dialog when it is modal', () => {
-    renderWithCrystal(<FloatingWindow label="Notes" isModal defaultRect={start}><p>body</p></FloatingWindow>);
+    renderWithPrismata(<FloatingWindow label="Notes" isModal defaultRect={start}><p>body</p></FloatingWindow>);
     const dialog = screen.getByRole('dialog', { name: 'Notes' });
     expect(dialog.getAttribute('aria-modal')).toBe('true');
   });
 
   it('gives the title bar to the keyboard', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<FloatingWindow label="Notes" defaultRect={start}><p>body</p></FloatingWindow>);
+    renderWithPrismata(<FloatingWindow label="Notes" defaultRect={start}><p>body</p></FloatingWindow>);
     await user.tab();
     /* Keyboard users must be able to move the window. Testing with a mouse
        alone would not show that they cannot. */
@@ -34,7 +34,7 @@ describe('FloatingWindow', () => {
   it('moves with the arrow keys', async () => {
     const user = userEvent.setup();
     const onRectChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <FloatingWindow label="Notes" defaultRect={start} step={16} onRectChange={onRectChange}>
         <p>body</p>
       </FloatingWindow>,
@@ -49,7 +49,7 @@ describe('FloatingWindow', () => {
   it('widens the step with Shift', async () => {
     const user = userEvent.setup();
     const onRectChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <FloatingWindow label="Notes" defaultRect={start} step={16} onRectChange={onRectChange}>
         <p>body</p>
       </FloatingWindow>,
@@ -62,7 +62,7 @@ describe('FloatingWindow', () => {
   it('resizes rather than moves with a modifier', async () => {
     const user = userEvent.setup();
     const onRectChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <FloatingWindow label="Notes" defaultRect={start} step={16} onRectChange={onRectChange}>
         <p>body</p>
       </FloatingWindow>,
@@ -77,7 +77,7 @@ describe('FloatingWindow', () => {
   it('returns to where it started with Home', async () => {
     const user = userEvent.setup();
     const onRectChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <FloatingWindow label="Notes" defaultRect={start} onRectChange={onRectChange}><p>body</p></FloatingWindow>,
     );
     await user.tab();
@@ -88,7 +88,7 @@ describe('FloatingWindow', () => {
   it('never leaves the viewport', async () => {
     const user = userEvent.setup();
     const onRectChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <FloatingWindow label="Notes" defaultRect={{ x: 0, y: 0, width: 360, height: 240 }} step={16} onRectChange={onRectChange}>
         <p>body</p>
       </FloatingWindow>,
@@ -104,7 +104,7 @@ describe('FloatingWindow', () => {
   it('cannot be resized smaller than its own handle needs', async () => {
     const user = userEvent.setup();
     const onRectChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <FloatingWindow
         label="Notes"
         defaultRect={{ x: 10, y: 10, width: 230, height: 130 }}

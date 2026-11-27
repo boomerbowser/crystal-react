@@ -12,12 +12,12 @@
  */
 import { forwardRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
-import { spacingValue, type CrystalSpacing } from '../../styles/spacing.js';
+import { spacingValue, type PrismataSpacing } from '../../styles/spacing.js';
 import styles from './SimpleGrid.module.scss';
 
 export interface SimpleGridProps extends HTMLAttributes<HTMLDivElement> {
   /** Gutter between cells. Defaults to `md`. */
-  gap?: CrystalSpacing;
+  gap?: PrismataSpacing;
   /** Narrowest a cell may become before the grid drops a column. CSS length. */
   minCellWidth?: string;
   children?: ReactNode;
@@ -28,8 +28,8 @@ export const SimpleGrid = forwardRef<HTMLDivElement, SimpleGridProps>(function S
   ref,
 ) {
   const layout: CSSProperties = {
-    ...(gap !== undefined ? { '--cr-grid-gap': spacingValue(gap) } as CSSProperties : {}),
-    ...(minCellWidth ? { '--cr-cell-min': minCellWidth } as CSSProperties : {}),
+    ...(gap !== undefined ? { '--pr-grid-gap': spacingValue(gap) } as CSSProperties : {}),
+    ...(minCellWidth ? { '--pr-cell-min': minCellWidth } as CSSProperties : {}),
     ...style,
   };
 

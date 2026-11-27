@@ -128,14 +128,14 @@ function NodeBox(
       className={cx(styles['row'])}
       /* The depth as a number, so one rule indents every level and one gradient
          draws every connector. CSS cannot read `aria-level`. */
-      style={{ '--cr-tree-level': level - 1 } as CSSProperties}
+      style={{ '--pr-tree-level': level - 1 } as CSSProperties}
     >
       {hasChildItems ? (
-        <Button slot="chevron" className={cx(styles['chevron'], 'cr-bare')}>{ChevronIcon}</Button>
+        <Button slot="chevron" className={cx(styles['chevron'], 'pr-bare')}>{ChevronIcon}</Button>
       ) : (
         <span aria-hidden="true" className={cx(styles['chevron'], styles['chevronEmpty'])} />
       )}
-      <div className={cx('cr-haze flush', styles['node'])}>
+      <div className={cx('pr-haze flush', styles['node'])}>
         {node.leading ? <span className={styles['leading']}>{node.leading}</span> : null}
         <span className={styles['names']}>
           <span className={styles['name']}>{node.name}</span>

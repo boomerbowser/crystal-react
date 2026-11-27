@@ -3,8 +3,8 @@
 /* ScatterChart: points in two dimensions.
  *
  * "Point size is a scale, not an arbitrary radius." A third value is mapped onto
- * Crystal's point scale (between `--cr-chart-point-min` and
- * `--cr-chart-point-max`) and onto the point's area rather than its diameter, so
+ * Prismata's point scale (between `--pr-chart-point-min` and
+ * `--pr-chart-point-max`) and onto the point's area rather than its diameter, so
  * that equal differences in the data are equal differences in the amount of
  * ink. A point twice as wide is four times as big to the eye, so mapping onto
  * the diameter exaggerates the spread without saying so.
@@ -100,15 +100,15 @@ export function ScatterChart({
         const across = scaleLinear().domain(span(xs)).nice(ticks).range([0, inner.width]);
         const up = scaleLinear().domain(span(ys)).nice(ticks).range([inner.height, 0]);
         /* The value maps onto the point's area. The range is the squares of
-           Crystal's two point sizes, and the diameter is the root of the result.
+           Prismata's two point sizes, and the diameter is the root of the result.
            Equal differences in the data are then equal differences in the
            amount of ink, which is what the eye compares. Mapping onto the
            diameter would make the largest point three times the area it should
            be, exaggerating the spread without saying so.
 
            The scale runs between the two published sizes rather than from zero,
-           so the smallest datum is always `--cr-chart-point-min` and the largest
-           always `--cr-chart-point-max`. A reader cannot read the size off the
+           so the smallest datum is always `--pr-chart-point-min` and the largest
+           always `--pr-chart-point-max`. A reader cannot read the size off the
            point alone, so it is also in the label and in the table. */
         const area = scaleLinear()
           .domain(sizes.length ? span(sizes) : [0, 1])

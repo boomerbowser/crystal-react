@@ -2,7 +2,7 @@
 @use '../../styles/option' as option;
 
 /* Variants wrap: a size run is eight of them and a colour run can be twenty. */
-.group > * { display: flex; flex-wrap: wrap; gap: $cr-spacing-xs; }
+.group > * { display: flex; flex-wrap: wrap; gap: $pr-spacing-xs; }
 
 .variant {
   @include option.option-states;
@@ -13,33 +13,33 @@
   @include option.option;
   @include option.option-selected;
 
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   inline-size: auto;
   justify-content: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
 }
 
 /* Why it cannot be chosen, in the option's own text instead of a tooltip.
    Lighter than the label, because the label is still what is being read. */
-.why { color: var(--cr-muted); font-size: var(--cr-text-caption-size); font-weight: 500; }
+.why { color: var(--pr-muted); font-size: var(--pr-text-caption-size); font-weight: 500; }
 
 /* The swatch. "Swatch variants are circles."
  *
  * The pad is the selection, because a colour has no weight to take. The colour
  * sits inset inside it, so choosing one shrinks the colour instead of drawing a
- * ring around it. An outline at an offset is how Crystal draws focus, and an
+ * ring around it. An outline at an offset is how Prismata draws focus, and an
  * option with one keeps looking focused after focus has left. */
 .swatch {
-  /* The element wears Crystal's `.cr-haze.flush` (2.7.0): the Haze fill to its own edge, with Crystal's opaque, reduced-transparency and forced-colours routes. */
+  /* The element wears Prismata's `.pr-haze.flush` (2.7.0): the Haze fill to its own edge, with Prismata's opaque, reduced-transparency and forced-colours routes. */
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
-  padding: $cr-spacing-2xs;
-  border: 1px solid var(--cr-rim);
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
+  padding: $pr-spacing-2xs;
+  border: 1px solid var(--pr-rim);
   border-radius: 50%;
   cursor: pointer;
 }
@@ -48,15 +48,15 @@
   inline-size: 100%;
   block-size: 100%;
   border-radius: 50%;
-  background: var(--cr-surface-alt);
+  background: var(--pr-surface-alt);
 
   /* Two rings.
    *
    * A hairline inside the colour handles a swatch that matches the page, such
    * as white on white. It does not handle a swatch that matches the pad. The
-   * selected pad is `--cr-primary`, so a product whose brand colour is a variant
+   * selected pad is `--pr-primary`, so a product whose brand colour is a variant
    * colour gets a swatch that vanishes into its own selected state. With a
-   * swatch set to `var(--cr-primary)`, pad and colour are both
+   * swatch set to `var(--pr-primary)`, pad and colour are both
    * `rgb(115, 56, 239)`, and a 0.18 alpha hairline between them separates
    * nothing.
    *
@@ -66,19 +66,19 @@
    * the colour match (white again), the inner hairline separates them. Each ring
    * covers the case the other cannot. */
   box-shadow:
-    inset 0 0 0 1px var(--cr-control-edge),
-    0 0 0 2px var(--cr-surface);
-  transition: scale calc(var(--cr-motion-enabled) * #{$cr-motion-duration-state} / var(--cr-motion-speed))
-    #{$cr-motion-easing-settle};
+    inset 0 0 0 1px var(--pr-control-edge),
+    0 0 0 2px var(--pr-surface);
+  transition: scale calc(var(--pr-motion-enabled) * #{$pr-motion-duration-state} / var(--pr-motion-speed))
+    #{$pr-motion-easing-settle};
 }
 
 /* Chosen: the pad tints and the colour draws back into it. Both, because the
    pad alone can be lost against a swatch of a similar colour. */
-.swatch[data-selected]::before { background: var(--cr-primary); filter: none; }
+.swatch[data-selected]::before { background: var(--pr-primary); filter: none; }
 .swatch[data-selected] .colour { scale: 0.78; }
 
 .swatch[data-disabled] { cursor: not-allowed; }
-.swatch[data-disabled] .colour { opacity: $cr-action-disabled-opacity; }
+.swatch[data-disabled] .colour { opacity: $pr-action-disabled-opacity; }
 
 @media (prefers-reduced-motion: reduce) { .colour { transition: none; } }
 

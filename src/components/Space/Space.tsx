@@ -13,11 +13,11 @@
  * a list. So it carries `aria-hidden` and is removed from the accessibility tree.
  */
 import { forwardRef, type CSSProperties, type HTMLAttributes } from 'react';
-import { spacingValue, type CrystalSpacing } from '../../styles/spacing.js';
+import { spacingValue, type PrismataSpacing } from '../../styles/spacing.js';
 
 export interface SpaceProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /** How much space. Defaults to `md`. */
-  size?: CrystalSpacing;
+  size?: PrismataSpacing;
   /** Space along the inline axis instead of the block one. */
   axis?: 'block' | 'inline';
 }

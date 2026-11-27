@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { PageHeader } from './PageHeader.js';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs.js';
 import { Button } from '../Button/Button.js';
@@ -9,12 +9,12 @@ describe('PageHeader', () => {
   /* "Contains the h1." The page's heading lives here. The screen draws none,
      and a state screen takes level 1 only once it has replaced the view. */
   it('carries the page heading at level one', () => {
-    renderWithCrystal(<PageHeader title="Reports" />);
+    renderWithPrismata(<PageHeader title="Reports" />);
     expect(screen.getByRole('heading', { level: 1, name: 'Reports' })).toBeInTheDocument();
   });
 
   it('steps down where a view already has a heading above', () => {
-    renderWithCrystal(<PageHeader title="Reports" titleAs="h2" />);
+    renderWithPrismata(<PageHeader title="Reports" titleAs="h2" />);
     expect(screen.getByRole('heading', { level: 2, name: 'Reports' })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 1 })).toBeNull();
   });
@@ -30,7 +30,7 @@ describe('PageHeader', () => {
    * or not. `verify:appearance`, which applies the stylesheet, checks that it
    * is invisible. */
   it('declares the condensed state and keeps the title and the actions', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <PageHeader
         title="Reports"
         description="Everything you have built."
@@ -39,20 +39,20 @@ describe('PageHeader', () => {
         data-testid="header"
       />,
     );
-    expect(screen.getByTestId('header')).toHaveAttribute('data-cr-state', 'condensed');
+    expect(screen.getByTestId('header')).toHaveAttribute('data-pr-state', 'condensed');
     expect(screen.getByRole('heading', { level: 1, name: 'Reports' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'New report' })).toBeInTheDocument();
   });
 
   it('is at rest until the view is scrolled', () => {
-    renderWithCrystal(<PageHeader title="Reports" data-testid="header" />);
-    expect(screen.getByTestId('header')).toHaveAttribute('data-cr-state', 'at-rest');
+    renderWithPrismata(<PageHeader title="Reports" data-testid="header" />);
+    expect(screen.getByTestId('header')).toHaveAttribute('data-pr-state', 'at-rest');
   });
 
   /* `Breadcrumbs` brings its own `<nav>`. Wrapping it in another would be two
      navigation landmarks around one list. */
   it('adds no second navigation landmark around the breadcrumbs', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <PageHeader
         title="Q3 revenue"
         breadcrumbs={(
@@ -68,7 +68,7 @@ describe('PageHeader', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <PageHeader title="Reports" description="Everything you have built." actions={<Button>New</Button>} />,
     );
     await expectNoAxeViolations(container);

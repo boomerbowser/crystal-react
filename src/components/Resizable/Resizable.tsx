@@ -13,7 +13,7 @@
  * than announcing that something was grabbed. A `div` with a pointer handler
  * would be reachable only by a mouse.
  *
- * The product sets the bounds. Crystal makes reaching one a state the handle
+ * The product sets the bounds. Prismata makes reaching one a state the handle
  * shows.
  */
 import {
@@ -114,8 +114,8 @@ export const Resizable = forwardRef<HTMLDivElement, ResizableProps>(function Res
         aria-valuemin={minSize}
         aria-valuemax={maxSize}
         aria-disabled={isDisabled || undefined}
-        data-cr-state={atMin ? 'at-min' : atMax ? 'at-max' : 'idle'}
-        className={cx('cr-resin divider', styles['handle'])}
+        data-pr-state={atMin ? 'at-min' : atMax ? 'at-max' : 'idle'}
+        className={cx('pr-resin divider', styles['handle'])}
       />
       <div className={cx(styles['region'])} style={{ flex: '1 1 0' }}>{secondary}</div>
     </div>

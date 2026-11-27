@@ -30,7 +30,7 @@ import { type ReactNode } from 'react';
 import { Toolbar } from '../Toolbar/Toolbar.js';
 import { OverflowList } from '../OverflowList/OverflowList.js';
 import { cx } from '../../styles/cx.js';
-import type { CrystalSpacing } from '../../styles/spacing.js';
+import type { PrismataSpacing } from '../../styles/spacing.js';
 import styles from './CommandBar.module.scss';
 
 export interface CommandBarProps {
@@ -38,7 +38,7 @@ export interface CommandBarProps {
   children: ReactNode;
   /**
    * Renders the overflow affordance, given the commands that did not fit and
-   * how many there are. Crystal requires that the affordance exists and names
+   * how many there are. Prismata requires that the affordance exists and names
    * its count. What it opens is up to the product.
    */
   renderOverflow: (hidden: readonly ReactNode[], count: number) => ReactNode;
@@ -47,7 +47,7 @@ export interface CommandBarProps {
   /** `inherit` for a bar inside a surface that already carries a material. */
   variant?: 'resin' | 'inherit';
   orientation?: 'horizontal' | 'vertical';
-  gap?: CrystalSpacing;
+  gap?: PrismataSpacing;
   className?: string;
 }
 

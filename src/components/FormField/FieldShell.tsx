@@ -5,7 +5,7 @@
  * It carries the validity React Aria resolved, which can differ from the one
  * the caller declared. They differ when the field is wrong for a reason the
  * caller does not know about, such as a server's rejection distributed by
- * `Form` or a native constraint the browser checked. Crystal's validation
+ * `Form` or a native constraint the browser checked. Prismata's validation
  * motion has to play in those cases too: a field that failed on the server
  * must look exactly like one that failed locally, because to the person
  * filling in the form they are the same thing.

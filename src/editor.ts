@@ -1,4 +1,4 @@
-/* @crystal-ui/react/editor: Crystal's rich text surface with TipTap bound to it.
+/* @prismata/react/editor: Prismata's rich text surface with TipTap bound to it.
  *
  * Its own entry point, so the engine is paid for only by a product that imports
  * it. TipTap is an optional peer dependency: install `@tiptap/react`,

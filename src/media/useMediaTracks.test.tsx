@@ -45,7 +45,7 @@ function harness(text: FakeTrack[], audio?: FakeTrack[], native = false): { resu
 }
 
 describe('useMediaTracks', () => {
-  /* Crystal draws the captions, above the transport, so a track the browser
+  /* Prismata draws the captions, above the transport, so a track the browser
      turned on from the reader's preference is moved to `hidden`: the choice is
      kept and only who draws it changes. */
   it('keeps a track the browser turned on, and draws it itself', () => {

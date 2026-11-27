@@ -6,11 +6,11 @@
 .transfer {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: var(--cr-space);
+  gap: var(--pr-space);
   align-items: stretch;
 }
 
-/* Each list panel wears Crystal's Haze, the catalogue's "Haze list panels"
+/* Each list panel wears Prismata's Haze, the catalogue's "Haze list panels"
    (R-35, ruled 18 November 2026): the feathered content fill and its shadow.
    It used to be the solid alternate surface with an edge rim. Nothing clips
    it, because `overflow: hidden` would cut the feather into a hard edge; the
@@ -19,44 +19,44 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  border-radius: var(--cr-radius);
+  border-radius: var(--pr-radius);
 }
 
 .panelHead {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: $cr-spacing-sm;
-  padding: $cr-spacing-sm;
-  border-block-end: 1px solid var(--cr-edge);
+  gap: $pr-spacing-sm;
+  padding: $pr-spacing-sm;
+  border-block-end: 1px solid var(--pr-edge);
   font-weight: 750;
 }
 
-.panelCount { font-weight: 400; font-size: var(--cr-text-caption-size); color: var(--cr-muted); }
+.panelCount { font-weight: 400; font-size: var(--pr-text-caption-size); color: var(--pr-muted); }
 
-.list { flex: 1; min-block-size: calc(#{$cr-action-min-target} * 4); max-block-size: 40vh; outline: none; padding: $cr-spacing-2xs; }
+.list { flex: 1; min-block-size: calc(#{$pr-action-min-target} * 4); max-block-size: 40vh; outline: none; padding: $pr-spacing-2xs; }
 
 .item {
   display: flex;
   align-items: center;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
-  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
+  border-radius: calc(var(--pr-radius) - #{$pr-field-well-inset});
   font-weight: 550;
   cursor: pointer;
 }
 
-.item[data-selected] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
-.item[data-focused] { background: var(--cr-surface); }
-.item[data-selected][data-focused] { background: var(--cr-primary-soft); }
+.item[data-selected] { font-weight: 800; background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
+.item[data-focused] { background: var(--pr-surface); }
+.item[data-selected][data-focused] { background: var(--pr-primary-soft); }
 
-.empty { display: flex; align-items: center; justify-content: center; min-block-size: calc(#{$cr-action-min-target} * 2); color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+.empty { display: flex; align-items: center; justify-content: center; min-block-size: calc(#{$pr-action-min-target} * 2); color: var(--pr-muted); font-size: var(--pr-text-caption-size); }
 
-.controls { display: flex; flex-direction: column; justify-content: center; gap: $cr-spacing-xs; }
+.controls { display: flex; flex-direction: column; justify-content: center; gap: $pr-spacing-xs; }
 
 /* Below the md breakpoint the two panels stack and the controls turn, because
    three columns are unusable at a phone's width. */
-@media (max-width: $cr-breakpoint-md) {
+@media (max-width: $pr-breakpoint-md) {
   .transfer { grid-template-columns: minmax(0, 1fr); }
   .controls { flex-direction: row; justify-content: center; }
 }

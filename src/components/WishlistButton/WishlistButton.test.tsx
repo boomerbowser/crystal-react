@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { WishlistButton } from './WishlistButton.js';
 
 describe('WishlistButton', () => {
@@ -9,13 +9,13 @@ describe('WishlistButton', () => {
      A name that flipped to "Remove" would be announced as "Remove from
      wishlist, pressed", which is a contradiction the reader has to resolve. */
   it('keeps one name and puts the state on aria-pressed', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <WishlistButton item="Harbour print" isSaved={false} onChange={() => {}} />,
     );
     const control = screen.getByRole('button', { name: 'Save Harbour print to your wishlist' });
     expect(control).toHaveAttribute('aria-pressed', 'false');
 
-    rerenderWithCrystal(<WishlistButton item="Harbour print" isSaved onChange={() => {}} />);
+    rerenderWithPrismata(<WishlistButton item="Harbour print" isSaved onChange={() => {}} />);
     expect(screen.getByRole('button', { name: 'Save Harbour print to your wishlist' }))
       .toHaveAttribute('aria-pressed', 'true');
   });
@@ -23,7 +23,7 @@ describe('WishlistButton', () => {
   /* A listing page has thirty of these, and thirty controls called "Save to
      wishlist" are thirty identical rows in a screen reader's element list. */
   it('names the thing it is saving', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <>
         <WishlistButton item="Harbour print" isSaved={false} onChange={() => {}} />
         <WishlistButton item="The long bridge" isSaved={false} onChange={() => {}} />
@@ -36,7 +36,7 @@ describe('WishlistButton', () => {
   it('toggles', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    renderWithCrystal(<WishlistButton item="Harbour print" isSaved onChange={onChange} />);
+    renderWithPrismata(<WishlistButton item="Harbour print" isSaved onChange={onChange} />);
     await user.click(screen.getByRole('button'));
     expect(onChange).toHaveBeenCalledWith(false);
   });
@@ -44,13 +44,13 @@ describe('WishlistButton', () => {
   /* "Resin pill or icon button". The same name either way, because an icon has
      no other. */
   it('is the same control in either shape', () => {
-    renderWithCrystal(<WishlistButton item="Harbour print" isSaved={false} onChange={() => {}} iconOnly />);
+    renderWithPrismata(<WishlistButton item="Harbour print" isSaved={false} onChange={() => {}} iconOnly />);
     expect(screen.getByRole('button', { name: 'Save Harbour print to your wishlist' }))
       .toHaveAttribute('aria-pressed', 'false');
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <WishlistButton item="Harbour print" isSaved onChange={() => {}} />,
     );
     await expectNoAxeViolations(container);

@@ -54,7 +54,7 @@ export const DeltaBadge = forwardRef<HTMLSpanElement, DeltaBadgeProps>(function 
       {...props}
       ref={ref}
       data-state={state}
-      className={cx(styles['delta'], 'cr-haze', className)}
+      className={cx(styles['delta'], 'pr-haze', className)}
     >
       <span aria-hidden="true">{`${deltaSign(value)}${magnitude}`}</span>
       <ChangeHighlight />

@@ -5,7 +5,7 @@
    unlabelled numbers.
 
    The column head is already sticky: `Table` gives every `thead th` its
-   `position` and offset, and Crystal's own `.cr-table` does the same. Repeating
+   `position` and offset, and Prismata's own `.pr-table` does the same. Repeating
    them here would make two copies of one rule at equal specificity, settled by
    source order, which breaks if an import is reordered. This component adds
    only the stacking: where the two sticky axes cross, the column head is in
@@ -16,7 +16,7 @@
   position: sticky;
   inset-inline-start: 0;
   z-index: 1;
-  background: var(--cr-surface);
+  background: var(--pr-surface);
 }
 
 /* The corner cell sits at both intersections and has to outrank both. */
@@ -24,11 +24,11 @@
 
 /* "Differences are marked, not only coloured." The word is in the row header's
    text. This colour is the second signal, never the first or the only one. */
-.note { color: var(--cr-muted); font-weight: 500; font-size: var(--cr-text-caption-size); }
+.note { color: var(--pr-muted); font-weight: 500; font-size: var(--pr-text-caption-size); }
 
 /* The tint is found through the mark, so the two cannot disagree. One place
    decides that a row differs, and both the word and the colour come from it. */
-.compare :global(tbody tr):has(.differs) { background: var(--cr-surface-alt); }
+.compare :global(tbody tr):has(.differs) { background: var(--pr-surface-alt); }
 
 @media (forced-colors: active) {
   .note { color: CanvasText; }

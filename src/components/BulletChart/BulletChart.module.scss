@@ -10,16 +10,16 @@
 .bullet {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
 }
 
 .label { font-weight: 650; }
 
 .track {
   position: relative;
-  block-size: $cr-slider-track-height * 3;
-  border-radius: $cr-action-radius;
-  background: var(--cr-content-fill);
+  block-size: $pr-slider-track-height * 3;
+  border-radius: $pr-action-radius;
+  background: var(--pr-content-fill);
   overflow: hidden;
 }
 
@@ -38,9 +38,9 @@
   inset-block: 33%;
   inset-inline-start: 0;
   inline-size: var(--measure-to);
-  border-start-end-radius: $cr-action-radius;
-  border-end-end-radius: $cr-action-radius;
-  background: var(--cr-text);
+  border-start-end-radius: $pr-action-radius;
+  border-end-end-radius: $pr-action-radius;
+  background: var(--pr-text);
 }
 
 /* "The target is a crisp marker, not a bar": full height, no material, no
@@ -50,14 +50,14 @@
   position: absolute;
   inset-block: 0;
   inset-inline-start: var(--target-at);
-  inline-size: $cr-indicator-line-width;
-  translate: calc($cr-indicator-line-width / -2);
-  background: var(--cr-primary);
+  inline-size: $pr-indicator-line-width;
+  translate: calc($pr-indicator-line-width / -2);
+  background: var(--pr-primary);
 }
 
 .reading {
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
 }
 
 @media (forced-colors: active) {

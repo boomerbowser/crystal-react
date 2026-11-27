@@ -11,7 +11,7 @@
  * keys while the caret stays where you are typing, and the highlighted row is
  * named by `aria-activedescendant`. If real focus moves into the list, typing
  * stops working and the user has to arrow back up to keep searching. React Aria
- * calls this virtual focus and `Autocomplete` provides it. Crystal must not undo
+ * calls this virtual focus and `Autocomplete` provides it. Prismata must not undo
  * it.
  *
  * ## Three materials, and the catalogue names each
@@ -128,7 +128,7 @@ export function CommandPalette({
   /* The recipe scales the whole palette, so it plays on the surface. */
   const [scope, play] = useMotion();
   /* The catalogue puts the palette on a Mirage scrim, and Mirage washes in and
-     withdraws with Crystal's `mirage` and `mirage-out`, from the preset module. */
+     withdraws with Prismata's `mirage` and `mirage-out`, from the preset module. */
   const wash = usePresetMotion('mirage', 'mirage-out', { active: props.isOpen === true });
 
   return (
@@ -146,7 +146,7 @@ export function CommandPalette({
             <AriaDialog
               ref={scope as never}
               aria-label={label}
-              className={cx('cr-haze raised', styles['palette'], className)}
+              className={cx('pr-haze raised', styles['palette'], className)}
             >
               <Sweep play={play} />
               {/* And `menu-out` as it closes: the palette is inside
@@ -157,7 +157,7 @@ export function CommandPalette({
                     never both. The two compose into `aria-labelledby` pointing
                     at the input and the label, which gives the field the wrong
                     name. A label element is also the one a click can focus. */}
-                <SearchField className={cx(styles['field'], 'cr-field-shell block')} autoFocus>
+                <SearchField className={cx(styles['field'], 'pr-field-shell block')} autoFocus>
                   <VisuallyHidden as="span"><Label>{label}</Label></VisuallyHidden>
                   <span className={cx(styles['searchIcon'])} aria-hidden="true">{SearchIcon}</span>
                   <Input placeholder={placeholder} className={cx(styles['input'])} />
@@ -170,7 +170,7 @@ export function CommandPalette({
                   <div className={cx(styles['status'])} role="status">Loading commands…</div>
                 ) : (
                   <ListBox
-                    className={cx(styles['results'], 'cr-scroll-resin')}
+                    className={cx(styles['results'], 'pr-scroll-resin')}
                     aria-label={label}
                     /* Each row runs its command. Nothing stays selected, because
                        a palette runs actions and is not a list you pick from. */

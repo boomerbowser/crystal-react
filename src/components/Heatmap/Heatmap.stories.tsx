@@ -10,7 +10,7 @@ const meta = {
         component:
           '"Intensity is paired with a value; colour alone never carries meaning." Every cell is '
           + "labelled with its number, and every cell's label reads on its own paint, because "
-          + "Crystal's intensity ramp ships the ink for each step. A single ink across a "
+          + "Prismata's intensity ramp ships the ink for each step. A single ink across a "
           + 'five-step ramp is unreadable at one end of it.\n\n'
           + 'The buckets are equal-width, never quantiles. Quantiles put the same number of '
           + 'cells in each bucket, so any data looks evenly spread. A week where one day had four '

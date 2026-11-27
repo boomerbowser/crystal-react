@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { PaymentMethod } from './PaymentMethod.js';
 
 const methods = [
@@ -11,17 +11,17 @@ const methods = [
 
 describe('PaymentMethod', () => {
   it('is a radio group of the methods on file', () => {
-    renderWithCrystal(<PaymentMethod methods={methods} />);
+    renderWithPrismata(<PaymentMethod methods={methods} />);
     expect(screen.getByRole('radiogroup', { name: 'Payment method' })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: /Visa ending 4242/ })).toBeInTheDocument();
   });
 
   /* "Card fields are never reimplemented." A card number typed into an input
-     this library rendered would put every product using Crystal inside PCI
+     this library rendered would put every product using Prismata inside PCI
      scope, because the data touched their page in the clear. Such a field would
      work, look right and pass every other test, so this test checks for it. */
   it('renders no card field of its own', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <PaymentMethod methods={methods} provider={<div data-testid="provider" />} value="new" />,
     );
     expect(container.querySelectorAll('input[autocomplete^="cc-"]')).toHaveLength(0);
@@ -36,12 +36,12 @@ describe('PaymentMethod', () => {
      them behind unchosen options would open four sessions for nothing, and one
      of them would be focusable inside a card the reader did not pick. */
   it('mounts the provider element only while it is chosen', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <PaymentMethod methods={methods} provider={<div data-testid="provider" />} value="visa" />,
     );
     expect(screen.queryByTestId('provider')).toBeNull();
 
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <PaymentMethod methods={methods} provider={<div data-testid="provider" />} value="new" />,
     );
     expect(screen.getByTestId('provider')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('PaymentMethod', () => {
      nothing, with no error or warning. */
   it('mounts the provider element for an uncontrolled group too', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(
+    renderWithPrismata(
       <PaymentMethod methods={methods} provider={<div data-testid="provider" />} defaultValue="visa" />,
     );
     expect(screen.queryByTestId('provider')).toBeNull();
@@ -62,12 +62,12 @@ describe('PaymentMethod', () => {
   });
 
   it('says why a method cannot be used', () => {
-    renderWithCrystal(<PaymentMethod methods={methods} />);
+    renderWithPrismata(<PaymentMethod methods={methods} />);
     expect(screen.getByRole('radio', { name: /Not accepted for this order/ })).toBeDisabled();
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <PaymentMethod methods={methods} provider={<div />} value="new" />,
     );
     await expectNoAxeViolations(container);

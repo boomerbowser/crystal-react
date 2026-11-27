@@ -7,17 +7,17 @@
  * interior corners square off against their neighbours, and a hairline separates
  * them. Rounding every child would give a row of separate buttons that touch.
  *
- * All of that is Crystal's `group` surface from 2.3.0, worn as `.cr-group` (and
+ * All of that is Prismata's `group` surface from 2.3.0, worn as `.pr-group` (and
  * `.vertical`): the Resin plane with its rim, shadow and Haze fill, the children
  * giving up their own elevation and diffusion but keeping their fill, the
  * squared interior, the hairline, and the three fallbacks (D-26). The dock
  * surface is different: it spaces its controls apart. This file holds only what
- * Crystal does not specify.
+ * Prismata does not specify.
  */
 
 /* The disclosure half of a split button is narrower than a full action but still
    meets the target floor on its own, which the catalogue asks for explicitly. */
 .disclosure {
-  min-inline-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
+  min-inline-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
 }

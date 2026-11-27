@@ -2,7 +2,7 @@
 
 /* Plays a recipe when a value changes, and never on the render that first shows it.
  *
- * Most of the motion Crystal's catalogue assigns marks a state being entered:
+ * Most of the motion Prismata's catalogue assigns marks a state being entered:
  * `selection` when an item becomes the selected one, `highlight` when a number
  * is replaced, `slider-step` when a value is committed, `attention` when a
  * status changes. They all follow the same rules, so they share one hook:

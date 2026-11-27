@@ -36,7 +36,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Crystal\'s rich text surface with TipTap bound to it, from `@crystal-ui/react/editor`. '
+          'Prismata\'s rich text surface with TipTap bound to it, from `@prismata/react/editor`. '
           + 'TipTap is an optional peer dependency, so a product that never imports this never '
           + 'bundles an editor. It offers the whole format vocabulary: a block-type menu, the marks '
           + '(bold, italic, underline, strikethrough, inline code, highlight, link, subscript, '
@@ -119,9 +119,9 @@ export const MarkdownInAndOut: Story = {
   render: function MarkdownStory(args) {
     const [markdown, setMarkdown] = useState(MARKDOWN);
     return (
-      <div style={{ display: 'grid', gap: 'var(--cr-spacing-md)' }}>
+      <div style={{ display: 'grid', gap: 'var(--pr-spacing-md)' }}>
         <RichTextEditor {...only(args)} onChange={(value) => { setMarkdown(value.markdown); }} />
-        <pre aria-label="The Markdown it saves" style={{ margin: 0, padding: 'var(--cr-spacing-md)', whiteSpace: 'pre-wrap', fontSize: 'var(--cr-text-caption-size)' }} className="cr-haze">{markdown}</pre>
+        <pre aria-label="The Markdown it saves" style={{ margin: 0, padding: 'var(--pr-spacing-md)', whiteSpace: 'pre-wrap', fontSize: 'var(--pr-text-caption-size)' }} className="pr-haze">{markdown}</pre>
       </div>
     );
   },
@@ -135,7 +135,7 @@ export const SwitchingLayouts: Story = {
   render: function SwitchingStory(args) {
     const [variant, setVariant] = useState<RichTextEditorVariant>('toolbar');
     return (
-      <div style={{ display: 'grid', gap: 'var(--cr-spacing-md)' }}>
+      <div style={{ display: 'grid', gap: 'var(--pr-spacing-md)' }}>
         <SegmentedControl
           label="Layout"
           value={variant}

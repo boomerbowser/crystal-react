@@ -1,9 +1,9 @@
 'use client';
 
-/* Crystal's motion, on Motion for React.
+/* Prismata's motion, on Motion for React.
  *
- * Crystal owns the physics and this file owns the binding. CONTRACT §6 requires
- * a library to honour the physics instead of copying keyframes. Every Crystal
+ * Prismata owns the physics and this file owns the binding. CONTRACT §6 requires
+ * a library to honour the physics instead of copying keyframes. Every Prismata
  * recipe carries a real spring, `{ stiffness, damping, mass }`, fitted so its
  * settling time equals the authored duration, and Motion's spring transition
  * takes exactly those three numbers. The recipe's own physics drive the
@@ -19,7 +19,7 @@
  *     is a 60fps render, and the imperative path costs nothing.
  *   - Animate a property the compositor cannot handle. The web preview animates
  *     `box-shadow`, `border-radius` and `background-position` across 46
- *     keyframes, each forcing a repaint every frame. Crystal React restricts
+ *     keyframes, each forcing a repaint every frame. Prismata React restricts
  *     itself to `transform` and `opacity`, and expresses a shadow change as an
  *     opacity cross-fade between pre-rendered layers.
  *   - Start anything at rest. Ambient motion is deferred upstream (R22) and must
@@ -28,20 +28,20 @@
 import { useCallback, useRef } from 'react';
 import { useAnimate } from 'motion/react';
 import type { AnimationSequence, DOMKeyframesDefinition } from 'motion/react';
-import motionRecipes from '@crystal-ui/core/motion-recipes' with { type: 'json' };
-import { useCrystalTheme } from '../theme/CrystalProvider.js';
+import motionRecipes from '@prismata/core/motion-recipes' with { type: 'json' };
+import { usePrismataTheme } from '../theme/PrismataProvider.js';
 
-const RECIPES: ReadonlyMap<string, CrystalRecipe> = new Map(
+const RECIPES: ReadonlyMap<string, PrismataRecipe> = new Map(
   motionRecipes.recipes.map((recipe) => [recipe.id, recipe]),
 );
 
-export type CrystalRecipeName = string;
+export type PrismataRecipeName = string;
 
-export function getRecipe(name: CrystalRecipeName): CrystalRecipe | undefined {
+export function getRecipe(name: PrismataRecipeName): PrismataRecipe | undefined {
   return RECIPES.get(name);
 }
 
-/** Every recipe id Crystal ships. Exported for the generated documentation. */
+/** Every recipe id Prismata ships. Exported for the generated documentation. */
 export const recipeNames: readonly string[] = [...RECIPES.keys()];
 
 export interface UseMotionOptions {
@@ -58,12 +58,12 @@ export interface UseMotionOptions {
    * Reorient a directional recipe. The physics are untouched. Only the direction
    * of the movement changes.
    *
-   * Crystal authors its directional recipes once, for one direction, with
+   * Prismata authors its directional recipes once, for one direction, with
    * physical transforms: `drawer-in` reads `translateX(105%) rotateY(-12deg)`,
    * which is a panel arriving from the right. That is correct for a drawer on
    * the inline-end edge of a left-to-right page and wrong for every other case,
    * and CSS cannot mirror a transform the way it mirrors `padding-inline-start`.
-   * Right-to-left is a verified axis in Crystal, so every recipe has to follow
+   * Right-to-left is a verified axis in Prismata, so every recipe has to follow
    * it.
    *
    * Reorienting is chosen over authoring three more recipes because a recipe
@@ -102,12 +102,12 @@ export interface Reorientation {
  * Durations, offsets, easing and the fitted spring are carried through
  * untouched. The function changes only the direction of an authored movement.
  */
-export function reorientRecipe(recipe: CrystalRecipe, how: Reorientation): CrystalRecipe {
+export function reorientRecipe(recipe: PrismataRecipe, how: Reorientation): PrismataRecipe {
   const { mirrorInline = false, toBlockAxis = false } = how;
   if (!mirrorInline && !toBlockAxis) return recipe;
 
   /* Captures the function name and its single argument. This works because
-     Crystal's recipes write one argument per transform function. A general
+     Prismata's recipes write one argument per transform function. A general
      transform parser would be a CSS parser. A function not listed here is left
      exactly as it is. */
   const negate = (value: string): string => (value.startsWith('-') ? value.slice(1) : `-${value}`);
@@ -209,11 +209,11 @@ function release(element: HTMLElement, values: Record<string, unknown>): void {
 /**
  * Turn a recipe's keyframes into Motion's per-property arrays.
  *
- * Motion animates each property across its own array of values, where Crystal
+ * Motion animates each property across its own array of values, where Prismata
  * authors a list of frames each holding several properties. The frames carry
  * explicit offsets, which become Motion's `times`.
  */
-export function toMotionKeyframes(recipe: CrystalRecipe): {
+export function toMotionKeyframes(recipe: PrismataRecipe): {
   values: DOMKeyframesDefinition;
   times: number[] | undefined;
   frameCount: number;
@@ -243,12 +243,12 @@ export function toMotionKeyframes(recipe: CrystalRecipe): {
 
 /**
  * The Motion transition for one play of a recipe. Every hook that plays
- * Crystal's recipes shares it, so a spring, a loop and a stagger are decided in
+ * Prismata's recipes shares it, so a spring, a loop and a stagger are decided in
  * one place.
  *
  * A spring is a continuous solution from one value to another, so it can only
  * describe a two-keyframe animation, and Motion refuses more. "Settle from A to
- * B" has no meaning across four waypoints. Crystal authors most recipes as three
+ * B" has no meaning across four waypoints. Prismata authors most recipes as three
  * or four frames and fits each spring so its settling time equals the authored
  * duration, so the two forms agree. Where Motion can take the spring it gets the
  * real physics, and where it cannot, it falls back to the duration that spring
@@ -259,7 +259,7 @@ export function toMotionKeyframes(recipe: CrystalRecipe): {
  * never takes the spring branch.
  */
 export function transitionFor(
-  recipe: CrystalRecipe,
+  recipe: PrismataRecipe,
   durationMs: number,
   delayMs: number,
   frameCount: number,
@@ -295,20 +295,20 @@ export function useMotion(
   options: UseMotionOptions = {},
 ): [
   ReturnType<typeof useAnimate>[0],
-  (name: CrystalRecipeName, position?: StaggerPosition) => Promise<void>,
+  (name: PrismataRecipeName, position?: StaggerPosition) => Promise<void>,
   () => void,
 ] {
   const [scope, animate] = useAnimate();
   /* A continuous recipe also needs a way to end it. It repeats until stopped,
      and the caller stops it when the work it reports has resolved. */
   const current = useRef<{ stop: () => void } | null>(null);
-  const { resolveDuration, reduceMotion } = useCrystalTheme();
+  const { resolveDuration, reduceMotion } = usePrismataTheme();
   const running = useRef<string | null>(null);
   const once = options.once ?? false;
   const mirrorInline = options.reorient?.mirrorInline ?? false;
   const toBlockAxis = options.reorient?.toBlockAxis ?? false;
 
-  const play = useCallback(async (name: CrystalRecipeName, position?: StaggerPosition): Promise<void> => {
+  const play = useCallback(async (name: PrismataRecipeName, position?: StaggerPosition): Promise<void> => {
     const element = scope.current as HTMLElement | null;
     if (!element) return;
 
@@ -316,7 +316,7 @@ export function useMotion(
     const recipe = authored && reorientRecipe(authored, { mirrorInline, toBlockAxis });
     if (!recipe) {
       throw new RangeError(
-        `Unknown Crystal motion "${name}". Recipes come from @crystal-ui/core; this library defines none of its own.`,
+        `Unknown Prismata motion "${name}". Recipes come from @prismata/core; this library defines none of its own.`,
       );
     }
 
@@ -324,14 +324,14 @@ export function useMotion(
        recipe was marking has already been applied by the caller. */
     const duration = resolveDuration(recipe.duration);
     if (reduceMotion || duration === 0) {
-      element.dataset['crMotionState'] = 'instant';
+      element.dataset['prMotionState'] = 'instant';
       return;
     }
 
     if (once && running.current === name) return;
     running.current = name;
-    element.dataset['crMotionName'] = name;
-    element.dataset['crMotionState'] = 'running';
+    element.dataset['prMotionName'] = name;
+    element.dataset['prMotionState'] = 'running';
 
     const { values, times, frameCount } = toMotionKeyframes(recipe);
 
@@ -348,7 +348,7 @@ export function useMotion(
     await controls
       .then(() => {
         releaseRestingStyles(element, values as Record<string, unknown>);
-        if (running.current === name) element.dataset['crMotionState'] = 'finished';
+        if (running.current === name) element.dataset['prMotionState'] = 'finished';
       })
       /* A cancelled animation is not an error. It happens whenever a component
          unmounts mid-motion. */

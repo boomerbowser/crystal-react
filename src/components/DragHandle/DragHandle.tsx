@@ -11,7 +11,7 @@
  * different input. That is why this component uses it: a hand-rolled drag
  * usually lacks the keyboard path, because the pointer version looks finished.
  *
- * Crystal owns the lift and the settle: elevation while carried, and the
+ * Prismata owns the lift and the settle: elevation while carried, and the
  * `drag-pickup` and `drag-settle` recipes at each end of the gesture. Both are
  * bound to the drag state and not to pointer events, so the keyboard path
  * animates exactly as the pointer one does.
@@ -67,7 +67,7 @@ export const DragHandle = forwardRef<HTMLDivElement, DragHandleProps>(function D
       {...props}
       {...(isDisabled ? {} : dragProps)}
       ref={mergeRefs(scope as never, ref)}
-      data-cr-state={isDragging ? 'dragging' : 'at-rest'}
+      data-pr-state={isDragging ? 'dragging' : 'at-rest'}
       className={cx(styles['draggable'], isDragging ? styles['dragging'] : undefined, className)}
     >
       {children}
@@ -79,13 +79,13 @@ export const DragHandle = forwardRef<HTMLDivElement, DragHandleProps>(function D
         type="button"
         disabled={isDisabled}
         aria-label={handleLabel}
-        data-cr-state={isDragging ? 'dragging' : 'at-rest'}
-        /* Crystal's lift keys on this. */
+        data-pr-state={isDragging ? 'dragging' : 'at-rest'}
+        /* Prismata's lift keys on this. */
         data-dragging={isDragging || undefined}
-        /* Crystal's drag handle (2.2.0): a bare control with a grip and a lift.
-           Crystal also draws the grip, a dot grid in the handle's own ink, so
+        /* Prismata's drag handle (2.2.0): a bare control with a grip and a lift.
+           Prismata also draws the grip, a dot grid in the handle's own ink, so
            this component draws no glyph of its own. */
-        className={cx(styles['handle'], 'cr-bare', 'cr-drag-handle')}
+        className={cx(styles['handle'], 'pr-bare', 'pr-drag-handle')}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { act } from 'react';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { Affix } from './Affix.js';
 
 /* jsdom has no layout, so every rect is zero and the component would read
@@ -12,7 +12,7 @@ const original = Element.prototype.getBoundingClientRect;
 /* The fixture's height, not a design value: jsdom reports zero for everything,
    so the test has to supply a number for the component to measure, and the
    assertions below check that this exact number is what gets reserved.
-   crystal-allow-literal: a test fixture's dimension, never rendered. */
+   prismata-allow-literal: a test fixture's dimension, never rendered. */
 const FIXTURE_HEIGHT = 48;
 
 beforeEach(() => {
@@ -35,13 +35,13 @@ const scroll = (to: number): void => {
 
 describe('Affix', () => {
   it('renders its content inline before the threshold', () => {
-    renderWithCrystal(<Affix offset={0}><p>Filters</p></Affix>);
+    renderWithPrismata(<Affix offset={0}><p>Filters</p></Affix>);
     expect(screen.getByText('Filters')).toBeTruthy();
     expect(screen.getByText('Filters').closest('[data-pinned]')).toBeNull();
   });
 
   it('pins once its natural position reaches the offset', async () => {
-    renderWithCrystal(<Affix offset={16}><p>Filters</p></Affix>);
+    renderWithPrismata(<Affix offset={16}><p>Filters</p></Affix>);
     scroll(8);
     await vi.waitFor(() => {
       expect(screen.getByText('Filters').closest('[data-pinned]')).not.toBeNull();
@@ -50,7 +50,7 @@ describe('Affix', () => {
 
   it('tells its caller when it pins and when it releases', async () => {
     const onChange = vi.fn();
-    renderWithCrystal(<Affix offset={16} onChange={onChange}><p>Filters</p></Affix>);
+    renderWithPrismata(<Affix offset={16} onChange={onChange}><p>Filters</p></Affix>);
     scroll(8);
     await vi.waitFor(() => expect(onChange).toHaveBeenCalledWith(true));
     scroll(400);
@@ -59,7 +59,7 @@ describe('Affix', () => {
 
   it('reports a change only when the state actually changes', async () => {
     const onChange = vi.fn();
-    renderWithCrystal(<Affix offset={16} onChange={onChange}><p>Filters</p></Affix>);
+    renderWithPrismata(<Affix offset={16} onChange={onChange}><p>Filters</p></Affix>);
     scroll(8);
     await vi.waitFor(() => expect(onChange).toHaveBeenCalledTimes(1));
     scroll(4);
@@ -70,7 +70,7 @@ describe('Affix', () => {
   });
 
   it('holds the placeholder open whether or not it is pinned', async () => {
-    renderWithCrystal(<Affix offset={16}><p>Filters</p></Affix>);
+    renderWithPrismata(<Affix offset={16}><p>Filters</p></Affix>);
     /* Found from the content rather than from the container's first child,
        which is the provider's wrapper. */
     const holder = screen.getByText('Filters').parentElement?.parentElement as HTMLElement;

@@ -1,6 +1,6 @@
 /* The chart kit: the shapes, the scales, the second channel and the two hooks
  * every chart in slice K shares. Exported because a product drawing a chart
- * Crystal has no recipe for should be able to draw it on the same frame, with
+ * Prismata has no recipe for should be able to draw it on the same frame, with
  * the same series colours, rather than starting a second system beside this one.
  */
 export type { ChartSeries, ChartTableData, ChartFrame, ChartInsets } from './types.js';

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { DataTableRow } from '../DataTable/DataTable.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { ResizableTable } from './ResizableTable.js';
 
 const columns = [
@@ -28,7 +28,7 @@ const meta = {
           + '`DataTable` is the full instrument, and a product that only needs columns a reader '
           + 'can widen should not have to switch selection and sorting off to get one, so the '
           + 'separate name is the API. Here resizing is the point, so it is opt-out.\n\n'
-          + `The catalogue's rule is geometric: the resizer is a ${crystalTokens['action.minTarget']} target that does `
+          + `The catalogue's rule is geometric: the resizer is a ${prismataTokens['action.minTarget']} target that does `
           + 'not shift the column it borders. It reaches the floor by filling the header cell\'s '
           + 'height, and it sits inside the header\'s box rather than straddling the boundary, '
           + 'because a resizer that overhangs moves the edge it reports. It is a slider, so '

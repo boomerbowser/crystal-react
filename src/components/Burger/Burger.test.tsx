@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { Burger } from './Burger.js';
 
 function Controlled({ label }: { label?: string }): React.JSX.Element {
@@ -15,7 +15,7 @@ function Controlled({ label }: { label?: string }): React.JSX.Element {
 
 describe('Burger', () => {
   it('has a name, an expanded state and something it controls', () => {
-    renderWithCrystal(<Controlled />);
+    renderWithPrismata(<Controlled />);
     const button = screen.getByRole('button', { name: 'Navigation' });
     expect(button.getAttribute('aria-expanded')).toBe('false');
     expect(button.getAttribute('aria-controls')).toBe('nav');
@@ -23,7 +23,7 @@ describe('Burger', () => {
 
   it('announces the state through aria-expanded, and keeps its name', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Controlled />);
+    renderWithPrismata(<Controlled />);
     const button = screen.getByRole('button', { name: 'Navigation' });
     await user.click(button);
     expect(button.getAttribute('aria-expanded')).toBe('true');
@@ -36,7 +36,7 @@ describe('Burger', () => {
 
   it('is operable from the keyboard', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Controlled />);
+    renderWithPrismata(<Controlled />);
     await user.tab();
     const button = screen.getByRole('button', { name: 'Navigation' });
     expect(document.activeElement).toBe(button);
@@ -47,13 +47,13 @@ describe('Burger', () => {
   it('reports each press to its caller', async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
-    renderWithCrystal(<Burger isOpen={false} onOpenChange={onOpenChange} />);
+    renderWithPrismata(<Burger isOpen={false} onOpenChange={onOpenChange} />);
     await user.click(screen.getByRole('button'));
     expect(onOpenChange).toHaveBeenCalledWith(true);
   });
 
   it('takes the name it is given', () => {
-    renderWithCrystal(<Controlled label="Sections" />);
+    renderWithPrismata(<Controlled label="Sections" />);
     expect(screen.getByRole('button', { name: 'Sections' })).toBeTruthy();
   });
 });

@@ -8,14 +8,14 @@
  * their edges, which the material contract forbids. The plane floats and the
  * destinations are painted on it.
  *
- * The labels share one Stone backing. Stone is Crystal's label backing (55% in
+ * The labels share one Stone backing. Stone is Prismata's label backing (55% in
  * light, 60% in dark), and here it runs behind the whole label row instead of
  * behind each label. A per-label backing would draw a box around every
  * destination and turn the dock into a segmented control, which is a different
  * component: a segmented control picks a view, and a dock goes somewhere.
  *
  * The selected destination takes a primary fill. The destination itself changes
- * material, and no mark is placed beside its label, because Crystal withdrew
+ * material, and no mark is placed beside its label, because Prismata withdrew
  * leading marks for shifting the label they point at. The label also goes
  * heavier, which is the signal that survives a monochrome rendering and forced
  * colours.
@@ -46,13 +46,13 @@ export interface DockProps {
 }
 
 export function Dock({ items, currentId, className, ...props }: DockProps): React.JSX.Element {
-  /* The primary fill is Crystal's pill behind the current destination, and it
+  /* The primary fill is Prismata's pill behind the current destination, and it
      travels to the one a person goes to (D-37). It replaces `selection`'s
      squash on the link. */
   const { planeRef } = useTravelMotion('selection-travel', 'a[aria-current]:not([aria-current=false])');
   return (
-    <nav aria-label={props['aria-label'] ?? 'Destinations'} className={cx(styles['dock'], 'cr-dock', className)}>
-      <ul ref={planeRef} className={cx(styles['group'], 'cr-dock-inner')}>
+    <nav aria-label={props['aria-label'] ?? 'Destinations'} className={cx(styles['dock'], 'pr-dock', className)}>
+      <ul ref={planeRef} className={cx(styles['group'], 'pr-dock-inner')}>
         {items.map((item) => {
           const isCurrent = item.id === currentId;
           return (

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, waitFor } from '../../test/render.js';
 import { MasterDetail } from './MasterDetail.js';
 
 /* This environment implements no `matchMedia` (`window.matchMedia` is
@@ -31,7 +31,7 @@ const list = <ul><li>One</li></ul>;
 describe('MasterDetail', () => {
   it('names both panes, so a landmark list can tell them apart', () => {
     atWidth(true);
-    renderWithCrystal(
+    renderWithPrismata(
       <MasterDetail list={list} listLabel="Messages" detailLabel="Message" selectedKey="a">
         The message.
       </MasterDetail>,
@@ -46,10 +46,10 @@ describe('MasterDetail', () => {
      they can see it change. */
   it('leaves focus in the list when both panes are on screen', async () => {
     atWidth(true);
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <MasterDetail list={list} detailLabel="Message" selectedKey="a">First.</MasterDetail>,
     );
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <MasterDetail list={list} detailLabel="Message" selectedKey="b">Second.</MasterDetail>,
     );
     await waitFor(() => {
@@ -62,10 +62,10 @@ describe('MasterDetail', () => {
      press goes to a control that is not there. */
   it('moves focus to the detail once the layout has collapsed', async () => {
     atWidth(false);
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <MasterDetail list={list} detailLabel="Message" selectedKey={null}>First.</MasterDetail>,
     );
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <MasterDetail list={list} detailLabel="Message" selectedKey="b">Second.</MasterDetail>,
     );
     await waitFor(() => {
@@ -77,7 +77,7 @@ describe('MasterDetail', () => {
      and the detail in sequence, which is a page. */
   it('shows one pane at a time when stacked', () => {
     atWidth(false);
-    renderWithCrystal(
+    renderWithPrismata(
       <MasterDetail list={list} listLabel="Messages" detailLabel="Message" selectedKey="a">
         The message.
       </MasterDetail>,
@@ -90,7 +90,7 @@ describe('MasterDetail', () => {
      pane is a large empty rectangle beside a list. */
   it('says what to do when nothing is chosen', () => {
     atWidth(true);
-    renderWithCrystal(
+    renderWithPrismata(
       <MasterDetail list={list} selectedKey={null} emptySelection="Choose a message to read.">
         Never shown.
       </MasterDetail>,
@@ -100,7 +100,7 @@ describe('MasterDetail', () => {
 
   it('has no axe violations', async () => {
     atWidth(true);
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <MasterDetail list={list} listLabel="Messages" detailLabel="Message" selectedKey="a">
         The message.
       </MasterDetail>,

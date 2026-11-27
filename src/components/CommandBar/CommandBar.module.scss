@@ -1,9 +1,9 @@
 @use '../../styles/tokens' as *;
 
-/* "Pill; overflow to a menu." The bar is Crystal's dock, whose radius (2.10.1)
+/* "Pill; overflow to a menu." The bar is Prismata's dock, whose radius (2.10.1)
    is concentric with the pills inside it, which for one row of them is a pill.
    Restating 999px here would undo that for a bar that wraps. The actions
-   inside are Crystal actions and take their pill geometry from there. */
+   inside are Prismata actions and take their pill geometry from there. */
 
 /* The measuring row has to be as wide as the bar, or it measures itself.
  *

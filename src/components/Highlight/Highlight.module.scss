@@ -3,7 +3,7 @@
 /* Mark and Highlight mark a search match inline.
  *
  * The fill is the palette's soft primary with its own ink on top, the pair
- * Crystal uses for a selected surface, because a match is a kind of selection.
+ * Prismata uses for a selected surface, because a match is a kind of selection.
  * Using the pair and not a yellow means the contrast holds in every palette and
  * both modes, and it is checked as a pair.
  *
@@ -16,9 +16,9 @@
   position: relative;
   isolation: isolate;
   padding-inline: 0.15em;
-  border-radius: $cr-spacing-2xs;
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
+  border-radius: $pr-spacing-2xs;
+  background: var(--pr-primary-soft);
+  color: var(--pr-on-primary-soft);
   /* The ink is set explicitly because `mark` has a UA colour that survives a
      background change and is black in every browser. */
   box-decoration-break: clone;
@@ -29,9 +29,9 @@
   .mark { background: Highlight; color: HighlightText; }
 }
 
-/* The cue Crystal's `highlight` plays on: a feathered Haze wash under the text
-   of a mark that has just arrived, invisible at rest. It wears Crystal's
-   `.cr-haze.flush` (2.7.0), the feathered fill to its own edge, with Crystal's
+/* The cue Prismata's `highlight` plays on: a feathered Haze wash under the text
+   of a mark that has just arrived, invisible at rest. It wears Prismata's
+   `.pr-haze.flush` (2.7.0), the feathered fill to its own edge, with Prismata's
    fallbacks. */
 .cue {
   position: absolute;

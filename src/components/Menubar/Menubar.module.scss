@@ -8,12 +8,12 @@
 .items {
   display: inline-flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
 }
 
 .menubar :global(button:focus-visible) {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  border-radius: $cr-action-radius;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  border-radius: $pr-action-radius;
+  box-shadow: var(--pr-focus-ring);
 }

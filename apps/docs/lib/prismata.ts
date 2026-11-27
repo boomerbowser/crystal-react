@@ -1,11 +1,11 @@
-/* Every fact the site states about Crystal, read from the installed
- * `@crystal-ui/core`. Nothing here is retyped: a surface, a recipe value or a
+/* Every fact the site states about Prismata, read from the installed
+ * `@prismata/core`. Nothing here is retyped: a surface, a recipe value or a
  * catalogue entry that core does not publish cannot appear on a page, because
  * the page is generated from what core publishes (§3.10). */
-import surfaceRecipes from '@crystal-ui/core/surface-recipes';
-import surfaceVocabulary from '@crystal-ui/core/surfaces';
-import catalogue from '@crystal-ui/core/catalogue';
-import libraryRegistry from '@crystal-ui/core/libraries';
+import surfaceRecipes from '@prismata/core/surface-recipes';
+import surfaceVocabulary from '@prismata/core/surfaces';
+import catalogue from '@prismata/core/catalogue';
+import libraryRegistry from '@prismata/core/libraries';
 import libraryVersions from './library-versions.json';
 
 export interface Branch {
@@ -67,7 +67,7 @@ export const entries: CatalogueEntry[] = (catalogue as unknown as {
 export function surface(id: string): { recipe: Surface; vocabulary: VocabularyEntry } {
   const recipe = surfaces.find((s) => s.id === id);
   const entry = vocabulary.find((s) => s.id === id);
-  if (!recipe || !entry) throw new Error(`@crystal-ui/core ${coreVersion} publishes no surface "${id}"`);
+  if (!recipe || !entry) throw new Error(`@prismata/core ${coreVersion} publishes no surface "${id}"`);
   return { recipe, vocabulary: entry };
 }
 
@@ -109,7 +109,7 @@ export interface Library {
   documentation: string | null;
 }
 
-/* Crystal's component libraries, from the installed registry, each with the
+/* Prismata's component libraries, from the installed registry, each with the
    version its package has published (scripts/library-versions.mjs). */
 export const libraries = (libraryRegistry as unknown as { libraries: Library[] }).libraries;
 export const publishedVersions = (libraryVersions as { packages: Record<string, string | null> }).packages;

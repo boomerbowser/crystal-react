@@ -18,7 +18,7 @@ const meta = {
           + 'is a detached node that `focus()` accepts and silently ignores. Storing one '
           + 'passes a test that never unmounts anything and puts every reader at the top of '
           + 'the page in production.\n\n'
-          + 'The movement is Crystal\'s `view-push-in` and `view-push-out`, authored in core '
+          + 'The movement is Prismata\'s `view-push-in` and `view-push-out`, authored in core '
           + '2.1.0. One is a view arriving from the inline-end edge, the other the view it covers '
           + 'travelling a fraction of that distance behind it. Two recipes instead of four, '
           + 'because a pop is a push mirrored and right-to-left is a push mirrored again.',

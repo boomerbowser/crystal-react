@@ -8,15 +8,15 @@
  */
 
 .edge {
-  stroke: var(--cr-chart-grid);
-  stroke-width: var(--cr-chart-hairline);
+  stroke: var(--pr-chart-grid);
+  stroke-width: var(--pr-chart-hairline);
 }
 
 .dot {
   fill: var(--series-colour);
-  stroke: var(--cr-surface);
-  stroke-width: var(--cr-chart-hairline);
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
+  stroke: var(--pr-surface);
+  stroke-width: var(--pr-chart-hairline);
+  transition: opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 .target { fill: transparent; }
@@ -24,7 +24,7 @@
 .node:focus-visible { outline: none; }
 
 .node[data-active] .dot,
-.node:hover .dot { stroke: var(--cr-text); stroke-width: var(--cr-chart-stroke); }
+.node:hover .dot { stroke: var(--pr-text); stroke-width: var(--pr-chart-stroke); }
 
 .chart :global(svg) > g:hover .node:not(:hover) .dot,
 .chart :global(svg) > g:focus-within .node:not([data-active]) .dot { opacity: 0.55; }

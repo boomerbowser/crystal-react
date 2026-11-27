@@ -7,29 +7,29 @@
 .label { @include field.label; }
 
 .required {
-  color: var(--cr-danger-ink);
+  color: var(--pr-danger-ink);
   /* Beside the label rather than replacing part of it, so the asterisk is not
      read as punctuation in the middle of a sentence. */
   margin-inline-start: 0.25em;
 }
 
 .description, .error { @include field.message; }
-.description { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 700; }
+.description { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 700; }
 
 /* The error carries an icon as well as a colour, because colour alone is not an
    indication. */
 .error::before { content: '⚠ '; }
 
 .field[data-disabled] {
-  opacity: $cr-action-disabled-opacity;
+  opacity: $pr-action-disabled-opacity;
   cursor: not-allowed;
 }
 
 .fieldset {
   display: flex;
   flex-direction: column;
-  gap: var(--cr-space);
+  gap: var(--pr-space);
   margin: 0;
   padding: 0;
   border: 0;
@@ -38,16 +38,16 @@
 
 .legend {
   padding: 0;
-  font-size: var(--cr-text-subheading-size);
+  font-size: var(--pr-text-subheading-size);
   font-weight: 750;
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 /* A panel is optional. A group inside a form usually needs spacing and not a
    surface, and a form with every group on its own card reads as a stack of
    unrelated things. */
 .panelled {
-  padding: var(--cr-space);
-  border: 1px solid var(--cr-edge);
-  border-radius: var(--cr-radius);
+  padding: var(--pr-space);
+  border: 1px solid var(--pr-edge);
+  border-radius: var(--pr-radius);
 }

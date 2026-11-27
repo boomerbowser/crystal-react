@@ -13,8 +13,8 @@
  * band. It never invents a colour and never uses colour alone: the band's name
  * is in the value's accessible text and beside it on screen.
  *
- * The sweep and the stroke are both Crystal's. The arc matches the ring
- * progress stroke, as the catalogue requires, and `--cr-progress-ring-stroke`
+ * The sweep and the stroke are both Prismata's. The arc matches the ring
+ * progress stroke, as the catalogue requires, and `--pr-progress-ring-stroke`
  * is one value so a gauge and a ring progress cannot drift apart.
  */
 import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';

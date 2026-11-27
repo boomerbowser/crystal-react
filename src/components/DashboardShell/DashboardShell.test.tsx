@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { DashboardShell } from './DashboardShell.js';
 import { StatusBar } from '../StatusBar/StatusBar.js';
 
@@ -10,7 +10,7 @@ describe('DashboardShell', () => {
      second set on the page. This asserts that composing does not lose them, and
      that there is still exactly one main. */
   it('keeps the shell landmarks, and exactly one main', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <DashboardShell
         header={<header>The product</header>}
         sidebar={<a href="/reports">Reports</a>}
@@ -25,12 +25,12 @@ describe('DashboardShell', () => {
   });
 
   it('names the content grid', () => {
-    renderWithCrystal(<DashboardShell gridLabel="Sales"><p>A tile</p></DashboardShell>);
+    renderWithPrismata(<DashboardShell gridLabel="Sales"><p>A tile</p></DashboardShell>);
     expect(screen.getByRole('group', { name: 'Sales' })).toBeInTheDocument();
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <DashboardShell header={<header>The product</header>} footer={<StatusBar status="Saved" />}>
         <p>A tile</p>
       </DashboardShell>,

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor, within } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor, within } from '../../test/render.js';
 import { PlaylistBlock, type PlaylistTrack } from './PlaylistBlock.js';
 
 const tracks: PlaylistTrack[] = [
@@ -11,7 +11,7 @@ const tracks: PlaylistTrack[] = [
 
 describe('PlaylistBlock', () => {
   it('is a named grid of tracks, each with its own named drag handle', () => {
-    renderWithCrystal(<PlaylistBlock label="Up next" tracks={tracks} onReorder={() => {}} />);
+    renderWithPrismata(<PlaylistBlock label="Up next" tracks={tracks} onReorder={() => {}} />);
     const grid = screen.getByRole('grid', { name: 'Up next' });
     expect(within(grid).getAllByRole('row')).toHaveLength(3);
     expect(screen.getByRole('button', { name: 'Reorder North Road' })).toBeInTheDocument();
@@ -19,7 +19,7 @@ describe('PlaylistBlock', () => {
 
   /* The now-playing row is `aria-current`, on the row itself, and says so in words. */
   it('marks the now-playing row as current, and says so', () => {
-    renderWithCrystal(<PlaylistBlock label="Up next" tracks={tracks} nowPlaying="b" onReorder={() => {}} />);
+    renderWithPrismata(<PlaylistBlock label="Up next" tracks={tracks} nowPlaying="b" onReorder={() => {}} />);
     const rows = screen.getAllByRole('row');
     expect(rows[1]).toHaveAttribute('aria-current', 'true');
     expect(rows[0]).not.toHaveAttribute('aria-current');
@@ -30,14 +30,14 @@ describe('PlaylistBlock', () => {
      its exit before it goes, disabled meanwhile so the keyboard passes over it. */
   it('plays list-in on a track added, and list-out on a track removed before it goes', async () => {
     const extra: PlaylistTrack = { id: 'd', title: 'Low Tide', titleText: 'Low Tide', duration: '5:10' };
-    const motionOf = (title: string) => (screen.getByText(title).closest('[data-cr-motion-name]') as HTMLElement | null)?.dataset['crMotionName'];
-    const { rerenderWithCrystal } = renderWithCrystal(<PlaylistBlock label="Up next" tracks={tracks} onReorder={() => {}} />);
+    const motionOf = (title: string) => (screen.getByText(title).closest('[data-pr-motion-name]') as HTMLElement | null)?.dataset['prMotionName'];
+    const { rerenderWithPrismata } = renderWithPrismata(<PlaylistBlock label="Up next" tracks={tracks} onReorder={() => {}} />);
     expect(motionOf('Harbour Lights')).toBeUndefined();
 
-    rerenderWithCrystal(<PlaylistBlock label="Up next" tracks={[...tracks, extra]} onReorder={() => {}} />);
+    rerenderWithPrismata(<PlaylistBlock label="Up next" tracks={[...tracks, extra]} onReorder={() => {}} />);
     expect(motionOf('Low Tide')).toBe('list-in');
 
-    rerenderWithCrystal(<PlaylistBlock label="Up next" tracks={[tracks[0]!, tracks[2]!, extra]} onReorder={() => {}} />);
+    rerenderWithPrismata(<PlaylistBlock label="Up next" tracks={[tracks[0]!, tracks[2]!, extra]} onReorder={() => {}} />);
     const leaving = screen.getByText('North Road').closest('[role="row"]');
     expect(leaving).toHaveAttribute('aria-disabled', 'true');
     expect(motionOf('North Road')).toBe('list-out');
@@ -47,7 +47,7 @@ describe('PlaylistBlock', () => {
 
   it('plays a track on Enter', async () => {
     const onPlay = vi.fn();
-    renderWithCrystal(<PlaylistBlock label="Up next" tracks={tracks} onReorder={() => {}} onPlay={onPlay} />);
+    renderWithPrismata(<PlaylistBlock label="Up next" tracks={tracks} onReorder={() => {}} onPlay={onPlay} />);
     await userEvent.tab();
     await userEvent.keyboard('{Enter}');
     expect(onPlay).toHaveBeenCalledWith('a');
@@ -57,7 +57,7 @@ describe('PlaylistBlock', () => {
     ['at rest', {}],
     ['playing', { nowPlaying: 'a' }],
   ])('has no axe violations %s', async (_, extra) => {
-    const { container } = renderWithCrystal(<PlaylistBlock label="Up next" tracks={tracks} onReorder={() => {}} {...extra} />);
+    const { container } = renderWithPrismata(<PlaylistBlock label="Up next" tracks={tracks} onReorder={() => {}} {...extra} />);
     await expectNoAxeViolations(container);
   });
 });

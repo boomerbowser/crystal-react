@@ -9,6 +9,6 @@ export type { ListItemMotionOptions } from './ListPresence.js';
 export { useContinuous } from './useContinuous.js';
 export { useChangeMotion, usePlayOnChange, entered } from './useChangeMotion.js';
 export type { ContinuousRecipe } from './useContinuous.js';
-export type { UsePresetOptions, CrystalPresetName } from './usePreset.js';
+export type { UsePresetOptions, PrismataPresetName } from './usePreset.js';
 export type { UsePresetMotionOptions, PresetMotionProps, PresetTarget } from './usePresetMotion.js';
-export type { UseMotionOptions, CrystalRecipeName, StaggerPosition } from './useMotion.js';
+export type { UseMotionOptions, PrismataRecipeName, StaggerPosition } from './useMotion.js';

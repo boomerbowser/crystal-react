@@ -43,7 +43,7 @@ export const Overflowing: Story = {
  *  same size, so the group's size wins over any a child was given. */
 export const Sizes: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-space)', flexDirection: 'column' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-space)', flexDirection: 'column' }}>
       <AvatarGroup {...only(args)} size="sm" max={4} />
       <AvatarGroup {...only(args)} size="md" max={4} />
       <AvatarGroup {...only(args)} size="lg" max={4} />

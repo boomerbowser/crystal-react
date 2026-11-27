@@ -6,12 +6,12 @@
 .stack {
   position: fixed;
   z-index: 1000;
-  inset-block-end: $cr-spacing-md;
-  inset-inline-end: $cr-spacing-md;
+  inset-block-end: $pr-spacing-md;
+  inset-inline-end: $pr-spacing-md;
   display: flex;
   flex-direction: column-reverse;
   /* "Stacked with a 12px offset." */
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -24,26 +24,26 @@
 /* "Frost panel with Haze reading fill and the panel shadow (R15e)." A toast
    opens over content, so it is a transient panel like a menu or a popover and
    takes Frost. Meridian moved it to Frost with the others, and the catalogue
-   says so as of Crystal 2.2.0. */
+   says so as of Prismata 2.2.0. */
 .toast {
-  /* The element wears Crystal's `.cr-frost.reading` (2.7.0): the Frost panel
+  /* The element wears Prismata's `.pr-frost.reading` (2.7.0): the Frost panel
      with the Haze reading fill under the text, the catalogue's "Frost panel
      with Haze reading fill", needed because Frost has no pad of its own. The
-     fill is on `::after`, because `.cr-frost` paints its grain on `::before`. */
+     fill is on `::after`, because `.pr-frost` paints its grain on `::before`. */
   display: flex;
   align-items: flex-start;
-  gap: $cr-spacing-sm;
-  padding: $cr-spacing-sm $cr-spacing-md;
-  border-radius: $cr-shape-content-radius;
-  color: var(--cr-text);
+  gap: $pr-spacing-sm;
+  padding: $pr-spacing-sm $pr-spacing-md;
+  border-radius: $pr-shape-content-radius;
+  color: var(--pr-text);
 }
 
 @include status.status-pairs('.toast');
 
 .well {
-  @include status.status-well($cr-icon-size);
+  @include status.status-well($pr-icon-size);
 
-  margin-block-start: $cr-spacing-2xs;
+  margin-block-start: $pr-spacing-2xs;
 }
 
 /* The live regions. Off the screen, present from the first render. */
@@ -61,9 +61,9 @@
 .title { margin: 0; font-weight: 750; }
 
 .description {
-  margin: $cr-spacing-2xs 0 0;
-  font-size: var(--cr-text-caption-size);
-  color: var(--cr-muted);
+  margin: $pr-spacing-2xs 0 0;
+  font-size: var(--pr-text-caption-size);
+  color: var(--pr-muted);
 }
 
 .action { flex: none; align-self: center; }
@@ -73,18 +73,18 @@
   flex: none;
   display: inline-grid;
   place-items: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
-  margin: calc(-1 * #{$cr-spacing-xs});
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
+  margin: calc(-1 * #{$pr-spacing-xs});
   border: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   background: transparent;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   cursor: pointer;
 }
 
-.dismiss:hover { color: var(--cr-text); background: var(--cr-surface-alt); }
-.dismiss svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.dismiss:hover { color: var(--pr-text); background: var(--pr-surface-alt); }
+.dismiss svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 @media (forced-colors: active) {
   .description { color: CanvasText; }

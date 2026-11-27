@@ -4,7 +4,7 @@
  *
  * Renders a number under a locale and a unit, through React Aria's
  * `useNumberFormatter`. Unlike calling `Intl` directly, it reads the locale from
- * the surrounding `I18nProvider`, which `CrystalProvider` sets, so a number
+ * the surrounding `I18nProvider`, which `PrismataProvider` sets, so a number
  * inside a right-to-left or German scope formats correctly without the call site
  * knowing where it is.
  *

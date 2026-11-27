@@ -12,7 +12,7 @@ import { describe, expect, it } from 'vitest';
 import { createRef } from 'react';
 import { act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderWithCrystal, screen } from '../test/render.js';
+import { renderWithPrismata, screen } from '../test/render.js';
 import { expectNoAxeViolations } from '../test/axe.js';
 import { RichTextEditor, type RichTextEditorHandle } from './RichTextEditor.js';
 
@@ -25,7 +25,7 @@ document.elementFromPoint ??= () => null;
 
 async function mount(props: Partial<Parameters<typeof RichTextEditor>[0]> = {}) {
   const ref = createRef<RichTextEditorHandle>();
-  const utils = renderWithCrystal(<RichTextEditor ref={ref} label="Notes" defaultValue="<p>Harbour notes</p>" {...props} />);
+  const utils = renderWithPrismata(<RichTextEditor ref={ref} label="Notes" defaultValue="<p>Harbour notes</p>" {...props} />);
   await waitFor(() => expect(ref.current?.editor).toBeTruthy());
   await screen.findByRole('toolbar', { name: 'Formatting for Notes' });
   return { ...utils, editor: () => ref.current!.editor! };
@@ -170,7 +170,7 @@ describe('RichTextEditor', () => {
 
   /* A subset is offered by id: a comment box has no headings and no history. */
   it('offers only the formats it is given', async () => {
-    renderWithCrystal(<RichTextEditor label="Comment" formats={['bold', 'checklist']} />);
+    renderWithPrismata(<RichTextEditor label="Comment" formats={['bold', 'checklist']} />);
     await screen.findByRole('button', { name: 'Bold' });
     expect(screen.queryByRole('button', { name: 'Italic' })).toBeNull();
     expect(screen.queryByRole('button', { name: /Block type/ })).toBeNull();
@@ -192,7 +192,7 @@ describe('RichTextEditor', () => {
 
   it('has no toolbar when read-only', async () => {
     const ref = createRef<RichTextEditorHandle>();
-    renderWithCrystal(<RichTextEditor ref={ref} label="Notes" isReadOnly defaultValue="<p>Fixed</p>" />);
+    renderWithPrismata(<RichTextEditor ref={ref} label="Notes" isReadOnly defaultValue="<p>Fixed</p>" />);
     await waitFor(() => expect(ref.current?.editor).toBeTruthy());
     expect(screen.queryByRole('toolbar')).toBeNull();
     expect(ref.current!.editor!.isEditable).toBe(false);
@@ -207,11 +207,11 @@ describe('RichTextEditor', () => {
      which made onChange fire on mount with the document untouched. */
   it('does not report a change on mount, or when it becomes read-only', async () => {
     const changes: string[] = [];
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <RichTextEditor label="Notes" defaultValue="<p>Due Wednesday.</p>" onChange={(value) => { changes.push(value.html); }} />,
     );
     await screen.findByRole('toolbar', { name: 'Formatting for Notes' });
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <RichTextEditor label="Notes" isReadOnly defaultValue="<p>Due Wednesday.</p>" onChange={(value) => { changes.push(value.html); }} />,
     );
     await new Promise((resolve) => { setTimeout(resolve, 50); });
@@ -252,14 +252,14 @@ describe('RichTextEditor', () => {
   /* The document variant has no fixed toolbar: "/" is how a block changes. */
   it('lays out as a page with no toolbar in the document variant', async () => {
     const ref = createRef<RichTextEditorHandle>();
-    renderWithCrystal(<RichTextEditor ref={ref} label="Notes" variant="document" defaultValue="<p>Harbour notes</p>" />);
+    renderWithPrismata(<RichTextEditor ref={ref} label="Notes" variant="document" defaultValue="<p>Harbour notes</p>" />);
     await waitFor(() => expect(ref.current?.editor).toBeTruthy());
     expect(screen.queryByRole('toolbar', { name: 'Formatting for Notes' })).toBeNull();
   });
 
   it('turns a line into a heading from the slash menu', async () => {
     const ref = createRef<RichTextEditorHandle>();
-    renderWithCrystal(<RichTextEditor ref={ref} label="Notes" variant="document" defaultValue="<p></p>" />);
+    renderWithPrismata(<RichTextEditor ref={ref} label="Notes" variant="document" defaultValue="<p></p>" />);
     await waitFor(() => expect(ref.current?.editor).toBeTruthy());
     const editor = ref.current!.editor!;
     act(() => { (editor.view.dom as HTMLElement).focus(); editor.commands.focus('end'); });

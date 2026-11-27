@@ -7,7 +7,7 @@
  * written straight onto a wedge is unreadable in half the palettes, and it looks
  * fine in a screenshot of the other half.
  *
- * Crystal has the answer already: Stone, "a 55% light / 60% dark label
+ * Prismata has the answer already: Stone, "a 55% light / 60% dark label
  * backing" that exists for exactly this, a label on paint whose colour nobody
  * controls. Here it is a halo round the glyphs rather than a pad behind them,
  * because a pad has to be the size of the text and a chart label is drawn before
@@ -17,15 +17,15 @@
  * The ink is then the body ink, which is what Stone is designed to carry.
  */
 @mixin chart-label {
-  fill: var(--cr-text);
-  font-size: var(--cr-text-caption-size);
-  font-family: var(--cr-font);
+  fill: var(--pr-text);
+  font-size: var(--pr-text-caption-size);
+  font-family: var(--pr-font);
   font-weight: 700;
   paint-order: stroke fill;
-  stroke: var(--cr-stone-fill);
-  /* Twice Crystal's Stone feather, so the halo is about as wide either side of a
+  stroke: var(--pr-stone-fill);
+  /* Twice Prismata's Stone feather, so the halo is about as wide either side of a
      glyph edge as the feathered pad is soft. */
-  stroke-width: calc(var(--cr-stone-feather) * 2);
+  stroke-width: calc(var(--pr-stone-feather) * 2);
   stroke-linejoin: round;
   pointer-events: none;
 }

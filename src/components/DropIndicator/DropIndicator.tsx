@@ -8,7 +8,7 @@
  * accessibility tree, with a name, and not decoration drawn beside a collection.
  * Inside a collection, React Aria's own `DropIndicator` makes it one.
  *
- * Crystal owns the material and the motion. The material is the palette's
+ * Prismata owns the material and the motion. The material is the palette's
  * primary, not a surface fill, because the line belongs to the gesture and not
  * to the page. It appears without moving anything: the rule is drawn on a
  * pseudo-element with no height in the flow, so the list does not part to make
@@ -25,7 +25,7 @@ import { forwardRef, type HTMLAttributes } from 'react';
 import { cx } from '../../styles/cx.js';
 import styles from './DropIndicator.module.scss';
 
-/** The Crystal indicator's class, for React Aria's own `DropIndicator`. */
+/** The Prismata indicator's class, for React Aria's own `DropIndicator`. */
 export const dropIndicatorClassName = styles['dropIndicator'] as string;
 
 export interface DropIndicatorProps extends HTMLAttributes<HTMLDivElement> {
@@ -50,7 +50,7 @@ export const DropIndicator = forwardRef<HTMLDivElement, DropIndicatorProps>(func
       aria-label={isInvalid ? `${label} — not allowed here` : label}
       aria-disabled={isInvalid || undefined}
       {...(isActive ? { 'data-drop-target': 'true' } : {})}
-      data-cr-state={isInvalid ? 'invalid-target' : isActive ? 'shown' : 'hidden'}
+      data-pr-state={isInvalid ? 'invalid-target' : isActive ? 'shown' : 'hidden'}
       className={cx(styles['dropIndicator'], isInvalid ? styles['invalid'] : undefined, className)}
     />
   );

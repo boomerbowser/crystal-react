@@ -13,9 +13,9 @@ const meta = {
     docs: {
       description: {
         component:
-          'Every block and commerce card reads its padding from `--cr-block-padding` and the space '
-          + 'between its parts from `--cr-block-gap`, falling back to its own defaults. '
-          + '`BlockSpacing` sets both from Crystal\'s spacing scale for everything inside it, and '
+          'Every block and commerce card reads its padding from `--pr-block-padding` and the space '
+          + 'between its parts from `--pr-block-gap`, falling back to its own defaults. '
+          + '`BlockSpacing` sets both from Prismata\'s spacing scale for everything inside it, and '
           + 'adds no box of its own. Cards with an inset Haze fill add the inset of the fill, so the space '
           + 'between the words and the visible fill is the step asked for.',
       },
@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 export const Controlled: Story = {
   render: (args) => (
     <BlockSpacing {...only(args)}>
-      <div style={{ display: 'grid', gap: 'var(--cr-spacing-xl)' }}>
+      <div style={{ display: 'grid', gap: 'var(--pr-spacing-xl)' }}>
         <PricingBlock {...(PricingStories.args as unknown as Parameters<typeof PricingBlock>[0])} />
         <div style={{ maxInlineSize: 320 }}>
           <ProductCard {...(CardStories.args as unknown as React.ComponentProps<typeof ProductCard>)} />

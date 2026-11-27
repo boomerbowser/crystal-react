@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor } from '../../test/render.js';
 import { ProductDetailBlock, type ProductDetailBlockProps } from './ProductDetailBlock.js';
 
 const gbp = (amount: number) => ({ amount, currency: 'GBP' });
@@ -19,7 +19,7 @@ const props: ProductDetailBlockProps = {
 
 describe('ProductDetailBlock', () => {
   it('shows the first variant’s price and stock, and says nothing on load', () => {
-    renderWithCrystal(<ProductDetailBlock {...props} />);
+    renderWithPrismata(<ProductDetailBlock {...props} />);
     expect(screen.getByText('£24.00')).toBeInTheDocument();
     expect(screen.getByText('In stock')).toBeInTheDocument();
     expect(screen.getByRole('status', { hidden: true }).textContent ?? '').not.toMatch(/Slate/);
@@ -27,7 +27,7 @@ describe('ProductDetailBlock', () => {
 
   /* Price and stock change together, and the change is said as one sentence. */
   it('updates price and stock together when the variant changes, and says both', async () => {
-    renderWithCrystal(<ProductDetailBlock {...props} />);
+    renderWithPrismata(<ProductDetailBlock {...props} />);
     await userEvent.click(screen.getByRole('radio', { name: 'Rust' }));
     expect(screen.getByText('£26.00')).toBeInTheDocument();
     expect(screen.getByText('Low stock')).toBeInTheDocument();
@@ -35,21 +35,21 @@ describe('ProductDetailBlock', () => {
   });
 
   it('refuses a variant that is out of stock, and says why on the control', async () => {
-    renderWithCrystal(<ProductDetailBlock {...props} />);
+    renderWithPrismata(<ProductDetailBlock {...props} />);
     await userEvent.click(screen.getByRole('radio', { name: 'Sand' }));
     expect(screen.getByRole('button', { name: 'Out of stock' })).toBeDisabled();
   });
 
   it('adds the chosen variant', async () => {
     const onAddToCart = vi.fn();
-    renderWithCrystal(<ProductDetailBlock {...props} onAddToCart={onAddToCart} />);
+    renderWithPrismata(<ProductDetailBlock {...props} onAddToCart={onAddToCart} />);
     await userEvent.click(screen.getByRole('radio', { name: 'Rust' }));
     await userEvent.click(screen.getByRole('button', { name: 'Add to basket' }));
     expect(onAddToCart).toHaveBeenCalledWith('rust');
   });
 
   it('waits while adding, and says so', () => {
-    renderWithCrystal(<ProductDetailBlock {...props} isAdding />);
+    renderWithPrismata(<ProductDetailBlock {...props} isAdding />);
     expect(screen.getByRole('button', { name: 'Add to basket' })).toBeDisabled();
     expect(screen.getByText('Adding to your basket')).toBeInTheDocument();
   });
@@ -59,7 +59,7 @@ describe('ProductDetailBlock', () => {
     ['unavailable', { defaultValue: 'sand' }],
     ['adding', { isAdding: true }],
   ])('has no axe violations %s', async (_, extra) => {
-    const { container } = renderWithCrystal(<ProductDetailBlock {...props} {...extra} />);
+    const { container } = renderWithPrismata(<ProductDetailBlock {...props} {...extra} />);
     await expectNoAxeViolations(container);
   });
 });

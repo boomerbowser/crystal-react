@@ -1,16 +1,16 @@
 'use client';
 
-/* The travelling selection pill (R-A8, Crystal's D-37).
+/* The travelling selection pill (R-A8, Prismata's D-37).
  *
- * Crystal 2.6.0 draws a strip's selection as one `.cr-indicator.pill` behind
+ * Prismata 2.6.0 draws a strip's selection as one `.pr-indicator.pill` behind
  * the selected segment, inside the plane that holds the segments, and moves it
  * with `selection-travel` when the choice changes. Core's stylesheet reads the
- * pill's box from five properties (`--cr-pill-x`, `-y`, `-width`, `-height`,
+ * pill's box from five properties (`--pr-pill-x`, `-y`, `-width`, `-height`,
  * `-radius`) and draws it only once it carries `data-placed`; from then on the
  * selected segment gives its fill and shadow to the pill and keeps its ink and
  * its weight. This hook is that contract for React: it renders the pill,
  * measures the selected segment, writes the five properties and plays the
- * recipe. Core's `CrystalMotion.travel()` is the same thing for a page without
+ * recipe. Core's `PrismataMotion.travel()` is the same thing for a page without
  * React, and the two are measured against each other.
  *
  * What moves it, and what does not:
@@ -36,7 +36,7 @@
  * The recipe is played through Motion with its fitted spring, as `useMotion`
  * plays every other recipe. Unlike the others it animates `width`, `height`
  * and `border-radius` as well as `transform`: a scale would squash the pill's
- * round ends, and Crystal's motion conserves volume (sx × sy = 1), which a
+ * round ends, and Prismata's motion conserves volume (sx × sy = 1), which a
  * one-axis scale does not. The pill is absolutely positioned, so its size
  * changing reflows nothing around it.
  *
@@ -50,7 +50,7 @@ import {
 } from 'react';
 import { useAnimate } from 'motion/react';
 import { getRecipe, transitionFor } from './useMotion.js';
-import { useCrystalTheme } from '../theme/CrystalProvider.js';
+import { usePrismataTheme } from '../theme/PrismataProvider.js';
 
 /* Server rendering has no layout to measure, and React warns about a layout
    effect there. The pill is placed on the client, before the first paint. */
@@ -69,8 +69,8 @@ const SELECTION_ATTRIBUTES = ['aria-selected', 'aria-pressed', 'aria-checked', '
 const PILL_PROPERTIES = ['transform', 'width', 'height', 'border-radius'] as const;
 
 export interface TravelMotion {
-  /** Attach to the plane that holds the segments: `.cr-dock`, `.cr-dock-inner`
-   *  or `.cr-group`. The hook puts the pill in it and measures inside it. */
+  /** Attach to the plane that holds the segments: `.pr-dock`, `.pr-dock-inner`
+   *  or `.pr-group`. The hook puts the pill in it and measures inside it. */
   readonly planeRef: RefCallback<HTMLElement>;
 }
 
@@ -90,7 +90,7 @@ export function useTravelMotion(recipe: 'selection-travel', selected: string): T
   /* Read through a ref, so a re-render of the strip (a new theme object, a new
      `resolveDuration`) does not make a new `place` and re-place the pill
      partway through a travel. */
-  const theme = useCrystalTheme();
+  const theme = usePrismataTheme();
   const motion = useRef(theme);
   motion.current = theme;
   const intent = useRef(Number.NEGATIVE_INFINITY);
@@ -146,8 +146,8 @@ export function useTravelMotion(recipe: 'selection-travel', selected: string): T
     settle();
 
     const corners = getComputedStyle(target).borderRadius;
-    for (const [key, value] of Object.entries(next)) pill.style.setProperty(`--cr-pill-${key}`, `${value}px`);
-    pill.style.setProperty('--cr-pill-radius', corners);
+    for (const [key, value] of Object.entries(next)) pill.style.setProperty(`--pr-pill-${key}`, `${value}px`);
+    pill.style.setProperty('--pr-pill-radius', corners);
     pill.setAttribute('data-placed', '');
 
     const authored = getRecipe(recipe);
@@ -161,15 +161,15 @@ export function useTravelMotion(recipe: 'selection-travel', selected: string): T
          chosen, measured again after the travel) leaves the record of the
          travel as it was. */
       if (seen && !moved && !travel) return;
-      pill.dataset['crMotionName'] = recipe;
-      pill.dataset['crMotionState'] = 'instant';
+      pill.dataset['prMotionName'] = recipe;
+      pill.dataset['prMotionState'] = 'instant';
       return;
     }
 
     const transition = transitionFor(authored, resolveDuration(authored.duration), 0, 2, undefined);
-    pill.dataset['crMotionName'] = recipe;
-    pill.dataset['crMotionState'] = 'running';
-    pill.dataset['crMotionTravel'] = String(Math.round(Math.hypot(dx, dy)));
+    pill.dataset['prMotionName'] = recipe;
+    pill.dataset['prMotionState'] = 'running';
+    pill.dataset['prMotionTravel'] = String(Math.round(Math.hypot(dx, dy)));
     pill.setAttribute('data-travelling', '');
     const controls = [animate(pill, {
       transform: [`translate(${dx}px, ${dy}px)`, 'translate(0px, 0px)'],
@@ -192,7 +192,7 @@ export function useTravelMotion(recipe: 'selection-travel', selected: string): T
       if (running.current !== controls) return;
       running.current = [];
       settle();
-      pill.dataset['crMotionState'] = 'finished';
+      pill.dataset['prMotionState'] = 'finished';
       if (stale.current) { stale.current = false; place(false); }
     }, () => { /* stopped by the next travel, which owns the pill now */ });
   }, [plane, selected, recipe, animate, settle]);
@@ -207,7 +207,7 @@ export function useTravelMotion(recipe: 'selection-travel', selected: string): T
   useIsomorphicLayoutEffect(() => {
     if (!plane) return undefined;
     const pill = document.createElement(plane.tagName === 'UL' || plane.tagName === 'OL' ? 'li' : 'span');
-    pill.className = 'cr-indicator pill';
+    pill.className = 'pr-indicator pill';
     pill.setAttribute('aria-hidden', 'true');
     plane.prepend(pill);
     element.current = pill;

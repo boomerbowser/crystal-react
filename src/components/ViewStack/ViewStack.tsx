@@ -19,7 +19,7 @@
  * div is unreachable by keyboard and unnamed to a screen reader, and the
  * browser's own back button is not a route the product offered.
  *
- * Movement. Crystal authors `view-push-in` (a view arriving from the inline-end
+ * Movement. Prismata authors `view-push-in` (a view arriving from the inline-end
  * edge) and `view-push-out` (the view it covers travelling a fraction of that
  * distance behind it). Two recipes instead of four, because a pop is a push
  * mirrored and right-to-left is a push mirrored again, which is what `reorient`
@@ -41,7 +41,7 @@
  * play with the push's orientation and arrive from the edge it was leaving
  * towards.
  *
- * Both recipes are Crystal's, published in `@crystal-ui/core` 2.1.0 and
+ * Both recipes are Prismata's, published in `@prismata/core` 2.1.0 and
  * required here. Do not add a `getRecipe` guard. A missing recipe is a mistake,
  * not a version skew, and `useMotion` throws on one so the mistake is visible.
  * A guard would turn it into a stack that silently does not move.
@@ -135,7 +135,7 @@ export function ViewStack({
   return (
     <div
       {...props}
-      data-cr-depth={views.length}
+      data-pr-depth={views.length}
       className={cx(styles['stack'], className)}
     >
       {leaving === null || leaving.id === top.id ? null : (

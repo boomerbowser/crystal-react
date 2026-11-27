@@ -55,16 +55,16 @@ export const Watermark = function Watermark({
       + `transform="rotate(${angle} ${tile / 2} ${tile / 2})" `
       /* Solid black in the mask's own document. The mask turns it into coverage,
          and the surface's ink is what paints. */
-      + `font-family="system-ui, sans-serif" font-size="16" fill="#000">`  // crystal-allow-literal: mask coverage, not a colour
+      + `font-family="system-ui, sans-serif" font-size="16" fill="#000">`  // prismata-allow-literal: mask coverage, not a colour
       + text.replace(/[<>&"]/g, (c) => `&#${c.charCodeAt(0)};`)
       + '</text></svg>';
     return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
   }, [text, tile, angle]);
 
   const mark: CSSProperties = {
-    '--cr-watermark-image': image,
-    '--cr-watermark-size': `${tile}px`,
-    '--cr-watermark-opacity': Math.min(MAX_OPACITY, Math.max(0, opacity)),
+    '--pr-watermark-image': image,
+    '--pr-watermark-size': `${tile}px`,
+    '--pr-watermark-opacity': Math.min(MAX_OPACITY, Math.max(0, opacity)),
     ...style,
   } as CSSProperties;
 

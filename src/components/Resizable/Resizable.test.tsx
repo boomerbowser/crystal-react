@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { Resizable } from './Resizable.js';
 
 describe('Resizable', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Resizable aria-label="Resize the sidebar" secondary={<p>Rest</p>}><p>Panel</p></Resizable>,
     );
     await expectNoAxeViolations(container);
@@ -15,7 +15,7 @@ describe('Resizable', () => {
      separator with a value lets a screen reader announce the size as it changes
      rather than announcing that something was grabbed. */
   it('is a separator with a value, not a div with a pointer handler', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Resizable aria-label="Resize" defaultSize={300} minSize={100} maxSize={600} secondary={<p>Rest</p>}>
         <p>Panel</p>
       </Resizable>,
@@ -29,7 +29,7 @@ describe('Resizable', () => {
 
   it('resizes from the keyboard', async () => {
     const onSizeChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <Resizable aria-label="Resize" defaultSize={300} onSizeChange={onSizeChange} secondary={<p>Rest</p>}>
         <p>Panel</p>
       </Resizable>,
@@ -42,11 +42,11 @@ describe('Resizable', () => {
 
   /* Reaching a bound is a state the handle shows. */
   it('says when it is at a bound', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Resizable aria-label="Resize" defaultSize={100} minSize={100} maxSize={600} secondary={<p>Rest</p>}>
         <p>Panel</p>
       </Resizable>,
     );
-    expect(screen.getByRole('separator', { name: 'Resize' }).dataset['crState']).toBe('at-min');
+    expect(screen.getByRole('separator', { name: 'Resize' }).dataset['prState']).toBe('at-min');
   });
 });

@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { RichTextSurface, Mentions } from './RichTextSurface.js';
 
 const BoldIcon = <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h6a4 4 0 010 8H7z" /></svg>;
 
 describe('RichTextSurface', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <RichTextSurface label="Notes"><div contentEditable suppressContentEditableWarning>Text</div></RichTextSurface>,
     );
     await expectNoAxeViolations(container);
@@ -17,7 +17,7 @@ describe('RichTextSurface', () => {
      a reader unable to tell whether their selection is already bold. */
   it('reports active formatting with aria-pressed', async () => {
     const onToggle = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <RichTextSurface
         label="Notes"
         actions={[{ id: 'bold', label: 'Bold', icon: BoldIcon, isActive: true, onToggle }]}
@@ -32,9 +32,9 @@ describe('RichTextSurface', () => {
     expect(onToggle).toHaveBeenCalledTimes(1);
   });
 
-  /* The toolbar is one tab stop with arrows inside it, as everywhere in Crystal. */
+  /* The toolbar is one tab stop with arrows inside it, as everywhere in Prismata. */
   it('groups the formatting actions into one toolbar', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <RichTextSurface
         label="Notes"
         actions={[{ id: 'bold', label: 'Bold', icon: BoldIcon, onToggle: () => undefined }]}
@@ -51,7 +51,7 @@ describe('Mentions', () => {
      because typing has to continue while the list is open. */
   it('offers a listbox without taking focus from the surface', async () => {
     const onSelect = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <Mentions
         isOpen
         options={[{ value: 'ada', label: 'Ada Lovelace' }]}
@@ -70,7 +70,7 @@ describe('Mentions', () => {
   });
 
   it('says when nothing matches', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Mentions isOpen options={[]} onSelect={() => undefined} emptyMessage="Nobody by that name">
         <textarea aria-label="Comment" />
       </Mentions>,

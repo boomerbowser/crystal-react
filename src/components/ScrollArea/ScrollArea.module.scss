@@ -4,8 +4,8 @@
  *
  * The scrollbar's colour and geometry, the scroll contract (no chaining, a
  * stable gutter, native gesture handling) and the edge fade all come from
- * `@crystal-ui/core`'s stylesheet, through the `.cr-scroll-frost` /
- * `.cr-scroll-resin` classes the component applies. Do not restate them here, or
+ * `@prismata/core`'s stylesheet, through the `.pr-scroll-frost` /
+ * `.pr-scroll-resin` classes the component applies. Do not restate them here, or
  * the two copies will drift.
  *
  * This file decides only which way the box scrolls, which is the product's
@@ -14,8 +14,8 @@
 
 .area {
   position: relative;
-  /* No focus rule here. Crystal's focus is a crisp core at a 3px offset inside a
-     four-layer feathered halo, and Crystal's stylesheet applies it to
+  /* No focus rule here. Prismata's focus is a crisp core at a 3px offset inside a
+     four-layer feathered halo, and Prismata's stylesheet applies it to
      `[tabindex]` as well as to native controls. Do not restate it here or pull
      the ring inward to keep it off the container's edge. */
 }

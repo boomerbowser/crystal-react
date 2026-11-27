@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, act, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, act, waitFor } from '../../test/render.js';
 import { Toast, ToastProvider, useToasts } from './Toast.js';
 
 function Raise({ onReady }: { onReady: (api: ReturnType<typeof useToasts>) => void }) {
@@ -15,7 +15,7 @@ describe('Toast', () => {
      stops being a list with items in it. */
   it('announces from a region that was there before the message was', async () => {
     let api: ReturnType<typeof useToasts> | null = null;
-    renderWithCrystal(
+    renderWithPrismata(
       <ToastProvider><Raise onReady={(one) => { api = one; }} /></ToastProvider>,
     );
     const polite = screen.getByRole('status');
@@ -27,7 +27,7 @@ describe('Toast', () => {
 
   it('keeps the stack a list of list items', () => {
     let api: ReturnType<typeof useToasts> | null = null;
-    renderWithCrystal(
+    renderWithPrismata(
       <ToastProvider><Raise onReady={(one) => { api = one; }} /></ToastProvider>,
     );
     act(() => { screen.getByRole('button', { name: 'Raise' }).click(); });
@@ -37,7 +37,7 @@ describe('Toast', () => {
 
   it('sends an urgent toast to the assertive region instead', async () => {
     let api: ReturnType<typeof useToasts> | null = null;
-    renderWithCrystal(
+    renderWithPrismata(
       <ToastProvider><Raise onReady={(one) => { api = one; }} /></ToastProvider>,
     );
     act(() => { screen.getByRole('button', { name: 'Raise' }).click(); });
@@ -51,7 +51,7 @@ describe('Toast', () => {
   /* The live region exists before anything is in it. Screen readers may never
      announce a region created at the same moment as its text. */
   it('has its stack in the document before any toast arrives', () => {
-    renderWithCrystal(<ToastProvider><p>Page</p></ToastProvider>);
+    renderWithPrismata(<ToastProvider><p>Page</p></ToastProvider>);
     expect(screen.getByRole('list', { name: 'Notifications' })).toBeInTheDocument();
   });
 
@@ -65,7 +65,7 @@ describe('Toast', () => {
      ever dismissed. */
   it('takes an ordinary toast away when its time is up', async () => {
     let api: ReturnType<typeof useToasts> | null = null;
-    renderWithCrystal(
+    renderWithPrismata(
       <ToastProvider defaultDuration={30}><Raise onReady={(one) => { api = one; }} /></ToastProvider>,
     );
     act(() => { screen.getByRole('button', { name: 'Raise' }).click(); });
@@ -76,7 +76,7 @@ describe('Toast', () => {
 
   it('never puts a lifespan on a toast that carries an action', async () => {
     let api: ReturnType<typeof useToasts> | null = null;
-    renderWithCrystal(
+    renderWithPrismata(
       <ToastProvider defaultDuration={30}><Raise onReady={(one) => { api = one; }} /></ToastProvider>,
     );
     act(() => { screen.getByRole('button', { name: 'Raise' }).click(); });
@@ -93,7 +93,7 @@ describe('Toast', () => {
 
   it('names its dismiss control for what it dismisses', async () => {
     const onDismiss = vi.fn();
-    renderWithCrystal(<Toast title="Saved" onDismiss={onDismiss} />);
+    renderWithPrismata(<Toast title="Saved" onDismiss={onDismiss} />);
     await userEvent.click(screen.getByRole('button', { name: 'Dismiss: Saved' }));
     /* Awaited, because the exit recipe plays first. A toast that unmounted on
        the state change would play `toast-out` into a detached node. */
@@ -101,7 +101,7 @@ describe('Toast', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <ToastProvider><p>Page</p></ToastProvider>,
     );
     await expectNoAxeViolations(container);
@@ -115,7 +115,7 @@ describe('Toast', () => {
      while the first is counting down. */
   it('keeps each toast on its own clock while others arrive', async () => {
     let api: ReturnType<typeof useToasts> | null = null;
-    renderWithCrystal(
+    renderWithPrismata(
       <ToastProvider defaultDuration={120}><Raise onReady={(one) => { api = one; }} /></ToastProvider>,
     );
     act(() => { screen.getByRole('button', { name: 'Raise' }).click(); });

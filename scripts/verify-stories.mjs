@@ -1,5 +1,5 @@
 /* Checks that every story file is reviewable in Storybook: it names a component,
- * reaches the Crystal environment, and has a Controls panel that moves something.
+ * reaches the Prismata environment, and has a Controls panel that moves something.
  *
  * It is a ratchet. The counts below are the floor the library is at today, and a
  * change that lowers one fails. New stories may be added freely, since the floor
@@ -246,7 +246,7 @@ const preview = readFileSync(resolve(process.cwd(), '.storybook/preview.ts'), 'u
 for (const needed of ['args: environmentArgs', 'argTypes: environmentArgTypes']) {
   if (!preview.includes(needed)) {
     failures.push(
-      `.storybook/preview.ts no longer declares \`${needed}\`, so the Crystal `
+      `.storybook/preview.ts no longer declares \`${needed}\`, so the Prismata `
       + 'environment is not on every story’s Controls panel.',
     );
   }

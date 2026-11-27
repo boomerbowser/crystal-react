@@ -17,7 +17,7 @@
  *     with `visibility: hidden`, and never shows an overflowing row for a frame.
  *   - Priority order is the product's. Which item is dropped first is a
  *     product decision, so children are considered in order and the caller
- *     arranges them by importance. Crystal does not assume that the last one
+ *     arranges them by importance. Prismata does not assume that the last one
  *     matters least.
  *
  * Widths are recorded during the measuring pass and later fits are computed
@@ -33,17 +33,17 @@ import {
   type CSSProperties, type HTMLAttributes, type ReactNode,
 } from 'react';
 import { cx } from '../../styles/cx.js';
-import { spacingValue, type CrystalSpacing } from '../../styles/spacing.js';
+import { spacingValue, type PrismataSpacing } from '../../styles/spacing.js';
 import styles from './OverflowList.module.scss';
 
 export interface OverflowListProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Items, most important first. Ones that do not fit move into the menu. */
   children: ReactNode;
   /** Gap between items. Defaults to the action gap, so a row of pills looks like one. */
-  gap?: CrystalSpacing;
+  gap?: PrismataSpacing;
   /**
    * Renders the overflow affordance. Receives the items that did not fit and how
-   * many there are, so a product can use a menu, a popover or a dialog. Crystal
+   * many there are, so a product can use a menu, a popover or a dialog. Prismata
    * requires that the affordance exists and names its count, and leaves what it
    * opens to the product.
    */
@@ -135,7 +135,7 @@ export function OverflowList({
   const hidden = measuring ? [] : items.slice(visibleCount);
 
   const layout: CSSProperties = {
-    ...(gap !== undefined ? { '--cr-overflow-gap': spacingValue(gap) } as CSSProperties : {}),
+    ...(gap !== undefined ? { '--pr-overflow-gap': spacingValue(gap) } as CSSProperties : {}),
     ...style,
   };
 

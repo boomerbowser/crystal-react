@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 
 /* "Resin transport over the media; Haze metadata." The transport is
-   `VideoPlayer`'s Resin pill over the picture; the metadata is Crystal's
-   `.cr-haze`; the queue is `PlaylistBlock`'s Haze rows. */
+   `VideoPlayer`'s Resin pill over the picture; the metadata is Prismata's
+   `.pr-haze`; the queue is `PlaylistBlock`'s Haze rows. */
 .shell {
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-md);
+  gap: var(--pr-block-gap, $pr-spacing-md);
   min-inline-size: 0;
 }
 
@@ -13,14 +13,14 @@
 
 .metadata {
   display: grid;
-  gap: $cr-spacing-2xs;
-  padding: var(--cr-space);
-  border-radius: var(--cr-radius);
+  gap: $pr-spacing-2xs;
+  padding: var(--pr-space);
+  border-radius: var(--pr-radius);
 }
 
 .title { margin: 0; }
 
-.subtitle { margin: 0; font-weight: 700; color: var(--cr-muted); }
+.subtitle { margin: 0; font-weight: 700; color: var(--pr-muted); }
 
 .description { margin: 0; }
 

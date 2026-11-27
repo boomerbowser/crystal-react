@@ -4,7 +4,7 @@
  *
  * The rail is Frost. A rail is part of the page's structure, between the
  * Plastic foundation and the content, and does not float above anything. Its
- * destinations are Crystal's navigation entries, and the current one is drawn
+ * destinations are Prismata's navigation entries, and the current one is drawn
  * at weight 800 on the surface-alt fill with the location dot.
  *
  * Collapsing must not remove the name. Collapsed, the rail shows icons only,
@@ -16,7 +16,7 @@
  * `NavLink` states: `aria-selected` belongs to a widget with a selection model,
  * and arriving somewhere is not picking an option. The rail marks location.
  *
- * Nothing is drawn beside the label to mark selection. Crystal withdrew the
+ * Nothing is drawn beside the label to mark selection. Prismata withdrew the
  * leading mark because a column that appears only for the active entry shifts
  * every label the moment you navigate. The destination's own material and its
  * label weight change instead, across the whole row.
@@ -62,7 +62,7 @@ export function NavRail({
     <nav
       aria-label={props['aria-label'] ?? 'Main'}
       data-collapsed={isCollapsed || undefined}
-      className={cx('cr-frost pane flat', styles['rail'], className)}
+      className={cx('pr-frost pane flat', styles['rail'], className)}
     >
       <ul className={cx(styles['list'])}>
         {items.map((item) => {
@@ -73,7 +73,7 @@ export function NavRail({
                 isCurrent={isCurrent}
                 href={item.href}
                 {...(isCurrent ? { 'aria-current': 'page' as const } : {})}
-                className={cx(styles['item'], 'cr-nav-item')}
+                className={cx(styles['item'], 'pr-nav-item')}
               >
                 {item.icon ? (
                   <span className={cx(styles['icon'])} aria-hidden="true">{item.icon}</span>

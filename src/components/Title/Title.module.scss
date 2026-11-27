@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* Title: headings at a step of Crystal's scale.
+/* Title: headings at a step of Prismata's scale.
  *
  * `text-wrap: balance` is the catalogue's `text-balance` component, applied
  * here instead of shipped separately. Balancing stops a heading from wrapping to
@@ -11,21 +11,21 @@
 
 .title {
   margin: 0;
-  font-size: var(--cr-title-size);
-  line-height: var(--cr-title-leading);
-  letter-spacing: var(--cr-title-tracking);
+  font-size: var(--pr-title-size);
+  line-height: var(--pr-title-leading);
+  letter-spacing: var(--pr-title-tracking);
   font-weight: 750;
-  color: var(--cr-text);
+  color: var(--pr-text);
   text-wrap: balance;
 }
 
 .lead {
   margin: 0;
-  font-size: var(--cr-text-subheading-size);
-  line-height: var(--cr-text-subheading-leading);
-  letter-spacing: var(--cr-text-subheading-tracking);
+  font-size: var(--pr-text-subheading-size);
+  line-height: var(--pr-text-subheading-leading);
+  letter-spacing: var(--pr-text-subheading-tracking);
   font-weight: 400;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   max-inline-size: 60ch;
   text-wrap: pretty;
 }
@@ -36,8 +36,8 @@
    paints wherever the clip is unsupported, and it is a palette colour, so the
    contrast floor holds either way. */
 .gradient {
-  color: var(--cr-primary);
-  background-image: linear-gradient(100deg, var(--cr-primary), var(--cr-decorative) 55%, var(--cr-companion));
+  color: var(--pr-primary);
+  background-image: linear-gradient(100deg, var(--pr-primary), var(--pr-decorative) 55%, var(--pr-companion));
   -webkit-background-clip: text;
   background-clip: text;
 }

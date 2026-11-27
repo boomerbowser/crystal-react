@@ -18,16 +18,16 @@
  */
 import { forwardRef, type CSSProperties, type ElementType, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
-import { spacingValue, type CrystalSpacing } from '../../styles/spacing.js';
+import { spacingValue, type PrismataSpacing } from '../../styles/spacing.js';
 import styles from './Masonry.module.scss';
 
 export interface MasonryProps extends HTMLAttributes<HTMLElement> {
-  /** Columns at the widest. Narrows to two and then one at Crystal's breakpoints. */
+  /** Columns at the widest. Narrows to two and then one at Prismata's breakpoints. */
   columns?: number;
   /** Columns below the `md` breakpoint. Defaults to two. */
   columnsMd?: number;
-  /** Gap between items, from Crystal's scale. Defaults to `md`. */
-  gap?: CrystalSpacing;
+  /** Gap between items, from Prismata's scale. Defaults to `md`. */
+  gap?: PrismataSpacing;
   /** Render as a list when the items are a set. Presentational otherwise. */
   as?: ElementType;
   children?: ReactNode;
@@ -38,9 +38,9 @@ export const Masonry = forwardRef<HTMLElement, MasonryProps>(function Masonry(
   ref,
 ) {
   const layout: CSSProperties = {
-    ...(columns !== undefined ? { '--cr-masonry-columns': columns } as CSSProperties : {}),
-    ...(columnsMd !== undefined ? { '--cr-masonry-columns-md': columnsMd } as CSSProperties : {}),
-    ...(gap !== undefined ? { '--cr-masonry-gap': spacingValue(gap) } as CSSProperties : {}),
+    ...(columns !== undefined ? { '--pr-masonry-columns': columns } as CSSProperties : {}),
+    ...(columnsMd !== undefined ? { '--pr-masonry-columns-md': columnsMd } as CSSProperties : {}),
+    ...(gap !== undefined ? { '--pr-masonry-gap': spacingValue(gap) } as CSSProperties : {}),
     ...style,
   };
 

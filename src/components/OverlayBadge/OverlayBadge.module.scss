@@ -5,7 +5,7 @@
  * The glyph must stay crisp, so the fill lives on a pseudo-element. Haze
  * feathers its own paint, and feathering an element that contains a glyph blurs
  * the glyph. A blurred tick over a photograph looks like a rendering fault.
- * Text, icons, hit areas and focus rings stay crisp throughout Crystal.
+ * Text, icons, hit areas and focus rings stay crisp throughout Prismata.
  *
  * `overflow: visible` is stated explicitly. The badge overhangs the corner by
  * 35% of its own size, and a wrapper that clips is the failure the catalogue
@@ -22,9 +22,9 @@
 }
 
 .badge {
-  /* The Haze fill is Crystal's `.cr-haze` (2.2.0), which this wears. Its pad
+  /* The Haze fill is Prismata's `.pr-haze` (2.2.0), which this wears. Its pad
      already fills to the edge. */
-  /* Crystal's surface carries a transparent 1px border. This badge has none,
+  /* Prismata's surface carries a transparent 1px border. This badge has none,
      because the border would grow every badge by two pixels in each direction. */
   border: 0;
 
@@ -33,21 +33,21 @@
   display: inline-grid;
   place-items: center;
   box-sizing: border-box;
-  min-inline-size: $cr-indicator-size;
-  min-block-size: $cr-indicator-size;
-  padding: 0 $cr-spacing-2xs;
-  border-radius: $cr-action-radius;
-  color: var(--cr-text);
-  font-size: var(--cr-text-caption-size);
+  min-inline-size: $pr-indicator-size;
+  min-block-size: $pr-indicator-size;
+  padding: 0 $pr-spacing-2xs;
+  border-radius: $pr-action-radius;
+  color: var(--pr-text);
+  font-size: var(--pr-text-caption-size);
   line-height: 1;
   font-weight: 800;
   /* The ring of page surface that keeps the mark legible where it overlaps its
      host, as Avatar's ring does. */
-  outline: 2px solid var(--cr-surface);
+  outline: 2px solid var(--pr-surface);
   pointer-events: none;
 }
 
-.badge > :first-child { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.badge > :first-child { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 .topEnd { inset-block-start: 0; inset-inline-end: 0; translate: 35% -35%; }
 .topStart { inset-block-start: 0; inset-inline-start: 0; translate: -35% -35%; }

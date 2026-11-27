@@ -7,10 +7,10 @@
  * reserved is cropped. Stretching a face is worse than cropping one.
  *
  * The placeholder is Haze because it is part of the composition. A grey
- * rectangle on Crystal's coloured atmosphere reads as a hole in the page.
+ * rectangle on Prismata's coloured atmosphere reads as a hole in the page.
  */
 
-/* The box wears Crystal's `.cr-haze.flat.sunken` (2.7.0): the fill on the
+/* The box wears Prismata's `.pr-haze.flat.sunken` (2.7.0): the fill on the
    element with no feather, because the paint layer here is the placeholder
    alone and the picture above it must stay exact. Where translucency gives
    way it becomes the alternate surface, so it still reads as a well. The
@@ -21,7 +21,7 @@
   border-radius: 0;
 }
 
-.rounded { border-radius: var(--cr-radius); }
+.rounded { border-radius: var(--pr-radius); }
 
 .media {
   display: block;
@@ -35,11 +35,11 @@
   place-items: center;
   inline-size: 100%;
   block-size: 100%;
-  min-block-size: $cr-spacing-2xl;
-  padding: var(--cr-space);
-  background: var(--cr-surface-alt);
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
+  min-block-size: $pr-spacing-2xl;
+  padding: var(--pr-space);
+  background: var(--pr-surface-alt);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
   text-align: center;
 }
 

@@ -1,15 +1,15 @@
-/* Crystal's "Make it yours" panel, as Storybook Controls.
+/* Prismata's "Make it yours" panel, as Storybook Controls.
  *
  * Meridian asked for the environment options to be "available per-component to
  * test with and against", and then, with a screenshot of the Tab Strip story
  * reading "This story has no controls", said "this is where and what we were
- * talking about in terms of how Crystal's controls should be translated to
+ * talking about in terms of how Prismata's controls should be translated to
  * Storybook". The destination is the Controls panel.
  *
  * ## Why args rather than the toolbar
  *
  * The toolbar cannot express this panel. `globalTypes` supports only a list of
- * discrete `items`: there is no slider, swatch row or checkbox in it. Crystal's
+ * discrete `items`: there is no slider, swatch row or checkbox in it. Prismata's
  * panel is continuous (atmosphere is any value from 15 to 90), so a toolbar
  * turns five sliders into five dropdowns of three or four stops each, and a
  * reviewer cannot reach 73%.
@@ -18,39 +18,39 @@
  * toolbar stays, because the two do different jobs: the toolbar sweeps one axis
  * across many stories, args drive many axes on one story.
  *
- * ## Every range here comes from Crystal
+ * ## Every range here comes from Prismata
  *
- * `crystalRanges` and `crystalChoices` are Crystal's own `RANGES` and `CHOICES`,
+ * `prismataRanges` and `prismataChoices` are Prismata's own `RANGES` and `CHOICES`,
  * re-exported by this library's provider and originally from
- * `@crystal-ui/core/core/preferences`, where the clamps are contract: "a product
+ * `@prismata/core/core/preferences`, where the clamps are contract: "a product
  * that lets a preference drift outside these ranges is no longer rendering
- * Crystal". Typing `min: 15` here would be a second copy of a number Crystal
- * owns (CONTRACT §1), and it would stop matching the day Crystal moved a floor.
+ * Prismata". Typing `min: 15` here would be a second copy of a number Prismata
+ * owns (CONTRACT §1), and it would stop matching the day Prismata moved a floor.
  */
-import { crystalRanges, crystalChoices } from '../src/theme/CrystalProvider.js';
-import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
+import { prismataRanges, prismataChoices } from '../src/theme/PrismataProvider.js';
+import prismataFlat from '@prismata/core/flat' with { type: 'json' };
 
-const PALETTES = Object.keys((crystalFlat as { palettes: Record<string, unknown> }).palettes);
+const PALETTES = Object.keys((prismataFlat as { palettes: Record<string, unknown> }).palettes);
 
 const range = (
-  key: keyof typeof crystalRanges,
+  key: keyof typeof prismataRanges,
   label: string,
   help: string,
   step = 1,
 ) => {
-  const [min, max] = crystalRanges[key] as unknown as [number, number];
+  const [min, max] = prismataRanges[key] as unknown as [number, number];
   return {
     name: label,
     description: help,
     control: { type: 'range' as const, min, max, step },
-    table: { category: 'Environment', defaultValue: { summary: String(CRYSTAL_DEFAULT[key]) } },
+    table: { category: 'Environment', defaultValue: { summary: String(PRISMATA_DEFAULT[key]) } },
   };
 };
 
-/* Crystal's own defaults, read from the token export rather than restated. The
+/* Prismata's own defaults, read from the token export rather than restated. The
    approved visual baseline was captured at exactly these values, so a slider
    that starts anywhere else makes every story a variant. */
-const CRYSTAL_DEFAULT = (crystalFlat as { default: Record<string, string | number | boolean> }).default;
+const PRISMATA_DEFAULT = (prismataFlat as { default: Record<string, string | number | boolean> }).default;
 
 export const environmentArgTypes = {
   palette: {
@@ -62,13 +62,13 @@ export const environmentArgTypes = {
   },
   mode: {
     name: 'Appearance',
-    description: '`system` follows the operating system, which is the Auto in Crystal’s own panel.',
+    description: '`system` follows the operating system, which is the Auto in Prismata’s own panel.',
     control: { type: 'inline-radio' as const },
-    options: crystalChoices.mode,
+    options: prismataChoices.mode,
     table: { category: 'Environment' },
   },
   atmosphere: range('atmosphere', 'Colour atmosphere',
-    'How much contextual colour Plastic carries. Crystal’s materials are defined by what is behind them: at the floor, Frost has nothing to diffuse and every surface reads as a plain white rectangle.'),
+    'How much contextual colour Plastic carries. Prismata’s materials are defined by what is behind them: at the floor, Frost has nothing to diffuse and every surface reads as a plain white rectangle.'),
   translucency: range('translucency', 'Frost base tint', 'Frost’s base tint before the atmosphere is added.'),
   elevation: range('elevation', 'Elevation', 'Scales the shadow, including Resin’s optical rims.'),
   radius: range('radius', 'Corner radius', 'The content radius. Action controls stay pills at every value.'),
@@ -76,18 +76,18 @@ export const environmentArgTypes = {
     name: 'Content density',
     description: 'Tightens spacing. It never tightens a hit target.',
     control: { type: 'inline-radio' as const },
-    options: crystalChoices.density,
+    options: prismataChoices.density,
     table: { category: 'Environment' },
   },
   font: {
     name: 'Typeface',
-    description: 'Crystal’s own face, or the operating system’s UI face.',
+    description: 'Prismata’s own face, or the operating system’s UI face.',
     control: { type: 'inline-radio' as const },
-    options: crystalChoices.font,
+    options: prismataChoices.font,
     table: { category: 'Environment' },
   },
   motionSpeed: range('motionSpeed', 'Animation speed',
-    'Divides every duration. Nothing moves at rest in Crystal, so this is only visible once something is started.', 0.05),
+    'Divides every duration. Nothing moves at rest in Prismata, so this is only visible once something is started.', 0.05),
   reduceMotion: {
     name: 'Reduce motion',
     description: 'Removes spatial movement and keeps state feedback. Not the same as stopping animation.',
@@ -129,25 +129,25 @@ export const environmentArgTypes = {
   },
   ground: {
     name: 'Story ground',
-    description: '`plastic` is Crystal’s foundation. `canvas` is a flat ground, which hides the material hierarchy.',
+    description: '`plastic` is Prismata’s foundation. `canvas` is a flat ground, which hides the material hierarchy.',
     control: { type: 'inline-radio' as const },
     options: ['plastic', 'canvas'],
     table: { category: 'Environment' },
   },
 };
 
-/** Crystal's defaults, which is what the approved baseline was captured at. */
+/** Prismata's defaults, which is what the approved baseline was captured at. */
 export const environmentArgs = {
-  palette: CRYSTAL_DEFAULT['palette'] as string,
-  mode: CRYSTAL_DEFAULT['mode'] as string,
-  atmosphere: CRYSTAL_DEFAULT['atmosphere'] as number,
-  translucency: CRYSTAL_DEFAULT['translucency'] as number,
-  elevation: CRYSTAL_DEFAULT['elevation'] as number,
-  radius: CRYSTAL_DEFAULT['radius'] as number,
-  density: CRYSTAL_DEFAULT['density'] as string,
-  font: CRYSTAL_DEFAULT['font'] as string,
-  motionSpeed: CRYSTAL_DEFAULT['motionSpeed'] as number,
-  reduceMotion: CRYSTAL_DEFAULT['reduceMotion'] as boolean,
+  palette: PRISMATA_DEFAULT['palette'] as string,
+  mode: PRISMATA_DEFAULT['mode'] as string,
+  atmosphere: PRISMATA_DEFAULT['atmosphere'] as number,
+  translucency: PRISMATA_DEFAULT['translucency'] as number,
+  elevation: PRISMATA_DEFAULT['elevation'] as number,
+  radius: PRISMATA_DEFAULT['radius'] as number,
+  density: PRISMATA_DEFAULT['density'] as string,
+  font: PRISMATA_DEFAULT['font'] as string,
+  motionSpeed: PRISMATA_DEFAULT['motionSpeed'] as number,
+  reduceMotion: PRISMATA_DEFAULT['reduceMotion'] as boolean,
   effects: 'full',
   reduceTransparency: false,
   direction: 'ltr',

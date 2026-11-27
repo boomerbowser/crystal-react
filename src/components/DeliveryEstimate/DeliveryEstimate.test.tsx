@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { DeliveryEstimate } from './DeliveryEstimate.js';
 
 /* Constructed from local calendar fields, because the component renders the
@@ -11,7 +11,7 @@ const friday = new Date(2026, 9, 2);
 describe('DeliveryEstimate', () => {
   /* "An absolute date, not only a relative phrase." */
   it('gives an absolute date', () => {
-    renderWithCrystal(<DeliveryEstimate on={friday} data-testid="d" />);
+    renderWithPrismata(<DeliveryEstimate on={friday} data-testid="d" />);
     expect(screen.getByTestId('d')).toHaveTextContent('Arrives Friday, October 2');
   });
 
@@ -32,7 +32,7 @@ describe('DeliveryEstimate', () => {
     ].join('-');
 
     for (const at of [new Date(2026, 9, 2, 1, 30), new Date(2026, 9, 2, 22, 30)]) {
-      const { container, unmount } = renderWithCrystal(<DeliveryEstimate on={at} />);
+      const { container, unmount } = renderWithPrismata(<DeliveryEstimate on={at} />);
       expect(container.querySelector('time')).toHaveAttribute('datetime', calendar(at));
       unmount();
     }
@@ -41,7 +41,7 @@ describe('DeliveryEstimate', () => {
   /* A relative phrase is additional and never instead: "in 3 days" stops being
      true the moment it is cached, screenshotted or read the next morning. */
   it('keeps the date when a relative phrase is given too', () => {
-    renderWithCrystal(<DeliveryEstimate on={friday} relative="in 3 days" data-testid="d" />);
+    renderWithPrismata(<DeliveryEstimate on={friday} relative="in 3 days" data-testid="d" />);
     const estimate = screen.getByTestId('d');
     expect(estimate).toHaveTextContent('in 3 days');
     expect(estimate).toHaveTextContent('October 2');
@@ -50,17 +50,17 @@ describe('DeliveryEstimate', () => {
   /* A blank space where a delivery date goes is indistinguishable from a
      delivery date of never. */
   it('says it is still working the estimate out, in a live region', () => {
-    renderWithCrystal(<DeliveryEstimate loading data-testid="d" />);
+    renderWithPrismata(<DeliveryEstimate loading data-testid="d" />);
     expect(screen.getByRole('status')).toHaveTextContent('Working out when this arrives');
   });
 
   it('says there is no estimate rather than rendering nothing', () => {
-    renderWithCrystal(<DeliveryEstimate data-testid="d" />);
+    renderWithPrismata(<DeliveryEstimate data-testid="d" />);
     expect(screen.getByTestId('d')).toHaveTextContent('No delivery estimate');
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(<DeliveryEstimate on={friday} relative="in 3 days" />);
+    const { container } = renderWithPrismata(<DeliveryEstimate on={friday} relative="in 3 days" />);
     await expectNoAxeViolations(container);
   });
 });

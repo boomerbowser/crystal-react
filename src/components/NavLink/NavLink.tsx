@@ -10,13 +10,13 @@
  * `aria-selected`, and this component makes sure nothing adds it.
  *
  * The current location is a dot, and selection is weight. They are different
- * things. Crystal's indicator ranking puts current location above selection
+ * things. Prismata's indicator ranking puts current location above selection
  * because the two coexist: an entry can be the page you are on and the one you
  * have picked in a list. The dot says location. The weight says the same thing
  * here for the reader who cannot resolve a 6px dot, as the signal that is
  * neither colour nor shape.
  *
- * Both are Crystal's. The link takes `.cr-nav-item`, which since 2.3.0 draws
+ * Both are Prismata's. The link takes `.pr-nav-item`, which since 2.3.0 draws
  * the dot itself (D-22): flat, primary, on `aria-current` only, inside the
  * entry's own inline-start padding, so the label is at the same pixel whether
  * or not the entry is current. This component draws no dot of its own, because
@@ -48,7 +48,7 @@ export function NavLink({
       {...props}
       href={href}
       {...(isCurrent ? { 'aria-current': 'page' as const } : {})}
-      className={cx(styles['navLink'], 'cr-nav-item', className)}
+      className={cx(styles['navLink'], 'pr-nav-item', className)}
     >
       {icon ? <span className={cx(styles['icon'])} aria-hidden="true">{icon}</span> : null}
       <span className={cx(styles['label'])}>{children}</span>

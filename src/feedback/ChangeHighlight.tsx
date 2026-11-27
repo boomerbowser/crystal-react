@@ -1,6 +1,6 @@
 'use client';
 
-/* Crystal's `highlight`: "a brief update cue paired with actual content".
+/* Prismata's `highlight`: "a brief update cue paired with actual content".
  *
  * Put it inside the element whose content changes, which must be positioned. It
  * paints nothing at rest and plays once each time that element's text changes

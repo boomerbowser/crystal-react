@@ -8,15 +8,15 @@
    query covers the moment before hydration. */
 
 .loader {
-  --loader-ink: var(--cr-primary);
-  --loader-tint: var(--cr-primary-soft);
-  --loader-speed: var(--cr-motion-speed, 1);
+  --loader-ink: var(--pr-primary);
+  --loader-tint: var(--pr-primary-soft);
+  --loader-speed: var(--pr-motion-speed, 1);
 
   display: inline-flex;
   align-items: center;
-  gap: $cr-spacing-xs;
-  color: var(--cr-text);
-  font-size: var(--cr-text-caption-size);
+  gap: $pr-spacing-xs;
+  color: var(--pr-text);
+  font-size: var(--pr-text-caption-size);
 }
 
 .hidden {
@@ -28,18 +28,18 @@
   white-space: nowrap;
 }
 
-/* crystal.css gives every svg an icon's 20px box, fill and stroke; the marks
+/* prismata.css gives every svg an icon's 20px box, fill and stroke; the marks
    set their own. */
 .spinner, .infinity { display: block; flex: none; fill: none; stroke: none; }
 .spinner { inline-size: var(--loader-size); block-size: var(--loader-size); }
 .infinity { inline-size: calc(var(--loader-size) * 2); block-size: var(--loader-size); }
 
 /* Spinner: the whole mark turns while the arc lengthens and draws back, so its
-   leading end runs ahead and its tail catches up. The turn is Crystal's one
+   leading end runs ahead and its tail catches up. The turn is Prismata's one
    period for pending work, `motion.duration.flow`, infinite and linear, as
    every continuous indicator's is (D-19). The circle is r=20, so its
    length is about 126 units. */
-.spinner { animation: loader-turn calc(#{$cr-motion-duration-flow} / var(--loader-speed)) linear infinite; }
+.spinner { animation: loader-turn calc(#{$pr-motion-duration-flow} / var(--loader-speed)) linear infinite; }
 .spinnerTrack { fill: none; stroke: var(--loader-tint); stroke-width: 4.5; }
 .spinnerArc {
   fill: none;
@@ -93,7 +93,7 @@
 .bars > span {
   inline-size: calc(var(--loader-size) * 0.14);
   block-size: 70%;
-  border-radius: 999px; /* crystal-allow-literal: a pill end, not a design radius */
+  border-radius: 999px; /* prismata-allow-literal: a pill end, not a design radius */
   background: var(--loader-ink);
   transform-origin: center;
   animation: loader-bar calc(1s / var(--loader-speed)) ease-in-out infinite;

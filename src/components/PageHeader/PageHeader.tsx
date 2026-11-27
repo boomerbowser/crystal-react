@@ -46,7 +46,7 @@ export interface PageHeaderProps extends Omit<HTMLAttributes<HTMLElement>, 'titl
   description?: ReactNode;
   /** A `Breadcrumbs`, which brings its own navigation landmark. */
   breadcrumbs?: ReactNode;
-  /** The page's actions. They are pills because they are Crystal actions. */
+  /** The page's actions. They are pills because they are Prismata actions. */
   actions?: ReactNode;
   /**
    * Condense regardless of scrolling. Left alone, the header condenses once the
@@ -68,10 +68,10 @@ export function PageHeader({
   return (
     <header
       {...props}
-      data-cr-state={condensed ? 'condensed' : 'at-rest'}
+      data-pr-state={condensed ? 'condensed' : 'at-rest'}
       className={cx(
         styles['header'],
-        isPlain ? undefined : cx('cr-frost flat', styles['banded']),
+        isPlain ? undefined : cx('pr-frost flat', styles['banded']),
         condensed ? styles['condensed'] : undefined,
         className,
       )}

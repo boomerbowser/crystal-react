@@ -36,7 +36,7 @@ export const Default: Story = {
         <SkeletonBox />
         <SkeletonBox />
         <SkeletonBox width="70%" />
-        <SkeletonBox shape="block" height="var(--cr-spacing-2xl)" />
+        <SkeletonBox shape="block" height="var(--pr-spacing-2xl)" />
       </>
     ),
   },

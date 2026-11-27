@@ -15,7 +15,7 @@
  * looks for it.
  *
  * This is the one place in the slice where motion carries meaning. The bars
- * turning into a cross is the state change, so Crystal's `icon-turn` recipe
+ * turning into a cross is the state change, so Prismata's `icon-turn` recipe
  * plays it. Under reduced motion the semantic state applies immediately and the
  * decorative movement is omitted.
  * The recipe's own words: "parent expanded state is authoritative."

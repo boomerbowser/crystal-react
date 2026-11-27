@@ -11,8 +11,8 @@
 .clamp {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--cr-clamp-lines, 3);
-  line-clamp: var(--cr-clamp-lines, 3);
+  -webkit-line-clamp: var(--pr-clamp-lines, 3);
+  line-clamp: var(--pr-clamp-lines, 3);
   overflow: hidden;
 }
 

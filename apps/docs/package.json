@@ -1,9 +1,9 @@
 {
-  "name": "@crystal-ui/docs",
+  "name": "@prismata/docs",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Crystal React's documentation website. Next.js brings its own bundler (R-30); the library is consumed through the workspace.",
+  "description": "Prismata React's documentation website. Next.js brings its own bundler (R-30); the library is consumed through the workspace.",
   "scripts": {
     "dev": "next dev",
     "check": "node scripts/check-names.mjs",
@@ -11,8 +11,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@crystal-ui/core": "^2.10.1",
-    "@crystal-ui/react": "workspace:*",
+    "@prismata/core": "^3.0.0",
+    "@prismata/react": "workspace:*",
     "next": "16.4.6",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

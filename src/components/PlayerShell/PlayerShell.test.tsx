@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { act, renderWithCrystal, screen, userEvent, within } from '../../test/render.js';
+import { act, renderWithPrismata, screen, userEvent, within } from '../../test/render.js';
 import { PlayerShell, type PlayerShellProps } from './PlayerShell.js';
 
 const queue: PlayerShellProps['queue'] = {
@@ -47,21 +47,21 @@ describe('PlayerShell', () => {
   /* Real media elements. */
   it('is a real media element, named for what is playing, handed back to the product', () => {
     const mediaRef = { current: null as HTMLMediaElement | null };
-    const { container } = renderWithCrystal(<PlayerShell {...props} mediaRef={mediaRef} />);
+    const { container } = renderWithPrismata(<PlayerShell {...props} mediaRef={mediaRef} />);
     const video = container.querySelector('video');
     expect(video).toHaveAttribute('aria-label', 'Harbour, episode 1');
     expect(mediaRef.current).toBe(video);
   });
 
   it('plays audio in an audio element, without a full-screen control', () => {
-    const { container } = renderWithCrystal(<PlayerShell {...props} kind="audio" />);
+    const { container } = renderWithPrismata(<PlayerShell {...props} kind="audio" />);
     expect(container.querySelector('audio')).not.toBeNull();
     expect(screen.queryByRole('button', { name: 'Full screen' })).toBeNull();
   });
 
   /* Transport reachable by keyboard. */
   it('puts every control of the transport in the tab order', async () => {
-    renderWithCrystal(<PlayerShell {...props} />);
+    renderWithPrismata(<PlayerShell {...props} />);
     const reached: string[] = [];
     for (let i = 0; i < 12; i += 1) {
       await userEvent.tab();
@@ -73,16 +73,16 @@ describe('PlayerShell', () => {
   });
 
   it('starts idle', () => {
-    const { container } = renderWithCrystal(<PlayerShell {...props} />);
-    expect(container.querySelector('[data-cr-state]')).toHaveAttribute('data-cr-state', 'idle');
+    const { container } = renderWithPrismata(<PlayerShell {...props} />);
+    expect(container.querySelector('[data-pr-state]')).toHaveAttribute('data-pr-state', 'idle');
   });
 
   /* The element's own state, read from its own events: jsdom plays nothing, so
      the element is told what a browser would report and says so. */
   it('is playing, buffering and paused as the element says it is', () => {
-    const { container } = renderWithCrystal(<PlayerShell {...props} />);
+    const { container } = renderWithPrismata(<PlayerShell {...props} />);
     const video = container.querySelector('video')!;
-    const shell = container.querySelector('[data-cr-state]');
+    const shell = container.querySelector('[data-pr-state]');
     const report = (paused: boolean, readyState: number, currentTime: number, event: string): void => {
       Object.defineProperty(video, 'paused', { configurable: true, get: () => paused });
       Object.defineProperty(video, 'readyState', { configurable: true, get: () => readyState });
@@ -90,16 +90,16 @@ describe('PlayerShell', () => {
       act(() => { video.dispatchEvent(new Event(event)); });
     };
     report(false, 4, 1, 'play');
-    expect(shell).toHaveAttribute('data-cr-state', 'playing');
+    expect(shell).toHaveAttribute('data-pr-state', 'playing');
     report(false, 1, 2, 'waiting');
-    expect(shell).toHaveAttribute('data-cr-state', 'buffering');
+    expect(shell).toHaveAttribute('data-pr-state', 'buffering');
     report(true, 4, 3, 'pause');
-    expect(shell).toHaveAttribute('data-cr-state', 'paused');
+    expect(shell).toHaveAttribute('data-pr-state', 'paused');
   });
 
-  /* Full screen keeps Crystal's transport, and entering and leaving are said. */
+  /* Full screen keeps Prismata's transport, and entering and leaving are said. */
   it('goes full screen on its stage, with the transport, and says so', async () => {
-    const { container } = renderWithCrystal(<PlayerShell {...props} />);
+    const { container } = renderWithPrismata(<PlayerShell {...props} />);
     const toggle = screen.getByRole('button', { name: 'Full screen' });
     expect(toggle).toHaveAttribute('aria-pressed', 'false');
     await userEvent.click(toggle);
@@ -108,11 +108,11 @@ describe('PlayerShell', () => {
     expect(fullscreenElement?.contains(toggle)).toBe(true);
     expect(toggle).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getAllByRole('status').some((one) => one.textContent === 'Full screen on')).toBe(true);
-    expect(container.querySelector('[data-cr-state]')).toHaveAttribute('data-cr-state', 'full-screen');
+    expect(container.querySelector('[data-pr-state]')).toHaveAttribute('data-pr-state', 'full-screen');
   });
 
   it('knows when full screen was left without its toggle, as Escape does', async () => {
-    renderWithCrystal(<PlayerShell {...props} />);
+    renderWithPrismata(<PlayerShell {...props} />);
     await userEvent.click(screen.getByRole('button', { name: 'Full screen' }));
     act(() => {
       fullscreenElement = null;
@@ -124,24 +124,24 @@ describe('PlayerShell', () => {
 
   it('offers no full screen where the document may not have it', () => {
     Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: false });
-    renderWithCrystal(<PlayerShell {...props} />);
+    renderWithPrismata(<PlayerShell {...props} />);
     expect(screen.queryByRole('button', { name: 'Full screen' })).toBeNull();
   });
 
   it('names the metadata by its heading, and gives the queue its now-playing row', () => {
-    renderWithCrystal(<PlayerShell {...props} />);
+    renderWithPrismata(<PlayerShell {...props} />);
     expect(screen.getByRole('region', { name: 'Harbour, episode 1' })).toHaveTextContent('The first night on the water.');
     const upNext = screen.getByRole('grid', { name: 'Up next' });
     expect(within(upNext).getAllByRole('row')[0]).toHaveAttribute('aria-current', 'true');
   });
 
   it.each([['video', 'video'], ['audio', 'audio']] as const)('has no axe violations %s', async (_, kind) => {
-    const { container } = renderWithCrystal(<PlayerShell {...props} kind={kind} />);
+    const { container } = renderWithPrismata(<PlayerShell {...props} kind={kind} />);
     await expectNoAxeViolations(container);
   });
 
   it('has no axe violations full screen', async () => {
-    const { container } = renderWithCrystal(<PlayerShell {...props} />);
+    const { container } = renderWithPrismata(<PlayerShell {...props} />);
     await userEvent.click(screen.getByRole('button', { name: 'Full screen' }));
     await expectNoAxeViolations(container);
   });

@@ -8,7 +8,7 @@
      narrow whatever the window is. */
   container-type: inline-size;
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-lg);
+  gap: var(--pr-block-gap, $pr-spacing-lg);
   min-inline-size: 0;
 }
 
@@ -16,19 +16,19 @@
 
 .layout {
   display: grid;
-  gap: $cr-spacing-lg;
+  gap: $pr-spacing-lg;
   align-items: start;
 }
 
-@container (min-inline-size: 56rem) { /* crystal-allow-literal: the width at which filters sit beside the grid */
-  .layout { grid-template-columns: minmax(14rem, 1fr) minmax(0, 3fr); } /* crystal-allow-literal: the filter column's floor */
+@container (min-inline-size: 56rem) { /* prismata-allow-literal: the width at which filters sit beside the grid */
+  .layout { grid-template-columns: minmax(14rem, 1fr) minmax(0, 3fr); } /* prismata-allow-literal: the filter column's floor */
 }
 
 .filters { min-inline-size: 0; }
 
 .results {
   display: grid;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   min-inline-size: 0;
 }
 
@@ -36,7 +36,7 @@
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: $cr-spacing-md;
+  gap: $pr-spacing-md;
   flex-wrap: wrap;
 }
 
@@ -54,8 +54,8 @@
    column count fits at their own minimum. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); /* crystal-allow-literal: a product card's narrowest */
-  gap: $cr-spacing-md;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); /* prismata-allow-literal: a product card's narrowest */
+  gap: $pr-spacing-md;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -65,6 +65,6 @@
 
 /* Filtering keeps the results in place, dimmed, so the page does not reflow
    under a reader still looking at it. */
-.storefront[data-cr-state='filtering'] .grid { opacity: $cr-action-disabled-opacity; }
+.storefront[data-pr-state='filtering'] .grid { opacity: $pr-action-disabled-opacity; }
 
 .pages { justify-self: center; }

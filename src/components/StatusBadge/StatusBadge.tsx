@@ -9,10 +9,10 @@
  *     `aria-hidden`. A screen reader that read both would say "exclamation
  *     mark, Action blocked".
  *   - Never a coloured perimeter stroke. A status ring around a pill is the
- *     shape Crystal uses for focus, and a danger-coloured one reads as a control
+ *     shape Prismata uses for focus, and a danger-coloured one reads as a control
  *     in an error state rather than a fact being reported.
  *   - Success uses a check mark, which is the one legitimate use of that glyph
- *     in Crystal: information display. A check mark never means "selected".
+ *     in Prismata: information display. A check mark never means "selected".
  *     Selection is label weight alone.
  *
  * `neutral` is the fifth state and has no tested ink pair, because it is the
@@ -20,7 +20,7 @@
  * every unremarkable thing takes, and shows no symbol: a glyph would imply a
  * meaning the state does not have.
  *
- * Motion plays on a change of status, never on mount. Crystal's rule is that
+ * Motion plays on a change of status, never on mount. Prismata's rule is that
  * nothing moves at rest and motion is only ever something a person started. A
  * badge that animated as the page loaded would be ambient movement, which was
  * withdrawn from 2.0 deliberately.
@@ -42,7 +42,7 @@ export interface StatusBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   children: ReactNode;
 }
 
-/* The symbol vocabulary is Crystal's, read once in `feedback/status.ts` and
+/* The symbol vocabulary is Prismata's, read once in `feedback/status.ts` and
    shared with every other component in the feedback slice that draws a well.
    `neutral` shows none: it is the absence of a status rather than a fifth one,
    and a glyph would imply a meaning the state does not have. */
@@ -70,12 +70,12 @@ export const StatusBadge = forwardRef<HTMLSpanElement, StatusBadgeProps>(functio
       {...props}
       ref={mergeRefs(ref, scope)}
       data-status={status}
-      className={cx(styles['statusBadge'], 'cr-status', className)}
+      className={cx(styles['statusBadge'], 'pr-status', className)}
     >
       {symbol === null ? null : (
         <span aria-hidden="true" className={styles['well']}>{symbol}</span>
       )}
-      {/* Bare text, not a span: Crystal's well is `span.cr-status > span`, so a
+      {/* Bare text, not a span: Prismata's well is `span.pr-status > span`, so a
           second span here is painted as a second well. */}
       {children}
     </span>

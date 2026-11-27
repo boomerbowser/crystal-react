@@ -2,10 +2,10 @@
 
 /* Carousel: a scrolling track of slides with controls and position indicators.
  *
- * There is no autoplay, and that is a decision. Crystal's rule is that nothing
+ * There is no autoplay, and that is a decision. Prismata's rule is that nothing
  * moves at rest and motion is only ever something a person started. The
  * catalogue says "never autoplay without a pause control", and the recipes say,
- * in Crystal's own words, "explicit next/previous navigation; never autoplay".
+ * in Prismata's own words, "explicit next/previous navigation; never autoplay".
  * The catalogue assigns autoplay policy to the product, so a product that must
  * have it owns both the timer and the pause control. This component does not
  * supply one without the other.
@@ -24,14 +24,14 @@
  * jump alone.
  *
  * Spacing is the product's to set: `gap` between slides, `padding` inside each,
- * from Crystal's spacing scale.
+ * from Prismata's spacing scale.
  */
 import {
   forwardRef, useCallback, useEffect, useRef, useState,
   type CSSProperties, type HTMLAttributes, type ReactNode,
 } from 'react';
 import { cx } from '../../styles/cx.js';
-import { spacingValue, type CrystalSpacing } from '../../styles/spacing.js';
+import { spacingValue, type PrismataSpacing } from '../../styles/spacing.js';
 import styles from './Carousel.module.scss';
 
 export interface CarouselSlide {
@@ -49,10 +49,10 @@ export interface CarouselProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
   /** What the previous control says. */
   previousLabel?: string;
   nextLabel?: string;
-  /** Space between slides, from Crystal's scale. Defaults to `md`. */
-  gap?: CrystalSpacing;
-  /** Space inside each slide, from Crystal's scale. Defaults to `lg`. */
-  padding?: CrystalSpacing;
+  /** Space between slides, from Prismata's scale. Defaults to `md`. */
+  gap?: PrismataSpacing;
+  /** Space inside each slide, from Prismata's scale. Defaults to `lg`. */
+  padding?: PrismataSpacing;
 }
 
 function Slide(
@@ -61,7 +61,7 @@ function Slide(
 ): ReactNode {
   return (
     <li
-      className={cx('cr-haze flush', styles['slide'])}
+      className={cx('pr-haze flush', styles['slide'])}
       aria-label={slide.label}
       aria-setsize={count}
       aria-posinset={index + 1}
@@ -139,15 +139,15 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       aria-label={label}
       className={cx(styles['carousel'], className)}
       style={{
-        ...(gap !== undefined ? { '--cr-carousel-gap': spacingValue(gap) } : {}),
-        ...(padding !== undefined ? { '--cr-carousel-padding': spacingValue(padding) } : {}),
+        ...(gap !== undefined ? { '--pr-carousel-gap': spacingValue(gap) } : {}),
+        ...(padding !== undefined ? { '--pr-carousel-padding': spacingValue(padding) } : {}),
         ...style,
       } as CSSProperties}
     >
       <ul
         ref={track}
         tabIndex={0}
-        className={cx(styles['track'], 'cr-scroll-resin')}
+        className={cx(styles['track'], 'pr-scroll-resin')}
         aria-label={label}
       >
         {slides.map((slide, position) => (
@@ -164,7 +164,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       <div className={styles['controls']}>
         <button
           type="button"
-          className="cr-button"
+          className="pr-button"
           disabled={atStart}
           onClick={() => { goTo(index - 1); }}
         >
@@ -180,7 +180,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
             <li key={slide.id}>
               <button
                 type="button"
-                className={cx(styles['indicator'], 'cr-bare')}
+                className={cx(styles['indicator'], 'pr-bare')}
                 aria-label={slide.label}
                 aria-current={position === index ? 'true' : undefined}
                 onClick={() => { goTo(position); }}
@@ -193,7 +193,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
 
         <button
           type="button"
-          className="cr-button"
+          className="pr-button"
           disabled={atEnd}
           onClick={() => { goTo(index + 1); }}
         >

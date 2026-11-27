@@ -7,7 +7,7 @@
 
 .bin .fill {
   fill: var(--series-colour);
-  transition: opacity var(--cr-state) var(--cr-ease-settle);
+  transition: opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 .bin:focus-visible { outline: none; }

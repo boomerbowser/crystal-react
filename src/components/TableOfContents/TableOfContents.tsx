@@ -2,7 +2,7 @@
 
 /* TableOfContents.
  *
- * The catalogue splits the work. Crystal supplies "active marking by label
+ * The catalogue splits the work. Prismata supplies "active marking by label
  * weight, spacing"; the product supplies "which headings are collected, scroll
  * spy thresholds". So the component is controlled. It is told which entry is
  * active and marks it. The scroll spy ships beside it as `useHeadingInView`,
@@ -55,7 +55,7 @@ export function TableOfContents({
   const base = entries.length ? Math.min(...entries.map((entry) => entry.level)) : 1;
 
   return (
-    <nav aria-label={label} className={cx('cr-haze', styles['toc'], className)}>
+    <nav aria-label={label} className={cx('pr-haze', styles['toc'], className)}>
       <ol className={cx(styles['list'])}>
         {entries.map((entry) => (
           <li key={entry.id}>
@@ -63,7 +63,7 @@ export function TableOfContents({
               isCurrent={entry.id === activeId}
               href={`#${entry.id}`}
               className={cx(styles['entry'])}
-              style={{ '--cr-toc-level': entry.level - base } as React.CSSProperties}
+              style={{ '--pr-toc-level': entry.level - base } as React.CSSProperties}
               {...(entry.id === activeId ? { 'aria-current': 'location' as const } : {})}
               {...(onNavigate
                 ? {

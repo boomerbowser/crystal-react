@@ -1,4 +1,4 @@
-/* The props React Aria gives Crystal React, which docgen cannot see.
+/* The props React Aria gives Prismata React, which docgen cannot see.
  *
  * ## Why this file exists
  *
@@ -59,7 +59,7 @@ const STATE = 'State';
 const SELECTION = 'Selection';
 const CONTENT = 'Content';
 
-/** Every React Aria prop Crystal React re-exposes, described once. */
+/** Every React Aria prop Prismata React re-exposes, described once. */
 export const ARIA_PROPS = {
   /* Events. Each becomes a spy in `ariaActions`, so the Actions panel shows
      what fired and with what. For a library whose subject is behaviour, an
@@ -106,7 +106,7 @@ export const ARIA_PROPS = {
   },
   isRequired: { description: 'Required. Announced, and never carried by the asterisk alone.', control: 'boolean', table: { category: STATE } },
   isInvalid: {
-    description: 'Failed validation. Crystal pairs this with a message: colour never carries the meaning alone.',
+    description: 'Failed validation. Prismata pairs this with a message: colour never carries the meaning alone.',
     control: 'boolean', table: { category: STATE },
   },
   isIndeterminate: { description: 'Neither checked nor unchecked: a parent whose children disagree.', control: 'boolean', table: { category: STATE } },

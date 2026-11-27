@@ -10,7 +10,7 @@
  * promises already exist, and the shell puts them together:
  *
  *   - Real media elements. `VideoPlayer` and `AudioPlayer` are a native
- *     `<video>` and `<audio>` under Crystal's transport; the element is handed
+ *     `<video>` and `<audio>` under Prismata's transport; the element is handed
  *     back through `mediaRef` for sources, DRM and analytics.
  *   - Captions and their state announced. `VideoPlayer`'s caption toggle is
  *     the track's real mode, `aria-pressed`, and says "Captions on" or "off".
@@ -20,19 +20,19 @@
  *
  * What the shell adds:
  *
- *   - Full screen that keeps Crystal's transport. Since 2 October 2026 this is
+ *   - Full screen that keeps Prismata's transport. Since 2 October 2026 this is
  *     `VideoPlayer`'s own: it goes full screen on the player (the picture and
  *     the transport together) rather than on the `<video>`, whose full screen is
  *     the browser's player with the browser's controls. The toggle is
  *     `aria-pressed`, and entering and leaving are announced, since Escape can
  *     leave without the toggle being touched. The shell reads the state for its
- *     own `data-cr-state`.
+ *     own `data-pr-state`.
  *   - The queue is `PlaylistBlock`: reorderable by keyboard, with the playing
  *     track `aria-current`.
  *   - Metadata on Haze, named by its heading.
  *
  * "Resin transport over the media; Haze metadata". The transport's showing and
- * hiding is `VideoPlayer`'s, which Crystal's rule keeps to movement a person
+ * hiding is `VideoPlayer`'s, which Prismata's rule keeps to movement a person
  * started: shown while a pointer is over the picture or focus is inside it.
  */
 import { useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
@@ -89,7 +89,7 @@ export function PlayerShell({
         : media.currentTime > 0 ? 'paused' : 'idle';
 
   return (
-    <div data-cr-state={state} className={cx(styles['shell'], className)}>
+    <div data-pr-state={state} className={cx(styles['shell'], className)}>
       <div className={cx(styles['stage'])}>
         {kind === 'video' ? (
           <VideoPlayer
@@ -113,7 +113,7 @@ export function PlayerShell({
       </div>
 
       {metadata ? (
-        <section aria-labelledby={metadataId} className={cx(styles['metadata'], 'cr-haze')}>
+        <section aria-labelledby={metadataId} className={cx(styles['metadata'], 'pr-haze')}>
           <Heading id={metadataId} className={cx(styles['title'])}>{metadata.title}</Heading>
           {metadata.subtitle ? <p className={cx(styles['subtitle'])}>{metadata.subtitle}</p> : null}
           {metadata.description ? <p className={cx(styles['description'])}>{metadata.description}</p> : null}

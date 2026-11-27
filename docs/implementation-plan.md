@@ -1,6 +1,6 @@
-# Crystal React implementation plan
+# Prismata React implementation plan
 
-`@crystal-ui/react`. A React component library that implements the full Crystal
+`@prismata/react`. A React component library that implements the full Prismata
 catalogue at parity with Mantine, MUI (including the X add-ons), Ant Design and PrimeReact.
 
 This is the working plan. It is kept current: when a decision changes, this document
@@ -17,14 +17,14 @@ Controls panel changes nothing for them. The twenty that closed are in
 [closed-issues.md](closed-issues.md) with their reasoning intact, because several
 explain why things are shaped as they are as well as what was wrong.
 
-Crystal's own tracker is `crystal-design-system/proposals/open-issues.md`. Open
+Prismata's own tracker is `prismata-design-system/proposals/open-issues.md`. Open
 there, and relevant here, are two divergences in the focus ring between what
-this library renders and what Crystal's site renders: the elevation layers and
+this library renders and what Prismata's site renders: the elevation layers and
 the dark-mode feather alphas. Both are recorded in D-11 and both are Meridian's
 to decide. Do not resolve either by changing this library.
 
 Since 2 October 2026 the tracker holds R-27 to R-29, from Slice R (media, text
-and recipe parity); Crystal's holds D-30 to D-36 from the same proposal.
+and recipe parity); Prismata's holds D-30 to D-36 from the same proposal.
 
 When you notice a defect, add it to the list.
 
@@ -39,7 +39,7 @@ built, the status says so.
 | --- | --- | --- |
 | React Aria as the unstyled primitive | §2.1 | decided |
 | Parity with PrimeReact, Mantine, MUI + MUI X, Ant Design, including add-ons | §4, §4.1, §4.2 | scoped: 265 components + 20 blocks, capability specified per component |
-| Crystal's animations at every appropriate step | §3.4, §2.6 | built on Motion for React, driven by Crystal's springs |
+| Prismata's animations at every appropriate step | §3.4, §2.6 | built on Motion for React, driven by Prismata's springs |
 | Theme provider, theme object, colour scheme and typography context, hooks | §3.3 | built |
 | 100% functional, correct TypeScript | §3.2 | enforced |
 | Next.js, TanStack Start, React Router, Gatsby, Redwood | §3.6 | designed, gated |
@@ -47,7 +47,7 @@ built, the status says so.
 | SCSS/PostCSS under the hood, not CSS-in-JS | §2.2, §3.1 | built |
 | Dynamic and responsive; improve the animations | §3.4, §3.5 | designed |
 | Forms: components, state, validation, submission, mutations | §3.8 | designed |
-| Named Crystal React, published as `@crystal-ui/react` | §3.9 | set |
+| Named Prismata React, published as `@prismata/react` | §3.9 | set |
 | A documentation website, deployable to Vercel | §3.10, slice M | designed |
 
 ---
@@ -80,10 +80,10 @@ maintained primitive and dress it."*
 Three secondary reasons, each sufficient on its own:
 
 - State is exposed as `data-*` attributes (`data-pressed`, `data-focus-visible`,
-  `data-selected`), so Crystal's materials can be written in plain CSS. The stated
+  `data-selected`), so Prismata's materials can be written in plain CSS. The stated
   preference for SCSS over Emotion therefore costs nothing.
 - It is SSR-safe by design, which §3.6 requires.
-- It has real internationalisation, which Crystal's right-to-left axis already tests for.
+- It has real internationalisation, which Prismata's right-to-left axis already tests for.
 
 ### 2.2 SCSS and PostCSS, not CSS-in-JS
 
@@ -94,37 +94,37 @@ per-render class generation.
 **On LESS.** The brief named SASS, LESS and PostCSS. The library's own source is SCSS,
 because a second preprocessor inside one codebase doubles the toolchain and adds nothing.
 Consumers can use any of the three: every value is published as a CSS custom property, so
-a LESS, SASS or PostCSS consumer overrides Crystal without needing Crystal's own
+a LESS, SASS or PostCSS consumer overrides Prismata without needing Prismata's own
 preprocessor. §3.1 states the surface.
 
-### 2.3 Crystal owns the physics, React owns the binding
+### 2.3 Prismata owns the physics, React owns the binding
 
 `assets/motion.js` is an IIFE that installs document-wide listeners, which a React library
 must not do. `src/engines.js` is already ESM with named exports and `assets/core/*.js`
 are pure functions. React imports those and binds through refs and effects.
 
 This satisfies CONTRACT §1 and §6: arithmetic, springs, recipes and state derivation stay
-Crystal's. React implements lifecycle, which is different on a platform with components
+Prismata's. React implements lifecycle, which is different on a platform with components
 and is what §2 means by "platform-appropriate techniques".
 
 ### 2.4 No ambient motion
 
-Crystal 2.0 ships none. It was specified, built, measured and withdrawn (R17 to R22), and
-Crystal React must not reintroduce it. Materials are at rest when nothing is happening to
+Prismata 2.0 ships none. It was specified, built, measured and withdrawn (R17 to R22), and
+Prismata React must not reintroduce it. Materials are at rest when nothing is happening to
 them. CONTRACT §8 records two findings for when it returns. A rest state fails by being
 too strong or too weak, so it needs a measured floor as well as a ceiling. Its cost came
 from its structure, not from its tuning.
 
-### 2.5 `@crystal-ui/core` is the base package
+### 2.5 `@prismata/core` is the base package
 
-The design system publishes as `@crystal-ui/core`; this library is `@crystal-ui/react`. Both sit
-under the `@crystal-ui` scope. Crystal React consumes `@crystal-ui/core` and never vendors it.
+The design system publishes as `@prismata/core`; this library is `@prismata/react`. Both sit
+under the `@prismata` scope. Prismata React consumes `@prismata/core` and never vendors it.
 It is `external` in the bundle, so a consumer resolves one copy of the token set.
 
-`@crystal-ui/core` is published. The dependency is `^2.0.0` from the public npm
+`@prismata/core` is published. The dependency is `^2.0.0` from the public npm
 registry, and the lockfile resolves to the registry tarball. Until 20 September
 2026 it was a `file:` path into a sibling checkout, which resolved only on a
-disk that had that checkout. CI checked Crystal out beside this repository to
+disk that had that checkout. CI checked Prismata out beside this repository to
 make it resolve there, and the push ordering between the two repositories was a
 hazard with its own tracker entry.
 
@@ -134,13 +134,13 @@ Vite's pre-bundle cache cannot go stale against an edit, which is the hazard
 that flag guarded against.
 
 To develop a change across both repositories, use
-`pnpm link ../crystal-design-system/core`. It brings the stale pre-bundle
+`pnpm link ../prismata-design-system/core`. It brings the stale pre-bundle
 hazard back, so run Storybook with `--force` for that session. Do not commit
 the linked range.
 
 ### 2.6 Every dependency is the React-native one
 
-**Policy.** Where a library ships a React binding, Crystal React uses the binding
+**Policy.** Where a library ships a React binding, Prismata React uses the binding
 and not the framework-agnostic core. A JS-first library is used only where no
 React binding exists and the work is framework-agnostic, such as date arithmetic
 or scale math. Wrapping a library in `useEffect` by hand reimplements what its
@@ -153,9 +153,9 @@ pointed at it. The table below is the audit made under the policy.
 | Need | Chosen | Licence | Why |
 | --- | --- | --- | --- |
 | Behaviour and accessibility | `react-aria-components` | Apache-2.0 | §2.1 |
-| Motion | `motion/react` | MIT | Consumes Crystal's `{stiffness, damping, mass}` springs directly |
+| Motion | `motion/react` | MIT | Consumes Prismata's `{stiffness, damping, mass}` springs directly |
 | Dates | `@internationalized/date` | Apache-2.0 | Framework-agnostic *by design*; there is nothing React-shaped to bind |
-| Charts | `@visx/*` | MIT | React-native and low-level: scales and shapes, no imposed visual opinion, so Crystal owns the material |
+| Charts | `@visx/*` | MIT | React-native and low-level: scales and shapes, no imposed visual opinion, so Prismata owns the material |
 | Virtualisation | `@tanstack/react-virtual` | MIT | Headless, React-native |
 | Rich text | `@tiptap/react` | MIT | The React binding, not the vanilla core |
 | Carousel | `embla-carousel-react` | MIT | The React binding |
@@ -168,8 +168,8 @@ pointed at it. The table below is the audit made under the policy.
 **Scrolling defers to React Aria wherever React Aria has an answer.** Meridian asked
 for this explicitly. React Aria ships no scroll-area primitive. Its one scrolling
 API is `usePreventScroll`, the modal scroll lock, which `Dialog` already receives
-through React Aria's own `Modal`. Crystal's `ScrollArea` is therefore the container
-React Aria leaves to the design system, and it contributes Crystal's two scrollbars,
+through React Aria's own `Modal`. Prismata's `ScrollArea` is therefore the container
+React Aria leaves to the design system, and it contributes Prismata's two scrollbars,
 the scroll contract and the edge fade.
 
 Where React Aria does own scrolling, the components that need it take it from
@@ -182,18 +182,18 @@ React Aria:
 | Virtualised scrolling | React Aria `Virtualizer`, with `@tanstack/react-virtual` only where a collection is not involved |
 | Infinite scroll sentinels | React Aria's `*LoadMoreItem` components |
 | Focus containment and restoration | React Aria `FocusScope` |
-| The scroll container, its scrollbar and its edge fade | Crystal |
+| The scroll container, its scrollbar and its edge fade | Prismata |
 
 Every one is MIT, ISC or Apache-2.0. None is a paid licence, and none becomes
 paid at a usage threshold.
 
-**Motion for React also removes GSAP.** `@crystal-ui/core` depends on GSAP for
+**Motion for React also removes GSAP.** `@prismata/core` depends on GSAP for
 pseudo-element animation in the web preview, and GSAP's is a custom
-"no charge" licence rather than an OSS one. Crystal React does not need GSAP:
+"no charge" licence rather than an OSS one. Prismata React does not need GSAP:
 Motion for React covers what GSAP was used for, so the React library's
 dependency graph contains no non-OSS licence.
 
-**Where this changes the physics, it improves it.** Every Crystal recipe carries a
+**Where this changes the physics, it improves it.** Every Prismata recipe carries a
 spring fitted so its settling time equals the authored duration, and Motion's
 spring transition takes exactly `{ stiffness, damping, mass }`. The recipe's own
 physics now drive the animation, where before a duration and a bezier
@@ -208,14 +208,14 @@ rather than the keyframes.
 
 Three layers, in cascade order:
 
-1. **`@crystal-ui/core` stylesheets**: the reset, the material primitives and the resolved
+1. **`@prismata/core` stylesheets**: the reset, the material primitives and the resolved
    theme custom properties. Imported once by the consumer.
 2. **Component SCSS**: one `.module.scss` per component, selecting on React Aria's
    `data-*` attributes. Compiled through PostCSS with Autoprefixer.
-3. **Consumer overrides**: custom properties, scoped to a `CrystalProvider` subtree or to
+3. **Consumer overrides**: custom properties, scoped to a `PrismataProvider` subtree or to
    a single component through `style`.
 
-**Values enter in one place.** `scripts/build-tokens.mjs` reads Crystal's resolved
+**Values enter in one place.** `scripts/build-tokens.mjs` reads Prismata's resolved
 export and writes `src/styles/_tokens.scss` and `src/theme/tokens.generated.ts`. Both are
 gitignored, because a committed generated file eventually gets edited by hand.
 `scripts/lint-tokens.mjs` fails the build on a hard-coded colour or length anywhere else.
@@ -238,16 +238,16 @@ bundler, so the published types are the ones the source is checked against.
 
 ### 3.3 Theme, built
 
-- `CrystalProvider` wraps `@crystal-ui/core/core/preferences`. Normalisation, clamps, choices
-  and duration resolution are Crystal's, and the provider re-derives nothing. Crystal's own
+- `PrismataProvider` wraps `@prismata/core/core/preferences`. Normalisation, clamps, choices
+  and duration resolution are Prismata's, and the provider re-derives nothing. Prismata's own
   defaults and palette list are passed in, not copied.
 - **Scoping is per element.** A nested provider writes custom properties onto its own
   wrapper, so a dark island inside a light page needs no second root. The provider is
   also safe to render more than once, which Storybook and visual tests both do.
-- Hooks: `useCrystalTheme`, `useColorScheme`, `useDensity`, `useDirection`,
+- Hooks: `usePrismataTheme`, `useColorScheme`, `useDensity`, `useDirection`,
   `useReducedEffects`, `useMotionSpeed`. Each is a narrow read, so a component that cares
   only about direction need not re-render when the palette changes.
-- `useCrystalTheme` throws outside a provider and returns no default. A component that
+- `usePrismataTheme` throws outside a provider and returns no default. A component that
   renders un-themed without an error is the failure that produces "it looks
   nothing like the design system" reports.
 - **Typography context** is still to build: `useTypography` returning the resolved family,
@@ -259,7 +259,7 @@ Motion is bound to state and not to events: `checked`, `aria-expanded`, `aria-in
 `open`, a committed range value. Keyboard and assistive technology therefore get what a
 pointer user gets. This mirrors `motion-interactions.js` upstream, implemented as hooks.
 
-- `useMotion(ref, recipe, options)` plays a Crystal recipe through Crystal's engine,
+- `useMotion(ref, recipe, options)` plays a Prismata recipe through Prismata's engine,
   cancels on unmount, and supports `{ once }` coalescing so a continuous control does not
   restart its recipe on every event.
 - `useStateMotion(ref, { checked, expanded, invalid, open })` is the declarative binding
@@ -306,7 +306,7 @@ the 44px minimum survives every density and every breakpoint.
 
 ### 3.7 Testing, stories, and machine readability
 
-- **Vitest** + Testing Library + `vitest-axe`, with a shared `renderWithCrystal` helper.
+- **Vitest** + Testing Library + `vitest-axe`, with a shared `renderWithPrismata` helper.
   Built; 7 tests currently cover the provider.
 - **Jest** compatibility is tested: `pnpm test:jest` runs a real suite under Jest's own
   resolver, transform and environment, and it is part of `pnpm verify`. Babel is pinned
@@ -322,14 +322,14 @@ the 44px minimum survives every density and every breakpoint.
 
 ### 3.8 Forms
 
-- `useCrystalForm` over React Aria's own form integration. React Hook Form is not
+- `usePrismataForm` over React Aria's own form integration. React Hook Form is not
   wrapped, because RAC already owns validation display, `aria-describedby` wiring and
   submission semantics, and a second form library competing with it is a known source of
   bugs.
 - **Validation** through [Standard Schema](https://standardschema.dev) (`~standard`), so
   Zod, Valibot and ArkType all work untouched and none is a dependency.
 - **Submission state** (idle, submitting, succeeded, failed) is surfaced as data
-  attributes so the SCSS can dress it, and drives Crystal's `field-invalid` / `field-valid`
+  attributes so the SCSS can dress it, and drives Prismata's `field-invalid` / `field-valid`
   recipes.
 - **Mutations** through an adapter that accepts any `mutate` function with a
   `{ mutateAsync, isPending, error }` shape. TanStack Query fits it exactly and is not a
@@ -339,7 +339,7 @@ the 44px minimum survives every density and every breakpoint.
 
 ### 3.9 Packaging
 
-`@crystal-ui/react`, ESM + CJS + types, `sideEffects` declaring the SCSS. Changesets for
+`@prismata/react`, ESM + CJS + types, `sideEffects` declaring the SCSS. Changesets for
 versioning. Peer range React 18.2 and 19.
 
 ### 3.10 Documentation website
@@ -349,20 +349,20 @@ Blueprint: every component gets a page with an explanation, isolated visual
 examples, the code for each, a generated props table, and its accessibility and
 surface notes.
 
-**It follows Crystal's current specification, and keeps following it.** The
-design below was brought up to `@crystal-ui/core` 2.6.0 on 16 November 2026, at
+**It follows Prismata's current specification, and keeps following it.** The
+design below was brought up to `@prismata/core` 2.6.0 on 16 November 2026, at
 Meridian's direction: components are described by the closed surface vocabulary
 (2.2.0) and its recipes, page text is set in the prose vocabulary (2.4.0), the
-demo frame offers every axis of Crystal's environment, and selection, motion and
+demo frame offers every axis of Prismata's environment, and selection, motion and
 reading leading are 2.6.0's. Parity is structural rather than a review: every
-fact the site states about Crystal is read from the installed package at build
+fact the site states about Prismata is read from the installed package at build
 time, the site depends on the same core range as the library, and its build
 fails when a page names a surface, recipe or catalogue entry the installed core
-does not publish. Each Crystal release that changes the vocabulary is followed
+does not publish. Each Prismata release that changes the vocabulary is followed
 by a revision of this section in the same change that adopts it.
 
-**Separate from `crystal-preview`.** That is Crystal's site: it documents the design
-system, it installs `@crystal-ui/core`, and it renders the specification that
+**Separate from `prismata-preview`.** That is Prismata's site: it documents the design
+system, it installs `@prismata/core`, and it renders the specification that
 ships inside that package. It says what a material is. This site says what a
 React component does: props, accessibility, the code that runs. The two sites
 have different audiences and different sources of truth. Merging them would mean
@@ -386,8 +386,8 @@ is read from disk at build time for its source. There is no second copy of an
 example in a code fence, so an example cannot drift from what it renders, and a
 demo that stops compiling breaks the build.
 
-Each example is isolated: it is rendered inside its own `CrystalProvider` scope
-with per-demo controls for every axis of Crystal's environment, the fourteen
+Each example is isolated: it is rendered inside its own `PrismataProvider` scope
+with per-demo controls for every axis of Prismata's environment, the fourteen
 Storybook already offers: palette, mode, atmosphere, Frost tint, elevation,
 corner radius, density, font, animation speed, reduced motion, effects (full,
 reduced, opaque), reduced transparency, direction and ground. They are read from
@@ -404,7 +404,7 @@ argument CONTRACT §1 makes for values.
 Every component page carries:
 
 - what it is, and when to use it in place of its neighbours;
-- anatomy, states, and the Crystal surfaces it wears (from the catalogue's
+- anatomy, states, and the Prismata surfaces it wears (from the catalogue's
   `surface` field), each linked to its surface page;
 - isolated examples, each with its source and a copy button;
 - a generated props table, plus the React Aria props it passes through;
@@ -418,17 +418,17 @@ Every component page carries:
   makes.
 
 **One page per surface** (R-Q1). Each of the 23 surfaces in
-`@crystal-ui/core/surfaces` gets a page with its recipe values from
+`@prismata/core/surfaces` gets a page with its recipe values from
 `surface-recipes.json` (fill, diffusion, rim, shadow and paint layers, light and
 dark, with the reduced-transparency, opaque and forced-colours routes), a live
 specimen wearing the class, and every component made of it, from the manifest.
 
-**Page text is Crystal's prose.** MDX renders inside `Prose` (`.cr-prose`), so
+**Page text is Prismata's prose.** MDX renders inside `Prose` (`.pr-prose`), so
 headings, lists, quotations, code and tables take the reading vocabulary, at
 the 1.6 body leading of 2.5.0, rather than a docs theme's.
 
 Page content is MDX. The component index, the parity claims and the surface and
-motion notes come from `@crystal-ui/core`'s catalogue, surfaces and recipes, so a
+motion notes come from `@prismata/core`'s catalogue, surfaces and recipes, so a
 component added to the catalogue appears in the documentation with no further
 step.
 
@@ -451,8 +451,8 @@ The gap against the four benchmarks was computed: every benchmark package was in
 and its component directories enumerated. Curating that list was most of the work. MUI
 composes from anatomy parts (`CardHeader`, `TableCell`, `StepLabel`, `ChartsAxis`) and
 date-library adapters (`AdapterDayjs`, `AdapterLuxon`), which are parts and plumbing and
-not components Crystal would name. 55 additions took the catalogue from 119 to 174. The
-largest single gap was that Crystal named no charting surface while all four benchmarks
+not components Prismata would name. 55 additions took the catalogue from 119 to 174. The
+largest single gap was that Prismata named no charting surface while all four benchmarks
 ship one.
 
 | Category | Count | |
@@ -481,14 +481,14 @@ ship one.
 component names against four benchmark libraries. A catalogue can pass that
 check and still be unable to drag an element, upload a file with progress, or play
 a video, because counting names against names cannot see a missing capability.
-Meridian's own example: Crystal specified a drag element that could not be
+Meridian's own example: Prismata specified a drag element that could not be
 click-and-dragged.
 
 Two sources were added as a result:
 
 1. **React Aria's component list.** CONTRACT §3 says to wrap a maintained
-   primitive rather than rebuild it, so a primitive React Aria ships that Crystal
-   does not name is a gap by definition: Crystal would be leaving accessible
+   primitive rather than rebuild it, so a primitive React Aria ships that Prismata
+   does not name is a gap by definition: Prismata would be leaving accessible
    behaviour unused. The installed package was enumerated and diffed against
    the catalogue. The contexts are internal plumbing and the components are not.
 2. **The named list**: click-and-drag, File Input / Upload / UploadZone,
@@ -496,7 +496,7 @@ Two sources were added as a result:
    banners, alerts, loading and skeletons, pagination, portal, video and music
    players, gallery, carousel.
 
-28 components followed, including a `media` category, which Crystal did not have
+28 components followed, including a `media` category, which Prismata did not have
 before.
 
 #### Capabilities every component owes
@@ -515,13 +515,13 @@ in the catalogue that can carry one of these and does not is not finished.
 | **Filtering and sorting** | table, data-table, list, combobox, autocomplete | Sort state announced through `aria-sort`; filtering never silently drops the selected item. |
 | **Forms** | every input | Native form participation, validation display, `aria-describedby` wiring, submission state, server errors landing on the same field state as client rules. |
 | **Overlay placement** | popover, tooltip, menu, submenu, hover-card, combobox, date pickers | Flip and shift at viewport edges, arrow following placement, and correct behaviour inside a scroll container. |
-| **Internationalisation** | dates, times, numbers, calendars, collation | Real locale handling through `@internationalized/date`, and right-to-left correctness, an axis Crystal's own visual gate already tests. |
+| **Internationalisation** | dates, times, numbers, calendars, collation | Real locale handling through `@internationalized/date`, and right-to-left correctness, an axis Prismata's own visual gate already tests. |
 | **Media transport** | video-player, audio-player, media-controls, gallery, lightbox | Real `video`/`audio` elements, captions with announced state, a scrubber that is a slider rather than a progress bar, and keyboard transport that does not trap focus. |
-| **Motion** | every component with a state change | The recipe Crystal's catalogue assigns it, bound to **state** rather than to an event, so keyboard and assistive technology get what a pointer user gets. Where the catalogue assigns none, the component plays none. |
+| **Motion** | every component with a state change | The recipe Prismata's catalogue assigns it, bound to **state** rather than to an event, so keyboard and assistive technology get what a pointer user gets. Where the catalogue assigns none, the component plays none. |
 
 #### How this is enforced
 
-A component's catalogue entry carries its `states` and its `crystal` obligations,
+A component's catalogue entry carries its `states` and its `prismata` obligations,
 and the parity manifest carries its status. A slice is not complete until, for
 each of its components, the capabilities above that apply to it are implemented
 and tested. A drag test that only simulates a pointer does not count, because the
@@ -547,11 +547,11 @@ then has to work against the opinion.
 Blocks therefore live in their own category, ship from their own entry point, and
 carry a different promise: a component's API is stable, and a block is a starting
 point that products are expected to fork. Blocks guarantee that the materials,
-motion, focus and accessibility inside them are Crystal's, so forking one does not
+motion, focus and accessibility inside them are Prismata's, so forking one does not
 mean leaving the design system.
 
 The tier is benchmarked against Tailwind UI, Mantine UI, Ant Design Pro, MUI
-Templates and PrimeBlocks, which is where it exists in the ecosystems Crystal is
+Templates and PrimeBlocks, which is where it exists in the ecosystems Prismata is
 measured against.
 
 Two scope boundaries, stated now because they are easy to cross later:
@@ -590,36 +590,36 @@ a state behind a click.
 
 Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 
-- [x] Repository, separate from the design system, remote `boomerbowser/crystal-react`
-- [x] `package.json` as `@crystal-ui/react`; Vite library build; ESM + CJS; `preserveModules`
+- [x] Repository, separate from the design system, remote `boomerbowser/prismata-react`
+- [x] `package.json` as `@prismata/react`; Vite library build; ESM + CJS; `preserveModules`
 - [x] TypeScript strict with the stricter flags; declarations emitted by `tsc`
 - [x] `scripts/build-tokens.mjs`: the single point where values enter
 - [x] `scripts/lint-tokens.mjs`: fails on a hard-coded colour or length
-- [x] `CrystalProvider`, the theme object, six hooks, per-element scoping, 7 tests.
+- [x] `PrismataProvider`, the theme object, six hooks, per-element scoping, 7 tests.
   Since R-12 there is also a browser gate that every property the stylesheets read
   resolves on the themed scope and on the container that overlays are portalled
   into. The provider was built first and correctly. What was missing was proof
   that what it publishes survives to the served page.
-- [x] **The environment, per component.** Every adjustable value in Crystal's own
+- [x] **The environment, per component.** Every adjustable value in Prismata's own
   "Make it yours" panel is a Storybook toolbar control: palette, appearance,
   colour atmosphere, Frost base tint, elevation, corner radius, density,
   direction, animation speed, reduced motion and reduced effects. Each can be
-  pinned per story through `parameters.crystal`, so a component whose subject is
+  pinned per story through `parameters.prismata`, so a component whose subject is
   an environment can show one and a browser gate can measure a fixed one.
 
-  Colour atmosphere mattered most and there was no way to reach it. Crystal's
+  Colour atmosphere mattered most and there was no way to reach it. Prismata's
   materials are defined by what is behind them, the decorator painted a flat
   canvas, and every material in every story therefore rendered as white. See R-13.
 - [x] Typography context: family, reading rhythm, and a scale derived from the reading size so moving that token moves every step
-- [x] `useMotion` (recipes, on Crystal's springs) and `usePreset` (material presets, on Crystal's shared preset module)
-- [x] `renderWithCrystal` with theme axes as one argument; axe assertions
+- [x] `useMotion` (recipes, on Prismata's springs) and `usePreset` (material presets, on Prismata's shared preset module)
+- [x] `renderWithPrismata` with theme axes as one argument; axe assertions
 - [x] Jest parity suite: one suite runs under Jest in `pnpm verify`, so the claim is
-      checkable. It renders a themed component, reads the theme through Crystal's
+      checkable. It renders a themed component, reads the theme through Prismata's
       resolver and asserts the clamp, which exercises the three things that
       differ under Jest: ESM-style `.js` specifiers in TypeScript imports, SCSS module
       resolution, and the jsdom environment
 - [x] Storybook with every theme axis in the toolbar (six palettes, both modes, both densities, both directions, reduced effects and reduced motion) and a11y findings set to fail rather than inform
-- [x] `llms.txt` and `component-manifest.json`, generated from Crystal's catalogue with status read from the source tree
+- [x] `llms.txt` and `component-manifest.json`, generated from Prismata's catalogue with status read from the source tree
 
 **Gate C.** One component per concern, proven together:
 
@@ -640,7 +640,7 @@ Repo, build, tokens, theme, motion, testing, Storybook, `llms.txt`.
 
 Nothing downstream is trustworthy until this gate passes.
 
-- [x] **Task C-1: export the motion presets from `@crystal-ui/core`.** Done:
+- [x] **Task C-1: export the motion presets from `@prismata/core`.** Done:
       `assets/core/presets.js` is a pure module, `motion.js` consumes it and keeps
       no copy of its own, and `usePreset` consumes it from React. The decorative paint
       layers stay behind in the web runtime, because animated `box-shadow`,
@@ -652,8 +652,8 @@ Nothing downstream is trustworthy until this gate passes.
 
 - [x] `scroll-area`: taken out of order, because Meridian reported the scrolling
       problem from a phone and it had to be fixed in both places at once. It carries
-      Crystal's two scrollbars by class and does not restate their CSS, drives the
-      edge fade through `data-cr-scroll`, and becomes a tab stop only when it
+      Prismata's two scrollbars by class and does not restate their CSS, drives the
+      edge fade through `data-pr-scroll`, and becomes a tab stop only when it
       scrolls and holds nothing focusable.
 - [x] `container`: the shell ceiling and the reading ceiling, which are different
       numbers for different reasons. It introduces no landmark, as the catalogue
@@ -671,30 +671,30 @@ Nothing downstream is trustworthy until this gate passes.
       The name comes from `aria-labelledby`, because `separator` is not a
       name-from-content role and a label left as a child text node is announced as
       nothing.
-- [x] `visually-hidden`, `skip-link`: React Aria owns the clipping recipe. Crystal
+- [x] `visually-hidden`, `skip-link`: React Aria owns the clipping recipe. Prismata
       owns the pill the skip link becomes on focus. It also focuses the target and
       does not only scroll to it, which is the part every product gets wrong.
 - [x] `focus-trap`: React Aria's `FocusScope`, as the catalogue instructs ("use a
-      maintained primitive rather than rebuilding it"), with Crystal's rule stated
+      maintained primitive rather than rebuilding it"), with Prismata's rule stated
       around it: never trap without a visible, keyboard-reachable exit.
 - [x] `click-away`: React Aria's `useInteractOutside`, plus Escape, because
-      Crystal's rule is that dismissal is never only a click-away and a keyboard
+      Prismata's rule is that dismissal is never only a click-away and a keyboard
       user has no outside to click.
 - [x] `no-ssr`: `useIsSSR`, tied to React's hydration signal and not to a
       `useEffect` flag, so there is no mismatch to warn about.
-- [x] `focusable`, `pressable`: React Aria's behaviour with Crystal's appearance.
+- [x] `focusable`, `pressable`: React Aria's behaviour with Prismata's appearance.
       `Pressable` also supplies the role React Aria deliberately leaves out: a bare
       React Aria `Pressable` is a tab stop a screen reader announces as nothing,
       and the catalogue asks for button semantics unless told otherwise.
 
-Two tokens entered Crystal for this slice: the spacing scale and the breakpoints,
+Two tokens entered Prismata for this slice: the spacing scale and the breakpoints,
 plus the shell's ceilings, gutters and minimum cell width. The catalogue makes
-both Crystal's obligation and neither existed, and a value a library invents for
+both Prismata's obligation and neither existed, and a value a library invents for
 itself drifts.
 
 **Also done: providers, scopes and the two React Aria wrappers.**
 
-- [x] `theme-provider`: `CrystalProvider`, which already was this. It gained the
+- [x] `theme-provider`: `PrismataProvider`, which already was this. It gained the
       three things the catalogue asks for that it did not have. It declares
       `color-scheme`, so native controls and the browser's own scrollbars follow
       the mode and do not stay light inside a dark scope. It resolves
@@ -703,7 +703,7 @@ itself drifts.
       answer. It honours `prefers-reduced-transparency` and `forced-colors` on its
       own, so a product that never thought about either still respects them. An
       explicit `effects` prop can only reduce further and never restore.
-- [x] `direction-provider`: a `CrystalProvider` underneath, not a second
+- [x] `direction-provider`: a `PrismataProvider` underneath, not a second
       mechanism. It also hands React Aria a locale, which a `dir` attribute
       cannot do: React Aria calculates placement in JavaScript, and a
       calculation does not read an attribute.
@@ -714,16 +714,16 @@ itself drifts.
       preferences. A reset may normalise appearance. It may not remove an
       affordance or overrule a preference somebody expressed to their operating
       system.
-- [x] `router-provider`, `ssr-provider`: React Aria's, re-exported with Crystal's
+- [x] `router-provider`, `ssr-provider`: React Aria's, re-exported with Prismata's
       reason attached. `SSRProvider` does nothing on React 18 and later, which is
       this library's floor. It is shipped so the name exists where somebody looks
       for it and the reason is written down.
-- [x] `toolbar`: React Aria's roving tab index and arrow handling, Crystal's
+- [x] `toolbar`: React Aria's roving tab index and arrow handling, Prismata's
       material and geometry. One tab stop for a group of controls is an
       accessibility decision: without it, a formatting bar of fifteen buttons is
       fifteen stops between a person and the next field.
 - [x] `transition`: `usePreset` and `AnimatePresence`, and thin, because
-      everything it could decide is decided in `@crystal-ui/core`, and a transition
+      everything it could decide is decided in `@prismata/core`, and a transition
       component carrying its own durations is a second motion system. It renders a
       real wrapper and not `display: contents`, because an element that
       generates no box cannot be faded, and the exit animation would not play.
@@ -736,7 +736,7 @@ itself drifts.
       under it unusable. The opacity is clamped: past a few percent the mark
       competes with body text, and a contrast ratio measured for text no longer
       holds when the text is read through a pattern.
-- [x] `qr-code`: `qrcode.react` (ISC) renders it. Crystal owns the Haze quiet
+- [x] `qr-code`: `qrcode.react` (ISC) renders it. Prismata owns the Haze quiet
       zone and the contrast floor. The code's two colours are the one place in
       this library where a colour is not a token, because a scanner reads
       luminance, and a palette-tinted code scans in good light and fails in bad.
@@ -763,7 +763,7 @@ itself drifts.
       why the regions are props and not children a caller arranges. The content
       scrolls and the page does not: a sticky header does not hold inside a grid
       whose header row is exactly as tall as the header. Both scrolling regions
-      take Crystal's Frost scrollbar.
+      take Prismata's Frost scrollbar.
 - [x] `app-bar`: Frost band, full-bleed, actions as pills, elevation gained on
       scroll and absent at rest. Declining the banner role means rendering a
       `div`: a `header` outside sectioning content is a banner implicitly, so a
@@ -775,7 +775,7 @@ itself drifts.
 - [x] `drag-handle`, `drop-indicator`: React Aria's `useDrag`, whose keyboard path
       is the same state machine as the pointer path and not a fallback beside it.
       That is the reason to take it: a hand-rolled drag is where the keyboard path
-      is invariably missing, because the pointer version looks finished. Crystal
+      is invariably missing, because the pointer version looks finished. Prismata
       owns the lift, the settle and the indicator's material.
 - [x] `virtualizer`: React Aria's, re-exported with its layouts. The hard part is
       `aria-setsize`/`aria-posinset` across recycling and keeping focus when a
@@ -793,12 +793,12 @@ and `border-beam`, with reasons in the catalogue).
 
 ### E: Typography and actions (26), complete
 
-The type scale moved upstream first. Crystal specified a reading rhythm and no
+The type scale moved upstream first. Prismata specified a reading rhythm and no
 scale, so this library had derived six steps of its own: three tables of ratios,
-leadings and trackings that no other platform could see. They are Crystal's tokens
-now, reaching CSS as `--cr-text-<step>-*`, and six `crystal-allow-literal` markers
+leadings and trackings that no other platform could see. They are Prismata's tokens
+now, reaching CSS as `--pr-text-<step>-*`, and six `prismata-allow-literal` markers
 reading "pending a type-scale token" became tokens with them. Two icon sizes moved
-with them: 20px, the size Crystal's reset has always drawn an icon at, and 24px,
+with them: 20px, the size Prismata's reset has always drawn an icon at, and 24px,
 the catalogue's size inside an icon button.
 
 - [x] `title`, `heading`, `display`, `lead`: `Title`, `Display`, `Lead`. The
@@ -814,7 +814,7 @@ the catalogue's size inside an icon button.
       nothing still costs a keyboard user a tab stop.
 - [x] `prose`, `prose-list`, `blockquote`, `cite`, `abbreviation`: `Prose` is the
       one place a stylesheet reaches its descendants, because the alternative is
-      asking a content author to know Crystal. `Cite` names a work, not a
+      asking a content author to know Prismata. `Cite` names a work, not a
       person. `Abbr` is focusable, because an expansion shown only on hover is
       no use without a pointer.
 - [x] `mark`, `highlight`: the matched string stays one readable sentence with
@@ -882,7 +882,7 @@ inside a library as well as across one.
       lower bound must not be told the upper one. The dials share `useMove` with
       `Resizable`, which keeps "keyboard steps match the slider contract" true.
 
-Eight more tokens entered Crystal for this slice. Each is a figure the catalogue
+Eight more tokens entered Prismata for this slice. Each is a figure the catalogue
 already stated in prose: the choice box and its radius, the switch track, the
 slider track and thumb, the chip height, and the well inset.
 
@@ -917,7 +917,7 @@ slider track and thumb, the chip height, and the well inset.
       than a drag. That is the catalogue's requirement and the reason it is two
       listboxes. Cascader announces the whole path, and a branch says it is one
       in its name, because a chevron alone is silent.
-- [x] `rich-text-surface`, `mentions`: Crystal owns the chrome and the product
+- [x] `rich-text-surface`, `mentions`: Prismata owns the chrome and the product
       owns the engine, which the catalogue states as "the entire editing engine,
       serialisation and paste handling". The plan's dependency table names
       `@tiptap/react` for this. By the catalogue's wording no engine belongs in
@@ -927,7 +927,7 @@ slider track and thumb, the chip height, and the well inset.
 
 ### H: Forms, complete
 
-`useCrystalForm`, `Form`, and the Standard Schema types, in `src/form/`.
+`usePrismataForm`, `Form`, and the Standard Schema types, in `src/form/`.
 
 - **Standard Schema v1 declared locally, not depended on.** `@standard-schema/spec`
   contains that interface and nothing else, and a package in the tree is a poor
@@ -964,11 +964,11 @@ carrying an error and checks that each field picked it up. The temporal family
 accepted no `name` at all, so a date could not be submitted or matched to an
 error. It accepts one now.
 
-The second was in focus. `--cr-focus-core` / `--cr-focus-ring` were read by
-every field and defined by nothing, so Crystal's focus ring painted on no
-control in the library. Crystal now publishes the recipe.
-`src/theme/published-properties.test.tsx` reads every `var(--cr-…)` in every
-stylesheet here and fails on any that Crystal does not publish and no component
+The second was in focus. `--pr-focus-core` / `--pr-focus-ring` were read by
+every field and defined by nothing, so Prismata's focus ring painted on no
+control in the library. Prismata now publishes the recipe.
+`src/theme/published-properties.test.tsx` reads every `var(--pr-…)` in every
+stylesheet here and fails on any that Prismata does not publish and no component
 sets itself.
 
 ### I: Navigation and overlays (28), complete
@@ -1007,11 +1007,11 @@ sets itself.
   The nav link reserves the room for the current-location dot whether or not the
   dot is drawn, and one story exists only to show that the label does not move
   between the two states. A column that appears only for the current entry is
-  the defect that had the leading selection mark withdrawn from Crystal, and a
+  the defect that had the leading selection mark withdrawn from Prismata, and a
   dot drawn here that shifted the label would reintroduce it under a new name.
   Measured in a browser: one distinct label position across all four rows.
 
-  `component.anchor.underlineOffset` (4px) is new in Crystal. The catalogue
+  `component.anchor.underlineOffset` (4px) is new in Prismata. The catalogue
   states the value and no token carried it. Borrowing `spacing.2xs` for a
   typographic offset is how `selection.railWidth` became a generic 3px line.
 
@@ -1023,7 +1023,7 @@ sets itself.
   already means depth.
 
   The tree is a `treegrid` and not a `tree`. A `treeitem` in the plain tree
-  pattern must not contain independently focusable widgets, and Crystal's row
+  pattern must not contain independently focusable widgets, and Prismata's row
   contains the disclosure the catalogue asks for, so the two cannot both be
   honoured. Level, expansion and full arrow-key navigation are all present.
   This is raised as M-3 for Meridian, because changing the catalogue is their
@@ -1061,11 +1061,11 @@ sets itself.
   and no lock. There is no way to ask for one's look with the other's
   behaviour, and both directions are gated.
 
-  **`useMotion` gained `reorient`.** Crystal authors `drawer-in` once, from the
+  **`useMotion` gained `reorient`.** Prismata authors `drawer-in` once, from the
   right, with a physical `translateX(105%)`. CSS mirrors `padding-inline-start`
   and cannot mirror a transform, so that recipe is wrong on three of four edges
   and in every right-to-left page, and right-to-left is a verified axis in
-  Crystal. `reorientRecipe` negates the inline component or turns the movement
+  Prismata. `reorientRecipe` negates the inline component or turns the movement
   onto the block axis, and carries the fitted spring, the duration and the
   offsets through untouched. Authoring three more recipes would have meant
   authoring three more specifications.
@@ -1150,22 +1150,22 @@ pointer one.
   leaves a listener to guess what the 3 belongs to, so the meaning travels as a
   whole sentence in a live region or not at all, and for the same reason
   `description` is not defaulted to the count. A status badge puts the semantic
-  pair on the well and leaves the pill Resin with ordinary text. Crystal's own
-  cascade produces the same thing: `crystal.reset` paints the chip in
-  `--status-surface`, and `crystal.component`'s control rule then overrides both
+  pair on the well and leaves the pill Resin with ordinary text. Prismata's own
+  cascade produces the same thing: `prismata.reset` paints the chip in
+  `--status-surface`, and `prismata.component`'s control rule then overrides both
   the background and the colour. A status-coloured pill would make the word
   decoration on a coloured ground, and a status-coloured perimeter is the shape
-  Crystal uses for focus.
+  Prismata uses for focus.
 
   The catalogue's "36px minimum height" is a floor and the pill is taller.
   Twelve pixels of block padding either side of a 24px well is 48px of content
   box, and the pill renders at 50px with its rim, which is what the preview has
   always shown. Both numbers are true, and the floor protects the pill when the
   word is set at a smaller step.
-- [x] **`code`, `kbd`**: the two surfaces that are not Crystal materials in the
+- [x] **`code`, `kbd`**: the two surfaces that are not Prismata materials in the
   ordinary way. "Never feathered, as code must stay exact": a softened edge
   around a fragment of syntax reads as imprecision in the thing being quoted,
-  so `Code` takes a canvas fill and an edge rim, the flattest surface Crystal
+  so `Code` takes a canvas fill and an edge rim, the flattest surface Prismata
   has. A block is a tab stop with a Resin scrollbar,
   because a sample wider than its column scrolls and a scroll container with
   nothing focusable in it is unreachable without a pointer. `Kbd` is Resin plus
@@ -1201,7 +1201,7 @@ pointer one.
   theirs. The overflow chip shows "+3" and announces "3 more", because "+3" read
   literally is a plus sign and a number.
 
-- [x] **`indicator`.** The mark a control wears, and the one place in Crystal
+- [x] **`indicator`.** The mark a control wears, and the one place in Prismata
   where the Haze feather is not 1.95px. The catalogue asks for "a 3px-inset Haze
   fill and a 1px feather", and at 20px across the system feather is a fifth of
   the mark's own radius. `styles/_material.scss`'s `haze-fill` mixin took a
@@ -1262,29 +1262,29 @@ the promise now lets them do that.
   hyphen width by every font, so a column signed with hyphens does not line up.
   `Statistic` was rebuilt on `TrendIndicator` in the same change, because with
   two implementations of one rule, one of them stops following it.
-- [x] **`authored-bubble`.** The silhouette is Crystal's, value for value from
-  `.cr-bubble`: three content-radius corners and one cut to 6px. The cut is
+- [x] **`authored-bubble`.** The silhouette is Prismata's, value for value from
+  `.pr-bubble`: three content-radius corners and one cut to 6px. The cut is
   written with logical radius properties, so the mirroring the catalogue asks
   for is expressed once, where a `[dir=rtl]` rule would express it twice.
   `grouped` drops the cut, because in a run of messages from one author the cut
   marks where the run starts, and repeating it on every message removes that
   signal. `author` is required, following "author and time are text, not
   implied by side alone". `arriving` is set by the caller and the component
-  does not guess it, because Crystal's own note on `message-in` is "only on a
+  does not guess it, because Prismata's own note on `message-in` is "only on a
   new message; do not replay on virtualised history".
 - [x] **`overlay-badge`.** A mark over a corner, where `badge` is a count
   attached to one. Two things are built into the component and not left to a
   note: the fill is on a pseudo-element so the glyph above it stays crisp, and
   the wrapper does not clip, because "never clipped by its host" is broken by
   any caller who wraps a rounded image in `overflow: hidden`.
-- [x] **`rolling-number`**, the one place in this library where Crystal assigns
+- [x] **`rolling-number`**, the one place in this library where Prismata assigns
   no recipe and the component is still motion. `Card` plays nothing because the
   catalogue gives it nothing. Here the anatomy is "a number that animates digit
-  by digit", so the component has to move. The roll is built from Crystal's
+  by digit", so the component has to move. The roll is built from Prismata's
   published motion tokens and no recipe was invented: one digit of travel,
   `motion.duration.state`, and `motion.easing.settle`. The CSS does the same
   arithmetic `resolveDuration` does, which is `duration / speed`, and zero when
-  `--cr-motion-enabled` is 0. The roll therefore follows the same preference
+  `--pr-motion-enabled` is 0. The roll therefore follows the same preference
   slider as every JS recipe without a second copy of the rule. The value is
   announced once it settles rather than on every frame, and its test asserts
   the announcement is still the old value on the tick after the change.
@@ -1299,15 +1299,15 @@ the promise now lets them do that.
   caller's judgement and the tile makes no comparison of its own. A cost target
   is met by coming in under it, and a tile that decided for itself would report
   every saving as a miss.
-- [x] **`marquee`**, the one component in Crystal whose default state is
-  movement at rest, against a rule Crystal otherwise holds absolutely. The
+- [x] **`marquee`**, the one component in Prismata whose default state is
+  movement at rest, against a rule Prismata otherwise holds absolutely. The
   catalogue lists it anyway, and its own semantics line reconciles the two:
   "removed entirely under reduced motion". So the animation and the duplicate
   copy both go under reduced motion, the viewport takes a tab stop so "pausable
   on focus" means something without a pointer, and `speed` is a rate rather
   than a duration, because the duration of a continuous scroll depends on the
   caller's content. The measured duration arrives as a custom property so the
-  stylesheet can still gate it with `--cr-motion-enabled`. An inline
+  stylesheet can still gate it with `--pr-motion-enabled`. An inline
   `animation-duration` would outrank the rule and remove the gate without any
   sign.
 - [x] **`image-list`.** A real `ul`, so a reader is told how many images there
@@ -1329,18 +1329,18 @@ the promise now lets them do that.
   was right and the position was wrong. A unit test cannot see that kind of
   defect and a screenshot review can pass it. Sizing the track, where the first
   version positioned it, is the fix that survives the inline style. The handle
-  carries `data-cr-handle` because React Aria's real `input[role=slider]` lives
+  carries `data-pr-handle` because React Aria's real `input[role=slider]` lives
   in a visually-hidden 1px box inside it, so probing the named element would
   have reported a 1px target. The segmented control's label hit the same
   problem in slice I.
 
 - [x] **`table`**, which the rest of the data components stand on.
-  `crystal.css` already carries a complete `.cr-table` treatment, so the
+  `prismata.css` already carries a complete `.pr-table` treatment, so the
   stylesheet follows it value for value and makes no choices of its own. That
   includes the Haze fill inset 6px where the usual is 8, which is the value
   here most likely to be "corrected" by somebody reading the Haze default. It
   also includes the header band's top corners at
-  `calc(var(--cr-radius) - 8px)`, which keeps the catalogue's "header corners
+  `calc(var(--pr-radius) - 8px)`, which keeps the catalogue's "header corners
   inset 8px" right when the radius slider moves.
 
   Two semantics are easy to get wrong. Every header carries `scope`, because
@@ -1353,11 +1353,11 @@ the promise now lets them do that.
   checking the tag.
 
   The shell scrolls and the page does not, so the shell is a named tab stop with
-  the Resin scrollbar `.cr-table-scroll` gives it: a compact horizontal scroller
+  the Resin scrollbar `.pr-table-scroll` gives it: a compact horizontal scroller
   is a control plane, and a scroll container with nothing focusable in it cannot
   be reached without a pointer.
 
-- [x] **`carousel`**, which has no autoplay. Crystal's rule is that nothing
+- [x] **`carousel`**, which has no autoplay. Prismata's rule is that nothing
   moves at rest, the catalogue says "never autoplay without a pause control",
   and the recipes say "explicit next/previous navigation; never autoplay". The
   three state one thing. The catalogue assigns autoplay policy to the product,
@@ -1384,10 +1384,10 @@ the promise now lets them do that.
   the second attempt failed on.
 - [x] **`virtual-scroller`**, already implemented and now named. It is React
   Aria's `Virtualizer`, re-exported, so the manifest's translation table maps the
-  export to the catalogue id the way it does for `CrystalProvider`. It lacked
-  the story R-18 taught this library to require. Crystal's half of this
+  export to the catalogue id the way it does for `PrismataProvider`. It lacked
+  the story R-18 taught this library to require. Prismata's half of this
   component is the scroll surface, which is composed and not implied, and a
-  component whose Crystal half is a composition cannot be reviewed from its
+  component whose Prismata half is a composition cannot be reviewed from its
   signature. The story is two thousand rows on a Frost `ScrollArea`.
 
   It also surfaced a bundling defect that had been latent. React Stately's
@@ -1419,17 +1419,17 @@ the promise now lets them do that.
 - [x] **`data-view`**, which departs from its catalogue line in two places.
   "The layout switch is a control with a pressed state": it is a named radio
   group instead, because picking one of two arrangements is a choice and not a
-  pressed state. Crystal and React Aria reach that independently:
+  pressed state. Prismata and React Aria reach that independently:
   `SegmentedControl` is a radio group, and React Aria's `ToggleButtonGroup`
   renders `role="radiogroup"` with `aria-checked` the moment its selection is
   single. What the clause rules out is two unlabelled icons whose state is a
-  colour, and that is ruled out at least as firmly. Using Crystal's own control
+  colour, and that is ruled out at least as firmly. Using Prismata's own control
   means there is one segmented strip in the library and not two.
 
   "Layout switches at a declared breakpoint" is a container query and not a
   media query, because the same collection is a grid in a full-width page and a
   list in a narrow sidebar of the same window and only the container knows which.
-  The width is Crystal's `$cr-breakpoint-sm` and not a prop. That is a limit and
+  The width is Prismata's `$pr-breakpoint-sm` and not a prop. That is a limit and
   was not a choice: a container query's condition cannot read a custom property.
   It is a real `ul` in both layouts, because a grid of items is still a list of
   items. The arrangement is visual and the count is information.
@@ -1471,11 +1471,11 @@ the promise now lets them do that.
   in three different ways. That is D-18, which records what was tried and three
   ways out.
 
-**What this slice had to write down rather than look up.** Crystal 2.0.0
+**What this slice had to write down rather than look up.** Prismata 2.0.0
 publishes action geometry as tokens. It publishes badge, avatar, code, kbd and
-caption geometry only as rules in `crystal.css` or, for the ones with no rule at
+caption geometry only as rules in `prismata.css` or, for the ones with no rule at
 all, only as a sentence in the catalogue. Every such value enters through a
-named variable carrying `crystal-allow-literal` and its source, so the set of
+named variable carrying `prismata-allow-literal` and its source, so the set of
 things owed a token in a later core release can be found with grep and does not
 depend on memory. `styles/_avatar.scss` is the one that is shared, because the
 overflow chip must be the same circle as the people beside it.
@@ -1488,11 +1488,11 @@ overflow chip must be the same circle as the people beside it.
 owes a text equivalent of its data.** A chart is a second representation of the
 data and never the only one, and colour never carries meaning alone.
 
-**What the slice needed from Crystal before it could start.** Crystal's
-catalogue named twenty-four chart components, and Crystal published no series
+**What the slice needed from Prismata before it could start.** Prismata's
+catalogue named twenty-four chart components, and Prismata published no series
 colours, no intensity ramp and no stroke or point scale, although the catalogue
 says "line weight follows the stroke scale". A missing recipe is authored in
-core. Crystal 2.1.0 now publishes six categorical colours per palette per mode,
+core. Prismata 2.1.0 now publishes six categorical colours per palette per mode,
 a five-step intensity ramp with the ink measured for each step, and nine
 geometry values. The values are derived by measurement, because the
 requirements on seventy-two colours can be measured, and they are asserted
@@ -1547,7 +1547,7 @@ until 2.1.0 is on npm, and is removed when it is.
   asserts a whole and a reader cannot notice four per cent missing without it.
   Order is the caller's and is never sorted, so that "the third segment" means
   the same segment in the picture and in the table. The donut's ring thickness
-  is set by Crystal and not by the caller, so a donut is the same object at
+  is set by Prismata and not by the caller, so a donut is the same object at
   every size. Its centre is real text in the document.
 
 - [x] **`scatter-chart`**, which sizes points by area, so equal differences in
@@ -1609,22 +1609,22 @@ until 2.1.0 is on npm, and is removed when it is.
   motion and nothing moves at rest.
 
 **What this slice had to write down.** Two things. The first is that
-`crystal.css` styles the element, with `svg { width: 20px;
+`prismata.css` styles the element, with `svg { width: 20px;
 height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8 }`. That is
-right for the thousand icons Crystal ships and wrong for every other drawing,
+right for the thousand icons Prismata ships and wrong for every other drawing,
 and a consumer loading the stylesheet gets it either way. It is D-1's hazard in
 a new place: a spark line came out twenty pixels square, and every filled mark
 took a body-ink outline inherited from an ancestor. The second, which was not
 expected, is that a label written straight onto a series colour has no ink that
 clears 4.5:1, because the series colours are all drawn at one lightness. The
-label takes Crystal's own Stone backing, as a halo round the glyphs. A pad
+label takes Prismata's own Stone backing, as a halo round the glyphs. A pad
 behind them would have to be the size of text that has not been measured yet.
 
 **Dependencies.** `d3-scale`, `d3-shape`, `d3-hierarchy`, `d3-sankey` and
 `d3-geo` do the arithmetic. They are licensed ISC and BSD-3, with no paid
 licence. Every element on the screen is still written here, because a charting
 library that owned the markup would also own the materials, the focus ring and
-the forced-colours behaviour, and none of those would be Crystal's.
+the forced-colours behaviour, and none of those would be Prismata's.
 `check-bundle.mjs` caught all five being vendored into `dist/` the first time
 the charts were built.
 
@@ -1647,7 +1647,7 @@ reach the chart.
 
 **What is deferred.** The catalogue asks `bar-chart` and `pie-chart` for an
 enter motion and `line-chart` for a draw-on. None of the twenty-four has one,
-because Crystal publishes no recipe for a mark arriving and this library does
+because Prismata publishes no recipe for a mark arriving and this library does
 not author recipes. R-21 records it with the reasoning.
 
 ### L: Feedback (15), complete
@@ -1664,11 +1664,11 @@ not author recipes. R-21 records it with the reasoning.
   slider's track, from `component.slider.trackHeight`, because "matching the
   slider track" is a sentence about two components that must not drift.
 - **`ring-progress`**, **`semi-circle-progress`**. One stroke shared with the
-  gauge, `--cr-progress-ring-stroke`, published in core for that purpose. Both
+  gauge, `--pr-progress-ring-stroke`, published in core for that purpose. Both
   draw through the charts' `arcPath` instead of a second annular sector.
 - **`meter-group`**. Each segment is its own `role="meter"`: "63% disk, 22%
   cache" is two measurements, and one element reporting a single number would
-  have to pick one. Tints come from Crystal's chart series scale.
+  have to pick one. Tints come from Prismata's chart series scale.
 - **`alert`**. `role="alert"` only for urgent content that has to interrupt.
   An assertive live region interrupts a screen reader mid-word, so `urgent` is
   an explicit opt-in and is not implied by `danger`.
@@ -1676,7 +1676,7 @@ not author recipes. R-21 records it with the reasoning.
   is the control being removed, so `returnFocusTo` exists to make the omission
   visible.
 - **`result`**. The outcome is in a real heading. Six outcomes map onto four
-  ink pairs, because Crystal publishes no fifth and sixth semantic pair, and
+  ink pairs, because Prismata publishes no fifth and sixth semantic pair, and
   inventing two would add two more colours to hold at 4.5:1 across twelve
   combinations.
 - **`empty-state`**. "no-results and truly-empty are different states". `state`
@@ -1696,7 +1696,7 @@ not author recipes. R-21 records it with the reasoning.
   `duration` cannot appear together. A runtime warning is read only after
   shipping.
 - **`notification`**. Unread is label weight, with nothing drawn beside the
-  label: Crystal's selection rule applied one component along, because a mark
+  label: Prismata's selection rule applied one component along, because a mark
   beside the title offsets the title it points at. The state is said in words
   too, since weight is not read out.
 - **`popconfirm`**. Focus lands on Cancel. A confirmation exists because the
@@ -1707,17 +1707,17 @@ not author recipes. R-21 records it with the reasoning.
   the tour began, and the position is in the panel's accessible name.
 
 **One shared vocabulary instead of five copies.** `src/feedback/status.ts` and
-`styles/_status.scss` hold Crystal's four glyphs and four ink pairs once;
+`styles/_status.scss` hold Prismata's four glyphs and four ink pairs once;
 `StatusBadge` was moved onto them in the same pass. `src/feedback/ActivityArc.tsx`
 is the ring that an indeterminate `RingProgress` and a `Loader` both are.
 
-**Adopted from Crystal.** `Button` gained the `danger` variant this library was
-missing. Crystal 2.1.0 restored `.cr-button.danger` as an independent boundary
-rather than a fill, and when Crystal and a library diverge the library adopts.
+**Adopted from Prismata.** `Button` gained the `danger` variant this library was
+missing. Prismata 2.1.0 restored `.pr-button.danger` as an independent boundary
+rather than a fill, and when Prismata and a library diverge the library adopts.
 
 **Four gates that guarded nothing, found by planting them red.**
 
-1. The reduced-motion check asserted "the animation is gone". `crystal.css`
+1. The reduced-motion check asserted "the animation is gone". `prismata.css`
    carries a global `animation: none !important` under reduced motion, so the
    check was green with the component's own rules deleted. It now asserts what
    the component owns: the stopped bar fills the track, because a segment
@@ -1757,11 +1757,11 @@ Twice in this slice a gate identified an element by its position in the DOM and
 stopped checking anything when something was inserted beside it. Both now use a
 stable attribute.
 
-**What is not here.** Crystal has no continuous motion recipe. D-19 in the core
+**What is not here.** Prismata has no continuous motion recipe. D-19 in the core
 repository records that its catalogue asks three of these components to spin,
 sweep and travel while its motion chapter publishes fifty-four finite recipes
 and says nothing loops. Every continuous indicator here takes one duration,
-`--cr-flow`, and authors only the shape of the movement.
+`--pr-flow`, and authors only the shape of the movement.
 
 ### M: Media (5), complete
 
@@ -1818,10 +1818,10 @@ headset's pause button, another tab taking audio focus, picture-in-picture,
   named, because a dialog's name is read when the reader arrives in it and is
   not read again when it changes underneath them.
 
-  Selection on a thumbnail is Crystal's other half of the selection rule. There
+  Selection on a thumbnail is Prismata's other half of the selection rule. There
   is no label to weight, so the selected thumbnail takes the tinted reading pad
   core paints a selected control with, and not the outline: a 2px primary
-  outline is how Crystal paints focus, and a thumbnail wearing one goes on
+  outline is how Prismata paints focus, and a thumbnail wearing one goes on
   looking focused after focus has left the strip.
 
 **One extension to an existing component.** `Slider` gained `valueText`, a
@@ -1918,12 +1918,12 @@ is the one with a scope trap in it.
 `src/commerce/` came first, as `feedback/status.ts` and `media/time.ts` did.
 Nine components in this slice render an amount, and each of them would otherwise
 decide separately how a number becomes a currency, which is what the catalogue
-means when it says Crystal "left every store to reinvent … currency
+means when it says Prismata "left every store to reinvent … currency
 formatting". So the unit of exchange is `Money`, an amount with its currency:
 `29.99` alone is a price in something somebody has to remember. Every rule about
 where the separator goes, whether the symbol leads, and how many fraction digits
 a currency has is `Intl`'s, reached through `NumberFormatter` so the locale
-comes from `CrystalProvider` and not from the call site.
+comes from `PrismataProvider` and not from the call site.
 
 **What the catalogue's wording decided, in each case.**
 
@@ -2010,9 +2010,9 @@ item is in the name too, because thirty controls called "Save to wishlist" are
 thirty identical rows in an element list.
 
 That needed `Button` to gain `isSelected`, which `IconButton` has had since the
-actions slice. Crystal's stylesheet has always specified
-`button[aria-pressed=true]` (the reading pad in `--cr-primary` with its feather
-off, `--cr-on-primary` ink, weight 800), and having the state on one shape of
+actions slice. Prismata's stylesheet has always specified
+`button[aria-pressed=true]` (the reading pad in `--pr-primary` with its feather
+off, `--pr-on-primary` ink, weight 800), and having the state on one shape of
 the control and not the other was the inconsistency.
 
 **The sort select announces the ordering**, because pressing it rewrites a list
@@ -2043,14 +2043,14 @@ this slice had itself just written.
 
 1. **A pressed toggle did not look pressed, and the reason is the layer
    contest.** `Button` gained `isSelected` with a comment claiming it renders
-   "the appearance Crystal already specifies for a pressed action". Measured in
-   a browser, it did not. `crystal.css` carries that rule as
-   `:is(button[aria-pressed=true], …)` in `@layer crystal.component`, and a CSS
+   "the appearance Prismata already specifies for a pressed action". Measured in
+   a browser, it did not. `prismata.css` carries that rule as
+   `:is(button[aria-pressed=true], …)` in `@layer prismata.component`, and a CSS
    module class in this package is unlayered, so the library's own `.button`
    outranks it without a specificity contest. That is what cascade layers are
    for, and it is what makes this easy to miss. The recipe is written here now,
-   in the library's own layer, with Crystal's values: the reading pad in
-   `--cr-primary`, `--cr-on-primary` ink, the label at weight 800. The wishlist
+   in the library's own layer, with Prismata's values: the reading pad in
+   `--pr-primary`, `--pr-on-primary` ink, the label at weight 800. The wishlist
    pill's filled heart went with it, because two treatments for one state leave
    a reader hunting for a difference between them; the icon shape keeps the
    fill, having no label to weight.
@@ -2084,8 +2084,8 @@ and not on React Aria directly, which keeps the field shell that carries the
 validity React Aria resolved: a server saying "choose a delivery method" has to
 move the group exactly as a local rule would.
 
-**Selection is label weight here, and that is Crystal's rule for this shape.**
-`crystal.css` gives a selected button the primary reading pad and gives
+**Selection is label weight here, and that is Prismata's rule for this shape.**
+`prismata.css` gives a selected button the primary reading pad and gives
 `[role=tab][aria-selected=true]` only `font-weight: 800`. The difference is the
 distinction: a pressed button is an action in its on state, an option is a
 choice among peers. Both catalogue entries say the same ("selection is label
@@ -2097,7 +2097,7 @@ made.
 browser could see.
 
 1. **A selected swatch disappeared into its own selected state.** With no label
-   to weight, a swatch's selection is its pad, and the pad is `--cr-primary`, so
+   to weight, a swatch's selection is its pad, and the pad is `--pr-primary`, so
    a product whose brand colour is also one of its variant colours gets a swatch
    selected by being painted the colour it already was. Measured: pad and colour
    both `rgb(115, 56, 239)`. The fix is two rings, and the outer one does the
@@ -2117,7 +2117,7 @@ browser could see.
 it means a shopper who cannot find the large sees a product that does not come
 in large and goes elsewhere: the same information, and only one of the two
 tells the reader anything. And `payment-method` renders no card field: one typed
-into an input this library drew would put every product using Crystal inside
+into an input this library drew would put every product using Prismata inside
 PCI scope, and the failure would not look like one. It would work, look right,
 and pass everything in this repository.
 
@@ -2136,7 +2136,7 @@ one set of semantics. Writing the semantics twice would give
 `aria-current="step"` and the state wording two places to drift, and the
 wording is what carries the meaning to anybody not looking at the markers. So
 `Stepper` gained `shape`, and the check mark stays where it already was:
-`complete` is the one place in Crystal the glyph is right, because there it
+`complete` is the one place in Prismata the glyph is right, because there it
 means validated.
 
 **`cart-summary` is a description list, and that is the requirement.** A
@@ -2220,7 +2220,7 @@ facts, and a bar at 60% could be six votes or six hundred. Nothing rated is the
 absence of an average and never an average of nought: "0 out of 5" tells a
 reader the product was rated badly.
 
-**`recently-viewed` takes Resin**, which is read off Crystal's scroll contract:
+**`recently-viewed` takes Resin**, which is read off Prismata's scroll contract:
 Frost goes on panels and reading surfaces, Resin on compact or horizontal
 scrollers. The test asserts it, because a rule like this goes the other way
 when nobody writes down which sentence decided it.
@@ -2283,14 +2283,14 @@ Three things carry out of it.
 
 1. **Two false header sentences, both caught by measuring.** `NumberInput`
    claimed React Aria gives a `spinbutton` with `aria-valuenow`; `Button`'s new
-   `isSelected` claimed to render the appearance Crystal specifies for a pressed
-   action. Neither was true, and the second has a cause to know: Crystal styles
-   the element inside `@layer crystal.component`, and a CSS-module class in this
+   `isSelected` claimed to render the appearance Prismata specifies for a pressed
+   action. Neither was true, and the second has a cause to know: Prismata styles
+   the element inside `@layer prismata.component`, and a CSS-module class in this
    package is unlayered, so the package's own rule wins without a specificity
-   contest. That is what cascade layers are for, and it means any Crystal
+   contest. That is what cascade layers are for, and it means any Prismata
    element-selector recipe loses here without a warning. Before writing
-   "Crystal already does X", open it and measure.
-2. **Crystal has two selection vocabularies and they are not interchangeable.** A
+   "Prismata already does X", open it and measure.
+2. **Prismata has two selection vocabularies and they are not interchangeable.** A
    selected button takes the primary reading pad and weight 800; a selected tab
    takes the weight alone. An action in an on state gets the fill; a choice
    among peers gets the weight. Where there is no label to weight at all (a
@@ -2298,7 +2298,7 @@ Three things carry out of it.
    because an outline at an offset is how focus is drawn.
 3. **R-22 is open and is Meridian's.** The catalogue calls the quantity stepper
    "a spin button" and React Aria removes that role on purpose, with its own
-   comment: "we can't focus a spin button with VO". Crystal asks for a role the
+   comment: "we can't focus a spin button with VO". Prismata asks for a role the
    accessible primitive takes away.
 
 **An export rule, from an asymmetry the review found.** The commerce slice's
@@ -2306,8 +2306,8 @@ vocabulary was public and the feedback slice's was not, which meant
 `FeedbackStatus`, a public prop type of `Alert`, `Banner` and `StatusBadge`,
 could not be named by the products that have to pass one. The rule is now
 explicit: a type that appears in a component's public props is exported, and so
-is the Crystal vocabulary beside it, so that a product building something
-Crystal has no component for reaches for Crystal's own symbols instead of
+is the Prismata vocabulary beside it, so that a product building something
+Prismata has no component for reaches for Prismata's own symbols instead of
 picking four of its own.
 
 **A sixth round, after the slice was already pushed.** Four of the slice's
@@ -2323,7 +2323,7 @@ was the finding:
 1. **A gate that cannot be planted red against the component under test shows
    where the behaviour lives.** Removing `position: sticky` from
    `CompareTable` changed nothing, because `Table` already declares it, and so
-   does Crystal's own `.cr-table`. The component was carrying a second copy of
+   does Prismata's own `.pr-table`. The component was carrying a second copy of
    a rule at equal specificity, where the winner is decided by source order
    alone: a drift waiting for an import to be reordered. The duplicate is gone.
    What is left is the one thing only this component knows, which is that where
@@ -2409,7 +2409,7 @@ was deciding what they may not add.
   taken when it is inserted, not when its role attribute changes. The text
   updates and the urgency does not, and nobody who can see the bar notices the
   bug. The component renders two regions and puts the message in exactly one.
-- **Stone uses core's recipe.** Core's `.cr-stone` puts the feather on an
+- **Stone uses core's recipe.** Core's `.pr-stone` puts the feather on an
   isolated `::before` beneath the content, which is what "text stays crisp"
   means. A mixin written in this library would have been that recipe a
   feather-width off.
@@ -2420,7 +2420,7 @@ would have shipped.
 
 - **`SplitView` is `Resizable` plus one state.** The separator, its
   `aria-valuenow`, its keyboard travel and its 44px target are all already
-  Crystal's. What is new is `collapsed`. It is a component rather than a prop
+  Prismata's. What is new is `collapsed`. It is a component rather than a prop
   because of what collapsing has to do to the divider: a separator between one
   region and nothing announces a value it cannot change, and a keyboard user who
   lands on it can press arrow keys to no effect. So collapsing removes it.
@@ -2462,7 +2462,7 @@ would have shipped.
 
 **Round four: the two that touched core.**
 
-- **Crystal had named the view stack and published nothing it could move with.**
+- **Prismata had named the view stack and published nothing it could move with.**
   The catalogue has said since 2.0 that views "enter and leave along the reading
   direction", and the nearest recipe was `page-in`: a view arriving forward on
   the block axis, which is a different movement with a different meaning. A
@@ -2480,7 +2480,7 @@ would have shipped.
   keep in step with the first.
 
   **They were not reachable from here at first.** This library was pinned to
-  `@crystal-ui/core@^2.0.0` and the recipes ship in 2.1.0, which is Meridian's to
+  `@prismata/core@^2.0.0` and the recipes ship in 2.1.0, which is Meridian's to
   publish. `useMotion` throws on a recipe it does not have, because a movement
   that silently does nothing is worse than one that says so. So the stack asked
   `getRecipe` rather than assuming, and until the bump it behaved exactly as it
@@ -2647,7 +2647,7 @@ anything else in it should have been left to the component underneath.
 
 - **Every React dialog opened off-centre**, with its top-left corner at the
   middle of the screen and half of it past a phone's edge. R-24 put the surface
-  on Crystal's `.cr-dialog`, whose `position: fixed` centres a native `<dialog>`
+  on Prismata's `.pr-dialog`, whose `position: fixed` centres a native `<dialog>`
   because the browser gives a modal one `inset: 0` and auto margins; React
   Aria's surface is not a `<dialog>`. The material gate passed throughout,
   because the material was right and only the position was wrong.
@@ -2663,10 +2663,10 @@ anything else in it should have been left to the component underneath.
   takes `inset-block-start: 50%`; `verify:appearance` measures each thumb
   against its track.
 - **A property that does not exist passed every unit test.** `PricingBlock`
-  used `--cr-primary-ink`; `verify:theme` found it resolving to nothing on the
+  used `--pr-primary-ink`; `verify:theme` found it resolving to nothing on the
   themed scope and on the overlay container. The label keeps the text ink,
-  because Crystal's emphasis is weight and not colour, and the marks take
-  `--cr-primary`.
+  because Prismata's emphasis is weight and not colour, and the marks take
+  `--pr-primary`.
 - **`AuthBlock`'s failures cannot name a factor, by construction.** `AuthBlock`
   has no way to attach a sign-in failure to a field and takes no field errors
   for a reset, so a product cannot say "no account uses that address" by
@@ -2724,28 +2724,28 @@ separate project nobody finishes.
 - [ ] The component page template, fed from the catalogue, the surfaces and the manifest
 - [x] One page per surface from `surface-recipes.json` (R-Q1): the use, a specimen of every wearable selector, the recipe and its four fallbacks, each variant, and every catalogue entry made of it
 - [ ] MDX set in `Prose`
-- [x] A build check that fails on a surface, recipe or catalogue entry the installed core does not publish (`apps/docs/scripts/check-names.mjs`: every `cr-` class a page names, every surface id, every catalogue surface)
+- [x] A build check that fails on a surface, recipe or catalogue entry the installed core does not publish (`apps/docs/scripts/check-names.mjs`: every `pr-` class a page names, every surface id, every catalogue surface)
 - [ ] Guides: getting started per framework (webpack or esbuild where there is no bundler), theming, tokens, materials and surfaces, motion, accessibility, forms
 - [ ] Migration notes from Mantine, MUI, Ant Design and PrimeReact
 - [ ] Local search; `llms.txt` and the component manifest served from the site
 
-<!-- slice-r:start (generated by scripts/sync-slice-r.mjs; edit tasks.json in Crystal) -->
+<!-- slice-r:start (generated by scripts/sync-slice-r.mjs; edit tasks.json in Prismata) -->
 ### R: Media, text and recipe parity
 
 Added 2 October 2026 from Meridian's brief of that day. The proposal is
 [`proposals/2026-10-02-media-text-and-recipe-parity.md`](proposals/2026-10-02-media-text-and-recipe-parity.md);
-Crystal's half, with the findings, the core recipes and the decisions D-30 to D-35, is
-`crystal-design-system/proposals/2026-10-02-media-text-and-recipe-parity.md`. The tasks
+Prismata's half, with the findings, the core recipes and the decisions D-30 to D-35, is
+`prismata-design-system/proposals/2026-10-02-media-text-and-recipe-parity.md`. The tasks
 below are generated by `pnpm run sync:slice-r` from that proposal's `tasks.json` and
 `rulings.json`, where each also carries its acceptance checks; the IDs are shared with
-Crystal's task board, where rulings are recorded.
+Prismata's task board, where rulings are recorded.
 
 The slice changes no component count. It gives the media players, the rich text
 surface and `Prose` the anatomy the catalogue now specifies, makes every motion
 recipe visible, credits motion a child plays, and measures the library against
 the catalogue so the remaining material work can be counted.
 
-Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-02; D-33 (a), 2026-10-02; D-34 (a), 2026-10-02; D-35 (a), 2026-10-02; D-37 (a), 2026-10-02; D-39 (a), 2026-10-03; D-41 (b), 2026-11-07. The record is `crystal-design-system/proposals/2026-10-02-rulings.md`.
+Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-02; D-33 (a), 2026-10-02; D-34 (a), 2026-10-02; D-35 (a), 2026-10-02; D-37 (a), 2026-10-02; D-39 (a), 2026-10-03; D-41 (b), 2026-11-07. The record is `prismata-design-system/proposals/2026-10-02-rulings.md`.
 
 **Motion**
 
@@ -2758,27 +2758,27 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 **Text**
 
 - [x] **R-T10** (P1) Wear the 2.5.0 editor and caption recipes and drop the workarounds. RichTextSurface drops its D-40 workarounds (the 144px floor, the in-flow top toolbar and the coarse-pointer undo) and wears .above for toolbarPlacement="top"; VideoPlayer's captions wear .large, .larger and .solid in place of its local caption-style rules. Waits on C-R4.
-- [x] **R-T1** (P1) RichTextSurface wears .cr-field-shell, carries the vocabulary, places the toolbar by pointer. The rich-text-surface anatomy, engine-agnostic.
+- [x] **R-T1** (P1) RichTextSurface wears .pr-field-shell, carries the vocabulary, places the toolbar by pointer. The rich-text-surface anatomy, engine-agnostic.
 - [x] **R-T2** (P1) The format vocabulary, exported from the main entry. A product binding any engine reads names, shortcuts and glyphs from one list.
-- [x] **R-T3** (P1) RichTextEditor at @crystal-ui/react/editor. Headings, lists, checklists, every mark, indent and outdent, undo and redo, a selection toolbar, Alt+F10, Markdown input rules, form value.
+- [x] **R-T3** (P1) RichTextEditor at @prismata/react/editor. Headings, lists, checklists, every mark, indent and outdent, undo and redo, a selection toolbar, Alt+F10, Markdown input rules, form value.
 - [x] **R-T4** (P1) Text decorations and the edit elements. Text renders u, s, ins, del, mark, kbd, code, sub, sup and a meaning-free decoration.
 - [x] **R-T5** (P1) Prove the touch toolbar on real devices. The toolbar stays above the keyboard on iOS Safari and Android Chrome.
-- [x] **R-T6** (P2) Mentions popover wears .cr-frost. The suggestion popover's hand-written Frost goes.
+- [x] **R-T6** (P2) Mentions popover wears .pr-frost. The suggestion popover's hand-written Frost goes.
 - [x] **R-T7** (P2) EditorBlock offers the bound editor in a story. The editor block shown with RichTextEditor, save state and announcements together. Waits on D-30.
 - [ ] **R-T8** (P3) Screen-reader pass on the editor. VoiceOver and NVDA read the toolbar state, the block type, the checklist and the announcements as designed.
-- [x] **R-T9** (P1) Wear the published prose and editor recipes and delete the copies. Prose and RichTextSurface wear .cr-prose, .cr-editor and .cr-editor-toolbar; the selection toolbar wears .cr-frost.bar. Waits on C-R1.
+- [x] **R-T9** (P1) Wear the published prose and editor recipes and delete the copies. Prose and RichTextSurface wear .pr-prose, .pr-editor and .pr-editor-toolbar; the selection toolbar wears .pr-frost.bar. Waits on C-R1.
 
 **Media**
 
 - [x] **R-M1** (P1) Playback rate and picture in picture on useMediaElement. Both read from the element and set on it.
-- [x] **R-M2** (P1) useMediaTracks: caption, audio and video tracks. Tracks read from the element, one audio track at a time, a missing list offers nothing, Crystal draws captions.
+- [x] **R-M2** (P1) useMediaTracks: caption, audio and video tracks. Tracks read from the element, one audio track at a time, a missing list offers nothing, Prismata draws captions.
 - [x] **R-M3** (P1) MediaSettings: speed, subtitles, audio, quality. Radio items, selection by weight, a submenu per choice when there are several, every change announced.
 - [x] **R-M4** (P1) VideoPlayer: aspect ratio, fit, settings, captions on Stone, picture in picture, full screen. The catalogue's video-player anatomy.
 - [x] **R-M5** (P1) AudioPlayer: the Haze card, subtitle, speed. The catalogue's audio-player anatomy.
-- [x] **R-M6** (P1) MediaControls: transport padding, readouts on Haze, sliders inset by half a thumb. The .cr-resin.transport recipe.
+- [x] **R-M6** (P1) MediaControls: transport padding, readouts on Haze, sliders inset by half a thumb. The .pr-resin.transport recipe.
 - [x] **R-M7** (P2) PlayerShell uses the player's own full screen. One full-screen control, announced however full screen is left.
 - [x] **R-M8** (P2) Real media fixtures for stories and gates. Every media story plays real media with no network.
-- [x] **R-M9** (P1) Wear the published media recipes and delete the copies. VideoPlayer, AudioPlayer and MediaControls wear .cr-media, .cr-media-bar, .cr-resin.transport and .cr-media-caption. Waits on C-R1.
+- [x] **R-M9** (P1) Wear the published media recipes and delete the copies. VideoPlayer, AudioPlayer and MediaControls wear .pr-media, .pr-media-bar, .pr-resin.transport and .pr-media-caption. Waits on C-R1.
 - [x] **R-M10** (P1) Prove audio-track switching in Safari. The audio group appears and switches the track in an engine with audioTracks.
 - [x] **R-M11** (P3) Draw the first cue before playback starts. A cue active at 0:00 shows without a time update.
 - [x] **R-M12** (P2) Caption appearance settings (size and backing). A reader can enlarge captions and make the backing opaque, as broadcast caption rules require.
@@ -2790,8 +2790,8 @@ Rulings in force: D-30 (a), 2026-10-02; D-31 (a), 2026-10-02; D-32 (a), 2026-10-
 
 **Audit**
 
-- [x] **R-A9** (P2) The Haze reading fill in the popover, the pop-confirm and the menu. Popover and Popconfirm content, and Menu rows, sit on the Haze reading fill their catalogue entries specify inside the Frost panel, measured against the .cr-haze recipe; core then assigns the haze surface and removes the three from UNMEASURED in build-catalogue.cjs.
-- [x] **R-A10** (P2) The Resin thumb on the colour area, slider and wheel. The colour controls draw the Resin thumb their catalogue entries specify (today the thumb is the picked colour), measured against the .cr-resin recipe; core then assigns the resin surface and removes the three from UNMEASURED.
+- [x] **R-A9** (P2) The Haze reading fill in the popover, the pop-confirm and the menu. Popover and Popconfirm content, and Menu rows, sit on the Haze reading fill their catalogue entries specify inside the Frost panel, measured against the .pr-haze recipe; core then assigns the haze surface and removes the three from UNMEASURED in build-catalogue.cjs.
+- [x] **R-A10** (P2) The Resin thumb on the colour area, slider and wheel. The colour controls draw the Resin thumb their catalogue entries specify (today the thumb is the picked colour), measured against the .pr-resin recipe; core then assigns the resin surface and removes the three from UNMEASURED.
 
 **Docs**
 

@@ -1,50 +1,50 @@
 @use '../../styles/tokens' as *;
 
-/* "Haze rows." Each track is Crystal's `.cr-haze` reading fill; the queue paints
+/* "Haze rows." Each track is Prismata's `.pr-haze` reading fill; the queue paints
    nothing of its own. */
 .playlist {
   display: grid;
-  gap: var(--cr-block-gap, $cr-spacing-xs);
+  gap: var(--pr-block-gap, $pr-spacing-xs);
   min-inline-size: 0;
   outline: none;
 }
 
 .row {
-  border-radius: var(--cr-radius);
+  border-radius: var(--pr-radius);
   outline: none;
   cursor: default;
 }
 
 .row[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 /* Lifted out of the list while it is carried. */
-.row[data-dragging] { opacity: $cr-action-disabled-opacity; }
+.row[data-dragging] { opacity: $pr-action-disabled-opacity; }
 
 .track {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: $cr-spacing-sm;
-  min-block-size: $cr-action-min-target;
-  padding-inline-end: $cr-spacing-md;
+  gap: $pr-spacing-sm;
+  min-block-size: $pr-action-min-target;
+  padding-inline-end: $pr-spacing-md;
 }
 
 .handle { display: inline-flex; }
 
 .text { display: grid; min-inline-size: 0; }
 .title { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.artist { color: var(--cr-muted); font-size: var(--cr-text-caption-size); }
+.artist { color: var(--pr-muted); font-size: var(--pr-text-caption-size); }
 
 /* Now playing is weight and words, never a mark beside the title. */
 .track[data-current] .title { font-weight: 800; }
-.now { font-size: var(--cr-text-caption-size); font-weight: 800; }
+.now { font-size: var(--pr-text-caption-size); font-weight: 800; }
 
 .duration {
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
   font-variant-numeric: tabular-nums;
 }

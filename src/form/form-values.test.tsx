@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { renderWithCrystal } from '../test/render.js';
+import { renderWithPrismata } from '../test/render.js';
 import { PinInput } from '../components/PinInput/PinInput.js';
 import { TagsInput } from '../components/TagsInput/TagsInput.js';
 import { MultiSelect } from '../components/MultiSelect/MultiSelect.js';
@@ -15,14 +15,14 @@ describe('a named field reaches FormData', () => {
   const read = (form: HTMLFormElement) => [...new FormData(form).entries()];
 
   it('MaskInput submits its raw value', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <form><MaskInput label="P" name="f" mask="0000" defaultValue="1234" /></form>,
     );
     expect(read(container.querySelector('form')!)).toEqual([['f', '1234']]);
   });
 
   it('PinInput submits the whole code as one value', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <form><PinInput label="P" name="f" length={4} defaultValue="1234" /></form>,
     );
     expect(read(container.querySelector('form')!)).toEqual([['f', '1234']]);
@@ -32,14 +32,14 @@ describe('a named field reaches FormData', () => {
      has always carried a multiple selection, and valuesFromForm turns it back
      into an array. */
   it('TagsInput submits one entry per tag', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <form><TagsInput label="P" name="f" defaultValue={['x', 'y']} /></form>,
     );
     expect(read(container.querySelector('form')!)).toEqual([['f', 'x'], ['f', 'y']]);
   });
 
   it('MultiSelect submits one entry per selection', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <form><MultiSelect label="P" name="f" options={OPTIONS} defaultValue={['a', 'b']} /></form>,
     );
     expect(read(container.querySelector('form')!)).toEqual([['f', 'a'], ['f', 'b']]);
@@ -48,14 +48,14 @@ describe('a named field reaches FormData', () => {
   /* Nothing chosen means no key at all, not an empty one. That is HTML's
      behaviour, and what the schema is told to expect. */
   it('submits no key when nothing is chosen', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <form><MultiSelect label="P" name="f" options={OPTIONS} /></form>,
     );
     expect(read(container.querySelector('form')!)).toEqual([]);
   });
 
   it('submits nothing when the field has no name', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <form><TagsInput label="P" defaultValue={['x']} /></form>,
     );
     expect(read(container.querySelector('form')!)).toEqual([]);

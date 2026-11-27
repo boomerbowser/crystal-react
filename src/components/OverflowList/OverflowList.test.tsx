@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { OverflowList } from './OverflowList.js';
 
 describe('OverflowList', () => {
@@ -8,7 +8,7 @@ describe('OverflowList', () => {
      measurement: nothing is lost, and the affordance names its count. The
      arithmetic needs a real layout engine. */
   it('keeps every item reachable, in the row or in the overflow', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <OverflowList renderOverflow={(_hidden, count) => <button type="button">{count} more</button>}>
         <span>Alpha</span>
         <span>Beta</span>
@@ -24,7 +24,7 @@ describe('OverflowList', () => {
 
   it('hands the overflow affordance its count, so it can name itself', () => {
     let seen = -1;
-    renderWithCrystal(
+    renderWithPrismata(
       <OverflowList
         renderOverflow={(_hidden, count) => { seen = count; return <button type="button">{count} more</button>; }}
       >
@@ -47,7 +47,7 @@ describe('OverflowList', () => {
    * cell holding three spans and three cells holding one each look identical to
    * `getByText`, but they are different rows. */
   it('opens out a fragment rather than counting it as one item', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <OverflowList renderOverflow={(_hidden, count) => <button type="button">{count} more</button>}>
         <>
           <span>Alpha</span>

@@ -26,11 +26,11 @@ const meta = {
     /* A real photograph as the element's own background, so it scales with the
        box without distorting: both sizes are 16:9. */
     const picture = {
-      backgroundColor: 'var(--cr-primary-soft)',
+      backgroundColor: 'var(--pr-primary-soft)',
       backgroundImage: `url(${photos.mooredBoat})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      borderRadius: 'var(--cr-radius)',
+      borderRadius: 'var(--pr-radius)',
     };
     return (
       <div style={{ display: 'grid', gap: 16, justifyItems: 'start' }}>

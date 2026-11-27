@@ -1,22 +1,22 @@
 @use '../../styles/tokens' as *;
 
-/* Card: Crystal's Haze reading surface, `.cr-haze` (2.2.0).
+/* Card: Prismata's Haze reading surface, `.pr-haze` (2.2.0).
  *
  * The fill is an 80% Haze layer on an isolated `::before`, feathered, over the
  * content shadow, with crisp text above it. Inside a Resin frame it recesses
- * instead of rising. Crystal supplies all of it: the isolated layer, the fill,
- * the feather, the shadow, both fallbacks, and the recess keyed on `.cr-resin`.
- * The card wears the class and Crystal paints it.
+ * instead of rising. Prismata supplies all of it: the isolated layer, the fill,
+ * the feather, the shadow, both fallbacks, and the recess keyed on `.pr-resin`.
+ * The card wears the class and Prismata paints it.
  *
- * The card draws no border in `--cr-edge`, because Crystal's Haze surface does
+ * The card draws no border in `--pr-edge`, because Prismata's Haze surface does
  * not draw one. A card is not a control, so no boundary contrast rests on it,
  * and the library adopts where it diverges.
  *
- * Motion is not set here. Crystal 2.2.0 gives a card `list-in` and `list-out`,
+ * Motion is not set here. Prismata 2.2.0 gives a card `list-in` and `list-out`,
  * which belong to the collection a card arrives in and leaves, not to a card
  * standing alone, so they are bound where the collection is.
  */
 
 .card {
-  padding: var(--cr-space);
+  padding: var(--pr-space);
 }

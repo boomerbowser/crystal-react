@@ -21,7 +21,7 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { useMotion } from '../../motion/useMotion.js';
 import { mergeRefs } from '../../utils/mergeRefs.js';
 
-/* "Which recipes are allowed" is Crystal's half of this component, so it is a
+/* "Which recipes are allowed" is Prismata's half of this component, so it is a
    list and not a free string. Only entry recipes are allowed. A press or a field
    validation playing because something scrolled into view means nothing to the
    reader. `list-in` is the default because an element arriving in the viewport
@@ -31,7 +31,7 @@ const ENTRY_RECIPES = ['list-in', 'message-in', 'media-in', 'page-in', 'accordio
 export type ScrollEntryRecipe = typeof ENTRY_RECIPES[number];
 
 export interface AnimateOnScrollProps {
-  /** Which Crystal entry recipe to play. Only entry recipes are allowed. */
+  /** Which Prismata entry recipe to play. Only entry recipes are allowed. */
   recipe?: ScrollEntryRecipe;
   /**
    * How much of the element must be visible before it plays, 0 to 1. A tall

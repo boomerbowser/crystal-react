@@ -1,13 +1,13 @@
-/* Crystal's format vocabulary: what a rich text surface can offer, in what
+/* Prismata's format vocabulary: what a rich text surface can offer, in what
  * groups, under which names, keys and glyphs.
  *
  * It is engine-agnostic. `RichTextSurface` takes `FormatAction`s from whatever
- * engine a product binds, and `@crystal-ui/react/editor` binds TipTap to this
+ * engine a product binds, and `@prismata/react/editor` binds TipTap to this
  * same list. A product binding Lexical or a plain `contenteditable` reads its
- * names, shortcuts and icons from here, so every editor built on Crystal offers
+ * names, shortcuts and icons from here, so every editor built on Prismata offers
  * the same formats in the same order with the same words.
  *
- * Every glyph is from Crystal's icon set (`@crystal-ui/core/icons/*`), copied
+ * Every glyph is from Prismata's icon set (`@prismata/core/icons/*`), copied
  * path for path so the vocabulary stays a plain module with no asset import.
  * The set gained link, list, list-ordered, subscript, quote, undo and redo in
  * 2.4.0 (core task C-I1); until then those seven were drawn here.

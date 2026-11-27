@@ -4,7 +4,7 @@
 /* Prose: one reading rhythm for content the product did not lay out.
  *
  * This is the component for rendered Markdown, a CMS body, anything arriving as
- * HTML rather than as Crystal components. It wears Crystal's `.cr-prose`, which
+ * HTML rather than as Prismata components. It wears Prismata's `.pr-prose`, which
  * sets the column, the type and the vocabulary; this rule adds what the
  * vocabulary does not cover (`styles/_prose.scss`).
  */
@@ -18,19 +18,19 @@
    `blockquote`, and the component is the blockquote itself. */
 .blockquote {
   margin-inline: 0;
-  padding-inline-start: $cr-spacing-md;
+  padding-inline-start: $pr-spacing-md;
   /* A rule rather than a panel. A quotation inside running text is part of the
      text, and on its own surface it would read as a callout. */
-  border-inline-start: $cr-indicator-line-width solid var(--cr-primary-soft);
-  color: var(--cr-muted);
+  border-inline-start: $pr-indicator-line-width solid var(--pr-primary-soft);
+  color: var(--pr-muted);
 }
 
 .blockquote cite {
   display: block;
-  margin-block-start: $cr-spacing-xs;
-  font-size: var(--cr-text-caption-size);
+  margin-block-start: $pr-spacing-xs;
+  font-size: var(--pr-text-caption-size);
   font-style: normal;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
 }
 
 @media (forced-colors: active) {

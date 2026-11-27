@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { Accordion } from './Accordion.js';
 
 const items = [
@@ -19,7 +19,7 @@ const meta = {
           + 'header is a real button carrying `aria-expanded` and `aria-controls`, the panel is '
           + 'associated back to it, and `DisclosureGroup` keeps `expandedKeys` in one place. That '
           + 'is what makes "only one at a time" a property of the group rather than of five rows '
-          + `each watching the others. Crystal owns the material, the ${crystalTokens['action.minTarget']} header, and the rule `
+          + `each watching the others. Prismata owns the material, the ${prismataTokens['action.minTarget']} header, and the rule `
           + 'that the chevron\'s rotation is a CSS end state: `icon-turn` plays it, but the turned '
           + 'chevron is correct at rest whether or not the recipe ran.',
       },

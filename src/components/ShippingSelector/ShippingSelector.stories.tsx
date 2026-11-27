@@ -16,7 +16,7 @@ const meta = {
           + 'carries both in its own name, which a screen reader reads on arriving at the '
           + 'option.\n\n'
           + 'The whole card is the target, and there is no radio dot. Selection here is label '
-          + 'weight, which is what Crystal specifies for a choice among peers as distinct from '
+          + 'weight, which is what Prismata specifies for a choice among peers as distinct from '
           + 'an action in an on state.',
       },
     },

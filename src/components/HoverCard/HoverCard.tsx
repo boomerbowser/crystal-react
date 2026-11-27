@@ -25,7 +25,7 @@
  * its own name and the card supplements it. A card previews a destination and
  * is not its label.
  *
- * A transient overlay is Frost (Crystal R15e). Opened from the page the card is
+ * A transient overlay is Frost (Prismata R15e). Opened from the page the card is
  * Frost. Opened inside a dialog or a drawer it recesses to Haze. React decides
  * this, because the card is portalled and loses its nesting on the way, so the
  * DOM cannot.

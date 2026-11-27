@@ -7,7 +7,7 @@
  *
  * The second sentence is the reason this component is in the catalogue. A card
  * number, an expiry and a CVC typed into inputs this library rendered would put
- * every product using Crystal inside PCI scope (the whole cardholder data
+ * every product using Prismata inside PCI scope (the whole cardholder data
  * environment), because the data touched their page in the clear. Stripe, Adyen,
  * Braintree and the others hand you an element hosted on their origin that you
  * cannot read the inside of, so the number never reaches your JavaScript.
@@ -87,7 +87,7 @@ export function PaymentMethod({
           key={method.value}
           value={method.value}
           isDisabled={method.unavailable !== undefined}
-          className={cx('cr-haze flush', styles['option'])}
+          className={cx('pr-haze flush', styles['option'])}
         >
           {method.mark ? (
             <span aria-hidden="true" className={styles['mark']}>{method.mark}</span>
@@ -101,7 +101,7 @@ export function PaymentMethod({
 
       {provider ? (
         <div className={styles['new']}>
-          <SelectedRadio value={newMethodValue} className={cx('cr-haze flush', styles['option'])}>
+          <SelectedRadio value={newMethodValue} className={cx('pr-haze flush', styles['option'])}>
             <span className={styles['name']}>{newMethodLabel}</span>
           </SelectedRadio>
           {/* Mounted only while it is chosen. A provider's element is an iframe

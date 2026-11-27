@@ -13,11 +13,11 @@
  * `role="grid"` tells assistive technology to switch from reading mode to
  * interaction mode. Rendered as a plain table, none of those keys would work.
  *
- * What Crystal owns, and what is easy to get wrong:
+ * What Prismata owns, and what is easy to get wrong:
  *
  *   - Selection is shown by label weight, with no check badge on the row. The
  *     checkbox is the control that makes the selection. The row shows that it
- *     is selected by being heavier, as every other selected thing in Crystal
+ *     is selected by being heavier, as every other selected thing in Prismata
  *     does. The state belongs in the row, not only in the ticked box.
  *   - Real checkboxes with names, not a clickable cell or a row press. Each
  *     checkbox says which row it selects. React Aria composes that name itself:
@@ -208,7 +208,7 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
           frame. */}
       {resizable ? (
         <ResizableTableContainer
-          className={cx(styles['scroller'], 'cr-table-scroll')}
+          className={cx(styles['scroller'], 'pr-table-scroll')}
           /* `resize-settle` plays on the column that was resized, once the
              resize ends: "after measured layout size changes". The resizer holds
              focus while it resizes, by pointer or by key, so its header is noted
@@ -226,7 +226,7 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
           {table}
         </ResizableTableContainer>
       ) : (
-        <div tabIndex={0} role="region" aria-label={label} className={cx(styles['scroller'], 'cr-table-scroll')}>
+        <div tabIndex={0} role="region" aria-label={label} className={cx(styles['scroller'], 'pr-table-scroll')}>
           {table}
         </div>
       )}
@@ -235,14 +235,14 @@ export const DataTable = forwardRef<HTMLDivElement, DataTableProps>(function Dat
   );
 });
 
-/** Crystal's checkbox glyph on React Aria's checkbox. A check mark here is
+/** Prismata's checkbox glyph on React Aria's checkbox. A check mark here is
  *  information ("this row is in the selection"), which is a permitted use of
  *  the glyph. The row itself shows selection by weight. */
 function SelectionBox({ slot, label }: { slot: 'selection'; label: string }): ReactNode {
   return (
     <Checkbox slot={slot} aria-label={label} className={cx(styles['checkbox'])}>
       {({ isIndeterminate }) => (
-        <span aria-hidden="true" className={cx('cr-choice', styles['box'])}>
+        <span aria-hidden="true" className={cx('pr-choice', styles['box'])}>
           <span className={styles['well']}>{isIndeterminate ? DashIcon : CheckIcon}</span>
         </span>
       )}

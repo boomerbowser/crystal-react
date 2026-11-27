@@ -5,7 +5,7 @@
  * A half-ring showing progress toward a value.
  *
  * "Stroke matches the ring progress contract", so it reads the same
- * `--cr-progress-ring-stroke` and the same arc generator. Only the sweep
+ * `--pr-progress-ring-stroke` and the same arc generator. Only the sweep
  * differs: half a turn, drawn from nine o'clock to three.
  *
  * "role=progressbar **with a text value beside it**". The catalogue asks for the

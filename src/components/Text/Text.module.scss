@@ -3,20 +3,20 @@
 /* Text. Body copy, and the small pieces of running text.
  *
  * Every step is the same rule with different custom properties, because the scale
- * is Crystal's. Six classes each repeating a size, a leading and a tracking would
+ * is Prismata's. Six classes each repeating a size, a leading and a tracking would
  * be eighteen numbers restating what the resolver already published.
  */
 
 .text {
   margin: 0;
-  font-size: var(--cr-text-size, var(--cr-text-body-size));
-  line-height: var(--cr-text-leading, var(--cr-text-body-leading));
-  letter-spacing: var(--cr-text-tracking, var(--cr-text-body-tracking));
-  color: var(--cr-text);
+  font-size: var(--pr-text-size, var(--pr-text-body-size));
+  line-height: var(--pr-text-leading, var(--pr-text-body-leading));
+  letter-spacing: var(--pr-text-tracking, var(--pr-text-body-tracking));
+  color: var(--pr-text);
 }
 
-.muted { color: var(--cr-muted); }
-.onSurface { color: var(--cr-content-muted); }
+.muted { color: var(--pr-muted); }
+.onSurface { color: var(--pr-content-muted); }
 
 /* The measure. Long lines are hard to return from, because the eye loses the
    next one. It uses `ch` rather than px because the comfortable measure is a
@@ -48,20 +48,20 @@
 .lineThrough, s.text { text-decoration: line-through; text-decoration-thickness: 0.09em; }
 ins.text {
   text-decoration: underline;
-  text-decoration-color: var(--cr-success-ink);
+  text-decoration-color: var(--pr-success-ink);
   text-decoration-thickness: 0.12em;
   text-underline-offset: 0.2em;
 }
-del.text { text-decoration: line-through; text-decoration-color: var(--cr-danger-ink); text-decoration-thickness: 0.12em; }
-mark.text { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
+del.text { text-decoration: line-through; text-decoration-color: var(--pr-danger-ink); text-decoration-thickness: 0.12em; }
+mark.text { background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
 :is(code, kbd).text {
   padding-inline: 0.2em;
-  border-radius: $cr-spacing-2xs;
-  background: var(--cr-surface-alt);
+  border-radius: $pr-spacing-2xs;
+  background: var(--pr-surface-alt);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.9em;
 }
-kbd.text { border: 1px solid var(--cr-edge); border-block-end-width: 2px; }
+kbd.text { border: 1px solid var(--pr-edge); border-block-end-width: 2px; }
 :is(sub, sup).text { font-size: 0.75em; line-height: 0; }
 
 @media (forced-colors: active) {

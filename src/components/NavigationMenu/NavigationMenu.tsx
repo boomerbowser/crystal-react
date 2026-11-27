@@ -13,7 +13,7 @@
  * The structure is a `nav` landmark containing disclosure buttons, each with
  * `aria-expanded` and `aria-controls`, each disclosing a panel of ordinary
  * links. The WAI-ARIA Authoring Practices recommend this shape for navigation
- * with fly-outs, and Crystal's catalogue describes it: "a horizontal menu whose
+ * with fly-outs, and Prismata's catalogue describes it: "a horizontal menu whose
  * items open rich panels beneath them" is a disclosure pattern with a menu's
  * name.
  *
@@ -87,7 +87,7 @@ export function NavigationMenu({ sections, className, ...props }: NavigationMenu
                 /* One panel at a time: two overlapping panels beneath a bar
                    have no reading order. */
                 onClick={() => { setOpen(isOpen ? null : section.id); }}
-                className={cx(styles['trigger'], 'cr-bare')}
+                className={cx(styles['trigger'], 'pr-bare')}
               >
                 {section.label}
               </button>
@@ -125,7 +125,7 @@ function Panel({ id, label, isOpen, children }: {
       aria-label={label}
       hidden={!isOpen && !leaving}
       {...(leaving ? { inert: true } : {})}
-      className={cx('cr-frost pane flat', styles['panel'])}
+      className={cx('pr-frost pane flat', styles['panel'])}
     >
       {children}
     </div>

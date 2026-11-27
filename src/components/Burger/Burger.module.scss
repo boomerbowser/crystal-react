@@ -1,16 +1,16 @@
 @use '../../styles/tokens' as *;
 
 .burger {
-  /* A burger is a `<button>`, and Crystal paints every `<button>` as a Resin
+  /* A burger is a `<button>`, and Prismata paints every `<button>` as a Resin
      control by element selector, so the material is not restated here. The
      shape is square instead of a pill, so it keeps its own geometry. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
-  border-radius: $cr-action-radius;
-  color: var(--cr-text);
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
+  border-radius: $pr-action-radius;
+  color: var(--pr-text);
   cursor: pointer;
 }
 
@@ -21,9 +21,9 @@
 .bars::before,
 .bars::after {
   display: block;
-  inline-size: $cr-icon-size;
-  block-size: $cr-indicator-line-width;
-  border-radius: $cr-overlay-arrow-radius;
+  inline-size: $pr-icon-size;
+  block-size: $pr-indicator-line-width;
+  border-radius: $pr-overlay-arrow-radius;
   background: currentcolor;
 }
 
@@ -36,10 +36,10 @@
   inset-inline-start: 0;
 }
 
-.bars::before { inset-block-start: calc(#{$cr-icon-size} / -3); }
-.bars::after { inset-block-start: calc(#{$cr-icon-size} / 3); }
+.bars::before { inset-block-start: calc(#{$pr-icon-size} / -3); }
+.bars::after { inset-block-start: calc(#{$pr-icon-size} / 3); }
 
-/* The cross. Crystal's `icon-turn` plays the movement. These are the end
+/* The cross. Prismata's `icon-turn` plays the movement. These are the end
    states, so the control is correct at rest whether or not it animated. That
    includes reduced motion, where the recipe applies the semantic state
    immediately and omits the movement. */
@@ -47,17 +47,17 @@
 .burger[data-open] .bars::before { inset-block-start: 0; transform: rotate(45deg); }
 .burger[data-open] .bars::after { inset-block-start: 0; transform: rotate(-45deg); }
 
-.burger[data-hovered] { background: var(--cr-surface-alt); }
+.burger[data-hovered] { background: var(--pr-surface-alt); }
 
 .burger[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
-.burger[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.burger[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
 
-/* Opaque and reduced transparency are Crystal's routes for a `<button>`. */
+/* Opaque and reduced transparency are Prismata's routes for a `<button>`. */
 
 @media (forced-colors: active) {
   .burger { background: Canvas; border-color: CanvasText; backdrop-filter: none; }

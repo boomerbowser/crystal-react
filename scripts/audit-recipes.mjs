@@ -1,4 +1,4 @@
-/* Audit Crystal React against Crystal's catalogue: motion, materials and recipes.
+/* Audit Prismata React against Prismata's catalogue: motion, materials and recipes.
  *
  * The re-evaluation of 29 September 2026 named three things nobody had measured
  * across all 284 components at once: which assigned motion no component plays,
@@ -15,9 +15,9 @@
  *   node scripts/audit-recipes.mjs                 summary to stdout
  *   node scripts/audit-recipes.mjs --json out.json  full report as JSON
  *
- * It reads the catalogue from a sibling `crystal-design-system` checkout when
+ * It reads the catalogue from a sibling `prismata-design-system` checkout when
  * there is one, because that is where an unreleased change to the catalogue
- * lives, and otherwise from the installed `@crystal-ui/core`. Run the manifest
+ * lives, and otherwise from the installed `@prismata/core`. Run the manifest
  * first (`pnpm run manifest`): what each component plays is read from it.
  */
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
@@ -25,8 +25,8 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const LOCAL_CORE = resolve(ROOT, '../crystal-design-system/core');
-const INSTALLED_CORE = join(ROOT, 'node_modules/@crystal-ui/core');
+const LOCAL_CORE = resolve(ROOT, '../prismata-design-system/core');
+const INSTALLED_CORE = join(ROOT, 'node_modules/@prismata/core');
 const CORE = existsSync(join(LOCAL_CORE, 'tokens/catalogue')) ? LOCAL_CORE : INSTALLED_CORE;
 
 const manifestPath = join(ROOT, 'dist/component-manifest.json');
@@ -99,7 +99,7 @@ const surfaceClasses = Object.fromEntries(surfaces.map((surface) => [
    defines for each material, and raw `backdrop-filter` lines. */
 /* `field.shell` is not here: it paints nothing. It makes a shell fill its row
    and sets the origin the field motion deforms around, layout the R-28 ruling
-   carries into `.cr-field-shell` (16 November 2026). */
+   carries into `.pr-field-shell` (16 November 2026). */
 const MIXINS = /@include\s+(?:material\.)?(resin|frost|haze-fill|stone|plastic)\b/g;
 
 const components = [];
@@ -124,7 +124,7 @@ for (const entry of manifest.components) {
     const scss = strip(files.filter((f) => f.endsWith('.scss')).map((f) => readFileSync(join(dir, f), 'utf8')).join('\n'));
     const tsx = files.filter((f) => /\.tsx?$/.test(f) && !/\.(test|stories)\./.test(f))
       .map((f) => readFileSync(join(dir, f), 'utf8')).join('\n');
-    const worn = new Set([...tsx.matchAll(/['"`\s](cr-[a-z-]+)['"`\s]/g)].map((m) => m[1]));
+    const worn = new Set([...tsx.matchAll(/['"`\s](pr-[a-z-]+)['"`\s]/g)].map((m) => m[1]));
     record.classesWorn = [...worn].sort();
     record.handWritten = {
       backdropFilter: (scss.match(/backdrop-filter\s*:(?!\s*none\b)/g) ?? []).length,
@@ -170,7 +170,7 @@ const byDirectory = implemented.filter((c) => {
 });
 const sum = (list, pick) => list.reduce((total, c) => total + pick(c), 0);
 const summary = {
-  core: CORE === LOCAL_CORE ? 'local checkout (crystal-design-system/core)' : 'installed @crystal-ui/core',
+  core: CORE === LOCAL_CORE ? 'local checkout (prismata-design-system/core)' : 'installed @prismata/core',
   components: components.length,
   implemented: implemented.length,
   motion: {

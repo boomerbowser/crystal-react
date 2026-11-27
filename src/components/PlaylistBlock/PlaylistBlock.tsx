@@ -17,7 +17,7 @@
  *     prop, so it is set from inside the row, as `NavigationTree` does. Weight
  *     shows it too.
  *
- * Motion is Crystal's and bound to state: a row lifts with `drag-pickup` as it
+ * Motion is Prismata's and bound to state: a row lifts with `drag-pickup` as it
  * is picked up and settles with `drag-settle` where it lands; the rows it
  * displaced play `reorder`; a track added plays `list-in`, and a track removed
  * plays `list-out` before it goes. React Aria drops a row the moment its item
@@ -153,7 +153,7 @@ export function PlaylistBlock({
       className={cx(styles['playlist'], className)}
     >
       {(track: PlaylistTrack) => (
-        <GridListItem id={track.id} textValue={track.titleText} className={cx(styles['row'], 'cr-haze')}>
+        <GridListItem id={track.id} textValue={track.titleText} className={cx(styles['row'], 'pr-haze')}>
           {({ isDragging }) => (
             <Track
               track={track}
@@ -205,7 +205,7 @@ function Track({ track, isCurrent, isDragging, players, arriving, handleLabel, n
 
   return (
     <div ref={scope as never} className={cx(styles['track'])} data-current={isCurrent || undefined}>
-      <Button slot="drag" aria-label={handleLabel} className={cx(styles['handle'], 'cr-bare', 'cr-drag-handle')}>
+      <Button slot="drag" aria-label={handleLabel} className={cx(styles['handle'], 'pr-bare', 'pr-drag-handle')}>
         <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01" /></svg>
       </Button>
       <span className={cx(styles['text'])}>

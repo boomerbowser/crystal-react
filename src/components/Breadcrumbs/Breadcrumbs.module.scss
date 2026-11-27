@@ -11,17 +11,17 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: var(--cr-text-caption-size);
+  font-size: var(--pr-text-caption-size);
 }
 
 .crumb {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   min-inline-size: 0;
 }
 
@@ -32,14 +32,14 @@
      44px-tall crumbs reads as a toolbar, and this is a line of running text. The
      pseudo-element grows the target without growing the line. */
   position: relative;
-  min-block-size: var(--cr-text-caption-size);
-  border-radius: $cr-action-radius;
-  color: var(--cr-muted);
+  min-block-size: var(--pr-text-caption-size);
+  border-radius: $pr-action-radius;
+  color: var(--pr-muted);
   text-decoration: none;
   cursor: pointer;
 }
 
-/* The hit area, in both axes. Crystal's floor is 44 in both, and a short crumb
+/* The hit area, in both axes. Prismata's floor is 44 in both, and a short crumb
    such as "Data" is only 28px wide. Centred on the crumb and at least 44px
    across, so the growth is symmetrical and lands in the separator gap instead
    of over a neighbour. */
@@ -48,24 +48,24 @@
   position: absolute;
   inset-block: 50%;
   inset-inline-start: 50%;
-  min-inline-size: $cr-action-min-target;
-  inline-size: calc(100% + #{$cr-spacing-xs});
-  block-size: $cr-action-min-target;
+  min-inline-size: $pr-action-min-target;
+  inline-size: calc(100% + #{$pr-spacing-xs});
+  block-size: $pr-action-min-target;
   transform: translate(-50%, -50%);
 }
 
-.link[data-hovered] { color: var(--cr-text); text-decoration: underline; }
+.link[data-hovered] { color: var(--pr-text); text-decoration: underline; }
 
 .link[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 /* The current page. React Aria drops the href on the last crumb, so this is
    text. The weight marks it, never colour on its own. */
 .link[data-current] {
-  color: var(--cr-text);
+  color: var(--pr-text);
   font-weight: 800;
   cursor: default;
 }
@@ -76,7 +76,7 @@
 .separator {
   display: inline-flex;
   flex: none;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   opacity: 0.7;
 }
 
@@ -84,8 +84,8 @@
    that stays 20px while the trail is set at caption size reads as a glyph from
    another typeface. */
 .separator svg {
-  inline-size: 1em; /* crystal-allow-literal: relative to the text, not a design value */
-  block-size: 1em; /* crystal-allow-literal: relative to the text, not a design value */
+  inline-size: 1em; /* prismata-allow-literal: relative to the text, not a design value */
+  block-size: 1em; /* prismata-allow-literal: relative to the text, not a design value */
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -102,13 +102,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: $cr-action-min-target;
-  block-size: calc(#{$cr-action-min-target} - #{$cr-spacing-sm});
+  inline-size: $pr-action-min-target;
+  block-size: calc(#{$pr-action-min-target} - #{$pr-spacing-sm});
   padding: 0;
   border: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
   background: transparent;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   cursor: pointer;
 }
 
@@ -117,19 +117,19 @@
   position: absolute;
   inset-inline: 0;
   inset-block: 50%;
-  block-size: $cr-action-min-target;
+  block-size: $pr-action-min-target;
   transform: translateY(-50%);
 }
 
 /* The icon size comes from `IconButton`. The fill is set here because the
    ellipsis is filled, where the chevron is stroked. */
 .disclosure svg { fill: currentColor; stroke: none; }
-.disclosure[data-hovered], .disclosure:hover { color: var(--cr-text); background: var(--cr-surface-alt); }
+.disclosure[data-hovered], .disclosure:hover { color: var(--pr-text); background: var(--pr-surface-alt); }
 
 .disclosure[data-focus-visible], .disclosure:focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
 @media (forced-colors: active) {

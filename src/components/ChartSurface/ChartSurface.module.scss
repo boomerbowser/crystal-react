@@ -17,15 +17,15 @@
 .surface {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   margin: 0;
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 .caption {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
 }
 
 .title {
@@ -33,9 +33,9 @@
 }
 
 .description {
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
-  color: var(--cr-muted);
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
+  color: var(--pr-muted);
 }
 
 .legend {
@@ -45,8 +45,8 @@
 .plot {
   position: relative;
   inline-size: 100%;
-  border-radius: var(--cr-radius);
-  /* The element wears Crystal's `.cr-haze.inset` (2.7.0): the Haze fill inset by `--cr-haze-inset`, with Crystal's fallbacks. */
+  border-radius: var(--pr-radius);
+  /* The element wears Prismata's `.pr-haze.inset` (2.7.0): the Haze fill inset by `--pr-haze-inset`, with Prismata's fallbacks. */
 }
 
 .canvas {
@@ -62,18 +62,18 @@
 /* A mark takes the focus ring the rest of the system uses. Every engine this
    library gates against honours `outline` on an SVG element. The feathered halo
    is a shadow, and SVG shadows are filters, so this is the crisp core alone at
-   Crystal's offset and width, which is the part of the recipe that carries the
+   Prismata's offset and width, which is the part of the recipe that carries the
    meaning.
 
-   `crystal.css` also carries `[tabindex]:focus-visible`, so a document that
+   `prismata.css` also carries `[tabindex]:focus-visible`, so a document that
    loads it gives a mark a ring without this rule. Keep the rule anyway. A
    consumer who loads only this library's stylesheet is the case D-1 is about,
    and `verify:behaviour` cannot see that consumer: removing this rule leaves its
    focus-ring check green, as measured. */
 .canvas :focus-visible {
-  outline: $cr-focus-core-width solid var(--cr-primary);
-  outline-offset: $cr-focus-core-offset;
-  border-radius: $cr-focus-core-offset;
+  outline: $pr-focus-core-width solid var(--pr-primary);
+  outline-offset: $pr-focus-core-offset;
+  border-radius: $pr-focus-core-offset;
 }
 
 .empty {
@@ -83,30 +83,30 @@
   align-items: center;
   justify-content: center;
   margin: 0;
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
 }
 
 .disclosure {
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
 }
 
 .summary {
   display: inline-flex;
   align-items: center;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-xs;
-  border-radius: $cr-action-radius;
-  color: var(--cr-muted);
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-xs;
+  border-radius: $pr-action-radius;
+  color: var(--pr-muted);
   cursor: pointer;
   /* The platform marker is a triangle that means "open", which the two labels
      below already say. */
   list-style: none;
   &::-webkit-details-marker { display: none; }
   &:focus-visible {
-    outline: $cr-focus-core-width solid var(--cr-primary);
-    outline-offset: $cr-focus-core-offset;
+    outline: $pr-focus-core-width solid var(--pr-primary);
+    outline-offset: $pr-focus-core-offset;
   }
 }
 
@@ -127,22 +127,22 @@
 
   th,
   td {
-    padding: $cr-spacing-2xs $cr-spacing-xs;
+    padding: $pr-spacing-2xs $pr-spacing-xs;
     text-align: start;
-    border-block-end: 1px solid var(--cr-edge);
+    border-block-end: 1px solid var(--pr-edge);
     white-space: nowrap;
   }
 
   thead th {
     font-weight: 650;
-    color: var(--cr-muted);
+    color: var(--pr-muted);
   }
 }
 
 .tableCaption {
-  padding-block-end: $cr-spacing-2xs;
+  padding-block-end: $pr-spacing-2xs;
   text-align: start;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
 }
 
 /* Forced colours. The Haze fill is paint and is dropped. The plot keeps a

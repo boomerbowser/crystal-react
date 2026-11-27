@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { only } from '../../../.storybook/environment.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 import { Carousel } from './Carousel.js';
 import { photos } from '../../../.storybook/fixtures/index.js';
 
 const materials = [
   ['Plastic', 'The foundation. A coloured atmosphere behind everything else, with its own glow.'],
-  ['Frost', `The diffused intermediate surface: ${crystalTokens['material.frost.diffusion']} of backdrop blur at ${crystalTokens['material.frost.saturation']}% saturation, with fine grain.`],
-  ['Resin', `The floating optical control plane. A ${Number(crystalTokens['material.resin.fill']) * 100}% fill, a rim that catches the light, and a float shadow.`],
-  ['Haze', `The reading fill a control paints under its label, at ${Number(crystalTokens['material.haze.fill']) * 100}% with a ${crystalTokens['material.haze.feather']} feather.`],
+  ['Frost', `The diffused intermediate surface: ${prismataTokens['material.frost.diffusion']} of backdrop blur at ${prismataTokens['material.frost.saturation']}% saturation, with fine grain.`],
+  ['Resin', `The floating optical control plane. A ${Number(prismataTokens['material.resin.fill']) * 100}% fill, a rim that catches the light, and a float shadow.`],
+  ['Haze', `The reading fill a control paints under its label, at ${Number(prismataTokens['material.haze.fill']) * 100}% with a ${prismataTokens['material.haze.feather']} feather.`],
 ];
 
 const slides = materials.map(([name, text]) => ({
@@ -17,7 +17,7 @@ const slides = materials.map(([name, text]) => ({
   content: (
     <>
       <h3 style={{ margin: 0 }}>{name}</h3>
-      <p style={{ marginBlock: 'var(--cr-spacing-xs) 0', color: 'var(--cr-muted)' }}>{text}</p>
+      <p style={{ marginBlock: 'var(--pr-spacing-xs) 0', color: 'var(--pr-muted)' }}>{text}</p>
     </>
   ),
 }));
@@ -29,9 +29,9 @@ const meta = {
     docs: {
       description: {
         component:
-          'There is no autoplay, and that is a decision. Crystal\'s rule is that nothing moves '
+          'There is no autoplay, and that is a decision. Prismata\'s rule is that nothing moves '
           + 'at rest, the catalogue says "never autoplay without a pause control", and the '
-          + 'recipes say, in Crystal\'s own words, "explicit next/previous navigation; never '
+          + 'recipes say, in Prismata\'s own words, "explicit next/previous navigation; never '
           + 'autoplay". Autoplay policy belongs to the product, so a product that must have it '
           + 'owns both the timer and the pause control.\n\n'
           + 'The track is a real scroll container with snapping, so a swipe, a flick and the '
@@ -39,11 +39,11 @@ const meta = {
           + 'with nothing focusable inside cannot be reached without a pointer. The movement '
           + 'between slides is the track gliding, the same movement a swipe makes. A reader who '
           + 'asks for reduced motion gets the jump alone. `gap` sets the space between slides '
-          + 'and `padding` the space inside each, both from Crystal\'s spacing scale.',
+          + 'and `padding` the space inside each, both from Prismata\'s spacing scale.',
       },
     },
   },
-  args: { slides, label: 'Crystal materials' },
+  args: { slides, label: 'Prismata materials' },
 } satisfies Meta<typeof Carousel>;
 
 export default meta;
@@ -85,7 +85,7 @@ export const PhotographsWithSpacing: Story = {
         <img
           src={src}
           alt={alt}
-          style={{ display: 'block', inlineSize: '100%', aspectRatio: '3 / 2', objectFit: 'cover', borderRadius: 'calc(var(--cr-radius) - var(--cr-spacing-sm))' }}
+          style={{ display: 'block', inlineSize: '100%', aspectRatio: '3 / 2', objectFit: 'cover', borderRadius: 'calc(var(--pr-radius) - var(--pr-spacing-sm))' }}
         />
       ),
     })),

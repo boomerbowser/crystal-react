@@ -120,7 +120,7 @@ export function LineChart({
             <g {...tip.containerProps} ref={arrival as never}>
               {drawn.map(({ series: one, channel, slot }) => (
                 /* A series rises from the zero line, or from the floor of the plot
-                   when zero is not in it. Crystal's `mark-in`, once. */
+                   when zero is not in it. Prismata's `mark-in`, once. */
                 <g
                   key={one.name}
                   className={styles['series']}

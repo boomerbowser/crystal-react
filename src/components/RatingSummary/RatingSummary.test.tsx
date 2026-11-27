@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { RatingSummary } from './RatingSummary.js';
 
 describe('RatingSummary', () => {
@@ -8,14 +8,14 @@ describe('RatingSummary', () => {
      claim. 4.8 from three people and from three thousand are not the same fact,
      and a bar at 60% could be six votes or six hundred. */
   it('states the average and the count together', () => {
-    renderWithCrystal(<RatingSummary average={4.6} count={128} />);
+    renderWithPrismata(<RatingSummary average={4.6} count={128} />);
     expect(screen.getByText('4.6 out of 5, from 128 ratings')).toBeInTheDocument();
   });
 
   /* "Bars are labelled". Each segment is its own meter with its own name, so
      the proportions do not exist only as pixels. */
   it('labels every bar', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <RatingSummary average={4.6} count={10} distribution={[7, 2, 1, 0, 0]} />,
     );
     expect(screen.getByRole('meter', { name: /5 stars, 7/ })).toBeInTheDocument();
@@ -25,13 +25,13 @@ describe('RatingSummary', () => {
   /* No reviews is the absence of an average. "0 out of 5" would tell a reader
      the product was rated badly. */
   it('does not report nothing as a rating of zero', () => {
-    renderWithCrystal(<RatingSummary count={0} />);
+    renderWithPrismata(<RatingSummary count={0} />);
     expect(screen.getByText('No ratings yet')).toBeInTheDocument();
     expect(screen.queryByText(/out of 5/)).toBeNull();
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <RatingSummary average={4.6} count={10} distribution={[7, 2, 1, 0, 0]} />,
     );
     await expectNoAxeViolations(container);

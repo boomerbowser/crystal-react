@@ -61,7 +61,7 @@ export const Review = forwardRef<HTMLElement, ReviewProps>(function Review({
   const scope = useListItemMotion();
   const merged = useMemo(() => mergeRefs(ref, scope as never), [ref, scope]);
   return (
-    <article {...props} ref={merged as never} className={cx('cr-haze inset', styles['review'], className)}>
+    <article {...props} ref={merged as never} className={cx('pr-haze inset', styles['review'], className)}>
       {rating ? <div className={styles['rating']}>{rating}</div> : null}
       {title ? <h3 className={styles['title']}>{title}</h3> : null}
 

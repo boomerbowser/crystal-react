@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { AuthBlock, DEFAULT_AUTH_ERROR, type AuthMode, type AuthState } from './AuthBlock.js';
 
 const noop = (): void => {};
@@ -17,19 +17,19 @@ describe('AuthBlock', () => {
     ['register', { name: 'name', email: 'username', password: 'new-password' }],
     ['reset', { email: 'username' }],
   ] as const)('gives the %s fields the tokens they are', (mode, tokens) => {
-    renderWithCrystal(<AuthBlock mode={mode} onSubmit={noop} />);
+    renderWithPrismata(<AuthBlock mode={mode} onSubmit={noop} />);
     for (const [name, token] of Object.entries(tokens)) expect(field(name)).toHaveAttribute('autocomplete', token);
     expect(screen.getByRole('button', { name: /sign in|create account|send reset link/i })).toHaveAttribute('type', 'submit');
   });
 
   it('offers a one-time code to the verification field', () => {
-    renderWithCrystal(<AuthBlock mode="verify" onSubmit={noop} />);
+    renderWithPrismata(<AuthBlock mode="verify" onSubmit={noop} />);
     expect(document.querySelector('input[autocomplete="one-time-code"]')).not.toBeNull();
   });
 
   it('is one real form that hands the product the named values', async () => {
     const onSubmit = vi.fn();
-    renderWithCrystal(<AuthBlock mode="sign-in" onSubmit={onSubmit} />);
+    renderWithPrismata(<AuthBlock mode="sign-in" onSubmit={onSubmit} />);
     expect(document.querySelectorAll('form')).toHaveLength(1);
     await userEvent.type(screen.getByRole('textbox', { name: 'Email' }), 'ada@example.com');
     await userEvent.type(field('password'), 'correct horse');
@@ -41,7 +41,7 @@ describe('AuthBlock', () => {
 
   /* Second half: a failure never reveals which factor was wrong. */
   it('says one failure for signing in, attached to no field, whatever the product passes', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <AuthBlock mode="sign-in" onSubmit={noop} state="error" errors={{ email: 'No account uses that address' }} />,
     );
     expect(screen.getByRole('alert')).toHaveTextContent(DEFAULT_AUTH_ERROR);
@@ -51,19 +51,19 @@ describe('AuthBlock', () => {
   });
 
   it('does not take field errors for a reset either', () => {
-    renderWithCrystal(<AuthBlock mode="reset" onSubmit={noop} errors={{ email: 'No account uses that address' }} />);
+    renderWithPrismata(<AuthBlock mode="reset" onSubmit={noop} errors={{ email: 'No account uses that address' }} />);
     expect(screen.queryByText('No account uses that address')).toBeNull();
   });
 
   it('lets registration say what is wrong with the shape of a field', () => {
-    renderWithCrystal(<AuthBlock mode="register" onSubmit={noop} errors={{ password: 'Use at least 12 characters' }} />);
+    renderWithPrismata(<AuthBlock mode="register" onSubmit={noop} errors={{ password: 'Use at least 12 characters' }} />);
     expect(screen.getByText('Use at least 12 characters')).toBeInTheDocument();
     expect(field('password')).toHaveAttribute('aria-invalid', 'true');
   });
 
   it('holds the form when locked, and says when to try again', async () => {
     const onSubmit = vi.fn();
-    renderWithCrystal(<AuthBlock mode="sign-in" onSubmit={onSubmit} state="locked" lockedMessage="Try again in 15 minutes." />);
+    renderWithPrismata(<AuthBlock mode="sign-in" onSubmit={onSubmit} state="locked" lockedMessage="Try again in 15 minutes." />);
     expect(screen.getByRole('alert')).toHaveTextContent('Try again in 15 minutes.');
     expect(screen.getByRole('textbox', { name: 'Email' })).toBeDisabled();
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
@@ -71,7 +71,7 @@ describe('AuthBlock', () => {
   });
 
   it('says it is signing in, from a region that was already there', () => {
-    const { rerender } = renderWithCrystal(<AuthBlock mode="sign-in" onSubmit={noop} />);
+    const { rerender } = renderWithPrismata(<AuthBlock mode="sign-in" onSubmit={noop} />);
     expect(screen.getByRole('status')).toHaveTextContent('');
     rerender(<AuthBlock mode="sign-in" onSubmit={noop} state="submitting" />);
     expect(screen.getByRole('status')).toHaveTextContent('Signing in');
@@ -80,7 +80,7 @@ describe('AuthBlock', () => {
 
   it('moves between modes when the product can', async () => {
     const onModeChange = vi.fn();
-    renderWithCrystal(<AuthBlock mode="sign-in" onSubmit={noop} onModeChange={onModeChange} />);
+    renderWithPrismata(<AuthBlock mode="sign-in" onSubmit={noop} onModeChange={onModeChange} />);
     await userEvent.click(screen.getByRole('button', { name: 'Forgot your password?' }));
     expect(onModeChange).toHaveBeenCalledWith('reset');
   });
@@ -89,7 +89,7 @@ describe('AuthBlock', () => {
     (['sign-in', 'register', 'reset', 'verify'] as AuthMode[]).flatMap((mode) =>
       (['at-rest', 'submitting', 'error', 'locked'] as AuthState[]).map((state) => [mode, state] as const)),
   )('has no axe violations %s %s', async (mode, state) => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <AuthBlock mode={mode} state={state} onSubmit={noop} onModeChange={noop} notice={mode === 'reset' ? 'If an account uses that address, a link is on its way.' : undefined} />,
     );
     await expectNoAxeViolations(container);

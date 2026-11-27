@@ -4,14 +4,14 @@
  *
  * The catalogue's `product` column for this component says it in as many words:
  * "Use a maintained primitive rather than rebuilding it." So this is React Aria's
- * `FocusScope` with Crystal's contract stated around it, and nothing else.
+ * `FocusScope` with Prismata's contract stated around it, and nothing else.
  *
  * Rebuilding a focus trap means reimplementing tab-order traversal across shadow
  * roots, `inert`, iframes and every element that is focusable but not
  * tabbable. Getting one wrong strands a keyboard user inside a region with no
  * way out, which is the failure this component exists to prevent.
  *
- * Crystal adds one rule React Aria cannot enforce: never trap without a
+ * Prismata adds one rule React Aria cannot enforce: never trap without a
  * visible, keyboard-reachable exit. A dialog has its close button and a menu
  * has Escape. A region with neither must not be trapped.
  */

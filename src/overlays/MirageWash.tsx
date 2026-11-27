@@ -3,7 +3,7 @@
 /* The Mirage wash of a modal overlay, drawn on its own layer (R-37).
  *
  * React Aria's `Modal` sits inside its `ModalOverlay`. When the overlay itself
- * wore `.cr-mirage`, it became a backdrop root. A `backdrop-filter` on a
+ * wore `.pr-mirage`, it became a backdrop root. A `backdrop-filter` on a
  * surface inside it, such as a drawer's Frost or a palette's Haze, then sees
  * only the overlay's own layer, not the page, so it blurred nothing and the
  * page read through the panel sharp.
@@ -25,7 +25,7 @@ import { cx } from '../styles/cx.js';
 import styles from './MirageWash.module.scss';
 
 export function MirageWash(wash: PresetMotionProps): React.JSX.Element {
-  return <motion.div aria-hidden="true" data-cr-wash="" className={cx('cr-mirage', styles['wash'])} {...wash} />;
+  return <motion.div aria-hidden="true" data-pr-wash="" className={cx('pr-mirage', styles['wash'])} {...wash} />;
 }
 
 /** The class an overlay that holds a `MirageWash` needs, so the wash paints under its panel. */

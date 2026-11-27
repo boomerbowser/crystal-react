@@ -13,7 +13,7 @@ const meta = {
           + 'The centre label is not the only representation. The number in the middle is a '
           + 'convenience. The value lives in `aria-valuetext`, so a ring rendered without a '
           + 'centre label loses nothing an assistive technology needs.\n\n'
-          + 'The stroke is `--cr-progress-ring-stroke`, which Crystal publishes as one value for '
+          + 'The stroke is `--pr-progress-ring-stroke`, which Prismata publishes as one value for '
           + 'this and for the gauge arc the catalogue says matches it. A gauge is a progress '
           + 'ring that has been told what it is measuring, and one token keeps the two the same.',
       },

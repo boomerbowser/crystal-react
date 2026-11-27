@@ -3,14 +3,14 @@
 /* "Inherits" its material and sits inline, so there is no surface here. This
    file holds only the typography that separates a date from the sentence
    around it. */
-.estimate { color: var(--cr-text); }
+.estimate { color: var(--pr-text); }
 
 /* No estimate takes the muted ink and no status colour, because nothing is
    wrong: the answer is not known. */
-.estimate[data-unavailable] { color: var(--cr-muted); }
+.estimate[data-unavailable] { color: var(--pr-muted); }
 
 /* The relative phrase is the secondary reading of the same fact. */
-.relative { color: var(--cr-muted); }
+.relative { color: var(--pr-muted); }
 
 @media (forced-colors: active) {
   .estimate, .estimate[data-unavailable], .relative { color: CanvasText; }

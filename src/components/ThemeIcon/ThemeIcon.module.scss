@@ -14,20 +14,20 @@
   display: inline-grid;
   place-items: center;
   box-sizing: border-box;
-  inline-size: $cr-icon-action + $cr-spacing-sm;
-  block-size: $cr-icon-action + $cr-spacing-sm;
-  border-radius: var(--cr-radius);
+  inline-size: $pr-icon-action + $pr-spacing-sm;
+  block-size: $pr-icon-action + $pr-spacing-sm;
+  border-radius: var(--pr-radius);
   /* Not a control: no hit area and no cursor change. */
   pointer-events: none;
 }
 
 .themeIcon > :first-child {
-  inline-size: $cr-icon-action;
-  block-size: $cr-icon-action;
+  inline-size: $pr-icon-action;
+  block-size: $pr-icon-action;
 }
 
-.primary { background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
-.surface { background: var(--cr-surface-alt); color: var(--cr-text); }
+.primary { background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
+.surface { background: var(--pr-surface-alt); color: var(--pr-text); }
 
 .circle { border-radius: 50%; }
 

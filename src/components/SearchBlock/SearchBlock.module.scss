@@ -1,80 +1,80 @@
 @use '../../styles/field' as field;
 @use '../../styles/tokens' as *;
 
-/* "Frost overlay with Haze rows." The suggestions are Crystal's `.cr-frost`
+/* "Frost overlay with Haze rows." The suggestions are Prismata's `.pr-frost`
    popover with the combobox's row treatment, the same rows as Select and
-   ComboBox. The results are Haze rows, worn as `.cr-haze`. The field is
-   Crystal's field. */
-.search { display: grid; gap: $cr-spacing-md; min-inline-size: 0; }
+   ComboBox. The results are Haze rows, worn as `.pr-haze`. The field is
+   Prismata's field. */
+.search { display: grid; gap: $pr-spacing-md; min-inline-size: 0; }
 
 .form, .field { @include field.field; }
 .label { @include field.label; }
-/* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
+/* The shell wears Prismata's `.pr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 .shell { @include field.keyboard-focus-within; }
 .control { @include field.control; }
 .control:focus { outline: none; }
 
 .glass {
   flex: none;
-  inline-size: $cr-icon-size;
-  block-size: $cr-icon-size;
-  margin-inline-start: $cr-spacing-sm;
+  inline-size: $pr-icon-size;
+  block-size: $pr-icon-size;
+  margin-inline-start: $pr-spacing-sm;
   fill: none;
-  stroke: var(--cr-muted);
+  stroke: var(--pr-muted);
   stroke-width: 2;
   stroke-linecap: round;
 }
 
 .trigger { @include field.inline-action; }
-.trigger svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.trigger svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 .popover {
   min-inline-size: var(--trigger-width);
   max-block-size: 40vh;
-  padding: $cr-spacing-2xs;
-  border-radius: var(--cr-radius);
+  padding: $pr-spacing-2xs;
+  border-radius: var(--pr-radius);
   overflow: auto;
 }
 
 .list { outline: none; }
 
 .header {
-  padding: $cr-spacing-2xs $cr-spacing-sm;
-  font-size: var(--cr-text-caption-size);
+  padding: $pr-spacing-2xs $pr-spacing-sm;
+  font-size: var(--pr-text-caption-size);
   font-weight: 700;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
 }
 
 .option {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-block-size: $cr-action-min-target;
-  padding: $cr-spacing-2xs $cr-spacing-sm;
-  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
+  min-block-size: $pr-action-min-target;
+  padding: $pr-spacing-2xs $pr-spacing-sm;
+  border-radius: calc(var(--pr-radius) - #{$pr-field-well-inset});
   font-weight: 550;
-  color: var(--cr-text);
+  color: var(--pr-text);
   cursor: pointer;
 }
 
-.option[data-focused] { background: var(--cr-surface-alt); }
+.option[data-focused] { background: var(--pr-surface-alt); }
 
-.optionDescription { font-weight: 400; font-size: var(--cr-text-caption-size); color: var(--cr-muted); }
+.optionDescription { font-weight: 400; font-size: var(--pr-text-caption-size); color: var(--pr-muted); }
 
 .state {
   display: flex;
   align-items: center;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
-  color: var(--cr-muted);
-  font-size: var(--cr-text-caption-size);
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
+  color: var(--pr-muted);
+  font-size: var(--pr-text-caption-size);
 }
 
-.resultsHeading { margin: 0; font-size: var(--cr-text-subheading-size); }
+.resultsHeading { margin: 0; font-size: var(--pr-text-subheading-size); }
 
 .results {
   display: grid;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -82,14 +82,14 @@
 
 .result {
   display: grid;
-  gap: $cr-spacing-2xs;
-  padding: $cr-spacing-sm var(--cr-space);
-  border-radius: var(--cr-radius);
+  gap: $pr-spacing-2xs;
+  padding: $pr-spacing-sm var(--pr-space);
+  border-radius: var(--pr-radius);
 }
 
-.resultTitle { font-weight: 700; color: var(--cr-text); }
+.resultTitle { font-weight: 700; color: var(--pr-text); }
 
-.resultDescription { color: var(--cr-muted); }
+.resultDescription { color: var(--pr-muted); }
 
 @media (forced-colors: active) {
   .option[data-focused] { outline: 2px solid Highlight; }

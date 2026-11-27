@@ -56,7 +56,7 @@ export const Marked: Story = {
 export const Code: Story = {
   render: () => (
     <Stack gap="lg">
-      <QRCode value="https://example.com/crystal" caption="Scan to open" />
+      <QRCode value="https://example.com/prismata" caption="Scan to open" />
       <QRCode value="00A1FF93B2" alt="Ticket for row F, seat 12" isExpired caption="Expired" />
     </Stack>
   ),
@@ -66,7 +66,7 @@ export const Packed: Story = {
   render: () => (
     <Masonry columns={3} gap="md">
       {[120, 200, 80, 160, 100, 220, 140].map((height, i) => (
-        <Card key={height} aria-label={`Item ${i + 1}`} style={{ minHeight: `${height}px` /* crystal-allow-literal: story heights, so the packing is visible */ }}>
+        <Card key={height} aria-label={`Item ${i + 1}`} style={{ minHeight: `${height}px` /* prismata-allow-literal: story heights, so the packing is visible */ }}>
           {height}px
         </Card>
       ))}
@@ -94,7 +94,7 @@ export const Overflowing: Story = {
     menu. The container is narrow, so the menu always has something in it. */
 export const IntoAMenu: Story = {
   render: () => (
-    <div style={{ maxInlineSize: 'calc(var(--cr-layout-sidebar-width, 280px) * 1.4)' /* crystal-allow-literal: the token's own fallback */ }}>
+    <div style={{ maxInlineSize: 'calc(var(--pr-layout-sidebar-width, 280px) * 1.4)' /* prismata-allow-literal: the token's own fallback */ }}>
       <OverflowList
         gap="sm"
         renderOverflow={(hidden, count) => (
@@ -118,7 +118,7 @@ export const OnScroll: Story = {
   render: () => (
     <Stack gap="lg">
       <p>Scroll down. Each card is readable before it animates, never revealed by animating.</p>
-      <div style={{ height: '80vh' /* crystal-allow-literal: story spacer, to make scrolling possible */ }} />
+      <div style={{ height: '80vh' /* prismata-allow-literal: story spacer, to make scrolling possible */ }} />
       {[1, 2, 3].map((n) => (
         <AnimateOnScroll key={n}>
           <Card aria-label={`Card ${n}`}>Card {n}</Card>

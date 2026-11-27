@@ -19,12 +19,12 @@ export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      /* Three entry points. Blocks ship from their own (`@crystal-ui/react/blocks`),
+      /* Three entry points. Blocks ship from their own (`@prismata/react/blocks`),
          because a block is a starting point products are expected to fork, not
          a stable API (§4.2), and a product should be able to see which kind it
          is importing. The main entry exports blocks too.
 
-         The editor ships from its own (`@crystal-ui/react/editor`) and the main
+         The editor ships from its own (`@prismata/react/editor`) and the main
          entry does not export it, because it binds TipTap, an optional peer
          dependency: a product that never imports it never installs or bundles
          an editor engine. */
@@ -37,8 +37,8 @@ export default defineConfig({
       fileName: (format, name) => `${name}.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
-      /* Everything the consumer resolves themselves. `@crystal-ui/core` is
-         external because CONTRACT §1 says a library consumes Crystal's generated
+      /* Everything the consumer resolves themselves. `@prismata/core` is
+         external because CONTRACT §1 says a library consumes Prismata's generated
          values rather than carrying a copy; bundling it would inline a second
          copy of the token set that could drift from the installed one.
 
@@ -46,7 +46,7 @@ export default defineConfig({
          consumer installs once, and a copy inlined here would sit beside
          whatever else in the application already uses them. `check-bundle.mjs`
          fails when a dependency is missing from this list. */
-      external: (id) => /^(react|react-dom|react\/|react-dom\/|react-aria|react-aria-components|react-stately|@react-|@internationalized\/|@crystal-ui\/core|motion|motion-dom|motion-utils|qrcode\.react|react-imask|imask|d3-[a-z]+|internmap|delaunator|robust-predicates|@tiptap\/|@floating-ui\/)/.test(id),
+      external: (id) => /^(react|react-dom|react\/|react-dom\/|react-aria|react-aria-components|react-stately|@react-|@internationalized\/|@prismata\/core|motion|motion-dom|motion-utils|qrcode\.react|react-imask|imask|d3-[a-z]+|internmap|delaunator|robust-predicates|@tiptap\/|@floating-ui\/)/.test(id),
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',
@@ -54,7 +54,7 @@ export default defineConfig({
       },
     },
     sourcemap: true,
-    /* The library must not inline Crystal's values into JS as literals; they
+    /* The library must not inline Prismata's values into JS as literals; they
        arrive through generated tokens and custom properties. */
     cssCodeSplit: false,
     emptyOutDir: true,

@@ -10,7 +10,7 @@ const meta = {
         component:
           'Three of the four states already exist in `Resizable`: React Aria\'s `useMove` '
           + 'behind a `role="separator"` carrying `aria-valuenow`, so the divider is resizable '
-          + 'by keyboard rather than only by pointer, with a 44px target around a 4px grip.\n\n' /* crystal-allow-literal: prose about the target floor, not a value the component sets */
+          + 'by keyboard rather than only by pointer, with a 44px target around a 4px grip.\n\n' /* prismata-allow-literal: prose about the target floor, not a value the component sets */
           + 'What this adds is `collapsed`, and it is a component rather than a prop because '
           + 'of what collapsing must do to the divider: a separator between one region and '
           + 'nothing announces a value it cannot change, and a keyboard user who lands on it '

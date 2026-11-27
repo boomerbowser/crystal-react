@@ -14,7 +14,7 @@
 .stack {
   display: flex;
   min-width: 0;
-  gap: var(--cr-stack-gap, #{$cr-spacing-md});
+  gap: var(--pr-stack-gap, #{$pr-spacing-md});
 }
 
 .vertical { flex-direction: column; }

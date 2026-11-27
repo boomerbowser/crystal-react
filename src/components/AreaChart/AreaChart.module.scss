@@ -3,15 +3,15 @@
 /* The fill only. The line on top of it and the points on the line use the
  * shared cartesian styles.
  *
- * `--cr-chart-fill-opacity` is Crystal's, and it lets this chart show three
+ * `--pr-chart-fill-opacity` is Prismata's, and it lets this chart show three
  * series. The gridlines are behind the fill and must stay readable through it.
- * The catalogue puts that material decision on Crystal's side: "fill material
+ * The catalogue puts that material decision on Prismata's side: "fill material
  * and opacity so overlaps stay readable".
  */
 
 .area {
   fill: var(--series-colour);
-  fill-opacity: var(--cr-chart-fill-opacity);
+  fill-opacity: var(--pr-chart-fill-opacity);
   stroke: none;
 }
 

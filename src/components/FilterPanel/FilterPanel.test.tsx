@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { FilterPanel } from './FilterPanel.js';
 import { CheckboxGroup, Checkbox } from '../Checkbox/Checkbox.js';
 
@@ -24,14 +24,14 @@ describe('FilterPanel', () => {
      on the page. A checkbox says "checked" and nothing about the four hundred
      products that just became eleven. */
   it('announces what is applied, with how many results it leaves', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <FilterPanel applied={applied} resultCount={11}>{facets()}</FilterPanel>,
     );
     expect(screen.getByRole('status')).toHaveTextContent('Blue, Large. 11 results');
   });
 
   it('says nothing when nothing is applied', () => {
-    renderWithCrystal(<FilterPanel>{facets()}</FilterPanel>);
+    renderWithPrismata(<FilterPanel>{facets()}</FilterPanel>);
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
@@ -41,7 +41,7 @@ describe('FilterPanel', () => {
   it('offers a named control for each applied filter', async () => {
     const user = userEvent.setup();
     const onRemove = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <FilterPanel applied={applied} onRemove={onRemove}>{facets()}</FilterPanel>,
     );
     await user.click(screen.getByRole('button', { name: 'Remove Blue' }));
@@ -52,19 +52,19 @@ describe('FilterPanel', () => {
   /* With nothing applied, Clear all is absent. A disabled Clear all would be a
      control with nothing to do. */
   it('offers Clear all only when there is something to clear', () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <FilterPanel onClearAll={() => {}}>{facets()}</FilterPanel>,
     );
     expect(screen.queryByRole('button', { name: 'Clear all filters' })).toBeNull();
 
-    rerenderWithCrystal(
+    rerenderWithPrismata(
       <FilterPanel applied={applied} onClearAll={() => {}}>{facets()}</FilterPanel>,
     );
     expect(screen.getByRole('button', { name: 'Clear all filters' })).toBeInTheDocument();
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <FilterPanel applied={applied} onRemove={() => {}} onClearAll={() => {}} resultCount={11}>
         {facets()}
       </FilterPanel>,

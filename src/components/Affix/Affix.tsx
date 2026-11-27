@@ -125,7 +125,7 @@ export function Affix({ children, offset = 0, onChange, className }: AffixProps)
       <div
         ref={measureContent}
         data-pinned={isPinned || undefined}
-        className={cx(styles['content'], isPinned && 'cr-resin flat')}
+        className={cx(styles['content'], isPinned && 'pr-resin flat')}
         style={isPinned && place
           ? { insetBlockStart: `${place.top}px`, left: `${place.left}px`, inlineSize: `${place.width}px` }
           : undefined}

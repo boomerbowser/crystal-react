@@ -1,14 +1,14 @@
 'use client';
 
-/* RichTextEditor: Crystal's rich text surface with an engine bound to it.
+/* RichTextEditor: Prismata's rich text surface with an engine bound to it.
  *
  * `RichTextSurface` is engine-agnostic by the catalogue's rule ("the entire
  * editing engine, serialisation and paste handling" is the product's), and it
  * stays that way. This is the optional half: a binding of TipTap 3
- * (ProseMirror) to Crystal's format vocabulary, shipped from its own entry
- * point, `@crystal-ui/react/editor`, with TipTap as optional peer dependencies.
+ * (ProseMirror) to Prismata's format vocabulary, shipped from its own entry
+ * point, `@prismata/react/editor`, with TipTap as optional peer dependencies.
  * A product that never imports it never installs or bundles an editor. Whether
- * a design-system library should ship a binding at all is Crystal's open
+ * a design-system library should ship a binding at all is Prismata's open
  * decision D-30; this exists because Meridian's own review of the text element
  * asked for headings, lists, checklists, underline, strikethrough and touch
  * support, and an engine-agnostic surface cannot give a product any of them.
@@ -131,7 +131,7 @@ export interface RichTextEditorProps {
   selectionToolbar?: boolean;
   /** Where the toolbar sits; see `RichTextSurface`. */
   toolbarPlacement?: 'auto' | 'top' | 'bottom';
-  /** Extensions added to Crystal's, for a product's own nodes or marks. */
+  /** Extensions added to Prismata's, for a product's own nodes or marks. */
   extensions?: Extensions;
   autoFocus?: boolean;
   className?: string;
@@ -145,7 +145,7 @@ export interface RichTextEditorHandle {
 const isApplePlatform = (): boolean => typeof navigator !== 'undefined'
   && /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent);
 
-/* Which block the caret is in, as one of Crystal's block types. */
+/* Which block the caret is in, as one of Prismata's block types. */
 function blockTypeOf(editor: Editor): BlockType {
   if (editor.isActive('heading', { level: 2 })) return 'heading-2';
   if (editor.isActive('heading', { level: 3 })) return 'heading-3';
@@ -476,7 +476,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         <MenuTrigger>
           {/* Bare: the toolbar sits on the field shell's Resin, and Resin never
               contains Resin. It keeps the 48px target and the focus ring. */}
-          <Button variant="quiet" aria-label={`Block type, ${currentBlock.label}`} className={cx(styles['blockType'], 'cr-bare')}>
+          <Button variant="quiet" aria-label={`Block type, ${currentBlock.label}`} className={cx(styles['blockType'], 'pr-bare')}>
             <span aria-hidden="true">{currentBlock.label}</span>
             <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" className={styles['chevron']}><path d="m6 9 6 6 6-6" /></svg>
           </Button>
@@ -585,7 +585,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       {selectionToolbar && !isReadOnly ? (
         <BubbleMenu
           editor={editor}
-          className={cx(styles['selection'], 'cr-frost', 'bar')}
+          className={cx(styles['selection'], 'pr-frost', 'bar')}
           options={{ placement: 'top', offset: 8, flip: true, shift: { padding: 8 } }}
           shouldShow={({ editor: current, from, to }) => from !== to && !current.isActive('codeBlock') && current.isFocused}
         >

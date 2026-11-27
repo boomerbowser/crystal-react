@@ -2,7 +2,7 @@
 
 /* Stack and Group.
  *
- * Crystal's catalogue treats these as two components (a vertical arrangement
+ * Prismata's catalogue treats these as two components (a vertical arrangement
  * with one spacing value, and a horizontal one with wrapping and alignment). They
  * are two exports here because that is the vocabulary a product reads. They
  * share an implementation because they are the same box turned ninety degrees,
@@ -16,7 +16,7 @@
  */
 import { forwardRef, type CSSProperties, type ElementType, type HTMLAttributes, type ReactNode } from 'react';
 import { cx } from '../../styles/cx.js';
-import { spacingValue, type CrystalSpacing } from '../../styles/spacing.js';
+import { spacingValue, type PrismataSpacing } from '../../styles/spacing.js';
 import styles from './Stack.module.scss';
 
 type Align = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
@@ -31,8 +31,8 @@ const JUSTIFY: Record<Justify, string> = {
 };
 
 export interface StackProps extends HTMLAttributes<HTMLElement> {
-  /** Space between children, from Crystal's scale. Defaults to `md`. */
-  gap?: CrystalSpacing;
+  /** Space between children, from Prismata's scale. Defaults to `md`. */
+  gap?: PrismataSpacing;
   align?: Align;
   justify?: Justify;
   /** The element to render. Presentational by default; pass a real one when the grouping is real. */
@@ -52,7 +52,7 @@ function arrange(
   ref: React.Ref<HTMLElement>,
 ): React.JSX.Element {
   const layout: CSSProperties = {
-    ...(gap !== undefined ? { '--cr-stack-gap': spacingValue(gap) } as CSSProperties : {}),
+    ...(gap !== undefined ? { '--pr-stack-gap': spacingValue(gap) } as CSSProperties : {}),
     ...(align ? { alignItems: ALIGN[align] } : {}),
     ...(justify ? { justifyContent: JUSTIFY[justify] } : {}),
     ...style,

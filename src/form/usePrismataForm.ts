@@ -1,6 +1,6 @@
 'use client';
 
-/* useCrystalForm is the whole of §3.8 in one hook.
+/* usePrismataForm is the whole of §3.8 in one hook.
  *
  * React Hook Form is deliberately not wrapped. React Aria already owns
  * validation display, `aria-describedby` wiring and submission semantics. A
@@ -33,23 +33,23 @@ import {
   type FieldErrors, type StandardSchemaV1,
 } from './standard-schema.js';
 
-export type CrystalSubmissionStatus = 'idle' | 'submitting' | 'succeeded' | 'failed';
+export type PrismataSubmissionStatus = 'idle' | 'submitting' | 'succeeded' | 'failed';
 
 /**
  * Anything with a `mutateAsync`. TanStack Query's mutation object is this shape
  * already; so is `{ mutateAsync: (value) => fetch(…) }`. Neither is a dependency.
  */
-export interface CrystalMutation<Value> {
+export interface PrismataMutation<Value> {
   mutateAsync: (value: Value) => Promise<unknown>;
 }
 
-export interface UseCrystalFormOptions<Schema extends StandardSchemaV1> {
+export interface UsePrismataFormOptions<Schema extends StandardSchemaV1> {
   /** Any Standard Schema validator. Without one, whatever the browser accepts is submitted. */
   schema?: Schema;
   /** What to do with values that passed. Runs after `mutation`, if both are given. */
   onSubmit?: (value: StandardSchemaV1.InferOutput<Schema>) => void | Promise<void>;
   /** A mutation to send the values through. */
-  mutation?: CrystalMutation<StandardSchemaV1.InferOutput<Schema>>;
+  mutation?: PrismataMutation<StandardSchemaV1.InferOutput<Schema>>;
   /**
    * Turn a thrown error into field errors. A 422 carrying
    * `{ email: 'Already registered' }` becomes the same state a client rule
@@ -61,18 +61,18 @@ export interface UseCrystalFormOptions<Schema extends StandardSchemaV1> {
   resetOnSuccess?: boolean;
 }
 
-export interface CrystalFormProps {
+export interface PrismataFormProps {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChange: (event: FormEvent<HTMLFormElement>) => void;
   onReset: () => void;
   validationErrors: FieldErrors;
-  'data-cr-submission': CrystalSubmissionStatus;
+  'data-pr-submission': PrismataSubmissionStatus;
 }
 
-export interface CrystalForm {
+export interface PrismataForm {
   /** Spread onto `Form`, or onto a bare `<form>`, which loses only the distribution. */
-  formProps: CrystalFormProps;
-  status: CrystalSubmissionStatus;
+  formProps: PrismataFormProps;
+  status: PrismataSubmissionStatus;
   isSubmitting: boolean;
   /** Issues with no field of their own. Render these; nothing else will. */
   formErrors: string[];
@@ -85,12 +85,12 @@ export interface CrystalForm {
   reset: () => void;
 }
 
-export function useCrystalForm<Schema extends StandardSchemaV1>(
-  options: UseCrystalFormOptions<Schema> = {},
-): CrystalForm {
+export function usePrismataForm<Schema extends StandardSchemaV1>(
+  options: UsePrismataFormOptions<Schema> = {},
+): PrismataForm {
   const { schema, onSubmit, mutation, onError, resetOnSuccess = false } = options;
 
-  const [status, setStatus] = useState<CrystalSubmissionStatus>('idle');
+  const [status, setStatus] = useState<PrismataSubmissionStatus>('idle');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const [error, setError] = useState<unknown>(undefined);
@@ -185,7 +185,7 @@ export function useCrystalForm<Schema extends StandardSchemaV1>(
       onChange: handleChange,
       onReset: reset,
       validationErrors: fieldErrors,
-      'data-cr-submission': status,
+      'data-pr-submission': status,
     },
     status,
     isSubmitting: status === 'submitting',

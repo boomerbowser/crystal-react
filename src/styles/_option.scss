@@ -5,8 +5,8 @@
  * would decide separately what a selected option looks like, the divergence
  * `_status.scss` and `_field.scss` also prevent.
  *
- * Selection is label weight, which is what Crystal specifies for this shape.
- * `crystal.css` gives a selected button the primary reading pad, and gives
+ * Selection is label weight, which is what Prismata specifies for this shape.
+ * `prismata.css` gives a selected button the primary reading pad, and gives
  * `[role=tab][aria-selected=true]` only `font-weight: 800`. A pressed button is
  * an action in its on state, and an option is a choice among peers. Both
  * catalogue entries agree ("selection is label weight, never a check mark",
@@ -14,26 +14,26 @@
  * primary.
  *
  * Weight is typographic, not chromatic, so selection never rests on colour
- * alone. That is why Crystal chose it.
+ * alone. That is why Prismata chose it.
  */
 @use 'tokens' as *;
 
-/* The element an option is drawn on wears Crystal's `.cr-haze.flush` (2.7.0):
-   the feathered Haze fill to its own edge, with Crystal's fallbacks. This mixin
+/* The element an option is drawn on wears Prismata's `.pr-haze.flush` (2.7.0):
+   the feathered Haze fill to its own edge, with Prismata's fallbacks. This mixin
    is the option's geometry and its outline boundary. */
 @mixin option {
   position: relative;
   display: flex;
   align-items: center;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   box-sizing: border-box;
-  padding: $cr-spacing-sm $cr-spacing-md;
-  /* Crystal's light rim, not the dark outline: on glass a dark line round
+  padding: $pr-spacing-sm $pr-spacing-md;
+  /* Prismata's light rim, not the dark outline: on glass a dark line round
      every card reads as a hard black border. */
-  border: 1px solid var(--cr-rim);
-  border-radius: $cr-shape-content-radius;
-  min-block-size: $cr-action-min-target;
-  color: var(--cr-text);
+  border: 1px solid var(--pr-rim);
+  border-radius: $pr-shape-content-radius;
+  min-block-size: $pr-action-min-target;
+  color: var(--pr-text);
   cursor: pointer;
 
   /* An option is a choice, so the whole card is the target, not only a dot
@@ -45,9 +45,9 @@
   &[data-hovered] { filter: brightness(1.04); }
 
   &[data-focus-visible] {
-    outline: $cr-focus-core-width solid var(--cr-focus-core);
-    outline-offset: $cr-focus-core-offset;
-    box-shadow: var(--cr-focus-ring);
+    outline: $pr-focus-core-width solid var(--pr-focus-core);
+    outline-offset: $pr-focus-core-offset;
+    box-shadow: var(--pr-focus-ring);
   }
 
   /* "Unavailable options stay perceivable and say why." To stay perceivable the
@@ -56,7 +56,7 @@
      supplies the text that says why. */
   &[data-disabled] {
     cursor: not-allowed;
-    color: var(--cr-muted);
+    color: var(--pr-muted);
     border-style: dashed;
   }
 
@@ -75,16 +75,16 @@
  * card's padding crushes a 34px colour into a 10 by 18 ellipse. jsdom has no
  * layout, so unit tests do not catch this.
  *
- * Crystal's own rule for a selected option is the weight. The rim thickens with
+ * Prismata's own rule for a selected option is the weight. The rim thickens with
  * it so the choice is legible to somebody who cannot resolve a weight
  * difference. A thicker boundary is neither a fill nor the focus ring's shape,
  * which is an outline outside the box at an offset. */
 @mixin option-selected {
   &[data-selected] {
     font-weight: 800;
-    border-color: var(--cr-primary);
+    border-color: var(--pr-primary);
     border-width: 2px;
-    padding: calc(#{$cr-spacing-sm} - 1px) calc(#{$cr-spacing-md} - 1px);
+    padding: calc(#{$pr-spacing-sm} - 1px) calc(#{$pr-spacing-md} - 1px);
   }
 }
 
@@ -92,6 +92,6 @@
    estimate, and a row of them wraps into something hard to scan. */
 @mixin option-set {
   display: grid;
-  gap: $cr-spacing-xs;
+  gap: $pr-spacing-xs;
   inline-size: 100%;
 }

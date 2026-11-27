@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { Anchor } from './Anchor.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 
 describe('Anchor', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<Anchor href="/docs">The documentation</Anchor>);
+    const { container } = renderWithPrismata(<Anchor href="/docs">The documentation</Anchor>);
     await expectNoAxeViolations(container);
   });
 
@@ -16,7 +16,7 @@ describe('Anchor', () => {
      to open-in-new-tab and to the status bar. The type refuses that shape, and
      this is the run-time half of the same claim. */
   it('is a real anchor element with a destination', () => {
-    renderWithCrystal(<Anchor href="/docs">The documentation</Anchor>);
+    renderWithPrismata(<Anchor href="/docs">The documentation</Anchor>);
     const link = screen.getByRole('link', { name: 'The documentation' });
     expect(link.tagName).toBe('A');
     expect(link).toHaveAttribute('href', '/docs');
@@ -31,10 +31,10 @@ describe('Anchor', () => {
      does not derive longhands from a shorthand: `textDecoration` answers
      "underline" and `textDecorationLine` answers "none" for the same element.
      What jsdom genuinely cannot do is resolve a custom property (`color` here
-     reads back as the literal text `var(--cr-primary)`), so a check about a
+     reads back as the literal text `var(--pr-primary)`), so a check about a
      colour still belongs in a browser. */
   it('is underlined at rest, not only on hover', () => {
-    renderWithCrystal(<Anchor href="/docs">The documentation</Anchor>);
+    renderWithPrismata(<Anchor href="/docs">The documentation</Anchor>);
     const link = screen.getByRole('link');
     expect(getComputedStyle(link).textDecoration).toContain('underline');
   });
@@ -43,13 +43,13 @@ describe('Anchor', () => {
      keeps passing after the token moves, which makes it a test of nothing, and
      `lint:tokens` refuses a literal in here too. */
   it('clears the descenders it runs under, by the published offset', () => {
-    renderWithCrystal(<Anchor href="/docs">The documentation</Anchor>);
+    renderWithPrismata(<Anchor href="/docs">The documentation</Anchor>);
     const offset = getComputedStyle(screen.getByRole('link')).getPropertyValue('text-underline-offset');
-    expect(offset).toBe(crystalTokens['anchor.underlineOffset']);
+    expect(offset).toBe(prismataTokens['anchor.underlineOffset']);
   });
 
   it('opens an external link safely', () => {
-    renderWithCrystal(<Anchor href="https://example.com" isExternal>Example</Anchor>);
+    renderWithPrismata(<Anchor href="https://example.com" isExternal>Example</Anchor>);
     const link = screen.getByRole('link', { name: /Example/ });
     expect(link).toHaveAttribute('target', '_blank');
     expect(link.getAttribute('rel')).toContain('noopener');
@@ -60,19 +60,19 @@ describe('Anchor', () => {
      reader most likely to be lost by it is the one who cannot see it happen. The
      disclosure is text, not an icon. An icon announces nothing. */
   it('says that an external link opens a new tab', () => {
-    renderWithCrystal(<Anchor href="https://example.com" isExternal>Example</Anchor>);
+    renderWithPrismata(<Anchor href="https://example.com" isExternal>Example</Anchor>);
     expect(screen.getByRole('link', { name: 'Example (opens in a new tab)' })).toBeInTheDocument();
   });
 
   it('does not disclose a new tab for an ordinary link', () => {
-    renderWithCrystal(<Anchor href="/docs">The documentation</Anchor>);
+    renderWithPrismata(<Anchor href="/docs">The documentation</Anchor>);
     const link = screen.getByRole('link');
     expect(link.getAttribute('target')).toBeNull();
     expect(link.textContent).not.toMatch(/new tab/);
   });
 
   it('marks the external icon as decoration', () => {
-    renderWithCrystal(<Anchor href="https://example.com" isExternal>Example</Anchor>);
+    renderWithPrismata(<Anchor href="https://example.com" isExternal>Example</Anchor>);
     const svg = screen.getByRole('link').querySelector('svg');
     expect(svg?.closest('[aria-hidden="true"]')).not.toBeNull();
   });

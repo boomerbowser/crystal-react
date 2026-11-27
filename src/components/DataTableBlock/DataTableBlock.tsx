@@ -58,7 +58,7 @@ export interface DataTableBulkAction {
   label: (count: number) => string;
   /** Receives exactly the rows the label counted. */
   onAction: (keys: Selection) => void;
-  /** Destructive: Crystal's danger boundary on the control. */
+  /** Destructive: Prismata's danger boundary on the control. */
   danger?: boolean;
 }
 
@@ -119,7 +119,7 @@ export function DataTableBlock({
   return (
     <div
       aria-busy={state === 'loading' || undefined}
-      data-cr-state={selecting ? 'selecting' : state}
+      data-pr-state={selecting ? 'selecting' : state}
       className={cx(styles['block'], className)}
     >
       <div className={cx(styles['top'])}>

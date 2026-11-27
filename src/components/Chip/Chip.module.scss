@@ -1,11 +1,11 @@
 @use '../../styles/tokens' as *;
 @use '../../styles/field' as field;
 
-/* Chip is Crystal's tag (R-35, ruled 18 November 2026).
+/* Chip is Prismata's tag (R-35, ruled 18 November 2026).
  *
- * The catalogue says "Haze chips", and Crystal publishes that surface as a
- * pair: `.cr-resin-haze` carries the coat (the Resin shell, the Haze pad inset
- * by `--cr-haze-inset`, the sheen and the float shadow) and `.cr-tag` the
+ * The catalogue says "Haze chips", and Prismata publishes that surface as a
+ * pair: `.pr-resin-haze` carries the coat (the Resin shell, the Haze pad inset
+ * by `--pr-haze-inset`, the sheen and the float shadow) and `.pr-tag` the
  * geometry (the pill, the 48px floor and the label type). The chip wears both.
  * This file keeps only what a tag does not have: the gap, the remove control,
  * the two-control layout and selection on a chip that is not itself a button.
@@ -19,35 +19,35 @@
  */
 
 .chip {
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   white-space: nowrap;
 }
 
 .pressable { cursor: pointer; }
 
 /* Selection is label weight, here as everywhere; the primary pad is the second
-   signal. A selectable chip is a button, and Crystal fills a pressed button's
+   signal. A selectable chip is a button, and Prismata fills a pressed button's
    pad with the primary itself. A chip that is both selectable and removable is
    a container around two buttons, so it takes the same fill here. */
 .chip[data-selected] {
   font-weight: 800;
-  color: var(--cr-on-primary);
+  color: var(--pr-on-primary);
 }
 
 .chip[data-selected]::before {
-  background: var(--cr-primary);
+  background: var(--pr-primary);
   filter: none;
 }
 
 .chip[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: $cr-focus-core-offset;
-  box-shadow: var(--cr-focus-ring);
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: $pr-focus-core-offset;
+  box-shadow: var(--pr-focus-ring);
 }
 
-.chip[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.chip[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
 
-.removable { padding-inline-end: $cr-spacing-sm; }
+.removable { padding-inline-end: $pr-spacing-sm; }
 
 /* A chip that is both: the label half fills the pill up to the remove control,
    so the whole of it presses. The pill gives up its start and block padding,
@@ -63,7 +63,7 @@
   display: flex;
   align-items: center;
   align-self: stretch;
-  padding-inline: $cr-spacing-lg 0;
+  padding-inline: $pr-spacing-lg 0;
   border: 0;
   border-radius: inherit;
   background: transparent;
@@ -72,22 +72,22 @@
   cursor: pointer;
 }
 
-/* Crystal's tag narrows to 15px of inline padding on a phone. */
-@media (max-width: 600px) { /* crystal-allow-literal: Crystal's own tag breakpoint */
-  .chipLabel { padding-inline-start: 15px; } /* crystal-allow-literal: Crystal's tag padding on a phone */
+/* Prismata's tag narrows to 15px of inline padding on a phone. */
+@media (max-width: 600px) { /* prismata-allow-literal: Prismata's own tag breakpoint */
+  .chipLabel { padding-inline-start: 15px; } /* prismata-allow-literal: Prismata's tag padding on a phone */
 }
 
 .chipLabel[data-selected] { font-weight: 800; }
 
 .chipLabel[data-focus-visible] {
-  outline: $cr-focus-core-width solid var(--cr-focus-core);
-  outline-offset: calc(-1 * #{$cr-focus-core-offset});
+  outline: $pr-focus-core-width solid var(--pr-focus-core);
+  outline-offset: calc(-1 * #{$pr-focus-core-offset});
 }
 
 .remove {
   /* The visible control is the 24px circle this declares, and the 44px target is
-     the `::after` below. Neither inherited minimum may override that. Crystal's
-     `button { min-height: 48px }` (from 2.1.0) and `cr-bare`'s 44px minimum each
+     the `::after` below. Neither inherited minimum may override that. Prismata's
+     `button { min-height: 48px }` (from 2.1.0) and `pr-bare`'s 44px minimum each
      make a 32px chip render 50px tall, as measured. The hit-target box exists to
      prevent that. */
   min-inline-size: 0;
@@ -98,8 +98,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  inline-size: $cr-spacing-lg;
-  block-size: $cr-spacing-lg;
+  inline-size: $pr-spacing-lg;
+  block-size: $pr-spacing-lg;
   border: 0;
   border-radius: 50%;
   background: transparent;
@@ -111,12 +111,12 @@
    translate, the box takes its static position inside the button's flex layout
    and the button grows to 48px, so a 32px chip renders 52px tall. */
 .remove::after {
-  /* There is one `::after` per element, and Crystal's sheen is on it too.
-     Crystal's `.cr-bare` sets both pseudo-elements to `content: none`, so
-     switching this back on means undoing everything Crystal's rule sets on it,
+  /* There is one `::after` per element, and Prismata's sheen is on it too.
+     Prismata's `.pr-bare` sets both pseudo-elements to `content: none`, so
+     switching this back on means undoing everything Prismata's rule sets on it,
      not only `display`. Otherwise the gradient paints across the chip and
      `pointer-events: none` leaves the box inert. This box is the hit target,
-     and Crystal's rule disables it from 2.1.0 unless it is undone here. */
+     and Prismata's rule disables it from 2.1.0 unless it is undone here. */
   display: block;
   background: none;
   pointer-events: auto;
@@ -127,12 +127,12 @@
   inset-block-start: 50%;
   inset-inline-start: 50%;
   translate: -50% -50%;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
 }
 
-.remove:hover { background: var(--cr-surface); }
-.remove svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.remove:hover { background: var(--pr-surface); }
+.remove svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 @media (forced-colors: active) {
   .chip { background: ButtonFace; border-color: ButtonText; color: ButtonText; }
@@ -140,24 +140,24 @@
   .chip[data-selected]::before { background: ButtonFace; }
 }
 
-/* In a field. A field shell is Resin, and Crystal gives a control inside a
+/* In a field. A field shell is Resin, and Prismata gives a control inside a
    Resin plane no second blur: one diffusion is the plane's, and a blur
-   inside it only blurs that blur again. Crystal's rule lists the Resin planes
+   inside it only blurs that blur again. Prismata's rule lists the Resin planes
    but not the field shell, so a chip in a field takes the same treatment here.
-   `isolation` keeps the coat's pad above the chip's fill, as Crystal's rule
+   `isolation` keeps the coat's pad above the chip's fill, as Prismata's rule
    explains. */
-:global(.cr-field-shell) .chip {
+:global(.pr-field-shell) .chip {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   isolation: isolate;
 }
 
-/* A field is 62px, Crystal's field shell, and its 8px padding and rim leave
-   44px inside, the floor Crystal gives a control in a field. A tag's 48px
+/* A field is 62px, Prismata's field shell, and its 8px padding and rim leave
+   44px inside, the floor Prismata gives a control in a field. A tag's 48px
    floor would make every field that holds a chip taller than its neighbours,
    so in a field the chip is the tag at that floor instead: the same coat and
    type, 44px tall, as an input beside it is. */
-:global(.cr-field-shell) .chip {
+:global(.pr-field-shell) .chip {
   min-block-size: field.$field-control-floor;
   padding-block: 0;
 }

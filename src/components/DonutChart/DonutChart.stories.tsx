@@ -10,7 +10,7 @@ const meta = {
         component:
           '"Ring thickness is a declared proportion of the radius" and "the centre value is '
           + 'text, not an image". These two decisions are what separate it from the pie.\n\n'
-          + 'The thickness comes from Crystal, not from the caller, so a donut is recognisably '
+          + 'The thickness comes from Prismata, not from the caller, so a donut is recognisably '
           + 'the same object at every size.\n\n'
           + 'The centre is real text in the document, so it is selectable, translatable and read '
           + 'out. It is not the total by default, because the middle of a donut is the most '
@@ -41,7 +41,7 @@ export const WithACentreValue: Story = {
       <span>
         {/* Relative to the reader's own text, not a design value. The centre of a
             donut scales with the donut, and a fixed size would outgrow a small one. */}
-        <strong style={{ display: 'block', fontSize: '1.6em' }}>100k</strong>{/* crystal-allow-literal */}
+        <strong style={{ display: 'block', fontSize: '1.6em' }}>100k</strong>{/* prismata-allow-literal */}
         {' sessions'}
       </span>
     ),

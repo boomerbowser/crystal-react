@@ -12,7 +12,7 @@
 
 .field { @include field.field; }
 .label { @include field.label; }
-/* The shell wears Crystal's `.cr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
+/* The shell wears Prismata's `.pr-field-shell.block` (2.7.0): the shell as a block that fills its row. */
 /* This button is both the trigger and the shell. It carries the shell's classes,
    which give it the shell's radius and fill, and `field.trigger` for its height,
    font and cursor. `field.control` must not be used here. Its
@@ -32,34 +32,34 @@
    a native constraint, or an error a `Form` distributed from a server. Both are
    styled so a field announced as invalid is also drawn as invalid. */
 .shell[data-invalid],
-.field[data-invalid] .shell { border-color: var(--cr-danger-ink); }
+.field[data-invalid] .shell { border-color: var(--pr-danger-ink); }
 
 /* Room for the platform's own arrow, which is never covered. */
-.native { appearance: auto; padding-inline-end: $cr-spacing-xl; }
+.native { appearance: auto; padding-inline-end: $pr-spacing-xl; }
 
 .disclosure {
   display: flex;
   align-items: center;
   @include field.trigger-content;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
   pointer-events: none;
 }
 
-.disclosure svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.disclosure svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 .value { @include field.trigger-content; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.placeholder { color: var(--cr-muted); }
+.placeholder { color: var(--pr-muted); }
 
 /* The list is a Frost panel: a transient overlay is Frost, never Resin. */
 .popover {
-  /* The panel is Crystal's `.cr-frost`, which the popover wears: the Frost fill,
+  /* The panel is Prismata's `.pr-frost`, which the popover wears: the Frost fill,
      the rim, the panel shadow and the diffusion. Do not add the float shadow
      here. It is Resin's. The catalogue's popover geometry is the content radius,
      stated here. */
   min-inline-size: var(--trigger-width);
   max-block-size: 40vh;
-  padding: $cr-spacing-2xs;
-  border-radius: var(--cr-radius);
+  padding: $pr-spacing-2xs;
+  border-radius: var(--pr-radius);
   overflow: auto;
 }
 
@@ -68,26 +68,26 @@
 .option {
   display: flex;
   align-items: center;
-  min-block-size: $cr-action-min-target;
-  padding-inline: $cr-spacing-sm;
-  border-radius: calc(var(--cr-radius) - #{$cr-field-well-inset});
-  color: var(--cr-text);
-  /* Selection is label weight, never a check mark. In Crystal a check mark means
+  min-block-size: $pr-action-min-target;
+  padding-inline: $pr-spacing-sm;
+  border-radius: calc(var(--pr-radius) - #{$pr-field-well-inset});
+  color: var(--pr-text);
+  /* Selection is label weight, never a check mark. In Prismata a check mark means
      validated or informational. */
   font-weight: 550;
   cursor: pointer;
 }
 
-.option[data-selected] { font-weight: 800; background: var(--cr-primary-soft); color: var(--cr-on-primary-soft); }
-.option[data-focused] { background: var(--cr-surface-alt); }
-.option[data-selected][data-focused] { background: var(--cr-primary-soft); }
-.option[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.option[data-selected] { font-weight: 800; background: var(--pr-primary-soft); color: var(--pr-on-primary-soft); }
+.option[data-focused] { background: var(--pr-surface-alt); }
+.option[data-selected][data-focused] { background: var(--pr-primary-soft); }
+.option[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
 
 .description, .error { @include field.message; }
-.description { color: var(--cr-muted); }
-.error { color: var(--cr-danger-ink); font-weight: 700; }
+.description { color: var(--pr-muted); }
+.error { color: var(--pr-danger-ink); font-weight: 700; }
 
-.field[data-disabled] { opacity: $cr-action-disabled-opacity; cursor: not-allowed; }
+.field[data-disabled] { opacity: $pr-action-disabled-opacity; cursor: not-allowed; }
 
 @media (forced-colors: active) {
   .option[data-selected] { background: none; outline: 2px solid Highlight; color: CanvasText; }

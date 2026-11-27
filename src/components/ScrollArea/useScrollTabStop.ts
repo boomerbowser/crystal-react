@@ -2,7 +2,7 @@
 
 /* When a scroll container needs to be a tab stop of its own.
  *
- * Crystal's scroll contract asks every scroll container for native gesture
+ * Prismata's scroll contract asks every scroll container for native gesture
  * handling, and a keyboard is a gesture. A region that scrolls but holds nothing
  * focusable is unreachable without one: a mouse can wheel it, a touch can drag
  * it, and somebody navigating by keyboard cannot move it at all. axe reports it
@@ -12,7 +12,7 @@
  * because the links are the tab stops, and another stop in front of them would
  * be announced as nothing.
  *
- * This lives apart from `ScrollArea` because `AppShell` puts `cr-scroll-frost`
+ * This lives apart from `ScrollArea` because `AppShell` puts `pr-scroll-frost`
  * straight onto its `<main>`, a landmark, which a `div` cannot be, so it does not
  * go through `ScrollArea`. Both use this one hook so the rule cannot drift.
  */

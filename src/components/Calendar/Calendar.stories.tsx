@@ -17,7 +17,7 @@ const meta = {
           + 'an arrow key. It also hides the weekday row from assistive technology. Each day '
           + 'announces its whole date, "Wednesday, September 23, 2026", so a reader hears the '
           + 'weekday without cross-referencing a column header whose position they cannot see.\n\n'
-          + 'Crystal owns the Frost panel and two markings. Today is a rule beneath the number '
+          + 'Prismata owns the Frost panel and two markings. Today is a rule beneath the number '
           + 'instead of a fill, because with two fills a reader would have to tell them apart by '
           + 'shade. Selection is label weight, with the soft fill as the second signal.',
       },

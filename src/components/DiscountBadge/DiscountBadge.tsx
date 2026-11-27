@@ -20,7 +20,7 @@
  * so it takes the success ink over the Haze fill. The attention colour would
  * tell a reader that something needs their care. There is no perimeter stroke,
  * for the reason `StatusBadge` gives: a coloured ring around a pill is the shape
- * Crystal uses for focus.
+ * Prismata uses for focus.
  */
 import { forwardRef, useMemo, type HTMLAttributes } from 'react';
 import { useNumberFormatter } from 'react-aria';
@@ -76,7 +76,7 @@ export const DiscountBadge = forwardRef<HTMLSpanElement, DiscountBadgeProps>(
     )))(formatted);
 
     return (
-      <span {...props} ref={merged as never} className={cx(styles['discount'], 'cr-haze', className)}>
+      <span {...props} ref={merged as never} className={cx(styles['discount'], 'pr-haze', className)}>
         <span aria-hidden="true">{brief}</span>
         <VisuallyHidden>{whole}</VisuallyHidden>
       </span>

@@ -7,7 +7,7 @@
  * that borrows tab semantics announces its options as tabs, and a reader then
  * expects a panel to change, which this control does not do.
  *
- * Selection is weight and the primary fill. The fill is Crystal's dock, which the
+ * Selection is weight and the primary fill. The fill is Prismata's dock, which the
  * catalogue names for this control. The weight keeps selection off colour alone,
  * because it is typographic and survives greyscale, forced colours and a poor
  * screen. In forced colours the fill goes and a ring takes its place, because
@@ -46,7 +46,7 @@ export function SegmentedControl({
      `aria-label`, so a rich label is rendered visually hidden instead. Dropping
      it would leave the group unnamed. */
   const hiddenStringLabel = labelHidden && typeof label === 'string' ? label : undefined;
-  /* The selection is Crystal's pill behind the chosen segment, and it travels
+  /* The selection is Prismata's pill behind the chosen segment, and it travels
      when a person chooses another (D-37). React Aria marks the chosen
      segment's label `data-selected`. */
   const { planeRef } = useTravelMotion('selection-travel', 'label[data-selected]');
@@ -62,7 +62,7 @@ export function SegmentedControl({
       {labelHidden
         ? (hiddenStringLabel ? null : <VisuallyHidden as="span"><Label>{label}</Label></VisuallyHidden>)
         : <Label className={cx(styles['legend'])}>{label}</Label>}
-      <div ref={planeRef} className={cx(styles['strip'], 'cr-dock')}>
+      <div ref={planeRef} className={cx(styles['strip'], 'pr-dock')}>
         {options.map((option) => <Segment key={option.value} option={option} />)}
       </div>
       {description ? (

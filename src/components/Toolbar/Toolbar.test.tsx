@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { Toolbar } from './Toolbar.js';
 import { Button } from '../Button/Button.js';
 
@@ -16,7 +16,7 @@ function Bar({ orientation }: { orientation?: 'horizontal' | 'vertical' }) {
 
 describe('Toolbar', () => {
   it('has no accessibility violations and declares its orientation', async () => {
-    const { container } = renderWithCrystal(<Bar />);
+    const { container } = renderWithPrismata(<Bar />);
     const bar = screen.getByRole('toolbar', { name: 'Formatting' });
     expect(bar.getAttribute('aria-orientation')).toBe('horizontal');
     await expectNoAxeViolations(container);
@@ -26,7 +26,7 @@ describe('Toolbar', () => {
      would otherwise be fifteen tab stops between a person and the next field.
      One stop in, arrows within, one stop out. */
   it('is one tab stop, with arrows moving between the controls', async () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <div>
         <button type="button">Before</button>
         <Bar />
@@ -49,7 +49,7 @@ describe('Toolbar', () => {
   /* A vertical toolbar uses up and down, which a hand-rolled roving tab index
      often omits. */
   it('moves with up and down when it is vertical', async () => {
-    renderWithCrystal(<Bar orientation="vertical" />);
+    renderWithPrismata(<Bar orientation="vertical" />);
     screen.getByRole('button', { name: 'Bold' }).focus();
     await userEvent.keyboard('{ArrowDown}');
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Italic' }));

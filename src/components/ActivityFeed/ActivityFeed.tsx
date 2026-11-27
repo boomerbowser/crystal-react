@@ -75,7 +75,7 @@ export function ActivityFeed({
       aria-labelledby={headingId}
       aria-busy={state === 'loading' || undefined}
       className={cx(styles['feed'], className)}
-      data-cr-state={isLive ? 'live' : state}
+      data-pr-state={isLive ? 'live' : state}
     >
       <div className={cx(styles['top'])}>
         <Heading id={headingId} className={cx(styles['heading'])}>{title}</Heading>
@@ -90,7 +90,7 @@ export function ActivityFeed({
         <ol className={cx(styles['events'])}>
           <ListPresence>
             {events.map((event) => (
-              <PresenceItem key={event.id} leaves={false} className={cx(styles['event'], 'cr-haze')}>
+              <PresenceItem key={event.id} leaves={false} className={cx(styles['event'], 'pr-haze')}>
                 {event.avatar ? <span aria-hidden="true" className={cx(styles['avatar'])}>{event.avatar}</span> : null}
                 <p className={cx(styles['sentence'])}>
                   <span className={cx(styles['actor'])}>{event.actor}</span>{' '}{event.action}

@@ -18,7 +18,7 @@
  *
  * Loading is announced. A spinner that only spins tells a reader who cannot see
  * it that nothing is happening, so the state is a live region as well as a mark.
- * Debounce and the results are the product's. Crystal renders the state it is
+ * Debounce and the results are the product's. Prismata renders the state it is
  * told about and never decides when a search has started.
  */
 import { forwardRef, type ReactNode } from 'react';
@@ -75,10 +75,10 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
       {({ isInvalid }) => (
       <>
       <Label className={cx(styles['label'])}>{label}</Label>
-      {/* The field shell plays Crystal's field motion: \`field-focus\` as focus
+      {/* The field shell plays Prismata's field motion: \`field-focus\` as focus
           arrives, \`field-invalid\` and \`field-valid\` on the validity React Aria
           resolved. */}
-      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'cr-field-shell block')}>
+      <FieldGroupShell isInvalid={isInvalid} className={cx(styles['shell'], 'pr-field-shell block')}>
         {/* Decoration: hidden from assistive technology, and not pressable. */}
         <span className={cx(styles['leadingIcon'])} aria-hidden="true">{SearchIcon}</span>
         <Input
@@ -88,7 +88,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
         />
         {/* React Aria names this from the field's label and hides it when the
             field is empty, so it is not a permanent control that does nothing. */}
-        <Button className={cx(styles['inlineAction'], 'cr-bare')}>{CrossIcon}</Button>
+        <Button className={cx(styles['inlineAction'], 'pr-bare')}>{CrossIcon}</Button>
       </FieldGroupShell>
       {description ? (
         <Text slot="description" className={cx(styles['description'])}>{description}</Text>

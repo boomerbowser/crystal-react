@@ -6,13 +6,13 @@
  * minimum target size and square, and the icon inside it stays the size it
  * was drawn.
  *
- * Crystal paints every `<button>` as a Resin control by element selector, so
+ * Prismata paints every `<button>` as a Resin control by element selector, so
  * `resin` declares nothing here (R-19). `quiet` has to remove the whole coat.
- * Setting `background: transparent` alone leaves Crystal's 20px backdrop blur,
+ * Setting `background: transparent` alone leaves Prismata's 20px backdrop blur,
  * its float shadow and its 80%-white feathered reading pad in place, as
  * measured in a browser.
  *
- * This file says only what a quiet control is and what Crystal does not
+ * This file says only what a quiet control is and what Prismata does not
  * specify.
  */
 
@@ -20,34 +20,34 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: $cr-action-min-target;
-  block-size: $cr-action-min-target;
+  inline-size: $pr-action-min-target;
+  block-size: $pr-action-min-target;
   /* Square, so the target comes from the box rather than from padding, and the
      icon stays the size it was drawn. */
   padding: 0;
-  border-radius: $cr-action-radius;
+  border-radius: $pr-action-radius;
 }
 
-.iconButton svg { inline-size: $cr-icon-action; block-size: $cr-icon-action; }
+.iconButton svg { inline-size: $pr-icon-action; block-size: $pr-icon-action; }
 
 .circle { border-radius: 50%; }
 
 /* Quiet: the whole coat comes off, the fill included. The control wears
- * Crystal's `.cr-bare`, which removes the rim, the shadow, the blur and both
+ * Prismata's `.pr-bare`, which removes the rim, the shadow, the blur and both
  * feathered layers, keeps the target and the focus ring, and makes hover a
  * fill. A quiet control sits on the surface it is on. The colour is the text
  * colour, as on every control, not the surrounding ink. */
-.quiet { color: var(--cr-text); }
+.quiet { color: var(--pr-text); }
 
 /* A toggle that is on.
  *
- * Crystal paints this by tinting the reading pad. A quiet control has no pad,
+ * Prismata paints this by tinting the reading pad. A quiet control has no pad,
  * the same gap the quiet button has, so the state is a fill here. It takes the
- * selected pair Crystal uses for every selected surface. The resin variant
- * needs none of this: its pad is there, and Crystal tints it. */
+ * selected pair Prismata uses for every selected surface. The resin variant
+ * needs none of this: its pad is there, and Prismata tints it. */
 .quiet[aria-pressed='true'] {
-  background: var(--cr-primary-soft);
-  color: var(--cr-on-primary-soft);
+  background: var(--pr-primary-soft);
+  color: var(--pr-on-primary-soft);
 }
 
 @media (forced-colors: active) {

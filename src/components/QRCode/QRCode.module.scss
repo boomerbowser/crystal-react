@@ -10,21 +10,21 @@
  */
 
 .qrCode {
-  /* The quiet zone wears Crystal's `.cr-haze.flush` (2.7.0): the feathered
-     Haze fill to the code's own edge, with Crystal's fallbacks. */
+  /* The quiet zone wears Prismata's `.pr-haze.flush` (2.7.0): the feathered
+     Haze fill to the code's own edge, with Prismata's fallbacks. */
   display: inline-grid;
   place-items: center;
   /* Four modules of quiet zone is the specification's minimum. */
-  padding: $cr-spacing-md;
-  border-radius: var(--cr-radius);
-  color: var(--cr-text);
+  padding: $pr-spacing-md;
+  border-radius: var(--pr-radius);
+  color: var(--pr-text);
 }
 
 .caption {
-  margin-block-start: $cr-spacing-xs;
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
-  color: var(--cr-muted);
+  margin-block-start: $pr-spacing-xs;
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
+  color: var(--pr-muted);
 }
 
 .expired { opacity: 0.4; }

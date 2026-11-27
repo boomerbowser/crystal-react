@@ -3,7 +3,7 @@
 /* Divider: a hairline, never a heavy rule.
  *
  * The catalogue specifies the edge colour token and 1px. A divider must not
- * compete with the content it separates, and Crystal already has a colour for
+ * compete with the content it separates, and Prismata already has a colour for
  * "the contour of a surface".
  */
 
@@ -11,20 +11,20 @@
   border: 0;
   margin: 0;
   align-self: stretch;
-  color: var(--cr-muted);
+  color: var(--pr-muted);
 }
 
 .horizontal {
   inline-size: 100%;
   block-size: 1px;
-  background: var(--cr-edge);
+  background: var(--pr-edge);
 }
 
 .vertical {
   inline-size: 1px;
   block-size: auto;
   min-block-size: 100%;
-  background: var(--cr-edge);
+  background: var(--pr-edge);
 }
 
 /* A labelled divider is a rule either side of a label, drawn as one element with
@@ -33,11 +33,11 @@
 .labelled {
   display: flex;
   align-items: center;
-  gap: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
   background: none;
   block-size: auto;
-  font-size: var(--cr-text-caption-size);
-  line-height: var(--cr-text-caption-leading);
+  font-size: var(--pr-text-caption-size);
+  line-height: var(--pr-text-caption-leading);
   font-weight: 650;
 }
 
@@ -45,12 +45,12 @@
 .labelled::after {
   content: '';
   block-size: 1px;
-  background: var(--cr-edge);
+  background: var(--pr-edge);
 }
 
 .labelled > span { flex: 0 0 auto; }
 .labelled::after { flex: 1; }
-.labelled::before { flex: 0 0 $cr-spacing-lg; }
+.labelled::before { flex: 0 0 $pr-spacing-lg; }
 
 .centred::before { flex: 1; }
 

@@ -38,7 +38,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '**Selection is label weight.** This is Crystal\'s rule, and the segmented control '
+          '**Selection is label weight.** This is Prismata\'s rule, and the segmented control '
           + 'and the select are where it is most often broken. A coloured pill is the obvious '
           + 'thing to draw, and it leaves a reader who cannot distinguish the colour with '
           + 'nothing. Weight is typographic, not chromatic, so it survives greyscale, forced '
@@ -64,7 +64,7 @@ export const Choices: Story = {
   render: function Choices() {
     const [filters, setFilters] = useState<readonly string[]>(['london']);
     return (
-      <Stack gap="lg" style={{ maxWidth: '460px' /* crystal-allow-literal: story column */ }}>
+      <Stack gap="lg" style={{ maxWidth: '460px' /* prismata-allow-literal: story column */ }}>
         <CheckboxGroup label="Notify me about" description="You can change this later.">
           <Checkbox value="mentions">Mentions</Checkbox>
           <Checkbox value="replies">Replies</Checkbox>
@@ -110,7 +110,7 @@ export const Choices: Story = {
 
 export const Ranges: Story = {
   render: () => (
-    <Stack gap="lg" style={{ maxWidth: '460px' /* crystal-allow-literal: story column */ }}>
+    <Stack gap="lg" style={{ maxWidth: '460px' /* prismata-allow-literal: story column */ }}>
       <Slider label="Volume" defaultValue={40} ticks={['0', '50', '100']} />
       <Slider
         label="Budget"

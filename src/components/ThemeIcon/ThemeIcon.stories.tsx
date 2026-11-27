@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { only } from '../../../.storybook/environment.js';
 import { ThemeIcon } from './ThemeIcon.js';
 
-/* A stand-in glyph. The library ships no icon set of its own (Crystal's icons
-   come from `@crystal-ui/core`), so a story that needs a shape draws one. */
+/* A stand-in glyph. The library ships no icon set of its own (Prismata's icons
+   come from `@prismata/core`), so a story that needs a shape draws one. */
 const Glyph = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
     <path d="M4 7h16M4 12h16M4 17h10" strokeLinecap="round" />
@@ -36,7 +36,7 @@ export const Default: Story = {};
 /** Both fills, in both shapes. */
 export const FillsAndShapes: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 'var(--pr-space)', alignItems: 'center' }}>
       <ThemeIcon {...only(args)} variant="primary" shape="content" />
       <ThemeIcon {...only(args)} variant="primary" shape="circle" />
       <ThemeIcon {...only(args)} variant="surface" shape="content" />

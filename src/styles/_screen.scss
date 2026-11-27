@@ -24,11 +24,11 @@
   box-sizing: border-box;
   min-block-size: 100%;
   padding-block:
-    max(#{$cr-spacing-xl}, env(safe-area-inset-top))
-    max(#{$cr-spacing-xl}, env(safe-area-inset-bottom));
+    max(#{$pr-spacing-xl}, env(safe-area-inset-top))
+    max(#{$pr-spacing-xl}, env(safe-area-inset-bottom));
   padding-inline:
-    max(#{$cr-spacing-lg}, env(safe-area-inset-left))
-    max(#{$cr-spacing-lg}, env(safe-area-inset-right));
+    max(#{$pr-spacing-lg}, env(safe-area-inset-left))
+    max(#{$pr-spacing-lg}, env(safe-area-inset-right));
 }
 
 /* The card stops at the reading measure. A `Result` stretched to a 1500px
@@ -36,5 +36,5 @@
    to track across. */
 @mixin state-screen-card {
   inline-size: 100%;
-  max-inline-size: $cr-layout-reading-max;
+  max-inline-size: $pr-layout-reading-max;
 }

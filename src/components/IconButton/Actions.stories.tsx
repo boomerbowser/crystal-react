@@ -10,7 +10,7 @@ import { Button } from '../Button/Button.js';
 import { Card } from '../Card/Card.js';
 import { Stack, Group } from '../Stack/Stack.js';
 import { Text } from '../Text/Text.js';
-import { crystalTokens } from '../../theme/tokens.generated.js';
+import { prismataTokens } from '../../theme/tokens.generated.js';
 
 const icon = (path: string) => (
   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d={path} /></svg>
@@ -47,10 +47,10 @@ const meta = {
           /* The figures come from the live tokens, so the documentation cannot
              drift from the geometry it describes. The design system's own drift
              guard applies the same rule. */
-          `Every action in Crystal is a pill and every one reaches ${crystalTokens['action.minTarget']}. `
+          `Every action in Prismata is a pill and every one reaches ${prismataTokens['action.minTarget']}. `
           + `For an icon button the target grows and the icon does not: a `
-          + `${crystalTokens['icon.action']} icon is a ${crystalTokens['icon.action']} picture and a `
-          + `${crystalTokens['action.minTarget']} place to press. Growing the visible control `
+          + `${prismataTokens['icon.action']} icon is a ${prismataTokens['icon.action']} picture and a `
+          + `${prismataTokens['action.minTarget']} place to press. Growing the visible control `
           + 'instead makes a toolbar look clumsy.\n\n'
           + 'An icon has no text, so the label is the only name the control has, and `label` '
           + 'is required. CloseButton also names what closes. A page with three dismissible '
@@ -116,8 +116,8 @@ export const Groups: Story = {
         </SplitButton>
         <Card aria-label="Install">
           <Group gap="sm" align="center">
-            <Text as="span"><code>npm i @crystal-ui/react</code></Text>
-            <CopyButton value="npm i @crystal-ui/react" label="Copy the install command" />
+            <Text as="span"><code>npm i @prismata/react</code></Text>
+            <CopyButton value="npm i @prismata/react" label="Copy the install command" />
           </Group>
         </Card>
       </Stack>
@@ -126,13 +126,13 @@ export const Groups: Story = {
 };
 
 /** These are fixed to the viewport. A page that uses one owes the space underneath
- *  it, as scroll padding or a spacer, because Crystal cannot know what the content
+ *  it, as scroll padding or a spacer, because Prismata cannot know what the content
  *  at the bottom of the page is. */
 export const Floating: Story = {
   render: function Floating() {
     const [selected, setSelected] = useState(0);
     return (
-      <Stack gap="lg" style={{ paddingBlockEnd: 'var(--cr-spacing-2xl)' }}>
+      <Stack gap="lg" style={{ paddingBlockEnd: 'var(--pr-spacing-2xl)' }}>
         <Text>
           The floating action sits bottom-right; the action bar appears centred when a selection
           exists, and announces how many items are in it.

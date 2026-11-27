@@ -83,7 +83,7 @@ export interface TourProps {
 interface Box { top: number; left: number; width: number; height: number; radius: number }
 
 /* How much room the cut-out leaves around the target, so the highlight reads as
-   a margin instead of a tight crop. Crystal's smallest spacing step. */
+   a margin instead of a tight crop. Prismata's smallest spacing step. */
 const HALO = 8;
 
 export function Tour({
@@ -128,7 +128,7 @@ export function Tour({
       left: rect.left - HALO,
       width: rect.width + HALO * 2,
       height: rect.height + HALO * 2,
-      /* The target's own radius, so a pill is cut as a pill. Crystal's action
+      /* The target's own radius, so a pill is cut as a pill. Prismata's action
          radius is `999px`, meaning "as round as it can be", so it is clamped to
          half the shorter side, which is what the browser draws. */
       radius: Math.min(
@@ -195,12 +195,12 @@ export function Tour({
                 tests still pass because jsdom measures nothing and has no box to
                 cut. */}
             <div
-              className={cx('cr-mirage', styles['scrim'])}
+              className={cx('pr-mirage', styles['scrim'])}
               /* A stable hook for the gate that checks the hole. The gate must not
                  find the scrim by DOM position, because `FocusTrap` sits between
                  the scrim and the dialog, so the scrim is not the dialog's
                  previous sibling. */
-              data-cr-tour="scrim"
+              data-pr-tour="scrim"
               data-cut={box ? '' : undefined}
               style={box ? { clipPath: spotlight(box) } as React.CSSProperties : undefined}
             />
@@ -212,7 +212,7 @@ export function Tour({
               tabIndex={-1}
               aria-labelledby={`${id}-title`}
               aria-describedby={`${id}-body`}
-              className={cx('cr-frost pane flat', styles['panel'])}
+              className={cx('pr-frost pane flat', styles['panel'])}
               data-anchored={box ? '' : undefined}
               style={box ? {
                 '--panel-top': `${box.top + box.height}px`,

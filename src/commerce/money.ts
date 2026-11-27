@@ -3,7 +3,7 @@
  * Nine components in the commerce slice render an amount (a price, a range, a
  * reduction, a line of a basket, a total, a shipping option) and each of them
  * would otherwise decide separately how a number becomes a currency. That is
- * exactly the divergence the catalogue is complaining about when it says Crystal
+ * exactly the divergence the catalogue is complaining about when it says Prismata
  * "left every store to reinvent … currency formatting".
  *
  * An amount is never a number on its own. `29.99` is not a price. It is a
@@ -17,7 +17,7 @@
  * trails, how many fraction digits a currency has, and whether `USD` renders
  * as `$` or `US$` in this locale. Every one of those is a bug waiting in a
  * hand-written formatter. The components reach it through
- * `NumberFormatter`, which takes the locale from `CrystalProvider` rather than
+ * `NumberFormatter`, which takes the locale from `PrismataProvider` rather than
  * from the call site.
  */
 import type { NumberFormatOptions } from '@internationalized/number';

@@ -3,12 +3,12 @@ import { createRef } from 'react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent } from '@testing-library/react';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { VideoPlayer } from './VideoPlayer.js';
 
 describe('VideoPlayer', () => {
   it('is a real video element with the transport over it', () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <VideoPlayer label="The tour">
         <source src="/tour.mp4" type="video/mp4" />
       </VideoPlayer>,
@@ -24,7 +24,7 @@ describe('VideoPlayer', () => {
      on. This test checks the case jsdom can reach: a player with nothing to
      caption offers no control for it. */
   it('offers no caption toggle when there is nothing to caption', () => {
-    renderWithCrystal(<VideoPlayer label="The tour" />);
+    renderWithPrismata(<VideoPlayer label="The tour" />);
     expect(screen.queryByRole('button', { name: 'Captions' })).toBeNull();
   });
 
@@ -42,7 +42,7 @@ describe('VideoPlayer', () => {
      let the press bubble as a second toggle, so that test passes with the guard
      deleted. */
   it('leaves a control its own keys', () => {
-    const { container } = renderWithCrystal(<VideoPlayer label="The tour" />);
+    const { container } = renderWithPrismata(<VideoPlayer label="The tour" />);
     const video = container.querySelector('video')!;
 
     /* `fireEvent`, not `userEvent`. Typing a printable character at a focused
@@ -55,7 +55,7 @@ describe('VideoPlayer', () => {
   /* The shortcut works from inside the player and outside a control. Without
      this, a player with no shortcuts at all would pass the check above. */
   it('answers the shortcut when the press is the player\'s to answer', () => {
-    const { container } = renderWithCrystal(<VideoPlayer label="The tour" />);
+    const { container } = renderWithPrismata(<VideoPlayer label="The tour" />);
     const video = container.querySelector('video')!;
     fireEvent.keyDown(video, { key: 'm' });
     expect(video.muted).toBe(true);
@@ -63,7 +63,7 @@ describe('VideoPlayer', () => {
 
   it('has no document-level listener to steal the page\'s keys', async () => {
     const user = userEvent.setup();
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <>
         <button type="button">Outside</button>
         <VideoPlayer label="The tour" />
@@ -82,7 +82,7 @@ describe('VideoPlayer', () => {
      the product's to use, so it is handed over instead of hidden. */
   it('hands the element to the caller', () => {
     const ref = createRef<HTMLVideoElement>();
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <VideoPlayer label="The tour" mediaRef={ref}>
         <source src="/tour.mp4" type="video/mp4" />
       </VideoPlayer>,
@@ -94,20 +94,20 @@ describe('VideoPlayer', () => {
   /* The stage keeps a shape before the first frame decodes, so the page does
      not jump, and the shape is the product's. */
   it('holds the stage at the aspect ratio and fit it is given', () => {
-    const { container, rerenderWithCrystal } = renderWithCrystal(<VideoPlayer label="The tour" />);
+    const { container, rerenderWithPrismata } = renderWithPrismata(<VideoPlayer label="The tour" />);
     const stage = () => container.querySelector('video')!.parentElement!;
-    expect(stage().style.getPropertyValue('--cr-media-aspect')).toBe('16 / 9');
-    expect(stage().style.getPropertyValue('--cr-media-fit')).toBe('contain');
-    rerenderWithCrystal(<VideoPlayer label="The tour" aspectRatio="9 / 16" fit="cover" />);
-    expect(stage().style.getPropertyValue('--cr-media-aspect')).toBe('9 / 16');
-    expect(stage().style.getPropertyValue('--cr-media-fit')).toBe('cover');
+    expect(stage().style.getPropertyValue('--pr-media-aspect')).toBe('16 / 9');
+    expect(stage().style.getPropertyValue('--pr-media-fit')).toBe('contain');
+    rerenderWithPrismata(<VideoPlayer label="The tour" aspectRatio="9 / 16" fit="cover" />);
+    expect(stage().style.getPropertyValue('--pr-media-aspect')).toBe('9 / 16');
+    expect(stage().style.getPropertyValue('--pr-media-fit')).toBe('cover');
   });
 
   /* Speed is a choice of one, so it is radio items; the chosen one is weight,
      never a check; the element's own rate is what changes; and it is said. */
   it('changes the element\'s speed from the settings menu, and says so', async () => {
     const user = userEvent.setup();
-    const { container } = renderWithCrystal(<VideoPlayer label="The tour" />);
+    const { container } = renderWithPrismata(<VideoPlayer label="The tour" />);
     const video = container.querySelector('video')!;
     await user.click(screen.getByRole('button', { name: 'Settings' }));
     const normal = await screen.findByRole('menuitemradio', { name: 'Normal' });
@@ -120,7 +120,7 @@ describe('VideoPlayer', () => {
   });
 
   it('answers Shift+> and Shift+< with the next and previous speed', () => {
-    const { container } = renderWithCrystal(<VideoPlayer label="The tour" />);
+    const { container } = renderWithPrismata(<VideoPlayer label="The tour" />);
     const video = container.querySelector('video')!;
     fireEvent.keyDown(video, { key: '>' });
     expect(video.playbackRate).toBe(1.25);
@@ -132,15 +132,15 @@ describe('VideoPlayer', () => {
   /* R-M12. The reader's caption style is theirs, so it is kept for this
      browser and the next player starts from it. */
   it('draws captions in the caption style the reader saved', () => {
-    localStorage.setItem('crystal-caption-style', JSON.stringify({ size: 'larger', backing: 'solid' }));
+    localStorage.setItem('prismata-caption-style', JSON.stringify({ size: 'larger', backing: 'solid' }));
     try {
-      const { container } = renderWithCrystal(<VideoPlayer label="Harbour" />);
+      const { container } = renderWithPrismata(<VideoPlayer label="Harbour" />);
       /* The recipe's classes (2.5.0, C-S5). */
-      const cues = container.querySelector('.cr-media-caption');
+      const cues = container.querySelector('.pr-media-caption');
       expect(cues).toHaveClass('larger');
       expect(cues).toHaveClass('solid');
     } finally {
-      localStorage.removeItem('crystal-caption-style');
+      localStorage.removeItem('prismata-caption-style');
     }
   });
 
@@ -149,33 +149,33 @@ describe('VideoPlayer', () => {
      rendering would be a hydration mismatch. */
   it('renders the default caption style on the server, whatever is saved', async () => {
     const { renderToString } = await import('react-dom/server');
-    const { CrystalProvider } = await import('../../theme/CrystalProvider.js');
-    localStorage.setItem('crystal-caption-style', JSON.stringify({ size: 'larger', backing: 'solid' }));
+    const { PrismataProvider } = await import('../../theme/PrismataProvider.js');
+    localStorage.setItem('prismata-caption-style', JSON.stringify({ size: 'larger', backing: 'solid' }));
     try {
-      const html = renderToString(<CrystalProvider><VideoPlayer label="Harbour" /></CrystalProvider>);
-      const cue = /class="(cr-media-caption[^"]*)"/.exec(html)?.[1] ?? '';
+      const html = renderToString(<PrismataProvider><VideoPlayer label="Harbour" /></PrismataProvider>);
+      const cue = /class="(pr-media-caption[^"]*)"/.exec(html)?.[1] ?? '';
       expect(cue).toBeTruthy();
       expect(cue.split(' ')).not.toContain('larger');
       expect(cue.split(' ')).not.toContain('solid');
     } finally {
-      localStorage.removeItem('crystal-caption-style');
+      localStorage.removeItem('prismata-caption-style');
     }
   });
 
   it('ignores a saved caption style it does not recognise', () => {
-    localStorage.setItem('crystal-caption-style', '{"size":"huge","backing":"neon"}');
+    localStorage.setItem('prismata-caption-style', '{"size":"huge","backing":"neon"}');
     try {
-      const { container } = renderWithCrystal(<VideoPlayer label="Harbour" />);
-      const cues = container.querySelector('.cr-media-caption')!;
+      const { container } = renderWithPrismata(<VideoPlayer label="Harbour" />);
+      const cues = container.querySelector('.pr-media-caption')!;
       expect(cues).not.toBeNull();
       for (const style of ['large', 'larger', 'solid', 'huge', 'neon']) expect(cues).not.toHaveClass(style);
     } finally {
-      localStorage.removeItem('crystal-caption-style');
+      localStorage.removeItem('prismata-caption-style');
     }
   });
 
   it('leaves speed out when the product passes no speeds', () => {
-    renderWithCrystal(<VideoPlayer label="The tour" playbackRates={[]} />);
+    renderWithPrismata(<VideoPlayer label="The tour" playbackRates={[]} />);
     expect(screen.queryByRole('button', { name: 'Settings' })).toBeNull();
   });
 
@@ -184,7 +184,7 @@ describe('VideoPlayer', () => {
   it('offers the product\'s renditions and reports the choice', async () => {
     const user = userEvent.setup();
     const chosen: string[] = [];
-    renderWithCrystal(
+    renderWithPrismata(
       <VideoPlayer
         label="The tour"
         playbackRates={[]}
@@ -201,12 +201,12 @@ describe('VideoPlayer', () => {
   /* jsdom has no picture in picture, so the control is not offered. A button
      that does nothing when pressed is worse than none. */
   it('offers picture in picture only where the browser can do it', () => {
-    renderWithCrystal(<VideoPlayer label="The tour" />);
+    renderWithPrismata(<VideoPlayer label="The tour" />);
     expect(screen.queryByRole('button', { name: 'Picture in picture' })).toBeNull();
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <VideoPlayer label="The tour">
         <track kind="captions" srcLang="en" label="English" src="/tour.vtt" />
       </VideoPlayer>,

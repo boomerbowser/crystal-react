@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { FileInput, DropZone, Upload, UploadZone } from './FileInput.js';
 
 describe('FileInput', () => {
   it('has no accessibility violations and opens the platform picker', async () => {
-    const { container } = renderWithCrystal(<FileInput label="Attachment" />);
+    const { container } = renderWithPrismata(<FileInput label="Attachment" />);
     expect(screen.getByRole('button', { name: 'Choose a file' })).toBeInTheDocument();
     /* A real input underneath, so the picker is the system's, with its recent
        files, its search and its own accessibility. */
@@ -18,7 +18,7 @@ describe('DropZone', () => {
   /* Dragging needs a pointer, a steady hand and sight of both ends of the
      gesture. It is an enhancement over choosing, never a replacement. */
   it('always offers a button as well as a surface', () => {
-    renderWithCrystal(<DropZone label="Attachments" />);
+    renderWithPrismata(<DropZone label="Attachments" />);
     expect(screen.getByRole('button', { name: 'Choose a file' })).toBeInTheDocument();
   });
 });
@@ -27,7 +27,7 @@ describe('Upload', () => {
   /* A bar alone says "something is happening". The number says how much, and a
      screen reader can read only the number. */
   it('reports progress as a number, not only a bar', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Upload
         label="Attachments"
         files={[{ id: '1', name: 'report.pdf', size: 248000, progress: 0.4 }]}
@@ -39,14 +39,14 @@ describe('Upload', () => {
   });
 
   it('shows a readable size rather than a byte count', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Upload label="Attachments" files={[{ id: '1', name: 'report.pdf', size: 248000 }]} />,
     );
     expect(screen.getByText('248 kB')).toBeInTheDocument();
   });
 
   it('announces an upload failure rather than only colouring it', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <Upload label="Attachments" files={[{ id: '1', name: 'report.pdf', error: 'Too large' }]} />,
     );
     expect(screen.getByRole('alert').textContent).toContain('Too large');
@@ -56,7 +56,7 @@ describe('Upload', () => {
      button, the description and the error. The error would be announced twice,
      because both copies carry `role="alert"`. */
   it('gives a drop zone exactly one chooser, one description and one error', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <UploadZone
         label="Attachments"
         description="PDF or PNG, up to 10 MB"

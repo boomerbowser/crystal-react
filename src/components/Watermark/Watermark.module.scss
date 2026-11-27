@@ -14,9 +14,9 @@
   isolation: isolate;
   /* The mask paints in `currentColor`, and `color` is inherited from the document,
      not from the scope's custom properties. Without this the mark takes the ink
-     of the page above the Crystal scope, which is dark ink on a dark surface when
+     of the page above the Prismata scope, which is dark ink on a dark surface when
      the scope is darker than the page. */
-  color: var(--cr-text);
+  color: var(--pr-text);
 }
 
 /* A mask instead of a background image, so the mark takes the surface's own ink.
@@ -30,13 +30,13 @@
   z-index: 1;
   pointer-events: none;
   background-color: currentColor;
-  mask-image: var(--cr-watermark-image);
+  mask-image: var(--pr-watermark-image);
   mask-repeat: repeat;
-  mask-size: var(--cr-watermark-size);
-  -webkit-mask-image: var(--cr-watermark-image);
+  mask-size: var(--pr-watermark-size);
+  -webkit-mask-image: var(--pr-watermark-image);
   -webkit-mask-repeat: repeat;
-  -webkit-mask-size: var(--cr-watermark-size);
-  opacity: var(--cr-watermark-opacity, 0.06);
+  -webkit-mask-size: var(--pr-watermark-size);
+  opacity: var(--pr-watermark-opacity, 0.06);
 }
 
 /* Forced colours is the operating system deciding what is legible. A decorative

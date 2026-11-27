@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent, waitFor, within } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent, waitFor, within } from '../../test/render.js';
 import { Drawer, reorientationFor } from './Drawer.js';
 
-/* A closing scrim withdraws on Crystal's 650ms departure clock (`mirage-out`),
+/* A closing scrim withdraws on Prismata's 650ms departure clock (`mirage-out`),
    and `AnimatePresence` unmounts only after it. Testing Library waits one second
    by default, which the departure does not fit inside, so the exit assertions
    wait this long. */
@@ -26,7 +26,7 @@ function Harness({ isModal }: { isModal: boolean }): React.JSX.Element {
 
 describe('Drawer', () => {
   it('has no accessibility violations when modal', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <Drawer title="Filters" isOpen>
         <p>Body</p>
       </Drawer>,
@@ -35,7 +35,7 @@ describe('Drawer', () => {
   });
 
   it('has no accessibility violations when not modal', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <main>
         <Drawer title="Filters" isModal={false} isOpen>
           <p>Body</p>
@@ -46,7 +46,7 @@ describe('Drawer', () => {
   });
 
   it('renders nothing when closed', () => {
-    renderWithCrystal(<Drawer title="Filters"><p>Body</p></Drawer>);
+    renderWithPrismata(<Drawer title="Filters"><p>Body</p></Drawer>);
     expect(screen.queryByText('Body')).toBeNull();
   });
 
@@ -61,13 +61,13 @@ describe('Drawer', () => {
      that half of modality in a browser. These tests check the half jsdom can
      see. */
   it('is a real dialog when modal, named by its heading', () => {
-    renderWithCrystal(<Drawer title="Filters" isOpen><p>Body</p></Drawer>);
+    renderWithPrismata(<Drawer title="Filters" isOpen><p>Body</p></Drawer>);
     expect(screen.getByRole('dialog', { name: 'Filters' })).toBeInTheDocument();
   });
 
   it('contains focus inside a modal drawer', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness isModal />);
+    renderWithPrismata(<Harness isModal />);
     await user.click(screen.getByRole('button', { name: 'Open' }));
     const dialog = await screen.findByRole('dialog');
 
@@ -86,7 +86,7 @@ describe('Drawer', () => {
      not happen. */
   it('closes a modal drawer on Escape', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness isModal />);
+    renderWithPrismata(<Harness isModal />);
     await user.click(screen.getByRole('button', { name: 'Open' }));
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
     await user.keyboard('{Escape}');
@@ -96,7 +96,7 @@ describe('Drawer', () => {
   /* The other half of the rule. The page beside a non-modal drawer must still
      work. */
   it('is a complementary landmark when not modal, and no dialog at all', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <main>
         <Drawer title="Filters" isModal={false} isOpen><p>Body</p></Drawer>
       </main>,
@@ -107,7 +107,7 @@ describe('Drawer', () => {
 
   it('leaves the page reachable beside a non-modal drawer', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness isModal={false} />);
+    renderWithPrismata(<Harness isModal={false} />);
     await user.click(screen.getByRole('button', { name: 'Open' }));
     expect(screen.getByRole('complementary', { name: 'Filters' })).toBeInTheDocument();
 
@@ -122,10 +122,10 @@ describe('Drawer', () => {
   /* A scrim is the appearance of modality. It appears with the behaviour or
      not at all. */
   it('draws a scrim only when the page behind is genuinely blocked', () => {
-    const { container: modal } = renderWithCrystal(
+    const { container: modal } = renderWithPrismata(
       <Drawer title="Filters" isOpen><p>Body</p></Drawer>,
     );
-    const { container: inline } = renderWithCrystal(
+    const { container: inline } = renderWithPrismata(
       <main><Drawer title="Filters" isModal={false} isOpen><p>Body</p></Drawer></main>,
     );
     const hasScrim = (root: HTMLElement) => [...root.ownerDocument.querySelectorAll('[class]')]
@@ -136,7 +136,7 @@ describe('Drawer', () => {
 
   it('does not take focus when it opens without modality', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness isModal={false} />);
+    renderWithPrismata(<Harness isModal={false} />);
     const opener = screen.getByRole('button', { name: 'Open' });
     await user.click(opener);
     /* A non-modal region does not move focus into itself. */
@@ -147,7 +147,7 @@ describe('Drawer', () => {
 
   it('closes from its close control', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness isModal />);
+    renderWithPrismata(<Harness isModal />);
     await user.click(screen.getByRole('button', { name: 'Open' }));
     const dialog = await screen.findByRole('dialog');
     await user.click(within(dialog).getByRole('button', { name: /Close/ }));
@@ -155,18 +155,18 @@ describe('Drawer', () => {
   });
 
   it('names its close control after what it closes', () => {
-    renderWithCrystal(<Drawer title="Filters" isOpen><p>Body</p></Drawer>);
+    renderWithPrismata(<Drawer title="Filters" isOpen><p>Body</p></Drawer>);
     expect(screen.getByRole('button', { name: 'Close Filters' })).toBeInTheDocument();
   });
 
   it('can be built without a close control', () => {
-    renderWithCrystal(<Drawer title="Filters" isOpen hideCloseButton><p>Body</p></Drawer>);
+    renderWithPrismata(<Drawer title="Filters" isOpen hideCloseButton><p>Body</p></Drawer>);
     expect(screen.queryByRole('button', { name: /Close/ })).toBeNull();
   });
 
   it('returns focus to the opener when a modal drawer closes', async () => {
     const user = userEvent.setup();
-    renderWithCrystal(<Harness isModal />);
+    renderWithPrismata(<Harness isModal />);
     const opener = screen.getByRole('button', { name: 'Open' });
     await user.click(opener);
     await screen.findByRole('dialog');
@@ -177,7 +177,7 @@ describe('Drawer', () => {
   it('calls onOpenChange when it closes', async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <Drawer title="Filters" isOpen onOpenChange={onOpenChange}><p>Body</p></Drawer>,
     );
     await user.keyboard('{Escape}');
@@ -187,7 +187,7 @@ describe('Drawer', () => {
 
 /* The authored recipe arrives from the right. Every other edge, and every
    right-to-left page, uses that movement pointed somewhere else. This mapping is
-   how Crystal supplies the entrance direction, so it is checked directly
+   how Prismata supplies the entrance direction, so it is checked directly
    instead of through four rendered drawers. */
 describe('reorientationFor', () => {
   it('plays the authored movement unchanged for the inline end of a left-to-right page', () => {
@@ -209,7 +209,7 @@ describe('reorientationFor', () => {
   });
 
   /* The block axis does not mirror with the reading direction: top is top in
-     every locale Crystal supports. */
+     every locale Prismata supports. */
   it('turns onto the block axis for top and bottom, whatever the direction', () => {
     for (const rtl of [false, true]) {
       expect(reorientationFor('top', rtl)).toEqual({ mirrorInline: true, toBlockAxis: true });

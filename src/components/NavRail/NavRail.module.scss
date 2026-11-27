@@ -1,19 +1,19 @@
 @use '../../styles/tokens' as *;
 
-/* A Frost panel, as the catalogue puts it: Crystal's `.cr-frost.pane.flat`
+/* A Frost panel, as the catalogue puts it: Prismata's `.pr-frost.pane.flat`
    (2.7.0), the content radius and no grain behind a column of entries. The
-   rail belongs to the page's structure, and its destinations are Crystal's
+   rail belongs to the page's structure, and its destinations are Prismata's
    navigation entries. */
 
 .rail {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-sm;
-  padding: $cr-spacing-sm;
+  gap: $pr-spacing-sm;
+  padding: $pr-spacing-sm;
   /* The shell's sidebar width, because a rail is what a shell's sidebar
      holds, and one column needs one number. Overridable for a rail that is not
      in a shell. */
-  min-inline-size: var(--cr-shell-sidebar, #{$cr-layout-sidebar-width});
+  min-inline-size: var(--pr-shell-sidebar, #{$pr-layout-sidebar-width});
 }
 
 /* Collapsed changes only the width and the alignment. The labels are still
@@ -28,13 +28,13 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: $cr-spacing-2xs;
+  gap: $pr-spacing-2xs;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* Each destination is Crystal's navigation entry, `.cr-nav-item` (2.2.0): muted
+/* Each destination is Prismata's navigation entry, `.pr-nav-item` (2.2.0): muted
    at rest, the surface-alt fill and the text colour on hover, and the current
    one at weight 800 on the same fill. The catalogue's surface for a rail is
    `[frost, nav-item]`: the Frost panel, with entries that sit on it.
@@ -46,17 +46,17 @@
 
 .rail[data-collapsed] .item {
   justify-content: center;
-  padding-inline: $cr-action-padding-block;
+  padding-inline: $pr-action-padding-block;
   /* Square. When collapsed, the row loses the width its label gave it, and the
      block floor alone leaves a 32px-wide target. Hiding the label must not
-     shrink the hit area. Crystal's entry is 44px tall, so the block floor is
+     shrink the hit area. Prismata's entry is 44px tall, so the block floor is
      restated here beside the inline one. */
-  min-inline-size: $cr-action-min-target;
-  min-block-size: $cr-action-min-target;
+  min-inline-size: $pr-action-min-target;
+  min-block-size: $pr-action-min-target;
 }
 
 .icon { display: inline-flex; flex: none; }
-.icon svg { inline-size: $cr-icon-size; block-size: $cr-icon-size; }
+.icon svg { inline-size: $pr-icon-size; block-size: $pr-icon-size; }
 
 .label { min-inline-size: 0; }
 
@@ -79,10 +79,10 @@
 
 .footer {
   margin-block-start: auto;
-  padding-block-start: $cr-spacing-sm;
-  border-block-start: 1px solid var(--cr-rim);
+  padding-block-start: $pr-spacing-sm;
+  border-block-start: 1px solid var(--pr-rim);
 }
 
-/* Opaque, reduced transparency and forced colours are Crystal's routes for
-   the Frost panel. The current entry's Highlight ring is Crystal's, on
-   `.cr-nav-item`. */
+/* Opaque, reduced transparency and forced colours are Prismata's routes for
+   the Frost panel. The current entry's Highlight ring is Prismata's, on
+   `.pr-nav-item`. */

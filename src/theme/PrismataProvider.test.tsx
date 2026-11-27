@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { CrystalProvider, useCrystalTheme } from './CrystalProvider.js';
+import { PrismataProvider, usePrismataTheme } from './PrismataProvider.js';
 import { useColorScheme, useMotionSpeed } from './hooks.js';
-import { crystalTokens } from './tokens.generated.js';
-import crystalFlat from '@crystal-ui/core/flat' with { type: 'json' };
+import { prismataTokens } from './tokens.generated.js';
+import prismataFlat from '@prismata/core/flat' with { type: 'json' };
 
-/* Read from Crystal's own token file rather than typed in. A test asserting a
+/* Read from Prismata's own token file rather than typed in. A test asserting a
    literal hex passes forever after the palette changes underneath it, and that
    drift is what these assertions exist to catch. */
-const harbourDark = (crystalFlat as {
+const harbourDark = (prismataFlat as {
   palettes: Record<string, { modes: Record<string, Record<string, string>> }>;
 }).palettes['harbor']!.modes['dark']!;
 
 function Probe() {
-  const theme = useCrystalTheme();
+  const theme = usePrismataTheme();
   const { palette, mode } = useColorScheme();
   const { resolveDuration } = useMotionSpeed();
   return (
@@ -24,29 +24,29 @@ function Probe() {
 }
 const read = () => JSON.parse(screen.getByTestId('probe').textContent ?? '{}');
 
-describe('CrystalProvider', () => {
-  it('publishes Crystal defaults when given nothing', () => {
-    render(<CrystalProvider><Probe /></CrystalProvider>);
+describe('PrismataProvider', () => {
+  it('publishes Prismata defaults when given nothing', () => {
+    render(<PrismataProvider><Probe /></PrismataProvider>);
     const v = read();
     expect(v.palette).toBe('prism');
     expect(v.mode).toBe('light');
-    expect(`${v.radius}px`).toBe(crystalTokens['shape.contentRadius']);
+    expect(`${v.radius}px`).toBe(prismataTokens['shape.contentRadius']);
   });
 
   it('clamps an out-of-range value rather than passing it through', () => {
-    // Crystal's radius range is 14 to 28. 999 is outside it, and a library
-    // that lets it reach CSS is no longer rendering Crystal.
-    render(<CrystalProvider radius={999}><Probe /></CrystalProvider>);
-    expect(read().radius).toBeLessThanOrEqual(parseFloat(crystalTokens['shape.contentRadius']));
+    // Prismata's radius range is 14 to 28. 999 is outside it, and a library
+    // that lets it reach CSS is no longer rendering Prismata.
+    render(<PrismataProvider radius={999}><Probe /></PrismataProvider>);
+    expect(read().radius).toBeLessThanOrEqual(parseFloat(prismataTokens['shape.contentRadius']));
   });
 
-  it('resolves duration through Crystal, capped at the ceiling', () => {
-    render(<CrystalProvider motionSpeed={2}><Probe /></CrystalProvider>);
+  it('resolves duration through Prismata, capped at the ceiling', () => {
+    render(<PrismataProvider motionSpeed={2}><Probe /></PrismataProvider>);
     expect(read().press).toBe(60);
   });
 
   it('resolves reduced motion to zero, keeping the state change', () => {
-    render(<CrystalProvider reduceMotion><Probe /></CrystalProvider>);
+    render(<PrismataProvider reduceMotion><Probe /></PrismataProvider>);
     expect(read().press).toBe(0);
   });
 
@@ -64,9 +64,9 @@ describe('CrystalProvider', () => {
       addListener: () => {}, removeListener: () => {}, dispatchEvent: () => false,
     })) as typeof window.matchMedia;
     try {
-      const { container } = render(<CrystalProvider><Probe /></CrystalProvider>);
+      const { container } = render(<PrismataProvider><Probe /></PrismataProvider>);
       expect(read().press).toBe(0);
-      expect((container.firstElementChild as HTMLElement).style.getPropertyValue('--cr-motion-enabled')).toBe('0');
+      expect((container.firstElementChild as HTMLElement).style.getPropertyValue('--pr-motion-enabled')).toBe('0');
     } finally {
       window.matchMedia = original;
     }
@@ -74,116 +74,116 @@ describe('CrystalProvider', () => {
 
   it('scopes to its own element, so a nested provider overrides only itself', () => {
     render(
-      <CrystalProvider mode="light" data-testid="outer">
+      <PrismataProvider mode="light" data-testid="outer">
         <span data-testid="outer-probe" />
-        <CrystalProvider mode="dark"><Probe /></CrystalProvider>
-      </CrystalProvider>,
+        <PrismataProvider mode="dark"><Probe /></PrismataProvider>
+      </PrismataProvider>,
     );
     expect(read().mode).toBe('dark');
     expect(read().palette).toBe('prism'); // inherited, not reset
   });
 
   it('writes the theme onto the DOM for CSS to read', () => {
-    const { container } = render(<CrystalProvider palette="cobalt" mode="dark" />);
-    const scope = container.querySelector('[data-crystal-scope]') as HTMLElement;
-    expect(scope.dataset.crystalPalette).toBe('cobalt');
-    expect(scope.dataset.crystalMode).toBe('dark');
-    expect(scope.style.getPropertyValue('--cr-radius')).toBe(crystalTokens['shape.contentRadius']);
+    const { container } = render(<PrismataProvider palette="cobalt" mode="dark" />);
+    const scope = container.querySelector('[data-prismata-scope]') as HTMLElement;
+    expect(scope.dataset.prismataPalette).toBe('cobalt');
+    expect(scope.dataset.prismataMode).toBe('dark');
+    expect(scope.style.getPropertyValue('--pr-radius')).toBe(prismataTokens['shape.contentRadius']);
   });
 
   it('refuses to render a themed component outside a provider', () => {
     const quiet = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(() => render(<Probe />)).toThrow(/must be used inside <CrystalProvider>/);
+    expect(() => render(<Probe />)).toThrow(/must be used inside <PrismataProvider>/);
     quiet.mockRestore();
   });
 
   /* Native form controls and the browser's own scrollbars read `color-scheme`,
-     not Crystal's tokens. Without it a dark scope still gets a light select and a
+     not Prismata's tokens. Without it a dark scope still gets a light select and a
      light default scrollbar. */
   it('declares color-scheme so native controls and scrollbars follow the mode', () => {
     const { container, rerender } = render(
-      <CrystalProvider mode="dark"><span>x</span></CrystalProvider>,
+      <PrismataProvider mode="dark"><span>x</span></PrismataProvider>,
     );
     expect((container.firstElementChild as HTMLElement).style.colorScheme).toBe('dark');
 
-    rerender(<CrystalProvider mode="light"><span>x</span></CrystalProvider>);
+    rerender(<PrismataProvider mode="light"><span>x</span></PrismataProvider>);
     expect((container.firstElementChild as HTMLElement).style.colorScheme).toBe('light');
   });
 
   /* `system` is a preference, never a resolved value. A component asking "am I
      dark?" needs an answer, so `system` is resolved to a mode in the provider. */
-  /* Opt-in by decision: an unset provider follows Crystal's own default token
+  /* Opt-in by decision: an unset provider follows Prismata's own default token
      rather than the operating system, because making it follow the OS would
      change the default appearance of every existing consumer. */
-  it('follows Crystal\'s default mode until asked for the system one', () => {
+  it('follows Prismata\'s default mode until asked for the system one', () => {
     let seen: string | undefined;
-    function DefaultProbe(): null { seen = useCrystalTheme().mode; return null; }
-    render(<CrystalProvider><DefaultProbe /></CrystalProvider>);
-    expect(seen).toBe(crystalTokens['default.mode'] ?? 'light');
+    function DefaultProbe(): null { seen = usePrismataTheme().mode; return null; }
+    render(<PrismataProvider><DefaultProbe /></PrismataProvider>);
+    expect(seen).toBe(prismataTokens['default.mode'] ?? 'light');
   });
 
   it('resolves system to a real mode rather than passing it through', () => {
     let seen: string | undefined;
-    function ModeProbe(): null { seen = useCrystalTheme().mode; return null; }
-    render(<CrystalProvider mode="system"><ModeProbe /></CrystalProvider>);
+    function ModeProbe(): null { seen = usePrismataTheme().mode; return null; }
+    render(<PrismataProvider mode="system"><ModeProbe /></PrismataProvider>);
     expect(['light', 'dark']).toContain(seen);
   });
 
   /* React Aria lays out from its own locale, not from a `dir` attribute, so a
-     right-to-left Crystal scope that does not tell it is half mirrored. */
+     right-to-left Prismata scope that does not tell it is half mirrored. */
   it('hands React Aria a locale so its own components mirror too', () => {
     const { container } = render(
-      <CrystalProvider direction="rtl"><span>x</span></CrystalProvider>,
+      <PrismataProvider direction="rtl"><span>x</span></PrismataProvider>,
     );
     expect((container.firstElementChild as HTMLElement).getAttribute('dir')).toBe('rtl');
   });
 
-  /* `crystal-theme.css` is one palette at `:root` and defines no selector for
-     `data-crystal-palette` or `data-crystal-mode`. A provider that published
+  /* `prismata-theme.css` is one palette at `:root` and defines no selector for
+     `data-prismata-palette` or `data-prismata-mode`. A provider that published
      only the numeric preferences and left colours to that stylesheet would
      render Prism in light for a scope asking for Harbor in dark mode, and a
      palette or mode control in Storybook would change an attribute and nothing
      else. */
   it('publishes the resolved palette, not only the numbers', () => {
     const { container } = render(
-      <CrystalProvider palette="harbor" mode="dark"><span>x</span></CrystalProvider>,
+      <PrismataProvider palette="harbor" mode="dark"><span>x</span></PrismataProvider>,
     );
     const scope = container.firstElementChild as HTMLElement;
-    /* Harbor dark, from Crystal's own token file. A provider that published
+    /* Harbor dark, from Prismata's own token file. A provider that published
        nothing would leave these empty; one that published Prism would differ. */
-    expect(scope.style.getPropertyValue('--cr-canvas')).toBe(harbourDark['canvas']);
-    expect(scope.style.getPropertyValue('--cr-text')).toBe(harbourDark['text']);
+    expect(scope.style.getPropertyValue('--pr-canvas')).toBe(harbourDark['canvas']);
+    expect(scope.style.getPropertyValue('--pr-text')).toBe(harbourDark['text']);
   });
 
   /* Two scopes hold two palettes at the same time, as the provider claims. */
   it('lets a scope differ from the one around it', () => {
     const { container } = render(
-      <CrystalProvider palette="prism" mode="light">
+      <PrismataProvider palette="prism" mode="light">
         <span data-testid="outer">x</span>
-        <CrystalProvider palette="harbor" mode="dark"><span data-testid="inner">y</span></CrystalProvider>
-      </CrystalProvider>,
+        <PrismataProvider palette="harbor" mode="dark"><span data-testid="inner">y</span></PrismataProvider>
+      </PrismataProvider>,
     );
     const outer = container.firstElementChild as HTMLElement;
-    const inner = screen.getByTestId('inner').closest('[data-crystal-scope]') as HTMLElement;
-    expect(outer.style.getPropertyValue('--cr-canvas'))
-      .not.toBe(inner.style.getPropertyValue('--cr-canvas'));
+    const inner = screen.getByTestId('inner').closest('[data-prismata-scope]') as HTMLElement;
+    expect(outer.style.getPropertyValue('--pr-canvas'))
+      .not.toBe(inner.style.getPropertyValue('--pr-canvas'));
   });
 
   /* React Aria portals a popover to `document.body`, which is outside the scope
      element, so none of its custom properties reach the overlay. Without a
      themed container every menu, listbox and dialog resolves `:root`: a Harbor
      dark page opens a Prism light menu, and
-     `backdrop-filter: blur(var(--cr-frost-blur))` is invalid at computed-value
+     `backdrop-filter: blur(var(--pr-frost-blur))` is invalid at computed-value
      time because the variable does not exist there, so Frost loses its
      diffusion entirely and the page is legible straight through an open
      calendar. */
   it('gives overlays a themed container rather than a bare body', async () => {
     render(
-      <CrystalProvider palette="harbor" mode="dark"><span>x</span></CrystalProvider>,
+      <PrismataProvider palette="harbor" mode="dark"><span>x</span></PrismataProvider>,
     );
 
     const container = await waitFor(() => {
-      const found = document.querySelector<HTMLElement>('[data-crystal-overlays]');
+      const found = document.querySelector<HTMLElement>('[data-prismata-overlays]');
       expect(found).not.toBeNull();
       return found!;
     });
@@ -192,26 +192,26 @@ describe('CrystalProvider', () => {
        any ancestor with `overflow: hidden`, which is what portalling exists to
        avoid. */
     expect(container.parentElement).toBe(document.body);
-    expect(container.dataset['crystalPalette']).toBe('harbor');
-    expect(container.dataset['crystalMode']).toBe('dark');
-    expect(container.style.getPropertyValue('--cr-canvas')).toBe(harbourDark['canvas']);
+    expect(container.dataset['prismataPalette']).toBe('harbor');
+    expect(container.dataset['prismataMode']).toBe('dark');
+    expect(container.style.getPropertyValue('--pr-canvas')).toBe(harbourDark['canvas']);
     /* Without this property the blur is invalid at computed-value time and
        Frost renders with no diffusion at all. */
-    expect(container.style.getPropertyValue('--cr-frost-blur')).toBeTruthy();
+    expect(container.style.getPropertyValue('--pr-frost-blur')).toBeTruthy();
   });
 
   /* One container per live scope, and none left over. Nested providers each get
      their own because each carries a different palette. The count is checked
      because a container that outlives its provider accumulates. */
   it('keeps one overlay container per live provider', () => {
-    const count = () => document.querySelectorAll('[data-crystal-overlays]').length;
+    const count = () => document.querySelectorAll('[data-prismata-overlays]').length;
 
     const { unmount } = render(
-      <CrystalProvider palette="prism">
-        <CrystalProvider palette="harbor" mode="dark">
+      <PrismataProvider palette="prism">
+        <PrismataProvider palette="harbor" mode="dark">
           <span>island</span>
-        </CrystalProvider>
-      </CrystalProvider>,
+        </PrismataProvider>
+      </PrismataProvider>,
     );
     expect(count()).toBe(2);
 
@@ -224,16 +224,16 @@ describe('CrystalProvider', () => {
      `contentOwnSurface`; Prism does not. */
   it('drops properties the new theme does not declare', () => {
     const { rerender } = render(
-      <CrystalProvider palette="harbor" mode="dark"><span>x</span></CrystalProvider>,
+      <PrismataProvider palette="harbor" mode="dark"><span>x</span></PrismataProvider>,
     );
-    const overlay = () => document.querySelectorAll('[data-crystal-overlays]');
+    const overlay = () => document.querySelectorAll('[data-prismata-overlays]');
     const inner = overlay()[overlay().length - 1] as HTMLElement;
-    expect(inner.style.getPropertyValue('--cr-content-own-surface')).toBeTruthy();
+    expect(inner.style.getPropertyValue('--pr-content-own-surface')).toBeTruthy();
 
     rerender(
-      <CrystalProvider palette="prism" mode="light"><span>x</span></CrystalProvider>,
+      <PrismataProvider palette="prism" mode="light"><span>x</span></PrismataProvider>,
     );
-    expect(inner.style.getPropertyValue('--cr-content-own-surface')).toBe('');
+    expect(inner.style.getPropertyValue('--pr-content-own-surface')).toBe('');
     /* The same element, so an overlay open inside it survives. */
     expect(overlay()[overlay().length - 1]).toBe(inner);
   });

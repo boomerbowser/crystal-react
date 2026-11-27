@@ -2,7 +2,7 @@
 
 /* RichTextSurface and Mentions.
  *
- * Crystal owns the chrome and the product owns the engine. The catalogue states
+ * Prismata owns the chrome and the product owns the engine. The catalogue states
  * the split: "product: the entire editing engine, serialisation and paste
  * handling". An editor is a document model, a paste pipeline and a
  * serialisation format, and those decisions belong to the application.
@@ -20,7 +20,7 @@
  * selection is already bold, and the toolbar exists to show the state of the
  * selection.
  *
- * Since 2 October 2026 the surface also carries Crystal's format vocabulary and
+ * Since 2 October 2026 the surface also carries Prismata's format vocabulary and
  * its touch behaviour, whatever engine renders into it:
  *
  *   - The document is styled with the shared reading vocabulary (headings,
@@ -30,18 +30,18 @@
  *     through `Prose`. The caret is the primary ink; the selection is a primary
  *     tint that stays distinct from a highlight.
  *   - `toolbar` takes any further controls, such as the block-type menu an
- *     engine binding renders. `@crystal-ui/react/editor` is one such binding.
+ *     engine binding renders. `@prismata/react/editor` is one such binding.
  *   - On a touch screen the toolbar moves below the text and sticks above the
  *     on-screen keyboard (`useKeyboardInset`), so the formatting a person is
  *     using is in reach of a thumb and never under the keyboard. A phone
  *     keyboard has no Tab or Ctrl+B, so on touch the toolbar is the only way to
  *     indent a list or bold a word.
  *
- * The frame wears Crystal's `.cr-field-shell`: the Resin surround with the Haze
+ * The frame wears Prismata's `.pr-field-shell`: the Resin surround with the Haze
  * well, as the catalogue's `field` surface says. Until that date it painted its
  * own copy of Resin and its own Haze, which drifted from the recipe.
  *
- * `Mentions` follows the same split. Crystal owns the popover, the rows and the
+ * `Mentions` follows the same split. Prismata owns the popover, the rows and the
  * inserted token. The product owns the trigger characters, the data and the
  * insertion, because only the document model knows where a mention goes.
  */
@@ -96,7 +96,7 @@ export interface RichTextSurfaceProps {
   surfaceClassName?: string;
   /**
    * The editor. Whatever renders here owns the document, the paste pipeline and
-   * the serialisation. Crystal renders only the frame around it.
+   * the serialisation. Prismata renders only the frame around it.
    */
   children: ReactNode;
 }
@@ -113,7 +113,7 @@ export function RichTextSurface({
   const [focused, setFocused] = useState(false);
   const keyboard = useKeyboardInset(focused);
   /* `field-focus` when focus arrives from outside the field, and the validity
-     recipes when it changes, as every other Crystal field plays them. Moving
+     recipes when it changes, as every other Prismata field plays them. Moving
      between the toolbar and the text is not arriving, so it plays nothing. */
   const [scope, play] = useFieldMotion(invalid);
   const hasToolbar = actions.length > 0 || toolbar !== undefined;
@@ -123,9 +123,9 @@ export function RichTextSurface({
       <span id={labelId} className={cx(styles['label'])}>{label}</span>
       <div
         ref={scope as never}
-        className={cx(styles['frame'], 'cr-field-shell')}
+        className={cx(styles['frame'], 'pr-field-shell')}
         data-toolbar={toolbarPlacement}
-        style={{ '--cr-keyboard-inset': `${keyboard}px` } as CSSProperties}
+        style={{ '--pr-keyboard-inset': `${keyboard}px` } as CSSProperties}
         onFocus={(event) => {
           setFocused(true);
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) play('field-focus');
@@ -136,7 +136,7 @@ export function RichTextSurface({
         {...(invalid ? { 'data-invalid': true } : {})}
       >
         {hasToolbar ? (
-          <Toolbar aria-label={`Formatting for ${typeof label === 'string' ? label : 'the editor'}`} className={cx('cr-editor-toolbar', { bottom: 'below', top: 'above', auto: undefined }[toolbarPlacement], styles['toolbar'])}>
+          <Toolbar aria-label={`Formatting for ${typeof label === 'string' ? label : 'the editor'}`} className={cx('pr-editor-toolbar', { bottom: 'below', top: 'above', auto: undefined }[toolbarPlacement], styles['toolbar'])}>
             {actions.map((action) => (
               /* aria-pressed, not a class. A bold button that looks pressed but
                  announces as an ordinary button leaves a reader unable to tell
@@ -158,7 +158,7 @@ export function RichTextSurface({
           </Toolbar>
         ) : null}
         <div
-          className={cx('cr-editor', styles['surface'], 'cr-scroll-frost', surfaceClassName)}
+          className={cx('pr-editor', styles['surface'], 'pr-scroll-frost', surfaceClassName)}
           {...(isReadOnly ? { 'data-readonly': true } : {})}
         >
           {children}
@@ -244,5 +244,5 @@ export function Mentions({
 
 function Suggestions({ children }: { children: ReactNode }): React.JSX.Element {
   const presence = usePresenceMotion('menu-in', 'menu-out');
-  return <div ref={presence as never} className={cx(styles['popover'], 'cr-frost reading', 'cr-scroll-frost')}>{children}</div>;
+  return <div ref={presence as never} className={cx(styles['popover'], 'pr-frost reading', 'pr-scroll-frost')}>{children}</div>;
 }

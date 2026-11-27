@@ -10,7 +10,7 @@
  * `ListBox selectionMode="multiple"` inside either renders a listbox with no
  * `aria-multiselectable` and every option `aria-selected="false"`, with no
  * warning. Nothing is then announced as selected, and the `[data-selected]` rule
- * that carries Crystal's label weight never matches, so the selection is
+ * that carries Prismata's label weight never matches, so the selection is
  * invisible both to a screen reader and on screen.
  *
  * The listbox therefore stands on its own inside a popover, where it keeps its
@@ -162,7 +162,7 @@ export function MultiSelect({
             (shellScope as unknown as { current: HTMLDivElement | null }).current = node;
             shellRef.current = node;
           }}
-          className={cx(styles['shell'], 'cr-field-shell block')}
+          className={cx(styles['shell'], 'pr-field-shell block')}
           {...(invalid ? { 'data-invalid': true } : {})}
         >
           <ListPresence>
@@ -184,7 +184,7 @@ export function MultiSelect({
             isDisabled={isDisabled}
             aria-labelledby={`${labelId} ${valueId}`}
             {...(messageIds ? { 'aria-describedby': messageIds } : {})}
-            className={cx(styles['opener'], 'cr-bare')}
+            className={cx(styles['opener'], 'pr-bare')}
           >
             {selected.length === 0
               ? <span className={cx(styles['placeholder'])}>{placeholder}</span>
@@ -203,7 +203,7 @@ export function MultiSelect({
           {maxSelected !== undefined ? `, at most ${maxSelected}` : ''}
         </VisuallyHidden>
 
-        <ArrivingPopover recipe="menu-in" exit="menu-out" triggerRef={shellRef} className={cx(styles['popover'], 'cr-frost')}>
+        <ArrivingPopover recipe="menu-in" exit="menu-out" triggerRef={shellRef} className={cx(styles['popover'], 'pr-frost')}>
           <Dialog aria-labelledby={labelId} className={cx(styles['dialog'])}>
             {isFilterable ? (
               <SearchField
@@ -238,7 +238,7 @@ export function MultiSelect({
               renderEmptyState={() => (
                 <p className={cx(styles['empty'])}>No options match “{query}”.</p>
               )}
-              className={cx(styles['list'], 'cr-scroll-frost')}
+              className={cx(styles['list'], 'pr-scroll-frost')}
             >
               {(option: SelectOption) => (
                 <ListBoxItem

@@ -5,9 +5,9 @@
  * The scope that replaces translucency and diffusion with solid equivalents. The
  * geometry never changes: shapes, silhouettes and spacing are identical with
  * effects on or off, and the hierarchy survives as tone and contour instead of
- * as depth. This keeps a reduced-effects page recognisably Crystal.
+ * as depth. This keeps a reduced-effects page recognisably Prismata.
  *
- * The system's own preference is honoured without this component. `CrystalProvider`
+ * The system's own preference is honoured without this component. `PrismataProvider`
  * reads `prefers-reduced-transparency` and `forced-colors` and switches on its
  * own, because a product that never thought about the setting still has to
  * respect it. This component is for the other case the catalogue names: an
@@ -18,7 +18,7 @@
  * preference does not overrule an accessibility setting.
  */
 import type { ReactNode } from 'react';
-import { CrystalProvider } from '../../theme/CrystalProvider.js';
+import { PrismataProvider } from '../../theme/PrismataProvider.js';
 
 export interface ReducedEffectsProps {
   /** Whether the subtree uses solid equivalents. Defaults to true. */
@@ -28,8 +28,8 @@ export interface ReducedEffectsProps {
 
 export function ReducedEffects({ enabled = true, children }: ReducedEffectsProps): React.JSX.Element {
   return (
-    <CrystalProvider effects={enabled ? 'opaque' : 'full'}>
+    <PrismataProvider effects={enabled ? 'opaque' : 'full'}>
       {children}
-    </CrystalProvider>
+    </PrismataProvider>
   );
 }

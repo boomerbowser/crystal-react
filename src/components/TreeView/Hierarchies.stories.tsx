@@ -54,11 +54,11 @@ const meta = {
           + 'leading space.** In both components that space shows the depth, so a mark there '
           + 'would be read as a level instead of a state.\n\n'
           + '**The tree is a `treegrid`.** A `treeitem` in the plain tree pattern must not contain '
-          + 'independently focusable widgets, and Crystal\'s row contains the disclosure button the '
+          + 'independently focusable widgets, and Prismata\'s row contains the disclosure button the '
           + 'catalogue asks for. Level, expansion and full arrow-key navigation are all present. '
           + 'Only the role names differ, and the divergence is recorded.\n\n'
           + '**Rows revealed by expanding play `accordion-in`. Rows present on first render play '
-          + 'nothing.** Nothing in Crystal moves at rest, and a tree animating itself into '
+          + 'nothing.** Nothing in Prismata moves at rest, and a tree animating itself into '
           + 'existence on page load would be motion at rest.\n\n'
           + '**The table of contents is controlled.** The catalogue puts "which headings are '
           + 'collected, scroll spy thresholds" with the product, so the component is told which '
@@ -77,7 +77,7 @@ type Story = StoryObj<typeof meta>;
 export const Files: Story = {
   args: { label: 'Files', selectionMode: 'single', defaultExpandedKeys: ['src'] },
   render: (args) => (
-    <div style={{ maxWidth: '320px' }} /* crystal-allow-literal: story bound, a sidebar width */>
+    <div style={{ maxWidth: '320px' }} /* prismata-allow-literal: story bound, a sidebar width */>
       <TreeView {...only(args)} />
     </div>
   ),
@@ -98,7 +98,7 @@ export const Keyboard: Story = {
   name: 'Keyboard navigation',
   args: { label: 'Files', selectionMode: 'single', defaultExpandedKeys: ['src'] },
   render: (args) => (
-    <div style={{ maxWidth: '320px' }} /* crystal-allow-literal: story bound, a sidebar width */>
+    <div style={{ maxWidth: '320px' }} /* prismata-allow-literal: story bound, a sidebar width */>
       <TreeView {...only(args)} />
     </div>
   ),
@@ -150,7 +150,7 @@ export const Keyboard: Story = {
    move: the rows that were already open do not animate themselves in. */
 export const ExpandingIsMotion: Story = {
   render: () => (
-    <div style={{ maxWidth: '320px' }} /* crystal-allow-literal: story bound, a sidebar width */>
+    <div style={{ maxWidth: '320px' }} /* prismata-allow-literal: story bound, a sidebar width */>
       <TreeView label="Files" items={files} selectionMode="single" />
     </div>
   ),
@@ -173,7 +173,7 @@ export const ScrollSpy: Story = {
     const active = useHeadingInView(ids, { root });
 
     return (
-      <div style={{ display: 'flex', gap: 'var(--cr-space)', alignItems: 'start' }}>
+      <div style={{ display: 'flex', gap: 'var(--pr-space)', alignItems: 'start' }}>
         {/* The library's own scroll region instead of a hand-rolled one. A
             column of headings and paragraphs holds nothing focusable, so without
             a tab stop of its own a keyboard cannot scroll it at all. `ScrollArea`
@@ -182,14 +182,14 @@ export const ScrollSpy: Story = {
         <ScrollArea
           ref={setRoot}
           aria-label="Specification sections"
-          style={{ maxHeight: '320px', maxWidth: '420px', paddingInlineEnd: 'var(--cr-space)' }} /* crystal-allow-literal: story bound, so the column actually scrolls */
+          style={{ maxHeight: '320px', maxWidth: '420px', paddingInlineEnd: 'var(--pr-space)' }} /* prismata-allow-literal: story bound, so the column actually scrolls */
         >
           <Stack gap="lg">
             {sections.map((section) => (
               <Stack key={section.id} gap="xs">
                 <Title id={section.id} level={section.level === 2 ? 2 : 3}>{section.label}</Title>
                 <Text>
-                  Crystal&rsquo;s {String(section.label).toLowerCase()} are specified once and read
+                  Prismata&rsquo;s {String(section.label).toLowerCase()} are specified once and read
                   everywhere. This paragraph exists to give the column something to scroll.
                 </Text>
                 <Text>

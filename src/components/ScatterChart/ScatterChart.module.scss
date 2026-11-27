@@ -1,6 +1,6 @@
 @use '../../styles/tokens' as *;
 
-/* Points. The shape is the second channel, one per series, from Crystal's own
+/* Points. The shape is the second channel, one per series, from Prismata's own
  * marker set. The 44px hit area is the one the line chart's points carry,
  * because a six-pixel dot is too small to be a target.
  *
@@ -12,7 +12,7 @@
 .point .shape {
   fill: var(--series-colour);
   fill-opacity: 0.75;
-  transition: fill-opacity var(--cr-state) var(--cr-ease-settle);
+  transition: fill-opacity var(--pr-state) var(--pr-ease-settle);
 }
 
 .target { fill: transparent; }

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, waitFor } from '../../test/render.js';
+import { renderWithPrismata, screen, waitFor } from '../../test/render.js';
 import { ViewStack, type StackedView } from './ViewStack.js';
 
 const root: StackedView = {
@@ -18,7 +18,7 @@ const pushed: StackedView = {
 
 describe('ViewStack', () => {
   it('shows the top of the stack as a named region', () => {
-    renderWithCrystal(<ViewStack views={[root, pushed]} onPop={() => {}} />);
+    renderWithPrismata(<ViewStack views={[root, pushed]} onPop={() => {}} />);
     expect(screen.getByRole('region', { name: 'The quarterly figures' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'The quarterly figures' })).toBeNull();
   });
@@ -29,7 +29,7 @@ describe('ViewStack', () => {
   it('offers the way back as a button that names where it goes', async () => {
     const onPop = vi.fn();
     const user = userEvent.setup();
-    renderWithCrystal(<ViewStack views={[root, pushed]} onPop={onPop} />);
+    renderWithPrismata(<ViewStack views={[root, pushed]} onPop={onPop} />);
 
     await user.click(screen.getByRole('button', { name: 'Back to Inbox' }));
     expect(onPop).toHaveBeenCalledOnce();
@@ -45,8 +45,8 @@ describe('ViewStack', () => {
       return <p>The inbox list</p>;
     }
     const inbox: StackedView = { id: 'inbox', label: 'Inbox', children: <Covered /> };
-    const { rerenderWithCrystal } = renderWithCrystal(<ViewStack views={[inbox]} />);
-    rerenderWithCrystal(<ViewStack views={[inbox, pushed]} />);
+    const { rerenderWithPrismata } = renderWithPrismata(<ViewStack views={[inbox]} />);
+    rerenderWithPrismata(<ViewStack views={[inbox, pushed]} />);
 
     const covered = screen.getByText('The inbox list').closest('section');
     expect(covered).toHaveAttribute('aria-hidden', 'true');
@@ -58,7 +58,7 @@ describe('ViewStack', () => {
 
   /* Nothing to go back to. A back control on the root view would do nothing. */
   it('offers no way back from the root view', () => {
-    renderWithCrystal(<ViewStack views={[root]} onPop={() => {}} />);
+    renderWithPrismata(<ViewStack views={[root]} onPop={() => {}} />);
     expect(screen.queryByRole('button', { name: /^Back to/ })).toBeNull();
   });
 
@@ -66,10 +66,10 @@ describe('ViewStack', () => {
      at. Focus left on the control that pushed would sit on a button that is no
      longer displayed. */
   it('moves focus to the view it pushed', async () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <ViewStack views={[root]} onPop={() => {}} />,
     );
-    rerenderWithCrystal(<ViewStack views={[root, pushed]} onPop={() => {}} />);
+    rerenderWithPrismata(<ViewStack views={[root, pushed]} onPop={() => {}} />);
     await waitFor(() => {
       expect(screen.getByRole('region', { name: 'The quarterly figures' })).toHaveFocus();
     });
@@ -82,11 +82,11 @@ describe('ViewStack', () => {
      region returned to, and that it is not on the document body, which is the
      top of the page. */
   it('returns focus to the view it came back to, and not to the page', async () => {
-    const { rerenderWithCrystal } = renderWithCrystal(
+    const { rerenderWithPrismata } = renderWithPrismata(
       <ViewStack views={[root, pushed]} onPop={() => {}} />,
     );
 
-    rerenderWithCrystal(<ViewStack views={[root]} onPop={() => {}} />);
+    rerenderWithPrismata(<ViewStack views={[root]} onPop={() => {}} />);
     await waitFor(() => {
       expect(screen.getByRole('region', { name: 'Inbox' })).toHaveFocus();
     });
@@ -94,7 +94,7 @@ describe('ViewStack', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = renderWithCrystal(<ViewStack views={[root, pushed]} onPop={() => {}} />);
+    const { container } = renderWithPrismata(<ViewStack views={[root, pushed]} onPop={() => {}} />);
     await expectNoAxeViolations(container);
   });
 });

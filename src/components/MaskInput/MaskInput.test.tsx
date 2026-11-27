@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen, userEvent } from '../../test/render.js';
+import { renderWithPrismata, screen, userEvent } from '../../test/render.js';
 import { MaskInput } from './MaskInput.js';
 
 describe('MaskInput', () => {
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(
+    const { container } = renderWithPrismata(
       <MaskInput label="Card number" mask="0000 0000 0000 0000" id="card" />,
     );
     await expectNoAxeViolations(container);
@@ -16,7 +16,7 @@ describe('MaskInput', () => {
      server. */
   it('reports the raw value and shows the formatted one', async () => {
     const onChange = vi.fn();
-    renderWithCrystal(
+    renderWithPrismata(
       <MaskInput label="Phone" mask="(000) 000-0000" onChange={onChange} id="phone" />,
     );
     const field = screen.getByLabelText('Phone');
@@ -30,7 +30,7 @@ describe('MaskInput', () => {
      from the mask gives both the same id, and the second label then points at
      the first input. */
   it('gives two identical unnamed fields distinct ids', () => {
-    renderWithCrystal(
+    renderWithPrismata(
       <>
         <MaskInput label="Home phone" mask="(000) 000-0000" />
         <MaskInput label="Work phone" mask="(000) 000-0000" />

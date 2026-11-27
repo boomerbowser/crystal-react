@@ -7,25 +7,25 @@
  * and a narrow hook is what makes that possible later without changing call
  * sites now.
  */
-import { useCrystalTheme } from './CrystalProvider.js';
+import { usePrismataTheme } from './PrismataProvider.js';
 import type {
-  CrystalDensity, CrystalDirection, CrystalEffects, CrystalMode, CrystalPalette,
+  PrismataDensity, PrismataDirection, PrismataEffects, PrismataMode, PrismataPalette,
 } from './types.js';
 
 /** Palette and light/dark mode together, since almost nothing needs only one. */
-export function useColorScheme(): { palette: CrystalPalette; mode: CrystalMode } {
-  const { palette, mode } = useCrystalTheme();
+export function useColorScheme(): { palette: PrismataPalette; mode: PrismataMode } {
+  const { palette, mode } = usePrismataTheme();
   return { palette, mode };
 }
 
-export function useDensity(): CrystalDensity {
-  return useCrystalTheme().density;
+export function useDensity(): PrismataDensity {
+  return usePrismataTheme().density;
 }
 
 /** Logical direction. Components use logical CSS properties; this is for the
  *  cases that genuinely cannot, such as choosing an arrow key handler. */
-export function useDirection(): CrystalDirection {
-  return useCrystalTheme().direction;
+export function useDirection(): PrismataDirection {
+  return usePrismataTheme().direction;
 }
 
 /**
@@ -37,15 +37,15 @@ export function useDirection(): CrystalDirection {
  * stored, the other is a setting the person made, and a component that needs to
  * know which is which would otherwise have no way to tell.
  */
-export function useReducedEffects(): { effects: CrystalEffects; opaque: boolean } {
-  const { effects } = useCrystalTheme();
+export function useReducedEffects(): { effects: PrismataEffects; opaque: boolean } {
+  const { effects } = usePrismataTheme();
   return { effects, opaque: effects === 'opaque' };
 }
 
 /**
  * Motion speed and the resolver.
  *
- * `resolveDuration` is Crystal's own arithmetic: reduced motion resolves to
+ * `resolveDuration` is Prismata's own arithmetic: reduced motion resolves to
  * zero, and every result is capped at the 5000ms ceiling.
  */
 export function useMotionSpeed(): {
@@ -53,7 +53,7 @@ export function useMotionSpeed(): {
   reduceMotion: boolean;
   resolveDuration: (baseMs: number) => number;
 } {
-  const { motionSpeed, reduceMotion, resolveDuration } = useCrystalTheme();
+  const { motionSpeed, reduceMotion, resolveDuration } = usePrismataTheme();
   return { motionSpeed, reduceMotion, resolveDuration };
 }
 

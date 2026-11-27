@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { expectNoAxeViolations } from '../../test/axe.js';
-import { renderWithCrystal, screen } from '../../test/render.js';
+import { renderWithPrismata, screen } from '../../test/render.js';
 import { ChartLegend } from './ChartLegend.js';
 
 const entries = [
@@ -12,7 +12,7 @@ const entries = [
 describe('ChartLegend', () => {
   /* "Toggles are buttons with a pressed state." */
   it('is buttons with a pressed state when it toggles', () => {
-    renderWithCrystal(<ChartLegend entries={entries} onToggle={() => {}} />);
+    renderWithPrismata(<ChartLegend entries={entries} onToggle={() => {}} />);
     expect(screen.getByRole('button', { name: 'Revenue', pressed: true })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Costs', pressed: false })).toBeInTheDocument();
   });
@@ -20,7 +20,7 @@ describe('ChartLegend', () => {
   /* A legend that cannot toggle is a key and renders as text. Pressing it would
      do nothing, and a button that does nothing is worse than a label. */
   it('is text, not buttons, when it does not toggle', () => {
-    renderWithCrystal(<ChartLegend entries={entries} />);
+    renderWithPrismata(<ChartLegend entries={entries} />);
     expect(screen.queryByRole('button')).toBeNull();
     expect(screen.getByText('Revenue')).toBeInTheDocument();
   });
@@ -30,7 +30,7 @@ describe('ChartLegend', () => {
   it('announces what the reader just changed', async () => {
     const user = userEvent.setup();
     const onToggle = vi.fn();
-    renderWithCrystal(<ChartLegend entries={entries} onToggle={onToggle} />);
+    renderWithPrismata(<ChartLegend entries={entries} onToggle={onToggle} />);
     expect(screen.getByRole('status').textContent).toBe('');
     await user.click(screen.getByRole('button', { name: 'Revenue' }));
     expect(onToggle).toHaveBeenCalledWith('Revenue', false);
@@ -40,7 +40,7 @@ describe('ChartLegend', () => {
   /* Selection is weight. Nothing is drawn beside the label to mark it, and the
      swatch says which series this is, not whether it is showing. */
   it('carries the shown state as weight, not as a mark or a colour', () => {
-    renderWithCrystal(<ChartLegend entries={entries} onToggle={() => {}} />);
+    renderWithPrismata(<ChartLegend entries={entries} onToggle={() => {}} />);
     const shown = screen.getByRole('button', { name: 'Revenue' });
     const hidden = screen.getByRole('button', { name: 'Costs' });
     expect(shown.hasAttribute('data-shown')).toBe(true);
@@ -51,7 +51,7 @@ describe('ChartLegend', () => {
   });
 
   it('has no accessibility violations', async () => {
-    const { container } = renderWithCrystal(<ChartLegend entries={entries} onToggle={() => {}} />);
+    const { container } = renderWithPrismata(<ChartLegend entries={entries} onToggle={() => {}} />);
     await expectNoAxeViolations(container);
   });
 });

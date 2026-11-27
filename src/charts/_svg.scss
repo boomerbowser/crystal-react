@@ -1,19 +1,19 @@
-/* Undo Crystal's icon reset, for an `<svg>` that is not an icon.
+/* Undo Prismata's icon reset, for an `<svg>` that is not an icon.
  *
- * `crystal.css` styles the element itself:
+ * `prismata.css` styles the element itself:
  *
  *     svg { width: 20px; height: 20px; fill: none; stroke: currentColor;
  *           stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round }
  *
- * which is right for the thousand icons Crystal ships and wrong for every
+ * which is right for the thousand icons Prismata ships and wrong for every
  * drawing that is not one. All five declarations reach a chart, and each breaks
  * something different: a spark line comes out twenty pixels square because a CSS
  * `width` outranks the `width` attribute; every wedge, bar and cell gets a
  * one-and-a-bit pixel outline in the body ink, inherited from an ancestor rather
  * than set on the mark, so no amount of reading the mark's own rules explains it.
  *
- * It is not a defect in `crystal.css`. A consumer loading it is asking for
- * Crystal's element styles, and this library has to survive that, which is the
+ * It is not a defect in `prismata.css`. A consumer loading it is asking for
+ * Prismata's element styles, and this library has to survive that, which is the
  * same lesson as D-1. So every `<svg>` in a chart takes this mixin, and every
  * mark states the paint it wants rather than inheriting any.
  */
@@ -22,5 +22,5 @@
   block-size: auto;
   fill: none;
   stroke: none;
-  stroke-width: var(--cr-chart-stroke);
+  stroke-width: var(--pr-chart-stroke);
 }

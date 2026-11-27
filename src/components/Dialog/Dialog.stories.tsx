@@ -73,7 +73,7 @@ export const NotDismissable: Story = {
       <>
         <Button onPress={() => setOpen(true)}>Open</Button>
         <Dialog {...only(args)} isOpen={open} onOpenChange={setOpen} isDismissable={false}>
-          <p style={{ margin: '0 0 var(--cr-space)' }}>Escape still closes this.</p>
+          <p style={{ margin: '0 0 var(--pr-space)' }}>Escape still closes this.</p>
           <Button onPress={() => setOpen(false)}>Close</Button>
         </Dialog>
       </>

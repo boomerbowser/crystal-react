@@ -6,7 +6,7 @@
  *
  * That is `StatusBadge`'s contract, so the status is a `StatusBadge`, the same
  * badge every other part of this library uses, and no fifth drawing of a
- * coloured well. The four order states map onto Crystal's four semantic
+ * coloured well. The four order states map onto Prismata's four semantic
  * statuses, and the mapping is the one judgement this component makes:
  *
  *   - `pending` is info. Waiting is the ordinary outcome of placing an order,
@@ -56,7 +56,7 @@ export interface OrderSummaryProps extends Omit<HTMLAttributes<HTMLElement>, 'ch
   /** Said, where a `ReactNode` cannot be. */
   referenceText: string;
   state: OrderState;
-  /** The status in words. Defaults to Crystal React's fallback wording. */
+  /** The status in words. Defaults to Prismata React's fallback wording. */
   stateLabel?: ReactNode;
   /** When it was placed, already formatted. */
   placed?: ReactNode;
@@ -77,7 +77,7 @@ export const OrderSummary = forwardRef<HTMLElement, OrderSummaryProps>(
         ref={ref}
         aria-label={referenceText}
         data-state={state}
-        className={cx('cr-haze inset', styles['order'], className)}
+        className={cx('pr-haze inset', styles['order'], className)}
       >
         <header className={styles['header']}>
           <div className={styles['who']}>

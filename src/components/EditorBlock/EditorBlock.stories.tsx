@@ -78,8 +78,8 @@ export const Dirty: Story = { render: () => <Working initial="dirty" /> };
 export const Saving: Story = { render: () => <Working initial="saving" /> };
 export const Saved: Story = { render: () => <Working initial="saved" /> };
 
-/** The editor block with Crystal's bound editor, `RichTextEditor` from
- *  `@crystal-ui/react/editor`, given as `editor`: its own toolbar, selection
+/** The editor block with Prismata's bound editor, `RichTextEditor` from
+ *  `@prismata/react/editor`, given as `editor`: its own toolbar, selection
  *  toolbar and announcements, with the block's frame and save state around
  *  them. An edit makes the document dirty; Save, or Ctrl+S or Cmd+S, saves it. */
 export const WithTheBoundEditor: Story = {
